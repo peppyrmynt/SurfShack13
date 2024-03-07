@@ -325,4 +325,9 @@
 	. = ..()
 	AddElement(/datum/element/dangerous_organ_removal, /*surgical = */ TRUE)
 
+/obj/item/organ/internal/stomach/saiyan
+	disgust_metabolism = 2
+	hunger_modifier = 3
+	desc = "The Saiyan stomach can handle a wide range of foods, but burns it fast to power their energetic lifestyle."
+
 #undef STOMACH_METABOLISM_CONSTANT
