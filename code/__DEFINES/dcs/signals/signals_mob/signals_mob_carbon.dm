@@ -169,3 +169,8 @@
 #define COMSIG_MUTATION_GAINED "mutation_gained"
 ///Called from on_losing(mob/living/carbon/human/owner)
 #define COMSIG_MUTATION_LOST "mutation_lost"
+
+/// Saiyan survived a near-death encounter
+#define COMSIG_SAIYAN_SURVIVOR "miracle_zenkai_power"
+/// Saiyan just lost their tail
+#define COMSIG_SAIYAN_TAIL_REMOVED "saiyan_tail_removed"
