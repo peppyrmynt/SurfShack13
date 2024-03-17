@@ -236,3 +236,6 @@
 	/// Modify this via add_offsets and remove_offsets,
 	/// NOT directly (and definitely avoid modifying offsets directly)
 	VAR_PRIVATE/list/offsets
+
+	/// How much fasterer are we as a result of martial arts superpowers?
+	var/boost_movespeed = 0
