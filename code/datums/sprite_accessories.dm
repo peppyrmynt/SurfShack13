@@ -1816,7 +1816,7 @@
 	color_src = FALSE
 
 /datum/sprite_accessory/tails/saiyan/standard
-	name = "Monkey"
+	name = "Saiyan"
 	icon_state = "monkey"
 
 /datum/sprite_accessory/pod_hair
