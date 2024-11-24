@@ -66,19 +66,6 @@
 				splashed.set_eye_blur_if_lower(15 SECONDS)
 				splashed.adjust_confusion(4 SECONDS)
 
-			// GORE
-			var/obj/item/bodypart/bozopart = bozo.get_bodypart(BODY_ZONE_HEAD)
-			if(bozopart)
-				var/datum/wound/cranial_fissure/crit_wound = new()
-				crit_wound.apply_wound(bozopart)
-			/*
-				var/list/droppage_candidates = bozo.get_organs_for_zone(BODY_ZONE_HEAD, include_children = TRUE)
-				if(droppage_candidates)
-					var/obj/thing_to_drop = pick(droppage_candidates)
-					thing_to_drop.forceMove(bozo.drop_location())
-			*/ //WHY DOESNTY IT OWRK
-
-			// does not necessarily kill you directly. instead it causes cranial fissure + something to drop from your head. could be eyes, tongue, ears, brain, even implants
 			new /obj/effect/gibspawner/generic(get_turf(bozo), bozo)
 
 			sparks.set_up(15, cardinals_only = FALSE, location = get_turf(src))

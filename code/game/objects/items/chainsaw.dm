@@ -81,31 +81,6 @@
 		myhead.dismember()
 	return BRUTELOSS
 
-/obj/item/chainsaw/attack(mob/living/target_mob, mob/living/user, params)
-	if (target_mob.stat != DEAD)
-		return ..()
-
-	if (user.zone_selected != BODY_ZONE_HEAD)
-		return ..()
-
-	var/obj/item/bodypart/head = target_mob.get_bodypart(BODY_ZONE_HEAD)
-	if (isnull(head))
-		return ..()
-
-	playsound(user, 'sound/items/weapons/slice.ogg', vol = 80, vary = TRUE)
-
-	target_mob.balloon_alert(user, "cutting off head...")
-	if (!do_after(user, behead_time, target_mob, extra_checks = CALLBACK(src, PROC_REF(has_same_head), target_mob, head)))
-		return TRUE
-
-	head.dismember(silent = FALSE)
-	user.put_in_hands(head)
-
-	return TRUE
-
-/obj/item/chainsaw/proc/has_same_head(mob/living/target_mob, obj/item/bodypart/head)
-	return target_mob.get_bodypart(BODY_ZONE_HEAD) == head
-
 /**
  * Handles adding components to the chainsaw. Added in Initialize()
  *

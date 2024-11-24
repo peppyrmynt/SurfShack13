@@ -191,19 +191,6 @@
 		var/obj/item/stack/used_stack = tool
 		used_stack.use(1)
 
-/// Surgery to repair cranial fissures
-/datum/surgery/cranial_reconstruction
-	name = "Cranial reconstruction"
-	surgery_flags = SURGERY_REQUIRE_RESTING | SURGERY_REQUIRE_LIMB | SURGERY_REQUIRES_REAL_LIMB
-	targetable_wound = /datum/wound/cranial_fissure
-	possible_locs = list(
-		BODY_ZONE_HEAD,
-	)
-	steps = list(
-		/datum/surgery_step/clamp_bleeders/discard_skull_debris,
-		/datum/surgery_step/repair_skull
-	)
-
 /datum/surgery_step/clamp_bleeders/discard_skull_debris
 	name = "discard skull debris (hemostat)"
 	implements = list(

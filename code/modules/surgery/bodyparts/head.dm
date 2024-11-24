@@ -100,7 +100,7 @@
 		show_eyeless = FALSE
 
 		/// Can this head be dismembered normally?
-		can_dismember = FALSE
+		can_dismember = TRUE
 
 /obj/item/bodypart/head/Destroy()
 	QDEL_NULL(worn_ears_offset)
