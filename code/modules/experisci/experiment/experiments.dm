@@ -15,6 +15,7 @@
 		/obj/item/slime_extract/green = 2,
 		/obj/item/slime_extract/pink = 2,
 		/obj/item/slime_extract/gold = 2)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/slime/expert
 	name = "Expert Slime Survey"
@@ -26,6 +27,7 @@
 		/obj/item/slime_extract/black = 1,
 		/obj/item/slime_extract/lightpink = 1,
 		/obj/item/slime_extract/rainbow = 10)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS )
 
 /datum/experiment/scanning/random/cytology/easy
 	name = "Basic Cytology Scanning Experiment"
@@ -33,6 +35,7 @@
 	total_requirement = 3
 	max_requirement_per_type = 2
 	possible_types = list(/mob/living/basic/cockroach, /mob/living/basic/mouse)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS )
 
 /datum/experiment/scanning/random/cytology/medium
 	name = "Advanced Cytology Scanning Experiment"
@@ -47,6 +50,7 @@
 		/mob/living/basic/pet/dog/corgi,
 		/mob/living/basic/snake,
 	)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/random/cytology/medium/one
 	name = "Advanced Cytology Scanning Experiment One"
@@ -60,6 +64,7 @@
 	possible_types = list(/obj/effect/decal/cleanable/vomit,
 	/obj/effect/decal/cleanable/blood)
 	total_requirement = 3
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/ordnance/explosive/lowyieldbomb
 	name = "Low-Yield Explosives"
@@ -70,6 +75,7 @@
 	sanitized_misc = FALSE
 	sanitized_reactions = FALSE
 	allow_any_source = TRUE
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/ordnance/explosive/highyieldbomb
 	name = "High-Yield Explosives"
@@ -79,6 +85,7 @@
 	experiment_proper = TRUE
 	sanitized_misc = FALSE
 	sanitized_reactions = FALSE
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/ordnance/explosive/hydrogenbomb
 	name = "Hydrogen Explosives"
@@ -90,6 +97,7 @@
 	sanitized_reactions = TRUE
 	require_all = FALSE
 	required_reactions = list(/datum/gas_reaction/h2fire, /datum/gas_reaction/tritfire)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS )
 
 /datum/experiment/ordnance/explosive/nobliumbomb
 	name = "Noblium Explosives"
@@ -100,6 +108,7 @@
 	sanitized_misc = TRUE
 	sanitized_reactions = TRUE
 	required_reactions = list(/datum/gas_reaction/nobliumformation)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS )
 
 /datum/experiment/ordnance/explosive/pressurebomb
 	name = "Reactionless Explosives"
@@ -109,6 +118,7 @@
 	experiment_proper = TRUE
 	sanitized_misc = FALSE
 	sanitized_reactions = TRUE
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS )
 
 /datum/experiment/ordnance/gaseous/nitrous_oxide
 	name = "Nitrous Oxide Gas Shells"
@@ -117,6 +127,7 @@
 	target_amount = list(200,600)
 	experiment_proper = TRUE
 	required_gas = /datum/gas/nitrous_oxide
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/ordnance/gaseous/plasma
 	name = "Plasma Gas Shells"
@@ -125,6 +136,7 @@
 	target_amount = list(200,600)
 	experiment_proper = TRUE
 	required_gas = /datum/gas/plasma
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/ordnance/gaseous/bz
 	name = "BZ Gas Shells"
@@ -133,6 +145,7 @@
 	target_amount = list(50,125,400)
 	experiment_proper = TRUE
 	required_gas = /datum/gas/bz
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/ordnance/gaseous/noblium
 	name = "Hypernoblium Gas Shells"
@@ -141,11 +154,13 @@
 	target_amount = list(15,55,250)
 	experiment_proper = TRUE
 	required_gas = /datum/gas/hypernoblium
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/random/material/meat
 	name = "Biological Material Scanning Experiment"
 	description = "They told us we couldn't make chairs out of every material in the world. You're here to prove those nay-sayers wrong."
 	possible_material_types = list(/datum/material/meat)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS )
 
 /datum/experiment/scanning/random/material/easy
 	name = "Low Grade Material Scanning Experiment"
@@ -153,11 +168,13 @@
 	total_requirement = 6
 	possible_types = list(/obj/structure/chair, /obj/structure/toilet, /obj/structure/table)
 	possible_material_types = list(/datum/material/iron, /datum/material/glass)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS )
 
 /datum/experiment/scanning/random/material/medium
 	name = "Medium Grade Material Scanning Experiment"
 	description = "Not all materials are strong enough to hold together a space station. Look at these materials for example, and see what makes them useful for our electronics and equipment."
 	possible_material_types = list(/datum/material/silver, /datum/material/gold, /datum/material/plastic, /datum/material/titanium)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/random/material/medium/one
 	name = "Medium Grade Material Scanning Experiment One"
@@ -172,6 +189,7 @@
 	name = "High Grade Material Scanning Experiment"
 	description = "NT spares no expense to test even the most valuable of materials for their qualities as construction materials. Go build us some of these exotic creations and collect the data."
 	possible_material_types = list(/datum/material/diamond, /datum/material/plasma, /datum/material/uranium)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/random/material/hard/one
 	name = "High Grade Material Scanning Experiment One"
@@ -187,6 +205,7 @@
 	description = "Due to a number of reasons, (Solar Rays, a diet consisting only of unstable mutagen, entropy) plants with lower levels of instability may occasionally mutate upon harvest. Scan one of these samples for us."
 	performance_hint = "\"Wild\" mutations have been recorded to occur above 30 points of instability, while species mutations occur above 60 points of instability."
 	total_requirement = 1
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/random/plants/traits
 	name = "Unique Biomatter Mutation Sample"
@@ -194,6 +213,7 @@
 	performance_hint = "The wide varities of plants on station each carry various traits, some unique to them. Look for plants that may mutate into what we're looking for."
 	total_requirement = 3
 	possible_plant_genes = list(/datum/plant_gene/trait/squash, /datum/plant_gene/trait/cell_charge, /datum/plant_gene/trait/glow/shadow, /datum/plant_gene/trait/teleport, /datum/plant_gene/trait/brewing, /datum/plant_gene/trait/juicing, /datum/plant_gene/trait/eyes, /datum/plant_gene/trait/sticky)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/machinery_tiered_scan/tier2_lathes
 	name = "Advanced Stock Parts Benchmark"
@@ -208,6 +228,7 @@
 		/obj/machinery/rnd/production/techfab/department/service = 1
 	)
 	required_tier = 2
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/points/machinery_tiered_scan/tier3_bluespacemachines
 	name = "Bluespace Machinery Attunement"
@@ -218,6 +239,7 @@
 		/obj/machinery/teleport/station = 1
 	)
 	required_tier = 3
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/machinery_tiered_scan/tier3_variety
 	name = "High Efficiency Parts Applications Test"
@@ -239,6 +261,7 @@
 		/obj/machinery/quantumpad = 5
 	)
 	required_tier = 3
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/machinery_tiered_scan/tier3_mechbay
 	name = "Military-grade Mech Bay Setup"
@@ -250,6 +273,7 @@
 		/obj/machinery/recharge_station = 1
 	)
 	required_tier = 3
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/machinery_pinpoint_scan/tier2_microlaser
 	name = "High-power Micro-lasers Calibration"
@@ -265,6 +289,7 @@
 		/obj/machinery/power/emitter = 3
 	)
 	required_stock_part = /obj/item/stock_parts/micro_laser/high
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/points/machinery_pinpoint_scan/tier2_capacitors
 	name = "Advanced Capacitors Benchmark"
@@ -281,6 +306,7 @@
 		/obj/machinery/chem_dispenser/drinks/beer = 3
 	)
 	required_stock_part = /obj/item/stock_parts/capacitor/adv
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/points/machinery_pinpoint_scan/tier2_scanmodules
 	name = "Advanced Scanning Modules Calibration"
@@ -293,6 +319,7 @@
 		/obj/machinery/piratepad/civilian = 2,
 	)
 	required_stock_part = /obj/item/stock_parts/scanning_module/adv
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/points/machinery_pinpoint_scan/tier3_cells
 	name = "Power Cells Capacity Test"
@@ -306,6 +333,7 @@
 		/obj/machinery/power/smes = 2
 	)
 	required_stock_part = /obj/item/stock_parts/power_store/cell/hyper
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/machinery_pinpoint_scan/tier3_microlaser
 	name = "Ultra-high-power Micro-lasers Calibration"
@@ -321,6 +349,7 @@
 		/obj/machinery/chem_mass_spec = 3
 	)
 	required_stock_part = /obj/item/stock_parts/micro_laser/ultra
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/random/mecha_damage_scan
 	name = "Exosuit Materials: Stress Failure Test"
@@ -330,12 +359,14 @@
 	possible_types = list(/obj/vehicle/sealed/mecha)
 	///Damage percent that each mech needs to be at for a scan to work.
 	var/damage_percent
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/random/mecha_equipped_scan
 	name = "Exosuit Materials: Load Strain Test"
 	description = "Exosuit equipment places unique strain upon the structure of the vehicle. Scan exosuits you have assembled from your exosuit fabricator and fully equipped to accelerate our structural stress simulations."
 	possible_types = list(/obj/vehicle/sealed/mecha)
 	total_requirement = 1
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /// Scan a person with any mutation
 /datum/experiment/scanning/people/mutant
@@ -343,6 +374,7 @@
 	description = "Our new research assistants have been drinking random chemicals for science, when one of them mastered telekinesis and another started shooting lasers from the eyes. This could be useful for our studies. Repeat the experiment by making assistants drink unstable mutagen, scan them and report the results."
 	performance_hint = "Scan a person with a random mutation."
 	required_traits_desc = "random mutation"
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/people/mutant/is_valid_scan_target(mob/living/carbon/human/check, datum/component/experiment_handler/experiment_handler)
 	. = ..()
@@ -361,6 +393,7 @@
 	required_traits_desc = "non-synthetic organs not typical for their species"
 	/// Disallow prosthetic organs
 	var/organic_only = TRUE
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/people/novel_organs/is_valid_scan_target(mob/living/carbon/human/check)
 	. = ..()
@@ -399,6 +432,7 @@
 	performance_hint = "Perform an organ manipulation surgery to replace one of the vital organs with a cybernetic variant."
 	required_traits_desc = "augmented vital organs"
 	required_count = 1
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/people/augmented_organs/is_valid_scan_target(mob/living/carbon/human/check)
 	. = ..()
@@ -424,6 +458,7 @@
 	description = "Before sticking programmed circuits into human brain, we need to know how it handles simple ones. Scan a live person with a skill chip implant in their brain."
 	performance_hint = "Perform a skill chip implantation with a skill station."
 	required_traits_desc = "skill chip implant"
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/people/skillchip/is_valid_scan_target(mob/living/carbon/human/check, datum/component/experiment_handler/experiment_handler)
 	. = ..()
@@ -445,6 +480,7 @@
 	performance_hint = "Achieve full augmentation by performing a set of surgery operations."
 	required_traits_desc = "fully augmented android"
 	required_count = 1
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS )
 
 /datum/experiment/scanning/people/android/is_valid_scan_target(mob/living/carbon/human/check, datum/component/experiment_handler/experiment_handler)
 	. = ..()
@@ -479,6 +515,7 @@
 	performance_hint = "Keep the temperature as high as possible during the reaction."
 	required_reagent = /datum/reagent/cryostylane
 	min_purity = 0.99
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/reagent/haloperidol
 	name = "Pure Haloperidol Scan"
@@ -486,6 +523,7 @@
 	performance_hint = "Exothermic and consumes hydrogen during reaction."
 	required_reagent = /datum/reagent/medicine/haloperidol
 	min_purity = 0.98
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/bluespace_crystal
 	name = "Bluespace Crystal Sampling"
@@ -495,12 +533,14 @@
 		/obj/item/stack/ore/bluespace_crystal = 1,
 		/obj/item/stack/sheet/bluespace_crystal = 1
 	)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/anomalies
 	name = "Neutralized Anomaly Analysis"
 	description = "We have the power to deal with the anomalies now. Neutralize them with an anomaly neutralizer or refine the raw cores in the refinery and scan the results."
 	required_points = 4
 	required_atoms = list(/obj/item/assembly/signaler/anomaly = 1)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
 /datum/experiment/scanning/points/machinery_tiered_scan/tier2_any
 	name = "Upgraded Stock Parts Benchmark"
@@ -510,6 +550,7 @@
 		/obj/machinery = 1
 	)
 	required_tier = 2
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS )
 
 /datum/experiment/scanning/points/machinery_tiered_scan/tier3_any
 	name = "Advanced Stock Parts Benchmark"
@@ -519,3 +560,4 @@
 		/obj/machinery = 1
 	)
 	required_tier = 3
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )

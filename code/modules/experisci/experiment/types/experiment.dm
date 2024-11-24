@@ -34,6 +34,7 @@
 /datum/experiment/New(datum/techweb/techweb)
 	if (traits & EXPERIMENT_TRAIT_DESTRUCTIVE)
 		exp_tag = "Destructive [exp_tag]"
+	description += " Grants " + get_points_reward_text() + "."
 
 /**
  * Checks if the experiment is complete

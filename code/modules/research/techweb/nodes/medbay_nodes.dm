@@ -30,13 +30,6 @@
 		"pillbottle",
 		"xlarge_beaker",
 	)
-	experiments_to_unlock = list(
-		/datum/experiment/autopsy/human,
-		/datum/experiment/autopsy/nonhuman,
-		/datum/experiment/autopsy/xenomorph,
-		/datum/experiment/scanning/reagent/haloperidol,
-		/datum/experiment/scanning/reagent/cryostylane,
-	)
 
 /datum/techweb_node/chem_synthesis
 	id = TECHWEB_NODE_CHEM_SYNTHESIS
@@ -79,7 +72,6 @@
 		"piercesyringe",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
-	required_experiments = list(/datum/experiment/scanning/reagent/haloperidol)
 	announce_channels = list(RADIO_CHANNEL_MEDICAL)
 
 /datum/techweb_node/cryostasis

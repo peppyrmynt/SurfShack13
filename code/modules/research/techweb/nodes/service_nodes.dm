@@ -177,7 +177,6 @@
 		"bluespace_fish_tank_kit",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
-	required_experiments = list(/datum/experiment/scanning/fish)
 
 /datum/techweb_node/marine_util
 	id = TECHWEB_NODE_MARINE_UTIL
