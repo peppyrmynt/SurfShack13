@@ -101,6 +101,8 @@
 	if(stock_key != UPLINK_SHARED_STOCK_UNIQUE)
 		return
 	stock_key = type
+	//This is a stupid bandaid, but it'll produce the desired results without culling everywhere this gets set.
+	progression_minimum = 0
 
 /datum/uplink_category
 	/// Name of the category

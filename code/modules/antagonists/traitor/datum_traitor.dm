@@ -24,7 +24,7 @@
 
 	var/give_objectives = TRUE
 	/// Whether to give secondary objectives to the traitor, which aren't necessary but can be completed for a progression and TC boost.
-	var/give_secondary_objectives = TRUE
+	var/give_secondary_objectives = FALSE
 	var/should_give_codewords = TRUE
 	///give this traitor an uplink?
 	var/give_uplink = TRUE
@@ -84,7 +84,6 @@
 			uplink_handler = uplink.uplink_handler
 		uplink_handler.uplink_flag = uplink_flag_given
 		uplink_handler.primary_objectives = objectives
-		uplink_handler.has_progression = TRUE
 		SStraitor.register_uplink_handler(uplink_handler)
 
 		if(give_secondary_objectives)
