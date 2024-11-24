@@ -597,16 +597,6 @@
 	cost = 4
 	purchasable_from = UPLINK_SERIOUS_OPS
 
-/datum/uplink_item/stealthy_weapons/romerol_kit
-	name = "Romerol"
-	desc = "A highly experimental bioterror agent which creates dormant nodules to be etched into the grey matter of the brain. \
-		On death, these nodules take control of the dead body, causing limited revivification, \
-		along with slurred speech, aggression, and the ability to infect others with this agent."
-	item = /obj/item/storage/box/syndie_kit/romerol
-	cost = 25
-	purchasable_from = UPLINK_ALL_SYNDIE_OPS
-	cant_discount = TRUE
-
 // Modsuits
 
 /datum/uplink_item/suits/modsuit/elite
