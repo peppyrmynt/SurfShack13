@@ -172,12 +172,13 @@
 /datum/armor/mod_theme
 	melee = 10
 	bullet = 5
-	laser = 5
-	energy = 5
+	laser = 10
+	energy = 20
+	bomb = 10
 	bio = 100
-	fire = 25
-	acid = 25
-	wound = 5
+	fire = 50
+	acid = 75
+	wound = 10
 
 /datum/mod_theme/civilian
 	name = "civilian"
@@ -224,14 +225,15 @@
 	)
 
 /datum/armor/mod_theme_civilian
-	melee = 5
+	melee = 10
 	bullet = 5
-	laser = 5
-	energy = 5
-	bio = 50
-	fire = 25
-	acid = 25
-	wound = 5
+	laser = 10
+	energy = 20
+	bomb = 10
+	bio = 100
+	fire = 50
+	acid = 75
+	wound = 10
 
 /datum/mod_theme/engineering
 	name = "engineering"
@@ -290,14 +292,14 @@
 	)
 
 /datum/armor/mod_theme_engineering
-	melee = 10
+	melee = 30
 	bullet = 5
-	laser = 20
-	energy = 10
+	laser = 10
+	energy = 20
 	bomb = 10
 	bio = 100
 	fire = 100
-	acid = 25
+	acid = 75
 	wound = 10
 
 /datum/mod_theme/atmospheric
@@ -359,10 +361,10 @@
 	)
 
 /datum/armor/mod_theme_atmospheric
-	melee = 10
+	melee = 30
 	bullet = 5
 	laser = 10
-	energy = 15
+	energy = 20
 	bomb = 10
 	bio = 100
 	fire = 100
@@ -431,10 +433,10 @@
 	)
 
 /datum/armor/mod_theme_advanced
-	melee = 15
+	melee = 40
 	bullet = 5
-	laser = 20
-	energy = 15
+	laser = 10
+	energy = 20
 	bomb = 50
 	bio = 100
 	fire = 100
@@ -541,13 +543,13 @@
 	allowed_suit_storage = GLOB.mining_suit_allowed
 
 /datum/armor/mod_theme_mining
-	melee = 20
+	melee = 30
 	bullet = 5
-	laser = 5
-	energy = 5
-	bomb = 30
+	laser = 10
+	energy = 20
+	bomb = 50
 	bio = 100
-	fire = 100
+	fire = 50
 	acid = 75
 	wound = 15
 
@@ -609,10 +611,10 @@
 	)
 
 /datum/armor/mod_theme_loader
-	melee = 15
-	bullet = 5
-	laser = 5
-	energy = 5
+	melee = 30
+	bullet = 20
+	laser = 20
+	energy = 20
 	bomb = 10
 	bio = 10
 	fire = 25
@@ -718,15 +720,15 @@
 	)
 
 /datum/armor/mod_theme_medical
-	melee = 5
+	melee = 30
 	bullet = 5
-	laser = 5
-	energy = 5
+	laser = 10
+	energy = 20
 	bomb = 10
 	bio = 100
 	fire = 60
 	acid = 75
-	wound = 5
+	wound = 10
 
 /datum/mod_theme/rescue
 	name = "rescue"
@@ -798,15 +800,15 @@
 	)
 
 /datum/armor/mod_theme_rescue
-	melee = 10
+	melee = 35
 	bullet = 10
-	laser = 5
-	energy = 5
-	bomb = 10
+	laser = 20
+	energy = 30
+	bomb = 5
 	bio = 100
-	fire = 100
-	acid = 100
-	wound = 5
+	fire = 65
+	acid = 75
+	wound = 10
 
 /datum/mod_theme/research
 	name = "research"
@@ -870,14 +872,14 @@
 	)
 
 /datum/armor/mod_theme_research
-	melee = 20
-	bullet = 15
-	laser = 5
-	energy = 5
+	melee = 30
+	bullet = 5
+	laser = 10
+	energy = 20
 	bomb = 100
 	bio = 100
-	fire = 100
-	acid = 100
+	fire = 60
+	acid = 80
 	wound = 15
 
 /datum/mod_theme/security
@@ -937,15 +939,15 @@
 	)
 
 /datum/armor/mod_theme_security
-	melee = 15
+	melee = 35
 	bullet = 15
-	laser = 15
-	energy = 15
-	bomb = 25
+	laser = 30
+	energy = 40
+	bomb = 10
 	bio = 100
 	fire = 75
 	acid = 75
-	wound = 15
+	wound = 20
 
 /datum/mod_theme/safeguard
 	name = "safeguard"
@@ -1004,15 +1006,15 @@
 	)
 
 /datum/armor/mod_theme_safeguard
-	melee = 15
-	bullet = 15
-	laser = 15
-	energy = 15
-	bomb = 40
+	melee = 45
+	bullet = 25
+	laser = 30
+	energy = 40
+	bomb = 25
 	bio = 100
-	fire = 100
+	fire = 95
 	acid = 95
-	wound = 15
+	wound = 25
 
 /datum/mod_theme/magnate
 	name = "magnate"
@@ -1077,15 +1079,15 @@
 	)
 
 /datum/armor/mod_theme_magnate
-	melee = 20
-	bullet = 15
-	laser = 15
-	energy = 15
+	melee = 40
+	bullet = 50
+	laser = 50
+	energy = 25
 	bomb = 50
 	bio = 100
 	fire = 100
 	acid = 100
-	wound = 15
+	wound = 25
 
 /datum/mod_theme/cosmohonk
 	name = "cosmohonk"
@@ -1145,13 +1147,13 @@
 	)
 
 /datum/armor/mod_theme_cosmohonk
-	melee = 5
+	melee = 30
 	bullet = 5
-	laser = 20
+	laser = 10
 	energy = 20
 	bomb = 10
 	bio = 100
-	fire = 60
+	fire = 100
 	acid = 30
 	wound = 5
 
@@ -1253,10 +1255,10 @@
 	)
 
 /datum/armor/mod_theme_syndicate
-	melee = 15
-	bullet = 20
-	laser = 15
-	energy = 15
+	melee = 40
+	bullet = 50
+	laser = 30
+	energy = 40
 	bomb = 35
 	bio = 100
 	fire = 50
@@ -1326,10 +1328,10 @@
 	)
 
 /datum/armor/mod_theme_elite
-	melee = 35
-	bullet = 30
-	laser = 35
-	energy = 35
+	melee = 60
+	bullet = 60
+	laser = 50
+	energy = 60
 	bomb = 55
 	bio = 100
 	fire = 100

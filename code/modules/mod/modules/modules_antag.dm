@@ -1,12 +1,12 @@
 //Antag modules for MODsuits
 
-///Armor Booster - Grants your suit more armor and speed in exchange for EVA protection. Also acts as a welding screen.
+///Mobility Booster - Grants your suit more speed in exchange for EVA protection. Also acts as a welding screen.
 /obj/item/mod/module/armor_booster
-	name = "MOD armor booster module"
-	desc = "A retrofitted series of retractable armor plates, allowing the suit to function as essentially power armor, \
-		giving the user incredible protection against conventional firearms, or everyday attacks in close-quarters. \
-		However, the additional plating cannot deploy alongside parts of the suit used for vacuum sealing, \
-		so this extra armor provides zero ability for extravehicular activity while deployed."
+	name = "MOD armor mobility module"
+	desc = "A retrofitted series of adjustable armor plates, allowing the suit to function as essentially power armor, \
+		giving the user unfettered mobility while retaining the armor's defensive attributes. \
+		However, the adjusted plating exposes the wearer to the vacuum of space under this configuration, \
+		so this armor adjustment provides zero ability for extravehicular activity while deployed."
 	icon_state = "armor_booster"
 	module_type = MODULE_TOGGLE
 	active_power_cost = DEFAULT_CHARGE_DRAIN * 0.3
@@ -31,10 +31,10 @@
 	speed_added = 0
 
 /datum/armor/mod_module_armor_boost
-	melee = 25
-	bullet = 30
-	laser = 15
-	energy = 15
+	melee = 0
+	bullet = 0
+	laser = 0
+	energy = 0
 
 /obj/item/mod/module/armor_booster/on_part_activation()
 	var/obj/item/clothing/head_cover = mod.get_part_from_slot(ITEM_SLOT_HEAD) || mod.get_part_from_slot(ITEM_SLOT_MASK) || mod.get_part_from_slot(ITEM_SLOT_EYES)
@@ -50,7 +50,7 @@
 
 /obj/item/mod/module/armor_booster/on_activation()
 	playsound(src, 'sound/vehicles/mecha/mechmove03.ogg', 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
-	balloon_alert(mod.wearer, "armor boosted, EVA lost")
+	balloon_alert(mod.wearer, "speed boosted, EVA lost")
 	actual_speed_added = max(0, min(mod.slowdown_active, speed_added))
 	var/datum/mod_part/head_cover = mod.get_part_datum_from_slot(ITEM_SLOT_HEAD) || mod.get_part_datum_from_slot(ITEM_SLOT_MASK) || mod.get_part_datum_from_slot(ITEM_SLOT_EYES)
 	if(head_cover)
@@ -71,7 +71,7 @@
 /obj/item/mod/module/armor_booster/on_deactivation(display_message = TRUE, deleting = FALSE)
 	if(!deleting)
 		playsound(src, 'sound/vehicles/mecha/mechmove03.ogg', 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
-		balloon_alert(mod.wearer, "armor retracts, EVA ready")
+		balloon_alert(mod.wearer, "speed reduced, EVA ready")
 	var/datum/mod_part/head_cover = mod.get_part_datum_from_slot(ITEM_SLOT_HEAD) || mod.get_part_datum_from_slot(ITEM_SLOT_MASK) || mod.get_part_datum_from_slot(ITEM_SLOT_EYES)
 	if(head_cover)
 		UnregisterSignal(mod, COMSIG_MOD_PART_SEALED)
