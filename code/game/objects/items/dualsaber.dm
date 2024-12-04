@@ -173,7 +173,7 @@
 		return PROCESS_KILL
 
 /obj/item/dualsaber/IsReflect()
-	if(HAS_TRAIT(src, TRAIT_WIELDED) && prob(block_chance))
+	if(HAS_TRAIT(src, TRAIT_WIELDED))
 		return TRUE
 
 /obj/item/dualsaber/ignition_effect(atom/A, mob/user)
