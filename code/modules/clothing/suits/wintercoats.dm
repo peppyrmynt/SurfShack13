@@ -605,12 +605,6 @@
 	inhand_icon_state = null
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/cargo/qm
 
-/obj/item/clothing/suit/hooded/wintercoat/cargo/qm/Initialize(mapload)
-	. = ..()
-	allowed += list(
-		/obj/item/melee/baton/telescopic,
-	)
-
 /obj/item/clothing/head/hooded/winterhood/cargo/qm
 	desc = "A dark brown winter hood"
 	icon_state = "hood_qm"

@@ -18,7 +18,7 @@ GLOBAL_LIST_INIT(battle_royale_regions, list(
 	),
 	"Cargo Bay" = list(
 		/area/station/cargo,
-		/area/station/command/heads_quarters/qm,
+		/area/station/cargo/qm,
 		/area/station/security/checkpoint/supply,
 	),
 ))

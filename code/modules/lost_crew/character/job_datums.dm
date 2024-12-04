@@ -20,7 +20,7 @@
 /datum/job/recovered_crew/cargo
 	title = JOB_LOSTCREW_CARGO
 	department_head = list(JOB_QUARTERMASTER)
-	supervisors = SUPERVISOR_QM
+	supervisors = SUPERVISOR_HOP
 
 /datum/job/recovered_crew/scientist
 	title = JOB_LOSTCREW_SCIENCE

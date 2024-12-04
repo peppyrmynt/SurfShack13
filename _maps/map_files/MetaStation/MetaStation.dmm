@@ -2074,7 +2074,7 @@
 	pixel_x = 10
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "aMb" = (
 /obj/structure/table,
 /obj/item/cultivator,
@@ -2418,7 +2418,7 @@
 	pixel_y = 12
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "aSQ" = (
 /obj/structure/table/reinforced,
 /obj/item/book/manual/wiki/security_space_law{
@@ -4616,7 +4616,7 @@
 	dir = 1
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "bER" = (
 /obj/structure/cable,
 /obj/machinery/power/apc/auto_name/directional/south,
@@ -7526,7 +7526,7 @@
 	dir = 1
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "cJv" = (
 /obj/effect/turf_decal/tile/yellow/fourcorners,
 /obj/machinery/chem_heater/withbuffer,
@@ -7718,7 +7718,7 @@
 	dir = 1
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "cNg" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -9918,7 +9918,7 @@
 "dFg" = (
 /obj/structure/cable,
 /turf/open/floor/carpet/orange,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "dFi" = (
 /obj/structure/closet/l3closet/virology,
 /obj/effect/turf_decal/tile/green/half/contrasted{
@@ -10228,7 +10228,7 @@
 	},
 /obj/structure/dresser,
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "dLl" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -10801,7 +10801,7 @@
 /obj/structure/noticeboard/qm,
 /obj/structure/disposalpipe/segment,
 /turf/closed/wall,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "dUj" = (
 /obj/structure/chair/office{
 	dir = 1
@@ -12524,7 +12524,7 @@
 	name = "Jim Norton's Quebecois Coffee disposal unit"
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "ewf" = (
 /obj/effect/turf_decal/tile/neutral,
 /turf/open/floor/iron,
@@ -12704,7 +12704,7 @@
 /obj/structure/extinguisher_cabinet/directional/north,
 /obj/item/poster/traitor,
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "ezT" = (
 /obj/machinery/door/airlock/research{
 	name = "Research Division Access"
@@ -13741,7 +13741,7 @@
 	pixel_x = -5
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "eTI" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
@@ -15111,7 +15111,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "fqe" = (
 /obj/machinery/door/poddoor/shutters{
 	name = "Warehouse Shutters";
@@ -19730,7 +19730,7 @@
 "heR" = (
 /obj/structure/cable,
 /turf/closed/wall,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "heS" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/mop_bucket/janitorialcart,
@@ -20325,7 +20325,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/door/firedoor,
 /turf/open/floor/iron/diagonal,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "hqE" = (
 /obj/machinery/telecomms/bus/preset_four,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -21689,7 +21689,7 @@
 /obj/effect/mapping_helpers/requests_console/information,
 /obj/effect/mapping_helpers/requests_console/ore_update,
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "hQu" = (
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/iron,
@@ -23225,7 +23225,7 @@
 "iqo" = (
 /obj/effect/landmark/start/quartermaster,
 /turf/open/floor/carpet/orange,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "iqq" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -23856,7 +23856,7 @@
 /obj/machinery/camera/directional/south,
 /obj/item/radio/intercom/directional/west,
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "izZ" = (
 /obj/machinery/atmospherics/pipe/heat_exchanging/simple{
 	dir = 4
@@ -25979,7 +25979,7 @@
 	pixel_y = -4
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "jln" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/circuit/red,
@@ -30675,7 +30675,7 @@
 /area/station/cargo/storage)
 "kQP" = (
 /turf/closed/wall,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "kQT" = (
 /obj/machinery/atmospherics/components/unary/portables_connector/visible{
 	dir = 4
@@ -36448,7 +36448,7 @@
 	id = "qmroom"
 	},
 /turf/open/floor/plating,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "mYb" = (
 /obj/structure/chair,
 /obj/machinery/computer/security/telescreen/interrogation/directional/west,
@@ -37885,7 +37885,7 @@
 	dir = 8
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "nwq" = (
 /obj/structure/table,
 /obj/machinery/firealarm/directional/south,
@@ -40773,7 +40773,7 @@
 	dir = 1
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "oyj" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/plating,
@@ -49040,7 +49040,7 @@
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
 /obj/machinery/pdapainter/supply,
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "rtD" = (
 /obj/effect/turf_decal/tile/purple,
 /obj/machinery/light/directional/east,
@@ -56177,7 +56177,7 @@
 	pixel_y = 5
 	},
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "tQC" = (
 /obj/machinery/atmospherics/components/unary/thermomachine/freezer/on/coldroom,
 /obj/effect/turf_decal/delivery,
@@ -57281,7 +57281,7 @@
 /obj/item/bedsheet/qm,
 /obj/effect/landmark/start/quartermaster,
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "ukq" = (
 /obj/machinery/atmospherics/components/binary/pump{
 	dir = 1
@@ -64208,7 +64208,7 @@
 /area/station/cargo/miningoffice)
 "wyV" = (
 /turf/open/floor/carpet/orange,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "wzd" = (
 /obj/item/radio/intercom/directional/west,
 /obj/structure/table,
@@ -67947,7 +67947,7 @@
 	id = "qmroom"
 	},
 /turf/open/floor/plating,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "xTg" = (
 /obj/structure/chair/comfy{
 	dir = 4
@@ -68599,7 +68599,7 @@
 	},
 /obj/machinery/holopad,
 /turf/open/floor/wood/large,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "ydq" = (
 /obj/structure/closet/firecloset,
 /turf/open/floor/plating,

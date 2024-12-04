@@ -7,7 +7,7 @@
 	..()
 	new /obj/item/storage/lockbox/medal/cargo(src)
 	new /obj/item/radio/weather_monitor (src)
-	new /obj/item/radio/headset/heads/qm(src)
+	new /obj/item/radio/headset/headset_cargo(src)
 	new /obj/item/megaphone/cargo(src)
 	new /obj/item/tank/internals/emergency_oxygen(src)
 	new /obj/item/universal_scanner(src)

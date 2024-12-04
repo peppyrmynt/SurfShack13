@@ -1,11 +1,11 @@
 /datum/job/bitrunner
 	title = JOB_BITRUNNER
 	description = "Surf the virtual domain for gear and loot. Decrypt your rewards on station."
-	department_head = list(JOB_QUARTERMASTER)
+	department_head = list(JOB_HEAD_OF_PERSONNEL)
 	faction = FACTION_STATION
 	total_positions = 3
 	spawn_positions = 3
-	supervisors = SUPERVISOR_QM
+	supervisors = SUPERVISOR_HOP
 	exp_granted_type = EXP_TYPE_CREW
 	config_tag = "BITRUNNER"
 	outfit = /datum/outfit/job/bitrunner

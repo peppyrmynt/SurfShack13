@@ -69,3 +69,8 @@
 /area/station/cargo/miningfoundry
 	name = "\improper Mining Foundry"
 	icon_state = "mining_foundry"
+
+/area/station/cargo/qm
+	name = "\improper Quartermaster's Office"
+	icon_state = "qm_office"
+

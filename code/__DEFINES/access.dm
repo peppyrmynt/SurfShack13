@@ -98,12 +98,12 @@
 #define ACCESS_MINERAL_STOREROOM "mineral_storeroom"
 /// Access to the "on-station" Mining Portion of the Cargo Department.
 #define ACCESS_MINING "mining"
+/// QM access
+#define ACCESS_QM "qm"
 /// Access to the "off-station" Mining Station, which contains gear dedicated for miners to do their job best, as well as seek shelter from the inhospitable elements.
 #define ACCESS_MINING_STATION "mining_station"
 /// Access to the vault on the station, for accessing the station's budget, the nuke core, or the Ore Silo.
 #define ACCESS_VAULT "vault"
-/// Access for the Quartermaster's personal quarters in mapping, as well as some other QM-related things.
-#define ACCESS_QM "qm"
 /// Access for the bitrunning den
 #define ACCESS_BIT_DEN "bit_den"
 
@@ -362,7 +362,6 @@
 	ACCESS_CMO, \
 	ACCESS_HOS, \
 	ACCESS_HOP, \
-	ACCESS_QM, \
 	ACCESS_RD, \
 )
 
@@ -550,7 +549,7 @@
 	/obj/item/modular_computer/pda/warden = list(REGION_SECURITY), \
 	/obj/item/modular_computer/pda/janitor = list(REGION_GENERAL), \
 	/obj/item/modular_computer/pda/science = list(REGION_RESEARCH), \
-	/obj/item/modular_computer/pda/heads/quartermaster = list(REGION_COMMAND), \
+	/obj/item/modular_computer/pda/quartermaster = list(REGION_SUPPLY), \
 	/obj/item/modular_computer/pda/heads/hop = list(REGION_COMMAND), \
 	/obj/item/modular_computer/pda/heads/hos = list(REGION_COMMAND), \
 	/obj/item/modular_computer/pda/heads/cmo = list(REGION_COMMAND), \

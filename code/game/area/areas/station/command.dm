@@ -73,10 +73,6 @@
 	name = "\improper Research Director's Office"
 	icon_state = "rd_office"
 
-/area/station/command/heads_quarters/qm
-	name = "\improper Quartermaster's Office"
-	icon_state = "qm_office"
-
 /*
 * Command - Teleporter
 */

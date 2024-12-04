@@ -446,7 +446,7 @@
 	dir = 1
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "aiX" = (
 /turf/open/floor/iron,
 /area/station/security/courtroom)
@@ -675,7 +675,7 @@
 /area/station/commons/dorms)
 "alT" = (
 /turf/open/floor/carpet,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "alW" = (
 /obj/effect/spawner/structure/window/hollow/reinforced/middle{
 	dir = 1
@@ -5612,7 +5612,7 @@
 	},
 /obj/structure/chair/stool/directional/north,
 /turf/open/floor/carpet,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "bAj" = (
 /obj/machinery/door/firedoor{
 	dir = 4
@@ -11132,7 +11132,7 @@
 	},
 /obj/effect/landmark/event_spawn,
 /turf/open/floor/carpet,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "dct" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -12331,7 +12331,7 @@
 	pixel_x = -32
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "dsj" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/firealarm/directional/south,
@@ -12371,7 +12371,7 @@
 	dir = 4
 	},
 /turf/open/floor/carpet,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "dsZ" = (
 /obj/structure/noticeboard/directional/west,
 /turf/open/floor/engine/cult,
@@ -12608,7 +12608,7 @@
 	dir = 8
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "dwZ" = (
 /obj/machinery/airalarm/directional/west,
 /turf/open/floor/iron/white,
@@ -18156,7 +18156,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "fgo" = (
 /obj/effect/spawner/random/trash/mess,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -20348,7 +20348,7 @@
 	dir = 8
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "fOH" = (
 /obj/structure/fence/post{
 	dir = 1
@@ -28764,7 +28764,7 @@
 	name = "Privacy Shutters"
 	},
 /turf/open/floor/plating,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "ikW" = (
 /obj/structure/railing/corner{
 	dir = 8
@@ -35234,7 +35234,7 @@
 "kin" = (
 /obj/machinery/pdapainter/supply,
 /turf/open/floor/carpet,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "kir" = (
 /obj/machinery/door/airlock/external{
 	name = "External Access"
@@ -36884,7 +36884,7 @@
 /obj/structure/table,
 /obj/item/stamp/head/qm,
 /turf/open/floor/carpet,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "kHb" = (
 /obj/structure/closet/secure_closet/personal{
 	anchored = 1
@@ -38274,7 +38274,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/turf_decal/tile/brown/half/contrasted,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "lbk" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/structure/cable,
@@ -38533,7 +38533,7 @@
 	},
 /obj/effect/turf_decal/tile/brown/fourcorners,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "lfL" = (
 /obj/machinery/disposal/bin,
 /obj/structure/disposalpipe/trunk{
@@ -38682,7 +38682,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "lix" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
@@ -38940,7 +38940,7 @@
 	dir = 8
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "llT" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 1
@@ -46420,7 +46420,7 @@
 	},
 /obj/effect/turf_decal/tile/brown/anticorner/contrasted,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "nxM" = (
 /turf/closed/wall,
 /area/station/maintenance/department/medical/morgue)
@@ -48620,7 +48620,7 @@
 	},
 /obj/machinery/light/directional/east,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "obU" = (
 /obj/machinery/light_switch/directional/north{
 	pixel_x = 6
@@ -56264,7 +56264,7 @@
 	},
 /obj/machinery/airalarm/directional/east,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "qiL" = (
 /obj/structure/rack,
 /obj/item/pickaxe,
@@ -56290,7 +56290,7 @@
 	},
 /obj/machinery/status_display/ai/directional/east,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "qjb" = (
 /obj/machinery/atmospherics/pipe/smart/simple/cyan/visible{
 	dir = 10
@@ -59322,7 +59322,7 @@
 /area/station/hallway/primary/aft)
 "rbC" = (
 /turf/closed/wall,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "rbE" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -60375,7 +60375,7 @@
 	},
 /obj/machinery/light/directional/east,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "rrR" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -66127,7 +66127,7 @@
 	dir = 8
 	},
 /turf/open/floor/carpet,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "tai" = (
 /obj/machinery/door/airlock/maintenance{
 	name = "Chemistry Maintenance"
@@ -77039,7 +77039,7 @@
 	},
 /obj/machinery/keycard_auth/wall_mounted/directional/north,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "wrV" = (
 /obj/structure/cable,
 /turf/open/floor/plating/snowed/smoothed/icemoon,
@@ -78314,7 +78314,7 @@
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "wLS" = (
 /obj/structure/cable,
 /obj/effect/landmark/start/hangover,
@@ -79378,7 +79378,7 @@
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
 /turf/open/floor/carpet,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "xan" = (
 /obj/structure/toilet{
 	pixel_y = 8
@@ -79677,7 +79677,7 @@
 	dir = 8
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "xer" = (
 /obj/machinery/door/firedoor/heavy,
 /obj/machinery/door/poddoor/shutters/preopen{
@@ -80141,7 +80141,7 @@
 	dir = 8
 	},
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "xjO" = (
 /obj/machinery/power/port_gen/pacman{
 	anchored = 1
@@ -80707,7 +80707,7 @@
 	},
 /obj/structure/sign/poster/official/work_for_a_future/directional/north,
 /turf/open/floor/iron,
-/area/station/command/heads_quarters/qm)
+/area/station/cargo/qm)
 "xug" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/railing{

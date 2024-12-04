@@ -41,6 +41,7 @@
 	var/list/allowed_areas = typecacheof(list(/area/station/command,
 		/area/station/comms,
 		/area/station/engineering,
+		/area/station/cargo/qm,
 		/area/station/science,
 		/area/station/security,
 	))

@@ -1,11 +1,11 @@
 /datum/job/cargo_gorilla
 	title = JOB_CARGO_GORILLA
 	description = "Assist the supply department by moving freight and disposing of unwanted fruits."
-	department_head = list(JOB_QUARTERMASTER)
+	department_head = list(JOB_HEAD_OF_PERSONNEL)
 	faction = FACTION_STATION
 	total_positions = 0
 	spawn_positions = 0
-	supervisors = SUPERVISOR_QM
+	supervisors = SUPERVISOR_HOP
 	spawn_type = /mob/living/basic/gorilla/cargorilla
 	config_tag = "CARGO_GORILLA"
 	random_spawns_possible = FALSE

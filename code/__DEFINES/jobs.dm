@@ -274,7 +274,6 @@ DEFINE_BITFIELD(job_flags, list(
 #define SUPERVISOR_CMO "the Chief Medical Officer"
 #define SUPERVISOR_HOP "the Head of Personnel"
 #define SUPERVISOR_HOS "the Head of Security"
-#define SUPERVISOR_QM "the Quartermaster"
 #define SUPERVISOR_RD "the Research Director"
 
 /// Mind traits that should be shared by every head of staff. has to be this way cause byond lists lol
