@@ -170,7 +170,7 @@
 	var/charges = 3
 	var/max_charges = 3
 	var/list/charge_timers = list()
-	var/charge_time = 1800 //three minutes
+	var/charge_time = 1 MINUTES
 
 /obj/item/card/emag/doorjack/Initialize(mapload)
 	. = ..()
