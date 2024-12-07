@@ -180,7 +180,7 @@
 	var/head_attack_message = ""
 	if(affecting == BODY_ZONE_HEAD && iscarbon(target) && !HAS_TRAIT(target, TRAIT_HEAD_INJURY_BLOCKED))
 		head_attack_message = " on the head"
-		if(knockdown_effectiveness && prob(knockdown_effectiveness))
+		if(knockdown_effectiveness)
 			living_target.apply_effect(min(knockdown_effectiveness, 200) , EFFECT_KNOCKDOWN)
 
 	//Display an attack message.
