@@ -20,6 +20,8 @@
 #define COMSIG_FOOD_GET_EXTRA_COMPLEXITY "food_get_extra_complexity"
 
 // Deep frying foods
+/// Return to not burn the item
+#define COMSIG_FRYING_HANDLED (1<<0)
 /// An item becomes fried - From /datum/element/fried_item/Attach: (fry_time)
 #define COMSIG_ITEM_FRIED "item_fried"
 /// An item entering the deep frying (not fried yet) - From obj/machinery/deepfryer/start_fry: ()

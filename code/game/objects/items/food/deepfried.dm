@@ -5,8 +5,7 @@
 	icon_state = ""
 	bite_consumption = 2
 
-/obj/item/food/deepfryholder/MakeEdible()
-	. = ..()
+/obj/item/food/deepfryholder/proc/MakeEdible()
 	AddComponent(/datum/component/edible, on_consume = CALLBACK(src, PROC_REF(On_Consume)))
 
 /obj/item/food/deepfryholder/Initialize(mapload, obj/item/fried)
