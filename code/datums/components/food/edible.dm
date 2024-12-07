@@ -89,6 +89,7 @@ Behavior that's still missing from this component that original food items had t
 
 	if(isitem(parent))
 		RegisterSignal(parent, COMSIG_ITEM_ATTACK, PROC_REF(UseFromHand))
+		RegisterSignal(parent, COMSIG_ITEM_FRIED, PROC_REF(OnFried))
 		RegisterSignal(parent, COMSIG_ITEM_USED_AS_INGREDIENT, PROC_REF(used_to_customize))
 
 		var/obj/item/item = parent
@@ -110,6 +111,7 @@ Behavior that's still missing from this component that original food items had t
 		COMSIG_ATOM_ENTERED,
 		COMSIG_FOOD_INGREDIENT_ADDED,
 		COMSIG_ITEM_ATTACK,
+		COMSIG_ITEM_FRIED,
 		COMSIG_ITEM_USED_AS_INGREDIENT,
 		COMSIG_OOZE_EAT_ATOM,
 		COMSIG_ATOM_EXAMINE,
@@ -297,6 +299,14 @@ Behavior that's still missing from this component that original food items had t
 	if (!in_range(source, user))
 		return
 	return TryToEat(user, user)
+
+/datum/component/edible/proc/OnFried(datum/source, atom/fry_object)
+	SIGNAL_HANDLER
+	var/atom/our_atom = parent
+	fry_object.reagents.maximum_volume = our_atom.reagents.maximum_volume
+	our_atom.reagents.trans_to(fry_object, our_atom.reagents.total_volume)
+	qdel(our_atom)
+	return COMSIG_FRYING_HANDLED
 
 ///Called when food is created through processing (Usually this means it was sliced). We use this to pass the OG items reagents.
 /datum/component/edible/proc/OnProcessed(datum/source, atom/original_atom, list/chosen_processing_option)
