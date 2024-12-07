@@ -472,8 +472,6 @@
 	affected_mob.remove_status_effect(/datum/status_effect/drowsiness)
 	affected_mob.AdjustSleeping(-4 SECONDS * REM * seconds_per_tick)
 	affected_mob.adjust_bodytemperature(-5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, affected_mob.get_body_temp_normal())
-	if (SSradiation.can_irradiate_basic(affected_mob))
-		affected_mob.AddComponent(/datum/component/irradiated)
 
 /datum/reagent/consumable/rootbeer
 	name = "Root Beer"
