@@ -37,7 +37,7 @@
 /area/template_noop)
 "q" = (
 /obj/structure/closet/secure_closet/evidence,
-/obj/effect/spawner/random/sakhno/ammo,
+/obj/effect/spawner/random/mosin/ammo,
 /obj/effect/spawner/random/medical/injector,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/window/reinforced/tinted/spawner/directional/east,
