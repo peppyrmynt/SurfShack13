@@ -355,14 +355,14 @@
 		for(var/i in 1 to 6)
 			new ammo_to_spawn(src)
 
-/obj/item/storage/toolbox/ammobox/strilka310
-	name = ".310 Strilka ammo box (Surplus?)"
+/obj/item/storage/toolbox/ammobox/a762
+	name = "7.62mm ammo box (Surplus?)"
 	desc = "It contains a few clips. Goddamn, this thing smells awful. \
 		Has this been sitting in a warehouse for the last several centuries?"
-	ammo_to_spawn = /obj/item/ammo_box/strilka310
+	ammo_to_spawn = /obj/item/ammo_box/a762
 
-/obj/item/storage/toolbox/ammobox/strilka310/surplus
-	ammo_to_spawn = /obj/item/ammo_box/strilka310/surplus
+/obj/item/storage/toolbox/ammobox/a762/surplus
+	ammo_to_spawn = /obj/item/ammo_box/a762/surplus
 
 /obj/item/storage/toolbox/ammobox/wt550m9
 	name = "4.6x30mm ammo box"
@@ -553,10 +553,10 @@
 /obj/item/storage/toolbox/guncase/soviet
 	name = "ancient gun case"
 	desc = "A weapon's case. Has the symbol of the Third Soviet Union stamped on the side."
-	icon_state = "sakhno_case"
-	inhand_icon_state = "sakhno_case"
-	weapon_to_spawn = /obj/effect/spawner/random/sakhno
-	extra_to_spawn = /obj/effect/spawner/random/sakhno/ammo
+	icon_state = "mosin_case"
+	inhand_icon_state = "mosin_case"
+	weapon_to_spawn = /obj/effect/spawner/random/mosin
+	extra_to_spawn = /obj/effect/spawner/random/mosin/ammo
 
 /obj/item/storage/toolbox/guncase/monkeycase
 	name = "monkey gun case"

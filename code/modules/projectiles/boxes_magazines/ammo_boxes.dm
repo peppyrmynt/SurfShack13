@@ -117,24 +117,28 @@
 /obj/item/ammo_box/rocket/can_load(mob/user)
 	return FALSE
 
-/obj/item/ammo_box/strilka310
-	name = "stripper clip (.310 Strilka)"
+/obj/item/ammo_box/a762
+	name = "stripper clip (7.62mm)"
 	desc = "A stripper clip."
-	icon_state = "310_strip"
-	ammo_type = /obj/item/ammo_casing/strilka310
+	icon = 'surfshack13/icons/mosin_nagant/762_ammo.dmi'
+	icon_state = "762"
+	lefthand_file = 'surfshack13/icons/mosin_nagant/762_ammo_lefthand.dmi'
+	righthand_file = 'surfshack13/icons/mosin_nagant/762_ammo_righthand.dmi'
+	inhand_icon_state = "mosin_case"
+	ammo_type = /obj/item/ammo_casing/a762
 	max_ammo = 5
-	caliber = CALIBER_STRILKA310
+	caliber = CALIBER_A762
 	multiple_sprites = AMMO_BOX_PER_BULLET
 
-/obj/item/ammo_box/strilka310/surplus
-	name = "stripper clip (.310 Surplus)"
-	ammo_type = /obj/item/ammo_casing/strilka310/surplus
+/obj/item/ammo_box/a762/surplus
+	name = "stripper clip (7.62mm Surplus)"
+	ammo_type = /obj/item/ammo_casing/a762/surplus
 
-/obj/item/ammo_box/strilka310/phasic
-	name = "stripper clip (.310 Phasic)"
+/obj/item/ammo_box/a762/phasic
+	name = "stripper clip (7.62mm Phasic)"
 	desc = "A stripper clip filled with phasic bullets, hastily developed after an incident where a misfire resulted in the destruction of Atrakor Silverscale's priceless Vigoxian Fabergé egg. \
 		These fancy bullets pass right though valuables until they end up in a far less expensive human skull."
-	ammo_type = /obj/item/ammo_casing/strilka310/phasic
+	ammo_type = /obj/item/ammo_casing/a762/phasic
 
 /obj/item/ammo_box/n762
 	name = "ammo box (7.62x38mmR)"

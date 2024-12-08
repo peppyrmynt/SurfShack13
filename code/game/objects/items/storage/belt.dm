@@ -716,7 +716,7 @@
 	atom_storage.allow_quick_empty = TRUE
 	atom_storage.numerical_stacking = TRUE
 	atom_storage.set_holdable(list(
-		/obj/item/ammo_casing/strilka310,
+		/obj/item/ammo_casing/a762,
 		/obj/item/ammo_casing/shotgun,
 		/obj/item/ammo_casing/a357,
 		/obj/item/ammo_casing/junk,

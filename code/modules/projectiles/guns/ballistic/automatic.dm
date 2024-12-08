@@ -324,6 +324,9 @@
 	name = "surplus rifle"
 	desc = "One of countless obsolete ballistic rifles that still sees use as a cheap deterrent. Uses 10mm ammo and its bulky frame prevents one-hand firing."
 	icon_state = "surplus"
+	inhand_icon_state = "moistnugget"
+	lefthand_file = 'surfshack13/icons/mosin_nagant/surplus_lefthand.dmi'
+	righthand_file = 'surfshack13/icons/mosin_nagant/surplus_righthand.dmi'
 	worn_icon_state = null
 	weapon_weight = WEAPON_HEAVY
 	accepted_magazine_type = /obj/item/ammo_box/magazine/m10mm/rifle
