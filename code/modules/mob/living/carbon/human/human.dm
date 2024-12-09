@@ -1103,7 +1103,7 @@
 		mutation.instability = 0
 		mutation.class = MUT_OTHER
 
-	add_traits(list(TRAIT_NO_DNA_SCRAMBLE, TRAIT_BADDNA, TRAIT_BORN_MONKEY), SPECIES_TRAIT)
+	add_traits(list(TRAIT_NO_DNA_SCRAMBLE, TRAIT_BADDNA), SPECIES_TRAIT)
 
 /mob/living/carbon/human/proc/is_atmos_sealed(additional_flags = null, check_hands = FALSE, alt_flags = FALSE)
 	var/chest_covered = FALSE
