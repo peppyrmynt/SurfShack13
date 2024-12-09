@@ -78,7 +78,7 @@
 	name = "medical HUDSunglasses"
 	desc = "Sunglasses with a medical HUD."
 	icon_state = "sunhudmed"
-	flash_protect = FLASH_PROTECTION_FLASH
+	flash_protect = FLASH_PROTECTION_WELDER
 	flags_cover = GLASSESCOVERSEYES
 	tint = 1
 	glass_colour_type = /datum/client_colour/glass_colour/blue
@@ -121,7 +121,7 @@
 	desc = "Sunglasses with a diagnostic HUD."
 	icon_state = "sunhuddiag"
 	inhand_icon_state = "glasses"
-	flash_protect = FLASH_PROTECTION_FLASH
+	flash_protect = FLASH_PROTECTION_WELDER
 	flags_cover = GLASSESCOVERSEYES
 	tint = 1
 
@@ -147,23 +147,11 @@
 	flash_protect = FLASH_PROTECTION_FLASH
 	actions_types = list(/datum/action/item_action/chameleon/change/glasses/no_preset)
 
-/obj/item/clothing/glasses/hud/security/sunglasses/eyepatch
-	name = "eyepatch HUD"
-	desc = "The cooler looking cousin of HUDSunglasses."
-	icon_state = "hudpatch"
-	base_icon_state = "hudpatch"
-	actions_types = list(/datum/action/item_action/flip)
-
-/obj/item/clothing/glasses/hud/security/sunglasses/eyepatch/attack_self(mob/user, modifiers)
-	. = ..()
-	icon_state = (icon_state == base_icon_state) ? "[base_icon_state]_flipped" : base_icon_state
-	user.update_worn_glasses()
-
 /obj/item/clothing/glasses/hud/security/sunglasses
 	name = "security HUDSunglasses"
 	desc = "Sunglasses with a security HUD."
 	icon_state = "sunhudsec"
-	flash_protect = FLASH_PROTECTION_FLASH
+	flash_protect = FLASH_PROTECTION_WELDER
 	flags_cover = GLASSESCOVERSEYES
 	tint = 1
 	glass_colour_type = /datum/client_colour/glass_colour/darkred
@@ -176,6 +164,18 @@
 		/datum/element/slapcrafting,\
 		slapcraft_recipes = slapcraft_recipe_list,\
 	)
+
+/obj/item/clothing/glasses/hud/security/sunglasses/eyepatch
+	name = "eyepatch HUD"
+	desc = "The cooler looking cousin of HUDSunglasses."
+	icon_state = "hudpatch"
+	base_icon_state = "hudpatch"
+	actions_types = list(/datum/action/item_action/flip)
+
+/obj/item/clothing/glasses/hud/security/sunglasses/eyepatch/attack_self(mob/user, modifiers)
+	. = ..()
+	icon_state = (icon_state == base_icon_state) ? "[base_icon_state]_flipped" : base_icon_state
+	user.update_worn_glasses()
 
 /obj/item/clothing/glasses/hud/security/night
 	name = "night vision security HUD"
