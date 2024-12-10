@@ -137,6 +137,7 @@ GLOBAL_LIST_INIT(special_roles, list(
 	ROLE_TRAITOR = 0,
 	ROLE_WIZARD = 14,
 	ROLE_SPY = 0,
+	ROLE_BLOODSUCKER = 0,
 
 	// Midround
 	ROLE_ABDUCTOR = 0,
@@ -164,12 +165,14 @@ GLOBAL_LIST_INIT(special_roles, list(
 	ROLE_PROVOCATEUR = 14,
 	ROLE_SYNDICATE_INFILTRATOR = 0,
 	ROLE_STOWAWAY_CHANGELING = 0,
+	ROLE_VAMPIRICACCIDENT = 0,
 
 	// I'm not too sure why these are here, but they're not moving.
 	ROLE_GLITCH = 0,
 	ROLE_PAI = 0,
 	ROLE_SENTIENCE = 0,
 	ROLE_RECOVERED_CREW = 0,
+	ROLE_BLOODSUCKERBREAKOUT = 0,
 ))
 
 //Job defines for what happens when you fail to qualify for any job during job selection
