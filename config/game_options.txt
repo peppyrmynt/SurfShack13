@@ -128,7 +128,7 @@ PROTECT_ROLES_FROM_ANTAGONIST
 ## "NON_HUMAN_WHITELIST": non-humans will not be able to play as heads of staff, unless that job incorporates the "allow non-humans" flag (Which can be configured via a variable or the job config txt).
 ## "ENFORCED": non-humans cannot be heads of staff, only humans can. the "allow non-humans" setting will be ignored.
 ## Uncomment to enable a human authority mode of your choice.
-#HUMAN_AUTHORITY HUMAN_WHITELIST
+#HUMAN_AUTHORITY ENFORCED
 
 ## If late-joining players have a chance to become a traitor/changeling
 ALLOW_LATEJOIN_ANTAGONISTS
@@ -172,7 +172,7 @@ ALLOW_AI_MULTICAM
 
 ## Secborg ###
 ## Uncomment to prevent the security cyborg model from being chosen
-#DISABLE_SECBORG
+DISABLE_SECBORG
 
 ## Peacekeeper Borg ###
 ## Uncomment to prevent the peacekeeper cyborg model from being chosen
