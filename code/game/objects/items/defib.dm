@@ -188,6 +188,7 @@
 
 /obj/item/defibrillator/emp_act(severity)
 	. = ..()
+	safety = !safety
 	if(cell && !(. & EMP_PROTECT_CONTENTS))
 		deductcharge(STANDARD_CELL_CHARGE / severity)
 	if (. & EMP_PROTECT_SELF)
