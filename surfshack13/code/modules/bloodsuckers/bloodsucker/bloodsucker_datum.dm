@@ -163,15 +163,15 @@
 	var/datum/hud/bloodsucker_hud = owner.current.hud_used
 
 	blood_display = new /atom/movable/screen/bloodsucker/blood_counter()
-	blood_display.hud = bloodsucker_hud
+	blood_display.set_new_hud(bloodsucker_hud)
 	bloodsucker_hud.infodisplay += blood_display
 
 	vamprank_display = new /atom/movable/screen/bloodsucker/rank_counter()
-	vamprank_display.hud = bloodsucker_hud
+	vamprank_display.set_new_hud(bloodsucker_hud)
 	bloodsucker_hud.infodisplay += vamprank_display
 
 	sunlight_display = new /atom/movable/screen/bloodsucker/sunlight_counter()
-	sunlight_display.hud = bloodsucker_hud
+	sunlight_display.set_new_hud(bloodsucker_hud)
 	bloodsucker_hud.infodisplay += sunlight_display
 
 	bloodsucker_hud.show_hud(bloodsucker_hud.hud_version)
@@ -457,7 +457,10 @@
 	var/mob/living/carbon/user = owner.current
 	var/obj/item/organ/heart/newheart = owner.current.get_organ_slot(ORGAN_SLOT_HEART)
 	if(newheart)
-		newheart.beating = initial(newheart.beating)
+		if(initial(newheart.is_beating()))
+			newheart.Restart()
+		else
+			newheart.Stop()
 	var/obj/item/organ/eyes/user_eyes = user.get_organ_slot(ORGAN_SLOT_EYES)
 	if(user_eyes)
 		user_eyes.flash_protect = initial(user_eyes.flash_protect)
