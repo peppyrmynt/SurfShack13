@@ -225,7 +225,7 @@
 
 /obj/item/modular_computer/pda/cargo
 	name = "cargo technician PDA"
-	greyscale_colors = "#8b4c31#2c2e32"
+	greyscale_colors = "#D6B328#6506CA"
 	stored_paper = 20
 	starting_programs = list(
 		/datum/computer_file/program/shipping,
@@ -237,7 +237,7 @@
 /obj/item/modular_computer/pda/shaftminer
 	name = "shaft miner PDA"
 	greyscale_config = /datum/greyscale_config/tablet/stripe_thick
-	greyscale_colors = "#927444#8b4c31#4c202d"
+	greyscale_colors = "#927444#D6B328#6C3BA1"
 	starting_programs = list(
 		/datum/computer_file/program/skill_tracker,
 	)

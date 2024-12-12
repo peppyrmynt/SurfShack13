@@ -37,8 +37,7 @@
 	id_trim = /datum/id_trim/job/quartermaster
 	uniform = /obj/item/clothing/under/rank/cargo/qm
 	belt = /obj/item/modular_computer/pda/quartermaster
-	suit = /obj/item/clothing/suit/jacket/quartermaster
 	ears = /obj/item/radio/headset/headset_cargo
 	glasses = /obj/item/clothing/glasses/sunglasses
-	shoes = /obj/item/clothing/shoes/laceup
+	shoes = /obj/item/clothing/shoes/sneakers/brown
 	l_hand = /obj/item/clipboard
