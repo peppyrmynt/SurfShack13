@@ -121,6 +121,11 @@
 #define ROLE_CYBER_TAC "Cyber Tac"
 #define ROLE_NETGUARDIAN "NetGuardian Prime"
 
+//Bloodsuckers
+#define ROLE_BLOODSUCKER "Bloodsucker"
+#define ROLE_VAMPIRICACCIDENT "Vampiric Accident"
+#define ROLE_BLOODSUCKERBREAKOUT "Bloodsucker Breakout"
+
 /// This defines the antagonists you can operate with in the settings.
 /// Keys are the antagonist, values are the number of days since the player's
 /// first connection in order to play.
@@ -159,6 +164,7 @@ GLOBAL_LIST_INIT(special_roles, list(
 	ROLE_SPIDER = 0,
 	ROLE_WIZARD_MIDROUND = 14,
 	ROLE_VOIDWALKER = 0,
+	ROLE_BLOODSUCKERBREAKOUT = 0,
 
 	// Latejoin
 	ROLE_HERETIC_SMUGGLER = 0,
@@ -172,7 +178,6 @@ GLOBAL_LIST_INIT(special_roles, list(
 	ROLE_PAI = 0,
 	ROLE_SENTIENCE = 0,
 	ROLE_RECOVERED_CREW = 0,
-	ROLE_BLOODSUCKERBREAKOUT = 0,
 ))
 
 //Job defines for what happens when you fail to qualify for any job during job selection

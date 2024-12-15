@@ -135,13 +135,6 @@
 #define BLOODSUCKER_DRINK_INHUMANELY "bloodsucker_drink_imhumanely"
 
 /**
- * Role defines
- */
-#define ROLE_BLOODSUCKER "Bloodsucker"
-#define ROLE_VAMPIRICACCIDENT "Vampiric Accident"
-#define ROLE_BLOODSUCKERBREAKOUT "Bloodsucker Breakout"
-
-/**
  * Macros
  */
 ///Whether a mob is a Bloodsucker
