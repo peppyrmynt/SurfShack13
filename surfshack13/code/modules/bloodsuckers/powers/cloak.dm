@@ -37,8 +37,7 @@
 	var/mob/living/user = owner
 	was_running = ((user.move_intent == MOVE_INTENT_RUN))
 	if(was_running)
-		user.move_intent = MOVE_INTENT_WALK
-	ADD_TRAIT(user, TRAIT_NO_SPRINT, BLOODSUCKER_TRAIT)
+		user.toggle_move_intent()
 	user.AddElement(/datum/element/digitalcamo)
 	user.balloon_alert(user, "cloak turned on.")
 
@@ -54,7 +53,7 @@
 	// Prevents running while on Cloak of Darkness
 	if(user.move_intent != MOVE_INTENT_WALK)
 		owner.balloon_alert(owner, "you attempt to run, crushing yourself.")
-		user.move_intent = MOVE_INTENT_WALK
+		user.toggle_move_intent()
 		user.adjustBruteLoss(rand(5,15))
 
 /datum/action/cooldown/bloodsucker/cloak/ContinueActive(mob/living/user, mob/living/target)
@@ -72,7 +71,6 @@
 	animate(user, alpha = 255, time = 1 SECONDS)
 	user.RemoveElement(/datum/element/digitalcamo)
 	if(was_running && user.move_intent == MOVE_INTENT_WALK)
-		user.move_intent = MOVE_INTENT_RUN
+		user.toggle_move_intent()
 	user.balloon_alert(user, "cloak turned off.")
-	REMOVE_TRAIT(user, TRAIT_NO_SPRINT, BLOODSUCKER_TRAIT)
 	return ..()

@@ -137,8 +137,13 @@ const BloodsuckerIntro = () => {
           <Stack vertical>
             <Stack.Item>
               Rest in a <b>Coffin</b> to claim it, and that area, as your lair.
+              Claiming an area grants additional bloodsucker structures in
+              structures tab of the crafting menu.
               <br />
-              Examine your new structures to see how they function!
+              Use your structures to your advantage. Namely, the{' '}
+              <b>Persuasion Rack</b> allows you to convert crewmembers into
+              loyal thralls. If you're confused about anything your structures
+              do, try examining them!
               <br />
               Medical and Genetic Analyzers can sell you out, your Masquerade
               ability will hide your identity to prevent this.

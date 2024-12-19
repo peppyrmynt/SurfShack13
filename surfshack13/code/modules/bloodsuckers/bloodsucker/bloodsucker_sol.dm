@@ -151,7 +151,6 @@
 	var/list/datum/action/cooldown/bloodsucker/burdened_actions
 	var/static/list/sol_traits = list(
 		TRAIT_EASILY_WOUNDED,
-		TRAIT_NO_SPRINT,
 	)
 
 /datum/status_effect/bloodsucker_sol/on_apply()

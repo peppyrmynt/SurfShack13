@@ -23,7 +23,7 @@
 	owner.balloon_alert(owner, "fortitude turned on.")
 	to_chat(owner, span_notice("Your flesh, skin, and muscles become as steel."))
 	// Traits & Effects
-	owner.add_traits(list(TRAIT_PIERCEIMMUNE, TRAIT_ANALGESIA, TRAIT_NODISMEMBER, TRAIT_PUSHIMMUNE, TRAIT_NO_SPRINT), FORTITUDE_TRAIT)
+	owner.add_traits(list(TRAIT_PIERCEIMMUNE, TRAIT_ANALGESIA, TRAIT_NODISMEMBER, TRAIT_PUSHIMMUNE), FORTITUDE_TRAIT)
 	if(level_current >= 4)
 		owner.add_traits(list(TRAIT_STUNIMMUNE, TRAIT_CANT_STAMCRIT), FORTITUDE_TRAIT) // They'll get stun resistance + this, who cares.
 	var/mob/living/carbon/human/bloodsucker_user = owner
@@ -34,7 +34,7 @@
 
 	was_running = (bloodsucker_user.move_intent == MOVE_INTENT_RUN)
 	if(was_running)
-		bloodsucker_user.move_intent = MOVE_INTENT_WALK
+		bloodsucker_user.toggle_move_intent()
 
 /datum/action/cooldown/bloodsucker/fortitude/process(seconds_per_tick)
 	// Checks that we can keep using this.
@@ -46,7 +46,7 @@
 	var/mob/living/carbon/user = owner
 	/// Prevents running while on Fortitude
 	if(user.move_intent != MOVE_INTENT_WALK)
-		user.move_intent = MOVE_INTENT_WALK
+		user.toggle_move_intent()
 		user.balloon_alert(user, "you attempt to run, crushing yourself.")
 		user.take_overall_damage(brute = rand(5, 15))
 	/// We don't want people using fortitude being able to use vehicles
@@ -62,10 +62,10 @@
 		if(!HAS_TRAIT_FROM(bloodsucker_user, TRAIT_STUNIMMUNE, FORTITUDE_TRAIT))
 			bloodsucker_user.physiology.stamina_mod /= fortitude_resist
 	// Remove Traits & Effects
-	owner.remove_traits(list(TRAIT_PIERCEIMMUNE, TRAIT_ANALGESIA, TRAIT_NODISMEMBER, TRAIT_PUSHIMMUNE, TRAIT_NO_SPRINT, TRAIT_STUNIMMUNE, TRAIT_CANT_STAMCRIT), FORTITUDE_TRAIT)
+	owner.remove_traits(list(TRAIT_PIERCEIMMUNE, TRAIT_ANALGESIA, TRAIT_NODISMEMBER, TRAIT_PUSHIMMUNE, TRAIT_STUNIMMUNE, TRAIT_CANT_STAMCRIT), FORTITUDE_TRAIT)
 
 	if(was_running && bloodsucker_user.move_intent == MOVE_INTENT_WALK)
-		bloodsucker_user.move_intent = MOVE_INTENT_RUN
+		bloodsucker_user.toggle_move_intent()
 	owner.balloon_alert(owner, "fortitude turned off.")
 
 	return ..()

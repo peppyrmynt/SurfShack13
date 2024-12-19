@@ -144,7 +144,7 @@
 			continue
 		if(!isliving(nearby_viewers) || !nearby_viewers.mind || !nearby_viewers.client)
 			continue
-		if(IS_BLOODSUCKER(nearby_viewers) || IS_VASSAL(nearby_viewers) || HAS_MIND_TRAIT(nearby_viewers, TRAIT_OCCULTIST))
+		if(IS_BLOODSUCKER(nearby_viewers) || IS_VASSAL(nearby_viewers))
 			continue
 		if(issilicon(nearby_viewers) || nearby_viewers.is_blind())
 			continue
