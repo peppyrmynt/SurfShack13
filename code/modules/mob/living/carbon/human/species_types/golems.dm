@@ -17,12 +17,16 @@
 		TRAIT_PIERCEIMMUNE,
 		TRAIT_RADIMMUNE,
 		TRAIT_SNOWSTORM_IMMUNE, // Shared with plasma river... but I guess if you can survive a plasma river a blizzard isn't a big deal
+		TRAIT_RESISTHIGHPRESSURE,
+		TRAIT_RESISTLOWPRESSURE,
+		TRAIT_RESISTHEAT,
+		TRAIT_ASHSTORM_IMMUNE,
 		TRAIT_UNHUSKABLE,
 	)
 	mutantheart = null
 	mutantlungs = null
 	inherent_biotypes = MOB_HUMANOID|MOB_MINERAL
-	damage_modifier = 10 //golem is stronk
+	damage_modifier = 55 //golem is stronk
 	payday_modifier = 1.0
 	siemens_coeff = 0
 	no_equip_flags = ITEM_SLOT_MASK | ITEM_SLOT_OCLOTHING | ITEM_SLOT_GLOVES | ITEM_SLOT_FEET | ITEM_SLOT_ICLOTHING | ITEM_SLOT_SUITSTORE
@@ -49,6 +53,10 @@
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/golem,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/golem,
 	)
+	//How much to slow golems down by
+	var/golem_speed_mod = 1.5
+	//Innate golem buff purge ability
+	var/datum/action/cooldown/golem_purge/golem_purge
 
 /datum/species/golem/get_physical_attributes()
 	return "Golems are hardy creatures made out of stone, which are thus naturally resistant to many dangers, including asphyxiation, fire, radiation, electricity, and viruses.\
@@ -100,3 +108,31 @@
 	))
 
 	return to_add
+
+/datum/species/golem/on_species_gain(mob/living/carbon/new_golem, datum/species/old_species, pref_load, regenerate_icons)
+	. = ..()
+	new_golem.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/golem, multiplicative_slowdown = golem_speed_mod)
+	if(ishuman(new_golem))
+		golem_purge = new
+		golem_purge.Grant(new_golem)
+
+/datum/species/golem/on_species_loss(mob/living/carbon/former_golem, datum/species/new_species, pref_load)
+	. = ..()
+	former_golem.remove_movespeed_modifier(/datum/movespeed_modifier/golem)
+	if(golem_purge)
+		golem_purge.Remove(former_golem)
+
+/// Send an ore detection pulse on a cooldown
+/datum/action/cooldown/golem_purge
+	name = "Ore Purge"
+	desc = "Removes the current buff from your body, allowing you to gain a new one."
+	button_icon = 'icons/obj/stack_objects.dmi'
+	button_icon_state = "sheet-plasma"
+	check_flags = AB_CHECK_CONSCIOUS
+	cooldown_time = 2 MINUTES
+
+/datum/action/cooldown/golem_purge/Activate(atom/target)
+	. = ..()
+	var/mob/living/carbon/golem = target
+	golem.remove_status_effect(/datum/status_effect/golem)
+	to_chat(owner, span_notice("You purge the ore from your body, making yourself adaptable again."))

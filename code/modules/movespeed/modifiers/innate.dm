@@ -10,6 +10,10 @@
 	blacklisted_movetypes = FLYING
 	variable = TRUE
 
+/datum/movespeed_modifier/golem
+	blacklisted_movetypes = FLYING
+	variable = TRUE
+
 // no reason for leg loss (or gain) to affect speed if drifting
 /datum/movespeed_modifier/bodypart
 	blacklisted_movetypes = (FLYING|FLOATING)

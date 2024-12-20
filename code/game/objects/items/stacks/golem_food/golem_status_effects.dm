@@ -1,9 +1,7 @@
 /// Abstract holder for golem status effects, you should never have more than one of these active
 /datum/status_effect/golem
 	id = "golem_status"
-	duration = 5 MINUTES
 	alert_type = /atom/movable/screen/alert/status_effect/golem_status
-	show_duration = TRUE
 	/// Icon state prefix for overlay to display on golem limbs
 	var/overlay_state_prefix
 	/// Name of the mineral we ate to get this
@@ -123,7 +121,10 @@
 	mineral_name = "uranium"
 	applied_fluff = "Glowing crystals sprout from your body. You feel energised!"
 	alert_icon_state = "sheet-uranium"
-	alert_desc = "Internal radiation is providing all of your nutritional needs."
+	alert_desc = "Internal radiation is providing all of your nutritional needs. You're also radioactive, not that it bothers you."
+
+	//Makes us radioactive.
+	var/datum/component/radioactive_emitter/radioactivity
 
 /datum/status_effect/golem/uranium/on_apply()
 	. = ..()
@@ -132,9 +133,16 @@
 	ADD_TRAIT(owner, TRAIT_NOHUNGER, TRAIT_STATUS_EFFECT(id))
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/golem_hunger)
 	owner.remove_status_effect(/datum/status_effect/golem_statued) // Instant fix!
+	radioactivity = owner.AddComponent(\
+	/datum/component/radioactive_emitter,\
+	cooldown_time = 1 SECONDS,\
+	range = 2,\
+	threshold = RAD_MEDIUM_INSULATION,\
+	)
 	return TRUE
 
 /datum/status_effect/golem/uranium/on_remove()
+	QDEL_NULL(radioactivity)
 	REMOVE_TRAIT(owner, TRAIT_NOHUNGER, TRAIT_STATUS_EFFECT(id))
 	return ..()
 
@@ -157,79 +165,57 @@
 	owner.remove_traits(list(TRAIT_ANTIMAGIC, TRAIT_HOLY), TRAIT_STATUS_EFFECT(id))
 	return ..()
 
-/// What do we multiply our damage by to convert it into power?
-#define ENERGY_PER_DAMAGE (0.005 * STANDARD_CELL_CHARGE)
-/// Multiplier to apply to burn damage, not 0 so that we can reverse it more easily
-#define BURN_MULTIPLIER 0.05
-
-/// Heat immunity, turns heat damage into local power
+/// Become a living bomb.
 /datum/status_effect/golem/plasma
 	overlay_state_prefix = "plasma"
 	mineral_name = "plasma"
-	applied_fluff = "Plasma cooling rods sprout from your body. You can take the heat!"
+	applied_fluff = "Plasma sprouts from your body. You feel like a ticking time bomb."
 	alert_icon_state = "sheet-plasma"
-	alert_desc = "You are protected from high pressure and can convert heat damage into power."
+	alert_desc = "Burn damage will cause you to explode violently, killing you and being extremely harmful to those nearby."
 
 /datum/status_effect/golem/plasma/on_apply()
 	. = ..()
 	if (!.)
 		return FALSE
-	owner.add_traits(list(TRAIT_RESISTHIGHPRESSURE, TRAIT_RESISTHEAT, TRAIT_ASHSTORM_IMMUNE), TRAIT_STATUS_EFFECT(id))
 	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE, PROC_REF(on_burned))
-	var/mob/living/carbon/human/human_owner = owner
-	human_owner.physiology.burn_mod *= BURN_MULTIPLIER
 	return TRUE
 
 /datum/status_effect/golem/plasma/on_remove()
-	owner.remove_traits(list(TRAIT_RESISTHIGHPRESSURE, TRAIT_RESISTHEAT, TRAIT_ASHSTORM_IMMUNE), TRAIT_STATUS_EFFECT(id))
 	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE)
-	var/mob/living/carbon/human/human_owner = owner
-	human_owner.physiology.burn_mod /= BURN_MULTIPLIER
 	return ..()
 
-/// When we take fire damage (or... technically also cold damage, we don't differentiate), zap a nearby APC
+/// When we take fire damage (or... technically also cold damage, we don't differentiate), blow up
 /datum/status_effect/golem/plasma/proc/on_burned(datum/source, damage, damagetype, ...)
 	SIGNAL_HANDLER
 	if(damagetype != BURN)
 		return
-
-	var/obj/machinery/power/energy_accumulator/ground = get_closest_atom(/obj/machinery/power/energy_accumulator, view(4, owner), owner)
-	if (ground)
-		zap_effect(ground)
-		ground.zap_act(damage, ZAP_GENERATES_POWER)
-		return
-	var/area/our_area = get_area(owner)
-	var/obj/machinery/power/apc/our_apc = our_area.apc
-	if (!our_apc)
-		return
-	zap_effect(our_apc)
-	our_apc.cell?.give(damage * ENERGY_PER_DAMAGE)
-
-#undef ENERGY_PER_DAMAGE
-#undef BURN_MULTIPLIER
-
-/// Shoot a beam at the target atom
-/datum/status_effect/golem/plasma/proc/zap_effect(atom/target)
-	owner.Beam(target, icon_state = "lightning[rand(1,12)]", time = 0.5 SECONDS)
-	playsound(owner, 'sound/effects/magic/lightningshock.ogg', vol = 50, vary = TRUE)
+	explosion(owner, devastation_range = 1, heavy_impact_range = 2, light_impact_range = 4, flame_range = 5)
 
 /// Makes you spaceproof
 /datum/status_effect/golem/plasteel
 	overlay_state_prefix = "iron"
 	mineral_name = "plasteel"
-	applied_fluff = "Plasteel plates seal you tight. You feel insulated!"
+	applied_fluff = "Plasteel plates seal you tight. You feel secure."
 	alert_icon_state = "sheet-plasteel"
-	alert_desc = "You are sealed against the cold, and against low pressure environments."
+	alert_desc = "You are bulky, greatly reducing burn damage and somewhat reducing brute damage."
+	/// Amount to reduce brute damage by
+	var/brute_modifier = 0.75
+	/// Amount to reduce burn damage by
+	var/burn_modifier = 0.5
 
 /datum/status_effect/golem/plasteel/on_apply()
 	. = ..()
 	if (!.)
 		return FALSE
-	owner.add_traits(list(TRAIT_RESISTLOWPRESSURE, TRAIT_RESISTCOLD), TRAIT_STATUS_EFFECT(id))
+	var/mob/living/carbon/human/human_owner = owner
+	human_owner.physiology.brute_mod *= brute_modifier
+	human_owner.physiology.burn_mod *= burn_modifier
 	return TRUE
 
 /datum/status_effect/golem/plasteel/on_remove()
-	owner.remove_traits(list(TRAIT_RESISTLOWPRESSURE, TRAIT_RESISTCOLD), TRAIT_STATUS_EFFECT(id))
+	var/mob/living/carbon/human/human_owner = owner
+	human_owner.physiology.brute_mod /= brute_modifier
+	human_owner.physiology.burn_mod /= burn_modifier
 	return ..()
 
 /// Makes you reflect energy projectiles
@@ -333,7 +319,7 @@
 	/// Amount to reduce brute damage by
 	var/brute_modifier = 0.7
 	/// How much extra damage do we do with our fists?
-	var/damage_increase = 3
+	var/damage_increase = 10
 	/// Deal this much extra damage to mining mobs, most of which take 0 unarmed damage usually
 	var/mining_bonus = 30
 	/// List of arms we have updated
