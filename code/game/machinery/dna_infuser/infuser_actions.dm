@@ -54,7 +54,7 @@
 	ink.firer = caller
 	ink.fire()
 	playsound(caller, 'sound/items/weapons/pierce.ogg', 20, TRUE, -1)
-	caller.newtonian_move(get_angle(target, caller))
+	caller.newtonian_move(get_dir(target, caller))
 	StartCooldown()
 	return TRUE
 
