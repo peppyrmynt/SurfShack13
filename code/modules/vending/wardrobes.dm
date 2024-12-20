@@ -60,6 +60,7 @@ GLOBAL_VAR_INIT(roaches_deployed, FALSE)
 		/obj/item/storage/backpack/satchel/sec = 3,
 		/obj/item/storage/backpack/duffelbag/sec = 3,
 		/obj/item/storage/backpack/messenger/sec = 3,
+		/obj/item/clothing/mask/balaclava = 3,
 	)
 	premium = list(
 		/obj/item/clothing/under/rank/security/officer/formal = 3,
