@@ -480,8 +480,7 @@ GLOBAL_VAR_INIT(roaches_deployed, FALSE)
 		/obj/item/radio/headset/headset_srv = 2,
 	)
 	refill_canister = /obj/item/vending_refill/wardrobe/jani_wardrobe
-	default_price = PAYCHECK_ZERO
-	extra_price = PAYCHECK_ZERO
+	all_products_free = TRUE
 	payment_department = ACCOUNT_SRV
 	light_color = COLOR_STRONG_MAGENTA
 
