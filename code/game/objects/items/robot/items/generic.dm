@@ -18,15 +18,8 @@
 /obj/item/borg/stun
 	name = "electrically-charged arm"
 	icon_state = "elecarm"
-	var/stamina_damage = 60 //Same as normal batong
-	var/cooldown_check = 0
-	/// cooldown between attacks
-	var/cooldown = 4 SECONDS // same as baton
 
 /obj/item/borg/stun/attack(mob/living/attacked_mob, mob/living/user)
-	if(cooldown_check > world.time)
-		user.balloon_alert(user, "still recharging!")
-		return
 	if(ishuman(attacked_mob))
 		var/mob/living/carbon/human/human = attacked_mob
 		if(human.check_block(src, 0, "[attacked_mob]'s [name]", MELEE_ATTACK))
@@ -38,24 +31,14 @@
 			return
 
 	user.do_attack_animation(attacked_mob)
-	attacked_mob.adjustStaminaLoss(stamina_damage)
-	attacked_mob.set_confusion_if_lower(5 SECONDS)
-	attacked_mob.adjust_stutter(20 SECONDS)
-	attacked_mob.set_jitter_if_lower(5 SECONDS)
-	if(issilicon(attacked_mob))
-		attacked_mob.emp_act(EMP_HEAVY)
-		attacked_mob.visible_message(
-			span_danger("[user] shocks [attacked_mob] with [src]!"),
-			span_userdanger("[user] shocks you with [src]!"),
-		)
-	else
-		attacked_mob.visible_message(
-			span_danger("[user] prods [attacked_mob] with [src]!"),
-			span_userdanger("[user] prods you with [src]!"),
-		)
+	attacked_mob.Paralyze(100)
+	attacked_mob.adjust_stutter(10 SECONDS)
+
+	attacked_mob.visible_message(span_danger("[user] prods [attacked_mob] with [src]!"), \
+					span_userdanger("[user] prods you with [src]!"))
 
 	playsound(loc, 'sound/items/weapons/egloves.ogg', 50, TRUE, -1)
-	cooldown_check = world.time + cooldown
+
 	log_combat(user, attacked_mob, "stunned", src, "(Combat mode: [user.combat_mode ? "On" : "Off"])")
 
 #undef CYBORG_STUN_CHARGE_COST
