@@ -115,10 +115,6 @@
 
 //Current stations
 
-// Birdshot: added Apr 29, 2023 (#74371)
-/obj/structure/plaque/static_plaque/golden/commission/birdshot
-	desc = "Spinward Sector Station SS-13\n'Birdshot' Class Outpost\nCommissioned 29/04/2563\n'Shooting for the Stars'"
-
 // Deltastation: added Dec 17, 2016 (#22066)
 /obj/structure/plaque/static_plaque/golden/commission/delta
 	desc = "Spinward Sector Station SS-13\n'Delta' Class Outpost\nCommissioned 17/12/2556\n'Efficiency Through Redundancy'"
@@ -152,6 +148,10 @@
 // Birdboat Station: added Sep 17, 2015 (#11829), removed Feb 09, 2017 (#23754)- 1 year, 4 months, 23 days
 /obj/structure/plaque/static_plaque/golden/commission/birdboat
 	desc = "Spinward Sector Station SS-03\n'Birdboat' Class Outpost\nCommissioned 17/09/2555\nDecommissioned 09/02/2557\n'Rocking the Boat'"
+
+// Birdshot: added Apr 29, 2023 (#74371), removed Dec 23, 2024
+/obj/structure/plaque/static_plaque/golden/commission/birdshot
+	desc = "Spinward Sector Station SS-13\n'Birdshot' Class Outpost\nCommissioned 29/04/2563\n'Shooting for the Stars'"
 
 // Boxstation: added Nov 15, 2010 (pre-git), removed Jul 06, 2020 (#52017)- 9 years, 7 months, 21 days
 /obj/structure/plaque/static_plaque/golden/commission/box

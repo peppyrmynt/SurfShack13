@@ -95,6 +95,5 @@
 		"whiteship_tram",
 		"whiteship_personalshuttle",
 		"whiteship_obelisk",
-		"whiteship_birdshot",
 	)
 
