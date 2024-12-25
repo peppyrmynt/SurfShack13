@@ -106,8 +106,6 @@
 
 /obj/item/clothing/head/utility/bomb_hood/Initialize(mapload)
 	. = ..()
-	if(flags_inv & HIDEFACE)
-		AddComponent(/datum/component/clothing_fov_visor, FOV_90_DEGREES)
 	AddComponent(/datum/component/adjust_fishing_difficulty, 8)
 	AddComponent(/datum/component/hat_stabilizer, loose_hat = TRUE)
 
@@ -187,8 +185,6 @@
 
 /obj/item/clothing/head/utility/radiation/Initialize(mapload)
 	. = ..()
-	if(flags_inv & HIDEFACE)
-		AddComponent(/datum/component/clothing_fov_visor, FOV_90_DEGREES)
 	AddComponent(/datum/component/adjust_fishing_difficulty, 7)
 	AddComponent(/datum/component/hat_stabilizer, loose_hat = TRUE)
 
