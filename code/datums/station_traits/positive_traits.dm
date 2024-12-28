@@ -161,7 +161,6 @@
 	trait_type = STATION_TRAIT_POSITIVE
 	show_in_report = TRUE
 	abstract_type = /datum/station_trait/deathrattle_department
-	blacklist = list(/datum/station_trait/deathrattle_all)
 
 	var/department_to_apply_to
 	var/department_name = "department"
