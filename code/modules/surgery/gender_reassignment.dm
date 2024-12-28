@@ -24,7 +24,6 @@
 			user.visible_message("[user] begins to reshape [target]'s genitals to look more feminine.", "<span class='notice'>You begin to reshape [target]'s genitals to look more feminine...</span>")
 
 /datum/surgery_step/reshape_genitals/success(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
-	var/mob/living/carbon/human/H = target	//no type check, as that should be handled by the surgery
 	if(ishuman(target))
 		var/mob/living/carbon/human/target_human = target
 		if(target_human.physique == FEMALE)
@@ -37,12 +36,5 @@
 			target_human.gender = FEMALE
 			target_human.physique = FEMALE
 			target_human.update_body_parts(TRUE)
-	target.regenerate_icons()
-	return TRUE
-
-/datum/surgery_step/reshape_genitals/failure(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
-	var/mob/living/carbon/human/H = target
-	user.visible_message("<span class='warning'>[user] accidentally mutilates [target]'s genitals beyond the point of recognition!</span>", "<span class='warning'>You accidentally mutilate [target]'s genitals beyond the point of recognition!</span>")
-	target.gender = pick(MALE, FEMALE)
 	target.regenerate_icons()
 	return TRUE

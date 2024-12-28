@@ -228,27 +228,6 @@
 	department_to_apply_to = DEPARTMENT_BITFLAG_MEDICAL
 	department_name = "Medical"
 
-/datum/station_trait/deathrattle_all
-	name = "Deathrattled Station"
-	trait_type = STATION_TRAIT_POSITIVE
-	show_in_report = TRUE
-	weight = 1
-	report_message = "All members of the station have received an implant to notify each other if one of them dies. This should help improve job-safety!"
-	var/datum/deathrattle_group/deathrattle_group
-
-/datum/station_trait/deathrattle_all/New()
-	. = ..()
-	deathrattle_group = new("station group")
-	blacklist = subtypesof(/datum/station_trait/deathrattle_department)
-	RegisterSignal(SSdcs, COMSIG_GLOB_JOB_AFTER_SPAWN, PROC_REF(on_job_after_spawn))
-
-/datum/station_trait/deathrattle_all/proc/on_job_after_spawn(datum/source, datum/job/job, mob/living/spawned, client/player_client)
-	SIGNAL_HANDLER
-
-	var/obj/item/implant/deathrattle/implant_to_give = new()
-	deathrattle_group.register(implant_to_give)
-	implant_to_give.implant(spawned, spawned, TRUE, TRUE)
-
 /datum/station_trait/cybernetic_revolution
 	name = "Cybernetic Revolution"
 	trait_type = STATION_TRAIT_POSITIVE
