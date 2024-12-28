@@ -547,3 +547,10 @@
 	base_icon_state = "britcup"
 	volume = 30
 	spillable = TRUE
+
+/obj/item/reagent_containers/cup/glass/colocup/lean
+	name = "lean"
+	desc = "A cup of that purple drank, the stuff that makes you go WHEEZY BABY."
+	list_reagents = list(/datum/reagent/consumable/lean = 20)
+	random_sprite = FALSE
+	icon_state = "lean"
