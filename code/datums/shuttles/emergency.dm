@@ -125,7 +125,6 @@
 	name = "Grand Corporate Monastery"
 	description = "Originally built for a public station, this grand edifice to religion, due to budget cuts, is now available as an escape shuttle for the right... donation. Due to its large size and callous owners, this shuttle may cause collateral damage."
 	admin_notes = "WARNING: This shuttle WILL destroy a fourth of the station, likely picking up a lot of objects with it."
-	emag_only = TRUE
 	credit_cost = EMAG_LOCKED_SHUTTLE_COST * 1.8
 	movement_force = list("KNOCKDOWN" = 3, "THROW" = 5)
 	occupancy_limit = "70"
@@ -136,7 +135,6 @@
 	description = "A luxurious golden shuttle complete with an indoor swimming pool. Each crewmember wishing to board must bring 500 credits, payable in cash and mineral coin."
 	extra_desc = "This shuttle costs 500 credits to board."
 	admin_notes = "Due to the limited space for non paying crew, this shuttle may cause a riot."
-	emag_only = TRUE
 	credit_cost = EMAG_LOCKED_SHUTTLE_COST
 	occupancy_limit = "75"
 
@@ -157,7 +155,6 @@
 	name = "Disco Inferno"
 	description = "The glorious results of centuries of plasma research done by Nanotrasen employees. This is the reason why you are here. Get on and dance like you're on fire, burn baby burn!"
 	admin_notes = "Flaming hot. The main area has a dance machine as well as plasma floor tiles that will be ignited by players every single time."
-	emag_only = TRUE
 	credit_cost = EMAG_LOCKED_SHUTTLE_COST
 	occupancy_limit = "10"
 
@@ -326,7 +323,6 @@
 	Outside of admin intervention, it cannot explode. \
 	It does, however, still dust anything on contact, emits high levels of radiation, and induce hallucinations in anyone looking at it without protective goggles. \
 	Emitters spawn powered on, expect admin notices, they are harmless."
-	emag_only = TRUE
 	credit_cost = EMAG_LOCKED_SHUTTLE_COST
 	movement_force = list("KNOCKDOWN" = 3, "THROW" = 2)
 	occupancy_limit = "15"
@@ -337,7 +333,6 @@
 	description = "How was space work today? Oh, pretty good. We got a new space station and the company will make a lot of money. What space station? I cannot tell you; it's space confidential. \
 	Aw, come space on. Why not? No, I can't. Anyway, how is your space roleplay life?"
 	admin_notes = "Tiny, with a single airlock and wooden walls. What could go wrong?"
-	emag_only = TRUE
 	credit_cost = EMAG_LOCKED_SHUTTLE_COST
 	movement_force = list("KNOCKDOWN" = 3, "THROW" = 2)
 	occupancy_limit = "5"
