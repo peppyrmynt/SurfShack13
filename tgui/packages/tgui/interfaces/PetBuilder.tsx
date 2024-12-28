@@ -31,7 +31,6 @@ type Data = {
 enum PetGender {
   male = 'male',
   female = 'female',
-  neuter = 'neuter',
 }
 
 type CarrierOptions = {
@@ -338,13 +337,6 @@ const PetDetails = ({
                 selected={selectedGender === PetGender.female}
                 icon="venus"
                 onClick={() => setSelectedGender(PetGender.female)}
-              />
-            </Stack.Item>
-            <Stack.Item grow>
-              <Button
-                selected={selectedGender === PetGender.neuter}
-                icon="neuter"
-                onClick={() => setSelectedGender(PetGender.neuter)}
               />
             </Stack.Item>
           </Stack>

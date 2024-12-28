@@ -978,10 +978,23 @@
 
 	if(L.gender == MALE)
 		L.gender = FEMALE
+		if(ishuman(L))
+			var/mob/living/carbon/human/human = L
+			human.physique = FEMALE
+			human.set_facial_hairstyle(random_facial_hairstyle(FEMALE), TRUE)
+			human.set_hairstyle(random_hairstyle(FEMALE))
 		L.visible_message(span_boldnotice("[L] suddenly looks more feminine!"), span_boldwarning("You suddenly feel more feminine!"))
 	else
 		L.gender = MALE
+		if(ishuman(L))
+			var/mob/living/carbon/human/human = L
+			human.physique = MALE
+			human.set_facial_hairstyle(random_facial_hairstyle(MALE), TRUE)
+			human.set_hairstyle(random_hairstyle(MALE))
 		L.visible_message(span_boldnotice("[L] suddenly looks more masculine!"), span_boldwarning("You suddenly feel more masculine!"))
+	if(ishuman(L))
+		var/mob/living/carbon/human/human = L
+		human.update_body_parts(TRUE)
 	L.regenerate_icons()
 	qdel(src)
 
