@@ -85,3 +85,8 @@
 	name = "Pocket Protector (Filled)"
 	item_path = /obj/item/clothing/accessory/pocketprotector/full
 	additional_displayed_text = list("Contains pens")
+
+/datum/loadout_item/accessory/pride
+	name = "Pride Pin"
+	item_path = /obj/item/clothing/accessory/pride
+	can_be_reskinned = TRUE
