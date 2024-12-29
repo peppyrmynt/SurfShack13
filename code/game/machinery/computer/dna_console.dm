@@ -1309,7 +1309,7 @@
 				return
 
 			var/type = params["type"]
-			var/obj/item/dnainjector/timed/I
+			var/obj/item/dnainjector/I
 
 			switch(type)
 				if("ui")
@@ -1320,7 +1320,7 @@
 						to_chat(usr,span_warning("Genetic data corrupted, unable to create injector."))
 						return
 
-					I = new /obj/item/dnainjector/timed(loc)
+					I = new /obj/item/dnainjector(loc)
 					I.fields = list("UI"=buffer_slot["UI"])
 
 					// If there is a connected scanner, we can use its upgrades to reduce
@@ -1335,7 +1335,7 @@
 						to_chat(usr,span_warning("Genetic data corrupted, unable to create injector."))
 						return
 
-					I = new /obj/item/dnainjector/timed(loc)
+					I = new /obj/item/dnainjector(loc)
 					I.fields = list("name"=buffer_slot["name"], "UE"=buffer_slot["UE"], "blood_type"=buffer_slot["blood_type"])
 
 					// If there is a connected scanner, we can use its upgrades to reduce
@@ -1350,7 +1350,7 @@
 						to_chat(usr,span_warning("Genetic data corrupted, unable to create injector."))
 						return
 
-					I = new /obj/item/dnainjector/timed(loc)
+					I = new /obj/item/dnainjector(loc)
 					I.fields = list("name"=buffer_slot["name"], "UF"=buffer_slot["UF"])
 
 					// If there is a connected scanner, we can use its upgrades to reduce
@@ -1365,7 +1365,7 @@
 						to_chat(usr,span_warning("Genetic data corrupted, unable to create injector."))
 						return
 
-					I = new /obj/item/dnainjector/timed(loc)
+					I = new /obj/item/dnainjector(loc)
 					I.fields = list("UI"=buffer_slot["UI"],"name"=buffer_slot["name"], "UE"=buffer_slot["UE"], "UF"=buffer_slot["UF"], "blood_type"=buffer_slot["blood_type"])
 
 					// If there is a connected scanner, we can use its upgrades to reduce
