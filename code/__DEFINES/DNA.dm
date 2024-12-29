@@ -41,8 +41,9 @@
 #define DNA_HAIR_COLOR_GRADIENT_BLOCK 10
 #define DNA_FACIAL_HAIRSTYLE_GRADIENT_BLOCK 11
 #define DNA_FACIAL_HAIR_COLOR_GRADIENT_BLOCK 12
+#define DNA_PHYSIQUE_BLOCK 13
 
-#define DNA_UNI_IDENTITY_BLOCKS 12
+#define DNA_UNI_IDENTITY_BLOCKS 13
 
 /// This number needs to equal the total number of DNA blocks
 #define DNA_MUTANT_COLOR_BLOCK 1
@@ -138,6 +139,13 @@
 #define G_FEMALE 2
 #define G_PLURAL 3
 #define G_NEUTER 4
+
+//Used for mob's genetic physique
+#define PHYSIQUE 4
+#define P_MALE 1
+#define P_FEMALE 2
+#define P_PLURAL 3
+#define P_NEUTER 4
 
 /// Defines how a mob's organs_slot is ordered
 /// Exists so Life()'s organ process order is consistent

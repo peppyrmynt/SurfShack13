@@ -972,29 +972,34 @@
 		to_chat(user, span_warning("The potion can only be used on living things!"))
 		return
 
-	if(L.gender != MALE && L.gender != FEMALE)
+	if(L.gender != MALE && L.gender != FEMALE && !ishuman(L))
 		to_chat(user, span_warning("The potion can only be used on gendered things!"))
 		return
 
-	if(L.gender == MALE)
-		L.gender = FEMALE
-		if(ishuman(L))
-			var/mob/living/carbon/human/human = L
-			human.physique = FEMALE
-			human.set_facial_hairstyle(random_facial_hairstyle(FEMALE), TRUE)
-			human.set_hairstyle(random_hairstyle(FEMALE))
-		L.visible_message(span_boldnotice("[L] suddenly looks more feminine!"), span_boldwarning("You suddenly feel more feminine!"))
-	else
-		L.gender = MALE
-		if(ishuman(L))
-			var/mob/living/carbon/human/human = L
+	if(ishuman(L))
+		var/mob/living/carbon/human/human = L
+		if(L.gender == FEMALE)
+			human.gender = MALE
 			human.physique = MALE
 			human.set_facial_hairstyle(random_facial_hairstyle(MALE), TRUE)
 			human.set_hairstyle(random_hairstyle(MALE))
-		L.visible_message(span_boldnotice("[L] suddenly looks more masculine!"), span_boldwarning("You suddenly feel more masculine!"))
-	if(ishuman(L))
-		var/mob/living/carbon/human/human = L
+			human.visible_message(span_boldnotice("[human] suddenly looks more masculine!"), span_boldwarning("You suddenly feel more masculine!"))
+		else
+			human.gender = FEMALE
+			human.physique = FEMALE
+			human.set_facial_hairstyle(random_facial_hairstyle(FEMALE), TRUE)
+			human.set_hairstyle(random_hairstyle(FEMALE))
+			human.visible_message(span_boldnotice("[human] suddenly looks more feminine!"), span_boldwarning("You suddenly feel more feminine!"))
 		human.update_body_parts(TRUE)
+
+	else
+		if(L.gender == MALE)
+			L.gender = FEMALE
+			L.visible_message(span_boldnotice("[L] suddenly looks more feminine!"), span_boldwarning("You suddenly feel more feminine!"))
+		else
+			L.gender = MALE
+			L.visible_message(span_boldnotice("[L] suddenly looks more masculine!"), span_boldwarning("You suddenly feel more masculine!"))
+
 	L.regenerate_icons()
 	qdel(src)
 

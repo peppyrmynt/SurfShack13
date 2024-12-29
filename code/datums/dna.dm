@@ -193,6 +193,28 @@ GLOBAL_LIST_INIT(total_uf_len_by_block, populate_total_uf_len_by_block())
 		else
 			L[DNA_GENDER_BLOCK] = construct_block(G_PLURAL, GENDERS)
 	if(ishuman(holder))
+		var/mob/living/carbon/human/human = holder
+		switch(human.physique)
+			if(MALE)
+				L[DNA_PHYSIQUE_BLOCK] = construct_block(P_MALE, PHYSIQUE)
+			if(FEMALE)
+				L[DNA_PHYSIQUE_BLOCK] = construct_block(P_FEMALE, PHYSIQUE)
+			if(NEUTER)
+				L[DNA_PHYSIQUE_BLOCK] = construct_block(P_NEUTER, PHYSIQUE)
+			else
+				L[DNA_PHYSIQUE_BLOCK] = construct_block(P_PLURAL, PHYSIQUE)
+	else
+		switch(holder.gender)
+			if(MALE)
+				L[DNA_PHYSIQUE_BLOCK] = construct_block(P_MALE, PHYSIQUE)
+			if(FEMALE)
+				L[DNA_PHYSIQUE_BLOCK] = construct_block(P_FEMALE, PHYSIQUE)
+			if(NEUTER)
+				L[DNA_PHYSIQUE_BLOCK] = construct_block(P_NEUTER, PHYSIQUE)
+			else
+				L[DNA_PHYSIQUE_BLOCK] = construct_block(P_PLURAL, PHYSIQUE)
+
+	if(ishuman(holder))
 		var/mob/living/carbon/human/H = holder
 		if(length(SSaccessories.hairstyles_list) == 0 || length(SSaccessories.facial_hairstyles_list) == 0)
 			CRASH("SSaccessories lists are empty, this is bad!")
@@ -343,6 +365,16 @@ GLOBAL_LIST_INIT(total_uf_len_by_block, populate_total_uf_len_by_block())
 					set_uni_identity_block(blocknumber, construct_block(G_NEUTER, GENDERS))
 				else
 					set_uni_identity_block(blocknumber, construct_block(G_PLURAL, GENDERS))
+		if(DNA_PHYSIQUE_BLOCK)
+			switch(H.physique)
+				if(MALE)
+					set_uni_identity_block(blocknumber, construct_block(P_MALE, PHYSIQUE))
+				if(FEMALE)
+					set_uni_identity_block(blocknumber, construct_block(P_FEMALE, PHYSIQUE))
+				if(NEUTER)
+					set_uni_identity_block(blocknumber, construct_block(P_NEUTER, PHYSIQUE))
+				else
+					set_uni_identity_block(blocknumber, construct_block(P_PLURAL, PHYSIQUE))
 		if(DNA_FACIAL_HAIRSTYLE_BLOCK)
 			set_uni_identity_block(blocknumber, construct_block(SSaccessories.facial_hairstyles_list.Find(H.facial_hairstyle), length(SSaccessories.facial_hairstyles_list)))
 		if(DNA_HAIRSTYLE_BLOCK)
@@ -638,7 +670,15 @@ GLOBAL_LIST_INIT(total_uf_len_by_block, populate_total_uf_len_by_block())
 
 	if(ishuman(src))
 		var/mob/living/carbon/human/human = src
-		human.physique = gender
+		switch(deconstruct_block(get_uni_identity_block(dna.unique_identity, DNA_PHYSIQUE_BLOCK), PHYSIQUE))
+			if(P_MALE)
+				human.physique = MALE
+			if(P_FEMALE)
+				human.physique = FEMALE
+			if(P_NEUTER)
+				human.physique = NEUTER
+			else
+				human.physique = PLURAL
 
 /mob/living/carbon/human/updateappearance(icon_update = TRUE, mutcolor_update = FALSE, mutations_overlay_update = FALSE)
 	..()
