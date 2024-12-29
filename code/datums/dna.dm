@@ -636,6 +636,10 @@ GLOBAL_LIST_INIT(total_uf_len_by_block, populate_total_uf_len_by_block())
 		else
 			gender = PLURAL
 
+	if(ishuman(src))
+		var/mob/living/carbon/human/human = src
+		human.physique = gender
+
 /mob/living/carbon/human/updateappearance(icon_update = TRUE, mutcolor_update = FALSE, mutations_overlay_update = FALSE)
 	..()
 	var/structure = dna.unique_identity

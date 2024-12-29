@@ -67,8 +67,6 @@
 	name = "Transformation Sting"
 	desc = "We silently sting an organism, injecting a retrovirus that forces them to transform."
 	helptext = "The victim will transform much like a changeling would. \
-		For complex humanoids, the transformation is temporarily, but the duration is paused while the victim is dead or in stasis. \
-		For more simple humanoids, such as monkeys, the transformation is permanent. \
 		Does not provide a warning to others. Mutations will not be transferred."
 	button_icon_state = "sting_transform"
 	chemical_cost = 33 // Low enough that you can sting only two people in quick succession
@@ -76,7 +74,7 @@
 	/// A reference to our active profile, which we grab DNA from
 	VAR_FINAL/datum/changeling_profile/selected_dna
 	/// Duration of the sting
-	var/sting_duration = 8 MINUTES
+	var/sting_duration = INFINITY
 	/// Set this to false via VV to allow golem, plasmaman, or monkey changelings to turn other people into golems, plasmamen, or monkeys
 	var/verify_valid_species = TRUE
 
@@ -86,7 +84,7 @@
 
 /datum/action/changeling/sting/transformation/update_button_name(atom/movable/screen/movable/action_button/button, force)
 	. = ..()
-	button.desc += " Lasts [DisplayTimeText(sting_duration)] for humans, but duration is paused while dead or in stasis."
+	button.desc += " Is permanent."
 	button.desc += " Costs [chemical_cost] chemicals."
 
 /datum/action/changeling/sting/transformation/Destroy()
@@ -128,9 +126,6 @@
 /datum/action/changeling/sting/transformation/sting_action(mob/living/user, mob/living/target)
 	var/final_duration = sting_duration
 	var/final_message = span_notice("We transform [target] into [selected_dna.dna.real_name].")
-	if(ismonkey(target))
-		final_duration = INFINITY
-		final_message = span_warning("Our genes cry out as we transform the lesser form of [target] into [selected_dna.dna.real_name] permanently!")
 
 	if(target.apply_status_effect(/datum/status_effect/temporary_transformation/trans_sting, final_duration, selected_dna.dna))
 		..()
