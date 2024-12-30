@@ -333,3 +333,9 @@
 	desc = "A single bottle of Interdyne brand experimental medication, used for treating people suffering from hereditary manifold disease."
 	cost = PAYCHECK_CREW * 6.5
 	contains = list(/obj/item/storage/pill_bottle/sansufentanyl)
+
+/datum/supply_pack/goody/combatknives_single
+	name = "Combat Knife Single-Pack"
+	desc = "Contains one sharpened combat knive. Guaranteed to fit snugly inside any Nanotrasen-standard boot."
+	cost = PAYCHECK_COMMAND * 3.5
+	contains = list(/obj/item/knife/combat)
