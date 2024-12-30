@@ -347,3 +347,12 @@
 	access_view = ACCESS_SECURITY
 	contains = list(/obj/item/clothing/glasses/sunglasses = 1)
 	crate_name = "sunglasses crate"
+
+/datum/supply_pack/security/armory/combatknives
+	name = "Combat Knives Crate"
+	desc = "Contains three sharpened combat knives. Each knife guaranteed to fit snugly inside any Nanotrasen-standard boot. Requires Armory access to open."
+	cost = CARGO_CRATE_VALUE * 4.5
+	contains = list(/obj/item/knife/combat,
+					/obj/item/knife/combat,
+					/obj/item/knife/combat)
+	crate_name = "combat knife crate"
