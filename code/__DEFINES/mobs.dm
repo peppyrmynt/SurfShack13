@@ -1015,8 +1015,3 @@ GLOBAL_LIST_INIT(layers_to_offset, list(
 /// Distance which you can see someone's ID card
 /// Short enough that you can inspect over tables (bartender checking age)
 #define ID_EXAMINE_DISTANCE 3
-
-//Surf Shack 13
-
-///Swarmer flags
-#define SWARMER_LIGHT_ON (1<<0)
