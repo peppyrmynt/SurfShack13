@@ -65,9 +65,6 @@
 /turf/open/swarmer_act()//ex_act() on turf calls it on its contents, this is to prevent attacking mobs by DisIntegrate()'ing the floor
 	return FALSE
 
-/obj/structure/lattice/catwalk/swarmer_catwalk/swarmer_act()
-	return FALSE
-
 /obj/effect/swarmer_act()
 	return FALSE
 
@@ -81,11 +78,6 @@
 	return FALSE
 
 /obj/structure/flora/swarmer_act()
-	return FALSE
-
-/turf/open/lava/swarmer_act()
-	if(!is_safe())
-		new /obj/structure/lattice/catwalk/swarmer_catwalk(src)
 	return FALSE
 
 /obj/machinery/atmospherics/swarmer_act()
