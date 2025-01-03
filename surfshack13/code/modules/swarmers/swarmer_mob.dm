@@ -135,24 +135,6 @@
 	swarmer_target.revive(HEAL_ALL)
 
 /**
- * Called when a swarmer creates a structure or drone
- *
- * Proc called whenever a swarmer creates a structure or drone
- * Arguments:
- * * fabrication_object - The atom to create
- * * fabrication_cost - How many resources it costs for a swarmer to create the object
- */
-/mob/living/basic/swarmer/proc/Fabricate(atom/fabrication_object,fabrication_cost = 0)
-	if(!isturf(loc))
-		to_chat(src, span_warning("This is not a suitable location for fabrication. We need more space."))
-		return
-	if(resources < fabrication_cost)
-		to_chat(src, span_warning("You do not have the necessary resources to fabricate this object."))
-		return
-	update_resource_value(-fabrication_cost)
-	return new fabrication_object(drop_location())
-
-/**
  * Called when a swarmer attempts to consume an object
  *
  * Proc which determines interaction between a swarmer and whatever it is attempting to consume

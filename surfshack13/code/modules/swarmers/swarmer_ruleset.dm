@@ -32,6 +32,7 @@
 	// Everyone who signs up for this gets the role.
 	required_candidates = candidates.len
 	. = ..()
+	priority_announce("Long-range sensors indicate [station_name()] has been breached by swarmers. The crew is advised to protect precious material stores and disable the threat.", "Intrusion Alert")
 
 /datum/dynamic_ruleset/midround/from_ghosts/swarmers/generate_ruleset_body(mob/applicant)
 	var/mob/living/basic/swarmer/swarmer = new(spawn_loc)
