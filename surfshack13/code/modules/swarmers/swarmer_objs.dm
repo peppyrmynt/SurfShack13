@@ -6,15 +6,11 @@
 	icon_state = "ui_light"
 	layer = MOB_LAYER
 	resistance_flags = FIRE_PROOF | UNACIDABLE | ACID_PROOF
-	light_color = LIGHT_COLOR_CYAN
 	max_integrity = 30
 	anchored = TRUE
-	///How strong the light effect for the structure is
-	var/glow_range = 1
-
-/obj/structure/swarmer/Initialize(mapload)
-	. = ..()
-	set_light(glow_range)
+	light_system = OVERLAY_LIGHT
+	light_range = 1
+	light_on = TRUE
 
 /obj/structure/swarmer/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)
