@@ -6550,4 +6550,12 @@
 #include "surfshack13\code\modules\bloodsuckers\vassals\vassal_pinpointer.dm"
 #include "surfshack13\code\modules\bloodsuckers\vassals\types\favorite.dm"
 #include "surfshack13\code\modules\bloodsuckers\vassals\types\revenge.dm"
+#include "surfshack13\code\modules\swarmers\swarmer_act.dm"
+#include "surfshack13\code\modules\swarmers\swarmer_actions.dm"
+#include "surfshack13\code\modules\swarmers\swarmer_antag.dm"
+#include "surfshack13\code\modules\swarmers\swarmer_hud.dm"
+#include "surfshack13\code\modules\swarmers\swarmer_language.dm"
+#include "surfshack13\code\modules\swarmers\swarmer_mob.dm"
+#include "surfshack13\code\modules\swarmers\swarmer_objs.dm"
+#include "surfshack13\code\modules\swarmers\swarmer_ruleset.dm"
 // END_INCLUDE
