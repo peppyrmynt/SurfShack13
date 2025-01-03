@@ -1,7 +1,7 @@
 //And everybody clapped.
 /mob/living/basic/swarmer
 	name = "swarmer"
-	desc = "Malware of the space age. These self-replicating robots consume metal to create vapid structures to ensure their survival."
+	desc = "Malware of the space age. These robotic pests consume metal to create vapid structures to ensure their survival, and almost always come in groups."
 	icon = 'surfshack13/icons/swarmers/swarmer.dmi'
 	icon_state = "swarmer"
 	icon_living = "swarmer"
