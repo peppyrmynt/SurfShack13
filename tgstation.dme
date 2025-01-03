@@ -6521,7 +6521,6 @@
 #include "surfshack13\code\modules\bloodsuckers\bloodsucker\bloodsucker_overwrites.dm"
 #include "surfshack13\code\modules\bloodsuckers\bloodsucker\bloodsucker_ruleset.dm"
 #include "surfshack13\code\modules\bloodsuckers\bloodsucker\bloodsucker_sol.dm"
-#include "surfshack13\code\modules\bloodsuckers\bloodsucker\bloodsucker_traumas.dm"
 #include "surfshack13\code\modules\bloodsuckers\clans\_clan_base.dm"
 #include "surfshack13\code\modules\bloodsuckers\controllers\sunlight.dm"
 #include "surfshack13\code\modules\bloodsuckers\powers\_base_power.dm"
