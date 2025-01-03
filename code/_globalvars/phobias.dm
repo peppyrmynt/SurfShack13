@@ -90,6 +90,7 @@ GLOBAL_LIST_INIT(phobia_mobs, list(
 		/mob/living/silicon/ai,
 		/mob/living/silicon/robot,
 		/mob/living/simple_animal/bot,
+		/mob/living/basic/swarmer,
 	)),
 	"security" = typecacheof(list(/mob/living/simple_animal/bot/secbot)),
 	"spiders" = typecacheof(list(/mob/living/basic/spider/giant)),

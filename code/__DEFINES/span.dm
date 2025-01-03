@@ -136,6 +136,7 @@
 #define span_subheader_announcement_text(str) ("<span class='subheader_announcement_text'>" + str + "</span>")
 #define span_suicide(str) ("<span class='suicide'>" + str + "</span>")
 #define span_suppradio(str) ("<span class='suppradio'>" + str + "</span>")
+#define span_swarmer(str) ("<span class='swarmer'>" + str + "</span>")
 #define span_syndradio(str) ("<span class='syndradio'>" + str + "</span>")
 #define span_tape_recorder(str) ("<span class='tape_recorder'>" + str + "</span>")
 #define span_tinydanger(str) ("<span class='tinydanger'>" + str + "</span>")
