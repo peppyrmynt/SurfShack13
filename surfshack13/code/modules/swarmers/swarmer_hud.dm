@@ -1,8 +1,3 @@
-/// 1 tile down
-#define UI_RESOURCE_DISPLAY "WEST:6,CENTER-1:0"
-
-/datum/hud/living/swarmer
-
 /atom/movable/screen/swarmer_resource_counter
 	icon = 'icons/hud/screen_alien.dmi'
 	icon_state = "power_display"
