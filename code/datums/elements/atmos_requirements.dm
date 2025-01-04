@@ -36,7 +36,7 @@
 ///signal called by the living mob's life() while non stasis
 /datum/element/atmos_requirements/proc/on_non_stasis_life(mob/living/target, seconds_per_tick = SSMOBS_DT)
 	SIGNAL_HANDLER
-	if(is_breathable_atmos(target))
+	if(is_breathable_atmos(target) || HAS_TRAIT(target, TRAIT_NOBREATH))
 		target.clear_alert(ALERT_NOT_ENOUGH_OXYGEN)
 		return
 	target.adjustBruteLoss(unsuitable_atmos_damage * seconds_per_tick)

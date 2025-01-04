@@ -8,6 +8,11 @@
 	req_human = TRUE
 	disabled_by_fire = FALSE
 
+/datum/action/changeling/resonant_shriek/can_be_used_by(mob/living/user)
+	if(QDELETED(user))
+		return FALSE
+	return TRUE
+
 //A flashy ability, good for crowd control and sowing chaos.
 /datum/action/changeling/resonant_shriek/sting_action(mob/user)
 	..()
@@ -29,6 +34,11 @@
 		if(issilicon(M))
 			SEND_SOUND(M, sound('sound/items/weapons/flash.ogg'))
 			M.Paralyze(rand(100,200))
+		else
+			SEND_SOUND(M, sound('sound/effects/screech.ogg'))
+			if(!IS_CHANGELING(M))
+				M.adjust_confusion(25 SECONDS)
+				M.set_jitter_if_lower(100 SECONDS)
 
 	for(var/obj/machinery/light/L in range(4, user))
 		L.on = TRUE
@@ -43,6 +53,11 @@
 	chemical_cost = 20
 	dna_cost = 1
 	disabled_by_fire = FALSE
+
+/datum/action/changeling/dissonant_shriek/can_be_used_by(mob/living/user)
+	if(QDELETED(user))
+		return FALSE
+	return TRUE
 
 /datum/action/changeling/dissonant_shriek/sting_action(mob/user)
 	..()
