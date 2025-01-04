@@ -7,6 +7,11 @@
 	dna_cost = 2
 	req_stat = HARD_CRIT
 
+/datum/action/changeling/fleshmend/can_be_used_by(mob/living/user)
+	if(QDELETED(user))
+		return FALSE
+	return TRUE
+
 //Starts healing you every second for 10 seconds.
 //Can be used whilst unconscious.
 /datum/action/changeling/fleshmend/sting_action(mob/living/user)

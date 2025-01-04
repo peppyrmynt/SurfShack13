@@ -259,3 +259,67 @@
 		if(istype(living_user, shift_spell.shapeshift_type))
 			shift_spell.Trigger()
 			return TRUE
+
+// A subtype for a shapechange sourced from changeling's powers.
+/datum/status_effect/shapechange_mob/from_changeling
+	id = "shapechange_from_changeling"
+	alert_type = /atom/movable/screen/alert/status_effect/changeling_horror_form
+	/// The changeling power that's caused our change
+	var/datum/weakref/source_weakref
+
+/datum/status_effect/shapechange_mob/from_changeling/on_creation(mob/living/new_owner, mob/living/caster, datum/action/changeling/horrorform/source_power)
+	if(!istype(source_power))
+		stack_trace("Mob shapechange \"from changeling\" status effect applied without a source power.")
+		qdel(src)
+		return
+
+	source_weakref = WEAKREF(source_power)
+	return ..()
+
+/datum/status_effect/shapechange_mob/from_changeling/on_apply()
+	var/datum/action/changeling/horrorform/source_power = source_weakref.resolve()
+	if(source_power.owner == caster_mob)
+
+		var/damage_to_apply = owner.maxHealth * (caster_mob.get_total_damage() / caster_mob.maxHealth)
+
+		owner.apply_damage(damage_to_apply, BRUTE, forced = TRUE, spread_damage = TRUE, wound_bonus = CANT_WOUND)
+		// Only transfer blood if both mobs are supposed to have a blood volume
+		if (initial(owner.blood_volume) > 0 && initial(caster_mob.blood_volume) > 0 && !HAS_TRAIT(owner, TRAIT_NOBLOOD) && !HAS_TRAIT(caster_mob, TRAIT_NOBLOOD))
+			owner.blood_volume = caster_mob.blood_volume
+
+	return ..()
+
+/datum/status_effect/shapechange_mob/from_changeling/restore_caster(kill_caster_after)
+	if(owner?.contents)
+		// Prevent round removal and consuming stuff when losing shapeshift
+		for(var/atom/movable/thing as anything in owner.contents)
+			if(thing == caster_mob || HAS_TRAIT(thing, TRAIT_NOT_BARFABLE))
+				continue
+			thing.forceMove(get_turf(owner))
+
+	return ..()
+
+/datum/status_effect/shapechange_mob/from_changeling/after_unchange()
+	. = ..()
+	var/datum/action/changeling/horrorform/source_power = source_weakref.resolve()
+	if(QDELETED(source_power))
+		return
+
+	caster_mob.fully_heal(HEAL_DAMAGE) // Remove all of our damage before setting our health to a proportion of the former transformed mob's health
+	var/damage_to_apply = caster_mob.maxHealth * (owner.get_total_damage() / owner.maxHealth)
+	caster_mob.apply_damage(damage_to_apply, BRUTE, forced = TRUE, spread_damage = TRUE, wound_bonus = CANT_WOUND)
+	// Only transfer blood if both mobs are supposed to have a blood volume
+	if (initial(owner.blood_volume) > 0 && initial(caster_mob.blood_volume) > 0 && !HAS_TRAIT(owner, TRAIT_NOBLOOD) && !HAS_TRAIT(caster_mob, TRAIT_NOBLOOD))
+		caster_mob.blood_volume = owner.blood_volume
+
+/datum/status_effect/shapechange_mob/from_changeling/on_shape_death(datum/source, gibbed)
+	var/datum/action/changeling/horrorform/source_power = source_weakref.resolve()
+	if(!QDELETED(source_power))
+		restore_caster(kill_caster_after = TRUE)
+	return ..()
+
+/atom/movable/screen/alert/status_effect/changeling_horror_form
+	name = "Terror Form"
+	desc = "You're currently transformed into a horrible monster. \
+		This comes with a number of benefits, but its obvious what you are to anyone who sees you."
+	icon_state = "shapeshifted"
