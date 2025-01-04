@@ -142,10 +142,11 @@
 	maxHealth = 150
 	unsuitable_atmos_damage = 2
 	unsuitable_cold_damage = 2
-	unsuitable_heat_damage = 2
+	unsuitable_heat_damage = 4
 	speed = -0.2
 	density = TRUE
 	pass_flags = PASSTABLE
+	basic_mob_flags = FLAMMABLE_MOB
 	sight = SEE_TURFS | SEE_OBJS | SEE_MOBS
 	gender = NEUTER
 	mob_biotypes = MOB_ORGANIC
@@ -158,7 +159,7 @@
 	melee_attack_cooldown = CLICK_CD_MELEE
 	obj_damage = 25
 	wound_bonus = 25
-	bare_wound_bonus = 15
+	bare_wound_bonus = 25
 	armour_penetration = 30
 	max_grab = GRAB_KILL
 	attack_verb_continuous = "slashes at"
@@ -176,5 +177,13 @@
 	AddElement(/datum/element/footstep, FOOTSTEP_MOB_CLAW)
 	AddElement(/datum/element/door_pryer, pry_time = 5 SECONDS, interaction_key = HORRORFORM_INTERACTION)
 	AddElement(/datum/element/poster_tearer, interaction_key = HORRORFORM_INTERACTION)
+	RegisterSignal(src, COMSIG_LIVING_IGNITED, PROC_REF(on_ignited))
+
+//Panic
+/mob/living/basic/changeling_horrorform/proc/on_ignited()
+	to_chat(src, span_alien("You've been caught on fire!"))
+	playsound(src, 'sound/effects/hallucinations/far_noise.ogg', 50, 1)
+	adjust_confusion(10 SECONDS)
+	set_jitter_if_lower(20 SECONDS)
 
 #undef HORRORFORM_INTERACTION

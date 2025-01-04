@@ -50,26 +50,31 @@
 	var/gave_alert = FALSE
 
 	if(living_mob.bodytemperature < min_body_temp && !HAS_TRAIT(living_mob, TRAIT_RESISTCOLD))
-		living_mob.adjustFireLoss(cold_damage * seconds_per_tick, forced = TRUE)
+		var/cold_damage_mult = 0.5
 		if(!living_mob.has_status_effect(/datum/status_effect/inebriated))
-			switch(cold_damage)
-				if(1 to 5)
-					living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/cold, 1)
-				if(5 to 10)
-					living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/cold, 2)
-				if(10 to INFINITY)
-					living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/cold, 3)
+			if(living_mob.bodytemperature in BODYTEMP_COLD_WARNING_2 to min_body_temp)
+				living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/cold, 1)
+			if(living_mob.bodytemperature in BODYTEMP_COLD_WARNING_3 to BODYTEMP_COLD_WARNING_2)
+				living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/cold, 2)
+				cold_damage_mult = 1
+			if(living_mob.bodytemperature in -INFINITY to BODYTEMP_COLD_WARNING_3)
+				living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/cold, 3)
+				cold_damage_mult = 1.5
 			gave_alert = TRUE
+			living_mob.adjustFireLoss(cold_damage * cold_damage_mult * seconds_per_tick, forced = TRUE)
 
 	else if(living_mob.bodytemperature > max_body_temp && !HAS_TRAIT(living_mob, TRAIT_RESISTHEAT))
-		living_mob.adjustFireLoss(heat_damage * seconds_per_tick, forced = TRUE)
-		switch(heat_damage)
-			if(1 to 5)
-				living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/hot, 1)
-			if(5 to 10)
-				living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/hot, 2)
-			if(10 to INFINITY)
-				living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/hot, 3)
+		var/heat_damage_mult = 0.5
+		if(living_mob.bodytemperature in max_body_temp to BODYTEMP_HEAT_WARNING_2)
+			living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/hot, 1)
+		if(living_mob.bodytemperature in BODYTEMP_HEAT_WARNING_2 to BODYTEMP_HEAT_WARNING_3)
+			living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/hot, 2)
+			heat_damage_mult = 1
+		if(living_mob.bodytemperature in BODYTEMP_HEAT_WARNING_3 to INFINITY)
+			living_mob.throw_alert(ALERT_TEMPERATURE, /atom/movable/screen/alert/hot, 3)
+			heat_damage_mult = 1.5
+		living_mob.adjustFireLoss(heat_damage * heat_damage_mult * seconds_per_tick, forced = TRUE)
+
 		gave_alert = TRUE
 
 	if(!gave_alert)
