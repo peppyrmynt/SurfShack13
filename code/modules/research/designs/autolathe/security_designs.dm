@@ -268,7 +268,7 @@
 	name = "Shotgun Slug"
 	id = "shotgun_slug"
 	build_type = AUTOLATHE
-	materials = list(/datum/material/iron = SMALL_MATERIAL_AMOUNT * 10)
+	materials = list(/datum/material/iron = SMALL_MATERIAL_AMOUNT * 75)
 	build_path = /obj/item/ammo_casing/shotgun
 	category = list(
 		RND_CATEGORY_HACKED,
@@ -280,7 +280,7 @@
 	name = "Buckshot Shell"
 	id = "buckshot_shell"
 	build_type = AUTOLATHE
-	materials = list(/datum/material/iron = SMALL_MATERIAL_AMOUNT * 10)
+	materials = list(/datum/material/iron = SMALL_MATERIAL_AMOUNT * 75)
 	build_path = /obj/item/ammo_casing/shotgun/buckshot
 	category = list(
 		RND_CATEGORY_HACKED,
@@ -292,7 +292,7 @@
 	name = "Buckshot Ammo Box (12g) (Lethal)"
 	id = "buckshot_box"
 	build_type = AUTOLATHE
-	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT * 300)
+	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT * 350)
 	build_path = /obj/item/storage/box/lethalshot
 	category = list(
 		RND_CATEGORY_HACKED,
@@ -304,7 +304,7 @@
 	name = "Slug Ammo Box (12g) (Lethal)"
 	id = "slug_box"
 	build_type = AUTOLATHE
-	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT * 300)
+	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT * 350)
 	build_path = /obj/item/storage/box/slugs
 	category = list(
 		RND_CATEGORY_HACKED,
