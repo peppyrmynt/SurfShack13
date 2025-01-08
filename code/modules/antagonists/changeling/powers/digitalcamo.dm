@@ -5,6 +5,7 @@
 	button_icon_state = "digital_camo"
 	dna_cost = 1
 	active = FALSE
+	usable_by_basicmobs = TRUE
 
 //Prevents AIs tracking you but makes you easily detectable to the human-eye.
 /datum/action/changeling/digitalcamo/sting_action(mob/user)

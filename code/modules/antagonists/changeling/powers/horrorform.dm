@@ -8,15 +8,11 @@
 	button_icon_state = "horror_form"
 	chemical_cost = 45
 	dna_cost = 3
+	usable_by_basicmobs = TRUE
 
 /datum/action/changeling/horrorform/Remove(mob/remove_from)
 	unshift_owner()
 	return ..()
-
-/datum/action/changeling/horrorform/can_be_used_by(mob/living/user)
-	if(QDELETED(user))
-		return FALSE
-	return TRUE
 
 //Transform into horror form.
 /datum/action/changeling/horrorform/sting_action(mob/living/user)

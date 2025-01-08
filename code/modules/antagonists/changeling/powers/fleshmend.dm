@@ -6,11 +6,7 @@
 	chemical_cost = 20
 	dna_cost = 2
 	req_stat = HARD_CRIT
-
-/datum/action/changeling/fleshmend/can_be_used_by(mob/living/user)
-	if(QDELETED(user))
-		return FALSE
-	return TRUE
+	usable_by_basicmobs = TRUE
 
 //Starts healing you every second for 10 seconds.
 //Can be used whilst unconscious.

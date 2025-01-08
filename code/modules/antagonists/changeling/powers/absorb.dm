@@ -5,11 +5,12 @@
 	chemical_cost = 0
 	dna_cost = CHANGELING_POWER_INNATE
 	req_human = TRUE
+	usable_by_basicmobs = TRUE
 	///if we're currently absorbing, used for sanity
 	var/is_absorbing = FALSE
 	var/datum/looping_sound/changeling_absorb/absorbing_loop
 
-/datum/action/changeling/absorb_dna/can_sting(mob/living/carbon/owner)
+/datum/action/changeling/absorb_dna/can_sting(mob/living/owner)
 	if(!..())
 		return
 

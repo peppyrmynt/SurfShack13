@@ -11,8 +11,10 @@
 	var/list/atmos_requirements
 	/// How much (brute) damage we take from being in unsuitable atmos.
 	var/unsuitable_atmos_damage
+	/// How much we heal oxygen damage when in habitable atmos.
+	var/oxyloss_damage_healing
 
-/datum/element/atmos_requirements/Attach(datum/target, list/atmos_requirements, unsuitable_atmos_damage = 5, mapload = FALSE)
+/datum/element/atmos_requirements/Attach(datum/target, list/atmos_requirements, unsuitable_atmos_damage = 5, oxyloss_damage_healing = 1, mapload = FALSE)
 	. = ..()
 	if(!isliving(target))
 		return ELEMENT_INCOMPATIBLE
@@ -23,6 +25,7 @@
 		CRASH("[type] added to [target] with all requirements set to 0.")
 	src.atmos_requirements = atmos_requirements
 	src.unsuitable_atmos_damage = unsuitable_atmos_damage
+	src.oxyloss_damage_healing = oxyloss_damage_healing
 	RegisterSignal(target, COMSIG_LIVING_HANDLE_BREATHING, PROC_REF(on_non_stasis_life))
 
 	if(!mapload || !PERFORM_ALL_TESTS(focus_only/atmos_and_temp_requirements))
@@ -34,12 +37,13 @@
 	UnregisterSignal(target, COMSIG_LIVING_HANDLE_BREATHING)
 
 ///signal called by the living mob's life() while non stasis
-/datum/element/atmos_requirements/proc/on_non_stasis_life(mob/living/target, seconds_per_tick = SSMOBS_DT)
+/datum/element/atmos_requirements/proc/on_non_stasis_life(mob/living/basic/target, seconds_per_tick = SSMOBS_DT)
 	SIGNAL_HANDLER
 	if(is_breathable_atmos(target) || HAS_TRAIT(target, TRAIT_NOBREATH))
 		target.clear_alert(ALERT_NOT_ENOUGH_OXYGEN)
+		target.adjustOxyLoss(-oxyloss_damage_healing * seconds_per_tick)
 		return
-	target.adjustBruteLoss(unsuitable_atmos_damage * seconds_per_tick)
+	target.adjustOxyLoss(unsuitable_atmos_damage * seconds_per_tick)
 	target.throw_alert(ALERT_NOT_ENOUGH_OXYGEN, /atom/movable/screen/alert/not_enough_oxy)
 
 /datum/element/atmos_requirements/proc/is_breathable_atmos(mob/living/target)
