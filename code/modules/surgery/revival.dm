@@ -111,7 +111,10 @@
 		span_notice("[user] send a powerful shock to [target]'s brain with [tool]..."),
 	)
 	target.grab_ghost()
-	target.adjustOxyLoss(-50)
+	if(isbasicmob(target))
+		target.adjustOxyLoss(-target.maxHealth)
+	else
+		target.adjustOxyLoss(-50)
 	if(iscarbon(target))
 		var/mob/living/carbon/carbon_target = target
 		carbon_target.set_heartattack(FALSE)
