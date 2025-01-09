@@ -66,7 +66,7 @@
 	time = 24
 	preop_sound = 'sound/items/handling/surgery/hemostat1.ogg'
 
-/datum/surgery_step/clamp_bleeders/preop(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
+/datum/surgery_step/clamp_bleeders/preop(mob/user, mob/living/target, target_zone, obj/item/tool, datum/surgery/surgery)
 	display_results(
 		user,
 		target,
@@ -76,9 +76,12 @@
 	)
 	display_pain(target, "You feel a pinch as the bleeding in your [target.parse_zone_with_bodypart(target_zone)] is slowed.")
 
-/datum/surgery_step/clamp_bleeders/success(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery, default_display_results)
+/datum/surgery_step/clamp_bleeders/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/surgery/surgery, default_display_results)
 	if(locate(/datum/surgery_step/saw) in surgery.steps)
-		target.heal_bodypart_damage(20, 0, target_zone = target_zone)
+		if(isbasicmob(target))
+			target.heal_bodypart_damage(target.maxHealth * 0.1, 0, target_zone = target_zone)
+		else
+			target.heal_bodypart_damage(20, 0, target_zone = target_zone)
 	if (ishuman(target))
 		var/mob/living/carbon/human/human_target = target
 		var/obj/item/bodypart/target_bodypart = human_target.get_bodypart(target_zone)
@@ -171,7 +174,7 @@
 	success_sound = 'sound/items/handling/surgery/organ2.ogg'
 	surgery_effects_mood = TRUE
 
-/datum/surgery_step/saw/preop(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
+/datum/surgery_step/saw/preop(mob/user, mob/living/target, target_zone, obj/item/tool, datum/surgery/surgery)
 	display_results(
 		user,
 		target,
@@ -186,8 +189,11 @@
 		return FALSE
 	return TRUE
 
-/datum/surgery_step/saw/success(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery, default_display_results)
-	target.apply_damage(50, BRUTE, "[target_zone]", wound_bonus=CANT_WOUND)
+/datum/surgery_step/saw/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/surgery/surgery, default_display_results)
+	if(isbasicmob(target))
+		target.apply_damage(target.maxHealth * 0.25, BRUTE, "[target_zone]", wound_bonus=CANT_WOUND)
+	else
+		target.apply_damage(50, BRUTE, "[target_zone]", wound_bonus=CANT_WOUND)
 	display_results(
 		user,
 		target,

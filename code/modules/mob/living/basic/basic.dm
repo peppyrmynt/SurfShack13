@@ -192,6 +192,12 @@
 		ADD_TRAIT(src, TRAIT_UNDENSE, BASIC_MOB_DEATH_TRAIT)
 	SEND_SIGNAL(src, COMSIG_BASICMOB_LOOK_DEAD)
 
+//Basic mobs are dead when their health hits 0, for some reason living makes assumptions on behalf of carbons.
+/mob/living/basic/can_be_revived()
+	if(health <= 0)
+		return FALSE
+	return TRUE
+
 /mob/living/basic/revive(full_heal_flags = NONE, excess_healing = 0, force_grab_ghost = FALSE)
 	. = ..()
 	if(!.)
