@@ -179,7 +179,7 @@
 /mob/living/basic/changeling_horrorform/proc/on_ignited()
 	to_chat(src, span_alien("You've been caught on fire!"))
 	playsound(src, 'sound/effects/hallucinations/far_noise.ogg', 50, 1)
-	adjust_confusion_up_to(10 SECONDS)
+	adjust_confusion_up_to(10 SECONDS, 10 SECONDS)
 	set_jitter_if_lower(20 SECONDS)
 
 #undef HORRORFORM_INTERACTION
