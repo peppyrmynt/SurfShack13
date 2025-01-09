@@ -1,6 +1,7 @@
 /datum/action/changeling/sting//parent path, not meant for users afaik
 	name = "Tiny Prick"
 	desc = "Stabby stabby"
+	usable_by_basicmobs = TRUE
 
 /datum/action/changeling/sting/Trigger(trigger_flags)
 	var/mob/user = owner
@@ -31,7 +32,7 @@
 	changeling.lingstingdisplay.icon_state = null
 	changeling.lingstingdisplay.RemoveInvisibility(type)
 
-/mob/living/carbon/proc/unset_sting()
+/mob/living/proc/unset_sting()
 	if(mind)
 		var/datum/antagonist/changeling/changeling = mind.has_antag_datum(/datum/antagonist/changeling)
 		if(changeling?.chosen_sting)

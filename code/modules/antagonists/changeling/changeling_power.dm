@@ -22,6 +22,8 @@
 	var/req_dna = 0
 	/// If you need to be humanoid to use this ability (disincludes monkeys)
 	var/req_human = FALSE
+	/// If this ability is usable by the changeling if they are a basic mob (includes horror form)
+	var/usable_by_basicmobs = FALSE
 	/// Similar to req_dna, but only gained from absorbing, not DNA sting
 	var/req_absorbs = 0
 	/// Maximum stat before the ability is blocked.
@@ -107,6 +109,8 @@ the same goes for Remove(). if you override Remove(), call parent or else your p
 /datum/action/changeling/proc/can_be_used_by(mob/living/user)
 	if(QDELETED(user))
 		return FALSE
+	if(usable_by_basicmobs && isbasicmob(user) && !istype(user, /mob/living/basic/headslug))
+		return TRUE
 	if(!ishuman(user))
 		return FALSE
 	if(req_human && ismonkey(user))

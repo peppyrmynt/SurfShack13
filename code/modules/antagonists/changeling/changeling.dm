@@ -474,41 +474,39 @@
 /datum/antagonist/changeling/proc/can_absorb_dna(mob/living/carbon/human/target, verbose = TRUE)
 	if(!target)
 		return FALSE
-	if(!iscarbon(owner.current))
-		return FALSE
-	var/mob/living/carbon/user = owner.current
-
-	if(stored_profiles.len)
-		// If our current DNA is the stalest, we gotta ditch it before absorbing more.
-		var/datum/changeling_profile/top_profile = stored_profiles[1]
-		if(top_profile.dna.is_same_as(user.dna) && stored_profiles.len > dna_max)
-			if(verbose)
-				to_chat(user, span_warning("We have reached our capacity to store genetic information! We must transform before absorbing more."))
-			return FALSE
+	if(iscarbon(owner.current))
+		var/mob/living/carbon/user = owner.current
+		if(stored_profiles.len)
+			// If our current DNA is the stalest, we gotta ditch it before absorbing more.
+			var/datum/changeling_profile/top_profile = stored_profiles[1]
+			if(top_profile.dna.is_same_as(user.dna) && stored_profiles.len > dna_max)
+				if(verbose)
+					to_chat(user, span_warning("We have reached our capacity to store genetic information! We must transform before absorbing more."))
+				return FALSE
 
 	if(!target.has_dna())
 		if(verbose)
-			to_chat(user, span_warning("[target] is not compatible with our biology."))
+			to_chat(owner.current, span_warning("[target] is not compatible with our biology."))
 		return FALSE
 	if(has_profile_with_dna(target.dna))
 		if(verbose)
-			to_chat(user, span_warning("We already have this DNA in storage!"))
+			to_chat(owner.current, span_warning("We already have this DNA in storage!"))
 		return FALSE
 	if(HAS_TRAIT(target, TRAIT_NO_DNA_COPY))
 		if(verbose)
-			to_chat(user, span_warning("[target] is not compatible with our biology."))
+			to_chat(owner.current, span_warning("[target] is not compatible with our biology."))
 		return FALSE
 	if(HAS_TRAIT(target, TRAIT_BADDNA))
 		if(verbose)
-			to_chat(user, span_warning("[target]'s DNA is ruined beyond usability!"))
+			to_chat(owner.current, span_warning("[target]'s DNA is ruined beyond usability!"))
 		return FALSE
 	if(HAS_TRAIT(target, TRAIT_HUSK))
 		if(verbose)
-			to_chat(user, span_warning("[target]'s body is ruined beyond usability!"))
+			to_chat(owner.current, span_warning("[target]'s body is ruined beyond usability!"))
 		return FALSE
 	if(!ishuman(target) || ismonkey(target))//Absorbing monkeys is entirely possible, but it can cause issues with transforming. That's what lesser form is for anyway!
 		if(verbose)
-			to_chat(user, span_warning("We could gain no benefit from absorbing a lesser creature."))
+			to_chat(owner.current, span_warning("We could gain no benefit from absorbing a lesser creature."))
 		return FALSE
 
 	return TRUE

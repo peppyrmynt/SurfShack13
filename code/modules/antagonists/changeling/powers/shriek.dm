@@ -5,13 +5,8 @@
 	button_icon_state = "resonant_shriek"
 	chemical_cost = 20
 	dna_cost = 1
-	req_human = TRUE
+	usable_by_basicmobs = TRUE
 	disabled_by_fire = FALSE
-
-/datum/action/changeling/resonant_shriek/can_be_used_by(mob/living/user)
-	if(QDELETED(user))
-		return FALSE
-	return TRUE
 
 //A flashy ability, good for crowd control and sowing chaos.
 /datum/action/changeling/resonant_shriek/sting_action(mob/user)
@@ -53,11 +48,7 @@
 	chemical_cost = 20
 	dna_cost = 1
 	disabled_by_fire = FALSE
-
-/datum/action/changeling/dissonant_shriek/can_be_used_by(mob/living/user)
-	if(QDELETED(user))
-		return FALSE
-	return TRUE
+	usable_by_basicmobs = TRUE
 
 /datum/action/changeling/dissonant_shriek/sting_action(mob/user)
 	..()

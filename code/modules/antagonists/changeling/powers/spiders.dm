@@ -6,6 +6,7 @@
 	chemical_cost = 45
 	dna_cost = 1
 	req_absorbs = 3
+	usable_by_basicmobs = TRUE
 
 // Ensures that you cannot horrifically cheese the game by spawning spiders while in the vents
 /datum/action/changeling/spiders/can_be_used_by(mob/living/user)

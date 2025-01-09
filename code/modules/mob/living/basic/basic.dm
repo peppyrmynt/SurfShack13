@@ -88,6 +88,8 @@
 	var/list/habitable_atmos = list("min_oxy" = 5, "max_oxy" = 0, "min_plas" = 0, "max_plas" = 1, "min_co2" = 0, "max_co2" = 5, "min_n2" = 0, "max_n2" = 0)
 	///This damage is taken when atmos doesn't fit all the requirements above. Set to 0 to avoid adding the atmos_requirements element.
 	var/unsuitable_atmos_damage = 1
+	///How quickly this mob heals oxygen damage when in an environment it deems habitable.
+	var/oxyloss_damage_healing = 1
 
 	///Minimal body temperature without receiving damage
 	var/minimum_survivable_temperature = NPC_DEFAULT_MIN_TEMP
@@ -135,7 +137,7 @@
 		return
 	//String assoc list returns a cached list, so this is like a static list to pass into the element below.
 	habitable_atmos = string_assoc_list(habitable_atmos)
-	AddElement(/datum/element/atmos_requirements, habitable_atmos, unsuitable_atmos_damage, mapload)
+	AddElement(/datum/element/atmos_requirements, habitable_atmos, unsuitable_atmos_damage, oxyloss_damage_healing, mapload)
 
 /// Ensures this mob can take temperature damage if it's supposed to
 /mob/living/basic/proc/apply_temperature_requirements(mapload)
