@@ -145,7 +145,6 @@
 	for(var/i in 1 to 4 + rand(1,2))
 		var/chosen = getbork()
 		var/obj/item/food_item = new chosen(T)
-		ADD_TRAIT(food_item, TRAIT_FOOD_SILVER, INNATE_TRAIT)
 		if(prob(5))//Fry it!
 			var/obj/item/food/deepfryholder/fried
 			fried = new(T, food_item)
@@ -264,7 +263,7 @@
 	required_container = /obj/item/slime_extract/yellow
 
 /datum/chemical_reaction/slime/slimecell/on_reaction(datum/reagents/holder, created_volume)
-	new /obj/item/stock_parts/power_store/cell/emproof/slime(get_turf(holder.my_atom))
+	new /obj/item/stock_parts/power_store/cell/slime(get_turf(holder.my_atom))
 	..()
 
 /datum/chemical_reaction/slime/slimeglow

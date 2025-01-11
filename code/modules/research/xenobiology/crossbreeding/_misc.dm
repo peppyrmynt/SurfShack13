@@ -80,17 +80,12 @@ Slimecrossing Items
 	new /obj/effect/timestop(get_turf(target), 2, 50, list(user))
 
 //Hypercharged slime cell - Charged Yellow
-/obj/item/stock_parts/power_store/cell/high/slime_hypercharged
+/obj/item/stock_parts/power_store/cell/slime/hypercharged
 	name = "hypercharged slime core"
 	desc = "A charged yellow slime extract, infused with plasma. It almost hurts to touch."
-	icon = 'icons/mob/simple/slimes.dmi'
-	icon_state = "yellow-core"
 	rating = 7
-	custom_materials = null
 	maxcharge = 50 * STANDARD_CELL_CHARGE
-	chargerate = 2.5 * STANDARD_CELL_RATE
-	charge_light_type = null
-	connector_type = "slimecore"
+	recharge_time = 20 SECONDS
 
 //Barrier cube - Chilling Grey
 /obj/item/barriercube

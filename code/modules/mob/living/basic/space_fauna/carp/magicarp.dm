@@ -20,6 +20,12 @@ GLOBAL_LIST_INIT(xenobiology_magicarp_spell_types, list(
 	/obj/projectile/magic/fireball = "blazing",
 	/obj/projectile/magic/spellblade = "vorpal",
 	/obj/projectile/magic/arcane_barrage = "arcane",
+	/obj/projectile/magic/change = "transforming",
+))
+
+/// Additional spells that the chaos magicarp from xenobiology can use that the regular xenobio magicarp can't.
+GLOBAL_LIST_INIT(xenobiology_chaos_magicarp_spell_types, list(
+	/obj/projectile/magic/resurrection = "vital",
 ))
 
 /// Associative list of magicarp spells to colours, expand this list if you expand the other lists
@@ -137,4 +143,7 @@ GLOBAL_LIST_INIT(magicarp_spell_colours, list(
 	gold_core_spawnable = HOSTILE_SPAWN
 
 /mob/living/basic/carp/magic/chaos/xenobiology/spell_list()
-	return GLOB.xenobiology_magicarp_spell_types
+	var/list/full_spell_list = list()
+	full_spell_list += GLOB.xenobiology_magicarp_spell_types
+	full_spell_list += GLOB.xenobiology_chaos_magicarp_spell_types
+	return full_spell_list

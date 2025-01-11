@@ -141,7 +141,6 @@ Burning extracts:
 		var/path = get_random_food()
 		var/obj/item/food/food = new path(pick(turfs))
 		food.reagents.add_reagent(/datum/reagent/toxin/slimejelly,5) //Oh god it burns
-		ADD_TRAIT(food, TRAIT_FOOD_SILVER, INNATE_TRAIT)
 		if(prob(50))
 			food.desc += " It smells strange..."
 	user.visible_message(span_danger("[src] produces a few pieces of food!"))

@@ -605,12 +605,6 @@ GLOBAL_LIST_INIT(english_to_zombie, list())
 	disliked_foodtypes = GROSS
 	toxic_foodtypes = NONE
 
-/obj/item/organ/tongue/jelly/get_food_taste_reaction(obj/item/food, foodtypes = NONE)
-	// a silver slime created this? what a delicacy!
-	if(HAS_TRAIT(food, TRAIT_FOOD_SILVER))
-		return FOOD_LIKED
-	return ..()
-
 /obj/item/organ/tongue/monkey
 	name = "primitive tongue"
 	desc = "For aggressively chimpering. And consuming bananas."

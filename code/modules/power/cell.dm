@@ -191,15 +191,37 @@
 /obj/item/stock_parts/power_store/cell/emproof/corrupt()
 	return
 
-/obj/item/stock_parts/power_store/cell/emproof/slime
-	name = "EMP-proof slime core"
-	desc = "A yellow slime core infused with plasma. Its organic nature makes it immune to EMPs."
+/obj/item/stock_parts/power_store/cell/slime
+	name = "self-recharging slime core"
+	desc = "A yellow slime core infused with plasma. Whenever it runs out of charge, it will completely regain it after 15 seconds."
 	icon = 'icons/mob/simple/slimes.dmi'
 	icon_state = "yellow-core"
 	custom_materials = null
 	maxcharge = STANDARD_CELL_CHARGE * 5
+	chargerate = 0
 	charge_light_type = null
 	connector_type = "slimecore"
+	///Whether or not we're currently queued to recharge the cell.
+	var/recharge_queued = FALSE
+	///How long it takes for us to regain power
+	var/recharge_time = 15 SECONDS
+
+/obj/item/stock_parts/power_store/cell/slime/Initialize()
+	. = ..()
+	START_PROCESSING(SSobj, src)
+
+/obj/item/stock_parts/power_store/cell/slime/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	return ..()
+
+/obj/item/stock_parts/power_store/cell/slime/process(delta_time)
+	if(charge <= 0 && !recharge_queued)
+		recharge_queued = TRUE
+		addtimer(CALLBACK(src, PROC_REF(self_recharge)), recharge_time)
+
+/obj/item/stock_parts/power_store/cell/slime/proc/self_recharge()
+	charge = maxcharge
+	recharge_queued = FALSE
 
 /obj/item/stock_parts/power_store/cell/emergency_light
 	name = "miniature power cell"
