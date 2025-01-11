@@ -102,3 +102,10 @@
 
 ///Return true if target is not in a valid body position for the surgery
 #define IS_IN_INVALID_SURGICAL_POSITION(target, surgery) ((surgery.surgery_flags & SURGERY_REQUIRE_RESTING) && (target.mobility_flags & MOBILITY_LIEDOWN && target.body_position != LYING_DOWN))
+
+// Defines for all the different chems that can apply speed modifiers to surgery.
+#define SURGERY_SPEED_MODIFIER_HONEY "speed_mod_honey"
+#define SURGERY_SPEED_MODIFIER_MINE_SALVE "speed_mod_mine_salve"
+#define SURGERY_SPEED_MODIFIER_ANTIHOL "speed_mod_antihol"
+#define SURGERY_SPEED_MODIFIER_STERILIZINE "speed_mod_sterilizine"
+#define SURGERY_SPEED_MODIFIER_ETHANOL "speed_mod_ethanol"

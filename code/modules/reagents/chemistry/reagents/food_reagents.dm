@@ -840,12 +840,14 @@
 
 /datum/reagent/consumable/honey/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume)
 	. = ..()
-	if(!iscarbon(exposed_mob) || !(methods & (TOUCH|VAPOR|PATCH)))
+	if(!(methods & (TOUCH|VAPOR|PATCH)))
 		return
 
-	var/mob/living/carbon/exposed_carbon = exposed_mob
-	for(var/datum/surgery/surgery as anything in exposed_carbon.surgeries)
-		surgery.speed_modifier = max(0.6, surgery.speed_modifier)
+	for(var/datum/surgery/surgery as anything in exposed_mob.surgeries)
+		if(SURGERY_SPEED_MODIFIER_HONEY in surgery.speed_modifier_list)
+			continue
+		surgery.speed_modifier_list += SURGERY_SPEED_MODIFIER_HONEY
+		surgery.speed_modifier += 0.6
 
 /datum/reagent/consumable/mayonnaise
 	name = "Mayonnaise"
