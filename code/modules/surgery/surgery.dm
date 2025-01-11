@@ -32,6 +32,8 @@
 	///The types of bodyparts that this surgery can have performed on it. Used for augmented surgeries.
 	var/requires_bodypart_type = BODYTYPE_ORGANIC
 
+	///A list of speed modifiers already applied to this surgery, to prevent stacking.
+	var/list/speed_modifier_list = list()
 	///The speed modifier given to the surgery through external means.
 	var/speed_modifier = 0
 	///Whether the surgery requires research to do. You need to add a design if using this!

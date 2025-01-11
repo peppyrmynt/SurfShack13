@@ -361,12 +361,14 @@
 			to_chat(exposed_mob, span_warning("Your stomach feels empty and cramps!"))
 
 	if(methods & (PATCH|TOUCH))
-		var/mob/living/carbon/exposed_carbon = exposed_mob
-		for(var/datum/surgery/surgery as anything in exposed_carbon.surgeries)
-			surgery.speed_modifier = max(0.1, surgery.speed_modifier)
+		for(var/datum/surgery/surgery as anything in exposed_mob.surgeries)
+			if(SURGERY_SPEED_MODIFIER_MINE_SALVE in surgery.speed_modifier_list)
+				continue
+			surgery.speed_modifier_list += SURGERY_SPEED_MODIFIER_MINE_SALVE
+			surgery.speed_modifier += 0.1
 
 		if(show_message)
-			to_chat(exposed_carbon, span_danger("You feel your injuries fade away to nothing!") )
+			to_chat(exposed_mob, span_danger("You feel your injuries fade away to nothing!") )
 
 /datum/reagent/medicine/mine_salve/on_mob_metabolize(mob/living/affected_mob)
 	. = ..()
@@ -1158,13 +1160,16 @@
 		. = UPDATE_MOB_HEALTH
 	affected_mob.adjust_drunk_effect(-10 * REM * seconds_per_tick * normalise_creation_purity())
 
-/datum/reagent/medicine/antihol/expose_mob(mob/living/carbon/exposed_carbon, methods=TOUCH, reac_volume)
+/datum/reagent/medicine/antihol/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume)
 	. = ..()
 	if(!(methods & (TOUCH|VAPOR|PATCH)))
 		return
 
-	for(var/datum/surgery/surgery as anything in exposed_carbon.surgeries)
-		surgery.speed_modifier = max(surgery.speed_modifier  - 0.1, -0.9)
+	for(var/datum/surgery/surgery as anything in exposed_mob.surgeries)
+		if(SURGERY_SPEED_MODIFIER_ANTIHOL in surgery.speed_modifier_list)
+			continue
+		surgery.speed_modifier_list += SURGERY_SPEED_MODIFIER_ANTIHOL
+		surgery.speed_modifier -= -0.1
 
 /datum/reagent/medicine/stimulants
 	name = "Stimulants"
