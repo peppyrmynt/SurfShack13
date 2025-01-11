@@ -197,7 +197,7 @@
 	icon = 'icons/mob/simple/slimes.dmi'
 	icon_state = "yellow-core"
 	custom_materials = null
-	maxcharge = STANDARD_CELL_CHARGE * 5
+	maxcharge = STANDARD_CELL_CHARGE * 10
 	chargerate = 0
 	charge_light_type = null
 	connector_type = "slimecore"
