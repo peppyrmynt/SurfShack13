@@ -119,9 +119,6 @@ Industrial extracts:
 	itempath = pick(list(get_random_food(), get_random_drink()))
 	..()
 
-/obj/item/slimecross/industrial/silver/do_after_spawn(obj/item/spawned)
-	ADD_TRAIT(spawned, TRAIT_FOOD_SILVER, INNATE_TRAIT)
-
 /obj/item/slimecross/industrial/bluespace
 	colour = SLIME_TYPE_BLUESPACE
 	effect_desc = "Produces synthetic bluespace crystals."
