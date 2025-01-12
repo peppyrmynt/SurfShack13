@@ -119,6 +119,7 @@
 				/obj/item/clothing/under/rank/civilian/purple_bartender = 2,
 				/obj/item/clothing/suit/jacket/miljacket = 3,
 				/obj/item/clothing/suit/apron/overalls = 3,
+				/obj/item/clothing/suit/costume/cryptic_shirt = 2,
 				/obj/item/clothing/suit/costume/wellworn_shirt = 2,
 				/obj/item/clothing/suit/costume/wellworn_shirt/graphic = 2,
 				/obj/item/clothing/suit/costume/wellworn_shirt/graphic/ian = 2,
