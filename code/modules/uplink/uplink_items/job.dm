@@ -119,6 +119,15 @@
 	surplus = 20
 	restricted_roles = list(JOB_JANITOR)
 
+/datum/uplink_item/role_restricted/virus_grenade_janitor
+	name = "Fungal Tuberculosis Grenade Box"
+	desc = "A primed bio-grenade packed into a compact box. Comes with five Bio Virus Antidote Kit (BVAK) \
+		autoinjectors for rapid application on up to two targets each, a syringe, and a bottle containing \
+		the BVAK solution."
+	item = /obj/item/storage/box/syndie_kit/tuberculosisgrenade
+	cost = 25
+	restricted_roles = list(JOB_JANITOR)
+
 /datum/uplink_item/role_restricted/reverse_bear_trap
 	name = "Reverse Bear Trap"
 	desc = "An ingenious execution device worn on (or forced onto) the head. Arming it starts a 1-minute kitchen timer mounted on the bear trap. When it goes off, the trap's jaws will \
@@ -403,3 +412,10 @@
 	progression_minimum = 30 MINUTES
 	purchasable_from = parent_type::purchasable_from & ~UPLINK_SPY
 
+/datum/uplink_item/role_restricted/manifold_injector
+	name = "EHMS Autoinjector"
+	desc = "Stands for Experimental Hereditary Manifold Sickness. Inject this into a target to greatly dehabilitate them, though the effects \
+		can be staved off with proper medication."
+	item = /obj/item/reagent_containers/hypospray/medipen/manifoldinjector
+	cost = 5
+	restricted_roles = list(JOB_JANITOR, JOB_MEDICAL_DOCTOR, JOB_CHIEF_MEDICAL_OFFICER, JOB_PARAMEDIC, JOB_GENETICIST)

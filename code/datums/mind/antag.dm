@@ -176,6 +176,7 @@
 	new_uplink.uplink_handler.owner = traitor_mob.mind
 	new_uplink.uplink_handler.assigned_role = traitor_mob.mind.assigned_role.title
 	new_uplink.uplink_handler.assigned_species = traitor_mob.dna.species.id
+	new_uplink.uplink_handler.add_telecrystals(traitor_mob.mind.assigned_role.traitor_bonus_tc)
 
 	unlock_text = "Your Uplink is cunningly disguised as your [uplink_loc.name]. "
 	if(istype(uplink_loc, /obj/item/modular_computer/pda))

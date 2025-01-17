@@ -135,6 +135,9 @@
 	/// If set, look for a policy with this instead of the job title
 	var/policy_override
 
+	/// If this job gets bonus TC when assigned traitor and how much
+	var/traitor_bonus_tc = 0
+
 /datum/job/New()
 	. = ..()
 	var/new_spawn_positions = CHECK_MAP_JOB_CHANGE(title, "spawn_positions")
