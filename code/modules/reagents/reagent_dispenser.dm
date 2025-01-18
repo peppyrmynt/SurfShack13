@@ -150,7 +150,7 @@
 	UnregisterSignal(src, COMSIG_IGNITER_ACTIVATE)
 
 /obj/structure/reagent_dispensers/Initialize(mapload)
-	create_reagents(tank_volume, DRAINABLE | AMOUNT_VISIBLE)
+	create_reagents(tank_volume, DRAINABLE | AMOUNT_VISIBLE | INJECTABLE)
 	if(reagent_id)
 		reagents.add_reagent(reagent_id, tank_volume)
 	. = ..()
