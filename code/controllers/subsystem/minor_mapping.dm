@@ -13,7 +13,7 @@ SUBSYSTEM_DEF(minor_mapping)
 	return SS_INIT_NO_NEED
 #else
 	trigger_migration(CONFIG_GET(number/mice_roundstart))
-	place_satchels(satchel_amount = 6)
+	place_satchels(satchel_amount = 4)
 	return SS_INIT_SUCCESS
 #endif
 
