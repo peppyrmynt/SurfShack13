@@ -25,6 +25,10 @@
 	throw_drop_sound = 'sound/items/handling/lead_pipe/lead_pipe_drop.ogg'
 	hitsound = 'sound/items/lead_pipe_hit.ogg'
 
+	/obj/item/lead_pipe/Initialize(mapload)
+		. = ..()
+		AddElement(/datum/element/kneecapping)
+
 //A good battery early in the shift. Source of lead & sulfuric acid reagents.
 //Add lead material to this once implemented.
 /obj/item/stock_parts/power_store/cell/lead
