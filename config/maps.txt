@@ -31,6 +31,11 @@ map metastation
 	votable
 endmap
 
+map boxstation
+	minplayers 25
+	votable
+endmap
+
 map tramstation
 	minplayers 35
 	votable

@@ -1,0 +1,12 @@
+{
+	"version": 1,
+	"map_name": "BoxStation",
+	"map_path": "map_files/BoxStation",
+	"map_file": "ProtoBoxStation.dmm",
+	"shuttles": {
+		"cargo": "cargo_box",
+		"ferry": "ferry_fancy",
+		"whiteship": "whiteship_mbox",
+		"emergency": "emergency_box"
+	}
+}

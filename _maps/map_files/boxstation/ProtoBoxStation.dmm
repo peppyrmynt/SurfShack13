@@ -27400,7 +27400,7 @@
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/aft)
 "bPs" = (
-/obj/machinery/atmospherics/miner/oxygen,
+/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/engine/o2,
 /area/station/engineering/atmos)
 "bPx" = (
@@ -30705,7 +30705,7 @@
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
 "ccB" = (
-/obj/machinery/atmospherics/miner/n2o,
+/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /turf/open/floor/engine/n2o,
 /area/station/engineering/atmos)
 "ccC" = (
@@ -43378,7 +43378,7 @@
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "jjM" = (
-/obj/machinery/atmospherics/miner/nitrogen,
+/obj/machinery/portable_atmospherics/canister/nitrogen,
 /turf/open/floor/engine/n2,
 /area/station/engineering/atmos)
 "jlk" = (
@@ -52806,7 +52806,7 @@
 /turf/open/floor/iron/dark,
 /area/station/science/ordnance/storage)
 "rpF" = (
-/obj/machinery/atmospherics/miner/carbon_dioxide,
+/obj/machinery/portable_atmospherics/canister/carbon_dioxide,
 /turf/open/floor/engine/co2,
 /area/station/engineering/atmos)
 "rpJ" = (
@@ -55934,7 +55934,7 @@
 /turf/open/floor/plating,
 /area/station/service/abandoned_gambling_den)
 "ufi" = (
-/obj/machinery/atmospherics/miner/plasma,
+/obj/machinery/portable_atmospherics/canister/plasma,
 /turf/open/floor/engine/plasma,
 /area/station/engineering/atmos)
 "ufm" = (
@@ -57730,6 +57730,10 @@
 /obj/effect/turf_decal/tile/yellow/diagonal_edge,
 /turf/open/floor/iron/diagonal,
 /area/station/commons/storage/primary)
+"vLU" = (
+/obj/machinery/portable_atmospherics/canister/air,
+/turf/open/floor/engine/air,
+/area/station/engineering/atmos)
 "vLX" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
@@ -95119,7 +95123,7 @@ lFC
 aaf
 pII
 okl
-clc
+vLU
 cmW
 bOh
 aaa
