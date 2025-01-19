@@ -3994,16 +3994,6 @@
 /obj/item/clothing/head/hats/tophat,
 /turf/open/floor/iron,
 /area/station/service/bar)
-"alJ" = (
-/obj/effect/turf_decal/tile/neutral{
-	dir = 1
-	},
-/obj/machinery/light/floor,
-/obj/effect/turf_decal/plaque{
-	icon_state = "derelict16"
-	},
-/turf/open/floor/iron,
-/area/station/hallway/primary/central)
 "alK" = (
 /obj/structure/table/wood,
 /obj/effect/turf_decal/siding/wood{
@@ -7645,9 +7635,6 @@
 /obj/item/pillow/random,
 /turf/open/floor/carpet,
 /area/station/commons/dorms)
-"ayW" = (
-/turf/closed/wall,
-/area/station/ai_monitored/command/storage/eva)
 "ayX" = (
 /obj/structure/table,
 /obj/item/exodrone,
@@ -8006,6 +7993,8 @@
 /obj/effect/turf_decal/siding/thinplating_new/corner{
 	dir = 4
 	},
+/obj/machinery/light/directional/east,
+/obj/effect/turf_decal/tile/blue,
 /turf/open/floor/iron,
 /area/station/hallway/primary/fore)
 "aAb" = (
@@ -9194,7 +9183,7 @@
 	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/command/storage/eva)
+/area/station/hallway/primary/fore)
 "aDK" = (
 /obj/machinery/door/airlock{
 	id_tag = "Dorm1";
@@ -11912,14 +11901,14 @@
 /area/station/hallway/primary/central)
 "aLZ" = (
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict10"
+	icon_state = "L3"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "aMa" = (
 /obj/machinery/light/floor,
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict9"
+	icon_state = "L1"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
@@ -11932,32 +11921,33 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict12"
+	icon_state = "L7"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "aMc" = (
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict11"
+	icon_state = "L5"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "aMd" = (
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict14"
+	icon_state = "L11"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "aMe" = (
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict13"
+	icon_state = "L9"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "aMf" = (
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict15"
+	icon_state = "L13"
 	},
+/obj/machinery/light/floor,
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "aMg" = (
@@ -12341,7 +12331,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict2"
+	icon_state = "L4"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
@@ -12351,7 +12341,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict1"
+	icon_state = "L2"
 	},
 /obj/machinery/light/floor,
 /turf/open/floor/iron,
@@ -12364,7 +12354,7 @@
 	},
 /obj/machinery/light/floor,
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict4"
+	icon_state = "L8"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
@@ -12378,7 +12368,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict3"
+	icon_state = "L6"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
@@ -12388,7 +12378,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict6"
+	icon_state = "L12"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
@@ -12402,7 +12392,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict5"
+	icon_state = "L10"
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
@@ -12412,8 +12402,9 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/plaque{
-	icon_state = "derelict7"
+	icon_state = "L14"
 	},
+/obj/machinery/light/floor,
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "aNC" = (
@@ -16620,15 +16611,7 @@
 /turf/open/floor/iron/white/corner{
 	dir = 1
 	},
-/area/station/hallway/primary/starboard)
-"bbA" = (
-/obj/machinery/camera/directional/north{
-	c_tag = "Starboard Primary Hallway 2"
-	},
-/turf/open/floor/iron/white/corner{
-	dir = 1
-	},
-/area/station/hallway/primary/starboard)
+/area/station/service/kitchen)
 "bbB" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
@@ -21848,14 +21831,6 @@
 /obj/effect/mapping_helpers/airlock/access/all/command/teleporter,
 /turf/open/floor/iron/small,
 /area/station/command/teleporter)
-"btN" = (
-/obj/effect/turf_decal/tile/blue,
-/obj/machinery/light/directional/east,
-/obj/effect/turf_decal/siding/thinplating_new{
-	dir = 5
-	},
-/turf/open/floor/iron,
-/area/station/hallway/primary/fore)
 "btO" = (
 /obj/effect/turf_decal/tile/blue{
 	dir = 1
@@ -31794,7 +31769,7 @@
 /obj/structure/sign/warning/electric_shock/directional/west,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/command/storage/eva)
+/area/station/hallway/primary/fore)
 "cie" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
@@ -48371,7 +48346,7 @@
 /obj/machinery/light/small/directional/north,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/command/storage/eva)
+/area/station/hallway/primary/fore)
 "nCw" = (
 /obj/structure/sink/directional/south,
 /obj/effect/turf_decal/siding/dark_green{
@@ -48859,7 +48834,7 @@
 /turf/open/floor/iron/white/corner{
 	dir = 1
 	},
-/area/station/hallway/primary/starboard)
+/area/station/service/kitchen)
 "nVR" = (
 /obj/machinery/door/poddoor/shutters{
 	dir = 1;
@@ -54022,7 +53997,7 @@
 /obj/item/kirbyplants/random,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/command/storage/eva)
+/area/station/hallway/primary/fore)
 "stT" = (
 /obj/machinery/light/directional/east,
 /obj/machinery/airalarm/directional/east,
@@ -54726,16 +54701,13 @@
 /turf/open/floor/iron/diagonal,
 /area/station/hallway/primary/port)
 "tau" = (
-/obj/effect/turf_decal/trimline/neutral/line,
-/obj/effect/turf_decal/trimline/neutral/line{
+/obj/machinery/camera/directional/north{
+	c_tag = "Starboard Primary Hallway 2"
+	},
+/turf/open/floor/iron/white/corner{
 	dir = 1
 	},
-/obj/effect/turf_decal/plaque{
-	icon_state = "derelict8"
-	},
-/obj/machinery/light/floor,
-/turf/open/floor/iron,
-/area/station/hallway/primary/central)
+/area/station/service/kitchen)
 "taM" = (
 /obj/machinery/vending/coffee,
 /obj/effect/turf_decal/tile/purple{
@@ -56188,7 +56160,7 @@
 	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/command/storage/eva)
+/area/station/hallway/primary/fore)
 "usX" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/general/visible,
 /turf/open/floor/iron/freezer,
@@ -88883,8 +88855,8 @@ aDI
 usC
 str
 cid
-ayW
-ayW
+aJy
+aJy
 aJw
 aJo
 osV
@@ -89657,7 +89629,7 @@ aBu
 aBu
 aAa
 aHQ
-aJq
+aJt
 aJq
 aMe
 aNA
@@ -89911,10 +89883,10 @@ aMg
 aMg
 aMg
 aMg
-aMg
-btN
-aHQ
-aJt
+aJy
+aJy
+aJw
+aJs
 aJq
 aMd
 aNz
@@ -90169,8 +90141,8 @@ aUy
 ciq
 lzo
 aJy
-aJy
-aJw
+aqR
+aJn
 aJs
 aJq
 aMf
@@ -90427,11 +90399,11 @@ oMT
 oMT
 oMT
 bfm
-aJw
+aJn
 nqQ
 cPe
-alJ
-tau
+aMj
+cJU
 aOE
 bdy
 aRq
@@ -90684,7 +90656,7 @@ pwd
 tti
 oMT
 aqR
-aJw
+aJn
 aJn
 aJn
 aMj
@@ -99693,7 +99665,7 @@ rsI
 ykl
 aYM
 gAO
-bbA
+bbz
 bhl
 gVZ
 bdb
@@ -99950,7 +99922,7 @@ aVH
 aXn
 aYN
 aum
-bbz
+tau
 aYV
 gVZ
 bdb
