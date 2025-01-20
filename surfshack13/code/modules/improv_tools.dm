@@ -53,7 +53,7 @@
 	reqs = list(/obj/item/reagent_containers/cup/soda_cans = 1,
 				/datum/reagent/consumable/ethanol/beer = 10,
 				/obj/item/pipe/quaternary/pipe = 1,
-				/obj/item/stock_parts/cell = 1,
+				/obj/item/stock_parts/power_store/cell = 1,
 				/obj/item/stack/cable_coil = 1)
 	category = CAT_TOOLS
 

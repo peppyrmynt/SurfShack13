@@ -35,6 +35,8 @@
 	var/welding = FALSE
 	/// Whether the welder is secured or unsecured (able to attach rods to it to make a flamethrower)
 	var/status = TRUE
+	/// Whether you can turn off the welder once you ignite it or not.
+	var/can_disable = TRUE
 	/// What reagent the welding tool uses as fuel
 	var/reagent_fuel = /datum/reagent/fuel
 	/// The max amount of fuel the welder can hold
@@ -237,6 +239,9 @@
 /obj/item/weldingtool/proc/switched_on(mob/user)
 	if(!status)
 		balloon_alert(user, "unsecured!")
+		return
+	if(!can_disable && welding)
+		to_chat(user, span_warning("[src] can't be turned off!"))
 		return
 	set_welding(!welding)
 	if(welding)
