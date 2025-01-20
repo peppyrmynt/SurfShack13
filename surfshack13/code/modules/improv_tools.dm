@@ -41,7 +41,7 @@
 	reagent_fuel = /datum/reagent/consumable/ethanol/beer
 	custom_materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT)
 	activation_sound = 'sound/items/match_strike.ogg'
-	deactivation_sound = 'sound/items/wirecutter.ogg'
+	deactivation_sound = 'sound/items/tools/wirecutter.ogg'
 	can_disable = FALSE
 	toolspeed = 2
 
