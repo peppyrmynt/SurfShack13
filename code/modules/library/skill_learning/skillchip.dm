@@ -2,8 +2,8 @@
 	name = "skillchip"
 	desc = "This biochip integrates with user's brain to enable mastery of specific skill. Consult certified Nanotrasen neurosurgeon before use."
 
-	icon = 'icons/obj/devices/circuitry_n_data.dmi'
-	icon_state = "skillchip"
+	icon = 'surfshack13/icons/skillchips.dmi'
+	icon_state = "skillchip_white"
 	custom_price = PAYCHECK_CREW * 3
 	w_class = WEIGHT_CLASS_SMALL
 
@@ -43,10 +43,20 @@
 	var/active = FALSE
 	/// Brain that holds this skillchip.
 	var/obj/item/organ/brain/holding_brain
+	/// If it picks a random color or not
+	var/random_color = TRUE
+	/// Which tape (overlay) the skillchip has in it
+	var/overlay_tape = "standard"
+	/// Whether or not the skillchip is loaded
+	var/has_disk = TRUE
 
 /obj/item/skillchip/Initialize(mapload, is_removable = TRUE)
 	. = ..()
 	removable = is_removable
+	if(random_color)
+		icon_state = "skillchip_[pick("white", "blue", "red", "yellow", "purple", "green")]"
+	if(has_disk && overlay_tape)
+		add_overlay("skillchip_tape_" + overlay_tape)
 
 ///We don't grant actions outside of being activated when implanted
 /obj/item/skillchip/item_action_slot_check(slot, mob/user, datum/action/action)

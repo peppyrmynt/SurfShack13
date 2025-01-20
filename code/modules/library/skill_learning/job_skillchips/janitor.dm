@@ -1,5 +1,6 @@
 /obj/item/skillchip/job/janitor
 	name = "CL34NM4ST.R skillchip"
+	icon_state = "skillchip_srv"
 	desc = "Become a cleanbot whisperer."
 	auto_traits = list(TRAIT_CLEANBOT_WHISPERER)
 	skill_name = "Voice Of The Voiceless"

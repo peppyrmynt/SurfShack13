@@ -31,6 +31,9 @@
 
 /obj/item/skillchip/useless_adapter
 	name = "Skillchip adapter"
+	random_color = FALSE
+	has_disk = FALSE
+	icon_state = "skillchip_adapter"
 	skill_name = "Useless adapter"
 	skill_description = "Allows you to insert another skillchip into this adapter after it has been inserted into your brain..."
 	skill_icon = "plug"
@@ -43,6 +46,8 @@
 
 /obj/item/skillchip/light_remover
 	name = "N16H7M4R3 skillchip"
+	random_color = FALSE
+	icon_state = "skillchip_black"
 	auto_traits = list(TRAIT_LIGHTBULB_REMOVER)
 	skill_name = "Lightbulb Removing"
 	skill_description = "Stop failing taking out lightbulbs today, no gloves needed!"
@@ -52,6 +57,8 @@
 
 /obj/item/skillchip/disk_verifier
 	name = "K33P-TH4T-D15K skillchip"
+	random_color = FALSE
+	icon_state = "skillchip_green"
 	auto_traits = list(TRAIT_DISK_VERIFIER)
 	skill_name = "Nuclear Disk Verification"
 	skill_description = "Nuclear authentication disks have an extremely long serial number for verification. This skillchip stores that number, which allows the user to automatically spot forgeries."
@@ -61,6 +68,8 @@
 
 /obj/item/skillchip/entrails_reader
 	name = "3NTR41LS skillchip"
+	random_color = FALSE
+	icon_state = "skillchip_med"
 	auto_traits = list(TRAIT_ENTRAILS_READER)
 	skill_name = "Entrails Reader"
 	skill_description = "Be able to learn about a person's life, by looking at their internal organs. Not to be confused with looking into the future."
@@ -79,6 +88,8 @@
 
 /obj/item/skillchip/sabrage
 	name = "Le S48R4G3 skillchip"
+	random_color = FALSE
+	icon_state = "skillchip_golden"
 	auto_traits = list(TRAIT_SABRAGE_PRO)
 	skill_name = "Sabrage Proficiency"
 	skill_description = "Grants the user knowledge of the intricate structure of a champagne bottle's structural weakness at the neck, \
@@ -89,6 +100,9 @@
 
 /obj/item/skillchip/brainwashing
 	name = "suspicious skillchip"
+	random_color = FALSE
+	icon_state = "skillchip_black"
+	overlay_tape = "syndicate"
 	auto_traits = list(TRAIT_BRAINWASHING)
 	skill_name = "Brainwashing"
 	skill_description = "WARNING: The integrity of this chip is compromised. Please discard this skillchip."
@@ -107,6 +121,8 @@
 
 /obj/item/skillchip/chefs_kiss
 	name = "K1SS skillchip"
+	random_color = FALSE
+	icon_state = "skillchip_srv"
 	auto_traits = list(TRAIT_CHEF_KISS)
 	skill_name = "Chef's Kiss"
 	skill_description = "Allows you to kiss food you've created to make them with love."

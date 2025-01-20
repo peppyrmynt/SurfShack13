@@ -1,5 +1,6 @@
 /obj/item/skillchip/job/miner
 	name = "TUNN3L_R4T skillchip"
+	icon_state = "skillchip_eng"
 	desc = "Gain control of minebots."
 	auto_traits = list(TRAIT_ROCK_STONER)
 	skill_name = "Battlebot enthusiast"

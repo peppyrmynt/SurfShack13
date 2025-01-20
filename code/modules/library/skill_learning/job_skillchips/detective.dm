@@ -1,5 +1,6 @@
 /obj/item/skillchip/job/detectives_taste
 	name = "DET.ekt skillchip"
+	icon_state = "skillchip_sec"
 	desc = "Detective \"Encyclopedic Knowledge of Tastes\" v1.21"
 	auto_traits = list(TRAIT_DETECTIVES_TASTE)
 	skill_name = "Detective's Taste"
