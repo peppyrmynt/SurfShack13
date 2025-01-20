@@ -5,15 +5,11 @@
 	antag_datum = /datum/antagonist/swarmer
 	antag_flag = ROLE_SWARMER
 	required_type = /mob/dead/observer
-	enemy_roles = list(
-		JOB_CAPTAIN,
-		JOB_DETECTIVE,
-		JOB_HEAD_OF_SECURITY,
-		JOB_SECURITY_OFFICER,
-	)
 	required_candidates = 1
 	weight = 1
 	cost = 10
+	ruleset_category = parent_type::ruleset_category |  RULESET_CATEGORY_NO_WITTING_CREW_ANTAGONISTS
+	required_enemies = list(2,2,1,1,1,1,1,0,0,0)
 	repeatable = FALSE
 	signup_item_path = /mob/living/basic/swarmer
 	var/spawn_loc = null
