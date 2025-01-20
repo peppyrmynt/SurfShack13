@@ -456,6 +456,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	killsound = 'sound/items/weapons/hammer_death_scream.ogg', \
 	replace_default_death_sound = TRUE, \
 	)
+	AddElement(/datum/element/kneecapping)
 
 /obj/item/carpenter_hammer/examine(mob/user)
 	. = ..()
