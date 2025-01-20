@@ -346,11 +346,10 @@
 
 /// Subtype for the bomb cores found inside syndicate bombs
 /obj/item/bombcore/syndicate
-	name = "Donk Co. Super-Stable Bomb Payload"
-	desc = "After a string of unwanted detonations, this payload has been specifically redesigned to not explode unless triggered electronically by a bomb shell."
+	name = "Donk Co. Bomb Payload"
 
 /obj/item/bombcore/syndicate/large
-	name = "Donk Co. Super-Stable Bomb Payload XL"
+	name = "Donk Co. Stable Bomb Payload XL"
 	range_heavy = 5
 	range_medium = 10
 	range_light = 20
