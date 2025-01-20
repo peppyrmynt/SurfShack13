@@ -1,5 +1,6 @@
 /obj/item/skillchip/job/clown
 	name = "B@L00NY skillchip"
+	icon_state = "skillchip_srv"
 	desc = "This biochip contain several terabytes of uncannily religious, Honkmother praising guides on how to reshape balloons into silly animals."
 	auto_traits = list(TRAIT_BALLOON_SUTRA)
 	skill_name = "Balloon Sutra"
