@@ -10,6 +10,7 @@
 /obj/item/crowbar/improvised
 	name = "improvised crowbar"
 	desc = "Its a metal rod with a small hook made on the end."
+	icon = 'surfshack13/icons/improvtools.dmi'
 	icon_state = "crowbar_improv"
 	toolspeed = 2
 
