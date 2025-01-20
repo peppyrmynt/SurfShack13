@@ -9,20 +9,24 @@
 	antag_flag = ROLE_BLOODSUCKER
 	antag_datum = /datum/antagonist/bloodsucker
 	protected_roles = list(
-		// Command
-		JOB_CAPTAIN, JOB_HEAD_OF_PERSONNEL, JOB_HEAD_OF_SECURITY, JOB_RESEARCH_DIRECTOR, JOB_CHIEF_ENGINEER, JOB_CHIEF_MEDICAL_OFFICER,
-		// Security
-		JOB_WARDEN, JOB_SECURITY_OFFICER, JOB_DETECTIVE,
-		// Curator
+		JOB_CAPTAIN,
+		JOB_DETECTIVE,
+		JOB_HEAD_OF_SECURITY,
+		JOB_PRISONER,
+		JOB_SECURITY_OFFICER,
+		JOB_WARDEN,
 		JOB_CURATOR,
 	)
-	restricted_roles = list(JOB_AI, JOB_CYBORG)
+	restricted_roles = list(
+		JOB_AI,
+		JOB_CYBORG,
+	)
 	required_candidates = 1
 	weight = 3
 	cost = 14
 	minimum_players = 20
 	scaling_cost = 9
-	requirements = list(101,101,60,30,30,25,20,20,14,14)
+	requirements = list(101,101,60,30,30,25,20,15,10,10)
 	antag_cap = list("denominator" = 24)
 
 /datum/dynamic_ruleset/roundstart/bloodsucker/pre_execute(population)
@@ -61,8 +65,12 @@
 	antag_flag = ROLE_VAMPIRICACCIDENT
 	antag_flag_override = ROLE_BLOODSUCKER
 	protected_roles = list(
-		JOB_CAPTAIN, JOB_HEAD_OF_PERSONNEL, JOB_HEAD_OF_SECURITY,
-		JOB_WARDEN, JOB_SECURITY_OFFICER, JOB_DETECTIVE,
+		JOB_CAPTAIN,
+		JOB_DETECTIVE,
+		JOB_HEAD_OF_SECURITY,
+		JOB_PRISONER,
+		JOB_SECURITY_OFFICER,
+		JOB_WARDEN,
 		JOB_CURATOR,
 	)
 	restricted_roles = list(JOB_AI, JOB_CYBORG, "Positronic Brain")
@@ -110,13 +118,17 @@
 	antag_flag = ROLE_BLOODSUCKERBREAKOUT
 	antag_flag_override = ROLE_BLOODSUCKER
 	protected_roles = list(
-		JOB_CAPTAIN, JOB_HEAD_OF_PERSONNEL, JOB_HEAD_OF_SECURITY,
-		JOB_WARDEN, JOB_SECURITY_OFFICER, JOB_DETECTIVE,
+		JOB_CAPTAIN,
+		JOB_DETECTIVE,
+		JOB_HEAD_OF_SECURITY,
+		JOB_PRISONER,
+		JOB_SECURITY_OFFICER,
+		JOB_WARDEN,
 		JOB_CURATOR,
 	)
 	restricted_roles = list(JOB_AI, JOB_CYBORG)
 	required_candidates = 1
-	weight = 5
+	weight = 2
 	cost = 10
 	minimum_players = 20
 	requirements = list(101,101,60,20,20,20,20,20,14,14)
