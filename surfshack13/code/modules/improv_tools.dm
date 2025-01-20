@@ -5,7 +5,6 @@
 	icon_state = "screwdriver_improv"
 	toolspeed = 2.5
 	custom_materials = list(/datum/material/iron=HALF_SHEET_MATERIAL_AMOUNT)
-	embedding = list(embed_chance = 50)
 	random_color = FALSE
 
 /obj/item/crowbar/improvised
