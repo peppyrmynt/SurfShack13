@@ -6562,4 +6562,5 @@
 #include "surfshack13\code\modules\swarmers\swarmer_mob.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_objs.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_ruleset.dm"
+#include "surfshack13\code\modules\improv_tools.dm"
 // END_INCLUDE

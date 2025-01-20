@@ -35,6 +35,10 @@
 	var/welding = FALSE
 	/// Whether the welder is secured or unsecured (able to attach rods to it to make a flamethrower)
 	var/status = TRUE
+	/// Whether you can turn off the welder once you ignite it or not.
+	var/can_disable = TRUE
+	/// What reagent the welding tool uses as fuel
+	var/reagent_fuel = /datum/reagent/fuel
 	/// The max amount of fuel the welder can hold
 	var/max_fuel = 20
 	/// Does the welder start with fuel.
@@ -61,7 +65,7 @@
 
 	create_reagents(max_fuel)
 	if(starting_fuel)
-		reagents.add_reagent(/datum/reagent/fuel, max_fuel)
+		reagents.add_reagent(reagent_fuel, max_fuel)
 	update_appearance()
 
 /obj/item/weldingtool/update_icon_state()
@@ -194,7 +198,7 @@
 
 /// Returns the amount of fuel in the welder
 /obj/item/weldingtool/proc/get_fuel()
-	return reagents.get_reagent_amount(/datum/reagent/fuel)
+	return reagents.get_reagent_amount(reagent_fuel)
 
 
 /// Uses fuel from the welding tool.
@@ -206,7 +210,7 @@
 		burned_fuel_for = 0
 
 	if(get_fuel() >= used)
-		reagents.remove_reagent(/datum/reagent/fuel, used)
+		reagents.remove_reagent(reagent_fuel, used)
 		check_fuel()
 		return TRUE
 	else
@@ -235,6 +239,9 @@
 /obj/item/weldingtool/proc/switched_on(mob/user)
 	if(!status)
 		balloon_alert(user, "unsecured!")
+		return
+	if(!can_disable && welding)
+		to_chat(user, span_warning("[src] can't be turned off!"))
 		return
 	set_welding(!welding)
 	if(welding)
@@ -378,7 +385,7 @@
 
 /obj/item/weldingtool/abductor/process()
 	if(get_fuel() <= max_fuel)
-		reagents.add_reagent(/datum/reagent/fuel, 1)
+		reagents.add_reagent(reagent_fuel, 1)
 	..()
 
 /obj/item/weldingtool/hugetank
@@ -408,4 +415,4 @@
 	..()
 	if(get_fuel() < max_fuel && nextrefueltick < world.time)
 		nextrefueltick = world.time + 10
-		reagents.add_reagent(/datum/reagent/fuel, 1)
+		reagents.add_reagent(reagent_fuel, 1)
