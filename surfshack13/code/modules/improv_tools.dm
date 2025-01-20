@@ -7,12 +7,35 @@
 	custom_materials = list(/datum/material/iron=HALF_SHEET_MATERIAL_AMOUNT)
 	random_color = FALSE
 
+/obj/item/trash/broken_crowbar
+	name = "oddly bent rod"
+	desc = "In a past life, it may have been a crowbar. Now it is useless."
+	icon = 'surfshack13/icons/improvtools.dmi'
+	icon_state = "crowbar_improv_broken"
+
 /obj/item/crowbar/improvised
 	name = "improvised crowbar"
 	desc = "Its a metal rod with a small hook made on the end."
 	icon = 'surfshack13/icons/improvtools.dmi'
 	icon_state = "crowbar_improv"
-	toolspeed = 2
+	toolspeed = 1.5
+	/// How many more uses the crowbar has before it breaks
+	var/durability = 10
+	/// What object the tool should break into once its durability runs out
+	var/broken_type = /obj/item/trash/broken_crowbar
+	/// What sound should be played when the tool breaks
+	var/break_sound = 'sound/items/handling/materials/metal_drop.ogg'
+
+/obj/item/crowbar/improvised/use_tool(atom/target, mob/living/user, delay, amount, volume, datum/callback/extra_checks)
+	. = ..()
+	if(!durability)
+		if(broken_type && user)
+			new broken_type(user.loc)
+		if(break_sound)
+			playsound(src, break_sound, 40, TRUE)
+		qdel(src)
+	else
+		durability -= 1
 
 /obj/item/wirecutters/improvised
 	name = "improvised wirecutters"
