@@ -21308,7 +21308,7 @@
 /turf/open/floor/plating,
 /area/station/science/robotics/lab)
 "bru" = (
-/obj/item/food/grown/banana/bombanana,
+/obj/item/food/grown/banana,
 /turf/open/floor/grass,
 /area/station/science/genetics)
 "brv" = (
