@@ -344,19 +344,12 @@
 
 ///Bomb Core Subtypes///
 
-/// Subtype for the bomb cores found inside syndicate bombs, which will not detonate due to explosion/burning.
+/// Subtype for the bomb cores found inside syndicate bombs
 /obj/item/bombcore/syndicate
-	name = "Donk Co. Super-Stable Bomb Payload"
-	desc = "After a string of unwanted detonations, this payload has been specifically redesigned to not explode unless triggered electronically by a bomb shell."
-
-/obj/item/bombcore/syndicate/ex_act(severity, target)
-	return FALSE
-
-/obj/item/bombcore/syndicate/burn()
-	return ..()
+	name = "Donk Co. Bomb Payload"
 
 /obj/item/bombcore/syndicate/large
-	name = "Donk Co. Super-Stable Bomb Payload XL"
+	name = "Donk Co. Stable Bomb Payload XL"
 	range_heavy = 5
 	range_medium = 10
 	range_light = 20
