@@ -45,26 +45,29 @@
 	// Some effects are halved mid-combat.
 	var/determined_mod = has_status_effect(/datum/status_effect/determined) ? 0.5 : 0
 
-	var/word = pick("dizzy","woozy","faint")
+	// Whether or not the person is an android, which uses temperature instead of oxyloss
+	var/has_coolant = HAS_TRAIT(src, TRAIT_COOLANT)
+
+	var/word = (has_coolant ? pick("warm","hot","sluggish") : pick("dizzy","woozy","faint"))
 	switch(blood_volume)
 		if(BLOOD_VOLUME_EXCESS to BLOOD_VOLUME_MAX_LETHAL)
 			if(SPT_PROB(7.5, seconds_per_tick))
-				to_chat(src, span_userdanger("Blood starts to tear your skin apart. You're going to burst!"))
+				to_chat(src, span_userdanger((has_coolant ? "Coolant starts to tear your wiring and frame apart. You're going to explode!" : "Blood starts to tear your skin apart. You're going to burst!")))
 				investigate_log("has been gibbed by having too much blood.", INVESTIGATE_DEATHS)
 				inflate_gib()
 		// Way too much blood!
 		if(BLOOD_VOLUME_EXCESS to BLOOD_VOLUME_MAX_LETHAL)
 			if(SPT_PROB(5, seconds_per_tick))
-				to_chat(src, span_warning("You feel your skin swelling."))
+				to_chat(src, span_warning((has_coolant ? "You feel your coolant tubes swelling." : "You feel your skin swelling.")))
 		// Too much blood
 		if(BLOOD_VOLUME_MAXIMUM to BLOOD_VOLUME_EXCESS)
 			if(SPT_PROB(5, seconds_per_tick))
-				to_chat(src, span_warning("You feel terribly bloated."))
+				to_chat(src, span_warning((has_coolant ? "Your coolant lines feel terribly bloated." : "You feel terribly bloated.")))
 		// Low blood but not a big deal in the immediate
 		if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
 			if(SPT_PROB(2.5, seconds_per_tick))
 				set_eye_blur_if_lower(2 SECONDS * determined_mod)
-				if(prob(50))
+				if(!has_coolant && prob(50))
 					to_chat(src, span_danger("You feel [word]. It's getting a bit hard to breathe."))
 					losebreath += 0.5 * determined_mod * seconds_per_tick
 				else if(getStaminaLoss() < 25 * determined_mod)
@@ -75,7 +78,7 @@
 			if(SPT_PROB(5, seconds_per_tick))
 				set_eye_blur_if_lower(2 SECONDS * determined_mod)
 				set_dizzy_if_lower(2 SECONDS * determined_mod)
-				if(prob(50))
+				if(!has_coolant && prob(50))
 					to_chat(src, span_bolddanger("You feel very [word]. It's getting hard to breathe!"))
 					losebreath += 1 * determined_mod * seconds_per_tick
 				else if(getStaminaLoss() < 40 * determined_mod)
@@ -86,7 +89,7 @@
 			if(SPT_PROB(5, seconds_per_tick))
 				set_eye_blur_if_lower(4 SECONDS * determined_mod)
 				set_dizzy_if_lower(4 SECONDS * determined_mod)
-				if(prob(50))
+				if(!has_coolant && prob(50))
 					to_chat(src, span_userdanger("You feel extremely [word]! It's getting very hard to breathe!"))
 					losebreath += 1.5 * determined_mod * seconds_per_tick
 				else if(getStaminaLoss() < 80 * determined_mod)
@@ -105,15 +108,20 @@
 
 	// Blood ratio! if you have 280 blood, this equals 0.5 as that's half of the current value, 560.
 	var/effective_blood_ratio = blood_volume / BLOOD_VOLUME_NORMAL
-	var/target_oxyloss = max((1 - effective_blood_ratio) * 100, 0)
+	var/target_loss = (1 - effective_blood_ratio) * 100
 
-	// If your ratio is less than one (you're missing any blood) and your oxyloss is under missing blood %, start getting oxy damage.
-	// This damage accrues faster the less blood you have.
-	// If the damage surpasses the KO threshold for oxyloss, then we'll always tick up so you die eventually
-	if(target_oxyloss > 0 && (getOxyLoss() < target_oxyloss || (target_oxyloss >= OXYLOSS_PASSOUT_THRESHOLD && stat >= UNCONSCIOUS)))
-		// At roughly half blood this equals to 3 oxyloss per tick. At 90% blood it's close to 0.5
-		var/rounded_oxyloss = round(0.01 * (BLOOD_VOLUME_NORMAL - blood_volume), 0.25) * seconds_per_tick
-		adjustOxyLoss(rounded_oxyloss, updating_health = TRUE)
+	if(has_coolant)
+		adjust_bodytemperature(target_loss * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 50)
+	else
+		var/target_oxyloss = max(target_loss, 0)
+
+		// If your ratio is less than one (you're missing any blood) and your oxyloss is under missing blood %, start getting oxy damage.
+		// This damage accrues faster the less blood you have.
+		// If the damage surpasses the KO threshold for oxyloss, then we'll always tick up so you die eventually
+		if(target_oxyloss > 0 && (getOxyLoss() < target_oxyloss || (target_oxyloss >= OXYLOSS_PASSOUT_THRESHOLD && stat >= UNCONSCIOUS)))
+			// At roughly half blood this equals to 3 oxyloss per tick. At 90% blood it's close to 0.5
+			var/rounded_oxyloss = round(0.01 * (BLOOD_VOLUME_NORMAL - blood_volume), 0.25) * seconds_per_tick
+			adjustOxyLoss(rounded_oxyloss, updating_health = TRUE)
 
 /// Has each bodypart update its bleed/wound overlay icon states
 /mob/living/carbon/proc/update_bodypart_bleed_overlays()

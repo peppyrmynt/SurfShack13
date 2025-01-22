@@ -6,6 +6,7 @@
 /// The max damage a limb can take before it stops taking damage.
 /// Used by the max_damage var.
 #define LIMB_MAX_HP_PROSTHESIS 20 //Used by surplus prosthesis limbs.
+#define LIMB_MAX_HP_ANDROID 35 //Used by android skeleton limbs.
 #define LIMB_MAX_HP_DEFAULT 50 //Used by most all limbs by default.
 #define LIMB_MAX_HP_ADVANCED 75 //Used by advanced robotic limbs.
 #define LIMB_MAX_HP_CORE 200 //Only use this for heads and torsos.
@@ -22,6 +23,7 @@
 #define LIMB_BODY_DAMAGE_COEFFICIENT_ADVANCED 0.5 //Used by advanced robotic limbs.
 #define LIMB_BODY_DAMAGE_COEFFICIENT_DEFAULT 0.75 //Used by all limbs by default.
 #define LIMB_BODY_DAMAGE_COEFFICIENT_TOTAL 1 //Used by heads and torsos
+#define LIMB_BODY_DAMAGE_COEFFICIENT_ANDROID 1.5 //Used by android skeleton limbs
 #define LIMB_BODY_DAMAGE_COEFFICIENT_PROSTHESIS 2.5 //Used by surplus prosthesis limbs
 
 // EMP

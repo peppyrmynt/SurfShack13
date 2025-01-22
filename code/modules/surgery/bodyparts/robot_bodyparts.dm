@@ -478,6 +478,28 @@
 // Actively make you less healthy by being on your body, contributing a whopping 250% to overall health at only 20 max health
 // They also suck to punch with.
 
+/obj/item/bodypart/head/robot/surplus
+	name = "surplus prosthetic head"
+	desc = "A skeletal, robotic head. Outdated and fragile, but having a place to hold your brain is somewhat important."
+	icon_static = 'surfshack13/icons/android_limbs.dmi'
+	icon = 'surfshack13/icons/android_limbs.dmi'
+	burn_modifier = 1
+	brute_modifier = 1
+	body_damage_coeff = LIMB_BODY_DAMAGE_COEFFICIENT_PROSTHESIS
+
+	biological_state = (BIO_METAL|BIO_JOINTED)
+
+/obj/item/bodypart/chest/robot/surplus
+	name = "surplus prosthetic chest"
+	desc = "A skeletal, robotic chest. Outdated and fragile, but it'll hold the rest of your body together..."
+	icon_static = 'surfshack13/icons/android_limbs.dmi'
+	icon = 'surfshack13/icons/android_limbs.dmi'
+	burn_modifier = 1
+	brute_modifier = 1
+	body_damage_coeff = LIMB_BODY_DAMAGE_COEFFICIENT_PROSTHESIS
+
+	biological_state = (BIO_METAL|BIO_JOINTED)
+
 /obj/item/bodypart/arm/left/robot/surplus
 	name = "surplus prosthetic left arm"
 	desc = "A skeletal, robotic limb. Outdated and fragile, but it's still better than nothing."

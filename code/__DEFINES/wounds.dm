@@ -87,6 +87,10 @@ GLOBAL_LIST_INIT(wound_severities_chronological, list(
 #define BIO_JOINTED (1<<5)
 /// Robotic - can suffer all metal/wired wounds, such as: UNIMPLEMENTED PLEASE UPDATE ONCE SYNTH WOUNDS 9/5/2023 ~Niko
 #define BIO_ROBOTIC (BIO_METAL|BIO_WIRED)
+/// Standard android - they use coolant, so must be able to bleed it out to have it be meaningful
+#define BIO_ANDROID_UNJOINTED (BIO_ROBOTIC|BIO_BLOODED|BIO_BONE)
+/// Standard android limbs - they can get dislodged too!
+#define BIO_ANDROID_JOINTED (BIO_ANDROID_UNJOINTED|BIO_JOINTED)
 /// Has flesh and bone - See BIO_BONE and BIO_FLESH
 #define BIO_FLESH_BONE (BIO_BONE|BIO_FLESH)
 /// Standard humanoid - can bleed and suffer all flesh/bone wounds, such as: T1-3 slash/pierce/burn/blunt, except dislocations. Think human heads/chests

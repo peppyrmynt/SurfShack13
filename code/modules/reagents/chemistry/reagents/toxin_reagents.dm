@@ -241,6 +241,21 @@
 	ph = 12
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
+/datum/reagent/toxin/coolant
+	name = "Plasma Coolant"
+	description = "A reagent designed to help cool androids."
+	color = "#B48CC8" // rgb: 180, 140, 200
+	toxpwr = 0.2
+	taste_description = "bitter sugar"
+	ph = 8
+
+/datum/reagent/toxin/coolant/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
+	. = ..()
+	affected_mob.adjust_bodytemperature(-15 * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick, 25) /// coolant makes you cool :^P
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/humi = affected_mob
+		humi.adjust_coretemperature(-15 * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick, 25)
+
 /datum/reagent/toxin/zombiepowder
 	name = "Zombie Powder"
 	description = "A strong neurotoxin that puts the subject into a death-like state."

@@ -169,6 +169,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NOHUNGER "no_hunger"
 /// This carbon doesn't bleed
 #define TRAIT_NOBLOOD "noblood"
+/// This carbon uses coolant as blood: meaning they heat up and take burn damage instead of oxyloss when at low blood, and get android themed blood warning messages.
+#define TRAIT_COOLANT "coolant"
 /// This just means that the carbon will always have functional liverless metabolism
 #define TRAIT_LIVERLESS_METABOLISM "liverless_metabolism"
 /// This carbon can't be overdosed by chems
