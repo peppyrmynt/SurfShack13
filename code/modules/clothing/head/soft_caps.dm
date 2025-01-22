@@ -197,6 +197,7 @@
 
 /obj/item/clothing/head/soft/propeller_hat/attack_self(mob/user)
 	active = !active
+	active ? handle_anim(user, TRUE) : handle_anim(user, FALSE)
 	balloon_alert(user, (active ? "started propeller" : "stopped propeller"))
 	update_icon()
 	user.update_worn_head()
@@ -209,8 +210,16 @@
 
 /obj/item/clothing/head/soft/propeller_hat/dropped(mob/living/user)
 	. = ..()
+	handle_anim(user, FALSE)
 	user.clear_mood_event(PROPHAT_MOOD)
 	active = FALSE
 	update_icon()
+
+//no i am not putting any effort into not breaking the floating anim for a silly feature.
+/obj/item/clothing/head/soft/propeller_hat/proc/handle_anim(mob/living/target, state)
+	if(state)
+		DO_FLOATING_ANIM(target)
+	else
+		STOP_FLOATING_ANIM(target)
 
 #undef PROPHAT_MOOD
