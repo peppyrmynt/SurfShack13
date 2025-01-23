@@ -250,6 +250,7 @@
 	ph = 8
 
 /datum/reagent/toxin/coolant/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume, show_message=TRUE, touch_protection=0)
+	. = ..()
 	if(iscarbon(exposed_mob))
 		var/mob/living/carbon/exposed_carbon = exposed_mob
 		if(HAS_TRAIT(exposed_carbon, TRAIT_COOLANT) && (methods & INJECT))
