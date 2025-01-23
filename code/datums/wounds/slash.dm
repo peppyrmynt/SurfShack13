@@ -11,7 +11,7 @@
 	abstract = TRUE
 
 	required_wounding_types = list(WOUND_SLASH)
-	required_limb_biostate = BIO_FLESH
+	required_limb_biostate = BIO_BLOODED
 
 	wound_series = WOUND_SERIES_FLESH_SLASH_BLEED
 

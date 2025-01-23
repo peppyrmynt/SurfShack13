@@ -1,7 +1,7 @@
 /datum/species/android
 	name = "Android"
 	id = SPECIES_ANDROID
-	examine_limb_id = SPECIES_HUMAN
+	examine_limb_id = SPECIES_ANDROID
 	inherent_traits = list(
 		TRAIT_AGENDER,
 		TRAIT_GENELESS,
@@ -34,8 +34,10 @@
 	mutantlungs = null
 	mutanteyes = /obj/item/organ/eyes/robotic
 	mutantears = /obj/item/organ/ears/cybernetic
-	species_language_holder = /datum/language_holder/drone
+	species_language_holder = /datum/language_holder/android
 	exotic_blood = /datum/reagent/toxin/coolant
+
+	bodytemp_cold_damage_limit = (BODYTEMP_COLD_DAMAGE_LIMIT - 50) // they still get slowed down by cold, but can tolerate a bit more than most
 
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
 
@@ -47,6 +49,9 @@
 		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/robot/surplus/android,
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/robot/surplus/android,
 	)
+
+/datum/species/lizard/get_scream_sound(mob/living/carbon/human/android)
+	return 'sound/effects/stall.ogg'
 
 /datum/species/android/get_physical_attributes()
 	return "Androids are almost, but not quite, identical to fully augmented humans. \

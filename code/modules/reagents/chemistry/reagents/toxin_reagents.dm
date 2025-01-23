@@ -249,6 +249,13 @@
 	taste_description = "bitter sugar"
 	ph = 8
 
+/datum/reagent/toxin/coolant/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume, show_message=TRUE, touch_protection=0)
+	if(iscarbon(exposed_mob))
+		var/mob/living/carbon/exposed_carbon = exposed_mob
+		if(HAS_TRAIT(exposed_carbon, TRAIT_COOLANT) && (methods & INJECT))
+			exposed_carbon.blood_volume = min(exposed_carbon.blood_volume + round(reac_volume, 0.1), BLOOD_VOLUME_MAXIMUM)
+			exposed_carbon.reagents.remove_reagent(type, reac_volume)
+
 /datum/reagent/toxin/coolant/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	affected_mob.adjust_bodytemperature(-15 * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick, 25) /// coolant makes you cool :^P

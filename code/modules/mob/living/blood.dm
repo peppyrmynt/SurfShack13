@@ -111,7 +111,7 @@
 	var/target_loss = (1 - effective_blood_ratio) * 100
 
 	if(has_coolant)
-		adjust_bodytemperature(target_loss * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 50)
+		adjust_coretemperature(target_loss * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 50)
 	else
 		var/target_oxyloss = max(target_loss, 0)
 

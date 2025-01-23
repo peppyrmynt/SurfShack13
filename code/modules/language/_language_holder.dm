@@ -369,6 +369,16 @@ GLOBAL_LIST_INIT(prototype_language_holders, init_language_holder_prototypes())
 		/datum/language/machine = list(LANGUAGE_ATOM),
 	)
 
+/datum/language_holder/android
+	understood_languages = list(
+		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/drone = list(LANGUAGE_ATOM),
+	)
+	spoken_languages = list(
+		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/drone = list(LANGUAGE_ATOM),
+	)
+
 /datum/language_holder/moth
 	understood_languages = list(
 		/datum/language/common = list(LANGUAGE_ATOM),

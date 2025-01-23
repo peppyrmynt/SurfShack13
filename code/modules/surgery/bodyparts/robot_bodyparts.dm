@@ -214,6 +214,14 @@
 
 	wing_types = list(/obj/item/organ/wings/functional/robotic)
 
+	// What traits to apply when a humanoid has all of the relevant limb type
+	var/set_bonus = list(
+			TRAIT_RESISTCOLD,
+			TRAIT_RESISTHEAT,
+			TRAIT_RESISTLOWPRESSURE,
+			TRAIT_RESISTHIGHPRESSURE,
+			)
+
 	var/wired = FALSE
 	var/obj/item/stock_parts/power_store/cell = null
 
@@ -276,19 +284,9 @@
 		all_robotic = all_robotic && IS_ROBOTIC_LIMB(part)
 
 	if(all_robotic)
-		owner.add_traits(list(
-			TRAIT_RESISTCOLD,
-			TRAIT_RESISTHEAT,
-			TRAIT_RESISTLOWPRESSURE,
-			TRAIT_RESISTHIGHPRESSURE,
-			), AUGMENTATION_TRAIT)
+		owner.add_traits(set_bonus, AUGMENTATION_TRAIT)
 	else
-		owner.remove_traits(list(
-			TRAIT_RESISTCOLD,
-			TRAIT_RESISTHEAT,
-			TRAIT_RESISTLOWPRESSURE,
-			TRAIT_RESISTHIGHPRESSURE,
-			), AUGMENTATION_TRAIT)
+		owner.remove_traits(set_bonus, AUGMENTATION_TRAIT)
 
 /obj/item/bodypart/chest/robot/attackby(obj/item/weapon, mob/user, params)
 	if(istype(weapon, /obj/item/stock_parts/power_store/cell))
@@ -497,6 +495,11 @@
 	burn_modifier = 1
 	brute_modifier = 1
 	body_damage_coeff = LIMB_BODY_DAMAGE_COEFFICIENT_PROSTHESIS
+
+	set_bonus = list(
+			TRAIT_RESISTLOWPRESSURE,
+			TRAIT_RESISTHIGHPRESSURE,
+			)
 
 	biological_state = (BIO_METAL|BIO_JOINTED)
 
