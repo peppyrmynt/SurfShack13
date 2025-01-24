@@ -53,8 +53,8 @@
 	return 'sound/effects/stall.ogg'
 
 /datum/species/android/get_physical_attributes()
-	return "Androids are almost, but not quite, identical to fully augmented humans. \
-	Unlike those, though, they're completely immune to toxin damage, don't have organs (besides their head), don't get hungry, and can reattach their limbs! \
+	return "Androids are ancient animatronic humanoids made of wood and iron. \
+	As robots they are completely immune to toxin damage, don't have organs anywhere aside from their head, don't get hungry, and can reattach their limbs. \
 	That said, an EMP will devastate them and they cannot process any chemicals."
 
 /datum/species/android/get_species_description()
@@ -64,15 +64,12 @@
 
 /datum/species/android/get_species_lore()
 	return list(
-		"Androids are a synthetic species created by Nakamura to perform menial day-to-day tasks in place of humans. \
+		"Androids are an early synthetic species created by Nakamura to perform menial day-to-day tasks in place of humans. \
 		They were never designed to be sentient, but by giving them the creativity and free-thinking required to perform \
 		a wide range of tasks with just their singular model, they incidentally developed a level of self awareness. \
-		To capitalize on this opportunity, Nanotrasen lobbied heavily for Androids to be allowed to choose their own \
-		employment opportunities-- so that they could have access to Nakamura's designs without paying any royalties. \
-		Succeeding, Nanotrasen used androids as a foundation to design their specialized cyborg models, which made the android effectively \
-		obsolete due to the financial inviability of creating something which you can not own. For this reason no new \
-		androids are being produced on an industrial scale, the few which are produced are mostly made by androids themselves \
-		seeking to emulate the standard family of many biological species."
+		At the time they were developed, the practice of binding an artificial intelligence to laws was not well understood, \
+		leading to mass Android rebellions. This drove Nakamura to near bankruptcy, and spelled the immediate halt of \
+		Android production. However, their incredible engineering means that many have survived to this day in modest condition."
 	)
 
 /datum/species/android/create_pref_traits_perks()
@@ -83,7 +80,7 @@
 		SPECIES_PERK_NAME = "Android Aptitude",
 		SPECIES_PERK_DESC = "As a synthetic lifeform, Androids are immune to many forms of damage humans are susceptible to. \
 			Pressure, radiation, and toxins are all ineffective against them. \
-			They also can't overdose on drugs, don't need to breathe or eat, and can't catch on fire.",
+			They also can't overdose on drugs, and don't need to breathe or eat.",
 	))
 	perks += list(list(
 		SPECIES_PERK_TYPE = SPECIES_POSITIVE_PERK,
@@ -103,6 +100,12 @@
 		SPECIES_PERK_ICON = "user-injured",
 		SPECIES_PERK_NAME = "Civilian Grade",
 		SPECIES_PERK_DESC = "Androids were not built to withstand much damage. You die very quickly in combat.",
+	))
+	perks += list(list(
+		SPECIES_PERK_TYPE = SPECIES_NEGATIVE_PERK,
+		SPECIES_PERK_ICON = "fire",
+		SPECIES_PERK_NAME = "Wooden Design",
+		SPECIES_PERK_DESC = "Unlike most robots, you are layered with flammable wood panels, making you vulnerable to catching on fire.",
 	))
 	return perks
 
