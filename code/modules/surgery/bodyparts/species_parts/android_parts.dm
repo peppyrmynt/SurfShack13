@@ -40,3 +40,12 @@
 	biological_state = (BIO_ANDROID_JOINTED)
 	icon_static = 'surfshack13/icons/android_limbs.dmi'
 	icon = 'surfshack13/icons/android_limbs.dmi'
+
+/obj/item/organ/eyes/robotic/android
+	name = "silver filament eyes"
+	icon_state = "eyeballs-android"
+	desc = "A pair of incredibly old pinpoint cameras. It has one cable for each color... high tech stuff."
+	pepperspray_protect = TRUE
+	visual = FALSE
+	eye_icon_state = null
+	color_cutoffs = list(12, 4, 0)

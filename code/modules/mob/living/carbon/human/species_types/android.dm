@@ -7,7 +7,6 @@
 		TRAIT_GENELESS,
 		TRAIT_LIMBATTACHMENT,
 		TRAIT_LIVERLESS_METABOLISM,
-		TRAIT_NOFIRE,
 		TRAIT_NOHUNGER,
 		TRAIT_NO_DNA_COPY,
 		TRAIT_NO_PLASMA_TRANSFORM,
@@ -32,7 +31,7 @@
 	mutantheart = null
 	mutantliver = null
 	mutantlungs = null
-	mutanteyes = /obj/item/organ/eyes/robotic
+	mutanteyes = /obj/item/organ/eyes/robotic/android
 	mutantears = /obj/item/organ/ears/cybernetic
 	species_language_holder = /datum/language_holder/android
 	exotic_blood = /datum/reagent/toxin/coolant
@@ -50,7 +49,7 @@
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/robot/surplus/android,
 	)
 
-/datum/species/lizard/get_scream_sound(mob/living/carbon/human/android)
+/datum/species/android/get_scream_sound(mob/living/carbon/human/android)
 	return 'sound/effects/stall.ogg'
 
 /datum/species/android/get_physical_attributes()
