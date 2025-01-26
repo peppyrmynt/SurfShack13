@@ -901,6 +901,7 @@
 	icon_state = "vodkabottle"
 	list_reagents = list()
 	var/active = FALSE
+	var/coolfire = FALSE
 	var/list/accelerants = list(
 		/datum/reagent/consumable/ethanol,
 		/datum/reagent/fuel,
@@ -936,7 +937,19 @@
 	..()
 	if(firestarter && active)
 		target.fire_act()
-		new /obj/effect/hotspot(get_turf(target))
+		if(coolfire == TRUE)
+			for(var/turf/nearby_turf in RANGE_TURFS(2, target))
+				if(!locate(/obj/effect/hotspot) in nearby_turf)
+					var/obj/effect/decal/cleanable/fuel_pool/molotov/pool = nearby_turf.spawn_unique_cleanable(/obj/effect/decal/cleanable/fuel_pool/molotov)
+					pool.burn_amount = 10
+					pool.ignite()
+		else
+			for(var/turf/nearby_turf in RANGE_TURFS(1, target))
+				if(!locate(/obj/effect/hotspot) in nearby_turf)
+					var/obj/effect/decal/cleanable/fuel_pool/molotov/pool = nearby_turf.spawn_unique_cleanable(/obj/effect/decal/cleanable/fuel_pool/molotov)
+					pool.burn_amount = 5
+					pool.ignite()
+
 
 /obj/item/reagent_containers/cup/glass/bottle/molotov/attackby(obj/item/I, mob/user, params)
 	if(I.get_temperature() && !active)
@@ -947,6 +960,8 @@
 		add_overlay(custom_fire_overlay ? custom_fire_overlay : GLOB.fire_overlay)
 		if(!isGlass)
 			addtimer(CALLBACK(src, PROC_REF(explode)), 5 SECONDS)
+		if(reagents.total_volume >= 60)
+			coolfire = TRUE
 
 /obj/item/reagent_containers/cup/glass/bottle/molotov/proc/explode()
 	if(!active)
