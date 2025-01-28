@@ -901,7 +901,7 @@
 	icon_state = "vodkabottle"
 	list_reagents = list()
 	var/active = FALSE
-	var/coolfire = FALSE
+	var/bigfire = FALSE
 	var/list/accelerants = list(
 		/datum/reagent/consumable/ethanol,
 		/datum/reagent/fuel,
@@ -935,9 +935,11 @@
 				firestarter = 1
 				break
 	..()
-	if(firestarter && active)
+	if (!firestarter && !active)
+		return
+	else
 		target.fire_act()
-		if(coolfire == TRUE)
+		if(bigfire == TRUE)
 			for(var/turf/nearby_turf in RANGE_TURFS(2, target))
 				if(!locate(/obj/effect/hotspot) in nearby_turf)
 					var/obj/effect/decal/cleanable/fuel_pool/molotov/pool = nearby_turf.spawn_unique_cleanable(/obj/effect/decal/cleanable/fuel_pool/molotov)
@@ -961,7 +963,7 @@
 		if(!isGlass)
 			addtimer(CALLBACK(src, PROC_REF(explode)), 5 SECONDS)
 		if(reagents.total_volume >= 60)
-			coolfire = TRUE
+			bigfire = TRUE
 
 /obj/item/reagent_containers/cup/glass/bottle/molotov/proc/explode()
 	if(!active)
