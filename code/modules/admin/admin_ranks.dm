@@ -81,6 +81,8 @@ GLOBAL_PROTECT(protected_ranks)
 				flag = R_AUTOADMIN
 			if("DBRANKS")
 				flag = R_DBRANKS
+			if("READAGEGATE")
+				flag = R_READAGEGATE
 			if("@")
 				if(previous_rank)
 					switch(group_count)

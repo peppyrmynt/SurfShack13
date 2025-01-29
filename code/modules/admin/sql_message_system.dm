@@ -580,13 +580,16 @@
 			output += "<h2>Notes</h2>"
 			output += notedata
 			if(!linkless)
-				if (agegate)
-					if (skipped) //the first skipped message is still shown so that we can put this link over it.
-						output += "<center><a href='?_src_=holder;[HrefToken()];showmessageckey=[target_ckey];showall=1' style='position: relative; top: -3em;'>Show [skipped] hidden messages</a></center>"
-					else
-						output += "<center><a href='?_src_=holder;[HrefToken()];showmessageckey=[target_ckey];showall=1'>Show All</a></center>"
+				if(!check_rights(R_READAGEGATE))
+					return
 				else
-					output += "<center><a href='?_src_=holder;[HrefToken()];showmessageckey=[target_ckey]'>Hide Old</a></center>"
+					if (agegate)
+						if (skipped) //the first skipped message is still shown so that we can put this link over it.
+							output += "<center><a href='?_src_=holder;[HrefToken()];showmessageckey=[target_ckey];showall=1' style='position: relative; top: -3em;'>Show [skipped] hidden messages</a></center>"
+						else
+							output += "<center><a href='?_src_=holder;[HrefToken()];showmessageckey=[target_ckey];showall=1'>Show All</a></center>"
+					else
+						output += "<center><a href='?_src_=holder;[HrefToken()];showmessageckey=[target_ckey]'>Hide Old</a></center>"
 	if(index)
 		var/search
 		output += "<center><a href='?_src_=holder;[HrefToken()];addmessageempty=1'>Add message</a><a href='?_src_=holder;[HrefToken()];addwatchempty=1'>Add watchlist entry</a><a href='?_src_=holder;[HrefToken()];addnoteempty=1'>Add note</a></center>"
