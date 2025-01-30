@@ -173,6 +173,8 @@ GLOBAL_LIST_INIT(modulo_angle_to_dir, list(NORTH,NORTHEAST,EAST,SOUTHEAST,SOUTH,
 		. += "[seperator]AUTOLOGIN"
 	if(rights & R_DBRANKS)
 		. += "[seperator]DBRANKS"
+	if(rights & R_READAGEGATE)
+		. += "[seperator]READAGEGATE"
 	if(!.)
 		. = "NONE"
 	return .
