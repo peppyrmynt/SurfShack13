@@ -1322,6 +1322,11 @@
 	icon_state = "shirt_black"
 	gender = NEUTER
 
+/datum/sprite_accessory/undershirt/shirt_black_symbol
+	name = "Shirt (Symbol Shirt)"
+	icon_state = "shirt_symbol"
+	gender = NEUTER
+
 /datum/sprite_accessory/undershirt/blueshirt
 	name = "Shirt (Blue)"
 	icon_state = "shirt_blue"
