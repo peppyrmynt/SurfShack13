@@ -770,10 +770,10 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	tox_damage = 0
 
 /datum/reagent/inverse/sal_acid/on_hydroponics_apply(obj/machinery/hydroponics/mytray, mob/user)
-	mytray.adjust_plant_health(round(volume * 0.5))
-	mytray.myseed?.adjust_production(-round(volume * 0.2))
-	mytray.myseed?.adjust_potency(round(volume * 0.25))
-	mytray.myseed?.adjust_yield(round(volume * 0.2))
+	mytray.adjust_plant_health(round(volume * 1.2))
+	mytray.myseed?.adjust_production(-round(volume * 0.8))
+	mytray.myseed?.adjust_potency(round(volume))
+	mytray.myseed?.adjust_yield(round(volume * 0.8))
 
 /datum/reagent/inverse/oxandrolone
 	name = "Oxymetholone"
