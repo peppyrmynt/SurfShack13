@@ -3054,7 +3054,7 @@
 
 /datum/reagent/brimdust
 	name = "Brimdust"
-	description = "A brimdemon's dust. Consumption is not recommended, although plants like it."
+	description = "A brimdemon's dust. Consumption is not recommended, although it can be used on plants to rapidly heal them."
 	reagent_state = SOLID
 	color = "#522546"
 	taste_description = "burning"
@@ -3066,10 +3066,10 @@
 		return UPDATE_MOB_HEALTH
 
 /datum/reagent/brimdust/on_hydroponics_apply(obj/machinery/hydroponics/mytray, mob/user)
-	mytray.adjust_weedlevel(-1)
-	mytray.adjust_pestlevel(-1)
-	mytray.adjust_plant_health(round(volume))
-	mytray.myseed?.adjust_potency(round(volume * 0.5))
+	mytray.adjust_weedlevel(-3)
+	mytray.adjust_pestlevel(-3)
+	mytray.adjust_plant_health(round(volume * 3))
+	mytray.myseed?.adjust_potency(round(volume))
 
 // I made this food....with love.
 // Reagent added to food by chef's with a chef's kiss. Makes people happy.
