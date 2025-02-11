@@ -5,6 +5,7 @@ Surf Shack 13 currently has five station maps in rotation.
 * [IceBoxStation](https://tgstation13.org/wiki/IceboxStation)
 * [MetaStation](https://tgstation13.org/wiki/MetaStation)
 * [NorthStar](https://tgstation13.org/wiki/The_North_Star)
+* [BoxStation](https://tgstation13.org/wiki/BoxStation) (No tg wiki page since its removed map)
 * [TramStation](https://tgstation13.org/wiki/Tramstation)
 
 Debug station maps.
