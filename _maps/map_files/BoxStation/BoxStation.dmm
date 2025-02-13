@@ -17794,13 +17794,10 @@
 /turf/open/floor/iron/white/smooth_large,
 /area/station/medical/pharmacy)
 "bjS" = (
-/obj/effect/spawner/structure/window/reinforced,
-/obj/machinery/door/poddoor/shutters{
-	id = "abandoned bar";
-	dir = 1
-	},
-/turf/open/floor/plating,
-/area/station/maintenance/port/aft)
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/turf/open/floor/iron/white,
+/area/station/medical/medbay/lobby)
 "bjT" = (
 /obj/effect/turf_decal/trimline/blue/corner,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
@@ -32608,17 +32605,6 @@
 	},
 /turf/open/floor/iron/dark,
 /area/station/engineering/supermatter/room)
-"crQ" = (
-/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
-/obj/machinery/vending/medical,
-/obj/effect/turf_decal/trimline/blue/filled/warning{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8
-	},
-/turf/open/floor/iron/white/smooth_edge,
-/area/station/medical/medbay/central)
 "crS" = (
 /obj/machinery/netpod,
 /obj/machinery/light/small/directional/east,
@@ -38765,6 +38751,17 @@
 	},
 /turf/open/floor/iron/dark,
 /area/station/security/brig)
+"eDk" = (
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
+/obj/machinery/vending/medical,
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8
+	},
+/turf/open/floor/iron/white/smooth_edge,
+/area/station/medical/medbay/central)
 "eDY" = (
 /obj/structure/urinal/directional/north,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
@@ -44525,14 +44522,6 @@
 	},
 /turf/open/floor/iron/kitchen_coldroom,
 /area/station/medical/coldroom)
-"hOy" = (
-/obj/effect/spawner/structure/window/reinforced,
-/obj/machinery/door/poddoor/shutters{
-	id = "abandoned bar";
-	dir = 8
-	},
-/turf/open/floor/plating,
-/area/station/maintenance/port/aft)
 "hOF" = (
 /obj/machinery/atmospherics/components/unary/passive_vent{
 	dir = 1
@@ -46004,10 +45993,13 @@
 /turf/open/floor/iron/dark,
 /area/station/engineering/atmospherics_engine)
 "iKd" = (
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/turf/open/floor/iron/white,
-/area/station/medical/medbay/lobby)
+/obj/effect/spawner/structure/window/reinforced,
+/obj/machinery/door/poddoor/shutters{
+	id = "abandoned bar";
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "iKR" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -46994,6 +46986,14 @@
 	},
 /turf/open/floor/plating,
 /area/station/medical/office)
+"jtu" = (
+/obj/effect/spawner/structure/window/reinforced,
+/obj/machinery/door/poddoor/shutters{
+	id = "abandoned bar";
+	dir = 8
+	},
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "jtF" = (
 /obj/effect/landmark/start/medical_doctor,
 /obj/effect/turf_decal/siding/thinplating_new/light,
@@ -52652,10 +52652,6 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/circuit/off,
 /area/station/science/research/abandoned)
-"mxY" = (
-/obj/machinery/atmospherics/pipe/layer_manifold/scrubbers/hidden,
-/turf/closed/wall,
-/area/station/maintenance/starboard/greater)
 "myb" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -53650,6 +53646,10 @@
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/fore)
+"ndj" = (
+/obj/machinery/atmospherics/pipe/layer_manifold/scrubbers/hidden,
+/turf/closed/wall,
+/area/station/maintenance/starboard/greater)
 "ndn" = (
 /obj/structure/chair/office{
 	dir = 4
@@ -70281,6 +70281,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
 	},
+/obj/item/melee/baton,
 /turf/open/floor/iron/grimy,
 /area/station/security/detectives_office)
 "wUD" = (
@@ -91202,7 +91203,7 @@ aaa
 amJ
 amJ
 amJ
-hOy
+jtu
 amJ
 amJ
 cbj
@@ -91970,7 +91971,7 @@ aaa
 aaa
 aaa
 aaa
-bjS
+iKd
 anz
 bRc
 bSo
@@ -92227,7 +92228,7 @@ aaa
 aaa
 aaa
 aaa
-bjS
+iKd
 agr
 bRf
 elq
@@ -92484,7 +92485,7 @@ aaa
 aaa
 aaa
 aaa
-bjS
+iKd
 vIz
 rXp
 tcy
@@ -92741,7 +92742,7 @@ bJc
 aaa
 aaa
 aaa
-bjS
+iKd
 jOP
 poY
 wan
@@ -107879,8 +107880,8 @@ gVZ
 oaz
 jIT
 bhe
-iKd
-iKd
+bjS
+bjS
 sjQ
 lOL
 boe
@@ -108400,7 +108401,7 @@ bmK
 bog
 jPt
 bpO
-crQ
+eDk
 dKQ
 uHy
 bwD
@@ -109698,7 +109699,7 @@ bCE
 wid
 cdY
 bIn
-mxY
+ndj
 xBk
 isq
 aKe
