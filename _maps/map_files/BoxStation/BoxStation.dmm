@@ -4888,7 +4888,8 @@
 /obj/machinery/button/door/directional/east{
 	id = "Dorm4";
 	name = "Dorm Privacy Control";
-	specialfunctions = 4
+	specialfunctions = 4;
+	normaldoorcontrol = 1
 	},
 /obj/effect/spawner/random/bedsheet,
 /obj/item/pillow/random,
@@ -5355,7 +5356,8 @@
 /obj/machinery/button/door/directional/south{
 	id = "Dorm5";
 	name = "Cabin Privacy Control";
-	specialfunctions = 4
+	specialfunctions = 4;
+	normaldoorcontrol = 1
 	},
 /obj/effect/spawner/random/bedsheet,
 /obj/item/pillow/random,
@@ -5423,7 +5425,8 @@
 /obj/machinery/button/door/directional/south{
 	id = "Dorm6";
 	name = "Cabin Privacy Control";
-	specialfunctions = 4
+	specialfunctions = 4;
+	normaldoorcontrol = 1
 	},
 /obj/effect/spawner/random/bedsheet,
 /obj/item/pillow/random,
@@ -5814,7 +5817,8 @@
 /obj/machinery/button/door/directional/east{
 	id = "Dorm3";
 	name = "Dorm Privacy Control";
-	specialfunctions = 4
+	specialfunctions = 4;
+	normaldoorcontrol = 1
 	},
 /obj/effect/spawner/random/bedsheet,
 /obj/item/pillow/random,
@@ -6927,7 +6931,8 @@
 /obj/machinery/button/door/directional/east{
 	id = "Dorm2";
 	name = "Dorm Privacy Control";
-	specialfunctions = 4
+	specialfunctions = 4;
+	normaldoorcontrol = 1
 	},
 /obj/effect/spawner/random/bedsheet,
 /obj/item/pillow/random,
@@ -7658,7 +7663,8 @@
 /obj/machinery/button/door/directional/east{
 	id = "Dorm1";
 	name = "Dorm Privacy Control";
-	specialfunctions = 4
+	specialfunctions = 4;
+	normaldoorcontrol = 1
 	},
 /obj/effect/spawner/random/bedsheet,
 /obj/item/pillow/random,
@@ -17788,9 +17794,13 @@
 /turf/open/floor/iron/white/smooth_large,
 /area/station/medical/pharmacy)
 "bjS" = (
-/obj/machinery/atmospherics/pipe/layer_manifold/scrubbers/hidden,
-/turf/closed/wall,
-/area/station/maintenance/starboard/greater)
+/obj/effect/spawner/structure/window/reinforced,
+/obj/machinery/door/poddoor/shutters{
+	id = "abandoned bar";
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "bjT" = (
 /obj/effect/turf_decal/trimline/blue/corner,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
@@ -32598,6 +32608,17 @@
 	},
 /turf/open/floor/iron/dark,
 /area/station/engineering/supermatter/room)
+"crQ" = (
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
+/obj/machinery/vending/medical,
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8
+	},
+/turf/open/floor/iron/white/smooth_edge,
+/area/station/medical/medbay/central)
 "crS" = (
 /obj/machinery/netpod,
 /obj/machinery/light/small/directional/east,
@@ -37063,6 +37084,9 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light/small/directional/north,
+/obj/machinery/button/door/directional/north{
+	id = "abandoned bar"
+	},
 /turf/open/floor/wood,
 /area/station/maintenance/port/aft)
 "dHQ" = (
@@ -44501,6 +44525,14 @@
 	},
 /turf/open/floor/iron/kitchen_coldroom,
 /area/station/medical/coldroom)
+"hOy" = (
+/obj/effect/spawner/structure/window/reinforced,
+/obj/machinery/door/poddoor/shutters{
+	id = "abandoned bar";
+	dir = 8
+	},
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "hOF" = (
 /obj/machinery/atmospherics/components/unary/passive_vent{
 	dir = 1
@@ -46776,17 +46808,6 @@
 	},
 /turf/open/floor/engine,
 /area/station/science/xenobiology)
-"joi" = (
-/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
-/obj/machinery/vending/medical,
-/obj/effect/turf_decal/trimline/blue/filled/warning{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8
-	},
-/turf/open/floor/iron/white/smooth_edge,
-/area/station/medical/medbay/central)
 "joo" = (
 /obj/machinery/atmospherics/pipe/smart/manifold/cyan/visible,
 /obj/effect/decal/cleanable/dirt,
@@ -52631,6 +52652,10 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/circuit/off,
 /area/station/science/research/abandoned)
+"mxY" = (
+/obj/machinery/atmospherics/pipe/layer_manifold/scrubbers/hidden,
+/turf/closed/wall,
+/area/station/maintenance/starboard/greater)
 "myb" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -91177,7 +91202,7 @@ aaa
 amJ
 amJ
 amJ
-bLv
+hOy
 amJ
 amJ
 cbj
@@ -91945,7 +91970,7 @@ aaa
 aaa
 aaa
 aaa
-bLv
+bjS
 anz
 bRc
 bSo
@@ -92202,7 +92227,7 @@ aaa
 aaa
 aaa
 aaa
-bLv
+bjS
 agr
 bRf
 elq
@@ -92459,7 +92484,7 @@ aaa
 aaa
 aaa
 aaa
-bLv
+bjS
 vIz
 rXp
 tcy
@@ -92716,7 +92741,7 @@ bJc
 aaa
 aaa
 aaa
-bLv
+bjS
 jOP
 poY
 wan
@@ -108375,7 +108400,7 @@ bmK
 bog
 jPt
 bpO
-joi
+crQ
 dKQ
 uHy
 bwD
@@ -109673,7 +109698,7 @@ bCE
 wid
 cdY
 bIn
-bjS
+mxY
 xBk
 isq
 aKe
