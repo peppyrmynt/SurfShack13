@@ -43263,10 +43263,6 @@
 "hbV" = (
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/greater)
-"hbZ" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/turf/closed/wall,
-/area/station/maintenance/starboard/greater)
 "hce" = (
 /obj/effect/turf_decal/siding/wideplating_new/dark/corner{
 	dir = 4
@@ -45852,6 +45848,17 @@
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 8
 	},
+/area/station/medical/medbay/central)
+"iFr" = (
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
+/obj/machinery/vending/medical,
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8
+	},
+/turf/open/floor/iron/white/smooth_edge,
 /area/station/medical/medbay/central)
 "iFO" = (
 /obj/structure/sink/directional/west,
@@ -66804,17 +66811,6 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/fore)
-"uXB" = (
-/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
-/obj/machinery/vending/medical,
-/obj/effect/turf_decal/trimline/blue/filled/warning{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/blue/filled/corner{
-	dir = 8
-	},
-/turf/open/floor/iron/white/smooth_edge,
-/area/station/medical/medbay/central)
 "uXN" = (
 /obj/effect/turf_decal/arrows/red{
 	dir = 4;
@@ -71560,6 +71556,10 @@
 	},
 /turf/open/floor/iron,
 /area/station/ai_monitored/command/storage/eva)
+"xHX" = (
+/obj/machinery/atmospherics/pipe/layer_manifold/scrubbers/hidden,
+/turf/closed/wall,
+/area/station/maintenance/starboard/greater)
 "xHZ" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -108384,7 +108384,7 @@ bmK
 bog
 jPt
 bpO
-uXB
+iFr
 dKQ
 uHy
 bwD
@@ -109682,7 +109682,7 @@ bCE
 wid
 cdY
 bIn
-hbZ
+xHX
 xBk
 isq
 aKe
