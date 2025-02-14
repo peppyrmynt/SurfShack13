@@ -662,7 +662,7 @@
 	name = "Waystation Electrical"
 
 // The All-American Diner
-/area/ruin/space/has_grav/allamericandiner
+/area/ruin/space/has_grav/powered/allamericandiner
 	name = "\improper The All-American Diner"
 
 // Transit Booth
