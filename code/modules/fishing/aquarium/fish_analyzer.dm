@@ -61,7 +61,7 @@
 /obj/item/fish_analyzer/interact_with_atom(atom/target, mob/living/user, list/modifiers)
 	if(!isfish(target) && !HAS_TRAIT(target, TRAIT_IS_AQUARIUM))
 		return NONE
-	if(!user.can_read(src) || user.is_blind())
+	if(!user.can_read(src, READING_CHECK_LITERACY)|| user.is_blind())
 		return ITEM_INTERACT_BLOCKING
 
 	scanned_item = WEAKREF(target)
