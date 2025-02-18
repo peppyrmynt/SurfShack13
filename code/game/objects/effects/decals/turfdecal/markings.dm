@@ -585,3 +585,32 @@
 /obj/effect/turf_decal/board_letter/h
 	icon_state = "board_h"
 
+/// box map
+
+/obj/effect/turf_decal/map_box/one
+	icon_state = "boxmap1"
+
+/obj/effect/turf_decal/map_box/two
+	icon_state = "boxmap2"
+
+/obj/effect/turf_decal/map_box/three
+	icon_state = "boxmap3"
+
+/obj/effect/turf_decal/map_box/four
+	icon_state = "boxmap4"
+
+/obj/effect/turf_decal/map_box/five
+	icon_state = "boxmap5"
+
+/obj/effect/turf_decal/map_box/six
+	icon_state = "boxmap6"
+
+/obj/effect/turf_decal/map_box/seven
+	icon_state = "boxmap7"
+
+/obj/effect/turf_decal/map_box/eight
+	icon_state = "boxmap8"
+
+/obj/effect/turf_decal/map_box/nine
+	icon_state = "boxmap9"
+
