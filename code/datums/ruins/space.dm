@@ -452,7 +452,7 @@
 	id = "allamericandiner"
 	suffix = "allamericandiner.dmm"
 	name = "Space-Ruin The All-American Diner"
-	description = "A mothballed \"Restaurant\" station of the popular \"The All-American Diner\" franchise."
+	description = "A fully staffed american diner, floating in the void of space."
 
 /datum/map_template/ruin/space/mimesvclowns
 	id = "mimesvclowns"

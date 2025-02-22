@@ -39,7 +39,7 @@
 	. = ..()
 	if(!.)
 		return
-	if(!isliving(target) || !mod.wearer.can_read(src))
+	if(!isliving(target) || !mod.wearer.can_read(src, READING_CHECK_LITERACY))
 		return
 	switch(mode)
 		if(HEALTH_SCAN)

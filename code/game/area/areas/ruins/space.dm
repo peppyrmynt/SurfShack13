@@ -661,8 +661,8 @@
 /area/ruin/space/has_grav/waystation/power
 	name = "Waystation Electrical"
 
-// Ruin of The All-American Diner
-/area/ruin/space/has_grav/allamericandiner
+// The All-American Diner
+/area/ruin/space/has_grav/powered/allamericandiner
 	name = "\improper The All-American Diner"
 
 // Transit Booth

@@ -938,6 +938,8 @@
 
 	if(!firestarter || !active)
 		return
+	if(bartender_check(target) && ranged)
+		return smash(target)
 	target.fire_act()
 	for(var/turf/nearby_turf in RANGE_TURFS((bigfire ? 2 : 1), target))
 		if(locate(/obj/effect/hotspot) in nearby_turf)

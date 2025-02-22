@@ -94,6 +94,15 @@
 	suit = /obj/item/clothing/suit/armor/vest/alt
 	shoes = /obj/item/clothing/shoes/jackboots
 
+/datum/outfit/mafia/security/maints
+	name = "Maints Security Officer"
+
+	uniform = /obj/item/clothing/under/rank/security/officer
+	gloves = /obj/item/clothing/gloves/color/black/security
+	head = /obj/item/clothing/head/helmet/old
+	suit = /obj/item/clothing/suit/armor/vest/old
+	shoes = /obj/item/clothing/shoes/jackboots
+
 /datum/outfit/mafia/lawyer
 	name = "Mafia Lawyer"
 
@@ -129,6 +138,16 @@
 	gloves = /obj/item/clothing/gloves/color/black/security
 	head = /obj/item/clothing/head/hats/warden/red
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses
+
+/datum/outfit/mafia/maints/warden
+	name = "Maints Warden"
+
+	uniform = /obj/item/clothing/under/rank/security/warden
+	shoes = /obj/item/clothing/shoes/jackboots
+	suit = /obj/item/clothing/suit/armor/vest/old
+	gloves = /obj/item/clothing/gloves/color/black/security
+	head = /obj/item/clothing/head/hats/warden/red
+
 
 //mafia
 
