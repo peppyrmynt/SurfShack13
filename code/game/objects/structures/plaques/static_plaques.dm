@@ -139,6 +139,10 @@
 /obj/structure/plaque/static_plaque/golden/commission/wawa
 	desc = "Spinward Sector Station SS-13\n'Wawa' Class Outpost\nCommissioned 04/06/2564\n'Forever Vertical'"
 
+// Boxstation: added Nov 15, 2010 (pre-git), removed Jul 06, 2020 (#52017)- 9 years, 7 months, 21 days, readded Jan 20, 2025 (SurfShack)
+/obj/structure/plaque/static_plaque/golden/commission/box
+	desc = "Spinward Sector Station SS-02\n'Box' Class Outpost\nCommissioned 15/11/2550\nRecommissioned 20/01/2565\n'Old Faithful'"
+
 //Removed stations
 
 // Asteroidstation: added Oct 17, 2015 (169ab09f7b52254ee505e54cdea681fab287647b), removed Jun 19, 2016 (#18661)- 8 months, 2 days
@@ -152,10 +156,6 @@
 // Birdshot: added Apr 29, 2023 (#74371), removed Dec 23, 2024
 /obj/structure/plaque/static_plaque/golden/commission/birdshot
 	desc = "Spinward Sector Station SS-13\n'Birdshot' Class Outpost\nCommissioned 29/04/2563\n'Shooting for the Stars'"
-
-// Boxstation: added Nov 15, 2010 (pre-git), removed Jul 06, 2020 (#52017)- 9 years, 7 months, 21 days
-/obj/structure/plaque/static_plaque/golden/commission/box
-	desc = "Spinward Sector Station SS-02\n'Box' Class Outpost\nCommissioned 15/11/2550\nDecommissioned 06/07/2560\n'Old Faithful'"
 
 // Pubbystation: added Oct 19, 2016 (#20925), removed Dec 10, 2020 (#54588)- 4 years, 1 month, 21 days
 /obj/structure/plaque/static_plaque/golden/commission/pubby

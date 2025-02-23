@@ -106,6 +106,11 @@
 	desc = "A small bottle of diethylamine."
 	list_reagents = list(/datum/reagent/diethylamine = 30)
 
+/obj/item/reagent_containers/cup/bottle/brimdust
+	name = "brimdust bottle"
+	desc = "A small bottle of brimdust."
+	list_reagents = list(/datum/reagent/brimdust = 30)
+
 /obj/item/reagent_containers/cup/bottle/facid
 	name = "Fluorosulfuric Acid Bottle"
 	desc = "A small bottle. Contains a small amount of fluorosulfuric acid."

@@ -1,5 +1,16 @@
 <!-- Most valid html will work in here, but you have to use URL links for images. -->
 
-<h1>Welcome to Space Station 13!</h1>
+<h1>Welcome to Surf Shack 13!</h1>
 
-<i>This server is running a /tg/station 13 Git build.</i>
+<i>This server is running a modified /tg/station 13 Git build.</i>
+
+<H2><span style="text-decoration: underline;">Rules</H2>
+1. Do not cheat.<br>
+2. Have fun.
+
+<H2><span style="text-decoration: underline;">Links</H2>
+<li> <a href="play.surfshack13.net:1337">Sever Address <br>
+ <li><a href="https://discord.gg/bWEpZGTxqy"> Discord <br>
+ <li><a href="https://github.com/IndieanaJones/SurfShack13"> Github <br>
+<br>
+<img src="https://cdn.discordapp.com/attachments/1110999200700829828/1334052948585746472/image.png?ex=679b2120&is=6799cfa0&hm=e219b95d95fab20ec32ec17d3ec63b1936c7e822b72f427ab5194aa2a1bddddf&" alt="I Hope pepper doesn't see this." />
