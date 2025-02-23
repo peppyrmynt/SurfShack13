@@ -119,15 +119,3 @@
 	hidden = TRUE
 	experimental = TRUE
 	announce_channels = list(RADIO_CHANNEL_SCIENCE)
-
-/datum/techweb_node/autosurgeon
-	id = TECHWEB_NODE_AUTOSURGEON
-	display_name = "Unlocked Autonomous Surgery"
-	description = "Modern day medicine requires bypassing modern day security measures. Clearing just a few lines of code now unlocks the creation of an autosurgeon that isn't limited to a single implant."
-	design_ids = list(
-		"autosurgeon",
-	)
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS)
-	hidden = TRUE
-	experimental = TRUE
-	announce_channels = list(RADIO_CHANNEL_MEDICAL)
