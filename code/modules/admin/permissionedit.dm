@@ -140,7 +140,8 @@ ADMIN_VERB(edit_admin_permissions, R_PERMISSIONS, "Permissions Panel", "Edit adm
 	permissions_assets.send(usr.client)
 	var/admin_key = href_list["key"]
 	var/admin_ckey = ckey(admin_key)
-
+	var/datum/admins/D = GLOB.admin_datums[admin_ckey]
+	var/use_db
 	var/task = href_list["editrights"]
 	var/skip
 	var/legacy_only
@@ -173,7 +174,13 @@ ADMIN_VERB(edit_admin_permissions, R_PERMISSIONS, "Permissions Panel", "Edit adm
 			if(QDELETED(usr))
 				return
 
-	if(target_admin_datum && (task != "sync" && task != "verify") && !check_if_greater_rights_than_holder(target_admin_datum))
+	if(task != "add")
+		D = GLOB.admin_datums[admin_ckey]
+		if(!D)
+			D = GLOB.deadmins[admin_ckey]
+		if(!D)
+			return
+	if((task != "sync") && !check_if_greater_rights_than_holder(D))
 		message_admins("[key_name_admin(usr)] attempted to change the rank of [admin_key] without sufficient rights.")
 		log_admin("[key_name(usr)] attempted to change the rank of [admin_key] without sufficient rights.")
 		return
