@@ -80,6 +80,7 @@
 		/datum/language/draconic,
 		/datum/language/codespeak,
 		/datum/language/monkey,
+		/datum/language/kobold,
 		/datum/language/narsie,
 		/datum/language/beachbum,
 		/datum/language/aphasia,
