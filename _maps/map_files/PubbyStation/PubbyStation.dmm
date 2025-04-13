@@ -18337,7 +18337,7 @@
 	dir = 8;
 	dwidth = 2;
 	height = 13;
-	name = "PubbyStation Ferry Dock";
+	name = "port bay 2";
 	shuttle_id = "ferry_home";
 	width = 5
 	},
