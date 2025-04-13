@@ -21,8 +21,3 @@
 	suffix = "cramped"
 	name = "escape pod (Cramped)"
 	description = "Downgraded escape pod that lacks a window and only has one seat, alongside lacking an emergency safe."
-
-/datum/map_template/shuttle/escape_pod/pubby
-	suffix = "pubby"
-	name = "escape pod (Pubby)"
-	description = "Actually the new Pubbystation monastery shuttle."
