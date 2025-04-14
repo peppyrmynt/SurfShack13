@@ -2964,10 +2964,10 @@
 	},
 /area/station/security/execution/education)
 "akw" = (
-/obj/machinery/netpod,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/siding/dark,
 /obj/structure/extinguisher_cabinet/directional/west,
+/obj/machinery/computer/quantum_console,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/cargo/bitrunning/den)
 "akx" = (
@@ -12287,7 +12287,7 @@
 	dir = 8;
 	dwidth = 4;
 	height = 15;
-	name = "PubbyStation Emergency Evac Bay";
+	name = "Emergency Evac Bay";
 	width = 20;
 	shuttle_id = "emergency_home"
 	},
@@ -15498,7 +15498,7 @@
 	dir = 4;
 	dwidth = 3;
 	height = 5;
-	name = "mining shuttle bay";
+	name = "Mining Bay";
 	roundstart_template = /datum/map_template/shuttle/mining/delta;
 	width = 7;
 	shuttle_id = "mining_home"
@@ -15735,7 +15735,7 @@
 	dir = 8;
 	dwidth = 3;
 	height = 13;
-	name = "PubbyStation Arrival Bay";
+	name = "Arrival Bay";
 	roundstart_template = /datum/map_template/shuttle/arrival/pubby;
 	width = 6;
 	shuttle_id = "arrival_stationary"
@@ -18337,7 +18337,7 @@
 	dir = 8;
 	dwidth = 2;
 	height = 13;
-	name = "port bay 2";
+	name = "Ferry Dock";
 	shuttle_id = "ferry_home";
 	width = 5
 	},
@@ -20559,10 +20559,10 @@
 	},
 /area/station/medical/medbay/aft)
 "bEv" = (
-/obj/machinery/netpod,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/siding/dark,
 /obj/machinery/firealarm/directional/north,
+/obj/machinery/quantum_server,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/cargo/bitrunning/den)
 "bEw" = (
@@ -28808,10 +28808,10 @@
 	},
 /area/station/hallway/primary/central)
 "csY" = (
-/obj/machinery/quantum_server,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/siding/dark,
 /obj/machinery/camera/autoname/directional/east,
+/obj/machinery/byteforge,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/cargo/bitrunning/den)
 "cth" = (
@@ -29248,7 +29248,7 @@
 "cwM" = (
 /obj/docking_port/stationary/escape_pod{
 	dir = 8;
-	name = "PubbyStation Monastery Escape Pod"
+	name = "Monastery Escape Pod"
 	},
 /turf/open/space/basic,
 /area/space)
@@ -29811,12 +29811,12 @@
 /turf/open/floor/plating,
 /area/station/medical/abandoned)
 "cBv" = (
-/obj/machinery/byteforge,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/siding/dark{
 	dir = 1
 	},
 /obj/item/radio/intercom/directional/west,
+/obj/machinery/netpod,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/cargo/bitrunning/den)
 "cBx" = (
@@ -50022,13 +50022,11 @@
 	},
 /area/station/hallway/primary/central)
 "kEQ" = (
-/obj/machinery/computer/quantum_console{
-	dir = 1
-	},
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/siding/dark{
 	dir = 5
 	},
+/obj/machinery/netpod,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/cargo/bitrunning/den)
 "kEZ" = (
@@ -76912,6 +76910,7 @@
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4
 	},
+/obj/item/stock_parts/power_store/cell,
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/lobby)
 "uXO" = (
@@ -84101,6 +84100,7 @@
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 1
 	},
+/obj/item/stock_parts/power_store/cell,
 /turf/open/floor/iron/textured_large,
 /area/station/cargo/storage)
 "xOb" = (
@@ -105748,7 +105748,7 @@ ftu
 ftu
 btL
 ftu
-aaa
+oex
 oex
 aaa
 aaa
