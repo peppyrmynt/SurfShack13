@@ -17841,13 +17841,6 @@
 /obj/effect/turf_decal/trimline/yellow/filled/corner{
 	dir = 4
 	},
-/obj/machinery/button/door/directional/west{
-	id = "Secure Storage";
-	name = "Engineering Secure Storage";
-	pixel_y = -26;
-	req_access = list("engine_equip");
-	pixel_x = -5
-	},
 /turf/open/floor/iron,
 /area/station/command/heads_quarters/ce)
 "bql" = (
