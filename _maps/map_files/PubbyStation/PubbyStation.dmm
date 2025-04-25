@@ -37898,14 +37898,6 @@
 	},
 /turf/closed/wall,
 /area/station/hallway/primary/fore)
-"fxK" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/binary/pump{
-	name = "Gas to Chamber";
-	dir = 1
-	},
-/turf/open/floor/engine,
-/area/station/engineering/supermatter/room)
 "fyb" = (
 /obj/machinery/door/airlock/grunge{
 	name = "Private Painting"
@@ -57721,12 +57713,12 @@
 	},
 /area/station/hallway/secondary/entry)
 "ndI" = (
-/obj/machinery/atmospherics/components/binary/pump/on{
-	dir = 8;
-	name = "Engine Coolant Bypass"
-	},
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
+	},
+/obj/machinery/atmospherics/components/binary/pump/on{
+	dir = 4;
+	name = "Engine Coolant Bypass"
 	},
 /turf/open/floor/engine,
 /area/station/engineering/supermatter/room)
@@ -118186,7 +118178,7 @@ bOS
 bPI
 gEI
 slC
-fxK
+vpa
 gPI
 aaa
 aaa
