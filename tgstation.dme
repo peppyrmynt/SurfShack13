@@ -4917,6 +4917,7 @@
 #include "code\modules\mob\living\basic\guardian\guardian_helpers.dm"
 #include "code\modules\mob\living\basic\guardian\guardian_verbs.dm"
 #include "code\modules\mob\living\basic\guardian\guardian_types\assassin.dm"
+#include "code\modules\mob\living\basic\guardian\guardian_types\chaplain.dm"
 #include "code\modules\mob\living\basic\guardian\guardian_types\charger.dm"
 #include "code\modules\mob\living\basic\guardian\guardian_types\dextrous.dm"
 #include "code\modules\mob\living\basic\guardian\guardian_types\explosive.dm"

@@ -767,6 +767,9 @@
 		The stronger your swinging arm is, the stronger the blade is, though only slightly. \
 		Against debilitated targets, can also deal additional sneak attack damage with a very high wound chance."
 
+
+
+
 /obj/item/nullrod/nullblade/melee_attack_chain(mob/user, atom/target, params)
 	//Track our actual force separately
 	var/old_force = force

@@ -2,6 +2,7 @@
 #define GUARDIAN_THEME_MAGIC "magic"
 #define GUARDIAN_THEME_CARP "carp"
 #define GUARDIAN_THEME_MINER "miner"
+#define GUARDIAN_THEME_HOLY "holy"
 
 #define GUARDIAN_MAGIC "magic"
 #define GUARDIAN_TECH "tech"
@@ -27,4 +28,5 @@ GLOBAL_LIST_INIT(guardian_themes, list(
 	GUARDIAN_THEME_MAGIC = new /datum/guardian_fluff,
 	GUARDIAN_THEME_CARP = new /datum/guardian_fluff/carp,
 	GUARDIAN_THEME_MINER = new /datum/guardian_fluff/miner,
+	GUARDIAN_THEME_HOLY = new /datum/guardian_fluff/holy,
 ))
