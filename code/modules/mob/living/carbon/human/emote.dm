@@ -25,8 +25,9 @@
 /datum/emote/living/carbon/human/hehehehaw/run_emote(mob/living/carbon/human/H, params)
 	if(TIMER_COOLDOWN_RUNNING(H, type))
 		return
-	var/image/img = image('icons/hud/clash_royal_laugh.dmi', loc = H, layer=HUD_PLANE, pixel_x = -32, pixel_y = -32)
+	var/image/img = image('icons/hud/clash_royal_laugh.dmi', loc = H, layer=ABOVE_HUD_PLANE, pixel_x = -32, pixel_y = -32)
 	var/orig_matrix = img.transform * 0.5
+	img.plane = ABOVE_HUD_PLANE
 	img.transform *= 0
 	for (var/mob/M in viewers(world.view, H))
 		if (!M.client)
