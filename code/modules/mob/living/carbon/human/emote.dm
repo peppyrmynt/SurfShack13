@@ -20,13 +20,11 @@
 	emote_type = EMOTE_VISIBLE | EMOTE_AUDIBLE
 	specific_emote_audio_cooldown = 1 MINUTES
 	vary = TRUE
+	sound = 'sound/mobs/humanoids/human/laugh/hehehehehaw.ogg'
 
 /datum/emote/living/carbon/human/hehehehaw/run_emote(mob/living/carbon/human/H, params)
 	if(TIMER_COOLDOWN_RUNNING(H, type))
 		return
-	. = ..()
-	TIMER_COOLDOWN_START(H, type, specific_emote_audio_cooldown)
-
 	var/image/img = image('icons/hud/clash_royal_laugh.dmi', loc = H, layer=HUD_PLANE, pixel_x = -32, pixel_y = -32)
 	var/orig_matrix = img.transform * 0.5
 	img.transform *= 0
@@ -35,9 +33,7 @@
 			continue
 		M.client.images += img
 	animate(img, transform = orig_matrix, time = 1.5)
-	if(H.mind && !HAS_TRAIT(H, TRAIT_MIMING))
-		playsound(H, 'sound/mobs/humanoids/human/laugh/hehehehehaw.ogg', 25, 1)
-
+	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(fade_out), H, img), 20)
 
 /datum/emote/living/carbon/human/hehehehaw/proc/fade_out(mob/living/carbon/human/H, image/img)
