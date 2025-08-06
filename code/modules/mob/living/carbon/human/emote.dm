@@ -28,8 +28,8 @@
 	var/image/img = image('icons/hud/clash_royal_laugh.dmi', loc = H, layer=ABOVE_HUD_PLANE, pixel_x = -32, pixel_y = -32)
 	var/orig_matrix = img.transform * 0.5
 	img.plane = ABOVE_HUD_PLANE
-  img.mouse_opacity = FALSE //click through it
-  img.alpha = 210
+	img.mouse_opacity = FALSE //click through it
+	img.alpha = 210
 	img.transform *= 0
 	for (var/mob/M in viewers(world.view, H))
 		if (!M.client)
