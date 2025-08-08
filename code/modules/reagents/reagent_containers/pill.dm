@@ -22,8 +22,6 @@
 		icon_state = "pill[rand(1,20)]"
 	if(reagents.total_volume && rename_with_volume)
 		name += " ([reagents.total_volume]u)"
-	if(apply_type == INGEST)
-		AddComponent(/datum/component/germ_sensitive, mapload)
 
 ///Runs the consumption code, can be overriden for special effects
 /obj/item/reagent_containers/pill/proc/on_consumption(mob/consumer, mob/giver)

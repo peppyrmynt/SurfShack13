@@ -12,6 +12,44 @@
 	key = "eyebrow"
 	message = "raises an eyebrow."
 
+/datum/emote/living/carbon/human/hehehehaw
+	key = "hehehehaw"
+	key_third_person = "hehehehaws"
+	message = "hehehehaws."
+	message_mime = "hehehehaws silently!"
+	emote_type = EMOTE_VISIBLE | EMOTE_AUDIBLE
+	specific_emote_audio_cooldown = 1 MINUTES
+	vary = TRUE
+
+/datum/emote/living/carbon/human/hehehehaw/run_emote(mob/living/carbon/human/H, params)
+	if(TIMER_COOLDOWN_RUNNING(H, type))
+		return
+	. = ..()
+	TIMER_COOLDOWN_START(H, type, specific_emote_audio_cooldown)
+
+	var/image/img = image('icons/hud/clash_royal_laugh.dmi', loc = H, layer=HUD_PLANE, pixel_x = -32, pixel_y = -32)
+	var/orig_matrix = img.transform * 0.5
+	img.transform *= 0
+	for (var/mob/M in viewers(world.view, H))
+		if (!M.client)
+			continue
+		M.client.images += img
+	animate(img, transform = orig_matrix, time = 1.5)
+	if(H.mind && !HAS_TRAIT(H, TRAIT_MIMING))
+		playsound(H, 'sound/mobs/humanoids/human/laugh/hehehehehaw.ogg', 25, 1)
+
+	addtimer(CALLBACK(src, PROC_REF(fade_out), H, img), 20)
+
+/datum/emote/living/carbon/human/hehehehaw/proc/fade_out(mob/living/carbon/human/H, image/img)
+	if(QDELETED(H) || QDELETED(img))
+		return
+	animate(img, transform = matrix() * 0, time = 1.5)
+	QDEL_IN(img, 2)
+	if(prob(1))//spam prevention
+		H.visible_message(span_danger("[src] hehehehaws so hard \he explodes!"),\
+						span_warning("you hehehehaw so hard you explode!"))
+		H.gib(DROP_ALL_REMAINS)
+
 /datum/emote/living/carbon/human/glasses
 	key = "glasses"
 	key_third_person = "glasses"

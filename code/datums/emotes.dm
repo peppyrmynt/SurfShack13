@@ -193,9 +193,6 @@
 				continue
 			to_chat(ghost, span_emote("[FOLLOW_LINK(ghost, user)] [dchatmsg]"))
 
-	return
-
-
 
 /**
  * For handling emote cooldown, return true to allow the emote to happen.

@@ -472,6 +472,31 @@
 		/datum/material/glass = 50,
 	)
 
+/obj/structure/ore_vent/starter_resources/Initialize(mapload)
+	. = ..()
+	var/list/super_low_pop_mats = list(
+		/datum/material/plastic = 20,
+		/datum/material/plasma = 10,
+		/datum/material/titanium = 10,
+		/datum/material/silver = 5,
+		/datum/material/gold = 5,
+		/datum/material/diamond = 1,
+		/datum/material/uranium = 1,
+		/datum/material/bluespace = 1,
+	)
+	var/list/low_pop_mats = list(
+		/datum/material/plastic = 10,
+		/datum/material/plasma = 5,
+		/datum/material/titanium = 1,
+		/datum/material/silver = 1,
+		/datum/material/gold = 1,
+	)
+	var/player_count = length(GLOB.alive_player_list)
+	if(player_count <= 10)
+		mineral_breakdown |= super_low_pop_mats
+	if(player_count <= 20 && player_count >= 11)
+		mineral_breakdown |= low_pop_mats
+
 /obj/structure/ore_vent/random
 
 /obj/structure/ore_vent/random/Initialize(mapload)

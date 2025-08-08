@@ -1,7 +1,3 @@
-import { BooleanLike } from 'common/react';
-
-import { resolveAsset } from '../assets';
-import { useBackend, useLocalState } from '../backend';
 import {
   Box,
   Button,
@@ -10,7 +6,11 @@ import {
   Section,
   Stack,
   Tabs,
-} from '../components';
+} from 'tgui-core/components';
+import { BooleanLike } from 'tgui-core/react';
+
+import { resolveAsset } from '../assets';
+import { useBackend, useLocalState } from '../backend';
 import { Window } from '../layouts';
 
 type Objective = {

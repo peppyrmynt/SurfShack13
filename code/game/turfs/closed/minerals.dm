@@ -31,7 +31,7 @@
 	/// If we spawn a boulder like on the gulag, we use this in lou of mineralType
 	var/obj/item/boulder/spawned_boulder = null
 	/// How much ore we spawn when we're mining a mineralType.
-	var/mineralAmt = 3
+	var/mineralAmt = 4
 	///Holder for the image we display when we're pinged by a mining scanner
 	var/scan_state = ""
 	///If true, this turf will not call AfterChange during change_turf calls.

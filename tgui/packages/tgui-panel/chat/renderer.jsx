@@ -4,11 +4,11 @@
  * @license MIT
  */
 
-import { EventEmitter } from 'common/events';
-import { classes } from 'common/react';
 import { createRoot } from 'react-dom/client';
-import { Tooltip } from 'tgui/components';
 import { createLogger } from 'tgui/logging';
+import { Tooltip } from 'tgui-core/components';
+import { EventEmitter } from 'tgui-core/events';
+import { classes } from 'tgui-core/react';
 
 import {
   COMBINE_MAX_MESSAGES,
@@ -620,13 +620,13 @@ class ChatRenderer {
       '</body>\n' +
       '</html>\n';
     // Create and send a nice blob
-    const blob = new Blob([pageHtml]);
+    const blob = new Blob([pageHtml], { type: 'text/plain' });
     const timestamp = new Date()
       .toISOString()
       .substring(0, 19)
       .replace(/[-:]/g, '')
       .replace('T', '-');
-    window.navigator.msSaveBlob(blob, `ss13-chatlog-${timestamp}.html`);
+    Byond.saveBlob(blob, `ss13-chatlog-${timestamp}.html`, '.html');
   }
 }
 
