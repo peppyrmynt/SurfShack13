@@ -12,20 +12,21 @@
 	key = "eyebrow"
 	message = "raises an eyebrow."
 
-/datum/emote/living/carbon/human/hehehehaw
-	key = "hehehehaw"
-	key_third_person = "hehehehaws"
-	message = "hehehehaws."
-	message_mime = "hehehehaws silently!"
+/datum/emote/living/carbon/human/laugh_king
+	key = "laugh_k"
+	key_third_person = "laughs like a king!"
+	message = "laughs like a king!"
+	message_mime = "silently laughs like a king."
 	emote_type = EMOTE_VISIBLE | EMOTE_AUDIBLE
 	specific_emote_audio_cooldown = 1 MINUTES
 	vary = TRUE
-	sound = 'sound/mobs/humanoids/human/laugh/hehehehehaw.ogg'
+	sound = 'sound/mobs/humanoids/human/laugh/laugh_king.ogg'
 
-/datum/emote/living/carbon/human/hehehehaw/run_emote(mob/living/carbon/human/H, params)
-	if(TIMER_COOLDOWN_RUNNING(H, type))
-		return
-	var/image/img = image('icons/hud/clash_royal_laugh.dmi', loc = H, layer=ABOVE_HUD_PLANE, pixel_x = -32, pixel_y = -32)
+/datum/emote/living/carbon/human/laugh_king/run_emote(mob/living/carbon/human/H, params, type_override, intentional)
+	if(TIMER_COOLDOWN_RUNNING(H, type) || check_cooldown(H, intentional) || HAS_MIND_TRAIT(H, TRAIT_MIMING))
+		return ..()
+	. = ..()
+	var/image/img = image('icons/hud/laugh_king.dmi', loc = H, layer=ABOVE_HUD_PLANE, pixel_x = -32, pixel_y = -32)
 	var/orig_matrix = img.transform * 0.5
 	img.plane = ABOVE_HUD_PLANE
 	img.mouse_opacity = FALSE //click through it
@@ -36,10 +37,9 @@
 			continue
 		M.client.images += img
 	animate(img, transform = orig_matrix, time = 1.5)
-	. = ..()
 	addtimer(CALLBACK(src, PROC_REF(fade_out), H, img), 20)
 
-/datum/emote/living/carbon/human/hehehehaw/proc/fade_out(mob/living/carbon/human/H, image/img)
+/datum/emote/living/carbon/human/laugh_king/proc/fade_out(mob/living/carbon/human/H, image/img)
 	if(QDELETED(H) || QDELETED(img))
 		return
 	animate(img, transform = matrix() * 0, time = 1.5)
