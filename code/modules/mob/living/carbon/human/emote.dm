@@ -44,10 +44,7 @@
 		return
 	animate(img, transform = matrix() * 0, time = 1.5)
 	QDEL_IN(img, 2)
-	if(prob(1))//spam prevention
-		H.visible_message(span_danger("[src] hehehehaws so hard \he explodes!"),\
-						span_warning("you hehehehaw so hard you explode!"))
-		H.gib(DROP_ALL_REMAINS)
+
 
 /datum/emote/living/carbon/human/glasses
 	key = "glasses"
