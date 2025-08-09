@@ -45982,6 +45982,14 @@
 /obj/machinery/duct,
 /turf/open/floor/iron/dark/smooth_edge,
 /area/station/security/office)
+"izg" = (
+/obj/machinery/atmospherics/components/trinary/filter/critical{
+	dir = 8;
+	filter_type = list(/datum/gas/nitrogen)
+	},
+/obj/structure/cable,
+/turf/open/floor/engine,
+/area/station/engineering/supermatter/room)
 "izi" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/structure/crate,
@@ -119512,7 +119520,7 @@ cfw
 bKe
 cfw
 crz
-xvV
+izg
 tSK
 dUG
 ogt
