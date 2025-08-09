@@ -37,10 +37,10 @@
 			continue
 		M.client.images += img
 	animate(img, transform = orig_matrix, time = 1.5)
-	addtimer(CALLBACK(src, PROC_REF(fade_out), H, img), 20)
+	addtimer(CALLBACK(src, PROC_REF(fade_out), img), 20)
 
-/datum/emote/living/carbon/human/laugh_king/proc/fade_out(mob/living/carbon/human/H, image/img)
-	if(QDELETED(H) || QDELETED(img))
+/datum/emote/living/carbon/human/laugh_king/proc/fade_out(image/img)
+	if(QDELETED(img))
 		return
 	animate(img, transform = matrix() * 0, time = 1.5)
 	QDEL_IN(img, 2)
