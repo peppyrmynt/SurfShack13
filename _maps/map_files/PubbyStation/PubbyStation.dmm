@@ -972,20 +972,20 @@
 "adU" = (
 /obj/structure/table/reinforced,
 /obj/item/storage/bag/tray/cafeteria{
-	pixel_x = 0;
-	pixel_y = 1
+	pixel_w = 0;
+	pixel_z = 1
 	},
 /obj/item/storage/bag/tray/cafeteria{
-	pixel_x = 0;
-	pixel_y = 4
+	pixel_w = 0;
+	pixel_z = 4
 	},
 /obj/item/storage/bag/tray/cafeteria{
-	pixel_x = 0;
-	pixel_y = 7
+	pixel_w = 0;
+	pixel_z = 7
 	},
 /obj/item/storage/bag/tray/cafeteria{
-	pixel_x = 0;
-	pixel_y = 10
+	pixel_w = 0;
+	pixel_z = 10
 	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/service/chapel/monastery)
@@ -22651,7 +22651,7 @@
 "bMl" = (
 /obj/machinery/atmospherics/components/unary/thermomachine/freezer{
 	dir = 8;
-	initialize_directions = 1
+	initialize_directions = 8
 	},
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 8
@@ -23174,7 +23174,6 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/structure/cable/layer1,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 8
 	},
@@ -26285,7 +26284,6 @@
 	},
 /obj/machinery/door/firedoor,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/general,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/engineering/storage)
 "ccW" = (
@@ -27006,6 +27004,7 @@
 /obj/machinery/atmospherics/pipe/bridge_pipe/cyan/visible{
 	dir = 4
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
 	},
@@ -29506,7 +29505,6 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/structure/cable/layer1,
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/turret_protected/aisat/foyer)
 "cuE" = (
@@ -35843,22 +35841,6 @@
 /obj/machinery/light/directional/south,
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/security/execution/transfer)
-"eFh" = (
-/obj/machinery/power/terminal{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/yellow/filled/warning{
-	dir = 4
-	},
-/obj/effect/turf_decal/trimline/yellow/mid_joiner{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/structure/cable,
-/turf/open/floor/iron/dark/textured_edge{
-	dir = 4
-	},
-/area/station/engineering/storage)
 "eFj" = (
 /obj/structure/cable,
 /obj/effect/turf_decal/trimline/purple/filled/warning{
@@ -36444,7 +36426,7 @@
 "eRQ" = (
 /obj/machinery/atmospherics/components/unary/thermomachine/freezer{
 	dir = 4;
-	initialize_directions = 8
+	initialize_directions = 4
 	},
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/trimline/yellow/filled/line{
@@ -37391,6 +37373,12 @@
 	},
 /turf/open/floor/iron/white,
 /area/station/science/research)
+"fhi" = (
+/obj/docking_port/stationary/laborcamp_home{
+	dir = 8
+	},
+/turf/open/space/basic,
+/area/space)
 "fho" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
@@ -44767,7 +44755,6 @@
 /obj/effect/turf_decal/trimline/yellow/mid_joiner{
 	dir = 4
 	},
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/structure/cable,
 /turf/open/floor/iron/dark/textured_edge{
 	dir = 4
@@ -49624,15 +49611,6 @@
 	dir = 1
 	},
 /area/station/science/explab)
-"jYk" = (
-/obj/machinery/door/airlock/engineering/glass{
-	name = "Engine Monitoring Room"
-	},
-/obj/machinery/door/firedoor,
-/obj/effect/mapping_helpers/airlock/access/all/engineering/general,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/turf/open/floor/iron/dark/textured_large,
-/area/station/engineering/storage)
 "jYm" = (
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 8
@@ -50836,11 +50814,6 @@
 	},
 /turf/open/floor/iron/large,
 /area/station/hallway/primary/fore)
-"kyy" = (
-/obj/structure/lattice/catwalk,
-/obj/structure/marker_beacon/teal,
-/turf/open/space/basic,
-/area/space)
 "kyF" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -51321,10 +51294,6 @@
 "kGs" = (
 /turf/closed/wall,
 /area/station/security/office)
-"kGN" = (
-/obj/structure/lattice/catwalk,
-/turf/open/space/basic,
-/area/space)
 "kGP" = (
 /turf/closed/wall/r_wall,
 /area/station/maintenance/solars/starboard)
@@ -54974,6 +54943,7 @@
 	},
 /obj/effect/turf_decal/trimline/blue/filled/line,
 /obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
+/obj/structure/cable,
 /turf/open/floor/iron/white/textured_edge,
 /area/station/medical/treatment_center)
 "lXY" = (
@@ -55829,6 +55799,7 @@
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/visible{
 	dir = 9
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/white,
 /area/station/medical/cryo)
 "msw" = (
@@ -56015,9 +55986,6 @@
 /obj/effect/mapping_helpers/burnt_floor,
 /turf/open/floor/iron/small,
 /area/station/maintenance/starboard/aft)
-"mwo" = (
-/turf/open/space/basic,
-/area/space/nearstation)
 "mws" = (
 /obj/structure/cable,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -60734,10 +60702,6 @@
 	},
 /turf/open/floor/iron/airless,
 /area/space/nearstation)
-"oex" = (
-/obj/structure/lattice,
-/turf/open/space/basic,
-/area/space)
 "ofp" = (
 /obj/effect/turf_decal/trimline/blue/filled/line,
 /obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
@@ -64101,6 +64065,7 @@
 	dir = 5
 	},
 /obj/structure/cable,
+/obj/structure/cable/layer1,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/ai_monitored/turret_protected/aisat/teleporter)
 "pqY" = (
@@ -68117,6 +68082,7 @@
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 4
 	},
+/obj/structure/cable/layer1,
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/turret_protected/aisat/foyer)
 "qVO" = (
@@ -73657,7 +73623,7 @@
 	dir = 1
 	},
 /obj/machinery/atmospherics/components/unary/thermomachine/freezer/on{
-	initialize_directions = 4;
+	initialize_directions = 1;
 	name = "euthanization chamber freezer";
 	dir = 1
 	},
@@ -75100,6 +75066,12 @@
 /obj/machinery/door/firedoor/border_only,
 /turf/open/floor/iron/white/smooth_large,
 /area/station/medical/office)
+"tzT" = (
+/obj/docking_port/stationary/mining_home{
+	dir = 4
+	},
+/turf/open/space/basic,
+/area/space)
 "tAi" = (
 /obj/structure/cable,
 /turf/open/floor/iron/textured_large,
@@ -86396,6 +86368,19 @@
 	dir = 4
 	},
 /area/station/hallway/primary/fore)
+"xMb" = (
+/obj/effect/turf_decal/trimline/dark_blue/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/dark_blue/mid_joiner{
+	dir = 8
+	},
+/obj/structure/cable,
+/obj/structure/cable/layer1,
+/turf/open/floor/iron/dark/smooth_edge{
+	dir = 8
+	},
+/area/station/ai_monitored/turret_protected/aisat/foyer)
 "xMF" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4;
@@ -104313,13 +104298,13 @@ aaa
 aaa
 aaa
 aaa
-kyy
+cfJ
 aaa
 aaa
 aaa
 aaa
 aaa
-kyy
+cfJ
 aaa
 aaa
 aaa
@@ -104570,13 +104555,13 @@ aaa
 aaa
 aaa
 aaa
-oex
-oex
-kyy
-kGN
-kyy
-oex
-oex
+xMV
+xMV
+cfJ
+mBq
+cfJ
+xMV
+xMV
 aaa
 aaa
 aaa
@@ -104827,15 +104812,15 @@ aaa
 aaa
 aaa
 aaa
-oex
-mwo
+xMV
 aaa
 aaa
 aaa
 aaa
-oex
 aaa
-mwo
+xMV
+aaa
+aaa
 aaa
 aaa
 aaa
@@ -105085,15 +105070,15 @@ xMV
 xMV
 xMV
 xMV
-mwo
-mwo
-mwo
-mwo
-mwo
+aaa
+aaa
+aaa
+aaa
+aaa
 xMV
-mwo
-mwo
-mwo
+aaa
+aaa
+aaa
 aaa
 aaa
 aoI
@@ -105347,10 +105332,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 aoI
@@ -105604,9 +105589,9 @@ aaa
 aaa
 aaa
 aaa
-oex
-oex
-oex
+xMV
+xMV
+xMV
 xMV
 xMV
 xMV
@@ -105861,10 +105846,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 aoI
@@ -106118,10 +106103,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 aoI
@@ -106375,10 +106360,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 aoI
@@ -106632,10 +106617,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 aoI
@@ -106889,10 +106874,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 aoI
@@ -107095,7 +107080,7 @@ aaa
 aaa
 aaa
 aaa
-aaa
+fhi
 aaa
 aaa
 aaa
@@ -107146,10 +107131,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 aoI
@@ -107350,7 +107335,7 @@ oCi
 oCi
 ari
 oCi
-oex
+xMV
 dgX
 avq
 dgX
@@ -107403,10 +107388,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 xMV
@@ -107607,7 +107592,7 @@ apF
 oCi
 rdg
 oCi
-oex
+xMV
 plf
 avr
 awH
@@ -107660,10 +107645,10 @@ aaa
 aaa
 aaa
 aaa
-oex
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 xMV
@@ -107917,9 +107902,9 @@ aaa
 btK
 aaa
 aaa
-oex
-oex
-oex
+xMV
+xMV
+xMV
 xMV
 xMV
 xMV
@@ -108173,11 +108158,11 @@ ftu
 ftu
 btL
 ftu
-oex
-oex
+xMV
+xMV
 aaa
 aaa
-mwo
+aaa
 aaa
 aaa
 xMV
@@ -113897,7 +113882,7 @@ jMg
 jMg
 tEf
 bOI
-acv
+xMb
 spn
 acv
 vIv
@@ -116686,7 +116671,7 @@ tkM
 vWm
 cUJ
 cbf
-eFh
+iba
 iba
 njg
 gPI
@@ -116699,10 +116684,10 @@ kbV
 blO
 mci
 mBq
-oex
-oex
-oex
-oex
+xMV
+xMV
+xMV
+xMV
 xMV
 aaa
 aaa
@@ -116943,7 +116928,7 @@ bYN
 kaq
 cUJ
 uHW
-jYk
+ccR
 ccR
 dkH
 gPI
@@ -129745,7 +129730,7 @@ aaa
 aaa
 aaa
 aaa
-aaa
+tzT
 aaa
 aaa
 aaa
