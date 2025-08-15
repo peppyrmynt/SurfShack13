@@ -182,3 +182,16 @@
 	purity_min = 0.6
 	reaction_flags = REACTION_PH_VOL_CONSTANT
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_DAMAGING | REACTION_TAG_OTHER
+
+/datum/chemical_reaction/meth_crystal //Simulates the precipitation of a solution into a solid.
+	required_reagents = list(/datum/reagent/drug/methamphetamine = 10, /datum/reagent/toxin/acid = 5)
+	mob_react = FALSE
+	reaction_flags = REACTION_INSTANT
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING
+
+/datum/chemical_reaction/meth_crystal/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/location = get_turf(holder.my_atom)
+	for(var/i in 1 to created_volume)
+		var/obj/item/food/drug/meth_crystal/new_crystal (location)
+		new_rock.pixel_x = rand(-6, 6)
+		new_rock.pixel_y = rand(-6, 6)
