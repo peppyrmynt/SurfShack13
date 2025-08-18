@@ -794,15 +794,15 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	STOP_PROCESSING(SSobj, src)
 	QDEL_NULL(cig_smoke)
 
-/obj/item/cigarette/pipe/attackby(obj/item/thing, mob/user, params)
-	if(!istype(thing, /obj/item/food/grown))
+/obj/item/cigarette/pipe/attackby(obj/item/thing, mob/user, list/modifiers, list/attack_modifiers)
+	if(!(istype(thing, /obj/item/food/grown) || istype(thing, /obj/item/food/drug)))
 		return ..()
 
-	var/obj/item/food/grown/to_smoke = thing
+	var/atom/to_smoke = thing
 	if(packeditem)
 		to_chat(user, span_warning("It is already packed!"))
 		return
-	if(!HAS_TRAIT(to_smoke, TRAIT_DRIED))
+	if(istype(to_smoke, /obj/item/food/grown) && !HAS_TRAIT(to_smoke, TRAIT_DRIED))
 		to_chat(user, span_warning("It has to be dried first!"))
 		return
 
