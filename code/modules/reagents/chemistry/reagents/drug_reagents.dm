@@ -145,6 +145,7 @@
 	description = "Reduces stun times by about 300%, speeds the user up, and allows the user to quickly recover stamina while dealing a small amount of Brain damage. If overdosed the subject will move randomly, laugh randomly, drop items and suffer from Toxin and Brain damage. If addicted the subject will constantly jitter and drool, before becoming dizzy and losing motor control and eventually suffer heavy toxin damage."
 	reagent_state = LIQUID
 	color = "#78C8FA" //best case scenario is the "default", gets muddled depending on purity
+	taste_description = ("harsh, burning chemicals")
 	overdose_threshold = 20
 	metabolization_rate = 0.75 * REAGENTS_METABOLISM
 	ph = 5
@@ -177,7 +178,7 @@
 
 /datum/reagent/drug/methamphetamine/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	var/high_message = pick("You feel hyper.", "You feel like you need to go faster.", "You feel like you can run the world.")
+	var/high_message = pick("You feel hyper.", "You feel like you need to go faster.", "You feel like you can run the world.", "You understand, now.")
 	if(SPT_PROB(2.5, seconds_per_tick))
 		to_chat(affected_mob, span_notice("[high_message]"))
 		//surfshack start
