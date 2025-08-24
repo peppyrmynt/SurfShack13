@@ -77,6 +77,20 @@
 	e.start(holder.my_atom)
 	holder.clear_reagents()
 
+/datum/chemical_reaction/meth_crystal //Since the meth is a cooled pharmaceutical solvent, this precipitates it into a solid.
+	required_reagents = list(/datum/reagent/drug/methamphetamine = 7, /datum/reagent/toxin/acid = 2)
+	mob_react = FALSE
+	reaction_flags = REACTION_INSTANT
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING
+
+/datum/chemical_reaction/meth_crystal/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/location = get_turf(holder.my_atom)
+	for(var/i in 1 to created_volume)
+		var/obj/item/food/drug/meth_crystal/new_crystal = new(location)
+		new_crystal.pixel_x = rand(-6, 6)
+		new_crystal.pixel_y = rand(-6, 6)
+
+
 /datum/chemical_reaction/bath_salts
 	results = list(/datum/reagent/drug/bath_salts = 7)
 	required_reagents = list(/datum/reagent/toxin/bad_food = 1, /datum/reagent/saltpetre = 1, /datum/reagent/consumable/nutriment = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/consumable/enzyme = 1, /datum/reagent/consumable/tea = 1, /datum/reagent/mercury = 1)
@@ -182,16 +196,3 @@
 	purity_min = 0.6
 	reaction_flags = REACTION_PH_VOL_CONSTANT
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_DAMAGING | REACTION_TAG_OTHER
-
-/datum/chemical_reaction/meth_crystal //Since the meth is a cooled pharmaceutical solvent, this precipitates it into a solid.
-	required_reagents = list(/datum/reagent/drug/methamphetamine = 5, /datum/reagent/toxin/acid = 2)
-	mob_react = FALSE
-	reaction_flags = REACTION_INSTANT
-	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING
-
-/datum/chemical_reaction/meth_crystal/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/location = get_turf(holder.my_atom)
-	for(var/i in 1 to created_volume)
-		var/obj/item/food/drug/meth_crystal/new_crystal = new(location)
-		new_crystal.pixel_x = rand(-6, 6)
-		new_crystal.pixel_y = rand(-6, 6)
