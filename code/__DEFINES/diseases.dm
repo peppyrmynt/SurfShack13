@@ -1,5 +1,5 @@
 #define DISEASE_LIMIT 1
-#define VIRUS_SYMPTOM_LIMIT 6
+#define VIRUS_SYMPTOM_LIMIT 8
 
 //Visibility Flags
 #define HIDDEN_SCANNER (1<<0)
