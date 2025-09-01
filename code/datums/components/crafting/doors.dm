@@ -1,7 +1,7 @@
 /datum/crafting_recipe/shutters
 	name = "Shutters"
 	reqs = list(
-		/obj/item/stack/sheet/plasteel = 5,
+		/obj/item/stack/sheet/iron = 5,
 		/obj/item/stack/cable_coil = 5,
 		/obj/item/electronics/airlock = 1,
 	)
