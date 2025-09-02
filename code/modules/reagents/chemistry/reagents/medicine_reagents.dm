@@ -252,6 +252,18 @@
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	added_traits = list(TRAIT_VIRUS_RESISTANCE)
 
+/datum/reagent/medicine/spaceacillin/on_mob_life(mob/living/carbon/M, seconds_per_tick, times_fired)
+	. = ..()
+	var/need_mob_update
+	need_mob_update += M.adjustToxLoss(-0.1 * REM * normalise_creation_purity() * seconds_per_tick, updating_health = FALSE)
+	if(need_mob_update)
+		return UPDATE_MOB_HEALTH
+
+	if((M.mob_biotypes & MOB_ORGANIC) && prob(0.2))
+		for(var/thing in M.diseases) // can clean viruses from organic lifeforms.
+			var/datum/disease/D = thing
+			D.cure()
+
 //Goon Chems. Ported mainly from Goonstation. Easily mixable (or not so easily) and provide a variety of effects.
 
 /datum/reagent/medicine/oxandrolone
