@@ -140,6 +140,13 @@
 	list_reagents = list(/datum/reagent/medicine/mannitol = 15)
 	rename_with_volume = TRUE
 
+/obj/item/reagent_containers/pill/antiviral
+	name = "spaceacillin pill"
+	desc = "Used to suppress the symptoms of disease and certain wounds, and possibly eliminate any diseases within the host. Can be used to relieve minor toxin damage."
+	icon_state = "pill1"
+	list_reagents = list(/datum/reagent/medicine/spaceacillin = 5)
+	rename_with_volume = TRUE
+
 /obj/item/reagent_containers/pill/sansufentanyl
 	name = "sansufentanyl pill"
 	desc = "Used to treat Hereditary Manifold Sickness. Temporary side effects include - nausea, dizziness, impaired motor coordination."
