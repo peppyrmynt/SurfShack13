@@ -245,7 +245,7 @@
 
 
 /datum/chemical_reaction/mix_virus/mix_virus_2
-	required_reagents = list(medicine/synaptizine/synaptizinevirusfood = 1)
+	required_reagents = list(/datum/reagent/medicine/synaptizine/synaptizinevirusfood = 1)
 	level_min = 2
 	level_max = 2
 
