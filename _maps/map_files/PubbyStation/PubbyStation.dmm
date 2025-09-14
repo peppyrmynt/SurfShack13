@@ -1493,6 +1493,10 @@
 /obj/machinery/modular_computer/preset/id,
 /obj/machinery/status_display/evac/directional/north,
 /obj/machinery/camera/autoname/directional/north,
+/obj/machinery/keycard_auth/wall_mounted/directional/east{
+	pixel_w = 3;
+	pixel_z = -4
+	},
 /turf/open/floor/carpet,
 /area/station/command/heads_quarters/captain)
 "afL" = (
@@ -2847,9 +2851,9 @@
 /turf/open/floor/plating,
 /area/station/maintenance/disposal)
 "aka" = (
-/obj/machinery/pdapainter/security,
 /obj/machinery/status_display/ai/directional/north,
 /obj/effect/turf_decal/bot_red,
+/obj/machinery/pdapainter/security,
 /turf/open/floor/carpet,
 /area/station/command/heads_quarters/hos)
 "akb" = (
@@ -2905,9 +2909,10 @@
 /area/station/maintenance/fore)
 "akh" = (
 /obj/machinery/power/solar{
-	id = "portbowsolar";
-	name = "Port Bow Solar Array"
+	id = "starboardsolar";
+	name = "Starboard Solar Array"
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/solarpanel/airless,
 /area/station/solars/starboard)
 "akj" = (
@@ -7775,6 +7780,10 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
 	},
+/obj/machinery/keycard_auth/wall_mounted/directional/north{
+	pixel_w = -3;
+	pixel_z = 2
+	},
 /turf/open/floor/carpet,
 /area/station/command/heads_quarters/hop)
 "aBC" = (
@@ -10478,8 +10487,8 @@
 "aMs" = (
 /obj/machinery/power/solar_control{
 	dir = 8;
-	id = "portquartersolar";
-	name = "Port Quarter Solar Control"
+	id = "starboardsolar";
+	name = "Starboard Solar Control"
 	},
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
@@ -55779,6 +55788,7 @@
 /area/station/engineering/atmos/pumproom)
 "mri" = (
 /obj/machinery/power/tracker,
+/obj/structure/cable,
 /turf/open/floor/iron/solarpanel/airless,
 /area/station/solars/port/fore)
 "mrm" = (
@@ -65410,6 +65420,7 @@
 /area/station/maintenance/starboard/aft)
 "pTf" = (
 /obj/machinery/power/tracker,
+/obj/structure/cable,
 /turf/open/floor/iron/solarpanel/airless,
 /area/station/solars/starboard)
 "pTA" = (
@@ -69729,9 +69740,10 @@
 /area/station/maintenance/disposal)
 "rCt" = (
 /obj/machinery/power/solar{
-	id = "portbowsolar";
-	name = "Port Bow Solar Array"
+	id = "portquartersolar";
+	name = "Port Quarter Solar Array"
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/solarpanel/airless,
 /area/station/solars/port/aft)
 "rCN" = (
@@ -76543,7 +76555,13 @@
 	pixel_y = 24;
 	id = "hos_blast";
 	name = "Blast Door Control";
-	req_access = list("hos")
+	req_access = list("hos");
+	pixel_w = 0;
+	pixel_z = 2
+	},
+/obj/machinery/keycard_auth/wall_mounted/directional/north{
+	pixel_w = -36;
+	pixel_z = 1
 	},
 /turf/open/floor/carpet,
 /area/station/command/heads_quarters/hos)
@@ -76917,6 +76935,7 @@
 /area/station/science/robotics/mechbay)
 "uiF" = (
 /obj/machinery/power/tracker,
+/obj/structure/cable,
 /turf/open/floor/iron/solarpanel/airless,
 /area/station/solars/port/aft)
 "uiP" = (
@@ -83735,6 +83754,7 @@
 	id = "portbowsolar";
 	name = "Port Bow Solar Array"
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/solarpanel/airless,
 /area/station/solars/port/fore)
 "wKy" = (
@@ -87019,8 +87039,8 @@
 "ycs" = (
 /obj/machinery/power/solar_control{
 	dir = 4;
-	id = "portquartersolar";
-	name = "Port Quarter Solar Control"
+	id = "portbowsolar";
+	name = "Port Bow Solar Control"
 	},
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
