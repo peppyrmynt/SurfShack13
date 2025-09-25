@@ -12,6 +12,8 @@
 	var/internal_type = /obj/item/tank/internals/emergency_oxygen
 	/// What medipen should be present in this box?
 	var/medipen_type = /obj/item/reagent_containers/hypospray/medipen
+	/// What secondary medipen should be present in this box?
+	var/medipen2_type = /obj/item/reagent_containers/hypospray/medipen/spacepen
 	/// Are we crafted?
 	var/crafted = FALSE
 
@@ -35,6 +37,9 @@
 
 	if(!isnull(medipen_type))
 		new medipen_type(src)
+
+	if(!isnull(medipen2_type))
+		new medipen2_type(src)
 
 	if(HAS_TRAIT(SSstation, STATION_TRAIT_PREMIUM_INTERNALS))
 		new /obj/item/flashlight/flare(src)

@@ -1794,3 +1794,42 @@
 		if(affected_mob.adjustStaminaLoss(10 * REM * seconds_per_tick, updating_stamina = FALSE))
 			. = UPDATE_MOB_HEALTH
 	affected_mob.adjust_disgust(-10 * REM * seconds_per_tick)
+
+/datum/reagent/medicine/barozine
+	name = "Barozine"
+	description = "A potent drug that prevents pressure damage. Causes extreme pain and jittering. Very poisonous when overdosed."
+	color = "#EA4F34"
+	metabolization_rate = 0.5 * REAGENTS_METABOLISM
+	overdose_threshold = 30
+
+/datum/reagent/medicine/barozine/expose_mob(mob/living/carbon/affected_mob)
+	..()
+	if(affected_mob.stat == DEAD)
+		return
+	affected_mob.adjust_jitter(60 SECONDS)
+
+/datum/reagent/medicine/barozine/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
+	. = ..()
+	if(prob(30))
+		var/need_mob_update
+		need_mob_update += affected_mob.adjustFireLoss(1 * REM * normalise_creation_purity() * seconds_per_tick, updating_health = FALSE, required_bodytype = affected_bodytype)
+		if(need_mob_update)
+			return UPDATE_MOB_HEALTH
+
+	if(prob(5))
+		affected_mob.emote("scream")
+
+/datum/reagent/medicine/barozine/on_mob_metabolize(mob/living/affected_mob)
+	ADD_TRAIT(affected_mob, TRAIT_RESISTHIGHPRESSURE, type)
+	ADD_TRAIT(affected_mob, TRAIT_RESISTLOWPRESSURE, type)
+
+/datum/reagent/medicine/barozine/on_mob_end_metabolize(mob/living/affected_mob)
+	REMOVE_TRAIT(affected_mob, TRAIT_RESISTHIGHPRESSURE, type)
+	REMOVE_TRAIT(affected_mob, TRAIT_RESISTLOWPRESSURE, type)
+
+/datum/reagent/medicine/barozine/overdose_process(mob/living/affected_mob, seconds_per_tick, times_fired)
+	. = ..()
+	var/need_mob_update
+	need_mob_update += affected_mob.adjustToxLoss(6 * REM * normalise_creation_purity() * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype)
+	if(need_mob_update)
+		return UPDATE_MOB_HEALTH

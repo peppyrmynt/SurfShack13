@@ -359,3 +359,13 @@
 	inhand_icon_state = "atropen"
 	base_icon_state = "atropen"
 	list_reagents = list(/datum/reagent/medicine/c2/penthrite = 10)
+
+/obj/item/reagent_containers/hypospray/medipen/spacepen
+	name = "space medipen"
+	desc = "Contains a moderate amount of barozine to prevent pressure damage, and leporazine to prevent temperature damage. Use in moderation."
+	icon_state = "fancymedipen"
+	inhand_icon_state = "medipen"
+	base_icon_state = "fancymedipen"
+	volume = 30
+	amount_per_transfer_from_this = 30
+	list_reagents = list(/datum/reagent/medicine/barozine = 15, /datum/reagent/medicine/leporazine = 15)
