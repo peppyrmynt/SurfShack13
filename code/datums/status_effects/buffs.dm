@@ -640,3 +640,40 @@
 	name = "Shadow Regeneration"
 	desc = "Bathed in soothing darkness, you will slowly heal yourself."
 	icon_state = "lightless"
+
+/datum/status_effect/bed_rest
+	id = "bed_rest"
+	alert_type = /atom/movable/screen/alert/status_effect/bed_rest
+	/// Whether we healed from our last tick
+	var/healed_last_tick = FALSE
+
+/datum/status_effect/bed_rest/tick(seconds_between_ticks)
+	healed_last_tick = FALSE
+	var/need_mob_update = FALSE
+
+	if(owner.stat == DEAD)
+		return
+
+	if(owner.getBruteLoss() > 0)
+		need_mob_update += owner.adjustBruteLoss(-0.1, updating_health = FALSE)
+		healed_last_tick = TRUE
+
+	if(owner.getFireLoss() > 0)
+		need_mob_update += owner.adjustFireLoss(-0.1, updating_health = FALSE)
+		healed_last_tick = TRUE
+
+	if(owner.getToxLoss() > 0)
+		// Forced, so slimepeople are healed as well.
+		need_mob_update += owner.adjustToxLoss(-0.1, updating_health = FALSE, forced = TRUE)
+		healed_last_tick = TRUE
+
+	if(need_mob_update)
+		owner.updatehealth()
+
+	return ..()
+
+/atom/movable/screen/alert/status_effect/bed_rest
+	name = "Bed Rest"
+	desc = "You're resting on a bed, the mattress sure is comfy. You'll slowly recover from damage this way."
+	icon = 'icons/hud/screen_alert.dmi'
+	icon_state = "bed_rest"
