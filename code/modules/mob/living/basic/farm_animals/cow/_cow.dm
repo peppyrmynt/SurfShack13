@@ -8,7 +8,7 @@
 	icon_dead = "cow_dead"
 	icon_gib = "cow_gib"
 	gender = FEMALE
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC | MOB_BEAST | MOB_RUMINANT
 	speak_emote = list("moos","moos hauntingly")
 	speed = 1.1
 	butcher_results = list(/obj/item/food/meat/slab/grassfed = 6)

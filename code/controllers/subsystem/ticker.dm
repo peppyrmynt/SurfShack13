@@ -705,7 +705,6 @@ SUBSYSTEM_DEF(ticker)
 		return
 	if(end_string)
 		end_state = end_string
-
 	log_game(span_boldannounce("Rebooting World. [reason]"))
 
 	world.Reboot()
@@ -714,6 +713,7 @@ SUBSYSTEM_DEF(ticker)
 	gather_newscaster() //called here so we ensure the log is created even upon admin reboot
 	if(!round_end_sound)
 		round_end_sound = choose_round_end_song()
+
 	///The reference to the end of round sound that we have chosen.
 	var/sound/end_of_round_sound_ref = sound(round_end_sound)
 	for(var/mob/M in GLOB.player_list)

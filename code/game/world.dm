@@ -267,6 +267,9 @@ GLOBAL_PROTECT(tracy_init_reason)
 /world/Topic(T, addr, master, key)
 	TGS_TOPIC //redirect to server tools if necessary
 
+	if(addr == "127.0.0.1" && SSvoicechat)
+		SSvoicechat.handle_topic(T , addr)
+
 	var/static/list/topic_handlers = TopicHandlers()
 
 	var/list/input = params2list(T)
@@ -321,6 +324,8 @@ GLOBAL_PROTECT(tracy_init_reason)
 	qdel(src) //shut it down
 
 /world/Reboot(reason = 0, fast_track = FALSE)
+	if(SSvoicechat && SSvoicechat.initialized)
+		SSvoicechat.Shutdown()
 	if (reason || fast_track) //special reboot, do none of the normal stuff
 		if (usr)
 			log_admin("[key_name(usr)] Has requested an immediate world restart via client side debugging tools")
@@ -329,6 +334,8 @@ GLOBAL_PROTECT(tracy_init_reason)
 	else
 		to_chat(world, span_boldannounce("Rebooting world..."))
 		Master.Shutdown() //run SS shutdowns
+
+
 
 	#ifdef UNIT_TESTS
 	FinishTestRun()
@@ -375,6 +382,8 @@ GLOBAL_PROTECT(tracy_init_reason)
 		call_ext(debug_server, "auxtools_shutdown")()
 
 /world/Del()
+	if(SSvoicechat && SSvoicechat.initialized)
+		SSvoicechat.Shutdown()
 	shutdown_byond_tracy()
 	auxcleanup()
 	. = ..()

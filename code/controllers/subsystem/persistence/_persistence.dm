@@ -6,13 +6,8 @@ SUBSYSTEM_DEF(persistence)
 	init_order = INIT_ORDER_PERSISTENCE
 	flags = SS_NO_FIRE
 
-	///instantiated wall engraving components
-	var/list/wall_engravings = list()
-	///all saved persistent engravings loaded from JSON
-	var/list/saved_engravings = list()
-	///tattoo stories that we're saving.
+	var/list/obj/structure/chisel_message/chisel_messages = list()
 	var/list/prison_tattoos_to_save = list()
-	///tattoo stories that have been selected for this round.
 	var/list/prison_tattoos_to_use = list()
 	var/list/saved_messages = list()
 	var/list/saved_modes = list(1,2,3)
@@ -61,7 +56,7 @@ SUBSYSTEM_DEF(persistence)
 
 /datum/controller/subsystem/persistence/Initialize()
 	load_poly()
-	load_wall_engravings()
+	load_chisel_messages()
 	load_prisoner_tattoos()
 	load_trophies()
 	load_recent_maps()
@@ -75,7 +70,7 @@ SUBSYSTEM_DEF(persistence)
 
 ///Collects all data to persist.
 /datum/controller/subsystem/persistence/proc/collect_data()
-	save_wall_engravings()
+	collect_chisel_messages()
 	save_prisoner_tattoos()
 	collect_trophies()
 	collect_maps()

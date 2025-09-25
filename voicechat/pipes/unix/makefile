@@ -1,0 +1,31 @@
+# Makefile
+# APE SHIT - theres got to be a better way man
+BYOND_ROOT = $(PWD)/../../../../../Byond
+BYOND_VERSION = $(shell cat $(BYOND_ROOT)/ActiveVersion.txt)
+BYOND_PATH = $(BYOND_ROOT)/$(BYOND_VERSION)/byond/bin
+
+CC = gcc
+CPP = g++
+CFLAGS = -m32 -pthread -g -Wall -Wno-deprecated -O3 -fno-strict-aliasing
+LDFLAGS = -m32 -shared $(BYOND_PATH)/libbyond.so
+RM = rm -f
+TARGET_LIB = byondsocket.so
+
+OBJS = \
+	main.o \
+	byondapi/byondapi_cpp_wrappers.o
+
+.PHONY: all
+all: ${TARGET_LIB}
+
+$(TARGET_LIB): $(OBJS)
+	$(CC) ${LDFLAGS} -o $@ $^
+
+.cpp.o:
+	$(CPP) $(CPPFLAGS) $(CFLAGS) -c $*.cpp -o $*.o
+.c.o:
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $*.c -o $*.o
+
+.PHONY: clean
+clean:
+	-${RM} ${TARGET_LIB} ${OBJS}

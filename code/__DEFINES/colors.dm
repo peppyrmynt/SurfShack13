@@ -151,6 +151,10 @@
 #define COLOR_PURPLE_GRAY "#AE8CA8"
 #define COLOR_GOLEM_GRAY "#8E8C81"
 
+#define COLOR_SOAPSTONE_WANING "#9e3439"
+#define COLOR_SOAPSTONE_SACRED "#c68400"
+#define COLOR_SOAPSTONE_RAYS "#ffed00"
+
 //Color defines used by the assembly detailer.
 #define COLOR_ASSEMBLY_BLACK "#545454"
 #define COLOR_ASSEMBLY_BGRAY "#9497AB"

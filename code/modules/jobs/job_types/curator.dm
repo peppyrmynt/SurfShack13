@@ -43,6 +43,7 @@
 	id_trim = /datum/id_trim/job/curator
 	uniform = /obj/item/clothing/under/rank/civilian/curator
 	backpack_contents = list(
+		/obj/item/soapstone = 1,
 		/obj/item/barcodescanner = 1,
 		/obj/item/choice_beacon/hero = 1,
 	)
