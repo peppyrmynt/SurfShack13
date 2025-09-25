@@ -34,8 +34,12 @@
 	var/obj/item/reagent_containers/beaker = null
 	/// Dispensable_reagents is copypasted in plumbing synthesizers. Please update accordingly. (I didn't make it global because that would limit custom chem dispensers)
 	var/list/dispensable_reagents = list()
+	/// These become available once the manipulator has been upgraded to tier 2 (advanced)
+	var/list/upgrade_reagents2 = list()
+	/// These become available once the manipulator has been upgraded to tier 3 (nano)
+	var/list/upgrade_reagents3 = list()
 	/// These become available once the manipulator has been upgraded to tier 4 (femto)
-	var/list/upgrade_reagents = list()
+	var/list/upgrade_reagents4 = list()
 	/// These become available once the machine has been emaged
 	var/list/emagged_reagents = list()
 	/// Starting purity of the created reagents
@@ -73,22 +77,56 @@
 		/datum/reagent/water,
 		/datum/reagent/fuel
 	)
-	/// The default list of reagents upgrade_reagents
-	var/static/list/default_upgrade_reagents = list(
-		/datum/reagent/acetone,
+	/// The default list of reagents upgrade_reagents tier 2
+	var/static/list/default_upgrade_reagents_t2 = list(
 		/datum/reagent/ammonia,
-		/datum/reagent/ash,
-		/datum/reagent/diethylamine,
+		/datum/reagent/consumable/salt,
 		/datum/reagent/fuel/oil,
-		/datum/reagent/saltpetre
+		/datum/reagent/blood,
+		/datum/reagent/saltpetre,
+		/datum/reagent/liquid_dark_matter,
+		/datum/reagent/sorium
+	)
+	/// The default list of reagents upgrade_reagents tier 3
+	var/static/list/default_upgrade_reagents_t3 = list(
+		/datum/reagent/diethylamine,
+		/datum/reagent/ash,
+		/datum/reagent/gold,
+		/datum/reagent/silver,
+		/datum/reagent/fluorosurfactant,
+		/datum/reagent/phenol,
+		/datum/reagent/acetone,
+		/datum/reagent/cellulose
+	)
+	/// The default list of reagents upgrade_reagents tier 4
+	var/static/list/default_upgrade_reagents_t4 = list(
+		/datum/reagent/medicine/leporazine,
+		/datum/reagent/medicine/cryoxadone,
+		/datum/reagent/medicine/c2/convermol,
+		/datum/reagent/medicine/epinephrine,
+		/datum/reagent/medicine/ephedrine,
+		/datum/reagent/toxin/lipolicide,
+		/datum/reagent/medicine/c2/multiver,
+		/datum/reagent/medicine/c2/seiver
 	)
 	/// The default list of reagents emagged_reagents
 	var/static/list/default_emagged_reagents = list(
 		/datum/reagent/toxin/carpotoxin,
+		/datum/reagent/toxin/chloralhydrate,
+		/datum/reagent/toxin/mutetoxin,
 		/datum/reagent/medicine/mine_salve,
+		/datum/reagent/medicine/coagulant,
 		/datum/reagent/medicine/morphine,
 		/datum/reagent/drug/space_drugs,
-		/datum/reagent/toxin
+		/datum/reagent/consumable/honey,
+		/datum/reagent/toxin,
+		/datum/reagent/glycerol,
+		/datum/reagent/gunpowder,
+		/datum/reagent/clf3,
+		/datum/reagent/napalm,
+		/datum/reagent/phlogiston,
+		/datum/reagent/toxin/acid/fluacid,
+		/datum/reagent/uranium
 	)
 /obj/machinery/chem_dispenser/Initialize(mapload)
 	if(dispensable_reagents != null && !dispensable_reagents.len)
@@ -96,10 +134,20 @@
 	if(dispensable_reagents)
 		dispensable_reagents = sort_list(dispensable_reagents, GLOBAL_PROC_REF(cmp_reagents_asc))
 
-	if(upgrade_reagents != null && !upgrade_reagents.len)
-		upgrade_reagents = default_upgrade_reagents
-	if(upgrade_reagents)
-		upgrade_reagents = sort_list(upgrade_reagents, GLOBAL_PROC_REF(cmp_reagents_asc))
+	if(upgrade_reagents2 != null && !upgrade_reagents2.len)
+		upgrade_reagents2 = default_upgrade_reagents_t2
+	if(upgrade_reagents2)
+		upgrade_reagents2 = sort_list(upgrade_reagents2, GLOBAL_PROC_REF(cmp_reagents_asc))
+
+	if(upgrade_reagents3 != null && !upgrade_reagents3.len)
+		upgrade_reagents3 = default_upgrade_reagents_t3
+	if(upgrade_reagents3)
+		upgrade_reagents3 = sort_list(upgrade_reagents3, GLOBAL_PROC_REF(cmp_reagents_asc))
+
+	if(upgrade_reagents4 != null && !upgrade_reagents4.len)
+		upgrade_reagents4 = default_upgrade_reagents_t4
+	if(upgrade_reagents4)
+		upgrade_reagents4 = sort_list(upgrade_reagents4, GLOBAL_PROC_REF(cmp_reagents_asc))
 
 	if(emagged_reagents != null && !emagged_reagents.len)
 		emagged_reagents = default_emagged_reagents
@@ -446,10 +494,18 @@
 		recharge_amount *= capacitor.tier
 		parts_rating += capacitor.tier
 	for(var/datum/stock_part/servo/servo in component_parts)
-		if (servo.tier > 3)
-			dispensable_reagents |= upgrade_reagents
+		if (servo.tier > 1)
+			dispensable_reagents |= upgrade_reagents2
 		else
-			dispensable_reagents -= upgrade_reagents
+			dispensable_reagents -= upgrade_reagents2
+		if (servo.tier > 2)
+			dispensable_reagents |= upgrade_reagents3
+		else
+			dispensable_reagents -= upgrade_reagents3
+		if (servo.tier > 3)
+			dispensable_reagents |= upgrade_reagents4
+		else
+			dispensable_reagents -= upgrade_reagents4
 		parts_rating += servo.tier
 	power_cost = max(new_power_cost, 0.1 KILO WATTS)
 
@@ -530,11 +586,34 @@
 		/datum/reagent/consumable/tonic,
 		/datum/reagent/water,
 	)
-	upgrade_reagents = null
+	/// The default list of reagents upgrade_reagents tier 2
+	var/static/list/drink_upgrade_reagents_t2 = list(
+		/datum/reagent/consumable/carrotjuice,
+		/datum/reagent/consumable/bungojuice,
+		/datum/reagent/consumable/berryjuice,
+		/datum/reagent/consumable/applejuice,
+		/datum/reagent/consumable/watermelonjuice
+	)
+	/// The default list of reagents upgrade_reagents tier 3
+	var/static/list/drink_upgrade_reagents_t3 = list(
+		/datum/reagent/medicine/salglu_solution,
+		/datum/reagent/consumable/volt_energy
+	)
+	/// The default list of reagents upgrade_reagents tier 4
+	var/static/list/drink_upgrade_reagents_t4 = list(
+		/datum/reagent/water/holywater,
+		/datum/reagent/consumable/capsaicin,
+		/datum/reagent/medicine/ephedrine,
+		/datum/reagent/medicine/cryoxadone // Doctors delight bby :D
+	)
 	/// The default list of emagged reagents dispensable by the soda dispenser
 	var/static/list/drink_emagged_reagents = list(
 		/datum/reagent/consumable/ethanol/thirteenloko,
 		/datum/reagent/consumable/ethanol/whiskey_cola,
+		/datum/reagent/consumable/laughter,
+		/datum/reagent/consumable/nothing,
+		/datum/reagent/medicine/morphine,
+		/datum/reagent/toxin,
 		/datum/reagent/toxin/mindbreaker,
 		/datum/reagent/toxin/staminatoxin
 	)
@@ -543,6 +622,22 @@
 /obj/machinery/chem_dispenser/drinks/Initialize(mapload)
 	if(dispensable_reagents != null && !dispensable_reagents.len)
 		dispensable_reagents = drinks_dispensable_reagents
+
+	if(upgrade_reagents2 != null && !upgrade_reagents2.len)
+		upgrade_reagents2 = drink_upgrade_reagents_t2
+	if(upgrade_reagents2)
+		upgrade_reagents2 = sort_list(upgrade_reagents2, GLOBAL_PROC_REF(cmp_reagents_asc))
+
+	if(upgrade_reagents3 != null && !upgrade_reagents3.len)
+		upgrade_reagents3 = drink_upgrade_reagents_t3
+	if(upgrade_reagents3)
+		upgrade_reagents3 = sort_list(upgrade_reagents3, GLOBAL_PROC_REF(cmp_reagents_asc))
+
+	if(upgrade_reagents4 != null && !upgrade_reagents4.len)
+		upgrade_reagents4 = drink_upgrade_reagents_t4
+	if(upgrade_reagents4)
+		upgrade_reagents4 = sort_list(upgrade_reagents4, GLOBAL_PROC_REF(cmp_reagents_asc))
+
 	if(emagged_reagents != null && !emagged_reagents.len)
 		emagged_reagents = drink_emagged_reagents
 	. = ..()
@@ -616,18 +711,72 @@
 		/datum/reagent/consumable/ethanol/wine,
 		/datum/reagent/consumable/ethanol/yuyake,
 	)
-	upgrade_reagents = null
+	/// The default list of reagents upgrade_reagents tier 2
+	var/static/list/beer_upgrade_reagents_t2 = list(
+		/datum/reagent/medicine/antihol
+	)
+	/// The default list of reagents upgrade_reagents tier 3
+	var/static/list/beer_upgrade_reagents_t3 = list(
+		/datum/reagent/consumable/ethanol/champagne,
+		/datum/reagent/consumable/ethanol/manhattan,
+		/datum/reagent/consumable/ethanol/black_russian,
+		/datum/reagent/consumable/ethanol/margarita,
+		/datum/reagent/consumable/ethanol/irishcoffee,
+		/datum/reagent/consumable/ethanol/singulo,
+		/datum/reagent/consumable/ethanol/alexander,
+		/datum/reagent/consumable/ethanol/between_the_sheets,
+		/datum/reagent/consumable/ethanol/blazaam
+	)
+	/// The default list of reagents upgrade_reagents tier 4
+	var/static/list/beer_upgrade_reagents_t4 = list(
+		/datum/reagent/consumable/ethanol/screwdrivercocktail,
+		/datum/reagent/consumable/ethanol/bloody_mary,
+		/datum/reagent/consumable/ethanol/tequila_sunrise,
+		/datum/reagent/consumable/ethanol/toxins_special,
+		/datum/reagent/consumable/ethanol/beepsky_smash,
+		/datum/reagent/consumable/ethanol/demonsblood,
+		/datum/reagent/consumable/ethanol/amasec,
+		/datum/reagent/consumable/ethanol/changelingsting,
+		/datum/reagent/consumable/ethanol/hearty_punch,
+		/datum/reagent/consumable/ethanol/narsour,
+		/datum/reagent/consumable/ethanol/bastion_bourbon,
+		/datum/reagent/consumable/ethanol/wizz_fizz,
+		/datum/reagent/consumable/ethanol/telepole
+	)
 	/// The default list of emagged reagents dispensable by the beer dispenser
 	var/static/list/beer_emagged_reagents = list(
 		/datum/reagent/consumable/ethanol,
 		/datum/reagent/iron,
 		/datum/reagent/consumable/mintextract,
+		/datum/reagent/consumable/ethanol/planet_cracker,
+		/datum/reagent/consumable/ethanol/syndicatebomb,
+		/datum/reagent/consumable/ethanol/irishcarbomb,
+		/datum/reagent/consumable/ethanol/fernet,
+		/datum/reagent/consumable/ethanol/brave_bull,
+		/datum/reagent/consumable/ethanol/devilskiss,
 		/datum/reagent/consumable/ethanol/atomicbomb,
-		/datum/reagent/consumable/ethanol/fernet
+		/datum/reagent/consumable/ethanol/neurotoxin,
+		/datum/reagent/consumable/ethanol/old_timer
 	)
 
 /obj/machinery/chem_dispenser/drinks/beer/Initialize(mapload)
 	dispensable_reagents = beer_dispensable_reagents
+
+	if(upgrade_reagents2 != null && !upgrade_reagents2.len)
+		upgrade_reagents2 = beer_upgrade_reagents_t2
+	if(upgrade_reagents2)
+		upgrade_reagents2 = sort_list(upgrade_reagents2, GLOBAL_PROC_REF(cmp_reagents_asc))
+
+	if(upgrade_reagents3 != null && !upgrade_reagents3.len)
+		upgrade_reagents3 = beer_upgrade_reagents_t3
+	if(upgrade_reagents3)
+		upgrade_reagents3 = sort_list(upgrade_reagents3, GLOBAL_PROC_REF(cmp_reagents_asc))
+
+	if(upgrade_reagents4 != null && !upgrade_reagents4.len)
+		upgrade_reagents4 = beer_upgrade_reagents_t4
+	if(upgrade_reagents4)
+		upgrade_reagents4 = sort_list(upgrade_reagents4, GLOBAL_PROC_REF(cmp_reagents_asc))
+
 	emagged_reagents = beer_emagged_reagents
 	. = ..()
 
@@ -645,7 +794,9 @@
 	desc = "Creates and dispenses mutagen."
 	/// The default list of reagents dispensable by mutagen chem dispenser
 	var/static/list/mutagen_dispensable_reagents = list(/datum/reagent/toxin/mutagen)
-	upgrade_reagents = null
+	upgrade_reagents2 = null
+	upgrade_reagents3 = null
+	upgrade_reagents4 = null
 	/// The default list of emagged reagents dispensable by mutagen chem dispenser
 	var/static/list/mutagen_emagged_reagents = list(/datum/reagent/toxin/plasma)
 
@@ -674,7 +825,9 @@
 		/datum/reagent/ammonia,
 		/datum/reagent/ash,
 		/datum/reagent/diethylamine)
-	upgrade_reagents = null
+	upgrade_reagents2 = null
+	upgrade_reagents3 = null
+	upgrade_reagents4 = null
 
 /obj/machinery/chem_dispenser/mutagensaltpeter/Initialize(mapload)
 	dispensable_reagents = mutagensaltpeter_dispensable_reagents
