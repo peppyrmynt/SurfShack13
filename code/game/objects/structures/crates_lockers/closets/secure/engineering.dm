@@ -26,6 +26,7 @@
 	// Traitor steal objective
 	new /obj/item/blueprints(src)
 	new /obj/item/pipe_dispenser(src)
+	new /obj/item/card/id/departmental_budget/eng(src)
 
 /obj/structure/closet/secure_closet/engineering_electrical
 	name = "electrical supplies locker"

@@ -25,6 +25,7 @@
 	// Traitor steal objectives
 	new /obj/item/clothing/suit/armor/reactive/teleport(src)
 	new /obj/item/laser_pointer(src)
+	new /obj/item/card/id/departmental_budget/sci(src)
 
 /obj/structure/closet/secure_closet/cytology
 	name = "cytology equipment locker"
