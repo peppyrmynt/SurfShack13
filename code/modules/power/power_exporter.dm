@@ -20,7 +20,7 @@
 	if(!active)
 		. += "<span class='notice'>The exporter seems to be offline.</span>"
 	else
-		. += "<span class='notice'>The [src] is exporting [drain_rate] kilowatts of power, it has consumed [power_drained] kilowatts so far.</span>"
+		. += "<span class='notice'>[src] is exporting [drain_rate] watts of power, it has consumed [power_drained] watts so far.</span>"
 
 obj/machinery/power/exporter/Initialize()
 	..()
@@ -93,7 +93,23 @@ obj/machinery/power/exporter/Destroy()
 		icon_state = "dominator-Yellow"
 
 /obj/machinery/power/exporter/process()
+	if(isnull(attached)) // prevent constant runtimes
+		if(active)
+			src.say("Cannot detect any power cables, shutting down.")
+			active = FALSE
+			drain_rate = 0
+			icon_state = "dominator"
+			return
+		return
 	var/datum/powernet/powernet = attached.powernet
+	if(isnull(powernet))
+		if(active)
+			src.say("Cannot detect the power net, shutting down.")
+			active = FALSE
+			drain_rate = 0
+			icon_state = "dominator"
+			return
+		return
 	if(active && anchored && powernet)
 		if(powernet.netexcess >= drain_rate) // Make sure we have a surplus, and that we aren't dipping below it.
 			attached.add_delayedload(drain_rate)
@@ -116,7 +132,7 @@ obj/machinery/power/exporter/Destroy()
 	var/cargo_money = (((power_drained / 1000) * 0.3) * creditMult) // aprox 30% of the money goes straight to cargo.
 	var/engi_money = (((power_drained / 1000) * 0.7) * creditMult) // the 70% leftover goes straight to the engi budget.
 
-	src.say("Exported [power_drained] kilowatts of power! Cargo budget has recieved [cargo_money] cr. Engineering budget has recieved [engi_money] cr.")
+	src.say("Exported [power_drained] watts of power! Cargo budget has recieved [cargo_money] cr. Engineering budget has recieved [engi_money] cr.")
 
 	var/datum/bank_account/cargo_bank = SSeconomy.get_dep_account(ACCOUNT_CAR)
 	cargo_bank.adjust_money(cargo_money)
