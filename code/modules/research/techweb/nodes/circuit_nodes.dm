@@ -126,6 +126,7 @@
 		"comp_target_intercept",
 		"comp_thought_listener",
 		"comp_vox",
+		"comp_grenade_storage",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
 	discount_experiments = list(/datum/experiment/scanning/people/skillchip = TECHWEB_TIER_2_POINTS)
