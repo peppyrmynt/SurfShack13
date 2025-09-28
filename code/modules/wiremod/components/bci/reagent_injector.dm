@@ -14,17 +14,19 @@
 	required_shells = list(/obj/item/organ/cyberimp/bci)
 
 	var/datum/port/input/inject
+	var/datum/port/input/inject_amt
 	var/datum/port/output/injected
 
 	var/obj/item/organ/cyberimp/bci/bci
 
 /obj/item/circuit_component/reagent_injector/Initialize(mapload)
 	. = ..()
-	create_reagents(15, OPENCONTAINER) //This is mostly used in the case of a BCI still having reagents in it when the component is removed.
+	create_reagents(90, OPENCONTAINER) //This is mostly used in the case of a BCI still having reagents in it when the component is removed.
 
 /obj/item/circuit_component/reagent_injector/populate_ports()
 	. = ..()
 	inject = add_input_port("Inject", PORT_TYPE_SIGNAL, trigger = PROC_REF(trigger_inject))
+	inject_amt = add_input_port("Units", PORT_TYPE_NUMBER, default = 10)
 	injected = add_output_port("Injected", PORT_TYPE_SIGNAL)
 
 /obj/item/circuit_component/reagent_injector/proc/trigger_inject()
@@ -34,7 +36,11 @@
 	if(bci.owner.reagents.total_volume + bci.reagents.total_volume > bci.owner.reagents.maximum_volume)
 		return
 	var/contained = bci.reagents.get_reagent_log_string()
-	var/units = bci.reagents.trans_to(bci.owner.reagents, bci.reagents.total_volume, methods = INJECT)
+	var/amt_to_inject = inject_amt.value
+	if(amt_to_inject && amt_to_inject > 15)
+		amt_to_inject = 15
+		inject_amt.value = 15 // Resetting that var.
+	var/units = bci.reagents.trans_to(bci.owner.reagents, amt_to_inject, methods = INJECT)
 	if(units)
 		injected.set_output(COMPONENT_SIGNAL)
 		log_combat(bci.owner, bci.owner, "injected", bci, "which had [contained]")
@@ -43,7 +49,7 @@
 	. = ..()
 	if(istype(shell, /obj/item/organ/cyberimp/bci))
 		bci = shell
-		bci.create_reagents(15, OPENCONTAINER)
+		bci.create_reagents(90, OPENCONTAINER)
 		if(reagents.total_volume)
 			reagents.trans_to(bci, reagents.total_volume)
 
