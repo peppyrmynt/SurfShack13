@@ -85,13 +85,11 @@
 
 /obj/structure/bed/post_buckle_mob(mob/living/buckled)
 	. = ..()
-	set_density(TRUE)
 	update_appearance()
 	start_resting(buckled)
 
 /obj/structure/bed/post_unbuckle_mob(mob/living/buckled)
 	. = ..()
-	set_density(FALSE)
 	update_appearance()
 	stop_resting(buckled)
 
