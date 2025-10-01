@@ -644,11 +644,8 @@
 /datum/status_effect/bed_rest
 	id = "bed_rest"
 	alert_type = /atom/movable/screen/alert/status_effect/bed_rest
-	/// Whether we healed from our last tick
-	var/healed_last_tick = FALSE
 
 /datum/status_effect/bed_rest/tick(seconds_between_ticks)
-	healed_last_tick = FALSE
 	var/need_mob_update = FALSE
 
 	if(owner.stat == DEAD)
@@ -656,16 +653,13 @@
 
 	if(owner.getBruteLoss() > 0)
 		need_mob_update += owner.adjustBruteLoss(-0.1, updating_health = FALSE)
-		healed_last_tick = TRUE
 
 	if(owner.getFireLoss() > 0)
 		need_mob_update += owner.adjustFireLoss(-0.1, updating_health = FALSE)
-		healed_last_tick = TRUE
 
 	if(owner.getToxLoss() > 0)
 		// Forced, so slimepeople are healed as well.
 		need_mob_update += owner.adjustToxLoss(-0.1, updating_health = FALSE, forced = TRUE)
-		healed_last_tick = TRUE
 
 	if(need_mob_update)
 		owner.updatehealth()
