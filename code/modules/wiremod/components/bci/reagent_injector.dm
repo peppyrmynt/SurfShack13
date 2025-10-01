@@ -36,9 +36,7 @@
 	if(bci.owner.reagents.total_volume + bci.reagents.total_volume > bci.owner.reagents.maximum_volume)
 		return
 	var/contained = bci.reagents.get_reagent_log_string()
-	var/amt_to_inject = inject_amt.value
-	if(amt_to_inject && amt_to_inject > 15)
-		amt_to_inject = 15
+	if(inject_amt.value > 15)
 		inject_amt.value = 15 // Resetting that var.
 	var/units = bci.reagents.trans_to(bci.owner.reagents, amt_to_inject, methods = INJECT)
 	if(units)
