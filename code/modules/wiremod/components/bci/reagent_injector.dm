@@ -38,7 +38,7 @@
 	var/contained = bci.reagents.get_reagent_log_string()
 	if(inject_amt.value > 15)
 		inject_amt.value = 15 // Resetting that var.
-	var/units = bci.reagents.trans_to(bci.owner.reagents, amt_to_inject, methods = INJECT)
+	var/units = bci.reagents.trans_to(bci.owner.reagents, inject_amt.value, methods = INJECT)
 	if(units)
 		injected.set_output(COMPONENT_SIGNAL)
 		log_combat(bci.owner, bci.owner, "injected", bci, "which had [contained]")
