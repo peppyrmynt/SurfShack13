@@ -100,7 +100,7 @@
 		else
 			playsound(scanner, 'sound/machines/sonar-ping.ogg', radar_volume, FALSE)
 		scanner.balloon_alert_to_viewers("ore vent nearby")
-		scanner.spasm_animation(1.5 SECONDS)
+		scanner.AddComponent(/datum/component/tweak, time= 1.5 SECONDS)
 
 /obj/effect/temp_visual/mining_overlay
 	plane = HIGH_GAME_PLANE
