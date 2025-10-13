@@ -617,7 +617,7 @@
 
 	if(SPT_PROB(3.5 * (1 + (1-normalise_creation_purity())), seconds_per_tick))
 		to_chat(affected_mob, span_notice("[pick("Your head pounds.", "You feel a tight pain in your chest.", "You find it hard to stay still.", "You feel your heart practically beating out of your chest.")]"))
-
+		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
 	if(SPT_PROB(18 * (1 + (1-normalise_creation_purity())), seconds_per_tick))
 		affected_mob.adjustToxLoss(1 * REM * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype)
 		affected_mob.losebreath++
@@ -1209,6 +1209,7 @@
 		affected_mob.adjustStaminaLoss(2.5, updating_stamina = FALSE, required_biotype = affected_biotype)
 		affected_mob.adjustToxLoss(1, updating_health = FALSE, required_biotype = affected_biotype)
 		affected_mob.losebreath++
+		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
 		return UPDATE_MOB_HEALTH
 
 /datum/reagent/medicine/insulin
