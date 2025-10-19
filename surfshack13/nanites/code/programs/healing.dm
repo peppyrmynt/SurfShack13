@@ -307,19 +307,21 @@
 	name = "Nanite Resurrection"
 	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection. \
 			Cannot repair corpses, and requires them to be unhusked."
-	use_rate = 0
+	use_rate = 0.1 // Slight passive use for constant checks.
 	rogue_types = list(/datum/nanite_program/necrotic)
 	var/hasnotified = FALSE
-	var/hashealed = FALSE
+
+/datum/nanite_program/naniteresus/proc/check_revivable()
+	if(!iscarbon(host_mob))
+		return FALSE
+	if((host_mob.getBruteLoss() + host_mob.getFireLoss() + host_mob.getToxLoss() >= 100 || HAS_TRAIT(host_mob, TRAIT_HUSK))) //body is too damaged to be revived
+		return FALSE // We don't repair corpses, just revive them. (and make them not die afterward)
+	var/mob/living/carbon/carbon_host = host_mob
+	return carbon_host.can_defib()
 
 /datum/nanite_program/naniteresus/active_effect()
 	if(host_mob.stat == DEAD)
-		if(ismegafauna(host_mob)) //they are never coming back
-			activated = FALSE // Fuck you, stop checking for something every tick if it'll never change results. (Def of insanity)
-			return
-		if(iscarbon(host_mob) && (host_mob.getBruteLoss() + host_mob.getFireLoss() + host_mob.getToxLoss() >= 100 || HAS_TRAIT(host_mob, TRAIT_HUSK))) //body is too damaged to be revived
-			return // We don't repair corpses, just revive them. (and make them not die afterward)
-		else
+		if(check_revivable())
 			if(!hasnotified)
 				host_mob.notify_revival("You're being resurrected by nanites! Re-enter your corpse at your earliest conveinence.")
 				hasnotified = TRUE
@@ -336,14 +338,12 @@
 				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_STOMACH, -25)
 				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EYES, -25)
 				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EARS, -25)
-				if(!hashealed)
-					Carbon_mob.adjustBruteLoss(-10)
-					Carbon_mob.adjustFireLoss(-10)
-					Carbon_mob.adjustOxyLoss(-101, 0)
-					Carbon_mob.adjustToxLoss(-20, 0, TRUE)
-					Carbon_mob.blood_volume += 10
-					Carbon_mob.updatehealth()
-					hashealed = TRUE
+				Carbon_mob.adjustBruteLoss(-10)
+				Carbon_mob.adjustFireLoss(-10)
+				Carbon_mob.adjustOxyLoss(-101, 0)
+				Carbon_mob.adjustToxLoss(-20, 0, TRUE)
+				Carbon_mob.blood_volume += 10
+				Carbon_mob.updatehealth()
 			else // just for basic mobs, might as well.
 				host_mob.adjustBruteLoss(-10)
 				host_mob.adjustFireLoss(-10)
@@ -352,7 +352,6 @@
 				nanites.adjust_nanites(null, -35)
 				log_combat(host_mob, host_mob, "revived", src)
 				hasnotified = FALSE
-				hashealed = FALSE
 
 
 /datum/nanite_program/synthflesh
