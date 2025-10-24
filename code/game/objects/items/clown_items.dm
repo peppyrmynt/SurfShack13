@@ -281,7 +281,7 @@
 	force_string = "hilarious"
 	force = 10
 	damtype = STAMINA
-	hitsound = 'sound/items/weapons/genhit1.ogg'  //could use a funnier
+	hitsound = 'sound/items/rubber_chicken.ogg'
 	attack_verb_continuous = list("slaps", "smacks", "gahonks")
 	attack_verb_simple = list("slap", "smack", "gahonk")
 
@@ -326,3 +326,22 @@
 	victim.remove_status_effect(/datum/status_effect/pranked)
 	user.visible_message(span_danger("[user] knocks [victim] silly with [src]!"))
 	return SECONDARY_ATTACK_CONTINUE_CHAIN
+
+/obj/item/rubber_chicken/suicide_act(mob/living/user)
+	if(!iscarbon(user))
+		return ..()
+	var/mob/living/carbon/C = user
+	var/obj/item/organ/lungs = C.get_organ_slot(ORGAN_SLOT_LUNGS)
+	var/obj/chest = C.get_bodypart(BODY_ZONE_CHEST)
+	if(!lungs || !chest)
+		return ..()
+
+	visible_message(span_suicide("[user] starts forcing \the [src] down [user.p_their()] windpipe, it looks like [user.p_theyre()] trying to commit suicide!"))
+
+	src.forceMove(chest)
+	chest.contents |= src
+	user.emote("laugh")
+	playsound(user, 'sound/items/rubber_chicken.ogg', 50)
+	lungs.Remove(user)
+	lungs.forceMove(get_turf(user))
+	return OXYLOSS
