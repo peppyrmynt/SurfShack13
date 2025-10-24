@@ -281,7 +281,7 @@
 	force_string = "hilarious"
 	force = 10
 	damtype = STAMINA
-	hitsound = 'sound/items/rubber_chicken.ogg'
+	hitsound = 'sound/items/rubber_chicken/rubber_chicken.ogg'
 	attack_verb_continuous = list("slaps", "smacks", "gahonks")
 	attack_verb_simple = list("slap", "smack", "gahonk")
 
@@ -311,7 +311,7 @@
 
 	var/slap_power = victim_pranked.prank_counter
 
-	playsound(user, 'sound/items/weapons/punch1.ogg', min(slap_power * 10, 80))
+	playsound(user, 'sound/items/rubber_chicken/rubber_chicken.ogg', min(slap_power * 10, 80))
 	user.do_attack_animation(src)
 	var/honk_block = victim.run_armor_check(
 			def_zone = BODY_ZONE_HEAD,
@@ -336,12 +336,11 @@
 	if(!lungs || !chest)
 		return ..()
 
-	visible_message(span_suicide("[user] starts forcing \the [src] down [user.p_their()] windpipe, it looks like [user.p_theyre()] trying to commit suicide!"))
-
+	visible_message(span_suicide("[user] forces \the [src] down [user.p_their()] windpipe, and tries to laugh! [user.p_Their()] lungs get forced out of [user.p_their()] chest cavity"))
 	src.forceMove(chest)
 	chest.contents |= src
-	user.emote("laugh")
-	playsound(user, 'sound/items/rubber_chicken.ogg', 50)
+	user.emote("tries to laugh")
+	playsound(user, 'sound/items/rubber_chicken/rubber_chicken_long.ogg', 100)
 	lungs.Remove(user)
 	lungs.forceMove(get_turf(user))
 	return OXYLOSS
