@@ -1,5 +1,6 @@
 /datum/objective/abductee
 	completed = 1
+	reward_for_completion = FALSE
 
 /datum/objective/abductee/random
 
