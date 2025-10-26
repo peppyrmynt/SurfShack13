@@ -29,7 +29,7 @@
 /datum/store_item/roundstart/maint_pill
 	name = "1 Random Maint Pill"
 	item_cost = 100
-	item_path = /obj/item/reagent_containers/applicator/pill/maintenance
+	item_path = /obj/item/reagent_containers/pill/maintenance
 
 /datum/store_item/roundstart/maint_pill_bottle
 	name = "Bottle of Maint Pills"
@@ -40,11 +40,6 @@
 	name = "Core Set Card Pack"
 	item_path = /obj/item/cardpack/series_one
 	item_cost = 250
-
-/datum/store_item/roundstart/randomjunk
-	name = "Box of Random Junk"
-	item_path = /obj/item/storage/box/randomjunk
-	item_cost = 500
 
 /datum/store_item/roundstart/donkpockets
 	name = "Box of Donk Pockets"
