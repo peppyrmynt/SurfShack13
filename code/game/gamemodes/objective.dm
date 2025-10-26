@@ -16,6 +16,10 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 	var/martyr_compatible = FALSE //If the objective is compatible with martyr objective, i.e. if you can still do it while dead.
 	///can this be granted by admins?
 	var/admin_grantable = FALSE
+	/// If this objective is completed, do we award pre-round shop credits?
+	var/reward_for_completion = TRUE
+	/// If the above is true, how much credits per this objective?
+	var/completion_credit_reward = 100
 
 /datum/objective/New(text)
 	if(text)
