@@ -37,7 +37,8 @@
 #define EXOSUIT_MODULE_PADDY (1<<11)
 /// Module is compatible with Justice models
 #define EXOSUIT_MODULE_JUSTICE (1<<12)
-
+/// Module is compatible with Lockermech models
+#define EXOSUIT_MODULE_LOCKER_MECH (1<<13)
 /// Module is compatible with "Working" Exosuit models - Ripley and Clarke
 #define EXOSUIT_MODULE_WORKING (EXOSUIT_MODULE_RIPLEY | EXOSUIT_MODULE_CLARKE)
 /// Module is compatible with "Combat" Exosuit models - Gygax, H.O.N.K, Durand and Phazon, or any Exosuit with an empty Concealed Weapon Bay

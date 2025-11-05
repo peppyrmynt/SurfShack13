@@ -1,0 +1,9 @@
+- [x] port locker-mech
+  - [x] sprites
+  - [x] code
+- [  ] add attack which consist of locker mech falling over on people and adding the crushed vending machine state. It deals equal damage to occupant and person getting crushed (not much).
+	- [  ]  sprite locker mech falling backwards and forwards
+	- [  ] apply squash component
+	- [  ] deal damage to both user and target
+- [  ] add and maybe revamp crafting recipie
+- [  ] add library book or some in game context clues that the locker mech exist - kind of like omega soap.

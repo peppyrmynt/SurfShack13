@@ -19,8 +19,7 @@
 	canSmoothWith = SMOOTH_GROUP_WALLS
 
 	rcd_memory = RCD_MEMORY_WALL
-	///bool on whether this wall can be chiselled into
-	var/can_engrave = TRUE
+
 	///lower numbers are harder. Used to determine the probability of a hulk smashing through.
 	var/hardness = 40
 	var/slicing_duration = 100  //default time taken to slice the wall
@@ -36,8 +35,6 @@
 
 /turf/closed/wall/Initialize(mapload)
 	. = ..()
-	if(!can_engrave)
-		ADD_TRAIT(src, TRAIT_NOT_ENGRAVABLE, INNATE_TRAIT)
 	if(is_station_level(z))
 		GLOB.station_turfs += src
 	if(smoothing_flags & SMOOTH_DIAGONAL_CORNERS && fixed_underlay) //Set underlays for the diagonal walls.

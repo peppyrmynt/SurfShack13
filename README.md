@@ -1,6 +1,6 @@
 ## Surf Shack 13 codebase
 
-This is the codebase for the Surf Shack flavoured fork of SpaceStation 13.
+This is the codebase for the Surf Shack flavoured fork of SpaceStation 13. (discord.gg/Y7xtVKcbV4)
 
 Space Station 13 is a paranoia-laden round-based roleplaying game set against the backdrop of a nonsensical, metal death trap masquerading as a space station, with charming spritework designed to represent the sci-fi setting and its dangerous undertones. Have fun, and survive!
 

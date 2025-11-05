@@ -1,4 +1,5 @@
 /// The Greatest (animal) Of All Time. Cud chewing, shin-kicking, kitchen-dwelling nuisance.
+#define KING_ASS_RIPPER_GOAT //uncomment to enable farting after eating space vines - dont tell that wretched catgirl
 /mob/living/basic/goat
 	name = "goat"
 	desc = "Not known for their pleasant disposition."
@@ -21,7 +22,7 @@
 	butcher_results = list(/obj/item/food/meat/slab/grassfed = 4)
 
 	faction = list(FACTION_NEUTRAL)
-	mob_biotypes = MOB_ORGANIC | MOB_BEAST
+	mob_biotypes = MOB_ORGANIC | MOB_BEAST | MOB_RUMINANT
 
 	health = 40
 	maxHealth = 40
@@ -44,7 +45,12 @@
 		/obj/structure/glowshroom,
 		/obj/structure/spacevine,
 	)
-
+#ifdef KING_ASS_RIPPER_GOAT
+	var/static/list/sounds = alist(
+		"dayum" = 'sound/mobs/non-humanoids/goat/got dayum.ogg',
+		"Im king ass ripper" = 'sound/mobs/non-humanoids/goat/king_ass_ripper_right_here.ogg',
+	)
+	#endif
 /mob/living/basic/goat/Initialize(mapload)
 	. = ..()
 	add_udder()
@@ -133,7 +139,16 @@
 		if(istype(target, /obj/structure/glowshroom))
 			qdel(target)
 			eaten = TRUE
-
-	if(eaten && prob(10))
-		say("Nom") // bon appetit
-		playsound(src, 'sound/items/eatfood.ogg', rand(30, 50), TRUE)
+	if(eaten)
+#ifdef KING_ASS_RIPPER_GOAT
+		if(prob(3))
+			var/word = pick("dayum", "Im king ass ripper")
+			say(word)
+			playsound(src, sounds[word], 70, FALSE)
+			spasm_animation(60)
+			return
+#else
+		if(prob(10))
+			say("Nom") // bon appetit
+			playsound(src, 'sound/items/eatfood.ogg', rand(30, 50), TRUE)
+#endif
