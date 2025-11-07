@@ -17433,7 +17433,6 @@
 /turf/open/floor/iron/white,
 /area/station/science/robotics/lab)
 "biP" = (
-/obj/structure/filingcabinet/chestdrawer,
 /obj/effect/turf_decal/tile/purple/half{
 	dir = 1
 	},
@@ -18340,6 +18339,9 @@
 	},
 /obj/machinery/light/directional/south,
 /obj/structure/sign/poster/official/random/directional/south,
+/obj/item/storage/medkit{
+	empty = 1
+	},
 /turf/open/floor/iron,
 /area/station/science/robotics/mechbay)
 "blu" = (
@@ -18400,10 +18402,8 @@
 /area/station/science/robotics/lab)
 "blE" = (
 /obj/structure/table,
-/obj/item/healthanalyzer,
-/obj/item/healthanalyzer,
-/obj/item/healthanalyzer,
 /obj/item/radio/intercom/directional/east,
+/obj/machinery/cell_charger,
 /turf/open/floor/iron/dark,
 /area/station/science/robotics/lab)
 "blF" = (
@@ -19644,11 +19644,27 @@
 	pixel_x = -3;
 	pixel_y = 6
 	},
+/obj/item/stack/sheet/iron/fifty,
 /turf/open/floor/iron/dark,
 /area/station/science/robotics/lab)
 "bpU" = (
+/obj/item/storage/medkit{
+	pixel_x = 7;
+	pixel_y = -3
+	},
+/obj/item/storage/medkit{
+	pixel_x = -5;
+	pixel_y = -1
+	},
+/obj/item/healthanalyzer{
+	pixel_x = 4;
+	pixel_y = 6
+	},
+/obj/item/healthanalyzer{
+	pixel_x = -3;
+	pixel_y = -4
+	},
 /obj/structure/table,
-/obj/machinery/cell_charger,
 /turf/open/floor/iron/dark,
 /area/station/science/robotics/lab)
 "bpW" = (
@@ -34928,6 +34944,7 @@
 /obj/effect/turf_decal/tile/blue/anticorner{
 	dir = 8
 	},
+/obj/structure/closet/crate/mod,
 /turf/open/floor/iron/white/smooth_corner{
 	dir = 4
 	},
@@ -36264,7 +36281,9 @@
 	dir = 1
 	},
 /obj/structure/table,
-/obj/item/storage/medkit,
+/obj/item/storage/medkit{
+	empty = 1
+	},
 /turf/open/floor/iron/edge,
 /area/station/cargo/miningdock)
 "djf" = (
@@ -42861,9 +42880,6 @@
 "gMz" = (
 /obj/machinery/light/directional/west,
 /obj/structure/sign/poster/official/random/directional/west,
-/obj/structure/railing/corner/end/flip{
-	dir = 4
-	},
 /obj/effect/turf_decal/siding/wideplating_new/dark/corner{
 	dir = 4
 	},
@@ -52461,24 +52477,20 @@
 /turf/open/floor/iron,
 /area/station/cargo/storage)
 "moY" = (
-/obj/effect/landmark/start/medical_doctor,
-/obj/structure/railing{
-	dir = 4
-	},
 /obj/effect/turf_decal/siding/wideplating_new/dark{
 	dir = 4
 	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 4
 	},
 /area/station/medical/medbay/aft)
 "mpb" = (
-/obj/structure/railing{
-	dir = 5
-	},
 /obj/effect/turf_decal/siding/wideplating_new/dark{
 	dir = 5
 	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/structure/window/reinforced/spawner/directional/east,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 4
 	},
@@ -53195,10 +53207,11 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/structure/railing{
+/obj/effect/turf_decal/siding/wideplating_new/dark{
 	dir = 4
 	},
-/obj/effect/turf_decal/siding/wideplating_new/dark{
+/obj/machinery/door/window/left/directional/north{
+	name = "Chem closet";
 	dir = 4
 	},
 /turf/open/floor/iron/dark/smooth_edge{
@@ -60685,6 +60698,14 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/iron/dark,
 /area/station/medical/chem_storage)
+"rfh" = (
+/obj/structure/cable,
+/obj/structure/disposalpipe/segment,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/item/stack/sheet/iron/fifty,
+/turf/open/floor/iron/white,
+/area/station/science/research)
 "rfn" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -66782,6 +66803,7 @@
 /obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
 	dir = 8
 	},
+/obj/effect/landmark/start/medical_doctor,
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 8
 	},
@@ -118686,7 +118708,7 @@ cxJ
 ceX
 kIg
 lue
-lue
+rfh
 cBx
 lue
 bAa
