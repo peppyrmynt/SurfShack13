@@ -11780,7 +11780,6 @@
 /turf/open/floor/wood/large,
 /area/station/service/bar)
 "aQj" = (
-/obj/effect/decal/cleanable/shreds,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/green{
@@ -11788,8 +11787,9 @@
 	},
 /obj/effect/turf_decal/tile/neutral,
 /obj/machinery/light/small/directional/east,
+/obj/effect/turf_decal/tile/purple,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "aQk" = (
 /obj/machinery/door/airlock/freezer{
 	name = "Kitchen Backroom"
@@ -13907,6 +13907,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/small/directional/west,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "aXh" = (
@@ -23395,6 +23396,11 @@
 /obj/structure/disposalpipe/trunk{
 	dir = 1
 	},
+/obj/machinery/button/door/directional/south{
+	pixel_y = -36;
+	name = "Nanite Security Lockdown Control";
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/rd)
 "bCj" = (
@@ -23587,6 +23593,7 @@
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 4
 	},
+/obj/effect/landmark/blobstart,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "bCN" = (
@@ -30822,16 +30829,21 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sign/departments/nanites/directional/east,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "cgp" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/mapping_helpers/broken_floor,
-/obj/effect/landmark/generic_maintenance_landmark,
+/obj/structure/chair/office/light{
+	dir = 8
+	},
+/obj/structure/chair/office/light{
+	dir = 8
+	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "cgu" = (
 /obj/structure/rack,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
@@ -31035,8 +31047,11 @@
 	dir = 4
 	},
 /obj/structure/curtain/cloth,
+/obj/machinery/door/poddoor/shutters/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/plating,
-/area/station/maintenance/starboard/aft)
+/area/station/science/nanites)
 "chA" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -31050,8 +31065,10 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/neutral,
+/obj/effect/landmark/start/scientist,
+/obj/effect/turf_decal/tile/purple,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "chC" = (
 /obj/structure/rack,
 /obj/structure/disposalpipe/segment{
@@ -31983,15 +32000,17 @@
 /obj/machinery/power/apc/auto_name/directional/north,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/maintenance,
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "coI" = (
 /obj/effect/turf_decal/bot,
 /obj/structure/closet/crate,
@@ -32885,7 +32904,7 @@
 	dir = 4
 	},
 /obj/machinery/door/airlock/research{
-	name = "Abandoned Nanite Lab"
+	name = "Nanite Lab"
 	},
 /obj/effect/mapping_helpers/airlock/access/any/science/maintenance,
 /obj/structure/cable,
@@ -34972,8 +34991,11 @@
 "cJJ" = (
 /obj/effect/spawner/structure/window/reinforced/tinted,
 /obj/structure/curtain/cloth,
+/obj/machinery/door/poddoor/shutters/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/plating,
-/area/station/maintenance/starboard/aft)
+/area/station/science/nanites)
 "cKs" = (
 /obj/structure/table/reinforced/rglass,
 /obj/effect/turf_decal/tile/blue/full{
@@ -36714,16 +36736,14 @@
 /turf/open/floor/iron/white/smooth_edge,
 /area/station/medical/chemistry)
 "dwb" = (
-/obj/effect/decal/cleanable/glass,
-/obj/item/shard{
-	icon_state = "small";
-	pixel_x = 8;
-	pixel_y = -2
+/obj/structure/window/reinforced/spawner/directional/south,
+/obj/item/disk/nanite_program/good_mood,
+/obj/structure/table,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
 	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /turf/open/floor/circuit/off,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "dwn" = (
 /obj/machinery/atmospherics/pipe/smart/simple/dark/visible{
 	dir = 4
@@ -37229,6 +37249,12 @@
 /obj/structure/flora/bush/fullgrass/style_random,
 /turf/open/floor/grass,
 /area/station/medical/treatment_center)
+"dKV" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/spawner/random/engineering/atmospherics_portable,
+/obj/machinery/light/small/directional/west,
+/turf/open/floor/plating,
+/area/station/maintenance/starboard/aft)
 "dLU" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -37997,16 +38023,8 @@
 /turf/open/floor/iron,
 /area/station/construction/mining/aux_base)
 "egC" = (
-/obj/item/computer_disk/maintenance/theme{
-	pixel_x = -5;
-	pixel_y = -5
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/mapping_helpers/broken_floor,
-/obj/effect/landmark/generic_maintenance_landmark,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "ehO" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -38852,7 +38870,6 @@
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/command/heads_quarters/cmo)
 "eHO" = (
-/obj/effect/decal/cleanable/glass,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
@@ -38860,7 +38877,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "eId" = (
 /obj/machinery/suit_storage_unit/standard_unit,
 /obj/machinery/light/directional/west,
@@ -38917,11 +38934,8 @@
 /area/station/maintenance/starboard/aft)
 "eKi" = (
 /obj/structure/chair/office/light,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/mapping_helpers/broken_floor,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "eKp" = (
 /obj/structure/table/reinforced,
 /obj/structure/window/reinforced/spawner/directional/north,
@@ -39483,18 +39497,10 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "eVw" = (
-/obj/structure/showcase/machinery{
-	icon = 'icons/obj/machines/research.dmi';
-	icon_state = "server-nopower";
-	name = "decommissioned nanite program hub";
-	desc = "A server that used to compile nanite programs from the techweb servers and download them into disks. Looks like its parts have long-since been removed."
-	},
 /obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/cobweb/cobweb2,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
+/obj/machinery/computer/nanite_cloud_controller,
 /turf/open/floor/circuit/off,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "eVz" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -40231,16 +40237,16 @@
 /turf/open/floor/iron,
 /area/station/cargo/miningdock)
 "fon" = (
-/obj/structure/disposalpipe/segment{
-	dir = 4
-	},
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
+/obj/structure/disposalpipe/sorting/mail/flip{
+	dir = 4
+	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "foq" = (
 /obj/machinery/door/poddoor/preopen{
 	id = "heads_meeting";
@@ -40659,6 +40665,10 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/door/poddoor/shutters{
+	dir = 1;
+	id = "nanite_sci_outer"
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "fBX" = (
@@ -42856,9 +42866,8 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/mapping_helpers/broken_floor,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "gOZ" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -43985,19 +43994,21 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/item/computer_disk{
-	pixel_x = 9;
-	pixel_y = 7
+/obj/effect/landmark/start/scientist,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
 	},
 /turf/open/floor/circuit/off,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "hyu" = (
 /obj/structure/window/reinforced/spawner/directional/south,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/maintenance,
+/obj/item/disk/nanite_program/critstable,
+/obj/structure/table,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/circuit/off,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "hyQ" = (
 /obj/structure/table,
 /obj/effect/turf_decal/tile/bar/diagonal_centre,
@@ -44753,16 +44764,14 @@
 /turf/closed/wall/r_wall,
 /area/station/engineering/supermatter/room)
 "hWz" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/obj/effect/spawner/random/trash/garbage,
 /obj/machinery/light_switch/directional/west,
-/obj/effect/mapping_helpers/turn_off_lights_with_lightswitch,
+/obj/structure/table,
+/obj/item/storage/box/disks_nanite,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "hXd" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/turf_decal/siding/wood{
@@ -46934,6 +46943,10 @@
 "jsw" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
+/obj/machinery/door/poddoor/shutters{
+	dir = 1;
+	id = "nanite_sci_outer"
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "jsH" = (
@@ -47618,12 +47631,10 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/obj/effect/decal/cleanable/cobweb,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/trash/hobo_squat,
+/obj/effect/turf_decal/bot,
+/obj/machinery/nanite_programmer,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "jJv" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -47970,16 +47981,27 @@
 /area/station/medical/medbay/aft)
 "jTM" = (
 /obj/structure/table,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/maintenance,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
 /obj/effect/turf_decal/tile/green/opposingcorners,
 /obj/structure/extinguisher_cabinet/directional/west,
+/obj/machinery/button/door/directional/south{
+	pixel_x = -8;
+	id = "nanite_sci_outer";
+	name = "Outer Shutters Control"
+	},
+/obj/machinery/button/door/directional/south{
+	pixel_x = 8;
+	id = "nanite_lockdown";
+	name = "Nanite Lab Security Shutter Control"
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "jTY" = (
 /obj/machinery/biogenerator,
 /obj/machinery/door/firedoor,
@@ -48178,21 +48200,11 @@
 /turf/open/floor/engine/air,
 /area/station/engineering/atmos)
 "jXV" = (
-/obj/structure/showcase/machinery{
-	icon = 'icons/obj/machines/limbgrower.dmi';
-	icon_state = "limbgrower_panelopen";
-	name = "decommissioned nanite programmer";
-	desc = "A device used to edit nanite program disks and adjust their functionality. There's a big, yellow sticker on its front that reads, 'PROTOTYPE - NOT FOR PUBLIC USE', and the glass tube is shattered."
-	},
-/obj/effect/decal/cleanable/glass,
 /obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/greenglow,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /obj/machinery/newscaster/directional/north,
-/obj/effect/landmark/blobstart,
+/obj/machinery/nanite_programmer,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "jYd" = (
 /obj/structure/training_machine,
 /obj/item/target/clown,
@@ -48814,6 +48826,7 @@
 /area/station/science/circuits)
 "kpo" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
+/obj/effect/landmark/generic_maintenance_landmark,
 /turf/open/floor/iron,
 /area/station/maintenance/starboard/aft)
 "kpG" = (
@@ -49707,6 +49720,11 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron,
 /area/station/hallway/secondary/service)
+"kPt" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/iron/dark,
+/area/station/science/nanites)
 "kPF" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -50564,16 +50582,12 @@
 /turf/open/floor/grass,
 /area/station/hallway/secondary/service)
 "lpW" = (
-/obj/machinery/computer/old{
-	dir = 1;
-	name = "old nanite chamber control console";
-	desc = "Formerly controlled a connected nanite chamber. Was used to inoculate nanites, load programs, and analyze existing nanite swarms."
-	},
 /obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
+/obj/machinery/computer/nanite_chamber_control{
+	dir = 1
+	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "lql" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/turf_decal/tile/dark_blue/half{
@@ -51587,10 +51601,9 @@
 /area/station/maintenance/starboard/central)
 "lSX" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/trash/garbage,
+/mob/living/basic/bot/cleanbot,
 /turf/open/floor/circuit/off,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "lTE" = (
 /obj/machinery/suit_storage_unit/standard_unit,
 /obj/effect/turf_decal/siding/dark{
@@ -52307,7 +52320,7 @@
 /area/station/engineering/atmos/pumproom)
 "moa" = (
 /turf/closed/wall/r_wall,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "mog" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -52641,17 +52654,10 @@
 	},
 /area/station/hallway/secondary/entry)
 "mxW" = (
-/obj/structure/showcase/machinery{
-	icon = 'icons/obj/machines/research.dmi';
-	icon_state = "server-nopower";
-	name = "decommissioned nanite program hub";
-	desc = "A server that used to compile nanite programs from the techweb servers and download them into disks. Looks like its parts have long-since been removed."
-	},
 /obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
+/obj/machinery/nanite_program_hub,
 /turf/open/floor/circuit/off,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "myb" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -55840,8 +55846,11 @@
 /obj/effect/spawner/structure/window/reinforced/tinted,
 /obj/structure/curtain/cloth,
 /obj/effect/mapping_helpers/damaged_window,
+/obj/machinery/door/poddoor/shutters/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/plating,
-/area/station/maintenance/starboard/aft)
+/area/station/science/nanites)
 "onz" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
@@ -56123,7 +56132,6 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
@@ -56131,9 +56139,11 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 1
 	},
-/obj/effect/spawner/random/trash/mess,
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "owD" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron/white,
@@ -56260,12 +56270,8 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/item/computer_disk{
-	pixel_x = 3;
-	pixel_y = -5
-	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "oAt" = (
 /obj/machinery/door/firedoor/heavy,
 /obj/machinery/atmospherics/pipe/smart/simple/purple/visible{
@@ -56356,23 +56362,13 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/fore)
 "oEX" = (
-/obj/effect/decal/cleanable/glass,
-/obj/item/shard{
-	pixel_x = 7;
-	pixel_y = -8
-	},
-/obj/item/shard{
-	icon_state = "medium";
-	pixel_x = -4;
-	pixel_y = 6
-	},
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
+/obj/machinery/light/small/directional/east,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "oFt" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 4
@@ -57945,18 +57941,19 @@
 /turf/closed/wall/r_wall,
 /area/station/security/execution/education)
 "pyo" = (
-/obj/effect/decal/cleanable/glass,
-/obj/effect/decal/cleanable/greenglow,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
+/obj/structure/disposalpipe/trunk,
+/obj/machinery/disposal/bin,
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "pyt" = (
 /obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
 	dir = 1
@@ -58030,12 +58027,10 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/obj/effect/decal/cleanable/glass,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/trash/garbage,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "pAi" = (
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/plating,
@@ -58967,19 +58962,17 @@
 /area/station/science/lab)
 "qaY" = (
 /obj/structure/table,
-/obj/item/storage/box/disks{
-	pixel_x = 4;
-	pixel_y = 9
-	},
-/obj/effect/decal/cleanable/cobweb/cobweb2,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/neutral/opposingcorners,
+/obj/item/storage/box/disks_nanite,
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/machinery/light/small/directional/north,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "qbq" = (
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
@@ -61323,6 +61316,7 @@
 /obj/item/crowbar,
 /obj/effect/decal/cleanable/dirt,
 /obj/item/hand_labeler,
+/obj/structure/sign/departments/nanites/directional/south,
 /turf/open/floor/iron/white,
 /area/station/science/explab)
 "rID" = (
@@ -61390,17 +61384,10 @@
 /turf/open/floor/iron/dark,
 /area/station/maintenance/starboard/central)
 "rKo" = (
-/obj/structure/showcase/machinery{
-	icon = 'icons/obj/machines/bci_implanter.dmi';
-	icon_state = "bci_implanter";
-	name = "decommissioned nanite chamber";
-	desc = "A device that used to scan, reprogram, and inject nanites. Now, it sits dormant, collecting dust."
-	},
 /obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
+/obj/machinery/nanite_chamber,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "rKI" = (
 /obj/effect/spawner/random/engineering/tank,
 /obj/effect/decal/cleanable/dirt,
@@ -63434,12 +63421,9 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/landmark/event_spawn,
-/obj/effect/spawner/random/engineering/toolbox{
-	pixel_x = 5;
-	pixel_y = -7
-	},
+/mob/living/basic/bot/cleanbot,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "sWJ" = (
 /obj/machinery/light/small/directional/south,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -64277,16 +64261,18 @@
 /area/station/security/courtroom)
 "trq" = (
 /obj/structure/table,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/maintenance,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
 /obj/effect/turf_decal/tile/green,
 /obj/machinery/firealarm/directional/south,
+/obj/effect/turf_decal/tile/purple{
+	dir = 8
+	},
+/obj/item/circuitboard/machine/circuit_imprinter,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "trt" = (
 /obj/machinery/atmospherics/components/unary/outlet_injector/on,
 /turf/open/floor/engine/xenobio,
@@ -64716,11 +64702,9 @@
 /turf/open/floor/iron/showroomfloor,
 /area/station/commons/locker)
 "tDo" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/trash/mess,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "tDw" = (
 /obj/machinery/light_switch/directional/north,
 /obj/structure/cable,
@@ -64849,22 +64833,29 @@
 /area/station/science/explab)
 "tKU" = (
 /obj/structure/table,
-/obj/item/computer_disk{
-	pixel_x = -7;
-	pixel_y = -1
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/green/opposingcorners{
 	dir = 1
 	},
 /obj/effect/turf_decal/tile/neutral,
-/obj/effect/spawner/random/maintenance{
-	pixel_x = 6;
-	pixel_y = -3
+/obj/effect/turf_decal/tile/purple,
+/obj/item/nanite_remote{
+	pixel_y = 7;
+	pixel_x = -7
+	},
+/obj/item/nanite_remote{
+	pixel_y = 7;
+	pixel_x = -7
+	},
+/obj/item/nanite_scanner{
+	pixel_y = -4;
+	pixel_x = 7
+	},
+/obj/item/nanite_scanner{
+	pixel_y = -4;
+	pixel_x = 7
 	},
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "tLr" = (
 /obj/structure/table/wood,
 /obj/item/reagent_containers/condiment/saltshaker{
@@ -65038,6 +65029,9 @@
 	dir = 1
 	},
 /area/station/commons/storage/tools)
+"tRd" = (
+/turf/closed/wall,
+/area/station/science/nanites)
 "tRe" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -67348,17 +67342,12 @@
 /obj/machinery/airalarm/directional/south,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/ash{
-	pixel_x = -8;
-	pixel_y = -3
-	},
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/obj/effect/spawner/random/trash/garbage,
 /obj/machinery/light/small/directional/south,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "vlm" = (
 /obj/machinery/atmospherics/components/binary/pump/on/supply/hidden/layer4{
 	dir = 4;
@@ -68622,19 +68611,17 @@
 /area/station/medical/medbay/lobby)
 "vUa" = (
 /obj/structure/table,
-/obj/item/computer_disk{
-	pixel_x = 3;
-	pixel_y = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/green{
 	dir = 8
 	},
 /obj/effect/turf_decal/tile/neutral,
-/obj/effect/spawner/random/trash/mess,
+/obj/effect/turf_decal/tile/purple,
+/obj/item/clothing/glasses/hud/diagnostic{
+	pixel_y = 7
+	},
+/obj/item/clothing/glasses/hud/diagnostic,
 /turf/open/floor/iron/dark,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "vUh" = (
 /obj/effect/turf_decal/tile/neutral/half{
 	dir = 1
@@ -70143,11 +70130,9 @@
 "wQw" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/maintenance,
 /obj/machinery/light/small/directional/north,
-/obj/item/circuitboard/machine/circuit_imprinter,
 /turf/open/floor/circuit/off,
-/area/station/science/research/abandoned)
+/area/station/science/nanites)
 "wQy" = (
 /obj/structure/disposalpipe/segment,
 /obj/machinery/door/airlock/maintenance{
@@ -118199,7 +118184,7 @@ bOu
 rHZ
 mtK
 xaZ
-vPR
+dKV
 ovI
 ovI
 rrN
@@ -118711,15 +118696,15 @@ bYj
 hBD
 qEv
 caY
-mtK
-cNW
-cNW
-cNW
-cNW
-cNW
+moa
+tRd
+tRd
+tRd
+tRd
+tRd
 cvO
-cNW
-cNW
+tRd
+tRd
 ttD
 cNW
 cNW
@@ -118969,14 +118954,14 @@ hBD
 kNY
 cbc
 moa
-mxW
+eVw
 mxW
 hyu
 jJt
 hWz
 owu
 jTM
-cNW
+tRd
 ttD
 hcB
 tbp
@@ -119233,7 +119218,7 @@ eHO
 cgp
 oAc
 trq
-cNW
+tRd
 bCK
 hty
 tbp
@@ -119490,8 +119475,8 @@ oEX
 tDo
 gOP
 vkW
-cNW
-cNW
+tRd
+tRd
 cto
 wRU
 dFi
@@ -119746,9 +119731,9 @@ moa
 moa
 cou
 sWC
-tDo
+kPt
 rKo
-cNW
+tRd
 nQY
 czX
 cQr
@@ -120519,7 +120504,7 @@ qaY
 chA
 aQj
 tKU
-cNW
+tRd
 ttD
 cNW
 aaf
@@ -120771,12 +120756,12 @@ vnk
 mtK
 mtK
 mtK
-mtK
-mtK
+moa
+moa
 chz
-cNW
-cNW
-cNW
+tRd
+tRd
+tRd
 cNV
 cNW
 aaa
