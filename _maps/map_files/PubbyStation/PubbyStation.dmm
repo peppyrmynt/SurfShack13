@@ -48843,13 +48843,13 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/blue/full,
-/obj/machinery/power/apc/auto_name/directional/west{
-	pixel_x = -27;
-	pixel_y = 24
-	},
-/obj/item/radio/intercom/directional/west,
 /obj/machinery/camera/autoname/directional/north,
 /obj/structure/cable,
+/obj/machinery/power/apc/auto_name/directional/west,
+/obj/item/radio/intercom/directional/west{
+	pixel_w = -1;
+	pixel_z = 23
+	},
 /turf/open/floor/iron/white/textured_large,
 /area/station/medical/treatment_center)
 "jHP" = (
