@@ -237,7 +237,7 @@
 	rogue_types = list(/datum/nanite_program/necrotic)
 
 /datum/nanite_program/organrepair/check_conditions()
-	if(iscarbon(host_mob))
+	if(!iscarbon(host_mob))
 		return FALSE
 	return ..()
 
@@ -245,16 +245,16 @@
 	if(prob(2))
 		to_chat(host_mob, "<span class='warning'>You feel your innards twitch.")
 
-	var/mob/living/carbon/C = host_mob
-	//C.adjustOrganLoss(ORGAN_SLOT_BRAIN, -1)
-	C.adjustOrganLoss(ORGAN_SLOT_HEART, -0.5)
-	C.adjustOrganLoss(ORGAN_SLOT_LUNGS, -0.5)
-	C.adjustOrganLoss(ORGAN_SLOT_LIVER, -0.5)
-	C.adjustOrganLoss(ORGAN_SLOT_STOMACH, -0.5)
-	C.adjustOrganLoss(ORGAN_SLOT_EYES, -0.5)
-	C.adjustOrganLoss(ORGAN_SLOT_EARS, -0.5)
-	..()
-	. = TRUE
+	if(iscarbon(host_mob))
+		var/mob/living/carbon/Carbon_mob = host_mob
+		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_HEART, -0.5)
+		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_LUNGS, -0.5)
+		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_LIVER, -0.5)
+		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_STOMACH, -0.5)
+		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EYES, -0.5)
+		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EARS, -0.5)
+		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_APPENDIX, -0.5)
+		Carbon_mob.updatehealth()
 
 
 /datum/nanite_program/corpsepreserve
@@ -263,6 +263,11 @@
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
 	var/spent = FALSE
+
+/datum/nanite_program/corpsepreserve/check_conditions()
+	if(!iscarbon(host_mob))
+		return FALSE
+	return ..()
 
 /datum/nanite_program/corpsepreserve/active_effect()
 	if(host_mob.stat == DEAD)
@@ -287,6 +292,11 @@
 	rogue_types = list(/datum/nanite_program/suffocating)
 	var/spent = FALSE
 
+/datum/nanite_program/critstable/check_conditions()
+	if(!iscarbon(host_mob))
+		return FALSE
+	return ..()
+
 /datum/nanite_program/critstable/active_effect()
 	if(HAS_TRAIT(host_mob, TRAIT_CRITICAL_CONDITION))
 		var/datum/reagent/S = host_mob.reagents?.has_reagent(/datum/reagent/medicine/epinephrine)
@@ -307,8 +317,11 @@
 	name = "Nanite Resurrection"
 	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection. \
 			Cannot repair corpses, and requires them to be unhusked."
-	use_rate = 0.1 // Slight passive use for constant checks.
+	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
+	can_trigger = TRUE
+	trigger_cost = 45 // Higher cost than defib
+	trigger_cooldown = 180 // Higher cooldown for a more effective revive.
 	var/hasnotified = FALSE
 
 /datum/nanite_program/naniteresus/proc/check_revivable()
@@ -319,7 +332,7 @@
 	var/mob/living/carbon/carbon_host = host_mob
 	return carbon_host.can_defib()
 
-/datum/nanite_program/naniteresus/active_effect()
+/datum/nanite_program/naniteresus/on_trigger(comm_message)
 	if(host_mob.stat == DEAD)
 		if(check_revivable())
 			if(!hasnotified)
@@ -338,20 +351,26 @@
 				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_STOMACH, -25)
 				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EYES, -25)
 				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EARS, -25)
+				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_APPENDIX, -10)
 				Carbon_mob.adjustBruteLoss(-10)
 				Carbon_mob.adjustFireLoss(-10)
 				Carbon_mob.adjustOxyLoss(-101, 0)
 				Carbon_mob.adjustToxLoss(-20, 0, TRUE)
 				Carbon_mob.blood_volume += 10
+				Carbon_mob.set_heartattack(FALSE)
 				Carbon_mob.updatehealth()
-			else // just for basic mobs, might as well.
-				host_mob.adjustBruteLoss(-10)
-				host_mob.adjustFireLoss(-10)
 			if(host_mob.revive())
 				host_mob.emote("gasp")
 				nanites.adjust_nanites(null, -35)
 				log_combat(host_mob, host_mob, "revived", src)
 				hasnotified = FALSE
+		else // just for basic mobs, might as well.
+			if(!iscarbon(host_mob) && host_mob.revive())
+				nanites.adjust_nanites(null, -35)
+				log_combat(host_mob, host_mob, "revived", src)
+			else // Many programs like Accelerated Regeneration don't heal basic mobs. However, brute mending and burn mending are exceptions. But... i'll make it slowly revive em just to be safe.
+				host_mob.adjustBruteLoss(-5)
+				host_mob.adjustFireLoss(-5)
 
 
 /datum/nanite_program/synthflesh
