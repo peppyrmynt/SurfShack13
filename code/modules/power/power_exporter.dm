@@ -11,7 +11,7 @@
 	var/power_drained = 0 // has drained this much power
 	var/active = FALSE
 	var/checkForPay = 0
-	var/creditMult = 0.25
+	var/creditMult = 0.1
 
 	var/obj/structure/cable/attached
 
