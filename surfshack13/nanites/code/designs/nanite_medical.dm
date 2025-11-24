@@ -71,6 +71,13 @@
 	program_type = /datum/nanite_program/defib
 
 
+/datum/design/nanites/regenerative_oxy
+	name = "Blood Oxygenation"
+	desc = "The nanites expend themselves to enrich the host's blood with oxygen, whether it be synthesized or extracted from the environment around the host."
+	id = "oxyheal_nanites"
+	program_type = /datum/nanite_program/regenerative_oxy
+	category = list(NANITE_CATEGORY_MEDICAL)
+
 /datum/design/nanites/organrepair
 	name = "Organ Repair"
 	desc = "The nanites begin repairing the host's organs should they be damaged."

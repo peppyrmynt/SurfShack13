@@ -230,6 +230,25 @@
 	log_game("[carbon_host] has been successfully defibrillated by nanites.")
 
 
+/datum/nanite_program/regenerative_oxy
+	name = "Blood Oxygenation"
+	desc = "The nanites expend themselves to enrich the host's blood with oxygen, whether it be synthesized or extracted from the environment around the host."
+	use_rate = 0.2
+	rogue_types = list(/datum/nanite_program/necrotic)
+
+/datum/nanite_program/regenerative_oxy/check_conditions()
+	if(!iscarbon(host_mob))
+		return FALSE
+	if(!host_mob.getOxyLoss())
+		return FALSE
+	return ..()
+
+/datum/nanite_program/regenerative_oxy/active_effect()
+	if(iscarbon(host_mob))
+		host_mob.adjustOxyLoss(-0.2, TRUE)
+		return
+
+
 /datum/nanite_program/organrepair
 	name = "Organ Repair"
 	desc = "The nanites begin repairing the host's organs should they be damaged. Does not include brain damage."

@@ -102,6 +102,7 @@
 		"regenerative_nanites",
 		"bloodheal_nanites",
 		"coagulating_nanites",
+		"oxyheal_nanites",
 		"poison_nanites",
 		"flesheating_nanites",
 		"sensor_crit_nanites",
