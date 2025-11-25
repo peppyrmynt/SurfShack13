@@ -7,7 +7,7 @@
 	temp_body = TRUE
 
 
-/obj/effect/mob_spawn/ghost_role/human/virtual_domain/special(mob/living/spawned_mob, mob/mob_possessor)
+/obj/effect/mob_spawn/ghost_role/human/virtual_domain/special(mob/living/spawned_mob, mob/mob_possessor, apply_prefs)
 	var/datum/mind/ghost_mind = mob_possessor.mind
 	if(ghost_mind?.current) // Preserves any previous bodies before making the switch
 		spawned_mob.AddComponent(/datum/component/temporary_body, ghost_mind, ghost_mind.current, TRUE)
@@ -21,7 +21,38 @@
 /obj/effect/mob_spawn/ghost_role/human/virtual_domain/proc/artificial_spawn(mob/living/runner)
 	SEND_SIGNAL(src, COMSIG_BITRUNNER_SPAWNED, runner)
 
+//Beach Bums (Friendly)
+/obj/effect/mob_spawn/ghost_role/human/virtual_domain/beach
+	prompt_name = "a virtual beach bum"
+	name = "virtual beach bum sleeper"
+	you_are_text = "You're, like, totally a virtual simulation of a dudebro, bruh."
+	flavour_text = "Ch'yea. You came here, like, on spring break, hopin' to pick up some bangin' hot e-chicks, y'knaw?"
+	important_text = "You have no qualms with Bitrunning: in fact, you aren't even aware you're in a simulation."
+	outfit = /datum/outfit/beachbum
+	spawner_job_path = /datum/job/beach_bum
+	antag = FALSE
+	allow_custom_character = GHOSTROLE_TAKE_PREFS_APPEARANCE
 
+/obj/effect/mob_spawn/ghost_role/human/virtual_domain/beach/lifeguard
+	name = "virtual lifeguard sleeper"
+	you_are_text = "You are a spunky virtual lifeguard!"
+	flavour_text = "It's up to you to make sure nobody lags or gets eaten by malware and stuff."
+	outfit = /datum/outfit/beachbum/lifeguard
+	allow_custom_character = NONE
+
+/obj/effect/mob_spawn/ghost_role/human/virtual_domain/beach/lifeguard/special(mob/living/carbon/human/lifeguard, mob/mob_possessor, apply_prefs)
+	. = ..()
+	lifeguard.gender = FEMALE
+	lifeguard.update_body()
+
+/obj/effect/mob_spawn/ghost_role/human/virtual_domain/beach/bartender
+	name = "virtual bartender sleeper"
+	you_are_text = "You are a virtual beach bartender!"
+	flavour_text = "Your job is to keep the virtually rendered drinks coming, and help the dudebros engage drunkness simulations."
+	outfit = /datum/outfit/spacebartender
+	allow_custom_character = ALL
+
+//Skeleton Pirates
 /obj/effect/mob_spawn/ghost_role/human/virtual_domain/pirate
 	name = "Virtual Pirate Remains"
 	desc = "Some inanimate bones. They feel like they could spring to life at any moment!"
@@ -42,8 +73,7 @@
 	head = /obj/item/clothing/head/costume/pirate/bandana/armored
 	shoes = /obj/item/clothing/shoes/pirate/armored
 
-
-/obj/effect/mob_spawn/ghost_role/human/virtual_domain/pirate/special(mob/living/spawned_mob, mob/mob_possessor)
+/obj/effect/mob_spawn/ghost_role/human/virtual_domain/pirate/special(mob/living/spawned_mob, mob/mob_possessor, apply_prefs)
 	. = ..()
 	spawned_mob.fully_replace_character_name(spawned_mob.real_name, "[pick(strings(PIRATE_NAMES_FILE, "generic_beginnings"))][pick(strings(PIRATE_NAMES_FILE, "generic_endings"))]")
 

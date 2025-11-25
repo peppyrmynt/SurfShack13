@@ -329,3 +329,29 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define EMOTE_IMPORTANT (1<<2)
 /// Emote only prints to runechat, not to the chat window
 #define EMOTE_RUNECHAT (1<<3)
+
+// Flags for the empath component
+/// Can the empath see if a living mob has combat mode on
+#define EMPATH_SEE_COMBAT (1<<0)
+/// Can the empath see if living mob has over 10 oxyloss
+#define EMPATH_SEE_OXY (1<<1)
+/// Can the empath see if living mob has over 10 toxloss
+#define EMPATH_SEE_TOX (1<<2)
+/// Can the empath see if living mob's sanity is at distressed or below
+#define EMPATH_SEE_SANITY (1<<3)
+/// Can the empath see if living mob is blind
+#define EMPATH_SEE_BLIND (1<<4)
+/// Can the empath see if living mob is deaf
+#define EMPATH_SEE_DEAF (1<<5)
+/// Can the empath see if living mob's body temperature is too hot for their species
+#define EMPATH_SEE_HOT (1<<6)
+/// Can the empath see if living mob's body temperature is too low for their species
+#define EMPATH_SEE_COLD (1<<7)
+/// Can the empath see if living mob has the fundamentally evil trait
+#define EMPATH_SEE_EVIL (1<<8)
+
+// Flags for using your static for a ghost role
+/// Ghost role will take on the player's species
+#define GHOSTROLE_TAKE_PREFS_SPECIES (1<<0)
+/// Ghost role will take on the player's apperance (though exlcuding name)
+#define GHOSTROLE_TAKE_PREFS_APPEARANCE (1<<1)
