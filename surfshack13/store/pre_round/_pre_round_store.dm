@@ -26,7 +26,7 @@ GLOBAL_LIST_INIT(pre_round_items, init_pre_round_items())
 	. = ..()
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "PreRoundStore", "Spend Monkecoins")
+		ui = new(user, src, "PreRoundStore", "Spend Credits")
 		ui.open()
 
 /datum/pre_round_store/ui_state(mob/user)
