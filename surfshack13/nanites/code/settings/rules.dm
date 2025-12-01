@@ -111,6 +111,9 @@
 			damage_amt = program.host_mob.getToxLoss()
 		if(OXY)
 			damage_amt = program.host_mob.getOxyLoss()
+		if(STAMINA)
+			var/mob/living/carbon/human/tired_fella = program.host_mob
+			damage_amt = tired_fella.getStaminaLoss()
 
 	if(above)
 		if(damage_amt >= threshold)
@@ -128,3 +131,33 @@
 
 /datum/nanite_rule/damage/display()
 	return "[damage_type] [above ? ">" : "<"] [threshold]"
+
+
+/datum/nanite_rule/alive
+	name = "Alive"
+	desc = "Checks if the host is alive."
+
+/datum/nanite_rule/alive/check_rule()
+	if(program.host_mob.stat != DEAD && !HAS_TRAIT(program.host_mob, TRAIT_FAKEDEATH))
+		return TRUE
+	return FALSE
+
+
+/datum/nanite_rule/incapacitated
+	name = "Incapacitated"
+	desc = "Checks if the host is incapacitated."
+
+/datum/nanite_rule/incapacitated/check_rule()
+	if(program.host_mob.incapacitated)
+		return TRUE
+	return FALSE
+
+
+/datum/nanite_rule/resting
+	name = "Resting"
+	desc = "Checks if the host is resting."
+
+/datum/nanite_rule/resting/check_rule()
+	if(program.host_mob.resting)
+		return TRUE
+	return FALSE

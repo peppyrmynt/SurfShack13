@@ -22,7 +22,7 @@
 
 /datum/design/nanites/purging
 	name = "Blood Purification"
-	desc = "The nanites purge toxins and chemicals from the host's bloodstream."
+	desc = "The nanites purge toxins and chemicals from the host's bloodstream. Doesn't consume nanites until the host is poisoned."
 	id = "purging_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
 	program_type = /datum/nanite_program/purging
@@ -30,35 +30,37 @@
 /datum/design/nanites/purging_advanced
 	name = "Selective Blood Purification"
 	desc = "The nanites purge toxins and dangerous chemicals from the host's bloodstream, while ignoring beneficial chemicals. \
-			The added processing power required to analyze the chemicals severely increases the nanite consumption rate."
+			The added processing power required to analyze the chemicals severely increases the nanite consumption rate. \
+			Doesn't consume nanites should the host not be poisoned."
 	id = "purging_plus_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
 	program_type = /datum/nanite_program/purging_advanced
 
 /datum/design/nanites/brain_heal
 	name = "Neural Regeneration"
-	desc = "The nanites fix neural connections in the host's brain, reversing brain damage and minor traumas."
+	desc = "The nanites fix neural connections in the host's brain, reversing brain damage and minor traumas. Doesn't consume nanites unless you HAVE brain damage."
 	id = "brainheal_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
 	program_type = /datum/nanite_program/brain_heal
 
 /datum/design/nanites/brain_heal_advanced
 	name = "Neural Reimaging"
-	desc = "The nanites are able to backup and restore the host's neural connections, potentially replacing entire chunks of missing or damaged brain matter."
+	desc = "The nanites are able to backup and restore the host's neural connections, potentially replacing entire chunks of missing or damaged brain matter. \
+			Doesn't consume nanites if the host's brain isn't damaged in any capacity."
 	id = "brainheal_plus_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
 	program_type = /datum/nanite_program/brain_heal_advanced
 
 /datum/design/nanites/blood_restoring
 	name = "Blood Regeneration"
-	desc = "The nanites stimulate and boost blood cell production in the host."
+	desc = "The nanites stimulate and boost blood cell production in the host. Automatically de-activates should the host have 'Safe' blood levels."
 	id = "bloodheal_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
 	program_type = /datum/nanite_program/blood_restoring
 
 /datum/design/nanites/repairing
 	name = "Mechanical Repair"
-	desc = "The nanites fix damage in the host's mechanical limbs."
+	desc = "The nanites fix damage in the host's mechanical limbs. Automatically turns itself off if the host's mechanical limbs aren't damaged."
 	id = "repairing_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
 	program_type = /datum/nanite_program/repairing
@@ -73,7 +75,8 @@
 
 /datum/design/nanites/regenerative_oxy
 	name = "Blood Oxygenation"
-	desc = "The nanites expend themselves to enrich the host's blood with oxygen, whether it be synthesized or extracted from the environment around the host."
+	desc = "The nanites expend themselves to enrich the host's blood with oxygen, whether it be synthesized or extracted from the environment around the host. \
+			Doesn't consume nanites should the host not be oxygen-deprived."
 	id = "oxyheal_nanites"
 	program_type = /datum/nanite_program/regenerative_oxy
 	category = list(NANITE_CATEGORY_MEDICAL)
@@ -150,7 +153,8 @@
 
 /datum/design/nanites/woundfixer
 	name = "Wound-Tending"
-	desc = "The nanites slowly and methodically scan the host for major injuries and will slowly fix any wounds detected such as broken bones or hairline fractures -- without ever needing surgery."
+	desc = "The nanites slowly and methodically scan the host for major injuries and will slowly fix any wounds detected such as broken bones or hairline fractures -- without ever needing surgery. \
+			This program shuts itself off should the host have no wounds to tend."
 	id = "woundfixer_nanites"
 	program_type = /datum/nanite_program/woundfixer
 	category = list(NANITE_CATEGORY_MEDICAL)

@@ -33,6 +33,8 @@
 #define NES_INCLUSIVE_MODE "Inclusive Mode"
 #define NES_RACE "Race"
 #define NES_MODE "Mode"
+#define NES_JOB "Job"
+#define NES_NAME "Name"
 #define NES_MOOD_MESSAGE "Mood Message"
 #define NES_PROGRAM_OVERWRITE "Program Overwrite"
 #define NES_CLOUD_OVERWRITE "Cloud Overwrite"

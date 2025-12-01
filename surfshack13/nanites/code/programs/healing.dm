@@ -21,8 +21,8 @@
 		host_mob.adjustBruteLoss(-0.5, TRUE)
 		host_mob.adjustFireLoss(-0.5, TRUE)
 		return
-	var/lavaland_bonus = (lavaland_equipment_pressure_check(get_turf(host_mob)) ? 1 : 0.6) // 0.5 on lavaland, 0.3 on station
-	host_mob.heal_overall_damage(brute = (0.5 * lavaland_bonus), brute = (0.5 * lavaland_bonus), required_bodytype = BODYTYPE_ORGANIC)
+	var/healing_given = (lavaland_equipment_pressure_check(get_turf(host_mob)) ? 0.5 : 0.3)
+	host_mob.heal_overall_damage(brute = healing_given, brute = healing_given, required_bodytype = BODYTYPE_ORGANIC)
 
 /datum/nanite_program/regenerative_advanced
 	name = "Bio-Reconstruction"
@@ -37,8 +37,8 @@
 		host_mob.adjustBruteLoss(-3, TRUE)
 		host_mob.adjustFireLoss(-3, TRUE)
 		return
-	var/lavaland_bonus = (lavaland_equipment_pressure_check(get_turf(host_mob)) ? 1 : 0.8) // 1.5 on Lavaland, 1.2 on station
-	host_mob.heal_overall_damage(brute = (1.5 * lavaland_bonus), brute = (1.5 * lavaland_bonus), required_bodytype = BODYTYPE_ORGANIC)
+	var/healing_given = (lavaland_equipment_pressure_check(get_turf(host_mob)) ? 1.5 : 1.2)
+	host_mob.heal_overall_damage(brute = healing_given, brute = healing_given, required_bodytype = BODYTYPE_ORGANIC)
 
 /datum/nanite_program/temperature
 	name = "Temperature Adjustment"
@@ -59,7 +59,7 @@
 
 /datum/nanite_program/purging
 	name = "Blood Purification"
-	desc = "The nanites purge toxins and chemicals from the host's bloodstream."
+	desc = "The nanites purge toxins and chemicals from the host's bloodstream. Doesn't consume nanites until the host is poisoned."
 	use_rate = 1
 	rogue_types = list(/datum/nanite_program/suffocating, /datum/nanite_program/necrotic)
 
@@ -76,7 +76,7 @@
 
 /datum/nanite_program/brain_heal
 	name = "Neural Regeneration"
-	desc = "The nanites fix neural connections in the host's brain, reversing brain damage and minor traumas."
+	desc = "The nanites fix neural connections in the host's brain, reversing brain damage and minor traumas. Doesn't consume nanites unless you HAVE brain damage."
 	use_rate = 1.5
 	rogue_types = list(/datum/nanite_program/brain_decay)
 
@@ -100,7 +100,7 @@
 
 /datum/nanite_program/blood_restoring
 	name = "Blood Regeneration"
-	desc = "The nanites stimulate and boost blood cell production in the host."
+	desc = "The nanites stimulate and boost blood cell production in the host. Automatically de-activates should the host have 'Safe' blood levels."
 	use_rate = 1
 	rogue_types = list(/datum/nanite_program/suffocating)
 	///The amount of blood that we restore every active effect tick.
@@ -124,7 +124,7 @@
 
 /datum/nanite_program/repairing
 	name = "Mechanical Repair"
-	desc = "The nanites fix damage in the host's mechanical limbs."
+	desc = "The nanites fix damage in the host's mechanical limbs. Automatically turns itself off if the host's mechanical limbs aren't damaged."
 	use_rate = 0.5
 	rogue_types = list(/datum/nanite_program/necrotic)
 
@@ -153,7 +153,8 @@
 /datum/nanite_program/purging_advanced
 	name = "Selective Blood Purification"
 	desc = "The nanites purge toxins and dangerous chemicals from the host's bloodstream, while ignoring beneficial chemicals. \
-			The added processing power required to analyze the chemicals severely increases the nanite consumption rate."
+			The added processing power required to analyze the chemicals severely increases the nanite consumption rate. \
+			Doesn't consume nanites should the host not be poisoned."
 	use_rate = 2
 	rogue_types = list(/datum/nanite_program/suffocating, /datum/nanite_program/necrotic)
 
@@ -173,7 +174,8 @@
 
 /datum/nanite_program/brain_heal_advanced
 	name = "Neural Reimaging"
-	desc = "The nanites are able to backup and restore the host's neural connections, potentially replacing entire chunks of missing or damaged brain matter."
+	desc = "The nanites are able to backup and restore the host's neural connections, potentially replacing entire chunks of missing or damaged brain matter. \
+			Doesn't consume nanites if the host's brain isn't damaged in any capacity."
 	use_rate = 3
 	rogue_types = list(/datum/nanite_program/brain_decay, /datum/nanite_program/brain_misfire)
 
@@ -232,7 +234,8 @@
 
 /datum/nanite_program/regenerative_oxy
 	name = "Blood Oxygenation"
-	desc = "The nanites expend themselves to enrich the host's blood with oxygen, whether it be synthesized or extracted from the environment around the host."
+	desc = "The nanites expend themselves to enrich the host's blood with oxygen, whether it be synthesized or extracted from the environment around the host. \
+			Doesn't consume nanites should the host not be oxygen-deprived."
 	use_rate = 0.2
 	rogue_types = list(/datum/nanite_program/necrotic)
 
@@ -486,15 +489,16 @@
 	var/healing = 1.25
 
 /datum/nanite_program/mendingtoxin/check_conditions()
+	if(!iscarbon(host_mob))
+		return FALSE
 	if(!host_mob.getToxLoss())
 		return FALSE
 	return ..()
 
 /datum/nanite_program/mendingtoxin/active_effect()
-	if(iscarbon(host_mob))
-		host_mob.adjustToxLoss(-healing, TRUE)
-		if(prob(5))
-			to_chat(host_mob, "<span class='notice'>For the briefest of moments, you feel your veins bulk up.")
+	host_mob.adjustToxLoss(-healing, TRUE)
+	if(prob(5))
+		to_chat(host_mob, "<span class='notice'>For the briefest of moments, you feel your veins bulk up.")
 
 
 /datum/nanite_program/selfresp
@@ -555,11 +559,19 @@
 
 /datum/nanite_program/woundfixer
 	name = "Wound-Tending"
-	desc = "The nanites slowly and methodically scan the host for major injuries and will slowly fix any wounds detected such as broken bones or hairline fractures -- without ever needing surgery."
+	desc = "The nanites slowly and methodically scan the host for major injuries and will slowly fix any wounds detected such as broken bones or hairline fractures -- without ever needing surgery. \
+			This program shuts itself off should the host have no wounds to tend."
 	use_rate = 2
 	rogue_types = list(/datum/nanite_program/flesh_eating)
 	var/woundfixtimer = 0
 	var/max_woundfixtimer = 120
+
+/datum/nanite_program/woundfixer/check_conditions()
+	if(!iscarbon(host_mob))
+		return FALSE
+	var/mob/living/carbon/human/wounded = host_mob
+	if(!length(wounded.all_wounds))
+		return FALSE
 
 /datum/nanite_program/woundfixer/active_effect()
 	. = ..()

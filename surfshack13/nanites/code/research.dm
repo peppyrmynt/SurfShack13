@@ -49,6 +49,8 @@
 		"relay_repeater_nanites",
 		"red_diag_nanites",
 		"monitoring_nanites",
+		"sensor_name_nanites",
+		"sensor_resting_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS,
@@ -67,6 +69,8 @@
 		"sensor_voice_nanites",
 		"voice_nanites",
 		"research_nanites",
+		"sensor_job_nanites",
+		"sensor_incapacitated_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS,
@@ -110,6 +114,7 @@
 		"sensor_health_nanites",
 		"sensor_damage_nanites",
 		"sensor_species_nanites",
+		"sensor_alive_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS,
