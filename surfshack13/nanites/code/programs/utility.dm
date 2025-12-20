@@ -713,13 +713,33 @@
 
 /datum/nanite_program/monitoring
 	name = "Monitoring"
-	desc = "The nanites monitor the host's vitals and location, sending them to the suit sensor network.  Cannot function if the host isn't wearing a suit."
+	desc = "The nanites monitor the host's vitals and location, sending them to the suit sensor network. Cannot function if the host isn't wearing a suit."
 	rogue_types = list(/datum/nanite_program/toxic)
 
 /datum/nanite_program/monitoring/enable_passive_effect()
 	. = ..()
 	SSnanites.nanite_monitored_mobs |= host_mob
 
+/datum/nanite_program/monitoring/active_effect()
+	var/mob/living/carbon/human/tracked_human = host_mob
+	var/obj/item/clothing/under/uniform = tracked_human.w_uniform
+
+	if(!isnull(uniform) && (!uniform.has_sensor == NO_SENSORS && uniform.sensor_mode && uniform.sensor_mode <= SENSOR_VITALS)) // Auto-sets your sensors on if you re-equip a sensor'd uniform that's turned off. Quality of life, amiright?
+		uniform.sensor_mode = SENSOR_COORDS
+
+	if(!(tracked_human in GLOB.suit_sensors_list)) // Be sure to re-add us if you take off your uniform and put it back on.
+		if(!isnull(uniform) && (uniform.has_sensor == NO_SENSORS || !uniform.sensor_mode || uniform.sensor_mode == SENSOR_OFF))
+			GLOB.suit_sensors_list |= tracked_human
+
 /datum/nanite_program/monitoring/disable_passive_effect()
 	. = ..()
 	SSnanites.nanite_monitored_mobs -= host_mob
+
+	var/mob/living/carbon/human/tracked_human = host_mob
+
+	if(tracked_human in GLOB.suit_sensors_list) // Removes our artifical sensor entry.
+		GLOB.suit_sensors_list -= tracked_human
+
+	var/obj/item/clothing/under/uniform = tracked_human.w_uniform // Then with this special bit of code, re-applies it should we meet the criteria.
+	if(!isnull(uniform))
+		uniform.update_wearer_status()
