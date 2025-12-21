@@ -1,7 +1,18 @@
-// Connects a client to voice chat via an external browser
-/datum/controller/subsystem/voicechat/proc/join_vc(client/C, show_link_only=FALSE)
-	var/node_port = CONFIG_GET(number/port_voicechat) // I see no good reasons why admins should be able to modify the port so we check config every time
+// join_vc -> client/Topic -> open_vc
+/datum/controller/subsystem/voicechat/proc/join_vc(client/C, external=FALSE)
 	if(!C)
+		return
+	C << browse({"
+	<html><h4>If this window doesnt close briefly, something is broken</h4>
+	<script>window.location.href += `?src=[ref(src)];origin=${window.location.origin};external=[external]`</script></html>
+	"},"window=origin_locator")
+	//opens client/Topic: client/Topic -> open_vc
+
+
+
+// Connects a client to voice chat via an external browser
+/datum/controller/subsystem/voicechat/proc/open_vc(client/C, origin, external)
+	if(!C || !origin)
 		return
 	// Disconnect existing session if present
 	var/existing_userCode = client_userCode_map[C]
@@ -11,24 +22,22 @@
 	// Generate unique session and user codes
 	var/sessionId = md5("[world.time][rand()][world.realtime][rand(0,9999)][C.address][C.computer_id]")
 	var/userCode = generate_userCode(C)
-	if(!userCode)
-		return
+	// "deliver" voicechat assets
+	C << browse_rsc('voicechat/node/public/voicechat.html')
+	C << browse_rsc('voicechat/node/public/voicechat.js')
+	C << browse_rsc('voicechat/node/public/style.css')
+	C << browse_rsc('voicechat/node/public/stopclown.png')
+	C << browse_rsc('voicechat/node/public/socketio.js')
+	C << browse_rsc('voicechat/node/public/megaphone.png')
+	C << browse_rsc('voicechat/node/public/fastclown.gif')
 
-	// Open external browser with voice chat link
-	var/address = src.domain || world.internet_address
-	var/web_link = "https://[address]:[node_port]?sessionId=[sessionId]"
-	if(!show_link_only)
-		C << link(web_link)
+	// opens voicechat
+	var/node_port = CONFIG_GET(number/port_voicechat)
+	var/web_link = "[origin]/voicechat.html?sessionId=[sessionId]&socket_address=[world.internet_address]:[node_port]"
+	if(text2num(external))
+		C << browse("<html><h4>[web_link]</h4><p>Paste into a browser that supports webRTC (firefox is recommended).</p></html>", "window=voicechat_help")
 	else
-		C << browse({"
-		<html>
-			<body>
-				<h3>[web_link]</h3>
-				<p>copy and paste the link into your web browser of choice, or scan the qr code.</p>
-				<img src="https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent([web_link])}&size=150x150">
-			</body>
-		</html>"}, "window=voicechat_help")
-
+		C << link(web_link)
 
 	send_json(alist(
 		cmd = "register",
@@ -40,7 +49,6 @@
 	userCode_client_map[userCode] = C
 	client_userCode_map[C] = userCode
 	// Confirmation handled in confirm_usekrCode
-
 
 // Confirms userCode when browser and mic access are granted
 /datum/controller/subsystem/voicechat/proc/confirm_userCode(userCode)

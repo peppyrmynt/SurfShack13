@@ -15,7 +15,14 @@
 		return
 
 	if(SSvoicechat)
-		SSvoicechat.join_vc(client, show_link_only=TRUE)
+		SSvoicechat.join_vc(client, external=TRUE)
+		RegisterSignal(src, COMSIG_TOPIC, PROC_REF(voicechat_topic), override=TRUE)
+
+/mob/proc/voicechat_topic(href_list)
+	if(href_list["origin"])
+		UnregisterSignal(src, COMSIG_TOPIC)
+		var/external = href_list["external"]
+		SSvoicechat.open_vc(client, external)
 
 /mob/verb/help_voicechat()
 	set name = "Help"

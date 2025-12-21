@@ -31,9 +31,7 @@ let sinkId = null; // Output device ID
 // Extract sessionId from URL
 const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get('sessionId');
-
-// Extract ip from url
-const address = window.location.host;
+const socket_address = urlParams.get('socket_address');
 
 const ICE_SERVERS = [
     { urls: 'stun:stun.l.google.com:19302' },
@@ -382,6 +380,11 @@ function createPeerConnection(userCode, sendOffer) {
     return pc;
 }
 
+addEventListener("icecandidateerror", (event) => {
+    updateStatus('peer connection failed, view console for details')
+    socket.emit('ice_failed', {event})
+ })
+
 function removePeer(userCode) {
     const pc = peerConnections.get(userCode);
     if (pc) {
@@ -462,7 +465,6 @@ function setupSocketHandlers() {
     socket.on('server-shutdown', () => {
         cleanupConnections();
         updateStatus('Server shutting down. Connection closed.');
-		window.location.href = "https://surfshack13.net"
         toggleRoomStatus(false);
     });
 
@@ -548,7 +550,7 @@ function toggleSettings() {
 
 // Initialization
 async function init() {
-    socket = io(address, { rejectUnauthorized: false });
+    socket = io(socket_address, { rejectUnauthorized: false });
     socket.emit('join', { sessionId: sessionId });
     setupSocketHandlers();
     setupUIListeners();

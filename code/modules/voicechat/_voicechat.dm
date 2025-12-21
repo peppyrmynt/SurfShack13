@@ -31,10 +31,8 @@ SUBSYSTEM_DEF(voicechat)
 	var/list/ckey_muted_by = alist()
 	//node server path
 	var/const/node_path = "voicechat/node/server/main.js"
-	//library path set in get lib path
-	var/lib_path
-	//if you have a domain, put it here.
-	var/const/domain
+	//library path
+	var/lib_path = "voicechat/pipes/unix/byondsocket"
 
 /datum/controller/subsystem/voicechat/Initialize()
 	. = ..()
@@ -42,7 +40,6 @@ SUBSYSTEM_DEF(voicechat)
 	if(!CONFIG_GET(flag/enable_voicechat))
 		return SS_INIT_NO_NEED
 
-	set_lib_path()
 	if(!test_library())
 		message_admins("library test failed cant start voicechat")
 		return SS_INIT_FAILURE
@@ -54,14 +51,6 @@ SUBSYSTEM_DEF(voicechat)
 
 	RegisterSignal(SSticker, COMSIG_TICKER_ROUND_ENDED, PROC_REF(on_round_end)) //moves everyone to no prox room at round end.
 	return SS_INIT_SUCCESS
-
-/datum/controller/subsystem/voicechat/proc/set_lib_path()
-	var/const/lib_path_unix = "voicechat/pipes/unix/byondsocket"
-	var/const/lib_path_win = "voicechat/pipes/windows/byondsocket/Release/byondsocket"
-	if(world.system_type == MS_WINDOWS)
-		lib_path = lib_path_win
-	else
-		lib_path = lib_path_unix
 
 /datum/controller/subsystem/voicechat/proc/restart()
 	send_ooc_announcement("Voicechat restarting in a few seconds, please reconnect with join")
@@ -81,8 +70,6 @@ SUBSYSTEM_DEF(voicechat)
 	if(!node_port)
 		CRASH("bad port option specified in config {node_port: [node_port || "null"]}")
 	var/cmd = "node [src.node_path] --node-port=[node_port] --byond-port=[byond_port] --byond-pid=[world.process] &"
-	if(world.system_type == MS_WINDOWS) // ape shit insane but its ok :)
-		cmd = "powershell.exe -Command \"Start-Process -FilePath 'node' -ArgumentList '[src.node_path]','--node-port=[node_port]','--byond-port=[byond_port]', '--byond-pid=[world.process]'\""
 	var/exit_code = shell(cmd)
 	if(exit_code != 0)
 		CRASH("launching node failed {exit_code: [exit_code || "null"], cmd: [cmd || "null"]}")

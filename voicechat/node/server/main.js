@@ -16,7 +16,7 @@ const shutdown_function = () => {
     disconnectAllClients(io);
     turnServer.stop()
     io.close(() => {
-        wsServer.close(() => {
+        httpserver.close(() => {
             ByondServer.close(() => {
                 console.log('shutdown_function called');
                 setTimeout(() => {
@@ -60,7 +60,7 @@ function monitorParentProcess(shutdown_function) {
 monitorParentProcess(shutdown_function);
 
 // Start servers
-const { io, server: wsServer } = startWebSocketServer(byondPort, nodePort);
+const { io, httpserver } = startWebSocketServer(byondPort, nodePort);
 const ByondServer = startByondServer(byondPort, io, shutdown_function);
 const turnServer = startTurnServer()
 fs.writeFileSync(nodePidPath, process.pid.toString());
