@@ -94,7 +94,7 @@ SUBSYSTEM_DEF(voicechat)
 
 
 /datum/controller/subsystem/voicechat/proc/ensure_node_stopped()
-	var/pid = file2text("data/node.pid")
+	var/pid = file2text("node.pid")
 	if(!pid)
 		return TRUE
 

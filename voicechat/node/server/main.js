@@ -9,7 +9,7 @@ const byondPort = argv['byond-port']
 const nodePort = argv['node-port']
 const byondPID = argv['byond-pid']
 
-const nodePidPath = 'data/node.pid'
+const nodePidPath = 'node.pid'
 
 const shutdown_function = () => {
     fs.unlinkSync(nodePidPath)
