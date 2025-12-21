@@ -109,7 +109,7 @@ SUBSYSTEM_DEF(voicechat)
 		message_admins("killing node failed {exit_code: [exit_code || "null"], cmd: [cmd || "null"]}")
 	else
 		message_admins("node shutdown forcefully")
-		fdel("data/node.pid")
+		fdel("node.pid")
 
 
 /datum/controller/subsystem/voicechat/fire()
