@@ -37,8 +37,8 @@
 	C << browse_rsc('voicechat/node/public/fastclown.gif')
 
 	// opens voicechat
-	// var/node_port = CONFIG_GET(number/port_voicechat)
-	var/web_link = "[origin]/voicechat.html?sessionId=[sessionId]&socket_address=localhost:3000"
+	var/node_port = CONFIG_GET(number/port_voicechat)
+	var/web_link = "[origin]/voicechat.html?sessionId=[sessionId]&socket_address=[world.address]:[node_port]"
 	if(text2num(external))
 		C << browse("<html><h4>[web_link]</h4><p>Paste into a browser that supports webRTC (firefox is recommended).</p></html>", "window=voicechat_help")
 	else
