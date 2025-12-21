@@ -16,13 +16,6 @@
 
 	if(SSvoicechat)
 		SSvoicechat.join_vc(client, external=TRUE)
-		RegisterSignal(src, COMSIG_TOPIC, PROC_REF(voicechat_topic), override=TRUE)
-
-/mob/proc/voicechat_topic(href_list)
-	if(href_list["origin"])
-		UnregisterSignal(src, COMSIG_TOPIC)
-		var/external = href_list["external"]
-		SSvoicechat.open_vc(client, external)
 
 /mob/verb/help_voicechat()
 	set name = "Help"
@@ -34,10 +27,9 @@
 			Try <b>join</b> to load with default browser.
 			If the browser fails to open, try <b>"Join with URL"</b> instead.<br>
 			Once the external browser is loaded:<br>
-				1. Ignore the bad cert and <b>continue onto the site</b>.<br>
-				2. When prompted, allow mic perms,.<br>
-				3. Verify this is working, by looking for a voice indicator over your mob when speaking.<br>
-				4. Drag voicechat to its own window so its only the <b>active tab</b><br>
+				1. When prompted, allow mic perms,.<br>
+				2. Verify this is working, by looking for a voice indicator over your mob when speaking.<br>
+				3. Drag voicechat to its own window so its only the <b>active tab</b><br>
 			If you open a different tab it stops detecting microphone input.
 			So make sure voicechat is in its to its own browser window.
 		</p>

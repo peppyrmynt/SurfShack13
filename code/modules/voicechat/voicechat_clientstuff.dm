@@ -1,14 +1,20 @@
-// join_vc -> client/Topic -> open_vc
 /datum/controller/subsystem/voicechat/proc/join_vc(client/C, external=FALSE)
 	if(!C)
 		return
+	RegisterSignal(C, COMSIG_TOPIC, PROC_REF(voicechat_topic), override=TRUE)
 	C << browse({"
 	<html><h4>If this window doesnt close briefly, something is broken</h4>
 	<script>window.location.href += `?src=[ref(src)];origin=${window.location.origin};external=[external]`</script></html>
 	"},"window=origin_locator")
-	//opens client/Topic: client/Topic -> open_vc
+	///join_vc -> Topic -> open_vc
 
-
+/datum/controller/subsystem/voicechat/proc/voicechat_topic(atom/source, mob/user, href_list)
+	var/client/C = user.client
+	if(href_list["origin"])
+		C << browse(null, "window=origin_locator")
+		UnregisterSignal(C, COMSIG_TOPIC)
+		var/external = href_list["external"]
+		open_vc(C, href_list["origin"], external)
 
 // Connects a client to voice chat via an external browser
 /datum/controller/subsystem/voicechat/proc/open_vc(client/C, origin, external)
@@ -18,7 +24,6 @@
 	var/existing_userCode = client_userCode_map[C]
 	if(existing_userCode)
 		disconnect(existing_userCode, from_byond = TRUE)
-
 	// Generate unique session and user codes
 	var/sessionId = md5("[world.time][rand()][world.realtime][rand(0,9999)][C.address][C.computer_id]")
 	var/userCode = generate_userCode(C)
@@ -32,8 +37,8 @@
 	C << browse_rsc('voicechat/node/public/fastclown.gif')
 
 	// opens voicechat
-	var/node_port = CONFIG_GET(number/port_voicechat)
-	var/web_link = "[origin]/voicechat.html?sessionId=[sessionId]&socket_address=[world.internet_address]:[node_port]"
+	// var/node_port = CONFIG_GET(number/port_voicechat)
+	var/web_link = "[origin]/voicechat.html?sessionId=[sessionId]&socket_address=localhost:3000"
 	if(text2num(external))
 		C << browse("<html><h4>[web_link]</h4><p>Paste into a browser that supports webRTC (firefox is recommended).</p></html>", "window=voicechat_help")
 	else
@@ -49,6 +54,7 @@
 	userCode_client_map[userCode] = C
 	client_userCode_map[C] = userCode
 	// Confirmation handled in confirm_usekrCode
+
 
 // Confirms userCode when browser and mic access are granted
 /datum/controller/subsystem/voicechat/proc/confirm_userCode(userCode)
