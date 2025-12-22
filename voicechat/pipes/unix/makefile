@@ -1,6 +1,6 @@
 # Makefile
-BYOND_PATH = $(shell which DreamDaemon)/..
-RETARD = $(shell echo $(BYOND_PATH) >> test)
+DREAMDAEMON_PATH = $(shell which DreamDaemon)
+BYOND_PATH = $(shell dirname $(DREAMDAEMON_PATH))
 CC = gcc
 CPP = g++
 CFLAGS = -m32 -pthread -g -Wall -Wno-deprecated -O3 -fno-strict-aliasing
