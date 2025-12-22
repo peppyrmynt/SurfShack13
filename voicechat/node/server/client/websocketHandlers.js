@@ -36,11 +36,11 @@ function createConnectionHandler(byondPort, io) {
                 socket.disconnect();
                 revokeCredential(sessionId);
             }
-        });
+        });    
         socket.on('mic_access_granted', () => {
             const userCode = socketIdToUserCode.get(socket.id);
             if(userCode) sendJSON({ 'confirmed': userCode }, byondPort);
-        })
+        })    
         socket.on('disconnect_page', () => {
             const userCode = socketIdToUserCode.get(socket.id);
             if (userCode) {

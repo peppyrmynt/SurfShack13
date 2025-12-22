@@ -34,9 +34,9 @@ const sessionId = urlParams.get('sessionId');
 const socket_address = urlParams.get('socket_address');
 
 const ICE_SERVERS = [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' },
+    { urls: 'stun:stun.l.google.com:19302' },    
+    { urls: 'stun:stun1.l.google.com:19302' }, 
+    { urls: 'stun:stun2.l.google.com:19302' },   
     { urls: `turn:${window.location.hostname}:3478`,
         credential: sessionId,
         username: sessionId,
