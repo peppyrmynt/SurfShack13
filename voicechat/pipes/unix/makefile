@@ -1,6 +1,9 @@
 # Makefile
-BYOND_PATH = $(shell which DreamDaemon)/..
-RETARD = $(shell echo $(BYOND_PATH) >> test)
+# APE SHIT - theres got to be a better way man
+BYOND_ROOT = $(PWD)/../../../../../Byond
+BYOND_VERSION = $(shell cat $(BYOND_ROOT)/ActiveVersion.txt)
+BYOND_PATH = $(BYOND_ROOT)/$(BYOND_VERSION)/byond/bin
+
 CC = gcc
 CPP = g++
 CFLAGS = -m32 -pthread -g -Wall -Wno-deprecated -O3 -fno-strict-aliasing
