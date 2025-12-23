@@ -68,12 +68,15 @@ SUBSYSTEM_DEF(voicechat)
 /datum/controller/subsystem/voicechat/proc/start_node()
 	var/byond_port = world.port
 	var/node_port = CONFIG_GET(number/port_voicechat)
-	if(!node_port)
-		CRASH("bad port option specified in config {node_port: [node_port || "null"]}")
-	var/cmd = "node [src.node_path] --node-port=[node_port] --byond-port=[byond_port] --byond-pid=[world.process] &"
+	var/pid = world.process
+	if(!byond_port || !node_port || !pid)
+		message_admins("missing variable {byond_port:[byond_port], node_port:[node_port], pid:[pid]}")
+		return FALSE
+	var/cmd = "node [src.node_path] --node-port=[node_port] --byond-port=[byond_port] --byond-pid=[pid] &"
 	var/exit_code = shell(cmd)
 	if(exit_code != 0)
-		CRASH("launching node failed {exit_code: [exit_code || "null"], cmd: [cmd || "null"]}")
+		message_admins("launching node failed {exit_code: [exit_code || "null"], cmd: [cmd || "null"]}")
+		return FALSE
 	else
 		return TRUE
 
@@ -214,6 +217,5 @@ SUBSYSTEM_DEF(voicechat)
 	while(. in userCode_client_map)
 		. = copytext(md5("[C.computer_id][C.address][rand()]"),-4)
 	return .
-
 
 
