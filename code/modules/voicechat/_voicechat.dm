@@ -63,7 +63,8 @@ SUBSYSTEM_DEF(voicechat)
 		CRASH("ice_failed error without usercode {userCode: [userCode || "null"]")
 	var/client/C = userCode_client_map[userCode]
 	message_admins("voicechat peer connection failed for [C || userCode]")
-voicechat/node/server/main.js --node-port=3000 --byond-port=1337 --byond-pid=0
+
+
 /datum/controller/subsystem/voicechat/proc/start_node()
 	var/byond_port = world.port
 	var/node_port = CONFIG_GET(number/port_voicechat)
