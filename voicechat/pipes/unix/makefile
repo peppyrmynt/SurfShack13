@@ -1,5 +1,5 @@
 # Makefile
-BYOND_PATH = $(shell command -v DreamDaemon 2>/dev/null | xargs -r dirname)
+BYOND_PATH = $(shell dirname $(which DreamDaemon))
 CC = gcc
 CPP = g++
 CFLAGS = -m32 -pthread -g -Wall -Wno-deprecated -O3 -fno-strict-aliasing
