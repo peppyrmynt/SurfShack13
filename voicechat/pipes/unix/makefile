@@ -1,9 +1,8 @@
 # Makefile
-BYOND_ROOT = $(HOME)/Byond
+# APE SHIT - theres got to be a better way man
+BYOND_ROOT = $(PWD)/../../../../../Byond
 BYOND_VERSION = $(shell cat $(BYOND_ROOT)/ActiveVersion.txt)
 BYOND_PATH = $(BYOND_ROOT)/$(BYOND_VERSION)/byond/bin
-
-$(info    BYOND_PATH is $(BYOND_PATH))
 
 CC = gcc
 CPP = g++
