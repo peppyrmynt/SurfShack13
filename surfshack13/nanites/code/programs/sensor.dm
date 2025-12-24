@@ -424,7 +424,13 @@
 
 /datum/nanite_program/sensor/name/check_event()
 	var/datum/nanite_extra_setting/nanite_name_input = extra_settings[NES_NAME]
-	if(host_mob.name == nanite_name_input)
+	var/datum/nanite_extra_setting/mode = extra_settings[NES_MODE]
+
+	var/we_want_a_specific_name = mode.get_value()
+
+	if(host_mob.name == nanite_name_input.get_value() && we_want_a_specific_name)
+		return TRUE
+	if(!(host_mob.name == nanite_name_input.get_value()) && !we_want_a_specific_name)
 		return TRUE
 	return FALSE
 
