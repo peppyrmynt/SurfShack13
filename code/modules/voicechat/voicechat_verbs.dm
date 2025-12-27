@@ -46,7 +46,7 @@
 		<p>
 			* Ensure browser extensions are off and the page is whitelisted.<br>
 			* VPNS occasionally break voicechat.<br>
-			* For best results, use firefox browser
+			* For best results, look up if your browser supports webRTC well.
 		</p>
 		<h4>Issues</h4>
 		<p>
@@ -54,21 +54,16 @@
 			the Join verbs</b>
 		</p>
 		<p>
-			If your are still having issues, its most likely with microphone setup or rtc connections, (roughly 10% connections
-			fail).
+			If your are still having issues, its most likely with microphone setup or rtc connections.
 			To verify the microphone is connected on the website, open the settings tabs and click test mic. If you can hear your
 			mic playback then its working fine.
 			To check if its an RTC connection issue, open your browser debugger console and check for connection failed errors.
 			If you confirmed its a connection failure, try messing with your firewall to open the correct ports (usually
 			3000).
-			You can also try connecting with your phone using the <b>QR code generated from Join with URL</b>
 		</p>
-		<h4>Further help/Bug reporting</h4>
-		<p>Try yelling at the staff or yelling at <b>a_forg</b> on discord.</p>
 		<h4>Source</h4>
 		<p>
 			A small demo is availible at <a href="https://github.com/forgman6/voice_chat_byond">github.com/forgman6/voice_chat_byond</a><br>
-			Contributions are always welcome. Currently this is a solo project.
 		</p>
 	</html>
 	"}, "window=voicechat_help")
