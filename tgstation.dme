@@ -6573,6 +6573,7 @@
 #include "surfshack13\code\modules\clown\clown_props.dm"
 #include "surfshack13\code\modules\clown\clown_props.dm"
 #include "surfshack13\code\modules\datums\components\crafting\misc.dm"
+#include "surfshack13\code\modules\emotes\laugh_k.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_act.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_actions.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_antag.dm"
