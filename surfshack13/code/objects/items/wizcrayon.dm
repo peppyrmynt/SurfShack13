@@ -13,7 +13,7 @@
 	desc = "A colorful crayon, it radiates power. (left click crayon to change color)"
 	icon = 'icons/obj/art/crayons.dmi'
 	icon_state = "crayonrainbow"
-	var/paint_color = "#FF0000"
+	var/paint_color = COLOR_CRAYON_RED
 	var/drawtype = "flip"
 	var/uses = 15
 	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/flipper
