@@ -6581,4 +6581,6 @@
 #include "surfshack13\code\modules\swarmers\swarmer_mob.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_objs.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_ruleset.dm"
+#include "surfshack13\code\objects\decals\wizcrayon_decals.dm"
+#include "surfshack13\code\objects\items\wizcrayon.dm"
 // END_INCLUDE
