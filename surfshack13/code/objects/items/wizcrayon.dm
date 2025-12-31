@@ -1,3 +1,13 @@
+/**
+  * inserted into:
+  * mining_corpses.dm - legion clowns
+  * emergency_clown.dmm
+  * lavaland_biodome_clown_planet.dmm
+  * crashedclownship.dmm
+  * abandonded_crates.dmm
+  * job_types/clown.dm - mail goodies
+**/
+
 /obj/item/toy/wizcrayon
 	name = "wizcrayon"
 	desc = "A colorful crayon, it radiates power. (left click crayon to change color)"
@@ -27,10 +37,9 @@
 	if (!uses)
 		Destroy()
 		return
-	to_chat(user, span_notice("[uses] left"))
+	to_chat(user, span_notice("[uses] uses left"))
 
-
-//tgui is an act against god. this will be updated once I make an alternative
+//tgui is an act against god. The two procs below will be updated once I make an alternative.
 /obj/item/toy/wizcrayon/attack_self(mob/user)
 	var/static/list/ruin_types = subtypesof(/obj/effect/decal/cleanable/wizcrayon)
 	var/choice = input("Select drawing") as null|anything in ruin_types

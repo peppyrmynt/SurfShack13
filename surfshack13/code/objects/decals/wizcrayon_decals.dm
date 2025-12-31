@@ -2,7 +2,6 @@
 	name = "Incanting drawing"
 	desc = "It appears to be moving"
 	icon = 'surfshack13/icons/effects/wizcrayon_decal.dmi'
-	/// how much crayon the ruin uses to draw
 
 /obj/effect/decal/cleanable/wizcrayon/Initialize(mapload, list/datum/disease/diseases)
 	. = ..()
@@ -108,9 +107,7 @@
 
 /obj/effect/decal/cleanable/wizcrayon/light_bulb/Initialize(mapload, list/datum/disease/diseases)
 	. = ..()
-	set_light(3, 6, src.color)
-
-
+	set_light(3, 5, src.color)
 
 
 /obj/effect/decal/cleanable/wizcrayon/land_mine

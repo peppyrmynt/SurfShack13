@@ -30,6 +30,9 @@
 		/obj/item/clothing/shoes/clown_shoes/combat = 10,
 		/obj/item/reagent_containers/spray/waterflower/lube = 20, // lube
 		/obj/item/reagent_containers/spray/waterflower/superlube = 1 // Superlube, good lord.
+		//surfshack13 START
+		/obj/item/toy/wizcrayon = 20
+		//surfshack13 END
 	)
 
 	family_heirlooms = list(/obj/item/bikehorn/golden)
