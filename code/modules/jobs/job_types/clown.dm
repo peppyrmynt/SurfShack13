@@ -33,7 +33,6 @@
 		//surfshack13 START
 		/obj/item/toy/wizcrayon = 20
 		//surfshack13 END
-		)
 	)
 
 	family_heirlooms = list(/obj/item/bikehorn/golden)
