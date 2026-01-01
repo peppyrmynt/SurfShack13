@@ -5,6 +5,7 @@
   * lavaland_biodome_clown_planet.dmm
   * crashedclownship.dmm
   * abandonded_crates.dmm
+  * wizard_den.dmm
   * job_types/clown.dm - mail goodies
 **/
 
