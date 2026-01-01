@@ -35,7 +35,7 @@
 	flick("bald_1", src)
 	H.set_facial_hairstyle("Shaved", update = TRUE)
 	H.set_hairstyle("Skinhead", update = TRUE)
-	playsound(src, 'sound/effects/stealthoff.ogg', 100)
+	playsound(A, 'sound/effects/stealthoff.ogg', 100)
 	to_chat(H, span_danger("your head feels lighter"))
 	--uses
 	if(!uses)
@@ -58,7 +58,7 @@
 		return
 
 	flick("drug_1",src)
-	playsound(src, 'sound/machines/clockcult/steam_whoosh.ogg', 30)
+	playsound(A, 'sound/machines/clockcult/steam_whoosh.ogg', 30)
 	to_chat(C, span_danger("The air smells lucid."))
 	C.set_drugginess(20 SECONDS)
 	C.set_dizzy(10 SECONDS)
@@ -124,7 +124,7 @@
 		return
 
 	flick("mine_1", src)
-	playsound(src, 'surfshack13/sound/effects/air_burster_shoot.ogg', 50, FALSE)
+	playsound(A, 'surfshack13/sound/effects/air_burster_shoot.ogg', 50, FALSE)
 	do_sparks(5, TRUE, src)
 	to_chat(L, span_userdanger("The mine explodes maiming your leg- wait nevermind."))
 	L.add_atom_colour(src.color, WASHABLE_COLOUR_PRIORITY)
@@ -146,5 +146,5 @@
 	var/mob/M = A
 	M.spin(10, 1)
 	flick("spin_1", src)
-	playsound(src, 'surfshack13/sound/effects/cartoon_woink.ogg', 40, FALSE)
+	playsound(A, 'surfshack13/sound/effects/cartoon_woink.ogg', 40, FALSE)
 
