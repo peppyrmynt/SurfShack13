@@ -322,7 +322,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 	sparks.set_up(3, 1, src)
 	sparks.start()
 	M.throw_at(get_edge_target_turf(src, src.dir), 4, 3)
-	if(ishuman(M) && prob(34))
+	if(ishuman(M) && prob(15))
 		playsound(M, 'surfshack13/sound/effects/tom_yell.ogg', 50, FALSE)
 	//after shock, turn off shower
 	intended_on = FALSE
