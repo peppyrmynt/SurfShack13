@@ -38,7 +38,7 @@
 	if(!isnull(medipen_type))
 		new medipen_type(src)
 
-	if(!isnull(medipen2_type))
+	if(!isnull(medipen_space_type))
 		new medipen2_type(src)
 
 	if(HAS_TRAIT(SSstation, STATION_TRAIT_PREMIUM_INTERNALS))
