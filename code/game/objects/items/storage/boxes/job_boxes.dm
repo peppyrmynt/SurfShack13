@@ -39,7 +39,7 @@
 		new medipen_type(src)
 
 	if(!isnull(medipen_space_type))
-		new medipen2_type(src)
+		new medipen_space_type(src)
 
 	if(HAS_TRAIT(SSstation, STATION_TRAIT_PREMIUM_INTERNALS))
 		new /obj/item/flashlight/flare(src)
