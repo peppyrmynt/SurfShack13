@@ -13,7 +13,7 @@
 	/// What medipen should be present in this box?
 	var/medipen_type = /obj/item/reagent_containers/hypospray/medipen
 	/// What secondary medipen should be present in this box?
-	var/medipen2_type = /obj/item/reagent_containers/hypospray/medipen/spacepen
+	var/medipen_space_type = /obj/item/reagent_containers/hypospray/medipen/spacepen
 	/// Are we crafted?
 	var/crafted = FALSE
 
