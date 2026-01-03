@@ -14,6 +14,8 @@
 	var/medipen_type = /obj/item/reagent_containers/hypospray/medipen
 	/// What secondary medipen should be present in this box?
 	var/medipen_space_type = /obj/item/reagent_containers/hypospray/medipen/spacepen
+	/// What medical pill should be present in this box?
+	var/pill_type = /obj/item/reagent_containers/pill/antiviral
 	/// Are we crafted?
 	var/crafted = FALSE
 
@@ -40,6 +42,8 @@
 
 	if(!isnull(medipen_space_type))
 		new medipen_space_type(src)
+	if(!isnull(pill_type))
+		new pill_type(src)
 
 	if(HAS_TRAIT(SSstation, STATION_TRAIT_PREMIUM_INTERNALS))
 		new /obj/item/flashlight/flare(src)

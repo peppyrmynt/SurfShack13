@@ -136,9 +136,10 @@
 #define INIT_ORDER_DBCORE 95
 #define INIT_ORDER_BLACKBOX 94
 #define INIT_ORDER_SERVER_MAINT 93
-#define INIT_ORDER_INPUT 85
-#define INIT_ORDER_ADMIN_VERBS 84 // needs to be pretty high, admins can't do much without it
-#define INIT_ORDER_SOUNDS 83
+#define INIT_ORDER_INPUT 86
+#define INIT_ORDER_ADMIN_VERBS 85 // needs to be pretty high, admins can't do much without it
+#define INIT_ORDER_SOUNDS 84
+#define INIT_ORDER_VOICECHAT 83
 #define INIT_ORDER_INSTRUMENTS 82
 #define INIT_ORDER_GREYSCALE 81
 #define INIT_ORDER_VIS 80
@@ -188,9 +189,8 @@
 #define INIT_ORDER_EXPLOSIONS -69
 #define INIT_ORDER_STATPANELS -97
 #define INIT_ORDER_BAN_CACHE -98
-#define INIT_ORDER_VOICECHAT -99
-#define INIT_ORDER_INIT_PROFILER -100 //Near the end, logs the costs of initialize
-#define INIT_ORDER_CHAT -101//Should be last to ensure chat remains smooth during init.
+#define INIT_ORDER_INIT_PROFILER -99 //Near the end, logs the costs of initialize
+#define INIT_ORDER_CHAT -100 //Should be last to ensure chat remains smooth during init.
 
 // Subsystem fire priority, from lowest to highest priority
 // If the subsystem isn't listed here it's either DEFAULT or PROCESS (if it's a processing subsystem child)

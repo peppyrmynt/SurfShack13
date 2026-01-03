@@ -396,6 +396,7 @@
 	pixel_y = 12;
 	pixel_x = 8
 	},
+/obj/item/toy/wizcrayon,
 /turf/open/floor/engine/cult,
 /area/centcom/wizard_station)
 "ua" = (
