@@ -57,6 +57,10 @@ GLOBAL_LIST_INIT(shower_mode_descriptions, list(
 	COOLDOWN_DECLARE(timed_cooldown)
 	///How far to shift the sprite when placing.
 	var/pixel_shift = 16
+	//surfshack13 START
+	///Whether or not the shower is shorted
+	var/is_shorted = FALSE
+	//surfshack13 END
 
 MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 
@@ -101,6 +105,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 		. += span_notice("A water recycler is installed. It looks like you could pry it out.")
 	. += span_notice("The auto shut-off is programmed to [GLOB.shower_mode_descriptions["[mode]"]].")
 	. += span_notice("[reagents.total_volume]/[reagents.maximum_volume] liquids remaining.")
+	. += span_notice("The antishock mechanism is [is_shorted ? "de" : "at"]tached")
 
 /obj/machinery/shower/Destroy()
 	QDEL_NULL(soundloop)
@@ -183,6 +188,18 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 	handle_mist()
 	return TRUE
 
+//surfshack13 START
+/obj/machinery/shower/wirecutter_act(mob/living/user, obj/item/tool)
+	. = ..()
+	to_chat(user, span_notice("You being to [is_shorted ? "reat" : "de"]tach the antishock mechanism on \the [src]"))
+	if(tool.use_tool(src, user, 50))
+		add_hiddenprint(user)
+		user.visible_message(span_notice("[user] [is_shorted ? "reat" : "de"]taches the antishock mechanism on \the [src]"),\
+			span_notice("you [is_shorted ? "reat" : "de"]tach the antishock mechanism on \the [src]"))
+		is_shorted = !is_shorted
+	return TRUE
+//surfshack13 END
+
 /obj/machinery/shower/wrench_act(mob/living/user, obj/item/I)
 	. = ..()
 	I.play_tool_sound(src)
@@ -239,6 +256,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 	if(actually_on && reagents.total_volume)
 		wash_atom(enterer)
 
+
+
+
 /obj/machinery/shower/proc/on_exited(datum/source, atom/movable/exiter)
 	SIGNAL_HANDLER
 
@@ -283,6 +303,31 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 
 	living_target.apply_status_effect(/datum/status_effect/washing_regen, shower_reagent)
 	living_target.add_mood_event("shower", /datum/mood_event/shower, shower_reagent)
+
+//surfshack13 START
+
+	if(is_shorted && living_target)
+		try_electrocute_mob(living_target)
+
+/obj/machinery/shower/proc/try_electrocute_mob(mob/living/M)
+	var/turf/T = get_turf(src)
+	var/obj/structure/cable/cable_node = T.get_cable_node()
+	if(isnull(cable_node))
+		return
+	if(!electrocute_mob(M, cable_node, src, 1, TRUE))
+		return
+	M.visible_message(span_danger("Sparks poor out of the shower and send [M] flying!"),\
+		span_userdanger("The shower was electrocuted, the shock sends you flying!"))
+	var/datum/effect_system/spark_spread/sparks = new /datum/effect_system/spark_spread
+	sparks.set_up(3, 1, src)
+	sparks.start()
+	M.throw_at(get_edge_target_turf(src, src.dir), 4, 3)
+	if(ishuman(M) && prob(15))
+		playsound(M, 'surfshack13/sound/effects/tom_yell.ogg', 50, FALSE)
+	//after shock, turn off shower
+	intended_on = FALSE
+	update_actually_on(intended_on)
+//surfshack13 END
 
 /**
  * Toggle whether shower is actually on and outputting water.
@@ -401,6 +446,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 	tool.play_tool_sound(src)
 	deconstruct()
 	return TRUE
+
+//surfshack13 START
+
+//surfshack13 END
 
 
 /obj/effect/mist

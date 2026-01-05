@@ -193,6 +193,7 @@ GLOBAL_LIST_INIT(uncommon_loot, list(//uncommon: useful items
 		/obj/item/storage/belt/medical = 1,
 		/obj/item/storage/belt/utility = 1,
 		/obj/item/pen/screwdriver = 1,
+		/obj/item/rubber_chicken = 2,
 		) = 8,
 
 	list(//strange objects
@@ -359,6 +360,7 @@ GLOBAL_LIST_INIT(rarity_loot, list(//rare: really good items
 		/obj/item/skillchip/intj = 1,
 		/obj/item/tattoo_kit = 1,
 		/obj/item/folder/ancient_paperwork = 1,
+		/obj/item/tweak_fragment = 1,
 		) = 1,
 
 ))

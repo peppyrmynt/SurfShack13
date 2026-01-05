@@ -23,15 +23,23 @@
 	sender_override = "Nanotrasen Meteorology Division")
 	if (fake)
 		return
+	//surfshack START
+	var/aurora_sound = 'sound/ambience/aurora_caelus/aurora_caelus.ogg'
+	if(prob(5))
+		aurora_sound = 'surfshack13/sound/ambience/aurora_caelus/auroraborealis_kitchen.ogg'
 	for(var/V in GLOB.player_list)
 		var/mob/M = V
 		if((M.client.prefs.read_preference(/datum/preference/toggle/sound_midi)) && is_station_level(M.z))
-			M.playsound_local(M, 'sound/ambience/aurora_caelus/aurora_caelus.ogg', 20, FALSE, pressure_affected = FALSE)
+			M.playsound_local(M, aurora_sound, 20, FALSE, pressure_affected = FALSE)
+	//surfshack END
 	fade_space(fade_in = TRUE)
 	fade_kitchen(fade_in = TRUE)
 
 /datum/round_event/aurora_caelus/start()
-	if(!prob(1) && !check_holidays(APRIL_FOOLS))
+	//surfshack13 START
+	// if(!prob(1) && !check_holidays(APRIL_FOOLS))
+	if(!prob(1))
+	//surfshack13 END
 		return
 
 	var/list/human_blacklist = list()
