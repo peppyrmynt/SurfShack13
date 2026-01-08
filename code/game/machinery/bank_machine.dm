@@ -23,6 +23,8 @@
 
 	///What department to check to link our bank account to.
 	var/account_department = ACCOUNT_CAR
+	///What's the departmental budget name? For the TGUI.
+	var/account_dept_name = ACCOUNT_CAR_NAME
 	///Bank account we're connected to.
 	var/datum/bank_account/synced_bank_account
 
@@ -54,6 +56,7 @@
 	else if(istype(weapon, /obj/item/card/id/departmental_budget))
 		var/obj/item/card/id/departmental_budget/my_dep_card = weapon
 		account_department = my_dep_card.department_ID
+		account_dept_name = my_dep_card.department_name
 		say("Account department changed! Now accessing the funds of the [my_dep_card.name].")
 		synced_bank_account = SSeconomy.get_dep_account(account_department)
 	if(value)
@@ -100,6 +103,7 @@
 	data["current_balance"] = synced_bank_account?.account_balance || 0
 	data["siphoning"] = siphoning
 	data["station_name"] = station_name()
+	data["department_acc"] = account_dept_name
 
 	return data
 
