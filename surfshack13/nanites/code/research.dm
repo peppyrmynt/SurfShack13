@@ -14,7 +14,6 @@
 
 #define TECHWEB_NODE_NANITE_BASIC_TOOL "nanite_tool"
 #define TECHWEB_NODE_NANITE_ADV_TOOL "nanite_tool_adv"
-#define TECHWEB_NODE_NANITE_SUPER_TOOL "nanite_tool_super"
 #define TECHWEB_NODE_NANITE_EXPERI "nanite_experi"
 #define TECHWEB_NODE_NANITE_BRAINAUG "nanite_brainaug"
 #define TECHWEB_NODE_NANITE_ILLEGAL "nanite_illegal"
@@ -287,16 +286,6 @@
 		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_2_POINTS*NANITE_POINT_CONVERSION_RATE,)
 	prereq_ids = list(TECHWEB_NODE_NANITE_BASIC_TOOL, TECHWEB_NODE_EXP_TOOLS)
 	design_ids = list("construct_tool_adv_nanites", "botsummon_nanites")
-
-/datum/techweb_node/nanite_tools_super
-	id = TECHWEB_NODE_NANITE_SUPER_TOOL
-	display_name = "Super Nanite Manufacturing"
-	description = "Nanites programs that allow for easy construction of highly advanced items."
-	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS,
-		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_3_POINTS*NANITE_POINT_CONVERSION_RATE,)
-	prereq_ids = list(TECHWEB_NODE_NANITE_ADV_TOOL)
-	design_ids = list("construct_tool_super_nanites")
 
 
 /datum/techweb_node/nanite_experimental
