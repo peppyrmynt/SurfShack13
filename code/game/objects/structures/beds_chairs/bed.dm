@@ -77,6 +77,22 @@
 	deconstruct(disassembled = TRUE)
 	return TRUE
 
+/obj/structure/bed/proc/start_resting(mob/living/target)
+	target.apply_status_effect(/datum/status_effect/bed_rest, BED_STRUCTURE_EFFECT)
+
+/obj/structure/bed/proc/stop_resting(mob/living/target)
+	target.remove_status_effect(/datum/status_effect/bed_rest, BED_STRUCTURE_EFFECT)
+
+/obj/structure/bed/post_buckle_mob(mob/living/buckled)
+	. = ..()
+	update_appearance()
+	start_resting(buckled)
+
+/obj/structure/bed/post_unbuckle_mob(mob/living/buckled)
+	. = ..()
+	update_appearance()
+	stop_resting(buckled)
+
 /// Medical beds
 /obj/structure/bed/medical
 	name = "medical bed"

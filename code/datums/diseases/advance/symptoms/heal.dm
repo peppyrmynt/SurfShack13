@@ -51,7 +51,7 @@
 	resistance = -2
 	stage_speed = 0
 	transmittable = 1
-	level = 6
+	level = 9
 	passive_message = span_notice("You miss the feeling of starlight on your skin.")
 	var/nearspace_penalty = 0.3
 	threshold_descs = list(
@@ -185,7 +185,7 @@
 	resistance = -2
 	stage_speed = 2
 	transmittable = -2
-	level = 7
+	level = 10
 	required_organ = ORGAN_SLOT_HEART
 	threshold_descs = list(
 		"Resistance 7" = "Increases chem removal speed.",
@@ -228,7 +228,7 @@
 	resistance = -2
 	stage_speed = 2
 	transmittable = 1
-	level = 7
+	level = 10
 	required_organ = ORGAN_SLOT_STOMACH
 	threshold_descs = list(
 		"Stealth 3" = "Reduces hunger rate.",
@@ -270,7 +270,7 @@
 	resistance = -1
 	stage_speed = -2
 	transmittable = -1
-	level = 6
+	level = 8
 	passive_message = span_notice("You feel tingling on your skin as light passes over it.")
 	threshold_descs = list(
 		"Stage Speed 8" = "Doubles healing speed.",
@@ -327,7 +327,7 @@
 	resistance = 2
 	stage_speed = -3
 	transmittable = -2
-	level = 8
+	level = 11
 	passive_message = span_notice("The pain from your wounds makes you feel oddly sleepy...")
 	var/deathgasp = FALSE
 	var/stabilize = FALSE
@@ -378,7 +378,7 @@
 			return power * 0.9
 		if(SOFT_CRIT)
 			return power * 0.5
-	if(M.getBruteLoss() + M.getFireLoss() >= 70 && !active_coma)
+	if(M.getBruteLoss() + M.getFireLoss() >= 100 && !active_coma)
 		to_chat(M, span_warning("You feel yourself slip into a regenerative coma..."))
 		active_coma = TRUE
 		addtimer(CALLBACK(src, PROC_REF(coma), M), 6 SECONDS)
@@ -426,7 +426,7 @@
 	resistance = -1
 	stage_speed = 0
 	transmittable = 1
-	level = 6
+	level = 9
 	passive_message = span_notice("Your skin feels oddly dry...")
 	required_organ = ORGAN_SLOT_LIVER
 	threshold_descs = list(
@@ -501,7 +501,7 @@
 	resistance = 3
 	stage_speed = -2
 	transmittable = -2
-	level = 8
+	level = 10
 	passive_message = span_notice("You feel an odd attraction to plasma.")
 	required_organ = ORGAN_SLOT_LIVER
 	threshold_descs = list(
@@ -612,7 +612,7 @@
 	resistance = -2
 	stage_speed = 2
 	transmittable = -3
-	level = 6
+	level = 8
 	symptom_delay_min = 1
 	symptom_delay_max = 1
 	passive_message = span_notice("Your skin glows faintly for a moment.")
@@ -652,3 +652,48 @@
 
 /datum/symptom/heal/radiation/can_generate_randomly()
 	return ..() && !HAS_TRAIT(SSstation, STATION_TRAIT_RADIOACTIVE_NEBULA) //because people can never really suffer enough
+
+/datum/symptom/heal/calorie
+	name = "Nutritional Healing"
+	desc = "The virus uses newly obtained nutrients inside the body to repair damaged tissue cells. Most effective on well-fed hosts."
+	stealth = 0
+	resistance = 1
+	stage_speed = 1
+	transmittable = 1
+	level = 11
+	passive_message = span_notice("Your body feels like it's healing...")
+	required_organ = ORGAN_SLOT_LIVER
+	threshold_descs = list(
+		"Stage Speed 5" = "Being obese allows for slow regeneration.",
+	)
+	var/fatregen = FALSE
+	var/fatregenmult = 1
+
+/datum/symptom/heal/calorie/Start(datum/disease/advance/A)
+	. = ..()
+	if(!.)
+		return
+	if(A.totalStageSpeed() >= 5)
+		fatregen = TRUE
+
+/datum/symptom/heal/calorie/Heal(mob/living/carbon/my_human, datum/disease/advance/A, actual_power)
+	if(my_human.getBruteLoss() || my_human.getFireLoss() || my_human.getToxLoss())
+		// If we are fat and have fat regen, multiply heals by 2
+		if(fatregen && HAS_TRAIT_FROM(my_human, TRAIT_FAT, OBESITY))
+			fatregenmult = 2
+		else
+			fatregenmult = 1
+		// If we have a full stomach, begin healing us && let's also prevent cheese by ensuring you HAVE to be able to get fat.
+		if(my_human.nutrition > NUTRITION_LEVEL_FULL && !HAS_TRAIT(my_human, TRAIT_NOFAT))
+			my_human.adjustBruteLoss(-0.2 * fatregenmult)
+			my_human.adjustFireLoss(-0.2 * fatregenmult)
+			my_human.adjustToxLoss(-0.1 * fatregenmult)
+			// If we have a full stomach, but aren't fat, make us hungry (no free lipliocide)
+			if(!HAS_TRAIT_FROM(my_human, TRAIT_FAT, OBESITY))
+				my_human.adjust_nutrition(-0.2)
+
+/datum/symptom/heal/calorie/passive_message_condition(mob/living/carbon/infected_mob)
+	if(infected_mob.getBruteLoss() || infected_mob.getFireLoss())
+		return TRUE
+
+	return FALSE

@@ -13,9 +13,10 @@ function normalizeStringify(obj) {
 }
 
 const handleLocationPacket = (packet, io) => {
-    for (const zlevel in packet) {
-        if (zlevel === "loc") continue;
-        const locations = packet[zlevel];
+    for (const room in packet) {
+        if (room === "loc") continue;
+        const isNoProx = room.endsWith('_noprox');
+        const locations = packet[room];
         const userCodes = Object.keys(locations);
         const numUsers = userCodes.length;
 
@@ -25,20 +26,31 @@ const handleLocationPacket = (packet, io) => {
             peersByUser[userCode] = {};
         }
 
-        // Compute distances only for unique pairs (i < j)
-        for (let i = 0; i < numUsers; i++) {
-            const userCode = userCodes[i];
-            const [ux, uy] = locations[userCode];
-            for (let j = i + 1; j < numUsers; j++) {
-                const otherCode = userCodes[j];
-                const [ox, oy] = locations[otherCode];
-                const dx = Math.abs(ux - ox);
-                const dy = Math.abs(uy - oy);
-                if (dx < 8 && dy < 8) {
-                    const dist = Math.hypot(ux - ox, uy - oy);
-                    const roundedDist = Math.round(dist * 10) / 10;
-                    peersByUser[userCode][otherCode] = roundedDist;
-                    peersByUser[otherCode][userCode] = roundedDist;
+        if (isNoProx) { // connect everyone with distance 0
+            for (let i = 0; i < numUsers; i++) {
+                const userCode = userCodes[i];
+                for (let j = 0; j < numUsers; j++) {
+                    if (i !== j) {
+                        const otherCode = userCodes[j];
+                        peersByUser[userCode][otherCode] = 0;
+                    }
+                }
+            }
+        } else {
+            for (let i = 0; i < numUsers; i++) {
+                const userCode = userCodes[i];
+                const [ux, uy] = locations[userCode];
+                for (let j = i + 1; j < numUsers; j++) {
+                    const otherCode = userCodes[j];
+                    const [ox, oy] = locations[otherCode];
+                    const dx = Math.abs(ux - ox);
+                    const dy = Math.abs(uy - oy);
+                    if (dx < 8 && dy < 8) {
+                        const dist = Math.hypot(ux - ox, uy - oy);
+                        const roundedDist = Math.round(dist * 10) / 10;
+                        peersByUser[userCode][otherCode] = roundedDist;
+                        peersByUser[otherCode][userCode] = roundedDist;
+                    }
                 }
             }
         }

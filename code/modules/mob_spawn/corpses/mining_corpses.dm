@@ -259,6 +259,10 @@
 		))
 	if(prob(10))
 		r_pocket = /obj/item/implanter/sad_trombone
+	//surfshack13 START
+	if(prob(10))
+		backpack_contents += /obj/item/toy/wizcrayon/
+	//surfshack13 END
 
 /datum/outfit/consumed_clown/post_equip(mob/living/carbon/human/clown, visuals_only)
 	. = ..()
