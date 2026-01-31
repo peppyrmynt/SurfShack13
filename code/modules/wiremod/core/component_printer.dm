@@ -465,13 +465,13 @@
 
 	else if(istype(weapon, /obj/item/multitool/circuit))
 		var/list/errors = list()
-		var/option = alert(user, "Load a custom/saved circuit by file or direct input?", "Load by file or string", "File", "Direct Input")
+		var/option = alert(user, "Load a custom/saved circuit by direct input? (You should have this saved somewhere.)", "Load by string", "Cancel", "Direct Input")
 		var/txt
 		switch(option)
-			if("File")
-				txt = file2text(input(user, "Input File") as null|file)
 			if("Direct Input")
 				txt = input(user, "Input JSON", "Input JSON") as text|null
+			if("Cancel")
+				return
 
 		if(!txt)
 			return
@@ -479,7 +479,7 @@
 		var/machine_turf = get_turf(src)
 
 		var/obj/item/integrated_circuit/circuit = new(machine_turf)
-		circuit.load_circuit_data(txt, errors)
+		circuit.safe_load_circuit_data(txt, errors)
 
 		if(length(errors))
 			to_chat(user, span_warning("The following errors were found whilst compiling the circuit data:"))

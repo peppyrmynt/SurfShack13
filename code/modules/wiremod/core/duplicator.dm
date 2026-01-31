@@ -124,6 +124,126 @@ GLOBAL_LIST_INIT(circuit_dupe_whitelisted_types, list(
 
 	SEND_SIGNAL(src, COMSIG_CIRCUIT_POST_LOAD)
 
+// Surf Shack Edit
+
+/// Loads a circuit based on json data at a location. Can also load usb connections, such as arrest consoles.
+/obj/item/integrated_circuit/proc/safe_load_circuit_data(json_data, list/errors)
+	var/list/general_data = safe_json_decode(json_data)
+
+	if(!general_data)
+		LOG_ERROR(errors, "Invalid json format!")
+		return
+
+	var/list/variable_data = general_data["variables"]
+	for(var/list/variable as anything in variable_data)
+		var/variable_name = variable["name"]
+		var/datum/circuit_variable/variable_datum = new /datum/circuit_variable(variable_name, variable["datatype"])
+		circuit_variables[variable_name] = variable_datum
+		if(variable["is_assoc_list"])
+			assoc_list_variables[variable_name] = variable_datum
+			variable_datum.set_value(list())
+		else if(variable["is_list"])
+			list_variables[variable_name] = variable_datum
+			variable_datum.set_value(list())
+		else
+			modifiable_circuit_variables[variable_name] = variable_datum
+
+	admin_only = FALSE // We're trying to be SAFE here by default.
+
+	if(general_data["display_name"])
+		set_display_name(general_data["display_name"])
+
+	var/list/circuit_data = general_data["components"]
+	var/list/identifiers_to_circuit = list()
+	for(var/identifier in circuit_data)
+		var/list/component_data = circuit_data[identifier]
+		var/type = text2path(component_data["type"])
+		if(!ispath(type, /obj/item/circuit_component))
+			LOG_ERROR(errors, "Invalid path for circuit component, expected [/obj/item/circuit_component], got [type]")
+			continue
+		var/obj/item/circuit_component/component = load_component(type)
+		identifiers_to_circuit[identifier] = component
+		component.load_data_from_list(component_data)
+		SEND_SIGNAL(component, COMSIG_CIRCUIT_COMPONENT_LOAD_DATA, component_data)
+
+		var/list/input_ports_data = component_data["input_ports_stored_data"]
+		for(var/port_name in input_ports_data)
+			var/datum/port/input/port
+			var/list/port_data = input_ports_data[port_name]
+			for(var/datum/port/input/port_to_check as anything in component.input_ports)
+				if(port_to_check.name == port_name)
+					port = port_to_check
+					break
+
+			if(!port)
+				LOG_ERROR(errors, "Port '[port_name]' not found on [component.type] when trying to set it to a value of [port_data["stored_data"]]!")
+				continue
+
+			port.set_input(port_data["stored_data"])
+
+	var/list/external_objects = general_data["external_objects"]
+	for(var/identifier in external_objects)
+		var/list/object_data = external_objects[identifier]
+		var/type = text2path(object_data["type"])
+		if(!ispath(type))
+			LOG_ERROR(errors, "Invalid path for external object, expected a path, got [type]")
+			continue
+		var/atom/movable/object = new type(drop_location())
+		var/list/connected_components = list()
+		for(var/component_id in object_data["connected_components"])
+			var/obj/item/circuit_component/component = identifiers_to_circuit[component_id]
+			if(!component)
+				continue
+			connected_components += component
+		SEND_SIGNAL(object, COMSIG_MOVABLE_CIRCUIT_LOADED, src, connected_components)
+
+	for(var/identifier in identifiers_to_circuit)
+		var/obj/item/circuit_component/component = identifiers_to_circuit[identifier]
+		var/list/component_data = circuit_data[identifier]
+
+		var/list/connections = component_data["connections"]
+		for(var/port_name in connections)
+			var/datum/port/input/port
+			var/list/connection_data = connections[port_name]
+			for(var/datum/port/input/port_to_check as anything in component.input_ports)
+				if(port_to_check.name == port_name)
+					port = port_to_check
+					break
+
+			if(!port)
+				LOG_ERROR(errors, "Port [port_name] not found for [component.type].")
+				continue
+
+			if(connection_data["stored_data"])
+				if(!(port.datatype in GLOB.circuit_dupe_whitelisted_types))
+					continue
+				port.set_input(connection_data["stored_data"])
+				continue
+
+			// The || list(connected_data) is for backwards compatibility with when inputs could only be connected to up to one output.
+			for(var/list/output_data in (connection_data["connected_ports"] || list(connection_data)))
+				var/obj/item/circuit_component/connected_component = identifiers_to_circuit[output_data["component_id"]]
+				if(!connected_component)
+					LOG_ERROR(errors, "No connected component found for [component.type] for port [connection_data["port_name"]]. (connected component identifier: [connection_data["component_id"]])")
+					continue
+
+				var/datum/port/output/output_port
+				var/output_port_name = output_data["port_name"]
+				for(var/datum/port/output/port_to_check as anything in connected_component.output_ports)
+					if(port_to_check.name == output_port_name)
+						output_port = port_to_check
+						break
+
+				if(!output_port)
+					LOG_ERROR(errors, "No output port found for [component.type] for port [output_port_name] on component [connected_component.type]")
+					continue
+
+				port.connect(output_port)
+
+	SEND_SIGNAL(src, COMSIG_CIRCUIT_POST_LOAD)
+
+// Edit end
+
 #undef LOG_ERROR
 
 /// Converts a circuit into json.
