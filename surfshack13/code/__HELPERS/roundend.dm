@@ -16,7 +16,9 @@
 			break
 	if(!completed)
 		return
-	var/amount = CEILING(50000 / total_crew, 50) // nice even number
+	var/amount = (10 * total_crew) // so on 20 pop it'll be 200. It caps around 50 pop, totalling at 500 credits.
+	if(amount >= 501) // best not let it get too crazy.
+		amount = 500
 	for(var/ckey in joined_player_list)
 		LAZYINITLIST(rewards[ckey])
 		rewards[ckey] += list(list(amount, "Station Goal Completion Bonus"))
