@@ -230,6 +230,21 @@
 /obj/item/disk/nanite_program/species
 	program = /datum/nanite_program/sensor/species
 
+/obj/item/disk/nanite_program/alive
+	program = /datum/nanite_program/sensor/alive
+
+/obj/item/disk/nanite_program/job
+	program = /datum/nanite_program/sensor/job
+
+/obj/item/disk/nanite_program/incapacitated
+	program = /datum/nanite_program/sensor/incapacitated
+
+/obj/item/disk/nanite_program/name
+	program = /datum/nanite_program/sensor/name
+
+/obj/item/disk/nanite_program/resting
+	program = /datum/nanite_program/sensor/resting
+
 /obj/item/disk/nanite_program/defib
 	program = /datum/nanite_program/defib
 
