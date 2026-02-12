@@ -102,7 +102,7 @@
 
 /datum/nanite_program/sensor/crit
 	name = "Critical Health Sensor"
-	desc = "The nanites receive a signal when the host first reaches critical health."
+	desc = "The nanites receive a signal when the host is in critical health."
 	can_rule = TRUE
 
 /datum/nanite_program/sensor/crit/check_event()

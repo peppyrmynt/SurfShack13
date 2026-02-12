@@ -14,7 +14,7 @@
 
 /datum/design/nanites/sensor_crit
 	name = "Critical Health Sensor"
-	desc = "The nanites receive a signal when the host first reaches critical health."
+	desc = "The nanites receive a signal when the host is in critical health."
 	id = "sensor_crit_nanites"
 	category = list(NANITES_CATEGORY_SENSOR)
 	program_type = /datum/nanite_program/sensor/crit
