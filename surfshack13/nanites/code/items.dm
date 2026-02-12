@@ -29,9 +29,6 @@
 	new /obj/item/disk/nanite_program/pacifying(src)
 	new /obj/item/disk/nanite_program/mind_control(src)
 
-//Names are intentionally all the same - track your nanites, or use a hand labeler
-//This also means that you can give flesh melting nanites to your victims if you feel like it
-
 /obj/item/disk/nanite_program
 	name = "nanite program disk"
 	desc = "A disk capable of storing nanite programs. Can be customized using a Nanite Programming Console."
@@ -39,16 +36,36 @@
 	icon_state = "nanite"
 	///The program currently uploaded into the disk. If set to something, the disk will spawn with that program on mapload.
 	var/datum/nanite_program/program
+	///If a program is loaded onto this disk, does it become shock-proof?
+	var/shock_proofing = FALSE
+	///If a program is loaded onto this disk, does it become EMP-proof?
+	var/emp_proofing = FALSE
 
 /obj/item/disk/nanite_program/Initialize(mapload)
 	. = ..()
 	if(program)
 		program = new program
+		name = "[initial(name)] \[[program.name]\]"
+	if(shock_proofing && !(program.program_flags & NANITE_SHOCK_IMMUNE))
+		program.program_flags |= NANITE_SHOCK_IMMUNE
+	if(emp_proofing && !(program.program_flags & NANITE_EMP_IMMUNE))
+		program.program_flags |= NANITE_EMP_IMMUNE
 
-/obj/item/disk/nanite_program/examine(mob/user)
-	. = ..()
-	if(program) // because why aren't these labeled?
-		. += "The digital footprint reads: [program.name]."
+/obj/item/disk/nanite_program/no_shock
+	icon_state = "nanite_noshock"
+	shock_proofing = TRUE
+
+/obj/item/disk/nanite_program/no_emp
+	icon_state = "nanite_noemp"
+	emp_proofing = TRUE
+
+/obj/item/disk/nanite_program/no_dmg
+	icon_state = "nanite_nodmg"
+	shock_proofing = TRUE
+	emp_proofing = TRUE
+
+/obj/item/disk/nanite_program/no_dmg/syndicate
+	icon_state = "nanite_syndicate"
 
 /obj/item/disk/nanite_program/aggressive_replication
 	program = /datum/nanite_program/aggressive_replication
