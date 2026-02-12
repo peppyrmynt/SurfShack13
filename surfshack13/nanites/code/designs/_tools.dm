@@ -38,6 +38,16 @@
 	category = list(RND_CATEGORY_CONSTRUCTION + RND_SUBCATEGORY_CONSTRUCTION_ELECTRONICS)
 	departmental_flags = DEPARTMENT_BITFLAG_SCIENCE
 
+/datum/design/nanite_disk_noshock
+	name = "Shock-Immune Nanite Program Disk"
+	desc = "Stores nanite programs."
+	id = "nanite_disk_noshock"
+	build_type = PROTOLATHE
+	materials = list(/datum/material/iron = 300, /datum/material/glass = 100, /datum/material/gold = 250)
+	build_path = /obj/item/disk/nanite_program/no_shock
+	category = list(RND_CATEGORY_CONSTRUCTION + RND_SUBCATEGORY_CONSTRUCTION_ELECTRONICS)
+	departmental_flags = DEPARTMENT_BITFLAG_SCIENCE
+
 /datum/design/board/nanite_chamber
 	name = "Machine Design (Nanite Chamber Board)"
 	desc = "The circuit board for a Nanite Chamber."
