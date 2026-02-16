@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta charset='utf-8'>
+    <link rel='stylesheet' href='ui.css'>
+</head>
+
+<body class='NT_theme'>
+    <div class='Section'>
+        <div class='Section__title'><span class='Section__titleText'>Basic</span></div>
+        <table class='LabeledList'>
+            <tbody>
+                <tr class=LabeledList__row'>
+                    <td class='LabeledList__cell label'>Crayon left</td>
+                    <td class='LabeledList__cell'>
+                        <div id='crayonFill' class='progressBarContainer'>
+                            <div class='progressBar'>
+                                <element class='progressFill animated'></element>
+                                <span class='progressLabel'></span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class=LabeledList__row'>
+                    <td class='LabeledList__cell label'>Color</td>
+                    <td class='LabeledList__cell'>
+                        <div id='colorSelectors'>
+                            <!-- <label class='option color'><input type='radio' name='colorPicker' value='Red' data-hex='#DA0000'><span style='--fill:#DA0000;' class='colorBox'></span></label> -->
+                            <!-- color select insert -->
+                        </div>
+                        <span class='colorText' id='colorText'>...</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class='Section'>
+        <div class='Section__title'><span class='Section__titleText'>Stencil</span></div>
+        <table class='LabeledList'>
+            <tr>
+                <td class='LabeledList__cell label'>Ruin Stencil</td>
+                <td class='LabeledList__cell'>
+                    <div id='ruinSelectors'>
+                        <!-- <label class='option'><input type='radio' name='ruin' id='fart'/><span class='btn'>fart</span></label> -->
+                        <!-- ruin select insert -->
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        const crayonFillContainer = document.getElementById('crayonFill');
+        const colorText = document.getElementById('colorText');
+        const colorSelectors = document.getElementById('colorSelectors');
+        const ruinSelectors = document.getElementById('ruinSelectors');
+        const paintColors = {};
+        const options = colorSelectors.querySelectorAll('.option');
+        /* ref insert */
+        let activeColor;
+        options.forEach((option, index) => {
+            const radio = option.querySelector("input[type='radio']");
+            const paintName = radio.value;
+            const paintColor = radio.dataset.hex;
+            paintColors[paintName] = paintColor;
+            if (index === 0) {
+                radio.checked = true;
+                updateActiveColor(paintName);
+            }
+        })
+        function sendToByond(type, value) {
+            const search_out = `?src=${ref}&type=${type}&value=${value}`;
+            window.location.search = search_out;
+        }
+
+        function updateActiveColor(newColor) {
+            if (!newColor) return;
+            activeColor = newColor;
+            const colorValue = paintColors[activeColor];
+            crayonFillContainer.style.setProperty('--fill', colorValue);
+            colorText.textContent = activeColor;
+            colorText.style.color = colorValue;
+            sendToByond(type = "active_color", value = activeColor)
+        }
+        function updateCrayonFillWidth(newWidth) {
+            crayonFillContainer.style.setProperty('--fill-width', Number(newWidth));
+        }
+        colorSelectors.addEventListener('change', function (event) {
+            const newColor = event.target.value;
+            updateActiveColor(newColor);
+        })
+        ruinSelectors.addEventListener('change', function (event) {
+            const ruin = event.target.value;
+            if (!ruin) return;
+            sendToByond(type = "ruin", value = ruin)
+        })
+    </script>
+</body>

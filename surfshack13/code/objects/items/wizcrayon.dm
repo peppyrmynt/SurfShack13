@@ -8,22 +8,19 @@
   * abandonded_crates.dm
   * job_types/clown.dm - mail goodies
 **/
-
+#define TOTAL_USES 15
 /obj/item/toy/wizcrayon
 	name = "wizcrayon"
 	desc = "A colorful crayon, it radiates power. (left click crayon to change color, right click to set ruin.)"
 	icon = 'surfshack13/icons/obj/art/wizcrayon.dmi'
 	icon_state = "wizcrayon"
 	w_class = WEIGHT_CLASS_TINY
-	var/paint_color = COLOR_CRAYON_RED
+	var/paint_colors
+	var/paint_color
 	var/uses = 15
-	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/flipper
-	var/static/list/ruin_types
-
-/obj/item/toy/wizcrayon/Initialize(mapload)
-	. = ..()
-	if(!length(ruin_types))
-		ruin_types = subtypesof(/obj/effect/decal/cleanable/wizcrayon)
+	var/static/list/stencil_buttons
+	var/static/ui
+	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/flip
 
 /obj/item/toy/wizcrayon/proc/isValidSurface(atom/surface)
 	. = TRUE
@@ -54,17 +51,44 @@
 	if (!uses)
 		Destroy()
 		return
-	to_chat(user, span_notice("\The [src] psychically informs you it has [uses] use[uses == 1 ? "" : "s"] left"))
 
-//tgui is an act against god. The two procs below will be updated once I make an alternative.
+	var/percent = round((uses/TOTAL_USES) * 100)
+	user << output(percent, "[ref(src)].browser:updateCrayonFillWidth")
+
+
 /obj/item/toy/wizcrayon/attack_self(mob/user)
-	var/choice = input("Select drawing") as null|anything in ruin_types
-	if(choice)
-		current_ruin = choice
+	if(!ui)
+		create_ui()
+	winset(user, null, "browser-options=devtools")
+	SSfrogui.open_ui(user, src, ui, "size=415x310;")
 
-/obj/item/toy/wizcrayon/attack_self_secondary(mob/user, modifiers)
+
+/obj/item/toy/wizcrayon/proc/create_ui()
+	ui = file2text('frogui/wizcrayon.html')
+	var/insert = ""
+	paint_colors = list("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
+	for(var/color, value in paint_colors)
+		insert += "<label class='option color'><input type='radio' name='colorPicker' value='[color]' data-hex='[value]'><span style='--fill:[value];' class='colorBox'></span></label>\n"
+	ui = replacetextEx(ui, "<!-- color select insert -->\n", insert)
+	insert = ""
+	stencil_buttons = list()
+	for(var/type in subtypesof(/obj/effect/decal/cleanable/wizcrayon))
+		type = "[type]"
+		var/name = copytext(type, findlasttext(type, "/")+1)
+		stencil_buttons[name] = type
+		insert += "<label class='option'><input type='radio' name='ruin' value='[name]'/><span class='btn'>[name]</span></label>"
+	ui = replacetextEx(ui, "<!-- ruin select insert -->\n", insert)
+
+/obj/item/toy/wizcrayon/Topic(href, list/href_list)
 	. = ..()
-	var/static/list/colors = list("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
-	var/color_choice = input("Pick color") as null|anything in colors
-	if(color_choice)
-		paint_color = colors[color_choice]
+	var/type = href_list["type"]
+	var/value = href_list["value"]
+	if(!type || !value)
+		return
+	switch(type)
+		if("active_color")
+			paint_color = paint_colors[value]
+		if("ruin")
+			current_ruin = stencil_buttons[value]
+
+#undef TOTAL_USES
