@@ -15,12 +15,16 @@
 	icon = 'surfshack13/icons/obj/art/wizcrayon.dmi'
 	icon_state = "wizcrayon"
 	w_class = WEIGHT_CLASS_TINY
-	var/paint_colors
-	var/paint_color
 	var/uses = 15
+	var/paint_color
+	var/static/paint_colors
 	var/static/list/stencil_buttons
 	var/static/ui
 	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/flip
+
+/obj/item/toy/wizcrayon/Destroy(force)
+	SSfrogui.atom_close_uis(src)
+	. = ..()
 
 /obj/item/toy/wizcrayon/proc/isValidSurface(atom/surface)
 	. = TRUE
@@ -53,17 +57,17 @@
 		return
 
 	var/percent = round((uses/TOTAL_USES) * 100)
-	user << output(percent, "[ref(src)].browser:updateCrayonFillWidth")
-
+	SSfrogui.update_ui(user, src, data=percent, function="updateCrayonFillWidth")
 
 /obj/item/toy/wizcrayon/attack_self(mob/user)
 	if(!ui)
 		create_ui()
 	winset(user, null, "browser-options=devtools")
-	SSfrogui.open_ui(user, src, ui, "size=415x310;")
-
+	SSfrogui.open_ui(user, src, ui, "size=315x210;")
 
 /obj/item/toy/wizcrayon/proc/create_ui()
+	if(ui)
+		CRASH("create_ui called with exisiting ui")
 	ui = file2text('frogui/wizcrayon.html')
 	var/insert = ""
 	paint_colors = list("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
@@ -81,14 +85,8 @@
 
 /obj/item/toy/wizcrayon/Topic(href, list/href_list)
 	. = ..()
-	var/type = href_list["type"]
-	var/value = href_list["value"]
-	if(!type || !value)
-		return
-	switch(type)
-		if("active_color")
-			paint_color = paint_colors[value]
-		if("ruin")
-			current_ruin = stencil_buttons[value]
-
+	if(href_list["active_color"])
+		paint_color = paint_colors[href_list["active_color"]]
+	if(href_list["ruin"])
+		current_ruin = stencil_buttons[href_list["ruin"]]
 #undef TOTAL_USES
