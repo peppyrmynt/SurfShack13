@@ -5,18 +5,23 @@
 * each ui type is lazy loaded once, so it gets built per type on request once and then reused next request.
 * tried to make ui look and function same as tgui for user
 * experimental for now
+* per client, you can only have one ui based from an atom.
 */
+
 SUBSYSTEM_DEF(frogui)
 	name = "frogui"
 	flags = SS_NO_FIRE
 	runlevels = RUNLEVEL_LOBBY | RUNLEVELS_DEFAULT
+	/// list of all the open ui's a client has
 	var/client_uis = alist()
-	var/ui_clients = alist()
+	/// all open uis targeting a specific atom.
+	var/atom_ui_clients = alist()
 
 /datum/controller/subsystem/frogui/Initialize()
 	. = ..()
 	return SS_INIT_SUCCESS
 
+///open ui, register it in client and source atoms
 /datum/controller/subsystem/frogui/proc/open_ui(mob/user, atom/source, ui, params)
 	var/client/C = user.client
 	if(!C)
@@ -24,17 +29,18 @@ SUBSYSTEM_DEF(frogui)
 	if(isnull(client_uis[C]))
 		C << browse_rsc('surfshack13/frogui/ui.css', "ui.css")
 		client_uis[C] = list()
-	if(isnull(ui_clients[source]))
-		ui_clients[source] = list()
+	if(isnull(atom_ui_clients[source]))
+		atom_ui_clients[source] = list()
 
 	var/source_ref = ref(source)
 	client_uis[C] += source_ref
-	ui_clients[source] += C
+	atom_ui_clients[source] += C
 	C << browse(replacetextEx(ui,\
 		"/* ref insert */", "const ref = [json_encode(source_ref)];"),\
 		 "window=[source_ref];[params]")
 	winset(C, source_ref, "on-close=\"frogui_close [source_ref]\"")
 
+///close ui, clean up variables.
 /datum/controller/subsystem/frogui/proc/close_ui(mob/user, atom/source)
 	var/client/C = user.client
 	var/source_ref = ref(source)
@@ -44,19 +50,23 @@ SUBSYSTEM_DEF(frogui)
 	if(client_uis[C].Find(source_ref))
 		C  << browse(null, "window=[source_ref]")
 		client_uis[C] -= source_ref
-		ui_clients[source] -= C
+		atom_ui_clients[source] -= C
 
+/// close all uis tied to a given atom
 /datum/controller/subsystem/frogui/proc/atom_close_uis(atom/source)
 	var/source_ref = ref(source)
-	for(var/client/C in ui_clients[source])
+	for(var/client/C in atom_ui_clients[source])
 		C << browse(null, "window=[source_ref]")
 		client_uis[C] -= source_ref
-	ui_clients[source] = null
+	atom_ui_clients[source] = null
 
+/// send data to ui
 /datum/controller/subsystem/frogui/proc/update_ui(mob/user, atom/source, data, function)
 	var/source_ref = ref(source)
 	user << output(data, "[source_ref].browser:[function]")
 
+// see external.dm`
+/// client command to inform server that ui has closed, deletes closed ui variables
 /client/verb/frogui_close(source_ref as text)
 	set name = "frogui_close"
 	set hidden = TRUE

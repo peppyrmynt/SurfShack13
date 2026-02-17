@@ -60,10 +60,10 @@
 	var/percent = round((uses/TOTAL_USES) * 100)
 	SSfrogui.update_ui(user, src, data=percent, function="updateCrayonFillWidth")
 
-/obj/item/toy/wizcrayon/attack_self(mob/user)
+/obj/item/toy/wizcrayon/ui_interact(mob/user)
+	. = ..()
 	if(!ui)
 		create_ui()
-	winset(user, null, "browser-options=devtools")
 	SSfrogui.open_ui(user, src, ui, "size=315x210;")
 
 /obj/item/toy/wizcrayon/proc/create_ui()
