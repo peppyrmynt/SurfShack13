@@ -60,6 +60,7 @@
 		//const ref = "[0x1234567];"
 		/* ref insert */
 		let activeColor;
+		let activeRuin;
 		options.forEach((option, index) => {
 			const radio = option.querySelector("input[type='radio']");
 			const paintName = radio.value;
@@ -67,13 +68,23 @@
 			paintColors[paintName] = paintColor;
 			if (index === 0) {
 				radio.checked = true;
-				updateActiveColor(paintName);
+				activeColor = paintName
+				crayonFillContainer.style.setProperty('--fill', paintColor);
+				colorText.textContent = paintName;
+				colorText.style.color = paintColor;
 			}
 		})
 
-		function sendToByond(type, value) {
-			const search_out = `?src=${ref}&${type}=${value}`;
-			window.location.search = search_out;
+		function sendToByond(...pairs) {
+			const params = new URLSearchParams();
+			params.append('src', ref);
+
+			for (let i = 0; i < pairs.length; i += 2) {
+				if (pairs[i + 1] !== undefined) {
+					params.append(pairs[i], pairs[i + 1]);
+				}
+			}
+			window.location.search = params.toString();
 		}
 
 		function updateActiveColor(newColor) {
@@ -83,7 +94,7 @@
 			crayonFillContainer.style.setProperty('--fill', colorValue);
 			colorText.textContent = activeColor;
 			colorText.style.color = colorValue;
-			sendToByond(type = "active_color", value = activeColor)
+			sendToByond("active_color", activeColor);
 		}
 		function updateCrayonFillWidth(newWidth) {
 			crayonFillContainer.style.setProperty('--fill-width', Number(newWidth));
@@ -92,10 +103,14 @@
 			const newColor = event.target.value;
 			updateActiveColor(newColor);
 		})
+		const defaultSelector = ruinSelectors.firstElementChild.querySelector("input[type='radio']")
+		defaultSelector.checked = true
+		activeRuin = defaultSelector.value;
+		sendToByond('active_ruin', activeRuin, 'active_color', activeColor)
 		ruinSelectors.addEventListener('change', function (event) {
-			const ruin = event.target.value;
-			if (!ruin) return;
-			sendToByond(type = "ruin", value = ruin)
+			activeRuin = event.target.value;
+			if (!activeRuin) return;
+			sendToByond("active_ruin", activeRuin)
 		})
 	</script>
 </body>

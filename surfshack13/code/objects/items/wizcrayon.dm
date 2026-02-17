@@ -20,7 +20,8 @@
 	var/static/paint_colors
 	var/static/list/stencil_buttons
 	var/static/ui
-	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/flip
+	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/spore
+
 
 /obj/item/toy/wizcrayon/Destroy(force)
 	SSfrogui.atom_close_uis(src)
@@ -68,7 +69,7 @@
 /obj/item/toy/wizcrayon/proc/create_ui()
 	if(ui)
 		CRASH("create_ui called with exisiting ui")
-	ui = file2text('frogui/wizcrayon.html')
+	ui = file2text('surfshack13/frogui/wizcrayon.html')
 	var/insert = ""
 	paint_colors = list("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
 	for(var/color, value in paint_colors)
@@ -85,8 +86,9 @@
 
 /obj/item/toy/wizcrayon/Topic(href, list/href_list)
 	. = ..()
+	FROGUI_USE_CHECK
 	if(href_list["active_color"])
 		paint_color = paint_colors[href_list["active_color"]]
-	if(href_list["ruin"])
-		current_ruin = stencil_buttons[href_list["ruin"]]
+	if(href_list["active_ruin"])
+		current_ruin = stencil_buttons[href_list["active_ruin"]]
 #undef TOTAL_USES

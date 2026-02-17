@@ -6,7 +6,6 @@
 * tried to make ui look and function same as tgui for user
 * experimental for now
 */
-
 SUBSYSTEM_DEF(frogui)
 	name = "frogui"
 	flags = SS_NO_FIRE
@@ -23,7 +22,7 @@ SUBSYSTEM_DEF(frogui)
 	if(!C)
 		return
 	if(isnull(client_uis[C]))
-		C << browse_rsc('frogui/ui.css', "ui.css")
+		C << browse_rsc('surfshack13/frogui/ui.css', "ui.css")
 		client_uis[C] = list()
 	if(isnull(ui_clients[source]))
 		ui_clients[source] = list()
