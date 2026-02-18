@@ -31,8 +31,12 @@ SUBSYSTEM_DEF(frogui)
 		client_uis[C] = list()
 	if(isnull(atom_ui_clients[source]))
 		atom_ui_clients[source] = list()
-
+	//ui already exist
 	var/source_ref = ref(source)
+
+	if(client_uis[C].Find(source_ref))
+		return
+
 	client_uis[C] += source_ref
 	atom_ui_clients[source] += C
 	C << browse(replacetextEx(ui,\
@@ -61,9 +65,11 @@ SUBSYSTEM_DEF(frogui)
 	atom_ui_clients[source] = null
 
 /// send data to ui
-/datum/controller/subsystem/frogui/proc/update_ui(mob/user, atom/source, data, function)
+/datum/controller/subsystem/frogui/proc/update_ui(mob/user, atom/source)
 	var/source_ref = ref(source)
-	user << output(data, "[source_ref].browser:[function]")
+	var/data = source.ui_data()
+	var/message = url_encode(json_encode(data))
+	user << output(message, "[source_ref].browser:update")
 
 // see external.dm`
 /// client command to inform server that ui has closed, deletes closed ui variables

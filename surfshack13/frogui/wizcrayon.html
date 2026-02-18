@@ -51,29 +51,59 @@
 		</table>
 	</div>
 	<script>
-		const crayonFillContainer = document.getElementById('crayonFill');
-		const colorText = document.getElementById('colorText');
-		const colorSelectors = document.getElementById('colorSelectors');
-		const ruinSelectors = document.getElementById('ruinSelectors');
-		const paintColors = {};
-		const options = colorSelectors.querySelectorAll('.option');
 		//const ref = "[0x1234567];"
 		/* ref insert */
-		let activeColor;
-		let activeRuin;
-		options.forEach((option, index) => {
+
+		const crayonFillContainer = document.getElementById('crayonFill');
+		const colorText = document.getElementById('colorText');
+
+
+		const paintColors = {};
+		const colorSelectors = document.getElementById('colorSelectors');
+		const colorElements = {};
+
+		const ruinSelectors = document.getElementById('ruinSelectors');
+		const ruinElements = {};
+
+		let activeColorName;
+		let activeRuinName;
+
+		 colorSelectors.querySelectorAll('.option').forEach((option, index) => {
 			const radio = option.querySelector("input[type='radio']");
 			const paintName = radio.value;
 			const paintColor = radio.dataset.hex;
 			paintColors[paintName] = paintColor;
-			if (index === 0) {
-				radio.checked = true;
-				activeColor = paintName
-				crayonFillContainer.style.setProperty('--fill', paintColor);
-				colorText.textContent = paintName;
-				colorText.style.color = paintColor;
-			}
+			colorElements[paintName] = radio
 		})
+
+		ruinSelectors.querySelectorAll('.option').forEach((option, index) => {
+			const radio = option.querySelector("input[type='radio']");
+			const ruinName = radio.value;
+			ruinElements[ruinName] = radio;
+		})
+
+		function updateColor(newColor) {
+			activeColorName = newColor;
+			const colorValue = paintColors[activeColorName];
+			crayonFillContainer.style.setProperty('--fill', colorValue);
+			colorText.textContent = activeColorName;
+			colorText.style.color = colorValue;
+		}
+		function update(payload) {
+			const parsed = JSON.parse(payload)
+			if(parsed["active_color_name"]) {
+				activeColorName = parsed['active_color_name'];
+				updateColor(activeColorName);
+				colorElements[activeColorName].checked = true;
+			}
+			if(parsed["active_ruin_name"]) {
+				activeRuinName = parsed['active_ruin_name'];
+				ruinElements[activeRuinName].checked = true;
+			}
+			if(parsed["percent"]) {
+				updateCrayonFillWidth(parsed['percent']);
+			}
+		}
 
 		function sendToByond(...pairs) {
 			const params = new URLSearchParams();
@@ -87,30 +117,24 @@
 			window.location.search = params.toString();
 		}
 
-		function updateActiveColor(newColor) {
-			if (!newColor) return;
-			activeColor = newColor;
-			const colorValue = paintColors[activeColor];
-			crayonFillContainer.style.setProperty('--fill', colorValue);
-			colorText.textContent = activeColor;
-			colorText.style.color = colorValue;
-			sendToByond("active_color", activeColor);
-		}
 		function updateCrayonFillWidth(newWidth) {
 			crayonFillContainer.style.setProperty('--fill-width', Number(newWidth));
 		}
+
 		colorSelectors.addEventListener('change', function (event) {
 			const newColor = event.target.value;
-			updateActiveColor(newColor);
-		})
-		const defaultSelector = ruinSelectors.firstElementChild.querySelector("input[type='radio']")
-		defaultSelector.checked = true
-		activeRuin = defaultSelector.value;
-		sendToByond('active_ruin', activeRuin, 'active_color', activeColor)
+			if (!newColor) return;
+			updateColor(newColor);
+			sendToByond("active_color_name", activeColorName);
+		});
+
 		ruinSelectors.addEventListener('change', function (event) {
-			activeRuin = event.target.value;
-			if (!activeRuin) return;
-			sendToByond("active_ruin", activeRuin)
-		})
+			const newRuin = event.target.value;
+			if (!newRuin) return;
+			activeRuinName = newRuin;
+			sendToByond("active_ruin_name", activeRuinName);
+		});
+
+		setTimeout(sendToByond("ready",1), 200);
 	</script>
 </body>

@@ -16,12 +16,14 @@
 	icon_state = "wizcrayon"
 	w_class = WEIGHT_CLASS_TINY
 	var/uses = 15
-	var/paint_color
+	var/active_color_name = "Red"
+	var/active_color = COLOR_CRAYON_RED
 	var/static/paint_colors
 	var/static/list/stencil_buttons
 	var/static/ui
-	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/spore
-
+	var/active_ruin_name = "flip"
+	var/active_ruin = /obj/effect/decal/cleanable/wizcrayon/flip
+	var/percent = 100
 
 /obj/item/toy/wizcrayon/Destroy(force)
 	SSfrogui.atom_close_uis(src)
@@ -48,23 +50,30 @@
 	if(!do_after(user, 2 SECONDS, T, progress=TRUE))
 		return
 
-	var/atom/A = new current_ruin (T)
+	var/atom/A = new active_ruin (T)
 	if(!A)
 		return
-	A.color = paint_color
+	A.color = active_color
 	uses --
 	if (!uses)
 		Destroy()
 		return
 
-	var/percent = round((uses/TOTAL_USES) * 100)
-	SSfrogui.update_ui(user, src, data=percent, function="updateCrayonFillWidth")
+	percent = round((uses/TOTAL_USES) * 100)
+	SSfrogui.update_ui(user, src)
 
 /obj/item/toy/wizcrayon/ui_interact(mob/user)
 	. = ..()
 	if(!ui)
 		create_ui()
 	SSfrogui.open_ui(user, src, ui, "size=315x210;")
+	winset(user, null, "browser-options=devtools")
+
+/obj/item/toy/wizcrayon/ui_data(mob/user)
+	. = ..()
+	.["active_color_name"] = active_color_name
+	.["active_ruin_name"] = active_ruin_name
+	.["percent"] = percent
 
 /obj/item/toy/wizcrayon/proc/create_ui()
 	if(ui)
@@ -86,9 +95,18 @@
 
 /obj/item/toy/wizcrayon/Topic(href, list/href_list)
 	. = ..()
-	FROGUI_USE_CHECK
-	if(href_list["active_color"])
-		paint_color = paint_colors[href_list["active_color"]]
-	if(href_list["active_ruin"])
-		current_ruin = stencil_buttons[href_list["active_ruin"]]
+	var/mob/user = usr
+	if(!user)
+		CRASH("ui user not found")
+	if(!user.can_perform_action(src, NEED_LITERACY|NEED_DEXTERITY|NEED_HANDS|FORBID_TELEKINESIS_REACH))
+		SSfrogui.close_ui(user, src)
+		return
+	if(href_list["ready"])
+		SSfrogui.update_ui(user, src)
+	if(href_list["active_color_name"])
+		active_color_name = href_list["active_color_name"]
+		active_color = paint_colors[active_color_name]
+	if(href_list["active_ruin_name"])
+		active_ruin_name = href_list["active_ruin_name"]
+		active_ruin = stencil_buttons[active_ruin_name]
 #undef TOTAL_USES
