@@ -1,9 +1,10 @@
 //uncomment to show traffic
 // #define LOG_TRAFFIC
+#define VOICECHAT_LIB_PATH  "voicechat/pipes/unix/byondsocket"
 
 /datum/controller/subsystem/voicechat/proc/test_library()
 	var/text = "hello word"
-	var/out = call_ext(src.lib_path, "byond:Echo")(text)
+	var/out = call_ext(VOICECHAT_LIB_PATH, "byond:Echo")(text)
 	var/confirmed = (out == text)
 	return confirmed
 
@@ -22,7 +23,7 @@
 	#ifdef LOG_TRAFFIC
 	message_admins("BYOND: [json]")
 	#endif
-	call_ext(src.lib_path, "byond:SendJSON")(json)
+	call_ext(VOICECHAT_LIB_PATH, "byond:SendJSON")(json)
 
 
 /datum/controller/subsystem/voicechat/proc/handle_topic(T, addr)
@@ -40,7 +41,7 @@
 	#endif
 
 	if(data["node_started"])
-		on_node_start(data["node_started"])
+		on_node_start()
 		return
 
 
@@ -55,8 +56,12 @@
 	if(data["voice_activity"])
 		toggle_active(data["voice_activity"], data["active"])
 		return
+
 	if(data["disconnect"])
 		disconnect(userCode= data["disconnect"])
 
-	if(data["shutting_down"])
-		is_node_shutting_down = TRUE
+	if(data["ice_failed"])
+		on_ice_failed(userCode=data["ice_failed"])
+		return
+
+#undef VOICECHAT_LIB_PATH

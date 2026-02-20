@@ -1,128 +1,128 @@
+#define NODE_SERVER_PATH "voicechat/node/server/main.js"
 SUBSYSTEM_DEF(voicechat)
 	name = "Voice Chat"
+	/// faster tick times means smoother proximity. If machine is lagging, increase.
 	wait = 3 //300 ms
 	flags = SS_KEEP_TIMING
 	init_order = INIT_ORDER_VOICECHAT
 	runlevels = RUNLEVEL_GAME|RUNLEVEL_POSTGAME
-
-	//life cycle sanity shit, please dont touch
-	var/is_node_shutting_down = FALSE
-	//life cycle sanity shit, please dont touch
-	var/node_PID
-
-	//     --list shit--
-
 	//userCodes associated thats been fully confirmed - browser paired and mic perms on
 	var/list/vc_clients = list()
 	//userCode to clientRef
 	var/list/userCode_client_map = alist()
 	var/list/client_userCode_map = alist()
-
-	//a list all currnet rooms
 	//change with add_rooms and remove_rooms.
 	var/list/current_rooms = alist()
+	var/list/room_has_proximity = alist()
 	// usercode to room
 	var/list/userCode_room_map = alist()
 	// usercode to mob only really used for the overlays
 	var/list/userCode_mob_map = alist()
-	// used to ensure rooms are always updated
+	// mob to client map, needed for tracking switched mobs
+	var/list/mob_client_map = alist()
+	// used to manage overlays
 	var/list/userCodes_active = list()
 	// each speaker per userCode
 	var/list/userCodes_speaking_icon = alist()
-	//list of all rooms to add at round start
-	var/list/rooms_to_add = list("living", "ghost")
-	//holds a normal list of all the ckeys and list of all usercodes that muted that ckey
-	var/list/ckey_muted_by = alist()
-	//   --subsystem "defines"--
-
-	//node server path
-	var/const/node_path = "voicechat/node/server/main.js"
-	//library path
-	var/lib_path
-	var/const/lib_path_unix = "voicechat/pipes/unix/byondsocket"
-	var/const/lib_path_win = "voicechat/pipes/windows/byondsocket/Release/byondsocket"
-	//if you have a domain, put it here.
-	var/const/domain
-
-//  --lifecycle--
 
 /datum/controller/subsystem/voicechat/Initialize()
 	. = ..()
-	if(world.system_type == MS_WINDOWS)
-		lib_path = lib_path_win
-	else
-		lib_path = lib_path_unix
+
 	if(!CONFIG_GET(flag/enable_voicechat))
 		return SS_INIT_NO_NEED
+
 	if(!test_library())
+		message_admins("library test failed cant start voicechat")
 		return SS_INIT_FAILURE
-	add_rooms(rooms_to_add)
+
+	add_rooms(list("living", "ghost"))
+	add_rooms(list("lobby"), proximity_mode = FALSE)
 	start_node()
 	initialized = TRUE
+
+	RegisterSignal(SSticker, COMSIG_TICKER_ROUND_ENDED, PROC_REF(on_round_end)) //moves everyone to no prox room at round end.
 	return SS_INIT_SUCCESS
+
+/datum/controller/subsystem/voicechat/proc/restart()
+	send_ooc_announcement("Voicechat restarting in a few seconds, please reconnect with join")
+	disconnect_all_clients()
+	stop_node()
+	addtimer(CALLBACK(src, PROC_REF(start_node), 4 SECONDS))
+
+/datum/controller/subsystem/voicechat/proc/on_ice_failed(userCode)
+	// if(!userCode)
+	// 	CRASH("ice_failed error without usercode {userCode: [userCode || "null"]")
+	// var/client/C = userCode_client_map[userCode]
+	// message_admins("voicechat peer connection failed for [C || userCode]")
+	return
 
 
 /datum/controller/subsystem/voicechat/proc/start_node()
 	var/byond_port = world.port
 	var/node_port = CONFIG_GET(number/port_voicechat)
-	if(!node_port)
-		CRASH("bad port option specified in config {node_port: [node_port || "null"]}")
-	var/cmd = "node [src.node_path] --node-port=[node_port] --byond-port=[byond_port] --byond-pid=[world.process] &"
-	if(world.system_type == MS_WINDOWS) // ape shit insane but its ok :)
-		cmd = "powershell.exe -Command \"Start-Process -FilePath 'node' -ArgumentList '[src.node_path]','--node-port=[node_port]','--byond-port=[byond_port]', '--byond-pid=[world.process]'\""
+	var/pid = world.process
+	if(!byond_port || !node_port || !pid)
+		message_admins("missing variable {byond_port:[byond_port], node_port:[node_port], pid:[pid]}")
+		return FALSE
+	var/cmd = "node [NODE_SERVER_PATH] --node-port=[node_port] --byond-port=[byond_port] --byond-pid=[pid] &"
 	var/exit_code = shell(cmd)
 	if(exit_code != 0)
-		CRASH("launching node failed {exit_code: [exit_code || "null"], cmd: [cmd || "null"]}")
-
+		message_admins("launching node failed {exit_code: [exit_code || "null"], cmd: [cmd || "null"]}")
+		return FALSE
+	else
+		return TRUE
 
 
 /datum/controller/subsystem/voicechat/Shutdown()
+	disconnect_all_clients()
 	stop_node()
+	send_ooc_announcement("voicechat stopped")
 	. = ..()
+
+/datum/controller/subsystem/voicechat/proc/disconnect_all_clients()
+	for(var/userCode in vc_clients)
+		disconnect(userCode, from_byond = TRUE)
 
 
 /datum/controller/subsystem/voicechat/proc/stop_node()
 	send_json(alist(cmd= "stop_node"))
-	addtimer(CALLBACK(src, PROC_REF(confirm_node_stopped), 1 SECONDS))
+	addtimer(CALLBACK(src, PROC_REF(ensure_node_stopped), 3 SECONDS))
 
 
-/datum/controller/subsystem/voicechat/proc/confirm_node_stopped()
-	if(is_node_shutting_down)
-		return
+/datum/controller/subsystem/voicechat/proc/ensure_node_stopped()
+	var/pid = file2text("node.pid")
+	if(!pid)
+		return TRUE
 
-	message_admins("node failed to shutdown, trying forcefully...")
+	message_admins("node failed to shutdown when asked, trying forcefully...")
 
-	if(!node_PID)
-		message_admins("cant find pid to shutdown node. hard restart required to fix voicechat")
-		return
-	var/cmd = "kill [node_PID]"
+	var/cmd = "kill [pid]"
 	if(world.system_type == MS_WINDOWS)
-		cmd = "taskkill /F /PID [node_PID]"
+		cmd = "taskkill /F /PID [pid]"
 	var/exit_code = shell(cmd)
 
 	if(exit_code != 0)
 		message_admins("killing node failed {exit_code: [exit_code || "null"], cmd: [cmd || "null"]}")
 	else
-		message_admins("node shutdown")
+		message_admins("node shutdown forcefully")
+		fdel("node.pid")
+
 
 /datum/controller/subsystem/voicechat/fire()
 	send_locations()
 
-/datum/controller/subsystem/voicechat/proc/on_node_start(pid)
-	if(!pid || !isnum(pid))
-		CRASH("invalid pid {pid: [pid || "null"]}")
-	node_PID = pid
+/datum/controller/subsystem/voicechat/proc/on_node_start()
 	return
 
-/datum/controller/subsystem/voicechat/proc/add_rooms(list/rooms, zlevel_mode = FALSE)
+/datum/controller/subsystem/voicechat/proc/add_rooms(list/rooms, proximity_mode = TRUE)
 	if(!islist(rooms))
 		rooms = list(rooms)
 	rooms.Remove(current_rooms) //remove existing rooms
 	for(var/room in rooms)
-		if(isnum(room) && !zlevel_mode)
-			// CRASH("rooms cannot be numbers {room: [room]}")
+		if(isnum(room))
 			continue
 		current_rooms[room] = list()
+		room_has_proximity[room] = proximity_mode
 
 
 /datum/controller/subsystem/voicechat/proc/remove_rooms(list/rooms)
@@ -133,7 +133,15 @@ SUBSYSTEM_DEF(voicechat)
 		for(var/userCode in current_rooms[room])
 			userCode_room_map[userCode] = null
 		current_rooms.Remove(room)
+		room_has_proximity.Remove(room)
 
+/// remove user from room
+/datum/controller/subsystem/voicechat/proc/clear_userCode(userCode)
+	var/own_room = userCode_room_map[userCode]
+	if(own_room)
+		current_rooms[own_room] -= userCode
+
+	userCode_room_map[userCode] = null
 
 /datum/controller/subsystem/voicechat/proc/move_userCode_to_room(userCode, room)
 	if(!room || !current_rooms.Find(room))
@@ -145,110 +153,50 @@ SUBSYSTEM_DEF(voicechat)
 
 	userCode_room_map[userCode] = room
 	current_rooms[room] += userCode
+	message_admins("move to room worked {room: [userCode_room_map[userCode] || "null"]}")
 
 
 /datum/controller/subsystem/voicechat/proc/link_userCode_client(userCode, client)
 	if(!client|| !userCode)
 		// CRASH("{userCode: [userCode || "null"], client: [client  || "null"]}")
 		return
-	var/client_ref = ref(client)
-	userCode_client_map[userCode] = client_ref
-	client_userCode_map[client_ref] = userCode
-	world.log << "registered userCode:[userCode] to client_ref:[client_ref]"
-
-
-// Confirms userCode when browser and mic access are granted
-/datum/controller/subsystem/voicechat/proc/confirm_userCode(userCode)
-	if(!userCode || (userCode in vc_clients))
-		return
-	var/client_ref = userCode_client_map[userCode]
-	if(!client_ref)
-		return
-
-	vc_clients += userCode
-	log_world("Voice chat confirmed for userCode: [userCode]")
-	post_confirm(userCode)
-
+	userCode_client_map[userCode] = client
+	client_userCode_map[client] = userCode
 
 // faster the better
 /datum/controller/subsystem/voicechat/proc/send_locations()
-	var/list/params = list(cmd = "loc")
+	var/list/packet = list(cmd = "loc")
 	var/locs_sent = 0
 
 	for(var/userCode in vc_clients)
-		var/client/C = locate(userCode_client_map[userCode])
+		var/client/C = userCode_client_map[userCode]
 		var/room =  userCode_room_map[userCode]
-		if(!C || !room)
+		if(!room || !C)
 			continue
 		var/mob/M = C.mob
 		if(!M)
 			continue
-		var/turf/T = get_turf(M)
-		var/localroom = "[T.z]_[room]"
-		if(userCode in userCodes_active)
-			room_update(M)
-		if(!params[localroom])
-			params[localroom] = list()
-		params[localroom][userCode] = list(T.x, T.y)
+		if(room_has_proximity[room])
+			var/turf/T = get_turf(M)
+			var/localroom = "[T.z]_[room]"
+			if(!packet[localroom])
+				packet[localroom] = list()
+			packet[localroom][userCode] = list(T.x, T.y)
+		else
+			var/room_noprox = room + "_noprox"
+			if(!packet[room_noprox])
+				packet[room_noprox] = list()
+			packet[room_noprox][userCode] = list(1, 1) //very hacky bismallah
+
 		locs_sent ++
 
-	if(!locs_sent) //dont send empty packeys
+	if(!locs_sent) //dont send empty packets
 		return
-	send_json(params)
+	send_json(packet)
 
 
-// Disconnects a user from voice chat
-/datum/controller/subsystem/voicechat/proc/disconnect(userCode, from_byond = FALSE)
-	if(!userCode)
-		return
+/datum/controller/subsystem/voicechat/proc/on_round_end()
+	for(var/userCode in vc_clients)
+		move_userCode_to_room(userCode, "lobby")
 
-	toggle_active(userCode, FALSE)
-	var/room = userCode_room_map[userCode]
-	if(room)
-		current_rooms[room] -= userCode
-
-	var/client_ref = userCode_client_map[userCode]
-	if(client_ref)
-		userCode_client_map.Remove(userCode)
-		client_userCode_map.Remove(client_ref)
-		userCode_room_map.Remove(userCode)
-		vc_clients -= userCode
-
-
-	if(userCodes_speaking_icon[userCode])
-		var/client/C = locate(client_ref)
-		if(C && C.mob)
-			C.mob.cut_overlay(userCodes_speaking_icon[userCode])
-
-	if(from_byond)
-		send_json(alist(cmd= "disconnect", userCode= userCode))
-
-
-/datum/controller/subsystem/voicechat/proc/generate_userCode(client/C)
-	if(!C)
-		// CRASH("no client or wrong type")
-		return
-	. = copytext(md5("[C.computer_id][C.address][rand()]"),-4)
-	//ensure unique
-	while(. in userCode_client_map)
-		. = copytext(md5("[C.computer_id][C.address][rand()]"),-4)
-	return .
-
-
-// Updates the voice chat room based on mob status
-// this needs to be moved to signals at some point
-/datum/controller/subsystem/voicechat/proc/room_update(mob/source)
-	var/client/C = source.client
-	var/userCode = client_userCode_map[ref(C)]
-	if(!C || !userCode)
-		return
-	var/room
-	switch(source.stat)
-		if(CONSCIOUS to SOFT_CRIT)
-			room = "living"
-		if(UNCONSCIOUS to HARD_CRIT)
-			room = null
-		else
-			room = "ghost"
-	if(userCode_room_map[userCode] != room)
-		move_userCode_to_room(userCode, room)
+#undef NODE_SERVER_PATH
