@@ -34,7 +34,7 @@
 		return FALSE
 
 	if(!max_round_coins && respects_roundcap)
-		to_chat(parent, "You've hit the Credit limit for this shift, please try again next shift.")
+		to_chat(parent, "You've hit the Doubloon limit for this shift, please try again next shift.")
 		return
 
 	if(respects_roundcap)
@@ -44,11 +44,11 @@
 
 	amount = round(amount, 1) //make sure whole number
 	var/previous_coins = metacoins
-	metacoins += amount //store the updated metacoins in a variable, but not the actual game-to-game storage mechanism (load_metacoins() pulls from database)
+	metacoins += amount //store the updated doubloons in a variable, but not the actual game-to-game storage mechanism (load_metacoins() pulls from database)
 
-	logger.Log(LOG_CATEGORY_ECONOMY, "[parent]'s credits were changed by [amount] Reason: [reason]", list("currency_left" = metacoins, "reason" = reason, "previous_coins" = previous_coins ))
+	logger.Log(LOG_CATEGORY_ECONOMY, "[parent]'s doubloons were changed by [amount] Reason: [reason]", list("currency_left" = metacoins, "reason" = reason, "previous_coins" = previous_coins ))
 
-	//SQL query - updates the metacoins in the database (this is where the storage actually happens)
+	//SQL query - updates the doubloons in the database (this is where the storage actually happens)
 	var/datum/db_query/query_inc_metacoins = SSdbcore.NewQuery(
 		"UPDATE [format_table_name("player")] SET metacoins = metacoins + :amount WHERE ckey = :ckey",
 		list("amount" = amount, "ckey" = ckey)
@@ -61,9 +61,9 @@
 	//Output to chat
 	if(announces)
 		if(reason)
-			to_chat(parent, "<span class='rose bold'>[abs(amount)] Credits have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account! Reason: [reason]</span>")
+			to_chat(parent, "<span class='rose bold'>[abs(amount)] Doubloons have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account! Reason: [reason]</span>")
 		else
-			to_chat(parent, "<span class='rose bold'>[abs(amount)] Credits have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account!</span>")
+			to_chat(parent, "<span class='rose bold'>[abs(amount)] Doubloons have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account!</span>")
 	return TRUE
 
 /datum/preferences/proc/has_coins(amount)
