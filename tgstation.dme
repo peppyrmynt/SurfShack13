@@ -6572,6 +6572,7 @@
 #include "surfshack13\code\modules\bloodsuckers\vassals\types\revenge.dm"
 #include "surfshack13\code\modules\clown\clown_props.dm"
 #include "surfshack13\code\modules\datums\components\crafting\misc.dm"
+#include "surfshack13\code\modules\sports\bowling.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_act.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_actions.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_antag.dm"
@@ -6582,4 +6583,5 @@
 #include "surfshack13\code\modules\swarmers\swarmer_ruleset.dm"
 #include "surfshack13\code\objects\decals\wizcrayon_decals.dm"
 #include "surfshack13\code\objects\items\wizcrayon.dm"
+#include "surfshack13\code\objects\items\storage\uplink_kits.dm"
 // END_INCLUDE
