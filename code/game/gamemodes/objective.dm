@@ -16,6 +16,10 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 	var/martyr_compatible = FALSE //If the objective is compatible with martyr objective, i.e. if you can still do it while dead.
 	///can this be granted by admins?
 	var/admin_grantable = FALSE
+	/// If this objective is completed, do we award pre-round shop credits?
+	var/reward_for_completion = TRUE
+	/// If the above is true, how much credits per this objective?
+	var/completion_credit_reward = 100
 
 /datum/objective/New(text)
 	if(text)
@@ -346,6 +350,7 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 	admin_grantable = TRUE
 	var/target_role_type = FALSE
 	var/human_check = TRUE
+	completion_credit_reward = 150
 
 /datum/objective/protect/check_completion()
 	var/obj/item/organ/brain/brain_target
@@ -412,6 +417,7 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 	/// Overrides the hijack speed of any antagonist datum it is on ONLY, no other datums are impacted.
 	admin_grantable = TRUE
 	var/hijack_speed_override = 1
+	completion_credit_reward = 200
 
 /datum/objective/hijack/check_completion() // Requires all owners to escape.
 	if(SSshuttle.emergency.mode != SHUTTLE_ENDGAME)
@@ -501,6 +507,7 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 	explanation_text = "Escape on the shuttle or an escape pod alive and without being in custody."
 	team_explanation_text = "Have all members of your team escape on a shuttle or pod alive, without being in custody."
 	admin_grantable = TRUE
+	completion_credit_reward = 50
 
 /datum/objective/escape/check_completion()
 	// Require all owners escape safely.
@@ -559,6 +566,7 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 	name = "survive"
 	explanation_text = "Stay alive until the end."
 	admin_grantable = TRUE
+	completion_credit_reward = 25
 
 /datum/objective/survive/check_completion()
 	var/list/datum/mind/owners = get_owners()
@@ -582,6 +590,7 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 /datum/objective/exile
 	name = "exile"
 	explanation_text = "Stay alive off station. Do not go to CentCom."
+	completion_credit_reward = 50
 
 /datum/objective/exile/check_completion()
 	var/list/owners = get_owners()
@@ -596,6 +605,7 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 	name = "martyr"
 	explanation_text = "Die a glorious death."
 	admin_grantable = TRUE
+	completion_credit_reward = 25
 
 /datum/objective/martyr/check_completion()
 	var/list/datum/mind/owners = get_owners()
@@ -611,6 +621,7 @@ GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
 	explanation_text = "Destroy the station with a nuclear device."
 	martyr_compatible = TRUE
 	admin_grantable = TRUE
+	completion_credit_reward = 300
 
 /datum/objective/nuclear/check_completion()
 	if(GLOB.station_was_nuked)
@@ -778,6 +789,7 @@ GLOBAL_LIST_EMPTY(possible_items)
 /datum/objective/absorb
 	name = "absorb"
 	admin_grantable = TRUE
+	completion_credit_reward = 50
 
 /datum/objective/absorb/proc/gen_amount_goal(lowbound = 4, highbound = 6)
 	target_amount = rand (lowbound,highbound)
@@ -843,6 +855,7 @@ GLOBAL_LIST_EMPTY(possible_items)
 /datum/objective/absorb_changeling
 	name = "absorb changeling"
 	explanation_text = "Absorb another Changeling."
+	completion_credit_reward = 150
 
 /datum/objective/absorb_changeling/check_completion()
 	var/list/datum/mind/owners = get_owners()
@@ -865,6 +878,7 @@ GLOBAL_LIST_EMPTY(possible_items)
 /datum/objective/destroy
 	name = "destroy AI"
 	martyr_compatible = TRUE
+	completion_credit_reward = 150
 
 /datum/objective/destroy/find_target(dupe_search_range, list/blacklist)
 	var/list/possible_targets = active_ais(TRUE)
@@ -902,6 +916,7 @@ GLOBAL_LIST_EMPTY(possible_items)
 	var/list/wanted_items = list()
 	//how many we want to steal
 	var/amount = 5
+	completion_credit_reward = 25
 
 /datum/objective/steal_n_of_type/New()
 	..()
@@ -928,6 +943,7 @@ GLOBAL_LIST_EMPTY(possible_items)
 	explanation_text = "Steal at least five guns!"
 	wanted_items = list(/obj/item/gun)
 	amount = 5
+	completion_credit_reward = 50
 
 /datum/objective/steal_n_of_type/summon_guns/check_if_valid_item(obj/item/current_item)
 	var/obj/item/gun/gun = current_item
@@ -938,6 +954,7 @@ GLOBAL_LIST_EMPTY(possible_items)
 	explanation_text = "Steal at least five magical artefacts!"
 	wanted_items = list()
 	amount = 5
+	completion_credit_reward = 50
 
 /datum/objective/steal_n_of_type/summon_magic/New()
 	wanted_items = GLOB.summoned_magic_objectives

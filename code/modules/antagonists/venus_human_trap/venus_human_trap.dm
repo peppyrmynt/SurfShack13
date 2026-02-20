@@ -16,6 +16,7 @@
 
 /datum/objective/venus_human_trap
 	explanation_text = "Spread the infestation."
+	completion_credit_reward = 10
 
 /datum/objective/venus_human_trap/check_completion()
 	return owner.current.stat != DEAD

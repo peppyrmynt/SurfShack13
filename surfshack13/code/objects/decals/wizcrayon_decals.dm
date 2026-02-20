@@ -17,29 +17,29 @@
 	if(!A.has_gravity(src))
 		return
 
-/obj/effect/decal/cleanable/wizcrayon/razor
-	name = "razor"
-	desc = "a drawing of a razor, you see hairs on it."
-	icon_state = "bald_0"
-	var/uses = 7
+// /obj/effect/decal/cleanable/wizcrayon/razor
+// 	name = "razor"
+// 	desc = "a drawing of a razor, you see hairs on it."
+// 	icon_state = "bald_0"
+// 	var/uses = 7
 
-/obj/effect/decal/cleanable/wizcrayon/razor/drawing_crossed(atom/source, atom/A)
-	. = ..()
-	if(!ishuman(A))
-		return
-	var/mob/living/carbon/human/H = A
-	if(H.hairstyle == "Skinhead" && H.facial_hairstyle == "Shaved")
-		return
+// /obj/effect/decal/cleanable/wizcrayon/razor/drawing_crossed(atom/source, atom/A)
+// 	. = ..()
+// 	if(!ishuman(A))
+// 		return
+// 	var/mob/living/carbon/human/H = A
+// 	if(H.hairstyle == "Skinhead" && H.facial_hairstyle == "Shaved")
+// 		return
 
-	// cut the hair
-	flick("bald_1", src)
-	H.set_facial_hairstyle("Shaved", update = TRUE)
-	H.set_hairstyle("Skinhead", update = TRUE)
-	playsound(A, 'sound/effects/stealthoff.ogg', 100)
-	to_chat(H, span_danger("your head feels lighter"))
-	--uses
-	if(!uses)
-		Destroy()
+// 	// cut the hair
+// 	flick("bald_1", src)
+// 	H.set_facial_hairstyle("Shaved", update = TRUE)
+// 	H.set_hairstyle("Skinhead", update = TRUE)
+// 	playsound(A, 'sound/effects/stealthoff.ogg', 100)
+// 	to_chat(H, span_danger("your head feels lighter"))
+// 	--uses
+// 	if(!uses)
+// 		Destroy()
 
 /obj/effect/decal/cleanable/wizcrayon/shroom
 	name = "fentanyl shroom"
@@ -78,9 +78,9 @@
 	if(!ready)
 		return
 	icon_state = "fart_1"
-	playsound(A, pick('surfshack13/sound/effects/fart.ogg', 'surfshack13/sound/effects/fartmassive.ogg'), 100)
+	playsound(A, pick('surfshack13/sound/effects/fart.ogg'), 70)
 	ready = FALSE
-	addtimer(CALLBACK(src, PROC_REF(reset_fart)), 10 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(reset_fart)), 15 SECONDS)
 
 
 /obj/effect/decal/cleanable/wizcrayon/whoopie_cushion/proc/reset_fart()

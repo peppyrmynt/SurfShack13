@@ -37,22 +37,28 @@
 
 /datum/objective/cyborg_hijack
 	explanation_text = "Use your gloves to convert at least one cyborg to aid you in sabotaging the station."
+	completion_credit_reward = 50
 
 /datum/objective/door_jack
 	///How many doors that need to be opened using the gloves to pass the objective
 	var/doors_required = 0
+	completion_credit_reward = 25
 
 /datum/objective/plant_explosive
 	var/area/detonation_location
+	completion_credit_reward = 50
 
 /datum/objective/security_scramble
 	explanation_text = "Use your gloves on a security console to set everyone to arrest at least once.  Note that the AI will be alerted once you begin!"
+	completion_credit_reward = 50
 
 /datum/objective/terror_message
 	explanation_text = "Use your gloves on a communication console in order to bring another threat to the station.  Note that the AI will be alerted once you begin!"
+	completion_credit_reward = 75
 
 /datum/objective/research_secrets
 	explanation_text = "Use your gloves on a research & development server to sabotage research efforts.  Note that the AI will be alerted once you begin!"
+	completion_credit_reward = 50
 
 /**
  * Proc that adds all the ninja's objectives to the antag datum.

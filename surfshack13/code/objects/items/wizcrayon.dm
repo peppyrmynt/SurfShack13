@@ -11,9 +11,10 @@
 
 /obj/item/toy/wizcrayon
 	name = "wizcrayon"
-	desc = "A colorful crayon, it radiates power. (left click crayon to change color)"
-	icon = 'icons/obj/art/crayons.dmi'
-	icon_state = "crayonrainbow"
+	desc = "A colorful crayon, it radiates power. (left click crayon to change color, right click to set ruin.)"
+	icon = 'surfshack13/icons/obj/art/wizcrayon.dmi'
+	icon_state = "wizcrayon"
+	w_class = WEIGHT_CLASS_TINY
 	var/paint_color = COLOR_CRAYON_RED
 	var/uses = 15
 	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/flipper

@@ -16,6 +16,7 @@
 /datum/objective/heretic_trapped
 	name = "soultrapped failure"
 	explanation_text = "Help the cult. Kill the cult. Help the crew. Kill the crew. Help your wielder. Kill your wielder. Kill everyone. Rattle your chains. Break your bindings."
+	reward_for_completion = FALSE
 
 /datum/antagonist/soultrapped_heretic/on_gain()
 	..()

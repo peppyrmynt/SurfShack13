@@ -12,10 +12,6 @@ GLOBAL_LIST_INIT(generic_ambience,list(
 	'sound/ambience/general/ambigen11.ogg',
 	'sound/ambience/general/ambigen13.ogg',
 	'sound/ambience/general/ambigen14.ogg',
-	//surfshack13 START
-	'surfshack13/sound/ambience/general/ambiencegenlawnmower.ogg',
-	'surfshack13/sound/ambience/general/ambiencegenscivir.ogg',
-	//surfshack13 END
 ))
 
 GLOBAL_LIST_INIT(holy_ambience,list(

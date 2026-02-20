@@ -224,6 +224,7 @@
 
 /datum/objective/summon_carp
 	explanation_text = "Summon 3 rifts in order to flood the station with carp."
+	completion_credit_reward = 150
 
 /datum/objective/summon_carp/update_explanation_text()
 	var/datum/antagonist/space_dragon/dragon_owner = owner.has_antag_datum(/datum/antagonist/space_dragon)

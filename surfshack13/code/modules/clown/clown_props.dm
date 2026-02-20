@@ -4,14 +4,14 @@
 	// cooldown amount if any, set with prop_cooldown = world.time + amount
 	var/prop_cooldown
 
-/obj/item/clown_prop/examine_more(mob/user)
+/obj/item/clown_prop/examine(mob/user)
 	. = ..()
-	to_chat(user, span_info("It has [(uses_left == -1) ? "infinite" : "[uses_left]"] uses left"))
+	. += span_info("It has [(uses_left == -1) ? "infinite" : "[uses_left]"] use[uses_left == 1 ? "" : "s"] left")
 
 /obj/item/clown_prop/attack_self(mob/living/carbon/human/user, modifiers)
 	// we dont want WEIRDOS or NAKED clowns to use this
 	if(!is_clown_job(user.mind?.assigned_role) || !istype(user.w_uniform, /obj/item/clothing/under/rank/civilian/clown))
-		to_chat(user, span_notice("You are not silly enough to use [src]"))
+		to_chat(user, span_notice("You are not silly enough to use \the [src]"))
 		return
 	if(prop_cooldown && (world.time < prop_cooldown))
 		to_chat(user, span_notice("\The [src] is still reseting."))
@@ -39,6 +39,7 @@
 #define TIME STEPTIME * SEQUENCE_LENGTH * CYCLES
 
 /obj/item/clown_prop/spinning_banana/activate(mob/living/user)
+	forceMove(user)
 	user.visible_message(span_suicide("[user] ties the banana to \his waist and starts flailing"), span_suicide("you tie the banana around your waist and flail"))
 	var/obj/banana = new /obj/effect/()
 	banana.icon = 'surfshack13/icons/clown_props.dmi'
@@ -51,6 +52,7 @@
 	lock_dir(user, SOUTH, time = TIME)
 	user.Immobilize(TIME)
 	QDEL_IN(banana, (TIME)-2)
+	addtimer(CALLBACK(src, PROC_REF(move_back), user), TIME)
 	prop_cooldown = world.time + (TIME)
 	playsound(user, 'surfshack13/sound/banana_spin.ogg', 50, vary=FALSE)
 	for(var/i in 1 to CYCLES)
@@ -70,6 +72,10 @@
 #undef SEQUENCE_LENGTH
 #undef CYCLES
 #undef TIME
+
+/obj/item/clown_prop/spinning_banana/proc/move_back(mob/user)
+	if(!user.equip_to_slot_if_possible(src, ITEM_SLOT_HANDS, disable_warning = TRUE))
+		forceMove(get_turf(user))
 
 /obj/item/clown_prop/proc/lock_dir(mob/user, direction=SOUTH, time)
 	user.dir = direction
