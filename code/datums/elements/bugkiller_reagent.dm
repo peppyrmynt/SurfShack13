@@ -53,7 +53,7 @@
 
 /datum/status_effect/bugkiller_death/on_creation(mob/living/new_other, duration = 4 SECONDS)
 	src.duration = duration
-	src.spasm_loops = ROUND_UP(duration / 0.8) // one spasm ~= 0.8 deciseconds (yes deciseconds)
+	// src.spasm_loops = ROUND_UP(duration / 0.8) // one spasm ~= 0.8 deciseconds (yes deciseconds)
 	return ..()
 
 /datum/status_effect/bugkiller_death/on_apply()
@@ -61,7 +61,7 @@
 		return FALSE
 	playsound(owner, 'sound/mobs/humanoids/human/scream/malescream_1.ogg', 25, TRUE, extrarange = SILENCED_SOUND_EXTRARANGE, frequency = 5)
 	to_chat(owner, span_userdanger("The world begins to go dark..."))
-	owner.spasm_animation(spasm_loops)
+	owner.AddComponent(/datum/component/tweak, time = duration)
 	owner.adjust_eye_blur(duration)
 	return TRUE
 

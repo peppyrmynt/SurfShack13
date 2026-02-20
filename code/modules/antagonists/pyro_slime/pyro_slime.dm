@@ -16,6 +16,7 @@
 
 /datum/objective/pyro_slime
 	explanation_text = "All I know fire. I speak in tongues of flame. Why is everyone so cold?"
+	completion_credit_reward = 10
 
 /datum/objective/pyro_slime/check_completion()
 	return owner.current.stat != DEAD

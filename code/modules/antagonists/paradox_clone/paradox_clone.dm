@@ -88,6 +88,7 @@
  */
 /datum/objective/assassinate/paradox_clone
 	name = "clone assassinate"
+	completion_credit_reward = 50
 
 /datum/objective/assassinate/paradox_clone/update_explanation_text()
 	. = ..()

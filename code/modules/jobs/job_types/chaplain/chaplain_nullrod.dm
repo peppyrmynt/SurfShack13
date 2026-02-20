@@ -51,6 +51,7 @@
 									Harms you if you dismiss the scythe without first causing harm to a creature. \
 									The shard also causes you to become Morbid, shifting your interests towards the macabre."
 		rods[/obj/item/melee/skateboard/holyboard] = "A skateboard that grants you flight and anti-magic abilities while ridden. Fits in your bag."
+		rods[/obj/item/guardian_creator/chaplain] = "A deck of cards that when interacted with give a holoparasite that gives limited healing"
 		AddComponent(/datum/component/subtype_picker, rods, CALLBACK(src, PROC_REF(on_holy_weapon_picked)))
 
 /obj/item/nullrod/proc/on_holy_weapon_picked(obj/item/nullrod/holy_weapon_type)
@@ -766,6 +767,7 @@
 	menu_description = "A blade that deals variable, low amounts of damage, but does easily inflict wounds. \
 		The stronger your swinging arm is, the stronger the blade is, though only slightly. \
 		Against debilitated targets, can also deal additional sneak attack damage with a very high wound chance."
+
 
 /obj/item/nullrod/nullblade/melee_attack_chain(mob/user, atom/target, params)
 	//Track our actual force separately

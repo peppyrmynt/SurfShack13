@@ -122,3 +122,9 @@
 		GUARDIAN_STANDARD = "CARP CARP CARP! You caught one! This one is a little generic and disappointing... Better punch through some walls to ease the tension.",
 		GUARDIAN_SUPPORT = "CARP CARP CARP! You caught a support carp! Now it's here, now you're over there!",
 	)
+
+/datum/guardian_fluff/holy
+	name = "Holyparasite"
+	icon_state = "holybase"
+	overlay_state = "holy"
+	guardian_fluff = list()

@@ -560,6 +560,10 @@
 /obj/effect/turf_decal/tile/yellow/fourcorners,
 /turf/open/indestructible/permalube,
 /area/ruin/powered/clownplanet)
+"xH" = (
+/obj/item/toy/wizcrayon,
+/turf/open/floor/carpet,
+/area/ruin/powered/clownplanet)
 "ye" = (
 /turf/open/lava/smooth,
 /area/ruin/powered/clownplanet)
@@ -1254,7 +1258,7 @@ ps
 Lg
 ch
 bN
-bM
+xH
 bU
 bM
 bZ

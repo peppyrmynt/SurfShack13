@@ -29,7 +29,10 @@
 		/obj/item/spess_knife = 20, // As a joke for clumsy clown from engineering department
 		/obj/item/clothing/shoes/clown_shoes/combat = 10,
 		/obj/item/reagent_containers/spray/waterflower/lube = 20, // lube
-		/obj/item/reagent_containers/spray/waterflower/superlube = 1 // Superlube, good lord.
+		/obj/item/reagent_containers/spray/waterflower/superlube = 1, // Superlube, good lord.
+		//surfshack13 START
+		/obj/item/toy/wizcrayon = 20
+		//surfshack13 END
 	)
 
 	family_heirlooms = list(/obj/item/bikehorn/golden)
@@ -97,7 +100,9 @@
 	..()
 	if(visuals_only)
 		return
-
+	// surfshack begin
+	H.mind.teach_clown_prop_recipies()
+	// surfshack end
 	H.fully_replace_character_name(H.real_name, pick(GLOB.clown_names)) //rename the mob AFTER they're equipped so their ID gets updated properly.
 	H.dna.add_mutation(/datum/mutation/human/clumsy)
 	for(var/datum/mutation/human/clumsy/M in H.dna.mutations)

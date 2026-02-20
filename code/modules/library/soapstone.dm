@@ -112,7 +112,8 @@ but only permanently removed with the curator's soapstone.
 	desc = "A message from a past traveler."
 	icon = 'icons/obj/structures.dmi'
 	icon_state = "soapstone_message"
-	layer = LATTICE_LAYER
+	plane = FLOOR_PLANE
+	layer = RUNE_LAYER
 	density = FALSE
 	anchored = TRUE
 	max_integrity = 30

@@ -86,6 +86,7 @@
 	var/summoned = FALSE
 	var/killed = FALSE
 	var/list/summon_spots = list()
+	completion_credit_reward = 200
 
 /datum/objective/eldergod/New()
 	..()
