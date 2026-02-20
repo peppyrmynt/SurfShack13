@@ -145,6 +145,9 @@
 		if(6 to 10)
 			new /obj/item/melee/skateboard/pro(src)
 		if(11 to 15)
+			//surfshack13 START
+			new  /obj/item/toy/wizcrayon
+			//surfshack13 END
 			new /mob/living/basic/bot/honkbot(src)
 		if(16 to 20)
 			new /obj/item/stack/ore/diamond(src, 10)

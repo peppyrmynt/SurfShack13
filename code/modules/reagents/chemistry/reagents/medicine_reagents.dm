@@ -252,6 +252,18 @@
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	added_traits = list(TRAIT_VIRUS_RESISTANCE)
 
+/datum/reagent/medicine/spaceacillin/on_mob_life(mob/living/carbon/M, seconds_per_tick, times_fired)
+	. = ..()
+	var/need_mob_update
+	need_mob_update += M.adjustToxLoss(-0.1 * REM * normalise_creation_purity() * seconds_per_tick, updating_health = FALSE)
+	if(need_mob_update)
+		return UPDATE_MOB_HEALTH
+
+	if((M.mob_biotypes & MOB_ORGANIC) && prob(0.2))
+		for(var/thing in M.diseases) // can clean viruses from organic lifeforms.
+			var/datum/disease/D = thing
+			D.cure()
+
 //Goon Chems. Ported mainly from Goonstation. Easily mixable (or not so easily) and provide a variety of effects.
 
 /datum/reagent/medicine/oxandrolone
@@ -617,7 +629,7 @@
 
 	if(SPT_PROB(3.5 * (1 + (1-normalise_creation_purity())), seconds_per_tick))
 		to_chat(affected_mob, span_notice("[pick("Your head pounds.", "You feel a tight pain in your chest.", "You find it hard to stay still.", "You feel your heart practically beating out of your chest.")]"))
-
+		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
 	if(SPT_PROB(18 * (1 + (1-normalise_creation_purity())), seconds_per_tick))
 		affected_mob.adjustToxLoss(1 * REM * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype)
 		affected_mob.losebreath++
@@ -1209,6 +1221,7 @@
 		affected_mob.adjustStaminaLoss(2.5, updating_stamina = FALSE, required_biotype = affected_biotype)
 		affected_mob.adjustToxLoss(1, updating_health = FALSE, required_biotype = affected_biotype)
 		affected_mob.losebreath++
+		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
 		return UPDATE_MOB_HEALTH
 
 /datum/reagent/medicine/insulin
@@ -1794,3 +1807,31 @@
 		if(affected_mob.adjustStaminaLoss(10 * REM * seconds_per_tick, updating_stamina = FALSE))
 			. = UPDATE_MOB_HEALTH
 	affected_mob.adjust_disgust(-10 * REM * seconds_per_tick)
+
+/datum/reagent/antihardcrit
+	name = "Conscience Stabilizers"
+	description = "A reagent specifically used to stabilize critical patients to allow them to move despite the severity of their injuries. Impossible to synthesize outside of virology."
+	color = "#78008C"
+	metabolization_rate = 0.25 * REAGENTS_METABOLISM
+
+/datum/reagent/antihardcrit/on_mob_metabolize(mob/living/L)
+	..()
+	ADD_TRAIT(L,TRAIT_NOHARDCRIT,type)
+
+/datum/reagent/antihardcrit/on_mob_end_metabolize(mob/living/L)
+	REMOVE_TRAIT(L,TRAIT_NOHARDCRIT,type)
+	..()
+
+/datum/reagent/diseasensstim
+	name = "Neurological Stimulants"
+	description = "A minor neurological sitmulant capable of boosting the host's movement speed. Impossible to synthesize outside of virology."
+	color = "#78008C"
+	metabolization_rate = 0.25 * REAGENTS_METABOLISM
+
+/datum/reagent/diseasensstim/on_mob_metabolize(mob/living/L)
+	..()
+	L.add_movespeed_modifier(/datum/movespeed_modifier/reagent/diseasestim)
+
+/datum/reagent/diseasensstim/on_mob_end_metabolize(mob/living/L)
+	L.remove_movespeed_modifier(/datum/movespeed_modifier/reagent/diseasestim)
+	..()

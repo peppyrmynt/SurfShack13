@@ -1,4 +1,5 @@
 /datum/objective/revenant
+	completion_credit_reward = 50
 
 /datum/objective/revenant/New()
 	target_amount = rand(350, 600)
@@ -15,6 +16,7 @@
 	return essence_stolen >= target_amount
 
 /datum/objective/revenant_fluff
+	reward_for_completion = FALSE
 
 /datum/objective/revenant_fluff/New()
 	var/list/explanation_texts = list(

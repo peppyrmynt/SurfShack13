@@ -248,6 +248,8 @@ GLOBAL_LIST_EMPTY(wizard_spellbook_purchases_by_key)
 	successful_ritual.owner = owner
 	successful_ritual.explanation_text = "Complete the Grand Ritual at least seven times."
 	successful_ritual.completed = TRUE
+	successful_ritual.reward_for_completion = TRUE
+	successful_ritual.completion_credit_reward = 200
 	objectives = list(successful_ritual)
 	UnregisterSignal(ritual, COMSIG_GRAND_RITUAL_FINAL_COMPLETE)
 
