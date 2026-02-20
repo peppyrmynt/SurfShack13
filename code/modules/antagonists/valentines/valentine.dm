@@ -86,6 +86,7 @@
 /datum/objective/protect/valentine
 	admin_grantable = FALSE
 	human_check = FALSE
+	completion_credit_reward = 50
 
 /datum/objective/protect/valentine/update_explanation_text()
 	explanation_text = "Protect [target.name], your date."

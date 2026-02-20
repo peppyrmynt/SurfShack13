@@ -25,6 +25,7 @@
 
 /datum/objective/syndicate_monkey
 	var/mob/living/monky_master
+	reward_for_completion = FALSE
 
 /datum/objective/syndicate_monkey/check_completion()
 	return monky_master.stat != DEAD
