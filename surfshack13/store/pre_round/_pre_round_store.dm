@@ -26,7 +26,7 @@ GLOBAL_LIST_INIT(pre_round_items, init_pre_round_items())
 	. = ..()
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "PreRoundStore", "Spend Credits")
+		ui = new(user, src, "PreRoundStore", "Spend Doubloons")
 		ui.open()
 
 /datum/pre_round_store/ui_state(mob/user)
@@ -93,7 +93,7 @@ GLOBAL_LIST_INIT(pre_round_items, init_pre_round_items())
 	if(isnull(bought_item) || QDELETED(src) || QDELETED(owners_prefs))
 		return
 	if(!owners_prefs.has_coins(bought_item::item_cost))
-		to_chat(new_player_mob, span_warning("It seems you're lacking coins to complete this transaction."))
+		to_chat(new_player_mob, span_warning("It seems you're lacking doubloons to complete this transaction."))
 		return
 	var/obj/item/created_item = new bought_item.item_path
 
