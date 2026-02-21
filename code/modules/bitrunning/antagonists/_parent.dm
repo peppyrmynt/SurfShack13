@@ -36,6 +36,7 @@
 	objectives += objective
 
 /datum/objective/bitrunning_glitch_fluff
+	reward_for_completion = FALSE
 
 /datum/objective/bitrunning_glitch_fluff/New()
 	var/list/explanation_texts = list(
