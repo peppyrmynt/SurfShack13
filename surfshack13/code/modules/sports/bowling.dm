@@ -47,27 +47,38 @@
 	if(!ishuman(thrower))
 		return ..()
 	icon_state = "bowling_ball_spin"
-	target = get_edge_target_turf(target, thrower.dir)
-	spin = FALSE
-	range = 150
 	playsound(src,'surfshack13/sound/effects/bowl.ogg',40,0)
 	var/mob/living/carbon/human/user = thrower
 	if(user.w_uniform && istype(user.w_uniform, /obj/item/clothing/under/bowling_jersey))
 		pro_wielded = TRUE
+
+	//ball spins in sprite
+	spin = FALSE
+	target = get_edge_target_turf(target, thrower.dir)
+	range = 150
 	return ..()
 
 
 /obj/item/bowling_ball/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	icon_state = "bowling_ball"
-	if(!iscarbon(hit_atom))
+	if(pro_wielded)
 		pro_wielded = FALSE
-		return ..()
-	var/mob/living/carbon/target_mob = hit_atom
-	if(pro_wielded || iscarbon(hit_atom) || !target_mob.body_position == LYING_DOWN)
-		playsound(src, 'surfshack13/sound/effects/bowlhit.ogg', 60, 0)
-		target_mob.Knockdown(50)
-		target_mob.adjustBruteLoss(15) // + throw damage = 25 hit ouch!
-	pro_wielded = FALSE
+		var/mob/living/carbon/target_mob = hit_atom
+		if(iscarbon(hit_atom) && target_mob.body_position == STANDING_UP && throwingdatum.dist_travelled > 2)
+			playsound(src, 'surfshack13/sound/effects/bowlhit.ogg', 60, 0)
+			target_mob.Knockdown(50)
+			target_mob.adjustBruteLoss(12) // + throw damage = 22 hit, ouch!
 	return ..()
 
 
+/obj/item/bowling_ball/suicide_act(mob/living/user)
+	visible_message(span_suicide("[user] throws \the [src] but refuses to let go sending themselves flying!"), span_suicide("you throw \the [src] but dont let go, sending yourself flying."))
+	src.forceMove(user)
+	var/datum/callback/gib_user = new(src, PROC_REF(on_body_hit), user)
+	user.throw_at(target = get_edge_target_turf(user, user.dir), range = 150, speed = 1, thrower = user, spin = TRUE, callback = gib_user)
+	playsound(src,'surfshack13/sound/effects/bowl.ogg',40,0)
+	return BRUTELOSS
+
+/obj/item/bowling_ball/proc/on_body_hit(mob/living/user)
+	playsound(src, 'surfshack13/sound/effects/bowlhit.ogg', 60, 0)
+	user.gib(DROP_ITEMS|DROP_ORGANS)
