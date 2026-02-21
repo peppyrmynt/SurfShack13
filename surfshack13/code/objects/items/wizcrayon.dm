@@ -67,7 +67,6 @@
 	if(!ui)
 		create_ui()
 	SSfrogui.open_ui(user, src, ui, "size=315x210;")
-	winset(user, null, "browser-options=devtools")
 
 /obj/item/toy/wizcrayon/ui_data(mob/user)
 	. = ..()
