@@ -22,6 +22,7 @@
 
 /datum/objective/spider
 	explanation_text = "Spread the infestation."
+	completion_credit_reward = 10
 
 /datum/objective/spider/New(directive)
 	..()

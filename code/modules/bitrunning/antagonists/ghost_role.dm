@@ -17,6 +17,7 @@
 	objectives += objective
 
 /datum/objective/bitrunner_ghost_fluff
+	reward_for_completion = FALSE
 
 /datum/objective/bitrunner_ghost_fluff/New()
 	explanation_text = "Defend your domain from the intruders!"
