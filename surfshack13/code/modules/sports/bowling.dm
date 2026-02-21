@@ -82,3 +82,12 @@
 /obj/item/bowling_ball/proc/on_body_hit(mob/living/user)
 	playsound(src, 'surfshack13/sound/effects/bowlhit.ogg', 60, 0)
 	user.gib(DROP_ITEMS|DROP_ORGANS)
+
+
+/datum/supply_pack/bowling_kit
+	name = "Bowling Crate"
+	desc = "A set of four assorted bowling balls. While the sport has been dead for centuries, \
+	bowling balls are still sold and enjoyed as office decor."
+	cost = CARGO_CRATE_VALUE * 5
+	contraband = TRUE
+	contains = list(/obj/item/bowling_ball = 4)
