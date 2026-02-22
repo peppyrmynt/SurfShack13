@@ -1,3 +1,10 @@
+/**
+  * inserted into:
+  * cargo - frog crate
+  * maint loot - moisture spawn
+  * fishing - hydroponics tray
+**/
+
 /mob/living/basic/frog/space
 	icon = 'surfshack13/icons/mob/space_frog.dmi'
 	icon_state = "frog_white"
