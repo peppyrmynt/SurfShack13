@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<meta charset='utf-8'>
+	<link rel='stylesheet' href='ui.css'>
+</head>
+
+<body class='NT_theme'>
+	<div class='Section'>
+		<div class='Section__title'><span class='Section__titleText'>Basic</span></div>
+		<table class='LabeledList'>
+			<tbody>
+				<tr class=LabeledList__row'>
+					<td class='LabeledList__cell label'>Crayon left</td>
+					<td class='LabeledList__cell'>
+						<div id='crayonFill' class='progressBarContainer'>
+							<div class='progressBar'>
+								<element class='progressFill animated'></element>
+								<span class='progressLabel'></span>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr class=LabeledList__row'>
+					<td class='LabeledList__cell label'>Color</td>
+					<td class='LabeledList__cell'>
+						<div id='colorSelectors'>
+							<!-- <label class='option color'><input type='radio' name='colorPicker' value='Red' data-hex='#DA0000'><span style='--fill:#DA0000;' class='colorBox'></span></label> -->
+							<!-- color select insert -->
+						</div>
+						<span class='colorText' id='colorText'>...</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class='Section'>
+		<div class='Section__title'><span class='Section__titleText'>Stencil</span></div>
+		<table class='LabeledList'>
+			<tr>
+				<td class='LabeledList__cell label'>Ruin Stencil</td>
+				<td class='LabeledList__cell'>
+					<div id='ruinSelectors'>
+						<!-- <label class='option'><input type='radio' name='ruin' id='fart'/><span class='btn'>fart</span></label> -->
+						<!-- ruin select insert -->
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		//const ref = "[0x1234567];"
+		/* ref insert */
+
+		const crayonFillContainer = document.getElementById('crayonFill');
+		const colorText = document.getElementById('colorText');
+
+
+		const paintColors = {};
+		const colorSelectors = document.getElementById('colorSelectors');
+		const colorElements = {};
+
+		const ruinSelectors = document.getElementById('ruinSelectors');
+		const ruinElements = {};
+
+		let activeColorName;
+		let activeRuinName;
+
+		 colorSelectors.querySelectorAll('.option').forEach((option, index) => {
+			const radio = option.querySelector("input[type='radio']");
+			const paintName = radio.value;
+			const paintColor = radio.dataset.hex;
+			paintColors[paintName] = paintColor;
+			colorElements[paintName] = radio
+		})
+
+		ruinSelectors.querySelectorAll('.option').forEach((option, index) => {
+			const radio = option.querySelector("input[type='radio']");
+			const ruinName = radio.value;
+			ruinElements[ruinName] = radio;
+		})
+
+		function updateColor(newColor) {
+			activeColorName = newColor;
+			const colorValue = paintColors[activeColorName];
+			crayonFillContainer.style.setProperty('--fill', colorValue);
+			colorText.textContent = activeColorName;
+			colorText.style.color = colorValue;
+		}
+		function update(payload) {
+			const parsed = JSON.parse(payload)
+			if(parsed["active_color_name"]) {
+				activeColorName = parsed['active_color_name'];
+				updateColor(activeColorName);
+				colorElements[activeColorName].checked = true;
+			}
+			if(parsed["active_ruin_name"]) {
+				activeRuinName = parsed['active_ruin_name'];
+				ruinElements[activeRuinName].checked = true;
+			}
+			if(parsed["percent"]) {
+				updateCrayonFillWidth(parsed['percent']);
+			}
+		}
+
+		function sendToByond(...pairs) {
+			const params = new URLSearchParams();
+			params.append('src', ref);
+
+			for (let i = 0; i < pairs.length; i += 2) {
+				if (pairs[i + 1] !== undefined) {
+					params.append(pairs[i], pairs[i + 1]);
+				}
+			}
+			window.location.search = params.toString();
+		}
+
+		function updateCrayonFillWidth(newWidth) {
+			crayonFillContainer.style.setProperty('--fill-width', Number(newWidth));
+		}
+
+		colorSelectors.addEventListener('change', function (event) {
+			const newColor = event.target.value;
+			if (!newColor) return;
+			updateColor(newColor);
+			sendToByond("active_color_name", activeColorName);
+		});
+
+		ruinSelectors.addEventListener('change', function (event) {
+			const newRuin = event.target.value;
+			if (!newRuin) return;
+			activeRuinName = newRuin;
+			sendToByond("active_ruin_name", activeRuinName);
+		});
+
+		setTimeout(sendToByond("ready",1), 200);
+	</script>
+</body>

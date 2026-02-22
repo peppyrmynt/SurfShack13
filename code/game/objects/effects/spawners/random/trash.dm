@@ -175,6 +175,9 @@
 		/obj/item/clothing/head/cone = 7,
 		/obj/item/clothing/suit/caution = 3,
 		/mob/living/basic/frog = 2,
+		//surfshack begin
+		/obj/effect/spawner/random/space_frog = 1,
+		//surfshack end
 		/obj/item/reagent_containers/cup/rag = 2,
 		/obj/item/reagent_containers/cup/bucket = 2,
 		/obj/effect/decal/cleanable/blood/old = 2,

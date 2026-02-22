@@ -8,22 +8,26 @@
   * abandonded_crates.dm
   * job_types/clown.dm - mail goodies
 **/
-
+#define TOTAL_USES 15
 /obj/item/toy/wizcrayon
 	name = "wizcrayon"
 	desc = "A colorful crayon, it radiates power. (left click crayon to change color, right click to set ruin.)"
 	icon = 'surfshack13/icons/obj/art/wizcrayon.dmi'
 	icon_state = "wizcrayon"
 	w_class = WEIGHT_CLASS_TINY
-	var/paint_color = COLOR_CRAYON_RED
 	var/uses = 15
-	var/current_ruin = /obj/effect/decal/cleanable/wizcrayon/flipper
-	var/static/list/ruin_types
+	var/active_color_name = "Red"
+	var/active_color = COLOR_CRAYON_RED
+	var/static/paint_colors
+	var/static/list/stencil_buttons
+	var/static/ui
+	var/active_ruin_name = "flip"
+	var/active_ruin = /obj/effect/decal/cleanable/wizcrayon/flip
+	var/percent = 100
 
-/obj/item/toy/wizcrayon/Initialize(mapload)
+/obj/item/toy/wizcrayon/Destroy(force)
+	SSfrogui.atom_close_uis(src)
 	. = ..()
-	if(!length(ruin_types))
-		ruin_types = subtypesof(/obj/effect/decal/cleanable/wizcrayon)
 
 /obj/item/toy/wizcrayon/proc/isValidSurface(atom/surface)
 	. = TRUE
@@ -46,25 +50,62 @@
 	if(!do_after(user, 2 SECONDS, T, progress=TRUE))
 		return
 
-	var/atom/A = new current_ruin (T)
+	var/atom/A = new active_ruin (T)
 	if(!A)
 		return
-	A.color = paint_color
+	A.color = active_color
 	uses --
 	if (!uses)
 		Destroy()
 		return
-	to_chat(user, span_notice("\The [src] psychically informs you it has [uses] use[uses == 1 ? "" : "s"] left"))
 
-//tgui is an act against god. The two procs below will be updated once I make an alternative.
-/obj/item/toy/wizcrayon/attack_self(mob/user)
-	var/choice = input("Select drawing") as null|anything in ruin_types
-	if(choice)
-		current_ruin = choice
+	percent = round((uses/TOTAL_USES) * 100)
+	SSfrogui.update_ui(user, src)
 
-/obj/item/toy/wizcrayon/attack_self_secondary(mob/user, modifiers)
+/obj/item/toy/wizcrayon/ui_interact(mob/user)
 	. = ..()
-	var/static/list/colors = list("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
-	var/color_choice = input("Pick color") as null|anything in colors
-	if(color_choice)
-		paint_color = colors[color_choice]
+	if(!ui)
+		create_ui()
+	SSfrogui.open_ui(user, src, ui, "size=315x210;")
+
+/obj/item/toy/wizcrayon/ui_data(mob/user)
+	. = ..()
+	.["active_color_name"] = active_color_name
+	.["active_ruin_name"] = active_ruin_name
+	.["percent"] = percent
+
+/obj/item/toy/wizcrayon/proc/create_ui()
+	if(ui)
+		CRASH("create_ui called with exisiting ui")
+	ui = file2text('surfshack13/frogui/wizcrayon.html')
+	var/insert = ""
+	paint_colors = list("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
+	for(var/color, value in paint_colors)
+		insert += "<label class='option color'><input type='radio' name='colorPicker' value='[color]' data-hex='[value]'><span style='--fill:[value];' class='colorBox'></span></label>\n"
+	ui = replacetextEx(ui, "<!-- color select insert -->\n", insert)
+	insert = ""
+	stencil_buttons = list()
+	for(var/type in subtypesof(/obj/effect/decal/cleanable/wizcrayon))
+		type = "[type]"
+		var/name = copytext(type, findlasttext(type, "/")+1)
+		stencil_buttons[name] = type
+		insert += "<label class='option'><input type='radio' name='ruin' value='[name]'/><span class='btn'>[name]</span></label>"
+	ui = replacetextEx(ui, "<!-- ruin select insert -->\n", insert)
+
+/obj/item/toy/wizcrayon/Topic(href, list/href_list)
+	. = ..()
+	var/mob/user = usr
+	if(!user)
+		CRASH("ui user not found")
+	if(!user.can_perform_action(src, NEED_LITERACY|NEED_DEXTERITY|NEED_HANDS|FORBID_TELEKINESIS_REACH))
+		SSfrogui.close_ui(user, src)
+		return
+	if(href_list["ready"])
+		SSfrogui.update_ui(user, src)
+	if(href_list["active_color_name"])
+		active_color_name = href_list["active_color_name"]
+		active_color = paint_colors[active_color_name]
+	if(href_list["active_ruin_name"])
+		active_ruin_name = href_list["active_ruin_name"]
+		active_ruin = stencil_buttons[active_ruin_name]
+#undef TOTAL_USES
