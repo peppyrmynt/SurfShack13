@@ -505,6 +505,9 @@
 		/obj/item/seeds/grass = 6,
 		/obj/item/seeds/random = 1,
 		/mob/living/basic/frog = 1,
+		//surfshack start
+		/obj/effect/spawner/random/space_frog = 1,
+		//surfshack end
 		/mob/living/basic/axolotl = 1,
 		/mob/living/basic/turtle = 2,
 	)
@@ -513,6 +516,9 @@
 		/obj/item/seeds/grass = 4,
 		FISHING_RANDOM_SEED = 4,
 		/obj/item/seeds/random = 1,
+		//surfshack start
+		/obj/effect/spawner/random/space_frog = 1,
+		//surfshack end
 		/mob/living/basic/frog = 1,
 		/mob/living/basic/axolotl = 1,
 	)
