@@ -16,8 +16,10 @@
 	new /obj/item/bowling_ball(src)
 
 /datum/uplink_item/dangerous/bowling
-	name = "Bowling kit"
-	desc = "lets go bowling!"
+	name = "Bowling Kit"
+	desc = "A cardboard box containing a full set of bowler-style clothing and FIVE whole bowling balls! \
+			The packaged shoes allow for increased mobility and the jersey enhances your bowling skills, allowing you \
+			to make your thrown bowling balls turn ANYONE into your bowling pins. Hey, Agent, let's go bowling!"
 	item = /obj/item/storage/box/syndie_kit/bowling
 	cost = 11
 	surplus = 20
