@@ -219,7 +219,7 @@
 /datum/store_item/roundstart/implanterbiosig
 	name = "Implanter (Biosignaller)"
 	item_path = /obj/item/implanter/biosig
-	item_cost = 500
+	item_cost = 750
 
 /datum/store_item/roundstart/ltsrbt
 	name = "Flatpacked L.T.S.R.B.T"
