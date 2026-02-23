@@ -33,7 +33,7 @@
 
 /obj/item/antag_maker/heretic
 	provided_antag_datum = /datum/antagonist/heretic
-	refund_amount = 7000
+	refund_amount = 5000
 
 /obj/item/antag_maker/brother
 	provided_antag_datum = /datum/antagonist/brother
@@ -46,3 +46,15 @@
 /obj/item/antag_maker/spy
 	provided_antag_datum = /datum/antagonist/spy
 	refund_amount = 4000
+
+/obj/item/antag_maker/wizard
+	provided_antag_datum = /datum/antagonist/wizard
+	refund_amount = 8000
+
+/obj/item/antag_maker/nukie
+	provided_antag_datum = /datum/antagonist/nukeop
+	refund_amount = 7000
+
+/obj/item/antag_maker/clown_op
+	provided_antag_datum = /datum/antagonist/nukeop/clownop
+	refund_amount = 7000
