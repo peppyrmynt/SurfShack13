@@ -4423,6 +4423,7 @@
 	pixel_y = -2
 	},
 /obj/item/gun/grenadelauncher,
+/obj/structure/fireaxecabinet/batteringram/directional/east,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/ai_monitored/security/armory)
 "aID" = (

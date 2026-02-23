@@ -56284,6 +56284,7 @@
 	dir = 4
 	},
 /obj/effect/spawner/random/armory/barrier_grenades,
+/obj/structure/fireaxecabinet/batteringram/directional/west,
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/security/armory)
 "tTT" = (
