@@ -183,6 +183,10 @@
 				qdel(inserted_disk.program)
 			inserted_disk.program = new downloaded.program_type
 			inserted_disk.name = "[initial(inserted_disk.name)] \[[inserted_disk.program.name]\]"
+			if(inserted_disk.shock_proofing && !(inserted_disk.program.program_flags & NANITE_SHOCK_IMMUNE))
+				inserted_disk.program.program_flags |= NANITE_SHOCK_IMMUNE
+			if(inserted_disk.emp_proofing && !(inserted_disk.program.program_flags & NANITE_EMP_IMMUNE))
+				inserted_disk.program.program_flags |= NANITE_EMP_IMMUNE
 			playsound(src, 'sound/machines/terminal/terminal_prompt.ogg', 25, FALSE)
 			return TRUE
 		if("refresh")

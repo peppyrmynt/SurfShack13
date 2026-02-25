@@ -46,10 +46,10 @@
 	if(program)
 		program = new program
 		name = "[initial(name)] \[[program.name]\]"
-	if(shock_proofing && !(program.program_flags & NANITE_SHOCK_IMMUNE))
-		program.program_flags |= NANITE_SHOCK_IMMUNE
-	if(emp_proofing && !(program.program_flags & NANITE_EMP_IMMUNE))
-		program.program_flags |= NANITE_EMP_IMMUNE
+		if(shock_proofing && !(program.program_flags & NANITE_SHOCK_IMMUNE))
+			program.program_flags |= NANITE_SHOCK_IMMUNE
+		if(emp_proofing && !(program.program_flags & NANITE_EMP_IMMUNE))
+			program.program_flags |= NANITE_EMP_IMMUNE
 
 /obj/item/disk/nanite_program/no_shock
 	icon_state = "nanite_noshock"
