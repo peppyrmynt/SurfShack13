@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<meta charset='utf-8'>
+	<link rel='stylesheet' href='ui.css'>
+	<style>
+		.grid {
+			display: grid;
+			--width: 400px;
+			--cell: calc(var(--width)/10);
+			--arrow: calc(var(--cell)/2);
+			width: var(--width);
+			grid-template: repeat(4, var(--cell) var(--arrow)) var(--cell) / repeat(6,var(--cell) var(--arrow)) var(--cell);
+
+
+			.cell {
+				--row: 1;
+				--col: 1;
+				grid-area: var(--row) / var(--col);
+				border-radius: 0.5em;
+			}
+
+			label.cell:hover {
+				filter: brightness(1.2);
+			}
+		}
+
+		.arrow {
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+
+		.arrow.northeast {
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path transform="rotate(135, 50, 50)" d="m -4 ,50 l 30,-30 l 0 , 16 l 45, 0 l 0,-16 l 30,30 l -30, 30 l 0,-16 l -45 ,0 l 0, 16 l-30,-30z" fill="hsl(0, 0%, 30%)" /></svg>');
+		}
+
+		.arrow.northwest {
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path transform="rotate(45, 50, 50)" d="m -4 ,50 l 30,-30 l 0 , 16 l 45, 0 l 0,-16 l 30,30 l -30, 30 l 0,-16 l -45 ,0 l 0, 16 l-30,-30z" fill="hsl(0, 0%, 30%)"/></svg>');
+		}
+
+		.arrow.horizontal_double {
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path  d="m 5, 50 l 26,-32 l 0, 16 l 38,0 l 0,-16 l 26 ,32 l -26 ,32 l 0,-16 l -38,0 l 0, 16 l -26,-32 z" fill="hsl(0, 0%, 30%)"/></svg>');
+		}
+
+		.arrow.vertical_double {
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path transform="rotate(90, 50, 50)" d="m 5, 50 l 26,-32 l 0, 16 l 38,0 l 0,-16 l 26 ,32 l -26 ,32 l 0,-16 l -38,0 l 0, 16 l -26,-32 z" fill="hsl(0, 0%, 30%)"/></svg>');
+		}
+
+		.arrow.left {
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path d="M 5,50 31,18 V 34 H 95 V 65 H 31 v 16 z" fill="hsl(0, 0%, 30%)"/></svg>');
+		}
+
+		.arrow.right {
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path transform="rotate(180,50,50)" d="M 5,50 31,18 V 34 H 95 V 65 H 31 v 16 z" fill="hsl(0, 0%, 30%)"/></svg>');
+		}
+
+		.arrow.up {
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path transform="rotate(90,50,50)" d="M 5,50 31,18 V 34 H 95 V 65 H 31 v 16 z" fill="hsl(0, 0%, 30%)"/></svg>');
+		}
+
+		.arrow.down {
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path transform="rotate(270,50,50)" d="M 5,50 31,18 V 34 H 95 V 65 H 31 v 16 z" fill="hsl(0, 0%, 30%)"/></svg>');
+		}
+	</style>
+</head>
+
+<body>
+	<div class='wiki'>
+		<div class='Section__title'><span class='Section__titleText'>Slime Info</span></div>
+		<table class='LabeledList'>
+			<tbody>
+				<tr class=LabeledList__row'>
+					<td class='LabeledList__cell label'>Name</td>
+					<td id="slimeName" class='LabeledList__cell'>Grey slime</td>
+				</tr>
+				<tr class=LabeledList__row'>
+					<td class='LabeledList__cell label'>Tier</td>
+					<td id="tier" class='LabeledList__cell'>0</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class='wiki grid' id="slimeInputs">
+		<label class='cell' style='--row: 1; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#sepia" />
+			<input type='radio' name='SlimePicker' value='sepia'></label>
+		<label class='cell' style='--row: 3; --col:1 ;'><img src="https://files.catbox.moe/bnnkqi.svg#oil" />
+			<input type='radio' name='SlimePicker' value='oil'></label>
+		<label class='cell' style='--row: 3; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#red" />
+			<input type='radio' name='SlimePicker' value='red'></label>
+		<label class='cell' style='--row: 3; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#orange" />
+			<input type='radio' name='SlimePicker' value='orange'></label>
+		<label class='cell' style='--row: 3; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#dark-purple" />
+			<input type='radio' name='SlimePicker' value='dark_purple'></label>
+		<label class='cell' style='--row: 3; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#purple" />
+			<input type='radio' name='SlimePicker' value='purple'></label>
+		<label class='cell' style='--row: 3; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#green" />
+			<input type='radio' name='SlimePicker' value='green'></label>
+		<label class='cell' style='--row: 3; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#black" />
+			<input type='radio' name='SlimePicker' value='black'></label>
+
+		<label class='cell' style='--row: 5; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#bluespace" />
+			<input type='radio' name='SlimePicker' value='bluespace'></label>
+		<label class='cell' style='--row: 5; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#yellow" />
+			<input type='radio' name='SlimePicker' value='yellow'></label>
+		<label class='cell' style='--row: 5; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#grey" />
+			<input type='radio' name='SlimePicker' checked="true" value='grey'></label>
+		<label class='cell' style='--row: 5; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#dark-blue" />
+			<input type='radio' name='SlimePicker' value='dark_blue'></label>
+		<label class='cell' style='--row: 5; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#cerulean" />
+			<input type='radio' name='SlimePicker' value='cerulean'></label>
+
+		<label class='cell' style='--row: 7; --col:1 ;'><img src="https://files.catbox.moe/bnnkqi.svg#adamantine" />
+			<input type='radio' name='SlimePicker' value='adamantine'></label>
+		<label class='cell' style='--row: 7; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#gold" />
+			<input type='radio' name='SlimePicker' value='gold'></label>
+		<label class='cell' style='--row: 7; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#metal" />
+			<input type='radio' name='SlimePicker' value='metal'></label>
+		<label class='cell' style='--row: 7; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#silver" />
+			<input type='radio' name='SlimePicker' value='silver'></label>
+		<label class='cell' style='--row: 7; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#blue" />
+			<input type='radio' name='SlimePicker' value='blue'></label>
+		<label class='cell' style='--row: 7; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#pink" />
+			<input type='radio' name='SlimePicker' value='pink'></label>
+		<label class='cell' style='--row: 7; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#light-pink" />
+			<input type='radio' name='SlimePicker' value='light_pink'></label>
+
+		<label class='cell' style='--row: 9; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#pyrite" />
+			<input type='radio' name='SlimePicker' value='pyrite'></label>
+		<label class='cell' style='--row: 9; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#rainbow" />
+			<input type='radio' name='SlimePicker' value='rainbow'></label>
+
+		<div class='cell arrow northwest' style='--row: 6; --col:8;'></div>
+		<div class='cell arrow northwest' style='--row: 4; --col:6;'></div>
+		<div class='cell arrow northeast' style='--row: 6; --col:6 ;'></div>
+		<div class='cell arrow northeast' style='--row: 4; --col:8;'></div>
+		<div class='cell arrow horizontal_double' style='--row: 3; --col:8;'></div>
+		<div class='cell arrow horizontal_double' style='--row: 3; --col:6;'></div>
+		<div class='cell arrow horizontal_double' style='--row: 7; --col:8;''></div>
+		<div class=' cell arrow horizontal_double' style='--row: 7; --col:6;'></div>
+		<div class='cell arrow vertical_double' style='--row: 4; --col:5;'></div>
+		<div class='cell arrow vertical_double' style='--row: 6; --col:5;'></div>
+		<div class='cell arrow vertical_double' style='--row: 4; --col:9'></div>
+		<div class='cell arrow vertical_double' style='--row: 6; --col:9;'></div>
+		<div class='cell arrow left' style='--row: 7; --col:4;'></div>
+		<div class='cell arrow left' style='--row: 7; --col:2;'></div>
+		<div class='cell arrow left' style='--row: 5; --col:4;'></div>
+		<div class='cell arrow left' style='--row: 3; --col:4;'></div>
+		<div class='cell arrow left' style='--row: 3; --col:2;'></div>
+
+		<div class='cell arrow right' style='--row: 7; --col:10;'></div>
+		<div class='cell arrow right' style='--row: 5; --col:10;'></div>
+		<div class='cell arrow right' style='--row: 3; --col:10;'></div>
+		<div class='cell arrow right' style='--row: 3; --col:12;'></div>
+		<div class='cell arrow right' style='--row: 7; --col:12;'></div>
+		<div class='cell arrow down' style='--row: 8; --col:7;'></div>
+		<div class='cell arrow up' style='--row: 2; --col:7;'></div>
+	</div>
+
+
+	<div class=' wiki'>
+		<div class='Section__title'><span class='Section__titleText'>Plasma Reaction</span></div>
+		<span id="plasma">Creates a new grey slime.</span>
+	</div>
+	<div class=' wiki'>
+		<div class='Section__title'><span class='Section__titleText'>Blood Reaction</span></div>
+		<span id="blood">Creates three monkey cubes. Useful if you want to do your job for more than five
+			minutes. </span>
+	</div>
+	<div class=' wiki'>
+		<div class='Section__title'><span class='Section__titleText'>Water Reaction</span></div>
+		<span id="water">Fills the extract with Epinephrine.</span>
+	</div>
+	<div id="specialReactionContainer" class=' wiki' style="display:none;">
+		<div class='Section__title'><span class='Section__titleText'>Other</span></div>
+		<span id="specialReaction"></span>
+	</div>
+	<script>
+		const plasma = document.getElementById('plasma');
+		const blood = document.getElementById('blood');
+		const water = document.getElementById('water');
+		const slimeInputs = document.getElementById('slimeInputs');
+		const Slimes = {
+			grey: {
+				tier: 0,
+				plasmaReaction: "Creates a new grey slime.",
+				bloodReaction: "Creates three monkey cubes. Useful if you want to do your job for more than five minutes.",
+				waterReaction: "Fills the extract with Epinephrine."
+			},
+			orange: {
+				tier: 1,
+				plasmaReaction: "Creates a small plasma fire after 5 seconds.",
+				bloodReaction: "Fills the extract with Capsaicin Oil, 10u per 1u blood injected at once, up to 100u. Can be turned into Pepper Spray if mixed with ethanol.",
+				waterReaction: "Creates a cloud of smoke. More water injected at once means bigger smoke, up to max 15 water. It'll carry any other reagent already inside the slime extract."
+			},
+			purple: {
+				tier: 1,
+				plasmaReaction: "Creates a bottle of slime steroid. Slime steroid is a potent chemical mix that will cause a slime to produce one more extract when processed, for a maximum of four extra. The steroid only works on live slimes.",
+				bloodReaction: "Fills the extract with regenerative jelly. 5u per 1u blood injected, up to 100u. Similar to omnizine, but non toxic to jellypeople.",
+				waterReaction: "N/A "
+			},
+			blue: {
+				tier: 1,
+				plasmaReaction: "Fills the extract with frost oil. 10u per 1u plasma injected, up to 100u.",
+				bloodReaction: "Creates a slime stabilizer potion. Reduces a slime's mutation chance by 15 percentage points, and carries through across generations.",
+				waterReaction: "Creates foam when injected with at least 5u water. It'll carry any other reagent already inside the slime extract. "
+			},
+			metal: {
+				tier: 1,
+				plasmaReaction: "Creates 5 sheets of plasteel and 15 sheets of metal. Grinding plasteel will generate plasma and iron, making it a perfect substitute to dark purple slimes.",
+				bloodReaction: "N/A",
+				waterReaction: "Creates 5 sheets of reinforced glass and 15 sheets of glass. "
+			},
+			yellow: {
+				tier: 2,
+				plasmaReaction: "Creates a 5,000 capacity EMP-proof power cell. Does not make machines and cyborgs EMP-proof.",
+				bloodReaction: "Creates an EMP. It's a quite big blast as well, useful if that AI is onto your tricks.",
+				waterReaction: "Causes extract to emit light. They can be squeezed to increase the light emitted. "
+			},
+			dark_purple: {
+				tier: 2,
+				plasmaReaction: "Creates 3 sheets of Solid Plasma. Yessir, NT can link anything to the production of plasma. Also useful for further experimenting.",
+				bloodReaction: "N/A",
+				waterReaction: "N/A "
+			},
+			dark_blue: {
+				tier: 2,
+				plasmaReaction: "Creates supercooled N2 gas 5 seconds after injection.",
+				bloodReaction: "N/A",
+				waterReaction: "Creates a three-use chill potion, which fireproofs anything it's used on. Be a firebug without looking like one! Miners can make good use of this, as it will make them storm-proof. "
+			},
+			silver: {
+				tier: 2,
+				plasmaReaction: "Creates a small amount of random food, bork bork bork. Expect anything from a roburger to death berries. Spacemen find them disgusting.",
+				bloodReaction: "N/A",
+				waterReaction: "Creates a small amount of random drinks. Spacemen find them disgusting. "
+			},
+			bluespace: {
+				tier: 3,
+				plasmaReaction: "Creates a Bluespace Crystal. They will teleport you when crushed in your hand and teleport anyone you throw it at. Used as a material in techfabs and protolathes.",
+				bloodReaction: "Creates 25 Bluespace Floor Tiles, which speed up movement drastically.",
+				waterReaction: "Creates a Bluespace radio potion. Use it on a sentient animal to let them speak on the radio! "
+			},
+			sepia: {
+				tier: 3,
+				plasmaReaction: "Stops local time for 15 seconds, 5 seconds after injection. The user is not immune.",
+				bloodReaction: "Creates 25 Sepia Floor Tiles. They slow movement speed above them.",
+				waterReaction: "Creates some Film and a Camera. "
+			},
+			cerulean: {
+				tier: 3,
+				plasmaReaction: "Creates a bottle of extract enhancer. When used on an extract it adds one use to it.",
+				bloodReaction: "Creates a one-use blueprint. Renaming an area with it (to any name) will turn the floor blue and allow the Slime Console to work on that area, if it has a valid path.",
+				waterReaction: "N/A "
+			},
+			pyrite: {
+				tier: 3,
+				plasmaReaction: "Creates a can of paint. For the love of all that is holy, don't give it to the clown!",
+				bloodReaction: "Creates a random crayon.",
+				waterReaction: "N/A "
+			},
+			red: {
+				tier: 4,
+				plasmaReaction: "Creates a bottle of slime mutation potion. Makes slimes 12 percentage points more likely to mutate, the opposite of the slime stabilizer.",
+				bloodReaction: "Makes nearby slimes rabid. Has some fun uses. If the affected slimes were docile, it removes the docility instead of making them rabid.",
+				waterReaction: "Creates a bottle of speed potion. The speed potion will negate slowdown from any item of clothing or vehicle it is applied to. "
+			},
+			green: {
+				tier: 4,
+				plasmaReaction: "Fills extract with mutation toxin, 1u per 1u plasma injected. Taking at least 4u will eventually turn you into a random jellyperson. What is important to xenobiology is that slimes will never attack you and your blood is no longer valid for blood-based reactions, as it is replaced by slime jelly. Taking more mutation toxin when you're already a jellyperson will eventually turn you into another random subspecies.",
+				bloodReaction: "Fills extract with human mutation toxin, which turns whoever is injected with it into a human. 1u per 1u blood injected.",
+				waterReaction: "N/A",
+				specialReaction: "Injecting the extract with radium fills it with lizard mutation toxin instead, which will turn whoever is injected with it into a lizardperson. 1u per 1u radium.<br><br>Injecting the extract with milk fills it with felinid mutation toxin.<br><br>Injecting the extract with cellulose fibers fills it with mothperson mutation toxin"
+			},
+			pink: {
+				tier: 4,
+				plasmaReaction: "Creates a bottle of docility potion, which will nullify a slime's hunger, causing it to become docile and tame, and will let you name it. You too can have your own pet, just like the HoP! If the slime is rabid, the potion will remove its rabid rage but will not make it docile.",
+				bloodReaction: "Extract creates a bottle of gender changing potion, which changes the gender of any living, gendered thing it is used on.",
+				waterReaction: "N/A "
+			},
+			gold: {
+				tier: 4,
+				plasmaReaction: "Spawns five random dangerous hostile mobs.",
+				bloodReaction: "Spawns three random dangerous mobs. These mobs are not immediately hostile, but may be provoked by certain actions, proximity to other creatures (such as your slimes) or if they encounter a construct or mech. You can also spawn magicarps!",
+				waterReaction: "Spawns one random friendly critter. See here for the list of summonable mobs. "
+			},
+			oil: {
+				tier: 5,
+				plasmaReaction: "Creates an explosion after a moment.",
+				bloodReaction: "Fills extract with Corn Oil, about 10u per 1u blood injected.",
+				waterReaction: "N/A"
+			},
+			black: {
+				tier: 5,
+				plasmaReaction: "Fills extract with advanced mutation toxin, 1u per 1u plasma injected. Turns you, or others, into a sentient grey baby slime. Beware, slimes are still not harmless. This mutation can be prevented with frost oil, if you are quick enough. Acts instantly on slimepeople.",
+				bloodReaction: "N/A",
+				waterReaction: "N/A "
+			},
+			light_pink: {
+				tier: 5,
+				plasmaReaction: "Creates a bottle of sentience potion, a potent chemical mix that will bring human level intelligence to any animal, slime, monster or generally active thing you feed it to. Make Ian sentient! Create an army of gold slime minions! The possibilities are limited only by your own deviousness and the number of ghosts in the round.",
+				bloodReaction: "N/A",
+				waterReaction: "Creates a renaming potion. "
+			},
+			adamantine: {
+				tier: 5,
+				plasmaReaction: "Creates an adamantine bar. It can be sold at cargo for a high amount of credits, or it can be used inhand to craft a golem shell. Golem shells can then be finished with ten sheets of any material, which will affect the golem's properties. After completion, a ghost can possess the shell to spawn as a golem. It will follow the orders of who finishes the shell above anything else, and inherit conversion antagonist status, such as cult, from their owner.",
+				bloodReaction: "N/A",
+				waterReaction: "N/A "
+			},
+			rainbow: {
+				tier: "To attain this rare slime you must breed a slime with a 100% mutation chance",
+				plasmaReaction: "Spawns a random slime when injected with less than five units of plasma.<br><br>Explodes into randomly-colored slime cores when injected with at least five units of plasma.",
+				bloodReaction: "Creates a mind transference potion. You can use it to transfer your mind into a creature. This is not reversible and will result in your old body's instant death.",
+				waterReaction: "N/A",
+				specialReaction: "The extract will explode into randomly-colored slime cores <b>with water, plasma, and blood in them</b> when injected with slime jelly. This will trigger their reactions unpredictably and chaotically, and almost certainly cause mayhem wherever it happens.<br><br> The extract will spawn a flight potion when injected with 5u of Holy water and 5u Uranium."
+			}
+		};
+		const slimeName = document.getElementById('slimeName');
+		const tier = document.getElementById('tier');
+		const specialReaction = document.getElementById('specialReaction');
+		const specialReactionContainer = document.getElementById('specialReactionContainer');
+		var specialIsOpen = false;
+		function formatSlimeName(str) {
+			let formatted = str.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+			return `${formatted} Slime`;
+		}
+		function changeInfo(slime_name) {
+			const slime = Slimes[slime_name];
+			if (!slime)
+				return
+			slimeName.innerHTML = formatSlimeName(slime_name);
+			tier.innerHTML = slime.tier;
+			plasma.innerHTML = slime.plasmaReaction;
+			blood.innerHTML = slime.bloodReaction;
+			water.innerHTML = slime.waterReaction;
+			if (slime.specialReaction) {
+				specialIsOpen = true;
+				specialReactionContainer.style.setProperty('display', 'block');
+				specialReaction.innerHTML = slime.specialReaction;
+			}
+			else if (specialIsOpen) {
+				specialIsOpen = false;
+				specialReactionContainer.style.setProperty('display', 'none');
+				specialReaction.innerHTML = "";
+			}
+
+		}
+		slimeInputs.addEventListener('change', (event) => {
+			const slime_name = event.target.value;
+			if (slime_name) {
+				changeInfo(slime_name);
+			}
+		})
+	</script>
+</body>

@@ -6,35 +6,15 @@
   --color-bg-grad-spread: 2%;
   --color-label: hsl(209, 20%, 69%);
   color: var(--color-fg);
+
 }
 
-.grid {
-    --rows: 5;
-    --columns: 5;
-    --cellsize: 3em;
-    display: grid;
-    grid-template: repeat(var(--rows), var(--cellsize)) / repeat(var(--columns), var(--cellsize));
 
-    .cell {
-        --row: 1;
-        --col: 1;
-        grid-area: var(--row) / var(--col);
-        padding: 0.4em;
-        text-align: center;
-        border: 0.16em solid gray;
-        margin: 0.12em;
-        border-radius: 0.3em;
-        background-color: lightgray;
-    }
-    .cell:hover {
-        background-color: gray;
-    }
-}
 body {
 	font-family: Verdana, sans-serif;
     align-items: center;
     background-color: var(--color-bg);
-	font-size: 12px
+    font-size: 12px;
 }
 
 .NT_theme {
@@ -58,7 +38,6 @@ h1 {
 	background-color: #bb9b68;
 	background-image: repeating-linear-gradient(-45deg, transparent, transparent .8333333333em, rgba(0, 0, 0, .1) .8333333333em, rgba(0, 0, 0, .1) 1.6666666667em)
 }
-
 
 .Section {
 	position: relative;
@@ -236,7 +215,7 @@ h1 {
 	color: var(--color-label);
 	padding-left: 1em;
 	width: 1%;
-	font-size: 1.2em;
+	font-size: 1em;
     white-space: nowrap;
 }
 .LabeledList__cell.label::after {
@@ -307,7 +286,7 @@ h1 {
     content: counter(fill-width)"%";
 }
 
-.option input[type="radio"] {
+input[type="radio"] {
   display: none;
 }
 
@@ -366,3 +345,15 @@ h1 {
 .option input[type="radio"]:checked + .btn {
 	background-color: #1b973c;
 }
+
+.wiki {
+	flex: 1;
+	margin-bottom: .5em;
+	background-color: #181818B0;
+	padding: 0.1em
+}
+
+.cell:has(input[type="radio"]:checked) {
+	background-color: #1b973c;
+}
+
