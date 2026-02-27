@@ -325,8 +325,6 @@ GLOBAL_PROTECT(tracy_init_reason)
 	qdel(src) //shut it down
 
 /world/Reboot(reason = 0, fast_track = FALSE)
-	if(SSvoicechat && SSvoicechat.initialized)
-		SSvoicechat.Shutdown()
 	if (reason || fast_track) //special reboot, do none of the normal stuff
 		if (usr)
 			log_admin("[key_name(usr)] Has requested an immediate world restart via client side debugging tools")
@@ -383,8 +381,6 @@ GLOBAL_PROTECT(tracy_init_reason)
 		call_ext(debug_server, "auxtools_shutdown")()
 
 /world/Del()
-	if(SSvoicechat && SSvoicechat.initialized)
-		SSvoicechat.Shutdown()
 	shutdown_byond_tracy()
 	auxcleanup()
 	. = ..()

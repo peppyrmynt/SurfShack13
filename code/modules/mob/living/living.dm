@@ -1939,6 +1939,12 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 		reset_perspective()
 
 
+//surfshack start
+/// runs when mob is turned into an item
+/mob/living/proc/on_picked_up(obj/item/mob_item)
+	return
+//surfshack end
+
 /mob/living/proc/update_z(new_z) // 1+ to register, null to unregister
 	if(registered_z == new_z)
 		return
