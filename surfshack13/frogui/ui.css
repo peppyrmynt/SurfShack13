@@ -1,31 +1,32 @@
-
 :root {
-  --color-fg:        hsl(0 0% 100%);
-  --color-bg:        hsl(0 0% 14%);
-  --color-bg-section: rgba(0 0 0 / 0.33);
-  --color-bg-grad-spread: 2%;
-  --color-label: hsl(209, 20%, 69%);
-  color: var(--color-fg);
+	--color-fg: hsl(0 0% 100%);
+	--color-bg: hsl(0 0% 14%);
+	--color-bg-section: rgba(0 0 0 / 0.33);
+	--color-bg-grad-spread: 2%;
+	--color-label: hsl(209, 20%, 69%);
+	--border-radius-common: 0.16em;
+	color: var(--color-fg);
 
 }
 
 
 body {
 	font-family: Verdana, sans-serif;
-    align-items: center;
-    background-color: var(--color-bg);
-    font-size: 12px;
+	align-items: center;
+	background-color: var(--color-bg);
+	font-size: 12px;
 }
 
 .NT_theme {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 425 200" opacity=".33"><path d="m 178.00399,0.03869 -71.20393,0 a 6.7613422,6.0255495 0 0 0 -6.76134,6.02555 l 0,187.87147 a 6.7613422,6.0255495 0 0 0 6.76134,6.02554 l 53.1072,0 a 6.7613422,6.0255495 0 0 0 6.76135,-6.02554 l 0,-101.544018 72.21628,104.699398 a 6.7613422,6.0255495 0 0 0 5.76015,2.87016 l 73.55487,0 a 6.7613422,6.0255495 0 0 0 6.76135,-6.02554 l 0,-187.87147 a 6.7613422,6.0255495 0 0 0 -6.76135,-6.02555 l -54.71644,0 a 6.7613422,6.0255495 0 0 0 -6.76133,6.02555 l 0,102.61935 L 183.76413,2.90886 a 6.7613422,6.0255495 0 0 0 -5.76014,-2.87017 z" /><path d="M 4.8446333,22.10875 A 13.412039,12.501842 0 0 1 13.477588,0.03924 l 66.118315,0 a 5.3648158,5.000737 0 0 1 5.364823,5.00073 l 0,79.87931 z" /><path d="m 420.15535,177.89119 a 13.412038,12.501842 0 0 1 -8.63295,22.06951 l -66.11832,0 a 5.3648152,5.000737 0 0 1 -5.36482,-5.00074 l 0,-79.87931 z" /></svg>');
-  background-size: 70%;
-  background-position: center;
-  background-repeat: no-repeat;
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 425 200" opacity=".33"><path d="m 178.00399,0.03869 -71.20393,0 a 6.7613422,6.0255495 0 0 0 -6.76134,6.02555 l 0,187.87147 a 6.7613422,6.0255495 0 0 0 6.76134,6.02554 l 53.1072,0 a 6.7613422,6.0255495 0 0 0 6.76135,-6.02554 l 0,-101.544018 72.21628,104.699398 a 6.7613422,6.0255495 0 0 0 5.76015,2.87016 l 73.55487,0 a 6.7613422,6.0255495 0 0 0 6.76135,-6.02554 l 0,-187.87147 a 6.7613422,6.0255495 0 0 0 -6.76135,-6.02555 l -54.71644,0 a 6.7613422,6.0255495 0 0 0 -6.76133,6.02555 l 0,102.61935 L 183.76413,2.90886 a 6.7613422,6.0255495 0 0 0 -5.76014,-2.87017 z" /><path d="M 4.8446333,22.10875 A 13.412039,12.501842 0 0 1 13.477588,0.03924 l 66.118315,0 a 5.3648158,5.000737 0 0 1 5.364823,5.00073 l 0,79.87931 z" /><path d="m 420.15535,177.89119 a 13.412038,12.501842 0 0 1 -8.63295,22.06951 l -66.11832,0 a 5.3648152,5.000737 0 0 1 -5.36482,-5.00074 l 0,-79.87931 z" /></svg>');
+	background-size: 70%;
+	height: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 h1 {
-    color: var(--color-fg)
+	color: var(--color-fg)
 }
 
 .NoticeBox {
@@ -211,13 +212,15 @@ h1 {
 	border: 0;
 	text-align: left;
 }
+
 .LabeledList__cell.label {
 	color: var(--color-label);
 	padding-left: 1em;
 	width: 1%;
 	font-size: 1em;
-    white-space: nowrap;
+	white-space: nowrap;
 }
+
 .LabeledList__cell.label::after {
 	content: ":";
 }
@@ -246,9 +249,9 @@ h1 {
 
 
 @property --fill-width {
-  syntax: '<integer>';
-  initial-value: 100;
-  inherits: true;
+	syntax: '<integer>';
+	initial-value: 100;
+	inherits: true;
 }
 
 @property --fill-width-percent {
@@ -256,6 +259,7 @@ h1 {
 	inherits: true;
 	initial-value: 100%;
 }
+
 @property --fill {
 	syntax: '<color>';
 	initial-value: green;
@@ -283,32 +287,40 @@ h1 {
 }
 
 .progressLabel::after {
-    content: counter(fill-width)"%";
+	content: counter(fill-width)"%";
 }
 
 input[type="radio"] {
-  display: none;
+	display: none;
+}
+
+label {
+	cursor: pointer;
+}
+
+label:hover {
+	filter: brightness(1.2);
 }
 
 .colorBox {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  border: 0.2em solid #222;
-  background-color: var(--fill);
-  cursor: pointer;
-  transition: border-color 0.2s;
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	border: 0.2em solid #222;
+	background-color: var(--fill);
+	cursor: pointer;
+	transition: border-color 0.2s;
 }
 
-.colorSelectors{
+.colorSelectors {
 	display: flex;
 	align-items: center;
 }
 
 
 
-.option.color input[type="radio"]:checked + .colorBox {
-  border-color: #20b142;
+.option.color input[type="radio"]:checked+.colorBox {
+	border-color: #20b142;
 }
 
 .colorBox:hover {
@@ -316,35 +328,37 @@ input[type="radio"] {
 }
 
 .colorText {
-	color:red;
+	color: red;
 	font-weight: bold;
 }
 
 .btn {
-  position: relative;
-  display: inline-block;
-  line-height: 1.667em;
-  padding: 0 .5em;
-  margin-right: .1666666667em;
-  white-space: nowrap;
-  outline: 0;
-  border-radius: .16em;
-  border-style: none;
-  margin-bottom: .1666666667em;
-  margin-top: .1666666667em;
-  user-select: none;
-  -ms-user-select: none;
-  background-color: #3f6489;
-  color: var(--color-fg);
+	position: relative;
+	display: inline-block;
+	line-height: 1.667em;
+	padding: 0 .5em;
+	margin-right: .1666666667em;
+	white-space: nowrap;
+	outline: 0;
+	border-radius: var(--border-radius-common);
+	border-style: none;
+	margin-bottom: .1666666667em;
+	margin-top: .1666666667em;
+	user-select: none;
+	-ms-user-select: none;
+	background-color: #3f6489;
+	color: var(--color-fg);
 }
 
 .btn:hover {
 	filter: brightness(1.2);
 }
 
-.option input[type="radio"]:checked + .btn {
+.option input[type="radio"]:checked+.btn {
 	background-color: #1b973c;
 }
+
+
 
 .wiki {
 	flex: 1;
@@ -357,3 +371,45 @@ input[type="radio"] {
 	background-color: #1b973c;
 }
 
+.slime_type {
+	margin: 0.3em;
+	padding: 0.2em;
+	background-color: var(--color-bg-section);
+}
+
+.slime_type div:first-child {
+	font-weight: bold;
+	margin-bottom: 0.1em;
+	color: var(--color-label);
+}
+
+.slime_type div:first-child::after {
+	content: ":";
+}
+
+.tabber {
+	display: flex;
+	justify-content: space-around;
+}
+
+.tabber label {
+	flex: 1;
+	text-align: center;
+	padding: 0.3em;
+	margin: 0.2em;
+	border-radius: var(--border-radius-common);
+}
+
+.tabber label:has(input[type="radio"]:checked) {
+	background-color: #1b973c;
+}
+
+select {
+	cursor: pointer;
+	background: var(--color-fg);
+	color: var(--color-bg);
+	padding: 0.3em;
+	margin: 0.2em;
+	border-style: hidden;
+	border-radius: var(--border-radius-common);
+}

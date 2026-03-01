@@ -16,6 +16,9 @@
 	atom_storage.max_specific_storage = WEIGHT_CLASS_SMALL
 	atom_storage.max_slots = 4
 	atom_storage.set_holdable(list(
+		//surfshack start
+		/obj/item/holomanual,
+		//surfshack end
 		/obj/item/stack/spacecash,
 		/obj/item/holochip,
 		/obj/item/card,

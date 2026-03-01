@@ -1,6 +1,6 @@
 /obj/item/holomanual
 	name = "Holo Manual"
-	desc = "A holographic manual."
+	desc = "A holographic manual. A rather dense reference manual made of refined hardlight. It's about the size of playing card, and can fit into a wallet"
 	icon = 'icons/obj/service/bureaucracy.dmi'
 	icon_state ="alienpaper_words"
 	w_class = WEIGHT_CLASS_TINY
@@ -14,7 +14,7 @@
 	var/static/ui
 
 /obj/item/holomanual/xenobiology
-	name = "Slime holo manual"
+	name = "xenobiology holo manual"
 
 /obj/item/holomanual/xenobiology/ui_interact(mob/user)
 	if(!ui)

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
 	<meta charset='utf-8'>
@@ -11,7 +12,7 @@
 			--cell: calc(var(--width)/10);
 			--arrow: calc(var(--cell)/2);
 			width: var(--width);
-			grid-template: repeat(4, var(--cell) var(--arrow)) var(--cell) / repeat(6,var(--cell) var(--arrow)) var(--cell);
+			grid-template: repeat(4, var(--cell) var(--arrow)) var(--cell) / repeat(6, var(--cell) var(--arrow)) var(--cell);
 
 
 			.cell {
@@ -66,291 +67,685 @@
 </head>
 
 <body>
-	<div class='wiki'>
-		<div class='Section__title'><span class='Section__titleText'>Slime Info</span></div>
-		<table class='LabeledList'>
-			<tbody>
-				<tr class=LabeledList__row'>
-					<td class='LabeledList__cell label'>Name</td>
-					<td id="slimeName" class='LabeledList__cell'>Grey slime</td>
-				</tr>
-				<tr class=LabeledList__row'>
-					<td class='LabeledList__cell label'>Tier</td>
-					<td id="tier" class='LabeledList__cell'>0</td>
-				</tr>
-			</tbody>
-		</table>
+	<div class="wiki tabber" id='tabber'>
+		<label>
+			Extract Reactions
+			<input type='radio' name='tabber' checked="true" value='slimeMode'>
+		</label>
+		<label>
+			Crossbreeds
+			<input type='radio' name='tabber' value='crossbreedMode'>
+		</label>
+		<script>
+			const tabberElement = document.getElementById('tabber');
+			var currentTabElement;
+			function getCurrentTab() {
+				const ID = document.querySelector("input[name='tabber']:checked").value;
+				return document.getElementById(ID);
+			}
+			window.addEventListener('DOMContentLoaded', function () {
+				currentTabElement = getCurrentTab();
+			});
+			tabberElement.addEventListener('change', (event) => {
+
+				const newTab = event.target.value;
+				if (newTab) {
+					const newTabElement = document.getElementById(newTab)
+					if (!newTabElement) { console.error(`tabber tried to change to nonexistant elementID ${newTab}`); return }
+					newTabElement.style.setProperty('display', 'block')
+					currentTabElement.style.setProperty('display', 'none');
+					currentTabElement = newTabElement;
+				}
+			})
+		</script>
 	</div>
-	<div class='wiki grid' id="slimeInputs">
-		<label class='cell' style='--row: 1; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#sepia" />
-			<input type='radio' name='SlimePicker' value='sepia'></label>
-		<label class='cell' style='--row: 3; --col:1 ;'><img src="https://files.catbox.moe/bnnkqi.svg#oil" />
-			<input type='radio' name='SlimePicker' value='oil'></label>
-		<label class='cell' style='--row: 3; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#red" />
-			<input type='radio' name='SlimePicker' value='red'></label>
-		<label class='cell' style='--row: 3; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#orange" />
-			<input type='radio' name='SlimePicker' value='orange'></label>
-		<label class='cell' style='--row: 3; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#dark-purple" />
-			<input type='radio' name='SlimePicker' value='dark_purple'></label>
-		<label class='cell' style='--row: 3; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#purple" />
-			<input type='radio' name='SlimePicker' value='purple'></label>
-		<label class='cell' style='--row: 3; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#green" />
-			<input type='radio' name='SlimePicker' value='green'></label>
-		<label class='cell' style='--row: 3; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#black" />
-			<input type='radio' name='SlimePicker' value='black'></label>
 
-		<label class='cell' style='--row: 5; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#bluespace" />
-			<input type='radio' name='SlimePicker' value='bluespace'></label>
-		<label class='cell' style='--row: 5; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#yellow" />
-			<input type='radio' name='SlimePicker' value='yellow'></label>
-		<label class='cell' style='--row: 5; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#grey" />
-			<input type='radio' name='SlimePicker' checked="true" value='grey'></label>
-		<label class='cell' style='--row: 5; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#dark-blue" />
-			<input type='radio' name='SlimePicker' value='dark_blue'></label>
-		<label class='cell' style='--row: 5; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#cerulean" />
-			<input type='radio' name='SlimePicker' value='cerulean'></label>
+	<div id="slimeMode">
+		<div class='wiki'>
+			<div class='Section__title'><span class='Section__titleText'>Slime Info</span></div>
+			<table class='LabeledList'>
+				<tbody>
+					<tr class=LabeledList__row'>
+						<td class='LabeledList__cell label'>Name</td>
+						<td id="slimeName" class='LabeledList__cell'>Grey slime</td>
+					</tr>
+					<tr class=LabeledList__row'>
+						<td class='LabeledList__cell label'>Tier</td>
+						<td id="tier" class='LabeledList__cell'>0</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class='wiki grid' id="slimeInputs">
+			<label class='cell' style='--row: 1; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#sepia" />
+				<input type='radio' name='SlimePicker' value='sepia'></label>
+			<label class='cell' style='--row: 3; --col:1 ;'><img src="https://files.catbox.moe/bnnkqi.svg#oil" />
+				<input type='radio' name='SlimePicker' value='oil'></label>
+			<label class='cell' style='--row: 3; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#red" />
+				<input type='radio' name='SlimePicker' value='red'></label>
+			<label class='cell' style='--row: 3; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#orange" />
+				<input type='radio' name='SlimePicker' value='orange'></label>
+			<label class='cell' style='--row: 3; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#dark-purple" />
+				<input type='radio' name='SlimePicker' value='dark_purple'></label>
+			<label class='cell' style='--row: 3; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#purple" />
+				<input type='radio' name='SlimePicker' value='purple'></label>
+			<label class='cell' style='--row: 3; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#green" />
+				<input type='radio' name='SlimePicker' value='green'></label>
+			<label class='cell' style='--row: 3; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#black" />
+				<input type='radio' name='SlimePicker' value='black'></label>
 
-		<label class='cell' style='--row: 7; --col:1 ;'><img src="https://files.catbox.moe/bnnkqi.svg#adamantine" />
-			<input type='radio' name='SlimePicker' value='adamantine'></label>
-		<label class='cell' style='--row: 7; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#gold" />
-			<input type='radio' name='SlimePicker' value='gold'></label>
-		<label class='cell' style='--row: 7; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#metal" />
-			<input type='radio' name='SlimePicker' value='metal'></label>
-		<label class='cell' style='--row: 7; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#silver" />
-			<input type='radio' name='SlimePicker' value='silver'></label>
-		<label class='cell' style='--row: 7; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#blue" />
-			<input type='radio' name='SlimePicker' value='blue'></label>
-		<label class='cell' style='--row: 7; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#pink" />
-			<input type='radio' name='SlimePicker' value='pink'></label>
-		<label class='cell' style='--row: 7; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#light-pink" />
-			<input type='radio' name='SlimePicker' value='light_pink'></label>
+			<label class='cell' style='--row: 5; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#bluespace" />
+				<input type='radio' name='SlimePicker' value='bluespace'></label>
+			<label class='cell' style='--row: 5; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#yellow" />
+				<input type='radio' name='SlimePicker' value='yellow'></label>
+			<label class='cell' style='--row: 5; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#grey" />
+				<input type='radio' name='SlimePicker' checked="true" value='grey'></label>
+			<label class='cell' style='--row: 5; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#dark-blue" />
+				<input type='radio' name='SlimePicker' value='dark_blue'></label>
+			<label class='cell' style='--row: 5; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#cerulean" />
+				<input type='radio' name='SlimePicker' value='cerulean'></label>
 
-		<label class='cell' style='--row: 9; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#pyrite" />
-			<input type='radio' name='SlimePicker' value='pyrite'></label>
-		<label class='cell' style='--row: 9; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#rainbow" />
-			<input type='radio' name='SlimePicker' value='rainbow'></label>
+			<label class='cell' style='--row: 7; --col:1 ;'><img src="https://files.catbox.moe/bnnkqi.svg#adamantine" />
+				<input type='radio' name='SlimePicker' value='adamantine'></label>
+			<label class='cell' style='--row: 7; --col:3 ;'><img src="https://files.catbox.moe/bnnkqi.svg#gold" />
+				<input type='radio' name='SlimePicker' value='gold'></label>
+			<label class='cell' style='--row: 7; --col:5 ;'><img src="https://files.catbox.moe/bnnkqi.svg#metal" />
+				<input type='radio' name='SlimePicker' value='metal'></label>
+			<label class='cell' style='--row: 7; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#silver" />
+				<input type='radio' name='SlimePicker' value='silver'></label>
+			<label class='cell' style='--row: 7; --col:9 ;'><img src="https://files.catbox.moe/bnnkqi.svg#blue" />
+				<input type='radio' name='SlimePicker' value='blue'></label>
+			<label class='cell' style='--row: 7; --col:11 ;'><img src="https://files.catbox.moe/bnnkqi.svg#pink" />
+				<input type='radio' name='SlimePicker' value='pink'></label>
+			<label class='cell' style='--row: 7; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#light-pink" />
+				<input type='radio' name='SlimePicker' value='light_pink'></label>
 
-		<div class='cell arrow northwest' style='--row: 6; --col:8;'></div>
-		<div class='cell arrow northwest' style='--row: 4; --col:6;'></div>
-		<div class='cell arrow northeast' style='--row: 6; --col:6 ;'></div>
-		<div class='cell arrow northeast' style='--row: 4; --col:8;'></div>
-		<div class='cell arrow horizontal_double' style='--row: 3; --col:8;'></div>
-		<div class='cell arrow horizontal_double' style='--row: 3; --col:6;'></div>
-		<div class='cell arrow horizontal_double' style='--row: 7; --col:8;''></div>
+			<label class='cell' style='--row: 9; --col:7 ;'><img src="https://files.catbox.moe/bnnkqi.svg#pyrite" />
+				<input type='radio' name='SlimePicker' value='pyrite'></label>
+			<label class='cell' style='--row: 9; --col:13 ;'><img src="https://files.catbox.moe/bnnkqi.svg#rainbow" />
+				<input type='radio' name='SlimePicker' value='rainbow'></label>
+
+			<div class='cell arrow northwest' style='--row: 6; --col:8;'></div>
+			<div class='cell arrow northwest' style='--row: 4; --col:6;'></div>
+			<div class='cell arrow northeast' style='--row: 6; --col:6 ;'></div>
+			<div class='cell arrow northeast' style='--row: 4; --col:8;'></div>
+			<div class='cell arrow horizontal_double' style='--row: 3; --col:8;'></div>
+			<div class='cell arrow horizontal_double' style='--row: 3; --col:6;'></div>
+			<div class='cell arrow horizontal_double' style='--row: 7; --col:8;''></div>
 		<div class=' cell arrow horizontal_double' style='--row: 7; --col:6;'></div>
-		<div class='cell arrow vertical_double' style='--row: 4; --col:5;'></div>
-		<div class='cell arrow vertical_double' style='--row: 6; --col:5;'></div>
-		<div class='cell arrow vertical_double' style='--row: 4; --col:9'></div>
-		<div class='cell arrow vertical_double' style='--row: 6; --col:9;'></div>
-		<div class='cell arrow left' style='--row: 7; --col:4;'></div>
-		<div class='cell arrow left' style='--row: 7; --col:2;'></div>
-		<div class='cell arrow left' style='--row: 5; --col:4;'></div>
-		<div class='cell arrow left' style='--row: 3; --col:4;'></div>
-		<div class='cell arrow left' style='--row: 3; --col:2;'></div>
+			<div class='cell arrow vertical_double' style='--row: 4; --col:5;'></div>
+			<div class='cell arrow vertical_double' style='--row: 6; --col:5;'></div>
+			<div class='cell arrow vertical_double' style='--row: 4; --col:9'></div>
+			<div class='cell arrow vertical_double' style='--row: 6; --col:9;'></div>
+			<div class='cell arrow left' style='--row: 7; --col:4;'></div>
+			<div class='cell arrow left' style='--row: 7; --col:2;'></div>
+			<div class='cell arrow left' style='--row: 5; --col:4;'></div>
+			<div class='cell arrow left' style='--row: 3; --col:4;'></div>
+			<div class='cell arrow left' style='--row: 3; --col:2;'></div>
 
-		<div class='cell arrow right' style='--row: 7; --col:10;'></div>
-		<div class='cell arrow right' style='--row: 5; --col:10;'></div>
-		<div class='cell arrow right' style='--row: 3; --col:10;'></div>
-		<div class='cell arrow right' style='--row: 3; --col:12;'></div>
-		<div class='cell arrow right' style='--row: 7; --col:12;'></div>
-		<div class='cell arrow down' style='--row: 8; --col:7;'></div>
-		<div class='cell arrow up' style='--row: 2; --col:7;'></div>
-	</div>
+			<div class='cell arrow right' style='--row: 7; --col:10;'></div>
+			<div class='cell arrow right' style='--row: 5; --col:10;'></div>
+			<div class='cell arrow right' style='--row: 3; --col:10;'></div>
+			<div class='cell arrow right' style='--row: 3; --col:12;'></div>
+			<div class='cell arrow right' style='--row: 7; --col:12;'></div>
+			<div class='cell arrow down' style='--row: 8; --col:7;'></div>
+			<div class='cell arrow up' style='--row: 2; --col:7;'></div>
+		</div>
 
 
-	<div class=' wiki'>
-		<div class='Section__title'><span class='Section__titleText'>Plasma Reaction</span></div>
-		<span id="plasma">Creates a new grey slime.</span>
-	</div>
-	<div class=' wiki'>
-		<div class='Section__title'><span class='Section__titleText'>Blood Reaction</span></div>
-		<span id="blood">Creates three monkey cubes. Useful if you want to do your job for more than five
-			minutes. </span>
-	</div>
-	<div class=' wiki'>
-		<div class='Section__title'><span class='Section__titleText'>Water Reaction</span></div>
-		<span id="water">Fills the extract with Epinephrine.</span>
-	</div>
-	<div id="specialReactionContainer" class=' wiki' style="display:none;">
-		<div class='Section__title'><span class='Section__titleText'>Other</span></div>
-		<span id="specialReaction"></span>
-	</div>
-	<script>
-		const plasma = document.getElementById('plasma');
-		const blood = document.getElementById('blood');
-		const water = document.getElementById('water');
-		const slimeInputs = document.getElementById('slimeInputs');
-		const Slimes = {
-			grey: {
-				tier: 0,
-				plasmaReaction: "Creates a new grey slime.",
-				bloodReaction: "Creates three monkey cubes. Useful if you want to do your job for more than five minutes.",
-				waterReaction: "Fills the extract with Epinephrine."
-			},
-			orange: {
-				tier: 1,
-				plasmaReaction: "Creates a small plasma fire after 5 seconds.",
-				bloodReaction: "Fills the extract with Capsaicin Oil, 10u per 1u blood injected at once, up to 100u. Can be turned into Pepper Spray if mixed with ethanol.",
-				waterReaction: "Creates a cloud of smoke. More water injected at once means bigger smoke, up to max 15 water. It'll carry any other reagent already inside the slime extract."
-			},
-			purple: {
-				tier: 1,
-				plasmaReaction: "Creates a bottle of slime steroid. Slime steroid is a potent chemical mix that will cause a slime to produce one more extract when processed, for a maximum of four extra. The steroid only works on live slimes.",
-				bloodReaction: "Fills the extract with regenerative jelly. 5u per 1u blood injected, up to 100u. Similar to omnizine, but non toxic to jellypeople.",
-				waterReaction: "N/A "
-			},
-			blue: {
-				tier: 1,
-				plasmaReaction: "Fills the extract with frost oil. 10u per 1u plasma injected, up to 100u.",
-				bloodReaction: "Creates a slime stabilizer potion. Reduces a slime's mutation chance by 15 percentage points, and carries through across generations.",
-				waterReaction: "Creates foam when injected with at least 5u water. It'll carry any other reagent already inside the slime extract. "
-			},
-			metal: {
-				tier: 1,
-				plasmaReaction: "Creates 5 sheets of plasteel and 15 sheets of metal. Grinding plasteel will generate plasma and iron, making it a perfect substitute to dark purple slimes.",
-				bloodReaction: "N/A",
-				waterReaction: "Creates 5 sheets of reinforced glass and 15 sheets of glass. "
-			},
-			yellow: {
-				tier: 2,
-				plasmaReaction: "Creates a 5,000 capacity EMP-proof power cell. Does not make machines and cyborgs EMP-proof.",
-				bloodReaction: "Creates an EMP. It's a quite big blast as well, useful if that AI is onto your tricks.",
-				waterReaction: "Causes extract to emit light. They can be squeezed to increase the light emitted. "
-			},
-			dark_purple: {
-				tier: 2,
-				plasmaReaction: "Creates 3 sheets of Solid Plasma. Yessir, NT can link anything to the production of plasma. Also useful for further experimenting.",
-				bloodReaction: "N/A",
-				waterReaction: "N/A "
-			},
-			dark_blue: {
-				tier: 2,
-				plasmaReaction: "Creates supercooled N2 gas 5 seconds after injection.",
-				bloodReaction: "N/A",
-				waterReaction: "Creates a three-use chill potion, which fireproofs anything it's used on. Be a firebug without looking like one! Miners can make good use of this, as it will make them storm-proof. "
-			},
-			silver: {
-				tier: 2,
-				plasmaReaction: "Creates a small amount of random food, bork bork bork. Expect anything from a roburger to death berries. Spacemen find them disgusting.",
-				bloodReaction: "N/A",
-				waterReaction: "Creates a small amount of random drinks. Spacemen find them disgusting. "
-			},
-			bluespace: {
-				tier: 3,
-				plasmaReaction: "Creates a Bluespace Crystal. They will teleport you when crushed in your hand and teleport anyone you throw it at. Used as a material in techfabs and protolathes.",
-				bloodReaction: "Creates 25 Bluespace Floor Tiles, which speed up movement drastically.",
-				waterReaction: "Creates a Bluespace radio potion. Use it on a sentient animal to let them speak on the radio! "
-			},
-			sepia: {
-				tier: 3,
-				plasmaReaction: "Stops local time for 15 seconds, 5 seconds after injection. The user is not immune.",
-				bloodReaction: "Creates 25 Sepia Floor Tiles. They slow movement speed above them.",
-				waterReaction: "Creates some Film and a Camera. "
-			},
-			cerulean: {
-				tier: 3,
-				plasmaReaction: "Creates a bottle of extract enhancer. When used on an extract it adds one use to it.",
-				bloodReaction: "Creates a one-use blueprint. Renaming an area with it (to any name) will turn the floor blue and allow the Slime Console to work on that area, if it has a valid path.",
-				waterReaction: "N/A "
-			},
-			pyrite: {
-				tier: 3,
-				plasmaReaction: "Creates a can of paint. For the love of all that is holy, don't give it to the clown!",
-				bloodReaction: "Creates a random crayon.",
-				waterReaction: "N/A "
-			},
-			red: {
-				tier: 4,
-				plasmaReaction: "Creates a bottle of slime mutation potion. Makes slimes 12 percentage points more likely to mutate, the opposite of the slime stabilizer.",
-				bloodReaction: "Makes nearby slimes rabid. Has some fun uses. If the affected slimes were docile, it removes the docility instead of making them rabid.",
-				waterReaction: "Creates a bottle of speed potion. The speed potion will negate slowdown from any item of clothing or vehicle it is applied to. "
-			},
-			green: {
-				tier: 4,
-				plasmaReaction: "Fills extract with mutation toxin, 1u per 1u plasma injected. Taking at least 4u will eventually turn you into a random jellyperson. What is important to xenobiology is that slimes will never attack you and your blood is no longer valid for blood-based reactions, as it is replaced by slime jelly. Taking more mutation toxin when you're already a jellyperson will eventually turn you into another random subspecies.",
-				bloodReaction: "Fills extract with human mutation toxin, which turns whoever is injected with it into a human. 1u per 1u blood injected.",
-				waterReaction: "N/A",
-				specialReaction: "Injecting the extract with radium fills it with lizard mutation toxin instead, which will turn whoever is injected with it into a lizardperson. 1u per 1u radium.<br><br>Injecting the extract with milk fills it with felinid mutation toxin.<br><br>Injecting the extract with cellulose fibers fills it with mothperson mutation toxin"
-			},
-			pink: {
-				tier: 4,
-				plasmaReaction: "Creates a bottle of docility potion, which will nullify a slime's hunger, causing it to become docile and tame, and will let you name it. You too can have your own pet, just like the HoP! If the slime is rabid, the potion will remove its rabid rage but will not make it docile.",
-				bloodReaction: "Extract creates a bottle of gender changing potion, which changes the gender of any living, gendered thing it is used on.",
-				waterReaction: "N/A "
-			},
-			gold: {
-				tier: 4,
-				plasmaReaction: "Spawns five random dangerous hostile mobs.",
-				bloodReaction: "Spawns three random dangerous mobs. These mobs are not immediately hostile, but may be provoked by certain actions, proximity to other creatures (such as your slimes) or if they encounter a construct or mech. You can also spawn magicarps!",
-				waterReaction: "Spawns one random friendly critter. See here for the list of summonable mobs. "
-			},
-			oil: {
-				tier: 5,
-				plasmaReaction: "Creates an explosion after a moment.",
-				bloodReaction: "Fills extract with Corn Oil, about 10u per 1u blood injected.",
-				waterReaction: "N/A"
-			},
-			black: {
-				tier: 5,
-				plasmaReaction: "Fills extract with advanced mutation toxin, 1u per 1u plasma injected. Turns you, or others, into a sentient grey baby slime. Beware, slimes are still not harmless. This mutation can be prevented with frost oil, if you are quick enough. Acts instantly on slimepeople.",
-				bloodReaction: "N/A",
-				waterReaction: "N/A "
-			},
-			light_pink: {
-				tier: 5,
-				plasmaReaction: "Creates a bottle of sentience potion, a potent chemical mix that will bring human level intelligence to any animal, slime, monster or generally active thing you feed it to. Make Ian sentient! Create an army of gold slime minions! The possibilities are limited only by your own deviousness and the number of ghosts in the round.",
-				bloodReaction: "N/A",
-				waterReaction: "Creates a renaming potion. "
-			},
-			adamantine: {
-				tier: 5,
-				plasmaReaction: "Creates an adamantine bar. It can be sold at cargo for a high amount of credits, or it can be used inhand to craft a golem shell. Golem shells can then be finished with ten sheets of any material, which will affect the golem's properties. After completion, a ghost can possess the shell to spawn as a golem. It will follow the orders of who finishes the shell above anything else, and inherit conversion antagonist status, such as cult, from their owner.",
-				bloodReaction: "N/A",
-				waterReaction: "N/A "
-			},
-			rainbow: {
-				tier: "To attain this rare slime you must breed a slime with a 100% mutation chance",
-				plasmaReaction: "Spawns a random slime when injected with less than five units of plasma.<br><br>Explodes into randomly-colored slime cores when injected with at least five units of plasma.",
-				bloodReaction: "Creates a mind transference potion. You can use it to transfer your mind into a creature. This is not reversible and will result in your old body's instant death.",
-				waterReaction: "N/A",
-				specialReaction: "The extract will explode into randomly-colored slime cores <b>with water, plasma, and blood in them</b> when injected with slime jelly. This will trigger their reactions unpredictably and chaotically, and almost certainly cause mayhem wherever it happens.<br><br> The extract will spawn a flight potion when injected with 5u of Holy water and 5u Uranium."
+		<div class=' wiki'>
+			<div class='Section__title'><span class='Section__titleText'>Plasma Reaction</span></div>
+			<span id="plasma">Creates a new grey slime.</span>
+		</div>
+		<div class=' wiki'>
+			<div class='Section__title'><span class='Section__titleText'>Blood Reaction</span></div>
+			<span id="blood">Creates three monkey cubes. Useful if you want to do your job for more than five
+				minutes. </span>
+		</div>
+		<div class=' wiki'>
+			<div class='Section__title'><span class='Section__titleText'>Water Reaction</span></div>
+			<span id="water">Fills the extract with Epinephrine.</span>
+		</div>
+		<div id="specialReactionContainer" class=' wiki' style="display:none;">
+			<div class='Section__title'><span class='Section__titleText'>Other</span></div>
+			<span id="specialReaction"></span>
+		</div>
+		<script>
+			const plasma = document.getElementById('plasma');
+			const blood = document.getElementById('blood');
+			const water = document.getElementById('water');
+			const slimeInputs = document.getElementById('slimeInputs');
+			const Slimes = {
+				grey: {
+					tier: 0,
+					plasmaReaction: "Creates a new grey slime.",
+					bloodReaction: "Creates three monkey cubes. Useful if you want to do your job for more than five minutes.",
+					waterReaction: "Fills the extract with Epinephrine."
+				},
+				orange: {
+					tier: 1,
+					plasmaReaction: "Creates a small plasma fire after 5 seconds.",
+					bloodReaction: "Fills the extract with Capsaicin Oil, 10u per 1u blood injected at once, up to 100u. Can be turned into Pepper Spray if mixed with ethanol.",
+					waterReaction: "Creates a cloud of smoke. More water injected at once means bigger smoke, up to max 15 water. It'll carry any other reagent already inside the slime extract."
+				},
+				purple: {
+					tier: 1,
+					plasmaReaction: "Creates a bottle of slime steroid. Slime steroid is a potent chemical mix that will cause a slime to produce one more extract when processed, for a maximum of four extra. The steroid only works on live slimes.",
+					bloodReaction: "Fills the extract with regenerative jelly. 5u per 1u blood injected, up to 100u. Similar to omnizine, but non toxic to jellypeople.",
+					waterReaction: "N/A "
+				},
+				blue: {
+					tier: 1,
+					plasmaReaction: "Fills the extract with frost oil. 10u per 1u plasma injected, up to 100u.",
+					bloodReaction: "Creates a slime stabilizer potion. Reduces a slime's mutation chance by 15 percentage points, and carries through across generations.",
+					waterReaction: "Creates foam when injected with at least 5u water. It'll carry any other reagent already inside the slime extract. "
+				},
+				metal: {
+					tier: 1,
+					plasmaReaction: "Creates 5 sheets of plasteel and 15 sheets of metal. Grinding plasteel will generate plasma and iron, making it a perfect substitute to dark purple slimes.",
+					bloodReaction: "N/A",
+					waterReaction: "Creates 5 sheets of reinforced glass and 15 sheets of glass. "
+				},
+				yellow: {
+					tier: 2,
+					plasmaReaction: "Creates a 5,000 capacity EMP-proof power cell. Does not make machines and cyborgs EMP-proof.",
+					bloodReaction: "Creates an EMP. It's a quite big blast as well, useful if that AI is onto your tricks.",
+					waterReaction: "Causes extract to emit light. They can be squeezed to increase the light emitted. "
+				},
+				dark_purple: {
+					tier: 2,
+					plasmaReaction: "Creates 3 sheets of Solid Plasma. Yessir, NT can link anything to the production of plasma. Also useful for further experimenting.",
+					bloodReaction: "N/A",
+					waterReaction: "N/A "
+				},
+				dark_blue: {
+					tier: 2,
+					plasmaReaction: "Creates supercooled N2 gas 5 seconds after injection.",
+					bloodReaction: "N/A",
+					waterReaction: "Creates a three-use chill potion, which fireproofs anything it's used on. Be a firebug without looking like one! Miners can make good use of this, as it will make them storm-proof. "
+				},
+				silver: {
+					tier: 2,
+					plasmaReaction: "Creates a small amount of random food, bork bork bork. Expect anything from a roburger to death berries. Spacemen find them disgusting.",
+					bloodReaction: "N/A",
+					waterReaction: "Creates a small amount of random drinks. Spacemen find them disgusting. "
+				},
+				bluespace: {
+					tier: 3,
+					plasmaReaction: "Creates a Bluespace Crystal. They will teleport you when crushed in your hand and teleport anyone you throw it at. Used as a material in techfabs and protolathes.",
+					bloodReaction: "Creates 25 Bluespace Floor Tiles, which speed up movement drastically.",
+					waterReaction: "Creates a Bluespace radio potion. Use it on a sentient animal to let them speak on the radio! "
+				},
+				sepia: {
+					tier: 3,
+					plasmaReaction: "Stops local time for 15 seconds, 5 seconds after injection. The user is not immune.",
+					bloodReaction: "Creates 25 Sepia Floor Tiles. They slow movement speed above them.",
+					waterReaction: "Creates some Film and a Camera. "
+				},
+				cerulean: {
+					tier: 3,
+					plasmaReaction: "Creates a bottle of extract enhancer. When used on an extract it adds one use to it.",
+					bloodReaction: "Creates a one-use blueprint. Renaming an area with it (to any name) will turn the floor blue and allow the Slime Console to work on that area, if it has a valid path.",
+					waterReaction: "N/A "
+				},
+				pyrite: {
+					tier: 3,
+					plasmaReaction: "Creates a can of paint. For the love of all that is holy, don't give it to the clown!",
+					bloodReaction: "Creates a random crayon.",
+					waterReaction: "N/A "
+				},
+				red: {
+					tier: 4,
+					plasmaReaction: "Creates a bottle of slime mutation potion. Makes slimes 12 percentage points more likely to mutate, the opposite of the slime stabilizer.",
+					bloodReaction: "Makes nearby slimes rabid. Has some fun uses. If the affected slimes were docile, it removes the docility instead of making them rabid.",
+					waterReaction: "Creates a bottle of speed potion. The speed potion will negate slowdown from any item of clothing or vehicle it is applied to. "
+				},
+				green: {
+					tier: 4,
+					plasmaReaction: "Fills extract with mutation toxin, 1u per 1u plasma injected. Taking at least 4u will eventually turn you into a random jellyperson. What is important to xenobiology is that slimes will never attack you and your blood is no longer valid for blood-based reactions, as it is replaced by slime jelly. Taking more mutation toxin when you're already a jellyperson will eventually turn you into another random subspecies.",
+					bloodReaction: "Fills extract with human mutation toxin, which turns whoever is injected with it into a human. 1u per 1u blood injected.",
+					waterReaction: "N/A",
+					specialReaction: "Injecting the extract with radium fills it with lizard mutation toxin instead, which will turn whoever is injected with it into a lizardperson. 1u per 1u radium.<br><br>Injecting the extract with milk fills it with felinid mutation toxin.<br><br>Injecting the extract with cellulose fibers fills it with mothperson mutation toxin"
+				},
+				pink: {
+					tier: 4,
+					plasmaReaction: "Creates a bottle of docility potion, which will nullify a slime's hunger, causing it to become docile and tame, and will let you name it. You too can have your own pet, just like the HoP! If the slime is rabid, the potion will remove its rabid rage but will not make it docile.",
+					bloodReaction: "Extract creates a bottle of gender changing potion, which changes the gender of any living, gendered thing it is used on.",
+					waterReaction: "N/A "
+				},
+				gold: {
+					tier: 4,
+					plasmaReaction: "Spawns five random dangerous hostile mobs.",
+					bloodReaction: "Spawns three random dangerous mobs. These mobs are not immediately hostile, but may be provoked by certain actions, proximity to other creatures (such as your slimes) or if they encounter a construct or mech. You can also spawn magicarps!",
+					waterReaction: "Spawns one random friendly critter. See here for the list of summonable mobs. "
+				},
+				oil: {
+					tier: 5,
+					plasmaReaction: "Creates an explosion after a moment.",
+					bloodReaction: "Fills extract with Corn Oil, about 10u per 1u blood injected.",
+					waterReaction: "N/A"
+				},
+				black: {
+					tier: 5,
+					plasmaReaction: "Fills extract with advanced mutation toxin, 1u per 1u plasma injected. Turns you, or others, into a sentient grey baby slime. Beware, slimes are still not harmless. This mutation can be prevented with frost oil, if you are quick enough. Acts instantly on slimepeople.",
+					bloodReaction: "N/A",
+					waterReaction: "N/A "
+				},
+				light_pink: {
+					tier: 5,
+					plasmaReaction: "Creates a bottle of sentience potion, a potent chemical mix that will bring human level intelligence to any animal, slime, monster or generally active thing you feed it to. Make Ian sentient! Create an army of gold slime minions! The possibilities are limited only by your own deviousness and the number of ghosts in the round.",
+					bloodReaction: "N/A",
+					waterReaction: "Creates a renaming potion. "
+				},
+				adamantine: {
+					tier: 5,
+					plasmaReaction: "Creates an adamantine bar. It can be sold at cargo for a high amount of credits, or it can be used inhand to craft a golem shell. Golem shells can then be finished with ten sheets of any material, which will affect the golem's properties. After completion, a ghost can possess the shell to spawn as a golem. It will follow the orders of who finishes the shell above anything else, and inherit conversion antagonist status, such as cult, from their owner.",
+					bloodReaction: "N/A",
+					waterReaction: "N/A "
+				},
+				rainbow: {
+					tier: "To attain this rare slime you must breed a slime with a 100% mutation chance",
+					plasmaReaction: "Spawns a random slime when injected with less than five units of plasma.<br><br>Explodes into randomly-colored slime cores when injected with at least five units of plasma.",
+					bloodReaction: "Creates a mind transference potion. You can use it to transfer your mind into a creature. This is not reversible and will result in your old body's instant death.",
+					waterReaction: "N/A",
+					specialReaction: "The extract will explode into randomly-colored slime cores <b>with water, plasma, and blood in them</b> when injected with slime jelly. This will trigger their reactions unpredictably and chaotically, and almost certainly cause mayhem wherever it happens.<br><br> The extract will spawn a flight potion when injected with 5u of Holy water and 5u Uranium."
+				}
+			};
+			const slimeName = document.getElementById('slimeName');
+			const tier = document.getElementById('tier');
+			const specialReaction = document.getElementById('specialReaction');
+			const specialReactionContainer = document.getElementById('specialReactionContainer');
+			var specialIsOpen = false;
+			function formatSlimeName(str) {
+				let formatted = str.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+				return `${formatted} Slime`;
 			}
-		};
-		const slimeName = document.getElementById('slimeName');
-		const tier = document.getElementById('tier');
-		const specialReaction = document.getElementById('specialReaction');
-		const specialReactionContainer = document.getElementById('specialReactionContainer');
-		var specialIsOpen = false;
-		function formatSlimeName(str) {
-			let formatted = str.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-			return `${formatted} Slime`;
-		}
-		function changeInfo(slime_name) {
-			const slime = Slimes[slime_name];
-			if (!slime)
-				return
-			slimeName.innerHTML = formatSlimeName(slime_name);
-			tier.innerHTML = slime.tier;
-			plasma.innerHTML = slime.plasmaReaction;
-			blood.innerHTML = slime.bloodReaction;
-			water.innerHTML = slime.waterReaction;
-			if (slime.specialReaction) {
-				specialIsOpen = true;
-				specialReactionContainer.style.setProperty('display', 'block');
-				specialReaction.innerHTML = slime.specialReaction;
-			}
-			else if (specialIsOpen) {
-				specialIsOpen = false;
-				specialReactionContainer.style.setProperty('display', 'none');
-				specialReaction.innerHTML = "";
-			}
+			function changeInfo(slime_name) {
+				const slime = Slimes[slime_name];
+				if (!slime)
+					return
+				slimeName.innerHTML = formatSlimeName(slime_name);
+				tier.innerHTML = slime.tier;
+				plasma.innerHTML = slime.plasmaReaction;
+				blood.innerHTML = slime.bloodReaction;
+				water.innerHTML = slime.waterReaction;
+				if (slime.specialReaction) {
+					specialIsOpen = true;
+					specialReactionContainer.style.setProperty('display', 'block');
+					specialReaction.innerHTML = slime.specialReaction;
+				}
+				else if (specialIsOpen) {
+					specialIsOpen = false;
+					specialReactionContainer.style.setProperty('display', 'none');
+					specialReaction.innerHTML = "";
+				}
 
-		}
-		slimeInputs.addEventListener('change', (event) => {
-			const slime_name = event.target.value;
-			if (slime_name) {
-				changeInfo(slime_name);
 			}
-		})
-	</script>
+			slimeInputs.addEventListener('change', (event) => {
+				const slime_name = event.target.value;
+				if (slime_name) {
+					changeInfo(slime_name);
+				}
+			})
+		</script>
+	</div>
+	<div id="crossbreedMode" style="display: none;">
+		<div class='wiki'>
+			<div class='Section__title'><span class='Section__titleText'>Crossbreed Info</span></div>
+			<table class='LabeledList'>
+				<tbody>
+					<tr class=LabeledList__row'>
+						<td class='LabeledList__cell label'>Type</td>
+						<td id="slimeName" class='LabeledList__cell'>
+							<select id="crossBreedSelect" name="crossbreed">
+								<option value="reproductive">Reproductive</option>
+								<option value="burning">Burning</option>
+								<option value="regenerative">Regenerative</option>
+								<option value="stabilized">Stabilized</option>
+								<option value="industrial">Industrial</option>
+								<option value="charged">Charged</option>
+								<option value="selfSustaining">Self-Sustaining</option>
+								<option value="chilling">Chilling</option>
+								<option value="consuming">Consuming</option>
+								<option value="recurring">Recurring</option>
+								<option value="prismatic">Prismatic</option>
+							</select>
+						</td>
+					</tr>
+					<tr class=LabeledList__row'>
+						<td class='LabeledList__cell label'>Dominant Extract</td>
+						<td id="dominantExtract" class='LabeledList__cell'>Grey</td>
+					</tr>
+					<tr class=LabeledList__row'>
+						<td class='LabeledList__cell label'>Info</td>
+						<td id="info" class='LabeledList__cell'>Reproductive extracts are a sort of condensed version of
+							normal Xenobiology. They can be fed 3 Monkey Cubes either by hand or with a biobag, and then
+							they produce 1-4 normal extracts of their color! If you're making a lot of crossbreeds of
+							one type, making these is really convenient.</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+		<div id="hybridData" class="wiki" style="display: none;">
+			<div class='Section__title'><span class='Section__titleText'>Hybrid Data</span></div>
+			<div>
+				<div class="slime_type">
+					<div>Grey</div><span id="grey"></span>
+				</div>
+				<div class="slime_type">
+					<div>Orange</div><span id="orange"></span>
+				</div>
+				<div class="slime_type">
+					<div>Purple</div><span id="purple"></span>
+				</div>
+				<div class="slime_type">
+					<div>Blue</div><span id="blue"></span>
+				</div>
+				<div class="slime_type">
+					<div>Metal</div><span id="metal"></span>
+				</div>
+				<div class="slime_type">
+					<div>Yellow</div><span id="yellow"></span>
+				</div>
+				<div class="slime_type">
+					<div>Dark Purple</div><span id="darkPurple"></span>
+				</div>
+				<div class="slime_type">
+					<div>Dark Blue</div><span id="darkBlue"></span>
+				</div>
+				<div class="slime_type">
+					<div>Bluespace</div><span id="bluespace"></span>
+				</div>
+				<div class="slime_type">
+					<div>Silver</div><span id="silver"></span>
+				</div>
+				<div class="slime_type">
+					<div>Sepia</div><span id="sepia"></span>
+				</div>
+				<div class="slime_type">
+					<div>Cerulean</div><span id="cerulean"></span>
+				</div>
+				<div class="slime_type">
+					<div>Pyrite</div><span id="pyrite"></span>
+				</div>
+				<div class="slime_type">
+					<div>Red</div><span id="red"></span>
+				</div>
+				<div class="slime_type">
+					<div>Green</div><span id="green"></span>
+				</div>
+				<div class="slime_type">
+					<div>Pink</div><span id="pink"></span>
+				</div>
+				<div class="slime_type">
+					<div>Gold</div><span id="gold"></span>
+				</div>
+				<div class="slime_type">
+					<div>Oil</div><span id="oil"></span>
+				</div>
+				<div class="slime_type">
+					<div>Black</div><span id="black"></span>
+				</div>
+				<div class="slime_type">
+					<div>Light Pink</div><span id="lightPink"></span>
+				</div>
+				<div class="slime_type">
+					<div>Adamantine</div><span id="adamantine"></span>
+				</div>
+				<div class="slime_type">
+					<div>Rainbow</div><span id="rainbow"></span>
+				</div>
+			</div>
+		</div>
+		<script>
+			const select = document.getElementById('crossBreedSelect');
+			const Crossbreeds = {
+				reproductive: {
+					info: "Reproductive extracts are a sort of condensed version of normal Xenobiology. They can be fed 3 Monkey Cubes either by hand or with a biobag, and then they produce 1-4 normal extracts of their color! If you're making a lot of crossbreeds of one type, making these is really convenient. ",
+					extract: "Grey",
+					hasHybridData: false,
+				},
+				burning: {
+					info: "Burning extracts are similar to normal extracts, but are primarily offensive in nature. In order to activate one, you must fill it with 10u liquid plasma (gotten from grinding plasma sheets), and then activate/click it in your hand.",
+					extract: "Orange",
+					hasHybridData: true,
+					hybridData: {
+						grey: "Produces a hungry slime that will follow your orders and chase targets faster",
+						orange: "Makes a burst of pepper spray smoke. Careful, or you'll also be affected.",
+						purple: "Creates a clump of invigorating gel (works like an autoinjector) containing 30u regenerative jelly and 9u methamphetamine.",
+						blue: "Briefly freezes the flooring in a large radius, and decreases the body temperature of everyone in that radius but the user.",
+						metal: "Instantly destroys walls that are next to the user.",
+						yellow: "Electrocutes nearby creatures, except the user. 25 damage, 4 range.",
+						darkPurple: "Makes a burst of plasma gas.",
+						darkBlue: "Creates a puff of smoke containing 30u frost oil, freezing everything touched by it. Gives the user 10u regenerative jelly, as well!",
+						silver: "Spawns some foods that have 5u slime jelly in them. Only half of the foods have a tell for it (\"It smells strange...\"), until eaten. Highly poisonous to non-slimepeople",
+						bluespace: "Teleports anyone directly next to you as if they were hit by a bluespace crystal.",
+						sepia: "Creates a rewind camera. The camera can take a picture of a target, who will then rewind to the original spot and health status 10 seconds later, twice in a row. Limbs lost those 10 seconds re-attach, and new ones fall off. Can not revive someone from death. This can heal simple animals and objects.",
+						cerulean: "Creates an extract duplication potion, which copies a normal extract, as well as its extra uses.",
+						pyrite: "Overloads and shatters all lights in the room, as if the lighting was overridden in the APC",
+						red: "Makes nearby slimes rabid, and they'll also attack their friends.",
+						green: "You grow a lower damage armblade (15 brute) from the hand you used the extract in.",
+						pink: " Makes a small beaker with 5 units of synthpax in it, for manual application.",
+						gold: "Creates 3 hostile creatures that will not attack the user.",
+						oil: "5 seconds after activation it causes a heavy explosion on living things adjacent to it, but deals no damage to environment.",
+						black: "Temporarily transforms you into a slime, with the ability to transform back at will once. You do not lose or drop your worn items.",
+						lightPink: "Gives everyone in sight 5 units of Pax, bringing combat to a sudden halt.",
+						adamantine: "Creates an Adamantine Shield, a large shield that blocks most attacks, but makes you much slower, and takes both hands. Deals 15 brute.",
+						rainbow: "Creates the Rainbow Knife, a transparent, rainbow-glowing kitchen knife that does 15 of a completely random type of damage per attack."
+					},
+				},
+				regenerative: {
+					info: "Regenerative extracts will instantly fully heal whoever they are used on. Does not restore lost limbs. In addition, they also provide a different effect depending on the color.",
+					extract: 'Purple',
+					hasHybridData: true,
+					hybridData: {
+						grey: " Has no additional effect - simply fully heals the target.",
+						orange: "Makes a 3x3 ring of fire around the target for only a moment, which does not harm them.",
+						purple: "Also supplies 10u regenerative jelly, keeping the target healed for a bit afterward.",
+						blue: "Wets the floor below the target.",
+						metal: "Encases the target in a locker, though it is not welded.",
+						yellow: "Recharges a random, battery-equipped device on the target person to full.",
+						darkPurple: "Provides a set of purple clothing to the target if any clothing is missing.",
+						darkBlue: "Fireproofs the target's exosuit and helmet, if available.",
+						silver: "Feeds the target more than fully healing normally does.",
+						bluespace: "Teleports the target to where the extract was created.",
+						sepia: "Causes a deja vu effect before being healed. The location and health status of the target are saved, and they'll rewind to that spot and health status 10 seconds later. Limbs lost those 10 seconds re-attach, and new ones fall off. Can not revive someone from death. This can heal simple animals and objects.",
+						cerulean: "Spawns a secondary regenerative core without special effects.",
+						pyrite: "Randomly colors the target.",
+						red: "Adds 3u Ephedrine to the target, speeding them up slightly.",
+						green: "If used on a slimeperson or a xenobio slime, they change subspecies or color, respectively.",
+						pink: "Gives 4u Krokodil afterwards, to make the person a bit happier.",
+						gold: "Produces a random coin!",
+						oil: "Flashes everyone in sight when used, like a flashbang without the bang.",
+						black: "Spawns a duplicate of the target, who immediately drops dead. Fake your own death!",
+						lightPink: "If used on another person it also heals the person holding it.",
+						adamantine: "Boosts the target's armor for 30 seconds.",
+						rainbow: "Temporarily makes the target immortal for 10 seconds, but also pacifistic.",
+					},
+				},
+				stabilized: {
+					info: "Stabilized extracts do not require any reagents or special activation technique. Instead, they provide a unique, passive effect to whoever holds them, as long as it is on their person or in their backpack. They don't work if in a box in a backpack. Having multiple of any of these does not stack. ",
+					extract: 'Blue',
+					hasHybridData: true,
+					hybridData: {
+						grey: "Automatically makes slimes friends with you if you are next to them, making it safe to interact with them.",
+						orange: "Passively tries to increase or reduce your body temperature to a normal level.",
+						purple: "Provides a slow regeneration effect.",
+						blue: "Makes you immune to slipping on water, soap or foam. Space lube and ice such as from frost oil are still too slippery though!",
+						metal: "Every 30 seconds adds a sheet of material to a random stack in your inventory.",
+						yellow: "Every 10 seconds, recharges a random device on your person by about 10%.",
+						darkPurple: "Gives you burning fingertips, automatically cooking any microwavable food you hold.",
+						darkBlue: "Attempts to extinguish you slowly if you are on fire, and automatically wets any items you are holding.",
+						silver: "Slows the rate at which you lose nutrition.",
+						bluespace: "On a two minute cooldown, teleports you somewhere safe for humans when you take enough damage. May interact with Bag of Holding.",
+						sepia: "Randomly adjusts your speed.",
+						cerulean: " Spawns a duplicate of yourself. If you die while holding the extract, you will automatically take control of the duplicate, if it's still alive. Does not work if the original dies from decapitation or from being gibbed.",
+						pyrite: "Randomly colors you every few seconds. Become a disco ball!",
+						red: "You are no longer affected by slowdown or other speed changes from equipment.",
+						green: "While held, randomizes your name and appearance. When dropped, restores your original appearance and name. Mulligan!",
+						pink: "As long as no creature in sight is injured in your presence, they will not attack you. If the peace is broken, takes two minutes to restore.",
+						gold: "Summons a pet companion when held. If it dies, summons a new one!",
+						oil: "If you die while holding this extract, you will violently explode.",
+						black: "While strangling someone, your hands melt around their neck, draining their life in exchange for food and healing.",
+						lightPink: "You move faster, gain a temporary pacifism trait, and anyone in critical condition around you is stabilized with 5u Epinephrine. You are now an ambulance.",
+						adamantine: "You gain 5% damage resistance to all types.",
+						rainbow: "Accepts a regenerative extract. If you enter critical condition, it will automatically use the extract on you."
+					},
+				},
+				industrial: {
+					info: "Industrial extracts can be injected with liquid plasma with a syringe. They will slowly absorb it, and use it to produce items. The extract is not used up in this reaction, so a clever player can make factories with them.",
+					extract: 'Metal',
+					hasHybridData: true,
+					hybridData: {
+						grey: "Produces 5 monkey cubes per 2 units of plasma.",
+						orange: "Produces a fancy slime zippo lighter for 6 units of plasma.",
+						purple: "Produces an autoinjector with 20u regenerative jelly for 4 units of plasma.",
+						blue: "Produces a full fire extinguisher for 10 units of plasma.",
+						metal: "Produces 10 metal sheets for 3 units of plasma.",
+						yellow: "Produces a 10MJ high-capacity power cell with anywhere between 0 and 1/2 of its charge for 5 units of plasma.",
+						darkPurple: "Produces a sheet of plasma for 10 units of plasma, doubling your input.",
+						darkBlue: "Produces a one-use fireproofing potion for 6 units of plasma.",
+						silver: "Produces a random food or drink item per 1 unit of plasma.",
+						bluespace: "Produces a synthetic bluespace crystal for 7 units of plasma.",
+						sepia: "Produces a camera for 2 units of plasma.",
+						cerulean: "Produces a normal extract enhancer for 5 units of plasma.",
+						pyrite: "Produces a can of spraypaint for 2 units of plasma.",
+						red: "Produces an orb containing 50 units of blood for 5 units of plasma. Draw with a syringe. The orb disappears when emptied.",
+						green: "Produces a self-use-only autoinjector with 50u slime jelly for 7 units of plasma. Really only useful for slimepeople.",
+						pink: "Produces an injector of synthpax and space drugs for 6 units plasma.",
+						gold: "Produces a random coin for 10 units of plasma.",
+						oil: "Produces an IED for 4 units of plasma",
+						black: "Produces a fancy pack of regenerative, slime-brand cigarettes for 6 units of plasma.",
+						lightPink: "Produces a heart-shaped box of candies for 3 units of plasma. D'aww.",
+						adamantine: "Produces one sheet of adamantium for 10 units of plasma.",
+						rainbow: "Produces a random slime extract for 5 units of plasma.",
+					},
+				},
+				charged: {
+					info: "These extracts tend to be similar to the non-crossbreed slime extracts, but with roughly doubled effectiveness. In order to activate one, you must fill it with 10u liquid plasma (gotten from grinding plasma sheets), and then activate/click it in your hand.",
+					extract: 'Yellow',
+					hasHybridData: true,
+					hybridData: {
+						grey: "Produces a slime revival potion, bringing a slime back from the dead. Useful when you accidentally killed the last of a color.",
+						orange: "Instantly makes a large burst of flame for a brief moment.",
+						purple: "Creates a packet with 15 units of omnizine, rather than regenerative jelly.",
+						blue: "Creates a potion that instantly neuters the mutation chance for a slime, making it always produce the same color for that generation.",
+						metal: "Spawns 25 sheets of metal and 10 sheets of plasteel.",
+						yellow: "Creates a charged 50MJ slime cell (which does not auto-recharge). Charges slower than a bluespace power cell (in cell rechargers).",
+						darkPurple: "Spawns 10 sheets of plasma.",
+						darkBlue: "Creates a two-use pressure-shielding potion, making a suit and helmet spaceworthy.",
+						silver: "Spawns a slime cake and 10 random drinks. Enough for a party!",
+						bluespace: "Spawns 10 sheets of bluespace polycrystal.",
+						sepia: "Creates a camera obscura, which lets you take pictures of ghosts.",
+						cerulean: "Creates an extract maximizer, instantly boosting the uses of a normal extract to 5.",
+						pyrite: "Spawns 10 sheets of bananium. Oh god.",
+						red: "Creates a two-use lavaproofing potion, rendering items immune to burning in lava, which makes suits and helmets able to protect the wearer from it. (miners may beg)",
+						green: " Lets you pick which slime subspecies you want to turn into, rather than a random selection.",
+						pink: "Love potion. When fed to a creature it makes simple animals friendly to you and anyone else you fed this potion to. If fed to sentient people they will fall in love with you, making heart effects appear on them when near you.",
+						gold: "Spawns 10 hostile mobs, at a slow rate.",
+						oil: "Produces a smaller explosion, but it is extremely devastating, ripping a hole in the station.",
+						black: "Randomizes the user's species! Careful, you can end up as a plasma person with this.",
+						lightPink: "Produces a pacification potion, which will pacify simple animals, and give humans the pacifism trauma.",
+						adamantine: "Spawns a completed adamantium golem shell. 11 sheets worth of adamantium!",
+						rainbow: "Spawns 3 living slimes of random colors.",
+					},
+				},
+				selfSustaining: {
+					info: "The Self-Sustaining crossbreed actually produces four extracts, which can be activated in your hand to select which activation to use, removing the need for reagents. Convenient for when carrying around beakers of reagents or using your own blood is inconvenient, or with extracts like Rainbow, which use rarer reagents.",
+					extract: 'Dark Purple',
+					hasHybridData: false,
+				},
+				chilling: {
+					info: "Chilling extracts work like normal extracts, but with primarily defensive uses. In order to activate one, you must fill it with 10u liquid plasma (gotten from grinding plasma sheets), and then activate/click it in your hand.",
+					extract: 'Dark Blue',
+					hasHybridData: true,
+					hybridData: {
+						grey: "Creates a few barrier cubes. When used, they grow into somewhat weak slimy riot barriers!",
+						orange: "Makes a ring of fire in a two space radius around you, for only a moment. Keep your allies close, and they won't get burned!",
+						purple: "Gives 10u regenerative jelly to everyone in the area. Won't work outside!",
+						blue: "Creates a breath mask which doesn't need a tank, and works no matter what air you breathe!",
+						metal: "Temporarily surrounds you with unbreakable walls for 10 seconds, for when you need a quick breather.",
+						yellow: "Recharges the room's APC by 50%. Useful when you can't hack the thing open!",
+						darkPurple: "Removes all plasma gas in the room. Doesn't work outside!",
+						darkBlue: "Seals you in a protective block of ice, which can either be destroyed, or you can resist to break out of it.",
+						silver: "Creates several ration packs. While they aren't particularly tasty, they will never get you fat!",
+						bluespace: "Touching someone or a creature with it adds/removes them from a list. Activating the extract will try to summon everyone on the list to you after a few seconds. Targets get bubble effects on them and can resist out of it.",
+						sepia: "Touching someone with it adds/removes them from a list. Activating the extract stops time for 30 seconds, and everyone on the list is immune, except the user.",
+						cerulean: "Creates a duplicate of you, that you control! However, it quickly falls apart. When it enters critical condition, you go back to your original body.",
+						pyrite: "Creates a pair of Prism Glasses, which let you place colored light crystals at will.",
+						red: "The inverse of normal red slimes - it pacifies every slime on the screen completely!",
+						green: " Melts your skin and hollows out your bone into a gun that chills your blood into slowing gel projectiles when fired. The projectiles slow targets they hit and deal small amounts of burn damage over time. Finally, you can be Lovecraftian Megaman. Costs 20u of blood per shot.",
+						pink: "Creates a pink slime corgi puppy. It has no special properties.",
+						gold: "Produces a golden capture device. You can use it on a simple, neutral creature to store it, and use it in hand to release it.",
+						oil: "After 5 seconds makes a relatively large, but extremely light explosion.",
+						black: "Transforms you into a golem.",
+						lightPink: "Creates a \"Heroine Bud\" - a special flower that pacifies whoever wears it on their head. Be careful; it's addictive, so it can't be taken off by the wearer!",
+						adamantine: "Solidifies into a set of adamantine armor. Extremely slow, but defensive. It resists any attempt to speed it up.",
+						rainbow: "Makes an unpassable wall inside every door in the area for ten seconds. Halt the tides!",
+					},
+				},
+				consuming: {
+					info: "Consuming extracts eat lots of food, and produce special slime cookies, which will feed you a great amount and give you a special effect.",
+					extract: 'Silver',
+					hasHybridData: true,
+					hybridData: {
+						grey: "More filling than other cookies.",
+						orange: "Heats you up, and grants immunity to the cold for 10 seconds.",
+						purple: "Heals 5 points of every type of damage.",
+						blue: "Grants immunity to water-based slipping, and wets the floor around you for 10 seconds.",
+						metal: "Increases resistance to brute damage for 10 seconds.",
+						yellow: "Grants immunity to electricity for 30 seconds.",
+						darkPurple: "Makes you treat toxin damage as toxin healing, and toxin healing as toxin damage, for one minute.",
+						darkBlue: "Cools you down, immediately extinguishes you if you are on fire.",
+						silver: "When eaten, no matter how much you eat, it will not get you fat!",
+						bluespace: "Teleports you to a random place in the current area. Be careful when using these outdoors.",
+						sepia: "Increases the speed at which you perform actions that have progress bars by 5% for a minute.",
+						cerulean: "Has a 50% chance of spawning another cookie when eaten. Tasty!",
+						pyrite: "Randomly colors you, as if you ate a crayon.",
+						red: "Makes a splat of blood on the floor, and restores your blood by about 5%.",
+						green: "Absolutely disgusting, making you vomit when eaten. However, it also completely removes any reagents from you when you do!",
+						pink: "You hug people at random for 30 seconds.",
+						gold: "Has a golden coin inside! You're rich!",
+						oil: "Slows anyone next to you for 10 seconds.",
+						black: "Makes you look like a spooky skeleton for 30 seconds.",
+						lightPink: "Makes you, and anyone who stays right next to you, pacified for 10 seconds.",
+						adamantine: "Increases your resistance to burn damage for 10 seconds.",
+						rainbow: "Has the effects of a random cookie!",
+					},
+				},
+				recurring: {
+					info: "Recurring extracts act like a normal extract, but gain an extra use every few seconds, as long as you don't use it up! Sepia extract is special and will teleport back to the hand of the last person who touched it after activation.",
+					extract: 'Cerulean',
+					hasHybridData: false,
+				},
+				prismatic: {
+					info: "Prismatic extracts work like infinite-use paintbrushes, letting you dye tiles a new color. Rainbow prismatic extracts are special, and let you choose what color you use!",
+					extract: 'Dark Blue',
+					hasHybridData: false,
+				}
+			}
+			const infoElement = document.getElementById('info');
+			const dominantExtractElement = document.getElementById('dominantExtract');
+			const hybridDataElement = document.getElementById('hybridData');
+			select.addEventListener('change', (event) => {
+				const Cross = Crossbreeds[event.target.value]
+				if (!Cross) { return }
+				infoElement.innerText = Cross.info;
+				dominantExtractElement.innerText = Cross.extract;
+				if (Cross.hasHybridData) {
+					hybridDataElement.style.setProperty('display', 'block')
+					Object.entries(Cross.hybridData).forEach(([slimeName, text]) => {
+						const slime = document.getElementById(slimeName);
+						if (slime) {
+							slime.innerText = text;
+						}
+					})
+				}
+				else {
+					hybridDataElement.style.setProperty('display', 'none')
+				}
+			})
+		</script>
+	</div>
 </body>
