@@ -33,11 +33,11 @@ SUBSYSTEM_DEF(frogui)
 		atom_ui_clients[source] = list()
 	var/source_ref = ref(source)
 
-	if(client_uis[C].Find(source_ref))
-		return
+	if(!client_uis[C].Find(source_ref))
+		client_uis[C] += source_ref
+		atom_ui_clients[source] += C
 
-	client_uis[C] += source_ref
-	atom_ui_clients[source] += C
+
 	var/replacedtext  = replacetextEx(ui,"/* ref insert */", "const ref = [json_encode(source_ref)];")
 	if(replacedtext)
 		ui = replacedtext
