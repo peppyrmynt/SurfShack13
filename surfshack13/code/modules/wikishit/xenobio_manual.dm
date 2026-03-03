@@ -1,6 +1,6 @@
 /obj/item/holomanual
 	name = "Holo Manual"
-	desc = "A holographic manual. A rather dense reference manual made of refined hardlight. It's about the size of playing card. It fits in a wallet"
+	desc = "A holographic manual. A rather dense reference manual made of refined hardlight. It's about the size of playing card."
 	icon = 'icons/obj/service/bureaucracy.dmi'
 	icon_state ="alienpaper_words"
 	w_class = WEIGHT_CLASS_TINY
