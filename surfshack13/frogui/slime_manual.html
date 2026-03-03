@@ -409,6 +409,7 @@
 								<option value="consuming">Consuming</option>
 								<option value="recurring">Recurring</option>
 								<option value="prismatic">Prismatic</option>
+								<option value="luminescent">Luminescent</option>
 							</select>
 						</td>
 					</tr>
@@ -721,8 +722,37 @@
 				},
 				prismatic: {
 					info: "Prismatic extracts work like infinite-use paintbrushes, letting you dye tiles a new color. Rainbow prismatic extracts are special, and let you choose what color you use!",
-					extract: 'Dark Blue',
+					extract: 'Pyrite',
 					hasHybridData: false,
+				},
+				luminescent: {
+					info: "Luminescents are one of four types of slimefolk. Lumis can absorb any slime extract they're holding, and gain abilities respective to the type of absorbed extract.",
+					extract: "N/A. Obtained by mutating into a slime person, must be luminescent varient.",
+					hasHybridData: true,
+					hybridData: {
+						grey: "Minor Effect</b> - Spawns a monkey cube into the user's hand.<br>Major Effect - Spawns a grey baby slime.",
+						orange: "Minor Effect - Infuses the user with capsaicin.<br>Major Effect - Spawns smoke around the user. The smoke will purge chemicals in the user's body and infuse itself with them.",
+						purple: "Minor Effect - Restores blood volume and nutrition. <br>Major Effect - Gives some regenerative jelly, healing the user.",
+						blue: "Minor Effect - Purges the dna and reduces radiation on the user.<br>Major Effect - Creates foam from the user, infusing itself with the chemicals in the user's body.",
+						metal: "Minor Effect - Creates 5 sheets of glass in the user's hand.<br>Major Effect - Creates 5 sheets of metal in the user's hand.",
+						yellow: "Minor Effect - Temporarily increases the user's light range and intensity.<br>Major Effect - Emits a short-ranged EMP.",
+						darkPurple: "Minor Effect - Spawns a plasma bar in the user's hand.<br>Major Effect - Spawns a cloud of plasma around the user.",
+						darkBlue: "Minor Effect - Infuses the user with frost oil and regenerative jelly.<br>Major Effect - Spawns extremely cold air around the user.",
+						silver: "Minor Effect - Spawns a random food in the user's hand.<br>Major Effect - Spawns a random drink in the user's hand.",
+						bluespace: "Minor Effect - Randomly teleports the user a few tiles away.<br>Major Effect - Saves the user's position on the first use. On the second use, it will warp the user back on that position. The extract can change user in the meantime.",
+						sepia: "Minor Effect - Spawns a camera in the user's hand.<br>Major Effect - Stops time for a few seconds around the user. (Windup)",
+						cerulean: "Minor Effect - Infuses the user with salbutamol, making them able to survive without air for some time.<br>Major Effect - Spawns a large amount of breathable air around the user.",
+						pyrite: "Minor Effect - Spawns a crayon in the user's hand.<br>Major Effect - Spawns a spraycan in the user's hand.",
+						red: "Minor Effect - Infuses the user with Ephedrine, greatly increasing their speed temporarily, while causing side effects such as making you drop held items.<br>Major Effect - Enrages slimes around the user.",
+						green: "Minor Effect - Turns the user back into a human.<br>Major Effect - Turns the user into another slime subspecies.",
+						pink: "Minor Effect - Switches the user's gender.<br>Major Effect - Temporarily pacifies creatures around the user, making them nonviolent for some time.",
+						gold: "Minor Effect - Spawns a friendly mob. (Windup)<br>Major Effect - Spawns a dangerous mob. If the user is on Combat Mode at the moment of use, the mob will be hostile. (Windup)",
+						oil: "Minor Effect - User vomits slippery oil.<br>Major Effect - User violently explodes. (Windup)",
+						black: "Minor Effect - Turns the user into a slime. (Windup)<br>Major Effect - Turns the user into a sligger/shadowperson. (Windup)",
+						lightPink: "Minor Effect - Spawns a renaming potion, which offers anyone it's used on the option to choose any new name.<br>Major Effect - Spawns a sentience potion.",
+						adamantine: "Minor Effect - Temporarily increases the user's armor, reducing overall damage taken.<br>Major Effect - Turns the user into an adamantine golem. (Windup)",
+						rainbow: "Minor Effect - Changes the user's color randomly.<br>Major Effect - Spawns a random slime core.",
+					}
 				}
 			}
 			const infoElement = document.getElementById('info');
@@ -738,7 +768,7 @@
 					Object.entries(Cross.hybridData).forEach(([slimeName, text]) => {
 						const slime = document.getElementById(slimeName);
 						if (slime) {
-							slime.innerText = text;
+							slime.innerHTML = text;
 						}
 					})
 				}
