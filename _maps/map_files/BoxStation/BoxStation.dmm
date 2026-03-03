@@ -419,6 +419,7 @@
 	},
 /obj/item/storage/lockbox/loyalty,
 /obj/effect/turf_decal/tile/red/full,
+/obj/structure/fireaxecabinet/batteringram/directional/north,
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/ai_monitored/security/armory)
 "abI" = (

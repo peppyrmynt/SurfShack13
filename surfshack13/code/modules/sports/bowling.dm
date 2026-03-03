@@ -23,28 +23,30 @@
 	desc = "A heavy, round device used to knock pins (or people) down."
 	icon_state = "bowling_ball"
 	inhand_icon_state = "bowling_ball"
-	icon = 'surfshack13/icons/obj/bowling_ball.dmi'
+	icon = 'surfshack13/icons/obj/bowling.dmi'
 	worn_y_offset = 4
 	worn_icon = 'surfshack13/icons/mob/head.dmi'
-	righthand_file = 'surfshack13/icons/mob/inhands/lefthand.dmi'
+	righthand_file = 'surfshack13/icons/mob/inhands/righthand.dmi'
 	lefthand_file = 'surfshack13/icons/mob/inhands/lefthand.dmi'
 	force = 6
 	w_class = WEIGHT_CLASS_NORMAL
 	throwforce = 10
-	throw_range = 2
+	throw_range = 1
 	throw_speed = 1
 	var/pro_wielded = FALSE
 	body_parts_covered = HEAD
 	slot_flags = ITEM_SLOT_HEAD
+	/// used for noise check
+	var/play_pin_sound_on_hit = FALSE
 
 
 /obj/item/bowling_ball/Initialize()
 	. = ..()
-	color = pick("gray", "red", "magenta", "lime", "yellow", "cyan", "blue", "teal", "black")
+	color = pick("gray", "red", "magenta", "lime", "yellow", "cyan", "blue", "teal")
 	ADD_TRAIT(src, TRAIT_UNCATCHABLE, TRAIT_GENERIC)
 
 /obj/item/bowling_ball/throw_at(atom/target, range = 150, speed, mob/thrower, spin, diagonals_first, datum/callback/callback, force, gentle, quickstart)
-	if(!ishuman(thrower))
+	if(!iscarbon(thrower))
 		return ..()
 	icon_state = "bowling_ball_spin"
 	playsound(src,'surfshack13/sound/effects/bowl.ogg',40,0)
@@ -56,20 +58,27 @@
 	spin = FALSE
 	target = get_edge_target_turf(target, thrower.dir)
 	range = 150
+	play_pin_sound_on_hit = TRUE
 	return ..()
-
 
 /obj/item/bowling_ball/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	play_pin_sound_on_hit = FALSE
 	icon_state = "bowling_ball"
-	if(pro_wielded)
+	if(pro_wielded || prob(10))
 		pro_wielded = FALSE
 		var/mob/living/carbon/target_mob = hit_atom
-		if(iscarbon(hit_atom) && target_mob.body_position == STANDING_UP && throwingdatum.dist_travelled > 2)
+		if(iscarbon(hit_atom) && target_mob.body_position == STANDING_UP && throwingdatum.dist_travelled > 1)
 			playsound(src, 'surfshack13/sound/effects/bowlhit.ogg', 60, 0)
-			target_mob.Knockdown(50)
-			target_mob.adjustBruteLoss(12) // + throw damage = 22 hit, ouch!
+			target_mob.Knockdown(60)
+			target_mob.adjustBruteLoss(15) // + throw damage = 25 hit, ouch!
 	return ..()
 
+//so if you hit a line of pins they dont all get spam sound.
+/obj/item/bowling_ball/proc/knocked_pin()
+	if(!play_pin_sound_on_hit)
+		return
+	playsound(src, 'surfshack13/sound/effects/bowlhit.ogg', 60, 0)
+	play_pin_sound_on_hit = FALSE
 
 /obj/item/bowling_ball/suicide_act(mob/living/user)
 	visible_message(span_suicide("[user] throws \the [src] but refuses to let go sending themselves flying!"), span_suicide("you throw \the [src] but dont let go, sending yourself flying."))
@@ -83,11 +92,66 @@
 	playsound(src, 'surfshack13/sound/effects/bowlhit.ogg', 60, 0)
 	user.gib(DROP_ITEMS|DROP_ORGANS)
 
+/obj/item/bowling_pins
+	name = "bowling pins"
+	desc = "A set of four bowling pins, can be placed."
+	icon = 'surfshack13/icons/obj/bowling.dmi'
+	icon_state = "bowling_pins"
+	inhand_icon_state = "bowling_pins"
+	/// if the pins are standing up
+	var/standing = FALSE
+
+
+/obj/item/bowling_pins/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if(!isfloorturf(interacting_with))
+		return NONE
+	var/turf/T = interacting_with
+	for(var/atom/A in interacting_with)
+		if(A.density)
+			return NONE
+	src.forceMove(T)
+	toggle_standing(TRUE)
+	return ITEM_INTERACT_SUCCESS
+
+/obj/item/bowling_pins/proc/toggle_standing(stand)
+	standing = stand
+	icon_state = "bowling_pins[standing ? "_standing" : ""]"
+	if(standing && isturf(loc))
+		playsound(src, 'sound/effects/glass/glassbash.ogg', 30)
+		pixel_y = 2
+		RegisterSignal(src ,COMSIG_MOVABLE_CROSS, PROC_REF(on_entered))
+		RegisterSignal(src ,COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
+	else if(!standing)
+		pixel_y = 0
+		UnregisterSignal(src, list(COMSIG_MOVABLE_CROSS, COMSIG_MOVABLE_MOVED))
+
+/obj/item/bowling_pins/proc/on_moved()
+	SIGNAL_HANDLER
+	toggle_standing(FALSE)
+
+/obj/item/bowling_pins/proc/on_entered(datum/source, atom/movable/AM as mob|obj)
+	SIGNAL_HANDLER
+	if(ismob(AM))
+		var/mob/living/MM = AM
+		if(!(MM.movement_type & MOVETYPES_NOT_TOUCHING_GROUND) && MM.mob_size > MOB_SIZE_SMALL)
+			toggle_standing(FALSE)
+	else if(isobj(AM))
+		if(istype(AM, /obj/item/bowling_ball))
+			var/obj/item/bowling_ball/ball = AM
+			ball.knocked_pin()
+			toggle_standing(FALSE)
+		if(AM.density)
+			toggle_standing(FALSE)
+
 
 /datum/supply_pack/bowling_kit
 	name = "Bowling Crate"
-	desc = "A set of four assorted bowling balls. While the sport has been dead for centuries, \
-	bowling balls are still sold and enjoyed as office decor."
+	desc = "A bowling alley in a box! After \"The Long Hallway Intern Massacre\", Centcom restricted the sale of bowling supplies."
 	cost = CARGO_CRATE_VALUE * 5
 	contraband = TRUE
-	contains = list(/obj/item/bowling_ball = 4)
+	contains = list(
+		/obj/item/bowling_ball = 4,
+		/obj/item/bowling_pins = 3,
+		/obj/item/pizzabox/margherita = 1)
+
+

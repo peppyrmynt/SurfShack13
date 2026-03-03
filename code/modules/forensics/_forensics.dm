@@ -227,7 +227,10 @@
 
 /// Updates the blood displayed on parent
 /datum/forensics/proc/check_blood()
-	if(!isitem(parent) || isorgan(parent)) // organs don't spawn with blood decals by default
+	//surfshack start
+	// if(!isitem(parent) || isorgan(parent)) // organs don't spawn with blood decals by default
+	if(!isitem(parent) || isorgan(parent) || istype(src, /obj/item/bowling_ball)) // organs don't spawn with blood decals by default
+	//surfshack end
 		return
 	if(!length(blood_DNA))
 		return
