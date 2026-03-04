@@ -74,6 +74,9 @@
 	var/datum/action/innate/choose_modules/modules_action
 	var/chnotify = 0
 
+	/// Action given to AI's on lowpop to give them a shell to immediately interact with the round.
+	var/datum/action/innate/ai/request_shell/low_pop_shell = new
+
 	var/multicam_on = FALSE
 	var/atom/movable/screen/movable/pic_in_pic/ai/master_multicam
 	var/list/multicam_screens = list()
@@ -161,6 +164,10 @@
 	aicamera = new/obj/item/camera/siliconcam/ai_camera(src)
 
 	deploy_action.Grant(src)
+
+	var/player_count = length(GLOB.alive_player_list)
+	if(player_count <= 20)
+		low_pop_shell.Grant(src)
 
 	if(isturf(loc))
 		add_verb(src, list(
