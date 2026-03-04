@@ -166,7 +166,8 @@
 	deploy_action.Grant(src)
 
 	var/player_count = length(GLOB.alive_player_list)
-	if(player_count <= 20)
+	var/max_player_count = CONFIG_GET(number/max_players_for_ai_shell)
+	if(player_count <= max_player_count)
 		low_pop_shell.Grant(src)
 
 	if(isturf(loc))
