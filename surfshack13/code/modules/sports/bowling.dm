@@ -94,7 +94,7 @@
 
 /obj/item/bowling_pins
 	name = "bowling pins"
-	desc = "A set of four bowling pins, can be placed."
+	desc = "A set of four bowling pins, they can be placed."
 	icon = 'surfshack13/icons/obj/bowling.dmi'
 	icon_state = "bowling_pins"
 	inhand_icon_state = "bowling_pins"
@@ -138,16 +138,17 @@
 	else if(isobj(AM))
 		if(istype(AM, /obj/item/bowling_ball))
 			var/obj/item/bowling_ball/ball = AM
+			// the sound is handled on the ball so it we can prevent noise spam, it only plays once per throw.
 			ball.knocked_pin()
 			toggle_standing(FALSE)
 		if(AM.density)
 			toggle_standing(FALSE)
 
 
-/datum/supply_pack/bowling_kit
+/datum/supply_pack/imports/bowling_kit
 	name = "Bowling Crate"
-	desc = "A bowling alley in a box! After \"The Long Hallway Intern Massacre\", Centcom restricted the sale of bowling supplies."
-	cost = CARGO_CRATE_VALUE * 5
+	desc = "Bowling supplies have been tightly regulated after a classified incident involving several interns, a clown, and a very long hallway. This has allowed smugglers to hike the price."
+	cost = CARGO_CRATE_VALUE * 15
 	contraband = TRUE
 	contains = list(
 		/obj/item/bowling_ball = 4,

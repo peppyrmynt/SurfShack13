@@ -13,9 +13,9 @@ SUBSYSTEM_DEF(frogui)
 	flags = SS_NO_FIRE
 	runlevels = RUNLEVEL_LOBBY | RUNLEVELS_DEFAULT
 	/// list of all the open ui's a client has
-	var/client_uis = alist()
+	var/alist/client_uis = alist()
 	/// all open uis targeting a specific atom.
-	var/atom_ui_clients = alist()
+	var/alist/atom_ui_clients = alist()
 
 /datum/controller/subsystem/frogui/Initialize()
 	. = ..()
@@ -31,18 +31,21 @@ SUBSYSTEM_DEF(frogui)
 		client_uis[C] = list()
 	if(isnull(atom_ui_clients[source]))
 		atom_ui_clients[source] = list()
-	//ui already exist
 	var/source_ref = ref(source)
 
-	if(client_uis[C].Find(source_ref))
-		return
 
-	client_uis[C] += source_ref
-	atom_ui_clients[source] += C
+
+
 	C << browse(replacetextEx(ui,\
 		"/* ref insert */", "const ref = [json_encode(source_ref)];"),\
 		 "window=[source_ref];[params]")
 	winset(C, source_ref, "on-close=\"frogui_close [source_ref]\"")
+
+	var/list/client_ui = client_uis[C]
+	if(!client_ui.Find(source_ref))
+		client_uis[C] += source_ref
+		atom_ui_clients[source] += C
+
 
 ///close ui, clean up variables.
 /datum/controller/subsystem/frogui/proc/close_ui(mob/user, atom/source)
@@ -51,7 +54,7 @@ SUBSYSTEM_DEF(frogui)
 	if(!C || !source_ref)
 		CRASH("no")
 
-	if(client_uis[C].Find(source_ref))
+	if(client_uis[C])
 		C  << browse(null, "window=[source_ref]")
 		client_uis[C] -= source_ref
 		atom_ui_clients[source] -= C

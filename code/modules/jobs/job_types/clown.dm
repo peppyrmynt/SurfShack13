@@ -101,7 +101,8 @@
 	if(visuals_only)
 		return
 	// surfshack begin
-	H.mind.teach_clown_prop_recipies()
+	if(H.mind)
+		H.mind.teach_clown_prop_recipies()
 	// surfshack end
 	H.fully_replace_character_name(H.real_name, pick(GLOB.clown_names)) //rename the mob AFTER they're equipped so their ID gets updated properly.
 	H.dna.add_mutation(/datum/mutation/human/clumsy)
