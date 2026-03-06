@@ -73,7 +73,10 @@
 	var/datum/action/innate/deploy_last_shell/redeploy_action = new
 	var/datum/action/innate/choose_modules/modules_action
 	var/chnotify = 0
-
+	//surfshack start
+	/// Action given to AI's on lowpop to give them a shell to immediately interact with the round.
+	var/datum/action/innate/ai/request_shell/low_pop_shell = new
+	//surfshack end
 	var/multicam_on = FALSE
 	var/atom/movable/screen/movable/pic_in_pic/ai/master_multicam
 	var/list/multicam_screens = list()
@@ -161,7 +164,12 @@
 	aicamera = new/obj/item/camera/siliconcam/ai_camera(src)
 
 	deploy_action.Grant(src)
-
+	//surfshack start
+	var/player_count = length(GLOB.alive_player_list)
+	var/max_player_count = CONFIG_GET(number/max_players_for_ai_shell)
+	if(player_count <= max_player_count)
+		low_pop_shell.Grant(src)
+	//surfshack end
 	if(isturf(loc))
 		add_verb(src, list(
 			/mob/living/silicon/ai/proc/ai_network_change,
