@@ -3,23 +3,32 @@
 * more syntax heavy (its just pure html,js,css, so no premade elements)
 * doesnt require external tools to load
 * each ui type is lazy loaded once, so it gets built per type on request once and then reused next request.
-* tried to make ui look and function same as tgui for user
+* tried to make ui look like tgui for user
 * experimental for now
 * per client, you can only have one ui based from an atom.
+* ui closes if mob is far enough away from it
 */
 
 SUBSYSTEM_DEF(frogui)
-	name = "frogui"
-	flags = SS_NO_FIRE
+	name = "FrogUI"
 	runlevels = RUNLEVEL_LOBBY | RUNLEVELS_DEFAULT
-	/// list of all the open ui's a client has
+	flags = SS_NO_INIT
+	wait = 2 SECONDS
+	/// list of all the open ui's a client has. key = client, value = list(ref(atom))
 	var/alist/client_uis = alist()
-	/// all open uis targeting a specific atom.
+	/// all open uis targeting a specific atom. key = atom, value = list(clients)
 	var/alist/atom_ui_clients = alist()
 
-/datum/controller/subsystem/frogui/Initialize()
-	. = ..()
-	return SS_INIT_SUCCESS
+
+/datum/controller/subsystem/frogui/fire(resumed)
+	for(var/key,val in atom_ui_clients)
+		var/atom/ui_atom = key
+		var/list/clients = val
+		for(var/client/C in clients)
+			var/mob/ui_mob = C.mob
+			// get_dist returns -1 if atom is same, or infinity if one object isnt on the map.
+			if((get_dist(ui_mob, ui_atom) > 2) && !ui_mob.CanReach(ui_atom))
+				close_ui(ui_mob, ui_atom)
 
 ///open ui, register it in client and source atoms
 /datum/controller/subsystem/frogui/proc/open_ui(mob/user, atom/source, ui, params)
@@ -80,7 +89,7 @@ SUBSYSTEM_DEF(frogui)
 /client/verb/frogui_close(source_ref as text)
 	set name = "frogui_close"
 	set hidden = TRUE
-	var/mob/user = src?.mob
+	var/mob/user = src.mob
 	if(!user)
 		return
 	SSfrogui.close_ui(user, locate(source_ref))
