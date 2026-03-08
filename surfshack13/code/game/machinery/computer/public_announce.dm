@@ -3,7 +3,7 @@
 
 /obj/machinery/computer/public_announcement
 	name = "Public Announcements console"
-	desc = "An interface and payment console for the station announcement relay."
+	desc = "An announcement relay payment console."
 	icon_screen = "civ_bounty"
 	icon_keyboard = "tech_key"
 	circuit = /obj/item/circuitboard/computer/communications
