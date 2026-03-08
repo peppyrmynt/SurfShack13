@@ -2,8 +2,8 @@
 #define ANNOUNCE_COST 1200
 
 /obj/machinery/computer/public_announcement
-	name = "public announcement console"
-	desc = "A interface and payment console for the station announcement relay."
+	name = "Public Announcements console"
+	desc = "An interface and payment console for the station announcement relay."
 	icon_screen = "civ_bounty"
 	icon_keyboard = "tech_key"
 	circuit = /obj/item/circuitboard/computer/communications
@@ -17,7 +17,7 @@
 
 /obj/machinery/computer/public_announcement/examine(mob/user)
 	. = ..()
-	. += "It cost [ANNOUNCE_COST] credits."
+	. += "It cost [ANNOUNCE_COST] credits to fire."
 
 /obj/machinery/computer/public_announcement/Initialize(mapload)
 	. = ..()
