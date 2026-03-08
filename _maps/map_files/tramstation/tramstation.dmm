@@ -54487,6 +54487,15 @@
 /obj/effect/landmark/event_spawn,
 /turf/open/floor/iron,
 /area/station/security/prison/garden)
+"sll" = (
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 4
+	},
+/obj/machinery/computer/public_announcement{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/station/hallway/secondary/exit/departure_lounge)
 "slr" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/railing,
@@ -189949,7 +189958,7 @@ uCy
 pFH
 gTN
 eAk
-gTN
+sll
 tgP
 gTN
 oXC
