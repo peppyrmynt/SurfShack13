@@ -1,5 +1,6 @@
 #define CREW_ANNOUNCE_COOLDOWN (12 MINUTES)
 #define ANNOUNCE_COST 1200
+
 /obj/machinery/computer/public_announcement
 	name = "public announcement console"
 	desc = "A interface and payment console for the station announcement relay."
@@ -7,7 +8,7 @@
 	icon_keyboard = "tech_key"
 	circuit = /obj/item/circuitboard/computer/communications
 
-	COOLDOWN_DECLARE(static/crew_announce_cooldown)
+	STATIC_COOLDOWN_DECLARE(crew_announce_cooldown)
 	/// how long crew messages can be
 	var/static/max_length = round(MAX_MESSAGE_LEN/3)
 	/// If someone is actively using the console
@@ -21,8 +22,9 @@
 /obj/machinery/computer/public_announcement/Initialize(mapload)
 	. = ..()
 	REGISTER_REQUIRED_MAP_ITEM(1, INFINITY)
-	// no roundstart spam
-	COOLDOWN_START(src, crew_announce_cooldown, 6 MINUTES)
+	// stop roundstart spam. cooldown should always have a value so only runs if this isnt set.
+	if(!crew_announce_cooldown)
+		crew_announce_cooldown = CREW_ANNOUNCE_COOLDOWN / 2
 
 
 
@@ -37,12 +39,11 @@
 		return
 
 	if(!COOLDOWN_FINISHED(src, crew_announce_cooldown))
-		//hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
 		var/cooldown_left = COOLDOWN_TIMELEFT(src, crew_announce_cooldown)
 		cooldown_left = ceil(cooldown_left / (1 MINUTES))
-		//hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
 		say("On cooldown. [cooldown_left] minutes left.")
 		return
+
 	in_use = TRUE
 	var/input = tgui_input_text(user, "Message to announce", "Announcement", max_length = max_length)
 	if(!input || !user.can_perform_action(src))
