@@ -961,6 +961,16 @@
 	},
 /turf/open/floor/iron/dark/textured,
 /area/station/medical/morgue)
+"apu" = (
+/obj/structure/cable,
+/obj/effect/turf_decal/siding/purple{
+	dir = 4
+	},
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "apx" = (
 /obj/structure/table/reinforced,
 /obj/structure/desk_bell,
@@ -8230,6 +8240,13 @@
 /obj/effect/landmark/event_spawn,
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
+"cYo" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/obj/machinery/light_switch/directional/west,
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "cYs" = (
 /obj/effect/spawner/random/structure/crate,
 /obj/effect/spawner/random/maintenance,
@@ -8703,7 +8720,6 @@
 "dhb" = (
 /obj/effect/spawner/random/vending/snackvend,
 /obj/effect/turf_decal/siding/purple,
-/obj/machinery/light_switch/directional/south,
 /turf/open/floor/iron/white/herringbone,
 /area/station/science/breakroom)
 "dhg" = (
@@ -15926,6 +15942,11 @@
 /obj/item/computer_disk/ordnance,
 /obj/machinery/light/warm/directional/south,
 /obj/item/coffee_cartridge/fancy,
+/obj/machinery/button/door/directional/south{
+	name = "Nanite Security Lockdown Control";
+	id = "nanite_lockdown";
+	pixel_x = 6
+	},
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/rd)
 "fGL" = (
@@ -18471,6 +18492,12 @@
 	dir = 8
 	},
 /area/station/service/chapel)
+"gBk" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 4
+	},
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "gBq" = (
 /obj/effect/turf_decal/tile/brown/half/contrasted{
 	dir = 4
@@ -21758,8 +21785,12 @@
 /area/station/security/prison/shower)
 "hHx" = (
 /obj/machinery/drone_dispenser,
-/turf/open/floor/plating,
-/area/station/maintenance/port/lesser)
+/obj/effect/turf_decal/siding/purple{
+	dir = 5
+	},
+/obj/machinery/light/small/directional/north,
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "hHA" = (
 /obj/machinery/status_display/ai/directional/north,
 /turf/open/floor/iron/stairs/left{
@@ -25709,9 +25740,8 @@
 /turf/open/floor/iron,
 /area/station/science/robotics/mechbay)
 "jih" = (
-/obj/item/trash/spacers_sidekick,
-/turf/open/floor/plating,
-/area/station/maintenance/port/lesser)
+/turf/closed/wall/r_wall,
+/area/station/science/nanites)
 "jij" = (
 /turf/closed/wall/r_wall,
 /area/station/commons/storage/primary)
@@ -26322,9 +26352,13 @@
 /turf/open/floor/plating,
 /area/station/maintenance/central/lesser)
 "jrY" = (
-/obj/structure/reagent_dispensers/watertank,
-/turf/open/floor/plating,
-/area/station/maintenance/port/lesser)
+/obj/effect/turf_decal/siding/purple{
+	dir = 10
+	},
+/obj/machinery/light/small/directional/south,
+/obj/machinery/computer/nanite_cloud_controller,
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "jsf" = (
 /obj/structure/sign/warning/chem_diamond/directional/south,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -27782,8 +27816,15 @@
 	amount = 25;
 	pixel_y = 6
 	},
-/turf/open/floor/plating,
-/area/station/maintenance/port/lesser)
+/obj/effect/turf_decal/siding/purple{
+	dir = 9
+	},
+/obj/machinery/button/door/directional/north{
+	id = "nanite_lockdown_2";
+	name = "Emergency Doors Control"
+	},
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "jQo" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
@@ -28550,6 +28591,7 @@
 /obj/machinery/modular_computer/preset/civilian{
 	dir = 8
 	},
+/obj/machinery/light_switch/directional/south,
 /turf/open/floor/iron/white/herringbone,
 /area/station/science/breakroom)
 "kdI" = (
@@ -31082,8 +31124,11 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/turf/open/floor/plating,
-/area/station/maintenance/port/lesser)
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "kUG" = (
 /obj/machinery/computer/security{
 	dir = 8
@@ -34434,6 +34479,18 @@
 /obj/machinery/newscaster/directional/east,
 /turf/open/floor/iron,
 /area/station/security/prison)
+"miA" = (
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/purple{
+	dir = 4
+	},
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "miD" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/structure/reagent_dispensers/plumbed,
@@ -35752,6 +35809,7 @@
 	dir = 1
 	},
 /obj/effect/spawner/random/maintenance,
+/obj/machinery/light/small/directional/east,
 /turf/open/floor/plating,
 /area/station/maintenance/port/lesser)
 "mEy" = (
@@ -35761,6 +35819,34 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron,
 /area/station/security)
+"mEL" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/obj/machinery/light/small/directional/west,
+/obj/structure/table,
+/obj/item/clothing/glasses/hud/diagnostic{
+	pixel_y = 12
+	},
+/obj/item/clothing/glasses/hud/diagnostic{
+	pixel_y = 12
+	},
+/obj/item/nanite_scanner,
+/obj/item/nanite_scanner,
+/obj/item/nanite_remote{
+	pixel_y = -7;
+	pixel_x = -5
+	},
+/obj/item/nanite_remote{
+	pixel_y = -7;
+	pixel_x = -5
+	},
+/obj/item/storage/box/disks_nanite{
+	pixel_y = -6;
+	pixel_x = 7
+	},
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "mEN" = (
 /obj/item/computer_disk/maintenance/spectre_meter,
 /turf/open/misc/asteroid/airless,
@@ -39757,6 +39843,15 @@
 /obj/structure/disposalpipe/junction/flip,
 /turf/open/floor/iron,
 /area/station/hallway/secondary/command)
+"odS" = (
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "odU" = (
 /obj/effect/landmark/start/mime,
 /obj/effect/decal/cleanable/dirt,
@@ -47273,6 +47368,7 @@
 "qNU" = (
 /obj/effect/decal/cleanable/oil,
 /obj/machinery/light/small/directional/west,
+/obj/machinery/light/small/directional/west,
 /turf/open/floor/plating,
 /area/station/maintenance/port/lesser)
 "qOs" = (
@@ -54076,6 +54172,23 @@
 	},
 /turf/open/floor/iron/white,
 /area/station/medical/paramedic)
+"sZo" = (
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/machinery/door/airlock/research/glass{
+	name = "Nanite Lab"
+	},
+/obj/effect/mapping_helpers/airlock/access/all/science/general,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown_2";
+	name = "Security Blast Door"
+	},
+/turf/open/floor/plating,
+/area/station/science/nanites)
 "sZs" = (
 /obj/effect/landmark/event_spawn,
 /obj/effect/turf_decal/siding/wood,
@@ -55927,10 +56040,12 @@
 /turf/open/floor/iron/chapel,
 /area/station/service/chapel)
 "tHh" = (
-/obj/effect/spawner/random/structure/closet_empty/crate,
-/obj/effect/spawner/random/maintenance/three,
-/turf/open/floor/plating,
-/area/station/maintenance/port/lesser)
+/obj/effect/turf_decal/siding/purple{
+	dir = 8
+	},
+/obj/machinery/nanite_programmer,
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "tHr" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/turf_decal/trimline/blue/filled/line{
@@ -57766,9 +57881,14 @@
 /turf/open/floor/engine,
 /area/station/science/xenobiology)
 "umK" = (
-/obj/effect/spawner/random/structure/crate_abandoned,
-/turf/open/floor/plating,
-/area/station/maintenance/port/lesser)
+/obj/structure/cable,
+/obj/effect/turf_decal/siding/purple{
+	dir = 6
+	},
+/obj/machinery/nanite_program_hub,
+/obj/machinery/power/apc/auto_name/directional/south,
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "umO" = (
 /obj/structure/chair/pew/left{
 	dir = 4
@@ -58974,9 +59094,12 @@
 /turf/open/floor/iron/dark,
 /area/station/security/checkpoint/medical)
 "uJt" = (
-/obj/effect/mapping_helpers/engraving,
-/turf/closed/wall,
-/area/station/maintenance/department/science)
+/obj/structure/cable,
+/obj/effect/turf_decal/siding/purple{
+	dir = 4
+	},
+/turf/open/floor/iron/white/herringbone,
+/area/station/science/nanites)
 "uJA" = (
 /obj/effect/turf_decal/sand/plating,
 /obj/item/rack_parts,
@@ -59167,6 +59290,14 @@
 /obj/structure/cable,
 /turf/open/floor/carpet/executive,
 /area/station/command/heads_quarters/captain/private)
+"uMD" = (
+/obj/structure/disposalpipe/segment,
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/light/small/directional/west,
+/turf/open/floor/plating,
+/area/station/maintenance/port/lesser)
 "uMT" = (
 /obj/structure/cable,
 /obj/effect/turf_decal/trimline/purple/filled/arrow_ccw{
@@ -65383,7 +65514,6 @@
 /turf/open/misc/asteroid,
 /area/station/asteroid)
 "xad" = (
-/obj/machinery/door/airlock/maintenance_hatch,
 /obj/effect/mapping_helpers/airlock/access/all/science/robotics,
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -65391,6 +65521,14 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
+/obj/machinery/door/airlock/research/glass{
+	name = "Robotics Lab"
+	},
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown_2";
+	name = "Security Blast Door"
+	},
+/obj/effect/mapping_helpers/airlock/access/all/science/research,
 /turf/open/floor/iron/dark,
 /area/station/science/robotics/lab)
 "xao" = (
@@ -103177,8 +103315,8 @@ cLf
 cLf
 vxX
 vfJ
-uJt
-uJt
+vfJ
+vfJ
 vfJ
 gvF
 eBY
@@ -103433,7 +103571,7 @@ cLf
 cLf
 cLf
 vxX
-uJt
+vfJ
 eJr
 wWY
 kju
@@ -103690,7 +103828,7 @@ cLf
 cLf
 cLf
 vxX
-uJt
+vfJ
 eJr
 hgX
 vfJ
@@ -103947,7 +104085,7 @@ cLf
 cLf
 vxX
 vxX
-uJt
+vfJ
 nXF
 tLH
 vfJ
@@ -105769,13 +105907,13 @@ tJx
 kQt
 aCv
 jQl
-niB
+cYo
 kUz
-crU
+mEL
 tHh
-pXS
+odS
 jrY
-crU
+jih
 dht
 jUU
 ujt
@@ -106026,13 +106164,13 @@ qlG
 rLT
 aCv
 hHx
-niB
-kUz
-niB
-pXS
-niB
+gBk
+miA
+uJt
+uJt
+apu
 umK
-crU
+jih
 dht
 jUU
 jUU
@@ -106284,12 +106422,12 @@ pld
 aCv
 aCv
 jih
-kUz
-niB
-niB
-crU
-crU
-crU
+sZo
+jih
+jih
+jih
+jih
+jih
 dht
 onK
 jUU
@@ -106545,7 +106683,7 @@ bwQ
 mEs
 xFh
 lPe
-lPe
+uMD
 lPe
 aLH
 woI

@@ -6074,8 +6074,8 @@
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/central)
 "bGA" = (
-/obj/effect/spawner/structure/window,
 /obj/structure/sign/departments/xenobio/directional/south,
+/obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
 /area/station/science/xenobiology)
 "bGP" = (
@@ -9176,6 +9176,9 @@
 /area/station/cargo/miningdock)
 "cyL" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "cyU" = (
@@ -20196,6 +20199,13 @@
 	},
 /turf/open/floor/iron/white,
 /area/station/medical/surgery/fore)
+"fLR" = (
+/obj/effect/turf_decal/tile/purple/half/contrasted,
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/station/hallway/primary/starboard)
 "fLS" = (
 /obj/structure/disposalpipe/segment,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -32941,8 +32951,11 @@
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/cmo)
 "jAI" = (
-/obj/machinery/module_duplicator,
 /obj/machinery/light/directional/south,
+/obj/machinery/nanite_program_hub,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "jAO" = (
@@ -38281,6 +38294,16 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/security/brig/upper)
+"lbl" = (
+/obj/structure/closet/crate,
+/obj/item/target/alien,
+/obj/item/target/alien,
+/obj/item/target/clown,
+/obj/item/target/clown,
+/obj/item/target/syndicate,
+/obj/item/target/syndicate,
+/turf/open/floor/engine,
+/area/station/science/explab)
 "lbm" = (
 /obj/machinery/newscaster/directional/north,
 /obj/effect/turf_decal/tile/red{
@@ -40109,6 +40132,18 @@
 	},
 /turf/open/floor/iron,
 /area/station/service/hydroponics/garden)
+"lCq" = (
+/obj/effect/spawner/structure/window/reinforced,
+/obj/machinery/door/poddoor/shutters/preopen{
+	dir = 1;
+	id = "rnd";
+	name = "Research Lab Shutters"
+	},
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/station/hallway/primary/starboard)
 "lCz" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/turf_decal/bot,
@@ -43363,7 +43398,8 @@
 	},
 /obj/machinery/door/window/right/directional/south{
 	name = "Research and Development Desk";
-	req_access = list("science")
+	req_access = list("science");
+	max_integrity = 400
 	},
 /obj/item/paper_bin{
 	pixel_x = -9;
@@ -48782,6 +48818,7 @@
 	dir = 8
 	},
 /obj/machinery/bluespace_vendor/directional/west,
+/obj/effect/turf_decal/stripes/corner,
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
 "ofl" = (
@@ -51344,6 +51381,22 @@
 /obj/effect/spawner/random/trash/mess,
 /turf/open/floor/iron/grimy,
 /area/station/maintenance/aft/greater)
+"oMA" = (
+/obj/machinery/door/poddoor/shutters/preopen{
+	dir = 1;
+	id = "rnd";
+	name = "Research Lab Shutters"
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/machinery/computer/nanite_chamber_control,
+/obj/machinery/door/window/right/directional/south{
+	name = "Reinforced Security Windoor";
+	req_access = list("science")
+	},
+/turf/open/floor/iron,
+/area/station/hallway/primary/starboard)
 "oMO" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
@@ -51385,14 +51438,11 @@
 /turf/open/openspace,
 /area/station/service/chapel)
 "oNE" = (
-/obj/structure/closet/crate,
-/obj/item/target/alien,
-/obj/item/target/alien,
-/obj/item/target/clown,
-/obj/item/target/clown,
-/obj/item/target/syndicate,
-/obj/item/target/syndicate,
 /obj/structure/sign/poster/official/random/directional/south,
+/obj/machinery/nanite_programmer,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "oNO" = (
@@ -53112,9 +53162,29 @@
 /turf/open/floor/iron,
 /area/mine/laborcamp)
 "pnK" = (
-/obj/structure/filingcabinet/chestdrawer,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light_switch/directional/north,
+/obj/structure/table,
+/obj/item/clothing/glasses/hud/diagnostic{
+	pixel_y = 12
+	},
+/obj/item/clothing/glasses/hud/diagnostic{
+	pixel_y = 12
+	},
+/obj/item/nanite_remote{
+	pixel_y = -7;
+	pixel_x = -5
+	},
+/obj/item/nanite_remote{
+	pixel_y = -7;
+	pixel_x = -5
+	},
+/obj/item/nanite_scanner,
+/obj/item/nanite_scanner,
+/obj/item/storage/box/disks_nanite{
+	pixel_y = -6;
+	pixel_x = 7
+	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "pnR" = (
@@ -53304,6 +53374,16 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron,
 /area/mine/production)
+"pqn" = (
+/obj/machinery/door/firedoor/heavy,
+/obj/effect/turf_decal/tile/purple/fourcorners,
+/obj/effect/turf_decal/stripes/white/line,
+/obj/effect/turf_decal/stripes/white/line{
+	dir = 1
+	},
+/obj/structure/sign/departments/nanites/directional/east,
+/turf/open/floor/iron/dark/textured,
+/area/station/science/research)
 "pqo" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/machinery/door/poddoor/shutters/preopen{
@@ -54846,9 +54926,12 @@
 /turf/open/floor/engine,
 /area/station/maintenance/disposal/incinerator)
 "pMY" = (
-/obj/effect/spawner/structure/window,
-/turf/open/floor/plating,
-/area/station/science/xenobiology)
+/obj/structure/table,
+/obj/machinery/recharger,
+/obj/item/gun/energy/laser/carbine/practice,
+/obj/item/gun/energy/laser/practice,
+/turf/open/floor/engine,
+/area/station/science/explab)
 "pNm" = (
 /turf/closed/wall/r_wall,
 /area/station/security/execution/education)
@@ -57207,6 +57290,10 @@
 	},
 /obj/effect/mapping_helpers/requests_console/ore_update,
 /obj/effect/mapping_helpers/requests_console/supplies,
+/obj/item/storage/toolbox/electrical{
+	pixel_y = 10;
+	pixel_x = -6
+	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "qxm" = (
@@ -57690,7 +57777,7 @@
 /turf/open/floor/iron/dark,
 /area/station/hallway/secondary/entry)
 "qFt" = (
-/obj/effect/spawner/structure/window,
+/obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
 /area/station/science/explab)
 "qFu" = (
@@ -59374,6 +59461,13 @@
 	},
 /turf/open/floor/iron,
 /area/station/science/explab)
+"rcs" = (
+/obj/structure/railing/corner,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/station/hallway/primary/starboard)
 "rcE" = (
 /obj/effect/spawner/structure/window,
 /turf/open/floor/plating,
@@ -60170,11 +60264,8 @@
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "roT" = (
-/obj/structure/table,
-/obj/machinery/recharger,
-/obj/item/gun/energy/laser/carbine/practice,
-/obj/item/gun/energy/laser/practice,
 /obj/machinery/newscaster/directional/south,
+/obj/machinery/computer/nanite_cloud_controller,
 /turf/open/floor/iron,
 /area/station/science/explab)
 "roX" = (
@@ -63488,6 +63579,9 @@
 /obj/machinery/vending/modularpc,
 /obj/effect/turf_decal/tile/purple/anticorner/contrasted{
 	dir = 8
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
@@ -73739,6 +73833,12 @@
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/iron,
 /area/station/science/ordnance)
+"vqw" = (
+/obj/effect/turf_decal/tile/purple/half/contrasted,
+/obj/effect/turf_decal/stripes/box,
+/obj/machinery/nanite_chamber,
+/turf/open/floor/iron,
+/area/station/hallway/primary/starboard)
 "vqH" = (
 /obj/effect/turf_decal/trimline/green/filled/line{
 	dir = 6
@@ -81304,11 +81404,8 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/central/fore)
 "xBa" = (
-/obj/structure/table,
-/obj/item/storage/toolbox/electrical{
-	pixel_y = 5
-	},
 /obj/machinery/light/small/directional/south,
+/obj/machinery/module_duplicator,
 /turf/open/floor/iron/white/side{
 	dir = 1
 	},
@@ -81749,6 +81846,11 @@
 /obj/machinery/light/directional/south,
 /obj/machinery/keycard_auth/wall_mounted/directional/south,
 /obj/structure/window/reinforced/spawner/directional/west,
+/obj/machinery/button/door/directional/south{
+	pixel_y = -36;
+	name = "Nanite Security Lockdown Control";
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/iron,
 /area/station/command/heads_quarters/rd)
 "xGL" = (
@@ -83326,6 +83428,9 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
 "yeC" = (
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "yeD" = (
@@ -260414,7 +260519,7 @@ pbQ
 pbQ
 jbU
 lKq
-pMY
+jhQ
 kLy
 bGA
 lKq
@@ -261192,7 +261297,7 @@ xnM
 lYg
 xYj
 kkX
-leo
+pqn
 qFt
 bYu
 qkH
@@ -261934,9 +262039,9 @@ okG
 cin
 eKl
 pxL
-lso
-hDb
-qWn
+cin
+vqw
+oMA
 xZA
 dVt
 gHY
@@ -262191,9 +262296,9 @@ cUB
 nYm
 mNi
 yeB
-uuC
-hDb
-qWn
+rcs
+fLR
+lCq
 gav
 ljF
 ljF
@@ -262483,7 +262588,7 @@ eVY
 ihu
 epH
 rDZ
-rDZ
+pMY
 ePu
 rDZ
 rDZ
@@ -262997,7 +263102,7 @@ abT
 jJZ
 tuy
 rDZ
-rDZ
+lbl
 mBk
 rDZ
 rDZ

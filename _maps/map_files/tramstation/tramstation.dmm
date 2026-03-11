@@ -11710,8 +11710,11 @@
 /turf/open/floor/iron,
 /area/station/science/explab)
 "cVW" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
 /turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "cWj" = (
 /obj/structure/railing{
 	dir = 1
@@ -14376,8 +14379,11 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "dSI" = (
 /obj/effect/turf_decal/siding/thinplating/dark,
 /obj/structure/table,
@@ -16441,11 +16447,9 @@
 /turf/open/floor/iron/freezer,
 /area/station/security/prison/shower)
 "eHR" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 4
-	},
-/turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/obj/effect/turf_decal/tile/purple/fourcorners,
+/turf/open/floor/iron/white,
+/area/station/science/nanites)
 "eIb" = (
 /obj/structure/cable,
 /obj/structure/disposalpipe/segment{
@@ -16782,7 +16786,7 @@
 /area/station/cargo/qm)
 "ePG" = (
 /turf/closed/wall/r_wall,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "ePS" = (
 /obj/machinery/shower/directional/west,
 /obj/structure/fluff/shower_drain,
@@ -18048,7 +18052,7 @@
 	dir = 5
 	},
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "fnI" = (
 /obj/structure/lattice/catwalk,
 /obj/machinery/power/tracker,
@@ -20143,10 +20147,12 @@
 /turf/closed/wall/r_wall,
 /area/station/commons/vacant_room)
 "gcx" = (
-/obj/structure/table/reinforced,
-/obj/effect/turf_decal/tile/purple/fourcorners,
-/turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/obj/effect/turf_decal/stripes/line,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
+/turf/open/floor/engine,
+/area/station/science/nanites)
 "gcE" = (
 /obj/effect/turf_decal/trimline/green/filled/line{
 	dir = 5
@@ -20199,15 +20205,14 @@
 /turf/open/floor/iron/white,
 /area/station/science/genetics)
 "gex" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 5
-	},
 /obj/machinery/camera/directional/north{
 	network = list("ss13","rd");
 	c_tag = "Science - Firing Range"
 	},
-/turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/obj/machinery/computer/nanite_chamber_control,
+/obj/effect/turf_decal/tile/dark/full,
+/turf/open/floor/iron/white,
+/area/station/science/nanites)
 "geA" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
@@ -21595,10 +21600,10 @@
 /area/station/hallway/primary/tram/center)
 "gDU" = (
 /obj/effect/turf_decal/stripes/line{
-	dir = 6
+	dir = 5
 	},
 /turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "gEs" = (
 /obj/machinery/power/terminal{
 	dir = 1
@@ -23773,9 +23778,13 @@
 /turf/open/floor/iron/dark,
 /area/station/science/ordnance/storage)
 "hvJ" = (
-/obj/effect/spawner/structure/window,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown_2";
+	name = "Security Blast Door"
+	},
+/obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "hvZ" = (
 /obj/effect/turf_decal/siding/thinplating/corner{
 	dir = 8
@@ -26351,7 +26360,7 @@
 	},
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "iwg" = (
 /obj/machinery/door/airlock/security/glass{
 	name = "Trial Cell A"
@@ -34562,8 +34571,12 @@
 /obj/machinery/door/firedoor,
 /obj/structure/cable,
 /obj/structure/disposalpipe/segment,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown_2";
+	name = "Security Blast Door"
+	},
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "ljZ" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/siphon/monitored/oxygen_output{
 	dir = 1
@@ -35274,7 +35287,7 @@
 	dir = 10
 	},
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "lvc" = (
 /obj/machinery/holopad,
 /obj/effect/turf_decal/bot,
@@ -37987,6 +38000,11 @@
 	pixel_x = -8;
 	pixel_y = -24
 	},
+/obj/machinery/button/door/directional/south{
+	name = "Nanite Security Lockdown Control";
+	id = "nanite_lockdown";
+	pixel_x = 6
+	},
 /turf/open/floor/iron,
 /area/station/command/heads_quarters/rd)
 "moU" = (
@@ -38391,10 +38409,11 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/command)
 "myo" = (
-/obj/structure/training_machine,
-/obj/item/target/alien,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "myz" = (
 /obj/machinery/camera/directional/west{
 	c_tag = "Civilian - Entertainment Center North"
@@ -38648,17 +38667,13 @@
 /turf/open/floor/iron/dark,
 /area/station/service/hydroponics)
 "mDl" = (
-/obj/machinery/recharger{
-	pixel_y = 4
-	},
-/obj/structure/table,
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 1
 	},
 /obj/machinery/power/apc/auto_name/directional/north,
 /obj/structure/cable,
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "mDp" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
 /turf/open/floor/grass,
@@ -43075,17 +43090,10 @@
 /turf/open/floor/iron,
 /area/station/science/robotics/mechbay)
 "ogt" = (
-/obj/structure/table/reinforced,
-/obj/item/clothing/ears/earmuffs{
-	pixel_y = 7
-	},
-/obj/item/clothing/ears/earmuffs{
-	pixel_x = 6;
-	pixel_y = 3
-	},
-/obj/effect/turf_decal/tile/purple/fourcorners,
+/obj/machinery/nanite_chamber,
+/obj/effect/turf_decal/tile/dark/full,
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "ohd" = (
 /obj/structure/table,
 /turf/open/floor/iron/dark,
@@ -43471,8 +43479,12 @@
 	name = "Testing Range Maintenance Hatch"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/science/research,
+/obj/machinery/door/poddoor/preopen{
+	id = "nanite_lockdown_2";
+	name = "Security Blast Door"
+	},
 /turf/open/floor/catwalk_floor,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "onW" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on{
 	dir = 4
@@ -47500,8 +47512,16 @@
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 8
 	},
+/obj/structure/table,
+/obj/item/disk/nanite_program/research{
+	pixel_y = 7;
+	pixel_x = -5
+	},
+/obj/item/disk/nanite_program/regenerative{
+	pixel_x = 6
+	},
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "pNz" = (
 /obj/effect/landmark/navigate_destination/chapel,
 /turf/open/floor/carpet,
@@ -48463,8 +48483,9 @@
 	dir = 8
 	},
 /obj/machinery/light/directional/west,
+/obj/machinery/computer/nanite_cloud_controller,
 /turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "qfg" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8
@@ -49695,7 +49716,7 @@
 	},
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "qBQ" = (
 /obj/effect/turf_decal/trimline/white/filled/corner{
 	dir = 8
@@ -49857,8 +49878,9 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
 	},
+/obj/machinery/nanite_programmer,
 /turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "qCZ" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron/dark,
@@ -52658,25 +52680,14 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/service)
 "rEd" = (
-/obj/structure/rack,
-/obj/item/gun/energy/laser/carbine/practice{
-	pixel_x = 2;
-	pixel_y = 5
-	},
-/obj/item/gun/energy/laser/practice{
-	pixel_x = 2;
-	pixel_y = 1
-	},
-/obj/item/gun/energy/laser/practice{
-	pixel_x = 2;
-	pixel_y = -2
-	},
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 5
 	},
 /obj/machinery/airalarm/directional/north,
+/obj/structure/table,
+/obj/item/storage/box/disks_nanite,
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "rEq" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -59827,24 +59838,20 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/entry)
 "uel" = (
-/obj/structure/closet/crate/secure{
-	name = "Firing Range Gear Crate";
-	desc = "A secure crate containing various materials for building a customised test-site.";
-	req_access = list("science")
-	},
-/obj/item/target/syndicate,
-/obj/item/target/syndicate,
-/obj/item/target/clown,
-/obj/item/target/clown,
-/obj/item/target/alien,
-/obj/item/target/alien,
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 4
 	},
 /obj/item/radio/intercom/directional/east,
 /obj/machinery/light/directional/east,
+/obj/structure/table,
+/obj/item/nanite_remote{
+	pixel_x = -6
+	},
+/obj/item/nanite_scanner{
+	pixel_x = 6
+	},
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "uem" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
@@ -62133,8 +62140,9 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
 	},
+/obj/machinery/nanite_program_hub,
 /turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "uNB" = (
 /turf/open/floor/iron,
 /area/station/command/teleporter)
@@ -62938,7 +62946,7 @@
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 1
 	},
-/obj/structure/sign/warning/firing_range/directional/north,
+/obj/structure/sign/departments/nanites/directional/north,
 /turf/open/floor/iron/white,
 /area/station/science/lower)
 "vcg" = (
@@ -64267,9 +64275,11 @@
 /turf/open/floor/iron/dark,
 /area/station/science/ordnance/testlab)
 "vzo" = (
-/obj/effect/turf_decal/stripes/line,
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
 /turf/open/floor/engine,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "vzp" = (
 /obj/effect/turf_decal/trimline/dark_green/corner{
 	dir = 8
@@ -65736,7 +65746,7 @@
 /obj/structure/cable,
 /obj/effect/landmark/event_spawn,
 /turf/open/floor/iron/white,
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "wbC" = (
 /obj/machinery/portable_atmospherics/scrubber,
 /obj/effect/turf_decal/bot,
@@ -70930,17 +70940,23 @@
 /turf/open/floor/iron/dark,
 /area/station/medical/morgue)
 "ybp" = (
-/obj/machinery/door/airlock/public/glass{
-	name = "Firing Range Access"
-	},
 /obj/effect/turf_decal/trimline/purple/filled/corner,
 /obj/effect/turf_decal/trimline/purple/filled/corner{
 	dir = 4
 	},
+/obj/machinery/button/door/directional/north{
+	id = "nanite_lockdown_2";
+	name = "Emergency Doors Control"
+	},
+/obj/structure/table,
+/obj/item/clothing/glasses/hud/diagnostic,
+/obj/item/clothing/glasses/hud/diagnostic{
+	pixel_y = 5
+	},
 /turf/open/floor/iron/white/side{
 	dir = 4
 	},
-/area/station/science/auxlab/firing_range)
+/area/station/science/nanites)
 "ybt" = (
 /obj/machinery/meter{
 	name = "Mixed Air Tank In"
@@ -115676,7 +115692,7 @@ abM
 ePG
 dSy
 myo
-vzo
+gcx
 ePG
 gHE
 xJR
@@ -115931,7 +115947,7 @@ aaa
 abM
 abM
 ePG
-dSy
+gDU
 cVW
 vzo
 ePG
@@ -116188,9 +116204,9 @@ aaa
 abM
 abM
 ePG
-dSy
-cVW
-vzo
+ogt
+eHR
+eHR
 ePG
 lyf
 xJR
@@ -116447,7 +116463,7 @@ abM
 ePG
 gex
 eHR
-gDU
+eHR
 ePG
 vOx
 xJR
@@ -116703,8 +116719,8 @@ abM
 abM
 ePG
 ybp
-ogt
-gcx
+eHR
+eHR
 ePG
 vca
 xJR
