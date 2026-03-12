@@ -1,16 +1,16 @@
-#define CREW_ANNOUNCE_COOLDOWN (12 MINUTES)
-#define ANNOUNCE_COST 1200
+#define CREW_ANNOUNCE_COOLDOWN (11 MINUTES)
+#define ANNOUNCE_COST 900
 
 /obj/machinery/computer/public_announcement
 	name = "Public Announcements console"
-	desc = "An announcement relay payment console."
+	desc = "A commerical announcement console, with built in transmitters."
 	icon_screen = "civ_bounty"
 	icon_keyboard = "tech_key"
 	circuit = /obj/item/circuitboard/computer/communications
 
 	STATIC_COOLDOWN_DECLARE(crew_announce_cooldown)
 	/// how long crew messages can be
-	var/static/max_length = round(MAX_MESSAGE_LEN/3)
+	var/static/max_length = round(MAX_MESSAGE_LEN/2)
 	/// If someone is actively using the console
 	var/in_use = FALSE
 
@@ -26,7 +26,12 @@
 	if(!crew_announce_cooldown)
 		crew_announce_cooldown = CREW_ANNOUNCE_COOLDOWN / 2
 
-
+/obj/machinery/computer/public_announcement/emag_act(mob/user, obj/item/card/emag/emag_card)
+	if(!is_operational || obj_flags & EMAGGED)
+		return
+	say("Breaker circuit offline.")
+	do_sparks(2, source=src)
+	obj_flags |= EMAGGED
 
 /obj/machinery/computer/public_announcement/interact(mob/living/user)
 	. = ..()
@@ -41,11 +46,15 @@
 	if(!COOLDOWN_FINISHED(src, crew_announce_cooldown))
 		var/cooldown_left = COOLDOWN_TIMELEFT(src, crew_announce_cooldown)
 		cooldown_left = ceil(cooldown_left / (1 MINUTES))
-		say("On cooldown. [cooldown_left] minutes left.")
+		say("The transmitter is recharging. [cooldown_left] minute[cooldown_left ? "s" : ""] left.")
+		return
+
+	if(obj_flags & EMAGGED)
+		overload_transmitters(user)
 		return
 
 	in_use = TRUE
-	var/input = tgui_input_text(user, "Message to announce", "Announcement", max_length = max_length)
+	var/input = tgui_input_text(user, "Costs [ANNOUNCE_COST] credits", "Announcement", max_length = max_length)
 	if(!input || !user.can_perform_action(src))
 		in_use = FALSE
 		return
@@ -62,11 +71,13 @@
 			span_hear("You hear an awkward silence, somehow."),
 			vision_distance = 4,
 			)
-	if(pay_for_announcement(user))
+	to_chat(user, span_notice("You manually tab through several EULA's and the payment prompt... (This will take a few seconds.)"))
+	if(do_after(user, 8 SECONDS, src) && pay_for_announcement(user))
 		minor_announce(input, "Crew Announcement:", players = GLOB.player_list)
 		deadchat_broadcast(" made a announcement from [span_name("[get_area_name(user, TRUE)]")].", span_name("[user.real_name]"), user, message_type=DEADCHAT_ANNOUNCEMENT)
 		COOLDOWN_START(src, crew_announce_cooldown, CREW_ANNOUNCE_COOLDOWN)
 	in_use = FALSE
+
 
 /obj/machinery/computer/public_announcement/proc/pay_for_announcement(mob/living/user)
 	var/datum/bank_account/account
@@ -84,12 +95,15 @@
 	if(!account.has_money(ANNOUNCE_COST))
 		say("Not enough credits. Requires [ANNOUNCE_COST] credits.")
 		return FALSE
-	var/confirm_buy = alert("Charge [ANNOUNCE_COST] credits?", "Confirm Payment", "Yes","No")
-	if(confirm_buy != "Yes")
-		return FALSE
 	if(account.adjust_money(-1 * ANNOUNCE_COST, "Purchased announcement"))
 		return TRUE
 
+
+/obj/machinery/computer/public_announcement/proc/overload_transmitters(mob/user)
+	say("ERR: Transmitter overloaded. {Charge:400%;}")
+	tesla_zap(user, power=(347.652 MEGA JOULES))
+	explosion(src, light_impact_range = 3, flame_range = 1, explosion_cause = src)
+	Destroy(force=max_integrity+1)
 
 #undef ANNOUNCE_COST
 #undef CREW_ANNOUNCE_COOLDOWN
