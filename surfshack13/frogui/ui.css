@@ -1,19 +1,22 @@
 :root {
-	--color-fg: hsl(0 0% 100%);
-	--color-bg: hsl(0 0% 14%);
-	--color-bg-section: rgba(0 0 0 / 0.33);
-	--color-bg-grad-spread: 2%;
-	--color-label: hsl(209, 20%, 69%);
+	--col-fg: hsl(0 0% 100%);
+	--col-bg: hsl(0 0% 14%);
+	--col-bg-section: rgba(0 0 0 / 0.33);
+	--col-bg-grad-spread: 2%;
+	--col-label: hsl(209, 20%, 69%);
+	--col-checked: #1b973c;
+	/* incase the green is too bright */
+	--col-checked-dark: #167a2d;
 	--border-radius-common: 0.16em;
-	color: var(--color-fg);
+	color: var(--col-fg);
+
 
 }
-
 
 body {
 	font-family: Verdana, sans-serif;
 	align-items: center;
-	background-color: var(--color-bg);
+	background-color: var(--col-bg);
 	font-size: 12px;
 }
 
@@ -23,21 +26,6 @@ body {
 	height: 100%;
 	background-position: center;
 	background-repeat: no-repeat;
-}
-
-h1 {
-	color: var(--color-fg)
-}
-
-.NoticeBox {
-	padding: .33em .5em;
-	margin-bottom: .5em;
-	box-shadow: none;
-	font-weight: 700;
-	font-style: italic;
-	color: #000;
-	background-color: #bb9b68;
-	background-image: repeating-linear-gradient(-45deg, transparent, transparent .8333333333em, rgba(0, 0, 0, .1) .8333333333em, rgba(0, 0, 0, .1) 1.6666666667em)
 }
 
 .Section {
@@ -65,128 +53,6 @@ h1 {
 	color: #fff
 }
 
-.Section__buttons {
-	position: absolute;
-	display: inline-block;
-	right: .5em;
-	margin-top: -.0833333333em
-}
-
-.Section__rest {
-	position: relative
-}
-
-.Section__content {
-	padding: .66em .5em
-}
-
-.Section--fitted>.Section__rest>.Section__content {
-	padding: 0
-}
-
-.Section--fill {
-	display: flex;
-	flex-direction: column;
-	height: 100%
-}
-
-.Section--fill>.Section__rest {
-	flex-grow: 1
-}
-
-.Section--fill>.Section__rest>.Section__content {
-	height: 100%
-}
-
-.Section--fill.Section--scrollable>.Section__rest>.Section__content {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0
-}
-
-.Section--fill.Section--iefix {
-	display: table !important;
-	width: 100% !important;
-	height: 100% !important;
-	border-collapse: collapse;
-	border-spacing: 0
-}
-
-.Section--fill.Section--iefix>.Section__rest {
-	display: table-row !important;
-	height: 100% !important
-}
-
-.Section--scrollable {
-	overflow-x: hidden;
-	overflow-y: hidden
-}
-
-.Section--scrollable>.Section__rest>.Section__content {
-	overflow-y: scroll;
-	overflow-x: hidden
-}
-
-.Section--scrollableHorizontal {
-	overflow-x: hidden;
-	overflow-y: hidden
-}
-
-.Section--scrollableHorizontal>.Section__rest>.Section__content {
-	overflow-y: hidden;
-	overflow-x: scroll
-}
-
-.Section--scrollable.Section--scrollableHorizontal {
-	overflow-x: hidden;
-	overflow-y: hidden
-}
-
-.Section--scrollable.Section--scrollableHorizontal>.Section__rest>.Section__content {
-	overflow-y: scroll;
-	overflow-x: scroll
-}
-
-.Section .Section {
-	background-color: rgba(0, 0, 0, 0);
-	margin-left: -.5em;
-	margin-right: -.5em
-}
-
-.Section .Section:first-child {
-	margin-top: -.5em
-}
-
-.Section .Section .Section__titleText {
-	font-size: 1.0833333333em
-}
-
-.Section .Section .Section .Section__titleText {
-	font-size: 1em
-}
-
-.Section--flex {
-	display: flex;
-	flex-flow: column
-}
-
-.Section--flex .Section__content {
-	overflow: auto;
-	flex-grow: 1
-}
-
-.Section__content--noTopPadding {
-	padding-top: 0
-}
-
-.Section__content--stretchContents {
-	height: calc(100% - 3rem)
-}
-
-
-
 .LabeledList {
 	display: table;
 	width: 100%;
@@ -197,9 +63,6 @@ h1 {
 	padding: 0;
 }
 
-.LabeledList__row {
-	display: table-row;
-}
 
 .LabeledList__row:last-child .LabeledList__cell {
 	padding-bottom: 0
@@ -214,7 +77,7 @@ h1 {
 }
 
 .LabeledList__cell.label {
-	color: var(--color-label);
+	color: var(--col-label);
 	padding-left: 1em;
 	width: 1%;
 	font-size: 1em;
@@ -302,14 +165,8 @@ label:hover {
 	filter: brightness(1.2);
 }
 
-.colorBox {
-	display: inline-block;
-	width: 1em;
-	height: 1em;
-	border: 0.2em solid #222;
-	background-color: var(--fill);
-	cursor: pointer;
-	transition: border-color 0.2s;
+label:has(input[type="radio"]:checked) {
+	background-color: var(--col-checked);
 }
 
 .colorSelectors {
@@ -317,14 +174,23 @@ label:hover {
 	align-items: center;
 }
 
+.colorBox {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	border: 0.2em solid #222;
+	background-color: var(--fill);
+	cursor: pointer;
+}
 
-
-.option.color input[type="radio"]:checked+.colorBox {
-	border-color: #20b142;
+.colorBox:has(input[type="radio"]:checked) {
+	/* overwrite default behaviour */
+	background-color: var(--fill);
+	border-color: var(--col-checked-dark);
 }
 
 .colorBox:hover {
-	border-color: #167a2d;
+	border-color: var(--col-checked-dark);
 }
 
 .colorText {
@@ -347,44 +213,13 @@ label:hover {
 	user-select: none;
 	-ms-user-select: none;
 	background-color: #3f6489;
-	color: var(--color-fg);
 }
-
-.btn:hover {
-	filter: brightness(1.2);
-}
-
-.option input[type="radio"]:checked+.btn {
-	background-color: #1b973c;
-}
-
-
 
 .wiki {
 	flex: 1;
 	margin-bottom: .5em;
 	background-color: #181818B0;
 	padding: 0.1em
-}
-
-.cell:has(input[type="radio"]:checked) {
-	background-color: #1b973c;
-}
-
-.slime_type {
-	margin: 0.3em;
-	padding: 0.2em;
-	background-color: var(--color-bg-section);
-}
-
-.slime_type div:first-child {
-	font-weight: bold;
-	margin-bottom: 0.1em;
-	color: var(--color-label);
-}
-
-.slime_type div:first-child::after {
-	content: ":";
 }
 
 .tabber {
@@ -400,14 +235,10 @@ label:hover {
 	border-radius: var(--border-radius-common);
 }
 
-.tabber label:has(input[type="radio"]:checked) {
-	background-color: #1b973c;
-}
-
 select {
 	cursor: pointer;
-	background: var(--color-fg);
-	color: var(--color-bg);
+	background: var(--col-fg);
+	color: var(--col-bg);
 	padding: 0.3em;
 	margin: 0.2em;
 	border-style: hidden;

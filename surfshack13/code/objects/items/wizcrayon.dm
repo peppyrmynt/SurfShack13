@@ -18,8 +18,8 @@
 	var/uses = 15
 	var/active_color_name = "Red"
 	var/active_color = COLOR_CRAYON_RED
-	var/static/paint_colors
-	var/static/list/stencil_buttons
+	var/static/alist/paint_colors
+	var/static/alist/stencil_buttons
 	var/static/ui
 	var/active_ruin_name = "flip"
 	var/active_ruin = /obj/effect/decal/cleanable/wizcrayon/flip
@@ -74,23 +74,17 @@
 	.["active_ruin_name"] = active_ruin_name
 	.["percent"] = percent
 
+
 /obj/item/toy/wizcrayon/proc/create_ui()
 	if(ui)
 		CRASH("create_ui called with exisiting ui")
 	ui = file2text('surfshack13/frogui/wizcrayon.html')
-	var/insert = ""
-	paint_colors = list("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
-	for(var/color, value in paint_colors)
-		insert += "<label class='option color'><input type='radio' name='colorPicker' value='[color]' data-hex='[value]'><span style='--fill:[value];' class='colorBox'></span></label>\n"
-	ui = replacetextEx(ui, "<!-- color select insert -->\n", insert)
-	insert = ""
-	stencil_buttons = list()
+	stencil_buttons = alist()
 	for(var/type in subtypesof(/obj/effect/decal/cleanable/wizcrayon))
 		type = "[type]"
 		var/name = copytext(type, findlasttext(type, "/")+1)
 		stencil_buttons[name] = type
-		insert += "<label class='option'><input type='radio' name='ruin' value='[name]'/><span class='btn'>[name]</span></label>"
-	ui = replacetextEx(ui, "<!-- ruin select insert -->\n", insert)
+	paint_colors = alist("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
 
 /obj/item/toy/wizcrayon/Topic(href, list/href_list)
 	. = ..()
