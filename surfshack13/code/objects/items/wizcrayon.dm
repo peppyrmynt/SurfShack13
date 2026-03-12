@@ -94,11 +94,9 @@
 
 /obj/item/toy/wizcrayon/Topic(href, list/href_list)
 	. = ..()
+
 	var/mob/user = usr
-	if(!user)
-		CRASH("ui user not found")
-	if(!user.can_perform_action(src, NEED_LITERACY|NEED_DEXTERITY|NEED_HANDS|FORBID_TELEKINESIS_REACH))
-		SSfrogui.close_ui(user, src)
+	if(SSfrogui.close_topic_check(user, src))
 		return
 	if(href_list["ready"])
 		SSfrogui.update_ui(user, src)
