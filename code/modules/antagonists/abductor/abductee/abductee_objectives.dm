@@ -1,6 +1,8 @@
 /datum/objective/abductee
 	completed = 1
+	//surfshack start
 	reward_for_completion = FALSE
+	//surfshack end
 
 /datum/objective/abductee/random
 

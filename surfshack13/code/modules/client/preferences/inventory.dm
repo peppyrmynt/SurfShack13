@@ -1,4 +1,5 @@
-/datum/preferences/proc/load_inventory(ckey)
+/datum/preferences/proc/load_inventory(mob/M)
+	var/ckey = M.ckey
 	if(!ckey || !SSdbcore.IsConnected())
 		return
 	var/datum/db_query/query_gear = SSdbcore.NewQuery(
@@ -61,9 +62,9 @@
 	//Output to chat
 	if(announces)
 		if(reason)
-			to_chat(parent, "<span class='rose bold'>[abs(amount)] Doubloons have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account! Reason: [reason]</span>")
+			to_chat(parent, span_dabloon("[abs(amount)] Doubloons have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account! Reason: [reason]"))
 		else
-			to_chat(parent, "<span class='rose bold'>[abs(amount)] Doubloons have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account!</span>")
+			to_chat(parent, span_dabloon("[abs(amount)] Doubloons have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account!"))
 	return TRUE
 
 /datum/preferences/proc/has_coins(amount)

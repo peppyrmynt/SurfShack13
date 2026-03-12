@@ -63,7 +63,6 @@
 		return
 
 	queue[ckey] += list(list(round_end_bonus, "Played a Round"))
-
 	if(details?.mob?.mind?.assigned_role?.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND)
 		queue[ckey] += list(list(200, "Head of Staff Bonus"))
 
