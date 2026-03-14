@@ -46838,6 +46838,16 @@
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
+"qDe" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral/opposingcorners,
+/obj/machinery/computer/public_announcement{
+	dir = 1
+	},
+/turf/open/floor/iron/dark,
+/area/station/hallway/secondary/exit/departure_lounge)
 "qDg" = (
 /obj/effect/turf_decal/stripes,
 /obj/machinery/light/directional/north,
@@ -95155,7 +95165,7 @@ lTp
 vHY
 pUH
 amZ
-aaB
+qDe
 nHK
 cLf
 kmZ

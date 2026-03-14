@@ -63,16 +63,32 @@
 		.arrow.down {
 			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" ><path transform="rotate(270,50,50)" d="M 5,50 31,18 V 34 H 95 V 65 H 31 v 16 z" fill="hsl(0, 0%, 30%)"/></svg>');
 		}
+
+		.slime_type {
+			margin: 0.3em;
+			padding: 0.2em;
+			background-color: var(--col-bg-section);
+		}
+
+		.slime_type div:first-child {
+			font-weight: bold;
+			margin-bottom: 0.1em;
+			color: var(--col-label);
+		}
+
+		.slime_type div:first-child::after {
+			content: ":";
+		}
 	</style>
 </head>
 
 <body>
 	<div class="wiki tabber" id='tabber'>
-		<label>
+		<label class="btn">
 			Extract Reactions
 			<input type='radio' name='tabber' checked="true" value='slimeMode'>
 		</label>
-		<label>
+		<label class="btn">
 			Crossbreeds
 			<input type='radio' name='tabber' value='crossbreedMode'>
 		</label>
