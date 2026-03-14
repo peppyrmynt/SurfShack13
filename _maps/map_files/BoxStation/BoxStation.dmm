@@ -58377,6 +58377,10 @@
 /obj/effect/decal/cleanable/cobweb,
 /turf/open/floor/plating,
 /area/station/maintenance/port/fore)
+"pCU" = (
+/obj/machinery/computer/public_announcement,
+/turf/open/floor/wood/large,
+/area/station/hallway/secondary/exit/departure_lounge)
 "pDl" = (
 /obj/structure/disposalpipe/segment{
 	dir = 5
@@ -122913,7 +122917,7 @@ idy
 aNa
 aQE
 aNa
-fVD
+pCU
 rgf
 rum
 aNa

@@ -126738,6 +126738,24 @@
 /obj/structure/sign/poster/official/wtf_is_co2/directional/north,
 /turf/open/floor/iron/dark/textured_half,
 /area/station/science/ordnance)
+"sQv" = (
+/obj/effect/turf_decal/siding/thinplating_new/dark{
+	dir = 4
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/neutral,
+/obj/effect/turf_decal/trimline/dark/warning{
+	dir = 8
+	},
+/obj/machinery/computer/public_announcement{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/side{
+	dir = 8
+	},
+/area/station/hallway/secondary/exit/departure_lounge)
 "sQw" = (
 /obj/effect/turf_decal/trimline/purple/filled/warning,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -176406,7 +176424,7 @@ mKk
 tsz
 wbZ
 kDh
-wbZ
+sQv
 vbe
 wbZ
 wbZ

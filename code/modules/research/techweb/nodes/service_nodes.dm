@@ -60,6 +60,9 @@
 	prereq_ids = list(TECHWEB_NODE_OFFICE_EQUIP)
 	design_ids = list(
 		"comconsole",
+		//surfshack start
+		"announceconsole",
+		//surfshack end
 		"automated_announcement",
 		"cargo",
 		"cargorequest",

@@ -27,10 +27,26 @@
 					<td class='LabeledList__cell label'>Color</td>
 					<td class='LabeledList__cell'>
 						<div id='colorSelectors'>
-							<!-- <label class='option color'><input type='radio' name='colorPicker' value='Red' data-hex='#DA0000'><span style='--fill:#DA0000;' class='colorBox'></span></label> -->
-							<!-- color select insert -->
+							<label class="colorBox" style="--fill:#DA0000;">
+								<input type="radio" name="colorPicker" value="Red">
+							</label>
+							<label class="colorBox" style="--fill:#FF9300;">
+								<input type="radio" name="colorPicker" value="Orange">
+							</label>
+							<label class="colorBox" style="--fill:#FFF200;">
+								<input type="radio" name="colorPicker" value="Yellow">
+							</label>
+							<label class="colorBox" style="--fill:#A8E61D;">
+								<input type="radio" name="colorPicker" value="Green">
+							</label>
+							<label class="colorBox" style="--fill:#00B7EF;">
+								<input type="radio" name="colorPicker" value="Blue">
+							</label>
+							<label class="colorBox" style="--fill:#DA00FF;">
+								<input type="radio" name="colorPicker" value="Purple">
+							</label>
 						</div>
-						<span class='colorText' id='colorText'>...</span>
+						<span class='colorText' id='colorText'>Loading</span>
 					</td>
 				</tr>
 			</tbody>
@@ -42,13 +58,30 @@
 			<tr>
 				<td class='LabeledList__cell label'>Ruin Stencil</td>
 				<td class='LabeledList__cell'>
-					<div id='ruinSelectors'>
-						<!-- <label class='option'><input type='radio' name='ruin' id='fart'/><span class='btn'>fart</span></label> -->
-						<!-- ruin select insert -->
+					<div id="ruinSelectors">
+						<label class="btn">
+							flip <input type="radio" name="ruin" value="flip">
+						</label>
+						<label class="btn">
+							spore <input type="radio" name="ruin" value="spore">
+						</label>
+						<label class="btn">
+							fart <input type="radio" name="ruin" value="fart">
+						</label>
+						<label class="btn">
+							glow <input type="radio" name="ruin" value="glow">
+						</label>
+						<label class="btn">
+							boom <input type="radio" name="ruin" value="boom">
+						</label>
+						<label class="btn">
+							spin <input type="radio" name="ruin" value="spin">
+						</label>
 					</div>
-				</td>
-			</tr>
-		</table>
+	</div>
+	</td>
+	</tr>
+	</table>
 	</div>
 	<script>
 		//const ref = "[0x1234567];"
@@ -68,16 +101,16 @@
 		let activeColorName;
 		let activeRuinName;
 
-		 colorSelectors.querySelectorAll('.option').forEach((option, index) => {
-			const radio = option.querySelector("input[type='radio']");
+		colorSelectors.querySelectorAll('label').forEach((label, index) => {
+			const radio = label.querySelector("input[type='radio']");
 			const paintName = radio.value;
-			const paintColor = radio.dataset.hex;
+			const paintColor = label.style.getPropertyValue('--fill');
 			paintColors[paintName] = paintColor;
 			colorElements[paintName] = radio
 		})
 
-		ruinSelectors.querySelectorAll('.option').forEach((option, index) => {
-			const radio = option.querySelector("input[type='radio']");
+		ruinSelectors.querySelectorAll('label').forEach((label, index) => {
+			const radio = label.querySelector("input[type='radio']");
 			const ruinName = radio.value;
 			ruinElements[ruinName] = radio;
 		})
@@ -91,16 +124,16 @@
 		}
 		function update(payload) {
 			const parsed = JSON.parse(payload)
-			if(parsed["active_color_name"]) {
+			if (parsed["active_color_name"]) {
 				activeColorName = parsed['active_color_name'];
 				updateColor(activeColorName);
 				colorElements[activeColorName].checked = true;
 			}
-			if(parsed["active_ruin_name"]) {
+			if (parsed["active_ruin_name"]) {
 				activeRuinName = parsed['active_ruin_name'];
 				ruinElements[activeRuinName].checked = true;
 			}
-			if(parsed["percent"]) {
+			if (parsed["percent"]) {
 				updateCrayonFillWidth(parsed['percent']);
 			}
 		}
@@ -134,7 +167,9 @@
 			activeRuinName = newRuin;
 			sendToByond("active_ruin_name", activeRuinName);
 		});
-
-		setTimeout(sendToByond("ready",1), 200);
+		//Wont be needed in new updates, thanks lummox!
+		setTimeout(sendToByond("ready", 1), 200);
 	</script>
 </body>
+
+</html>
