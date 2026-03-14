@@ -203,6 +203,23 @@
 	var/robotic_emp_paralyze_damage_percent_threshold = 0.3
 	/// A potential texturing overlay to put on the limb
 	var/datum/bodypart_overlay/texture/texture_bodypart_overlay
+	/// Lazylist of /datum/status_effect/grouped/bodypart_effect types. Instances of this are applied to the carbon when added the limb is attached, and merged with similair limbs
+	var/list/bodypart_effects
+	/// The cached info about the blood this organ belongs to, set during on_removal()
+	var/list/blood_dna_info
+	/// What items we drop whenever we're butchered
+	/// If unset, the bodyparot cannot be butchered
+	var/list/butcher_drops = null
+	/// What skeleton limb, if any, we replace ourselves with when butchered?
+	var/obj/item/bodypart/butcher_replacement = null
+	/// How much meat do we add to butcher_drops when automatically generating them from our species datum?
+	var/base_meat_amount = 1
+	/// Init cache for our butcher drops for sanic speed
+	var/static/list/butcher_drop_cache = list()
+	/// What state is the bodypart in for determining surgery availability
+	VAR_FINAL/surgery_state = NONE
+	/// What offsets to apply to mutant features by feature key
+	var/list/mutant_feature_offsets
 
 /obj/item/bodypart/apply_fantasy_bonuses(bonus)
 	. = ..()
