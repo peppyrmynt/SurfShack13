@@ -6,7 +6,7 @@
 	desc = "A commerical announcement console, with built in transmitters."
 	icon_screen = "civ_bounty"
 	icon_keyboard = "tech_key"
-	circuit = /obj/item/circuitboard/computer/communications
+	circuit = /obj/item/circuitboard/computer/public_announcement
 
 	STATIC_COOLDOWN_DECLARE(crew_announce_cooldown)
 	/// how long crew messages can be
@@ -46,12 +46,13 @@
 	if(!COOLDOWN_FINISHED(src, crew_announce_cooldown))
 		var/cooldown_left = COOLDOWN_TIMELEFT(src, crew_announce_cooldown)
 		cooldown_left = ceil(cooldown_left / (1 MINUTES))
-		say("The transmitter is recharging. [cooldown_left] minute[cooldown_left ? "s" : ""] left.")
+		say("The transmitter is charging. [cooldown_left] minute[cooldown_left ? "s" : ""] left.")
 		return
 
 	if(obj_flags & EMAGGED)
 		overload_transmitters(user)
 		return
+
 
 	in_use = TRUE
 	var/input = tgui_input_text(user, "Costs [ANNOUNCE_COST] credits", "Announcement", max_length = max_length)
@@ -100,10 +101,11 @@
 
 
 /obj/machinery/computer/public_announcement/proc/overload_transmitters(mob/user)
-	say("ERR: Transmitter overloaded. {Charge:400%;}")
-	tesla_zap(user, power=(347.652 MEGA JOULES))
-	explosion(src, light_impact_range = 3, flame_range = 1, explosion_cause = src)
-	Destroy(force=max_integrity+1)
-
+	say("ERR: Transmitter overloaded.")
+	var/turf/T = get_turf(src)
+	if(T)
+		T.hotspot_expose(700,125)
+	explosion(src, devastation_range = -1, heavy_impact_range = 1, light_impact_range = 3, flash_range = 4)
+	Destroy()
 #undef ANNOUNCE_COST
 #undef CREW_ANNOUNCE_COOLDOWN
