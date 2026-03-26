@@ -33,11 +33,11 @@
 		else
 			. += "<span class='notice'>[src] has to first be anchored onto exposed power lines to detect the powernet.</span>"
 
-obj/machinery/power/exporter/Initialize()
+/obj/machinery/power/exporter/Initialize()
 	..()
 	GLOB.power_exporter_list += src
 
-obj/machinery/power/exporter/Destroy()
+/obj/machinery/power/exporter/Destroy()
 	GLOB.power_exporter_list -= src
 	return ..()
 
