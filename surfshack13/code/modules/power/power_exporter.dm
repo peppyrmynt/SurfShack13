@@ -2,11 +2,11 @@
 #define CLAMPED_OFF 1
 #define OPERATING 2
 
-#define PAY_INTERVAL_TIME 1.5 MINUTES
+#define PAY_INTERVAL_TIME 1 MINUTES
 
 /obj/machinery/power/exporter
 	name = "power exporter"
-	desc = "It exports surplus electrical power over vast distances using highly secretive experimental technology. The more power sold, the cheaper it becomes."
+	desc = "Sell surplus power abroad using highly secretive experimental technology. The more power sold, the cheaper it becomes."
 	icon = 'icons/obj/machines/dominator.dmi'
 	icon_state = "dominator"
 	circuit = /obj/item/circuitboard/machine/power_exporter
@@ -17,27 +17,32 @@
 	/// DISCONNECTED, CLAMPED_OFF, OPERATING
 	var/mode = DISCONNECTED
 	/// currently drained amount to payout for
-	var/power_drained
+	var/power_drained = 0
+	var/total_power_drained = 0
 	/// total amount of money generated, the more power you make the cheaper you have to sell it.
 	var/static/total_payout = 0
 	/// Cable node machine is attached to.
 	var/obj/structure/cable/attached
 	/// how much more money you get from having better parts
 	var/payout_multiplier = 1
+
 /obj/machinery/power/exporter/Initialize()
 	if(!COOLDOWN_STARTED(src, pay_interval))
 		COOLDOWN_START(src, pay_interval, PAY_INTERVAL_TIME)
 	. = ..()
-
 
 /obj/machinery/power/exporter/examine(mob/user)
 	. = ..()
 	if(!anchored)
 		. += span_notice("[src] isn't anchored")
 	if(mode == OPERATING)
-		var/payout = round(power_drained / max(1000, total_payout*0.1)) * payout_multiplier
-		. += span_notice("[power_drained] watts have been stored and will be exported next payment cycle for an estimated [payout] credits")
+		var/payout = round(power_drained / max(1000, total_payout*0.2)) * payout_multiplier
+		. += span_notice("[power_drained * 0.001] kW have been stored and will be sold next cycle for an estimated [payout] credits")
 
+/obj/machinery/power/exporter/examine_more(mob/user)
+	. = ..()
+	. += "The power meter displays [total_power_drained* 0.001] KW."
+	. += "The export meter displays a total of [total_payout] credits."
 
 /obj/machinery/power/exporter/wrench_act(mob/living/user, obj/item/tool)
 	. = TRUE
@@ -61,6 +66,7 @@
 			"[user] detaches \the [src] from the cable.", \
 			span_notice("You unbolt \the [src] from the floor and detach it from the cable."),
 			span_hear("You hear some wires being disconnected from something."))
+	tool.play_tool_sound(src, 50)
 
 /obj/machinery/power/exporter/proc/set_mode(value)
 	if(value == mode)
@@ -72,7 +78,6 @@
 				STOP_PROCESSING(SSobj, src)
 				icon_state = "dominator"
 			set_anchored(FALSE)
-
 		if(CLAMPED_OFF)
 			if(!attached)
 				return
@@ -80,7 +85,6 @@
 				STOP_PROCESSING(SSobj, src)
 				icon_state = "dominator"
 			set_anchored(TRUE)
-
 		if(OPERATING)
 			if(!attached)
 				return
@@ -98,10 +102,8 @@
 	switch(mode)
 		if(DISCONNECTED)
 			..()
-
 		if(CLAMPED_OFF)
 			set_mode(OPERATING)
-
 		if(OPERATING)
 			say("Shutdown engaged.")
 			set_mode(CLAMPED_OFF)
@@ -109,7 +111,6 @@
 /obj/machinery/power/exporter/process()
 	if(mode != OPERATING)
 		return
-
 	drain_power()
 	if(COOLDOWN_FINISHED(src, pay_interval))
 		pay()
@@ -119,18 +120,14 @@
 	if(!attached)
 		set_mode(DISCONNECTED)
 		return
-
 	var/power_drain_amount = round(attached.surplus())
-
 	attached.add_load(power_drain_amount)
 	power_drained += power_drain_amount
 
 /obj/machinery/power/exporter/proc/pay()
-	var/payout = (power_drained / max(1000, total_payout*0.1))
-
+	var/payout = (power_drained / max(1000, total_payout*0.2))
 	payout = payout * payout_multiplier
 	total_payout += payout
-
   	//70% goes straight to the engi budget. 30% of the money goes to cargo.
 	var/datum/bank_account/engi_bank = SSeconomy.get_dep_account(ACCOUNT_ENG)
 	var/engi_payout = round(payout * 0.7)
@@ -138,15 +135,14 @@
 	var/datum/bank_account/cargo_bank = SSeconomy.get_dep_account(ACCOUNT_CAR)
 	var/cargo_payout = round(payout - engi_payout)
 	cargo_bank.adjust_money(cargo_payout)
-
-	say("Exported [power_drained] watts of power! Engineering budget has recieved [engi_payout] cr. Cargo budget has recieved [cargo_payout] cr.")
+	say("Sold [power_drained * 0.001] KW! Engineering and cargo recieved [engi_payout] cr. and [cargo_payout] cr.")
+	total_power_drained += power_drained
 	power_drained = 0
 
 /obj/machinery/power/exporter/RefreshParts()
 	. = ..()
 	for(var/datum/stock_part/capacitor/capacitor in component_parts)
 		payout_multiplier = capacitor.tier
-
 	//incase someone makes tier 25 parts or some bs
 	if(payout_multiplier > 4)
 		WARNING("This needs to be rebalanced for higher tier parts.")
