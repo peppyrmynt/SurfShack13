@@ -61,7 +61,9 @@
 		return FALSE
 	playsound(owner, 'sound/mobs/humanoids/human/scream/malescream_1.ogg', 25, TRUE, extrarange = SILENCED_SOUND_EXTRARANGE, frequency = 5)
 	to_chat(owner, span_userdanger("The world begins to go dark..."))
+	//surfshack start
 	owner.AddComponent(/datum/component/tweak, time = duration)
+	//surfshack end
 	owner.adjust_eye_blur(duration)
 	return TRUE
 

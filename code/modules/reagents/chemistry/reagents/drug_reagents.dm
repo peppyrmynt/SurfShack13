@@ -36,7 +36,9 @@
 	var/hallucination_duration_in_seconds = (affected_mob.get_timed_status_effect_duration(/datum/status_effect/hallucination) / 10)
 	if(hallucination_duration_in_seconds < volume && SPT_PROB(10, seconds_per_tick))
 		affected_mob.adjust_hallucinations(10 SECONDS)
+		//surfshack start
 		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
+		//surfshack end
 
 
 /datum/reagent/drug/cannabis
@@ -176,7 +178,9 @@
 	var/high_message = pick("You feel hyper.", "You feel like you need to go faster.", "You feel like you can run the world.")
 	if(SPT_PROB(2.5, seconds_per_tick))
 		to_chat(affected_mob, span_notice("[high_message]"))
+		//surfshack start
 		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
+		//surfshack end
 
 	affected_mob.add_mood_event("tweaking", /datum/mood_event/stimulant_medium)
 	affected_mob.AdjustAllImmobility(-40 * REM * seconds_per_tick)
@@ -368,7 +372,9 @@
 	if(SPT_PROB(10, seconds_per_tick))
 		affected_mob.losebreath++
 		affected_mob.adjustStaminaLoss(4, updating_stamina = FALSE, required_biotype = affected_biotype)
+		//surfshack start
 		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
+		//surfshack end
 		need_mob_update = TRUE
 	if(SPT_PROB(7.5, seconds_per_tick))
 		need_mob_update += affected_mob.adjustToxLoss(2, updating_health = FALSE, required_biotype = affected_biotype)
@@ -635,7 +641,9 @@
 
 	if(SPT_PROB(BLASTOFF_DANCE_MOVE_CHANCE_PER_UNIT * volume, seconds_per_tick))
 		dancer.emote("spin")
+		//surfshack start
 		dancer.AddComponent(/datum/component/tweak, time=30 SECONDS)
+		//surfshack end
 
 ///This proc listens to the flip signal and throws the mob every third flip
 /datum/reagent/drug/blastoff/proc/on_flip()
@@ -854,8 +862,9 @@
 	kronkaine_fiend.set_jitter_if_lower(20 SECONDS * REM * seconds_per_tick)
 	if(SPT_PROB(10, seconds_per_tick))
 		to_chat(kronkaine_fiend, span_danger(pick("You feel like your heart is going to explode!", "Your ears are ringing!", "You sweat like a pig!", "You clench your jaw and grind your teeth.", "You feel prickles of pain in your chest.")))
+		//surfshack start
 		kronkaine_fiend.AddComponent(/datum/component/tweak, time=30 SECONDS)
-
+		//surfshack end
 ///dirty kronkaine, aka gore. far worse overdose effects.
 /datum/reagent/drug/kronkaine/gore
 	name = "Gore"

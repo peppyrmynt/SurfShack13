@@ -100,7 +100,9 @@
 		else
 			playsound(scanner, 'sound/machines/sonar-ping.ogg', radar_volume, FALSE)
 		scanner.balloon_alert_to_viewers("ore vent nearby")
+		//surfshack start
 		scanner.AddComponent(/datum/component/tweak, time= 1.5 SECONDS)
+		//surfshack end
 
 /obj/effect/temp_visual/mining_overlay
 	plane = HIGH_GAME_PLANE

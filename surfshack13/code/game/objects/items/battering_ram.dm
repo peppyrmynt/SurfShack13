@@ -4,11 +4,11 @@
  * KNOCK-KNOCK, its Justice!
  */
 /obj/item/batteringram
-	icon = 'icons/obj/weapons/fireaxe.dmi'
+	icon = 'surfshack13/icons/obj/weapons.dmi'
 	icon_state = "battering_ram0"
 	base_icon_state = "battering_ram"
-	lefthand_file = 'icons/mob/inhands/weapons/axes_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/weapons/axes_righthand.dmi'
+	lefthand_file = 'surfshack13/icons/mob/inhands/lefthand.dmi'
+	righthand_file = 'surfshack13/icons/mob/inhands/righthand.dmi'
 	name = "battering ram"
 	desc = "An extremely heavy and unwieldy hunk of metal coated in insulating rubber used to break down airlocks. Why would anyone ram a sliding airlock?"
 
@@ -100,11 +100,10 @@
 			no_gravity = TRUE
 		var/throwtarget = get_step(target_mob, get_dir(user, target_mob))
 		target_mob.safe_throw_at(throwtarget, 1, 1, force = MOVE_FORCE_STRONG, spin = no_gravity)
-
 /obj/item/batteringram/afterattack(atom/target, mob/user, click_parameters)
 	. = ..()
 	var/mob/living/living_user = user
-
+	living_user.adjustStaminaLoss(9)
 	if(!isliving(target))
 		if(istype(target, /obj/machinery/door))
 			if(!target.density && target.get_integrity() != 0)
@@ -129,6 +128,10 @@
 		to_chat(living_user, span_userdanger("You [pick(attack_verb_simple)] [target], but slip due inertia!"))
 		visible_message(span_warning("[living_user] slips backwards!"))
 		playsound(living_user, 'sound/misc/slip.ogg', 100)
+
+	// if(prob(1))
+	// 	to_chat(user, span_warning("\The [src] breaks apart!"))
+	// 	Destroy()
 
 /obj/item/batteringram/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] [pick(attack_verb_continuous)] [user.p_them()]self open! It looks like [user.p_theyre()] trying to commit suicide!"))
