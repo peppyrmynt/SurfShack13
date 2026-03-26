@@ -88,7 +88,9 @@
  */
 /datum/objective/assassinate/paradox_clone
 	name = "clone assassinate"
+	//surfshack start
 	completion_credit_reward = 50
+	//surfshack end
 
 /datum/objective/assassinate/paradox_clone/update_explanation_text()
 	. = ..()

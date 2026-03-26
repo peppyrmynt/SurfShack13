@@ -991,6 +991,7 @@
 "fS" = (
 /obj/machinery/power/apc/auto_name/directional/north,
 /obj/structure/cable,
+/obj/machinery/computer/public_announcement,
 /turf/open/floor/iron,
 /area/station/hallway/secondary/exit/departure_lounge)
 "fX" = (

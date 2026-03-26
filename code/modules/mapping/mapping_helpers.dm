@@ -1275,7 +1275,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/mapping_helpers/no_atoms_ontop)
 	var/obj/machinery/airalarm/target = locate(/obj/machinery/requests_console) in loc
 	if(isnull(target))
 		var/area/target_area = get_area(target)
-		log_mapping("[src] failed to find a requests console at [AREACOORD(src)] ([target_area.type]).")
+		log_mapping("[src] failed to find a requests console at [AREACOORD(src)] ([target_area?.type]).")
 	else
 		payload(target)
 

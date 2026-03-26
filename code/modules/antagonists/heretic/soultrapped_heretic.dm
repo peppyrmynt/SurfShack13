@@ -16,7 +16,9 @@
 /datum/objective/heretic_trapped
 	name = "soultrapped failure"
 	explanation_text = "Help the cult. Kill the cult. Help the crew. Kill the crew. Help your wielder. Kill your wielder. Kill everyone. Rattle your chains. Break your bindings."
+	//surfshack start
 	reward_for_completion = FALSE
+	//surfshack end
 
 /datum/antagonist/soultrapped_heretic/on_gain()
 	..()

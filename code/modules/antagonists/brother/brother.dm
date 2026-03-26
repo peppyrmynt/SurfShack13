@@ -310,7 +310,9 @@
 	explanation_text = "Convert a brainwashable person using your flash on them directly. Any handheld flash will work if you lose or break your starting flash."
 	admin_grantable = FALSE
 	martyr_compatible = TRUE
+	//surfshack start
 	completion_credit_reward = 10
+	//surfshack end
 
 /datum/objective/convert_brother/check_completion()
 	return length(team?.members) > 1

@@ -22,7 +22,9 @@
 
 /datum/objective/spider
 	explanation_text = "Spread the infestation."
+	//surfshack start
 	completion_credit_reward = 10
+	//surfshack end
 
 /datum/objective/spider/New(directive)
 	..()

@@ -36,7 +36,9 @@
 	objectives += objective
 
 /datum/objective/bitrunning_glitch_fluff
+	//surfshack start
 	reward_for_completion = FALSE
+	//surfshack end
 
 /datum/objective/bitrunning_glitch_fluff/New()
 	var/list/explanation_texts = list(
