@@ -160,6 +160,11 @@
 	shell = TRUE
 	cell = null
 
+//surfshack start
+/mob/living/silicon/robot/shell/with_cell
+	cell = /obj/item/stock_parts/power_store/cell/high
+//surfshack end
+
 /mob/living/silicon/robot/model
 	var/set_model = /obj/item/robot_model
 

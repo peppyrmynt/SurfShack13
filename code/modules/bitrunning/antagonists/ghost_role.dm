@@ -17,7 +17,9 @@
 	objectives += objective
 
 /datum/objective/bitrunner_ghost_fluff
+	//surfshack start
 	reward_for_completion = FALSE
+	//surfshack end
 
 /datum/objective/bitrunner_ghost_fluff/New()
 	explanation_text = "Defend your domain from the intruders!"

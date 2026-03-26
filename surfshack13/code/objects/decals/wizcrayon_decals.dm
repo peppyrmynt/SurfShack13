@@ -41,15 +41,24 @@
 // 	if(!uses)
 // 		Destroy()
 
-/obj/effect/decal/cleanable/wizcrayon/shroom
+/obj/effect/decal/cleanable/wizcrayon/flip
+	name = "flipper"
+	desc = "a drawing of a bouncepad"
+	icon_state = "flip_0"
+
+/obj/effect/decal/cleanable/wizcrayon/flip/drawing_crossed(atom/source, atom/A)
+	. = ..()
+	A.SpinAnimation(7,1)
+	flick("flip_1", src)
+	playsound(A, 'surfshack13/sound/misc/cartoon_boing1.ogg', 40, TRUE)
+
+
+/obj/effect/decal/cleanable/wizcrayon/spore
 	name = "fentanyl shroom"
 	desc = "a drawing of a fentshroom, you feel dizzy just looking at it"
 	icon_state = "drug_0"
 
-
-
-
-/obj/effect/decal/cleanable/wizcrayon/shroom/drawing_crossed(atom/source, atom/A)
+/obj/effect/decal/cleanable/wizcrayon/spore/drawing_crossed(atom/source, atom/A)
 	. = ..()
 	if(!iscarbon(A))
 		return
@@ -65,7 +74,7 @@
 	C.set_confusion(10 SECONDS)
 
 
-/obj/effect/decal/cleanable/wizcrayon/whoopie_cushion
+/obj/effect/decal/cleanable/wizcrayon/fart
 	name = "whoopee cushion"
 	desc = "a drawing of a whoopee cushion"
 	icon_state = "fart_0"
@@ -73,7 +82,7 @@
 
 
 
-/obj/effect/decal/cleanable/wizcrayon/whoopie_cushion/drawing_crossed(atom/source, atom/A)
+/obj/effect/decal/cleanable/wizcrayon/fart/drawing_crossed(atom/source, atom/A)
 	. = ..()
 	if(!ready)
 		return
@@ -83,39 +92,27 @@
 	addtimer(CALLBACK(src, PROC_REF(reset_fart)), 15 SECONDS)
 
 
-/obj/effect/decal/cleanable/wizcrayon/whoopie_cushion/proc/reset_fart()
+/obj/effect/decal/cleanable/wizcrayon/fart/proc/reset_fart()
 	icon_state = "fart_0"
 	ready = TRUE
 
-/obj/effect/decal/cleanable/wizcrayon/flipper
-	name = "flipper"
-	desc = "a drawing of a bouncepad"
-	icon_state = "flip_0"
-
-/obj/effect/decal/cleanable/wizcrayon/flipper/drawing_crossed(atom/source, atom/A)
-	. = ..()
-	A.SpinAnimation(7,1)
-	flick("flip_1", src)
-	playsound(A, 'surfshack13/sound/misc/cartoon_boing1.ogg', 40, TRUE)
-
-
-/obj/effect/decal/cleanable/wizcrayon/light_bulb
+/obj/effect/decal/cleanable/wizcrayon/glow
 	name = "light"
 	desc = "the drawing glows"
 	icon_state = "glow"
 
 
-/obj/effect/decal/cleanable/wizcrayon/light_bulb/Initialize(mapload, list/datum/disease/diseases)
+/obj/effect/decal/cleanable/wizcrayon/glow/Initialize(mapload, list/datum/disease/diseases)
 	. = ..()
 	set_light(3, 5, src.color)
 
 
-/obj/effect/decal/cleanable/wizcrayon/land_mine
+/obj/effect/decal/cleanable/wizcrayon/boom
 	name = "landmine"
 	desc = "a drawing of some bosnian decour"
 	icon_state = "mine_0"
 
-/obj/effect/decal/cleanable/wizcrayon/land_mine/drawing_crossed(atom/source, atom/A)
+/obj/effect/decal/cleanable/wizcrayon/boom/drawing_crossed(atom/source, atom/A)
 	. = ..()
 	if(!isliving(A))
 		return
@@ -130,15 +127,15 @@
 	L.add_atom_colour(src.color, WASHABLE_COLOUR_PRIORITY)
 	addtimer(CALLBACK(src, PROC_REF(go_away)), 6)
 
-/obj/effect/decal/cleanable/wizcrayon/land_mine/proc/go_away()
+/obj/effect/decal/cleanable/wizcrayon/boom/proc/go_away()
 	Destroy()
 
-/obj/effect/decal/cleanable/wizcrayon/spinner
+/obj/effect/decal/cleanable/wizcrayon/spin
 	name = "spinner"
 	desc = "a drawing that seems to pivot"
 	icon_state = "spin_0"
 
-/obj/effect/decal/cleanable/wizcrayon/spinner/drawing_crossed(atom/source, atom/A)
+/obj/effect/decal/cleanable/wizcrayon/spin/drawing_crossed(atom/source, atom/A)
 	. = ..()
 	if(!istype(A, /mob))
 		return

@@ -62,7 +62,7 @@
 
 /datum/component/tweak/Destroy(force)
 	A = null
-
+	STOP_PROCESSING(SSfastprocess, src)
 	return ..()
 
 /datum/component/tweak/proc/stop()

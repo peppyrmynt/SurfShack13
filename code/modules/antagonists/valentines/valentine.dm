@@ -86,7 +86,9 @@
 /datum/objective/protect/valentine
 	admin_grantable = FALSE
 	human_check = FALSE
+	//surfshack start
 	completion_credit_reward = 50
+	//surfshack end
 
 /datum/objective/protect/valentine/update_explanation_text()
 	explanation_text = "Protect [target.name], your date."

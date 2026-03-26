@@ -24,7 +24,9 @@
 	human.set_species(/datum/species/shadow/nightmare)
 
 /datum/objective/nightmare_fluff
+	//surfshack start
 	reward_for_completion = FALSE
+	//surfshack end
 
 /datum/objective/nightmare_fluff/New()
 	var/list/explanation_texts = list(

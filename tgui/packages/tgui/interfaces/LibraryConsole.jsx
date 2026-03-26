@@ -65,11 +65,12 @@ export const PopoutMenu = (props) => {
         <PopoutEntry id={3} icon="server" text="Archive" />
         <PopoutEntry id={4} icon="upload" text="Upload" />
         <PopoutEntry id={5} icon="print" text="Print" />
+        <PopoutEntry id={6} icon="newspaper" text="Manuals" />
         {!!display_lore && (
           <PopoutEntry
-            id={6}
+            id={7}
             icon="question"
-            text={screen_state === 6 ? 'Gur Fbeprere' : 'Forbidden Lore'}
+            text={screen_state === 7 ? 'Gur Fbeprere' : 'Forbidden Lore'}
             color="black"
             font="copperplate"
           />
@@ -95,6 +96,8 @@ export const PageDisplay = (props) => {
   ) : screen_state === 5 ? (
     <Print />
   ) : screen_state === 6 ? (
+    <Manuals />
+  ) : screen_state === 7 ? (
     <Forbidden />
   ) : null;
   /* eslint-enable indent */
@@ -770,6 +773,62 @@ export const Print = (props) => {
               lineHeight={2}
               textAlign="center"
               onClick={() => act('print_bible')}
+            />
+          </Stack.Item>
+        </Stack>
+      </Stack.Item>
+    </Stack>
+  );
+};
+
+export const Manuals = (props) => {
+  const { act, data } = useBackend();
+  const { manuals } = data;
+  const [selectedManual, setSelectedManual] = useState(manuals[0]);
+
+  return (
+    <Stack vertical fill>
+      <Stack.Item grow>
+        <Stack fill>
+          <Stack.Item width="100%">
+            <Section fill scrollable>
+              {manuals.map((manual) => (
+                <div
+                  key={manual}
+                  title={manual}
+                  className={classes([
+                    'Button',
+                    'Button--fluid',
+                    'Button--color--transparent',
+                    'Button--ellipsis',
+                    selectedManual &&
+                      manual === selectedManual &&
+                      'Button--selected',
+                  ])}
+                  onClick={() => setSelectedManual(manual)}
+                >
+                  {manual}
+                </div>
+              ))}
+            </Section>
+          </Stack.Item>
+        </Stack>
+      </Stack.Item>
+      <Stack.Item>
+        <Stack justify="space-between">
+          <Stack.Item grow>
+            <Button
+              fluid
+              icon="newspaper"
+              content="Render Manual"
+              fontSize="30px"
+              lineHeight={2}
+              textAlign="center"
+              onClick={() =>
+                act('print_manual', {
+                  manual_name: selectedManual,
+                })
+              }
             />
           </Stack.Item>
         </Stack>

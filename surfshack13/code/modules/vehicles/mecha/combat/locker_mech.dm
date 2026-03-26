@@ -1,3 +1,4 @@
+
 #define TILT_AMOUNT 90
 
 /obj/vehicle/sealed/mecha/locker_mech
@@ -5,7 +6,7 @@
 	name = "\improper Locker Mech"
 	ui_theme = "neutral"
 	// it takes an awfully long locker to make long mech
-	icon = 'icons/mob/rideables/long_mechs.dmi'
+	icon = 'surfshack13/icons/mob/rideables/long_mechs.dmi'
 	icon_state = "lockermech"
 	base_icon_state = "lockermech"
 	movedelay = 2

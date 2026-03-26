@@ -381,6 +381,12 @@
 	min_val = 0
 	protection = CONFIG_ENTRY_LOCKED
 
+//surfshack start
+/datum/config_entry/number/max_players_for_ai_shell
+	default = 20
+	min_val = 1
+//surfshack end
+
 /datum/config_entry/number/mice_roundstart
 	default = 10
 	min_val = 0

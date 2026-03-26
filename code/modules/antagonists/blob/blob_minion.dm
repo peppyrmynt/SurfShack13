@@ -22,7 +22,9 @@
 	name = "protect the blob core"
 	explanation_text = "Protect the blob core at all costs."
 	var/datum/weakref/overmind
+	//surfshack start
 	completion_credit_reward = 50
+	//surfshack end
 
 /datum/objective/blob_minion/check_completion()
 	var/mob/eye/blob/resolved_overmind = overmind.resolve()
