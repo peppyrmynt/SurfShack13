@@ -401,7 +401,7 @@ GLOBAL_PROTECT(tracy_init_reason)
 		//surfshack start
 		var/discord_url = CONFIG_GET(string/discord_url)
 		if(discord_url)
-			new_status += "<a href = [discord_url]>\[Discord\] </a>"
+			new_status += "<a href = '[discord_url]'>\[Discord\] </a>"
 		//surfshack end
 		if(CONFIG_GET(flag/allow_respawn))
 			features += "respawn" // show "respawn" regardless of "respawn as char" or "free respawn"
