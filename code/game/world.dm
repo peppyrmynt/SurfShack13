@@ -422,6 +422,11 @@ GLOBAL_PROTECT(tracy_init_reason)
 	if(length(features))
 		new_status += ": [jointext(features, ", ")]"
 
+	//surfshack start
+	var/playdate = add_playdate(new_status)
+	if(playdate)
+		new_status += playdate
+	//surfshack end
 	if(!SSticker || SSticker?.current_state == GAME_STATE_STARTUP)
 		new_status += "<br><b>STARTING</b>"
 	else if(SSticker)
@@ -439,7 +444,6 @@ GLOBAL_PROTECT(tracy_init_reason)
 		new_status += "<br>Map: <b>[SSmapping.current_map.map_path == CUSTOM_MAP_PATH ? "Uncharted Territory" : SSmapping.current_map.map_name]</b>"
 	if(SSmap_vote.next_map_config)
 		new_status += "[SSmapping.current_map ? " | " : "<br>"]Next: <b>[SSmap_vote.next_map_config.map_path == CUSTOM_MAP_PATH ? "Uncharted Territory" : SSmap_vote.next_map_config.map_name]</b>"
-
 	status = new_status
 
 /world/proc/update_hub_visibility(new_visibility)
