@@ -18,7 +18,8 @@ GLOBAL_VAR(playdate_time)
 		if((hour/12) > 1)
 			hour -= 12
 
-	return  "<br>Scheduled playtime on <b>[weekday]. [month]/[day] at [hour]:[min] [day_half] UTC</b>"
+	return  "<br>Scheduled playtime on <b>[weekday]. [month]/[day] at [hour]:[min] [day_half] UTC</b>\
+	<a href='https://forgman6.github.io/?isoString=[date]'>(view Localtime)</a>"
 
 
 
