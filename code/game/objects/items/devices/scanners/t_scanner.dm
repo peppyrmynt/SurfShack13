@@ -59,5 +59,16 @@
 			MA.dir = O.dir
 			I.appearance = MA
 			t_ray_images += I
+	//surfshack start
+	for(var/mob/living/basic/crocodile/O in orange(distance, viewer) )
+		if(HAS_TRAIT(O, TRAIT_T_RAY_VISIBLE))
+			var/image/I = new(loc = get_turf(O))
+			var/mutable_appearance/MA = new(O)
+			MA.alpha = 128
+			MA.dir = O.dir
+			I.appearance = MA
+			t_ray_images += I
+			O.t_scanned(viewer)
+	//surfshack end
 	if(t_ray_images.len)
 		flick_overlay_global(t_ray_images, list(viewer.client), flick_time)
