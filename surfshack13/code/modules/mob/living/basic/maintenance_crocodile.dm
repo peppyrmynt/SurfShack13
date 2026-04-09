@@ -1,5 +1,6 @@
 
-
+//If I have to do another intensive animation, I will make a subsystem for
+//spawn() is fine because lummox fixed it in 1680, and I need motivation to move the codebase to 1680
 /mob/living/basic/crocodile
 	name = "maintenance crocodile"
 	desc = "A large and formerly aquatic reptile with a nasty temperment"
@@ -38,14 +39,11 @@
 	//cardinals only
 	if(dx && dy)
 		return
-
 	var/list/legs = list()
 	for(var/obj/item/bodypart/leg/leg in florida.bodyparts)
 		legs += leg
 	if(!length(legs))
 		return
-
-
 	var/degrees = 90
 	var/pix_x
 	var/pix_y
@@ -69,6 +67,7 @@
 			pix_x = 32
 
 	RegisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE, PROC_REF(on_dir_change))
+	RegisterSignal(florida, COMSIG_ATOM_PRE_DIR_CHANGE, PROC_REF(on_dir_change))
 	buckle_mob(florida, force = TRUE, check_loc = FALSE)
 	layer = ABOVE_MOB_LAYER
 	ADD_TRAIT(florida, TRAIT_CANNOT_BE_UNBUCKLED, REF(src))
@@ -86,36 +85,41 @@
 
 	if(shoes)
 		florida.dropItemToGround(shoes)
+#define STEP_TIME 2
+#define CYCLES 5
+#define TIME CYCLES * 4 * STEP_TIME
+	spawn(TIME)
+		unbuckle_mob(florida)
+		layer = initial(layer)
+		REMOVE_TRAIT(florida, TRAIT_CANNOT_BE_UNBUCKLED, REF(src))
+		REMOVE_TRAIT(florida, TRAIT_RESTRAINED, REF(src))
+		UnregisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE)
+		UnregisterSignal(florida, COMSIG_ATOM_PRE_DIR_CHANGE)
+		florida.transform = null
+		florida.pixel_x = initial(florida.pixel_x)
+		florida.pixel_y = initial(florida.pixel_y)
+		icon_state = "croc"
+		var/obj/item/bodypart/ripped_limb = pick(legs)
+		ripped_limb.dismember()
+		//nomnomnom
+		ripped_limb.forceMove(src)
 
-	for(var/i in 1 to 24)
-		if(do_after(src, 2, florida, progress = FALSE))
-			switch(florida.dir)
-				if(SOUTH)
-					florida.dir = EAST
-					icon_state = "croc_east"
-				if(EAST)
-					florida.dir = NORTH
-					icon_state = "croc_north"
-				if(NORTH)
-					florida.dir = WEST
-					icon_state = "croc_west"
-				if(WEST)
-					florida.dir = SOUTH
-					icon_state = "croc_south"
-	unbuckle_mob(florida)
-	layer = initial(layer)
-	REMOVE_TRAIT(florida, TRAIT_CANNOT_BE_UNBUCKLED, REF(src))
-	REMOVE_TRAIT(florida, TRAIT_RESTRAINED, REF(src))
-	UnregisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE)
-	florida.transform = null
-	florida.pixel_x = initial(florida.pixel_x)
-	florida.pixel_y = initial(florida.pixel_y)
-	icon_state = "croc"
-	var/obj/item/bodypart/ripped_limb = pick(legs)
-	ripped_limb.dismember()
-	//nomnomnom
-	ripped_limb.forceMove(src)
-	return TRUE
+	for(var/i in 1 to CYCLES)
+		animate(florida, time = STEP_TIME, dir = SOUTH, flags = ANIMATION_CONTINUE)
+		animate(time = STEP_TIME, dir = EAST)
+		animate(time = STEP_TIME, dir = NORTH)
+		animate(time = STEP_TIME, dir = WEST)
+
+		animate(src, time = STEP_TIME, icon_state = "croc_south", flags = ANIMATION_CONTINUE)
+		animate(time = STEP_TIME, icon_state = "croc_east")
+		animate(time = STEP_TIME, icon_state = "croc_north")
+		animate(time = STEP_TIME, icon_state = "croc_west")
+
+
+#undef CYCLES
+#undef STEP_TIME
+#undef TIME
+
 
 /mob/living/basic/crocodile/proc/on_dir_change()
 	SIGNAL_HANDLER
