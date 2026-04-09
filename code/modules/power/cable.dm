@@ -244,7 +244,7 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 
 /obj/structure/cable/proc/surplus()
 	if(powernet)
-		return clamp(powernet.avail - powernet.load, 0, powernet.avail)
+		return clamp(powernet.avail-powernet.load, 0, powernet.avail)
 	else
 		return 0
 

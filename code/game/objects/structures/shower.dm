@@ -310,9 +310,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 		try_electrocute_mob(living_target)
 
 /obj/machinery/shower/proc/try_electrocute_mob(mob/living/M)
-	var/turf/T = src.loc
-	if(!isturf(T))
-		return
+	var/turf/T = get_turf(src)
 	var/obj/structure/cable/cable_node = T.get_cable_node()
 	if(isnull(cable_node))
 		return

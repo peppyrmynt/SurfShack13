@@ -70,6 +70,9 @@
 	new /obj/item/storage/belt/security/full(src)
 	new /obj/item/circuitboard/machine/techfab/department/security(src)
 	new /obj/item/storage/photo_album/hos(src)
+	//surfshack start
+	new /obj/item/melee/execution_sword(src)
+	//surfshack end
 
 /obj/structure/closet/secure_closet/hos/populate_contents_immediate()
 	. = ..()

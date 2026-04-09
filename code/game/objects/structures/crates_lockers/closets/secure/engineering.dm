@@ -19,9 +19,6 @@
 	new /obj/item/storage/photo_album/ce(src)
 	new /obj/item/storage/box/skillchips/engineering(src)
 	new /obj/item/storage/box/stickers/chief_engineer(src)
-	//surfshack start
-	new /obj/item/circuitboard/machine/power_exporter(src)
-	//surfshack end
 
 /obj/structure/closet/secure_closet/engineering_chief/populate_contents_immediate()
 	. = ..()
