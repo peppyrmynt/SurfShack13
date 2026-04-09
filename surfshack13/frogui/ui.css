@@ -160,7 +160,9 @@ input[type="radio"] {
 label {
 	cursor: pointer;
 }
-
+input {
+	cursor: pointer;
+}
 label:hover {
 	filter: brightness(1.2);
 }
@@ -196,6 +198,11 @@ label:has(input[type="radio"]:checked) {
 .colorText {
 	color: red;
 	font-weight: bold;
+}
+
+input[type="button"] {
+	color: var(--col-fg);
+
 }
 
 .btn {
