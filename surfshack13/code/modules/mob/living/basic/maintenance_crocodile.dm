@@ -104,16 +104,35 @@
 		//nomnomnom
 		ripped_limb.forceMove(src)
 
-	for(var/i in 1 to CYCLES)
-		animate(florida, time = STEP_TIME, dir = SOUTH, flags = ANIMATION_CONTINUE)
-		animate(time = STEP_TIME, dir = EAST)
-		animate(time = STEP_TIME, dir = NORTH)
-		animate(time = STEP_TIME, dir = WEST)
+	for(var/i in 1 to CYCLES * 4)
+		var/new_dir
+		var/new_icon_state
+		switch(florida.dir)
+			if(SOUTH)
+				new_dir = EAST
+				new_icon_state = "croc_east"
+			if(EAST)
+				new_dir = NORTH
+				new_icon_state = "croc_north"
+			if(NORTH)
+				new_dir = WEST
+				new_icon_state = "croc_west"
+			if(WEST)
+				new_dir = SOUTH
+				new_icon_state = "croc_south"
+		florida.dir = new_dir
+		icon_state = new_icon_state
+		sleep(2)
+		//Lingmox needs to fix
+		// animate(florida, time = STEP_TIME, dir = SOUTH, flags = ANIMATION_CONTINUE)
+		// animate(time = STEP_TIME, dir = EAST)
+		// animate(time = STEP_TIME, dir = NORTH)
+		// animate(time = STEP_TIME, dir = WEST)
 
-		animate(src, time = STEP_TIME, icon_state = "croc_south", flags = ANIMATION_CONTINUE)
-		animate(time = STEP_TIME, icon_state = "croc_east")
-		animate(time = STEP_TIME, icon_state = "croc_north")
-		animate(time = STEP_TIME, icon_state = "croc_west")
+		// animate(src, time = STEP_TIME, icon_state = "croc_south", flags = ANIMATION_CONTINUE)
+		// animate(time = STEP_TIME, icon_state = "croc_east")
+		// animate(time = STEP_TIME, icon_state = "croc_north")
+		// animate(time = STEP_TIME, icon_state = "croc_west")
 
 
 #undef CYCLES
