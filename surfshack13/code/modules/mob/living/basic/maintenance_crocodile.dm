@@ -1,6 +1,5 @@
 
 //If I have to do another intensive animation, I will make a subsystem for
-//spawn() is fine because lummox fixed it in 1680, and I need motivation to move the codebase to 1680
 /mob/living/basic/crocodile
 	name = "maintenance crocodile"
 	desc = "A large and formerly aquatic reptile with a nasty temperment"
@@ -18,23 +17,21 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
-// /mob/living/basic/crocodile/attacked_by(obj/item/attacking_item, mob/living/user)
-// 	if(ishuman(user))
-// 		death_spin(user)
-// 	else
-// 		return ..()
+/mob/living/basic/crocodile/attacked_by(obj/item/attacking_item, mob/living/user)
+	if(ishuman(user))
+		death_spin(user)
+	else
+		return ..()
 
 /mob/living/basic/crocodile/UnarmedAttack(mob/living/simple_animal/user, list/modifiers)
 	if(!ishuman(user))
 		return ..()
-	is_in_deathroll = TRUE
 	death_spin(user)
-	is_in_deathroll = FALSE
-
 
 /mob/living/basic/crocodile/proc/death_spin(mob/living/carbon/human/florida)
-	if(!florida || !istype(florida))
+	if(is_in_deathroll || !florida || !istype(florida))
 		return
+	is_in_deathroll = TRUE
 	var/dx = x - florida.x
 	var/dy = y - florida.y
 	//cardinals only
@@ -83,13 +80,15 @@
 
 	//rip off shoes
 	var/obj/shoes = florida.shoes
-
 	if(shoes)
 		florida.dropItemToGround(shoes)
+
 #define STEP_TIME 2
 #define CYCLES 5
 #define TIME CYCLES * 4 * STEP_TIME
+	//spawn() is fine because lingmox fixed it in 1680, and I need motivation to move the codebase to 1680
 	spawn(TIME)
+		is_in_deathroll = FALSE
 		unbuckle_mob(florida)
 		layer = initial(layer)
 		REMOVE_TRAIT(florida, TRAIT_CANNOT_BE_UNBUCKLED, REF(src))
@@ -104,41 +103,23 @@
 		ripped_limb.dismember()
 		//nomnomnom
 		ripped_limb.forceMove(src)
+	animate(florida, flags = ANIMATION_END_NOW)
+	animate(src, flags = ANIMATION_END_NOW)
+	for(var/i in 1 to CYCLES)
+		animate(florida, time = STEP_TIME, dir = SOUTH, flags = ANIMATION_CONTINUE)
+		animate(time = STEP_TIME, dir = EAST)
+		animate(time = STEP_TIME, dir = NORTH)
+		animate(time = STEP_TIME, dir = WEST)
 
-	for(var/i in 1 to CYCLES * 4)
-		var/new_dir
-		var/new_icon_state
-		switch(florida.dir)
-			if(SOUTH)
-				new_dir = EAST
-				new_icon_state = "croc_east"
-			if(EAST)
-				new_dir = NORTH
-				new_icon_state = "croc_north"
-			if(NORTH)
-				new_dir = WEST
-				new_icon_state = "croc_west"
-			if(WEST)
-				new_dir = SOUTH
-				new_icon_state = "croc_south"
-		florida.dir = new_dir
-		icon_state = new_icon_state
-		sleep(2)
-		//Lingmox needs to fix
-		// animate(florida, time = STEP_TIME, dir = SOUTH, flags = ANIMATION_CONTINUE)
-		// animate(time = STEP_TIME, dir = EAST)
-		// animate(time = STEP_TIME, dir = NORTH)
-		// animate(time = STEP_TIME, dir = WEST)
-
-		// animate(src, time = STEP_TIME, icon_state = "croc_south", flags = ANIMATION_CONTINUE)
-		// animate(time = STEP_TIME, icon_state = "croc_east")
-		// animate(time = STEP_TIME, icon_state = "croc_north")
-		// animate(time = STEP_TIME, icon_state = "croc_west")
-
+		animate(src, time = STEP_TIME, icon_state = "croc_south", flags = ANIMATION_CONTINUE)
+		animate(time = STEP_TIME, icon_state = "croc_east")
+		animate(time = STEP_TIME, icon_state = "croc_north")
+		animate(time = STEP_TIME, icon_state = "croc_west")
 
 #undef CYCLES
 #undef STEP_TIME
 #undef TIME
+
 
 
 /mob/living/basic/crocodile/proc/on_dir_change()
