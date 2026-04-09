@@ -12,6 +12,7 @@
 	SET_BASE_PIXEL(-9, -9)
 	/// if we are deathrolling
 	var/is_in_deathroll = FALSE
+	maxHealth = 100
 
 /mob/living/basic/crocodile/Initialize(mapload)
 	. = ..()
