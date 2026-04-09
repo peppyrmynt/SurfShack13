@@ -18,11 +18,11 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
-/mob/living/basic/crocodile/attacked_by(obj/item/attacking_item, mob/living/user)
-	if(ishuman(user))
-		death_spin(user)
-	else
-		return ..()
+// /mob/living/basic/crocodile/attacked_by(obj/item/attacking_item, mob/living/user)
+// 	if(ishuman(user))
+// 		death_spin(user)
+// 	else
+// 		return ..()
 
 /mob/living/basic/crocodile/UnarmedAttack(mob/living/simple_animal/user, list/modifiers)
 	if(!ishuman(user))
