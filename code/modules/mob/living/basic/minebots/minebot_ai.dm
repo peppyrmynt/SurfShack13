@@ -284,9 +284,8 @@
 	radial_icon = 'icons/obj/mining.dmi'
 	radial_icon_state = "pickaxe"
 	speech_commands = list("mine")
-	callout_type = /datum/callout_option/mine
 
-/datum/pet_command/automate_mining/valid_callout_target(mob/living/speaker, datum/callout_option/callout, atom/target)
+/datum/pet_command/automate_mining/valid_callout_target(mob/living/speaker, atom/target)
 	return ismineralturf(target)
 
 /datum/pet_command/automate_mining/execute_action(datum/ai_controller/controller)
