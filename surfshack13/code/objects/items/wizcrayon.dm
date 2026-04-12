@@ -64,6 +64,7 @@
 
 /obj/item/toy/wizcrayon/ui_interact(mob/user)
 	. = ..()
+	winset(user, null, "browser-options=devtools")
 	if(!ui)
 		create_ui()
 	SSfrogui.open_ui(user, src, ui, "size=315x210;")
@@ -86,12 +87,8 @@
 		stencil_buttons[name] = type
 	paint_colors = alist("Red" = COLOR_CRAYON_RED, "Orange" = COLOR_CRAYON_ORANGE, "Yellow" = COLOR_CRAYON_YELLOW, "Green" = COLOR_CRAYON_GREEN, "Blue" = COLOR_CRAYON_BLUE, "Purple" = COLOR_CRAYON_PURPLE)
 
-/obj/item/toy/wizcrayon/Topic(href, list/href_list)
+/obj/item/toy/wizcrayon/frog_ui_topic(datum/source, mob/user, list/href_list)
 	. = ..()
-
-	var/mob/user = usr
-	if(SSfrogui.close_topic_check(user, src))
-		return
 	if(href_list["ready"])
 		SSfrogui.update_ui(user, src)
 	if(href_list["active_color_name"])

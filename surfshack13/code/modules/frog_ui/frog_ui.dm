@@ -24,7 +24,6 @@ SUBSYSTEM_DEF(frogui)
 	/// UI flags per atom key = atom, value = flags
 	var/alist/atom_ui_flags = alist()
 
-
 /// Checks if the ui should be closed
 /datum/controller/subsystem/frogui/fire(resumed)
 	for(var/key,val in atom_ui_clients)
@@ -38,7 +37,7 @@ SUBSYSTEM_DEF(frogui)
 				close_ui(ui_mob, ui_atom)
 
 /// Open ui, register it in client list, and the atom list
-/datum/controller/subsystem/frogui/proc/open_ui(mob/user, atom/source, ui, params, ui_flags)
+/datum/controller/subsystem/frogui/proc/open_ui(mob/user, atom/source, ui, params, ui_flags = 0)
 	var/client/C = user.client
 	if(!C)
 		return
@@ -48,6 +47,10 @@ SUBSYSTEM_DEF(frogui)
 	if(isnull(atom_ui_clients[source]))
 		atom_ui_clients[source] = list()
 	atom_ui_flags[source] = ui_flags
+
+	if(!(ui_flags & FROG_UI_NO_TOPIC))
+		RegisterSignal(source, COMSIG_TOPIC, PROC_REF(on_topic))
+
 	var/source_ref = ref(source)
 	var/replacedtext  = replacetextEx(ui,"/* ref insert */", "const ref = [json_encode(source_ref)];")
 	if(replacedtext)
@@ -60,13 +63,29 @@ SUBSYSTEM_DEF(frogui)
 		client_uis[C] += source_ref
 		atom_ui_clients[source] += C
 
-/// Checks if the ui should be closed, and then closes the ui. Returns true if the ui was closed.
-/datum/controller/subsystem/frogui/proc/close_topic_check(mob/user, atom/source)
-	if(!user || !source)
-		CRASH("topic checked without user or source user:[user] source:[source]")
-	if(user.default_can_use_topic(source) != UI_INTERACTIVE)
+
+/datum/controller/subsystem/frogui/proc/on_topic(datum/source, usr, list/href_list)
+	SIGNAL_HANDLER
+	var/mob/user = usr
+
+	var/client/C = user.client
+	var/list/ui_clients = atom_ui_clients[source]
+
+	//if client is not a ui user bail.
+	if(!C || !ui_clients.Find(C))
 		close_ui(user, source)
-		return TRUE
+		return
+
+	if(atom_ui_flags[source] & ~FROG_UI_IGNORE_PROXIMITY)
+		if(user.default_can_use_topic(source) != UI_INTERACTIVE)
+			close_ui(user, source)
+			return
+
+	source.frog_ui_topic(source, user, href_list)
+
+
+
+/// Checks if the ui should be closed, and then closes the ui. Returns true if the ui was closed.
 
 
 /// Closes the ui, cleans up list.
@@ -80,7 +99,12 @@ SUBSYSTEM_DEF(frogui)
 		C  << browse(null, "window=[source_ref]")
 		client_uis[C] -= source_ref
 		atom_ui_clients[source] -= C
-		atom_ui_flags -= source
+
+	//If no one else is using the ui, stop listening to topic.
+	if(!length(atom_ui_clients[source]) && !(atom_ui_flags[source] & FROG_UI_NO_TOPIC))
+		UnregisterSignal(source, COMSIG_TOPIC)
+	atom_ui_flags -= source
+
 
 /// Close all uis tied to a given atom.
 /datum/controller/subsystem/frogui/proc/atom_close_uis(atom/source)
@@ -88,6 +112,10 @@ SUBSYSTEM_DEF(frogui)
 	for(var/client/C in atom_ui_clients[source])
 		C << browse(null, "window=[source_ref]")
 		client_uis[C] -= source_ref
+
+	if(atom_ui_flags[source] & ~FROG_UI_NO_TOPIC)
+		UnregisterSignal(source, COMSIG_TOPIC)
+
 	atom_ui_clients[source] = null
 
 /// Send data to ui
@@ -106,3 +134,8 @@ SUBSYSTEM_DEF(frogui)
 	if(!user)
 		return
 	SSfrogui.close_ui(user, locate(source_ref))
+
+/datum/proc/frog_ui_topic(datum/source, mob/user, list/href_list)
+	SHOULD_CALL_PARENT(TRUE)
+	if(src != source)
+		CRASH("dont call it like that")
