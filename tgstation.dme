@@ -6654,7 +6654,6 @@
 #include "surfshack13\store\admin\admin_coin_modification.dm"
 #include "surfshack13\store\pre_round\_pre_round_store.dm"
 #include "surfshack13\store\pre_round\roundstart_items\_roundstart_item.dm"
-#include "surfshack13\store\store_items\__store.dm"
 #include "surfshack13\store\store_items\_store_items.dm"
 #include "surfshack13\Z_edits\hud_edits.dm"
 #include "surfshack13\Z_edits\research_edits.dm"
