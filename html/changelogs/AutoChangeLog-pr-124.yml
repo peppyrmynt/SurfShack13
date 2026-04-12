@@ -1,0 +1,4 @@
+author: "forgman6"
+delete-after: True
+changes:
+  - rscdel: "callouts and mob callout commands."

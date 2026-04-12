@@ -18,8 +18,6 @@
 	var/radial_icon_state
 	/// Speech strings to listen out for
 	var/list/speech_commands = list()
-	/// Callout that triggers this command
-	var/callout_type
 	/// Shown above the mob's head when it hears you
 	var/command_feedback
 	/// How close a mob needs to be to a target to respond to a command
@@ -33,11 +31,10 @@
 /datum/pet_command/proc/add_new_friend(mob/living/tamer)
 	RegisterSignal(tamer, COMSIG_MOB_SAY, PROC_REF(respond_to_command))
 	RegisterSignal(tamer, COMSIG_MOB_AUTOMUTE_CHECK, PROC_REF(waive_automute))
-	RegisterSignal(tamer, COMSIG_MOB_CREATED_CALLOUT, PROC_REF(respond_to_callout))
 
 /// Stop listening to a guy
 /datum/pet_command/proc/remove_friend(mob/living/unfriended)
-	UnregisterSignal(unfriended, list(COMSIG_MOB_SAY, COMSIG_MOB_AUTOMUTE_CHECK, COMSIG_MOB_CREATED_CALLOUT))
+	UnregisterSignal(unfriended, list(COMSIG_MOB_SAY, COMSIG_MOB_AUTOMUTE_CHECK))
 
 /// Stop the automute from triggering for commands (unless the spoken text is suspiciously longer than the command)
 /datum/pet_command/proc/waive_automute(mob/living/speaker, client/client, last_message, mute_type)
@@ -62,32 +59,8 @@
 
 	try_activate_command(speaker)
 
-/// Respond to a callout
-/datum/pet_command/proc/respond_to_callout(mob/living/speaker, datum/callout_option/callout, atom/target)
-	SIGNAL_HANDLER
-
-	if (isnull(callout_type) || !ispath(callout, callout_type))
-		return
-
-	var/mob/living/parent = weak_parent.resolve()
-	if (!parent)
-		return
-
-	if (!valid_callout_target(speaker, callout, target))
-		var/found_new_target = FALSE
-		for (var/atom/new_target in range(2, target))
-			if (valid_callout_target(speaker, callout, new_target))
-				target = new_target
-				found_new_target = TRUE
-
-		if (!found_new_target)
-			return
-
-	if (try_activate_command(speaker))
-		look_for_target(parent, target)
-
 /// Does this callout with this target trigger this command?
-/datum/pet_command/proc/valid_callout_target(mob/living/speaker, datum/callout_option/callout, atom/target)
+/datum/pet_command/proc/valid_callout_target(mob/living/speaker, atom/target)
 	return TRUE
 
 /**
