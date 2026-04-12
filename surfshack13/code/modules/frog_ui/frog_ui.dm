@@ -6,31 +6,39 @@
 * tried to make ui look like tgui for user
 * experimental for now
 * per client, you can only have one ui based from an atom.
+* if you want to have multiple UI's coming from the same atom, you can go fuck yourself.
 * ui closes if mob is far enough away from it
 */
 
+
+
 SUBSYSTEM_DEF(frogui)
 	name = "FrogUI"
-	runlevels = RUNLEVEL_LOBBY | RUNLEVELS_DEFAULT
+	runlevels = RUNLEVEL_LOBBY | RUNLEVELS_DEFAULT | RUNLEVEL_POSTGAME
 	flags = SS_NO_INIT
 	wait = 1.5 SECONDS
 	/// List of all the open ui's a client has. key = client, value = list(ref(atom))
 	var/alist/client_uis = alist()
 	/// All open uis targeting a specific atom. key = atom, value = list(clients)
 	var/alist/atom_ui_clients = alist()
+	/// UI flags per atom key = atom, value = flags
+	var/alist/atom_ui_flags = alist()
+
 
 /// Checks if the ui should be closed
 /datum/controller/subsystem/frogui/fire(resumed)
 	for(var/key,val in atom_ui_clients)
 		var/atom/ui_atom = key
 		var/list/clients = val
+		if(atom_ui_flags[ui_atom] & FROG_UI_IGNORE_PROXIMITY)
+			continue
 		for(var/client/C in clients)
 			var/mob/ui_mob = C.mob
 			if(ui_status_user_is_adjacent(ui_mob, ui_atom) <= UI_DISABLED)
 				close_ui(ui_mob, ui_atom)
 
 /// Open ui, register it in client list, and the atom list
-/datum/controller/subsystem/frogui/proc/open_ui(mob/user, atom/source, ui, params)
+/datum/controller/subsystem/frogui/proc/open_ui(mob/user, atom/source, ui, params, ui_flags)
 	var/client/C = user.client
 	if(!C)
 		return
@@ -39,6 +47,7 @@ SUBSYSTEM_DEF(frogui)
 		client_uis[C] = list()
 	if(isnull(atom_ui_clients[source]))
 		atom_ui_clients[source] = list()
+	atom_ui_flags[source] = ui_flags
 	var/source_ref = ref(source)
 	var/replacedtext  = replacetextEx(ui,"/* ref insert */", "const ref = [json_encode(source_ref)];")
 	if(replacedtext)
@@ -71,6 +80,7 @@ SUBSYSTEM_DEF(frogui)
 		C  << browse(null, "window=[source_ref]")
 		client_uis[C] -= source_ref
 		atom_ui_clients[source] -= C
+		atom_ui_flags -= source
 
 /// Close all uis tied to a given atom.
 /datum/controller/subsystem/frogui/proc/atom_close_uis(atom/source)

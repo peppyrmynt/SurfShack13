@@ -1,6 +1,5 @@
 GLOBAL_VAR(playdate_time)
 
-// https://www.byond.com/forum/post/2986517 I hope and pray
 /world/proc/add_playdate()
 	var/date = GLOB.playdate_time
 	if(!date)
@@ -26,7 +25,7 @@ GLOBAL_VAR(playdate_time)
 ADMIN_VERB(schedule_playtime, R_FUN, "Schedule Playtime", "Schedule the playtime to display on byond hub", ADMIN_CATEGORY_SERVER)
 	. = TRUE
 	RegisterSignal(src, COMSIG_TOPIC, PROC_REF(on_topic))
-	SSfrogui.open_ui(user.mob, src, file2text('surfshack13/frogui/datepicker.html'))
+	SSfrogui.open_ui(user.mob, src, file2text('surfshack13/frogui/datepicker.html'), ui_flags=FROG_UI_IGNORE_PROXIMITY)
 
 /datum/admin_verb/schedule_playtime/proc/on_topic(datum/source, usr, list/href_list)
 	SIGNAL_HANDLER
