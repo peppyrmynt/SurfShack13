@@ -1,5 +1,5 @@
 /**
- * AI controller for croc (ripped from carp)
+ * AI controller for alligator (ripped from carp)
  * Expected flow is:
  * * If health is low, mark that we want to run away.
  * * If we want to run away, find nearest target and run out of view of it.
@@ -7,7 +7,7 @@
  * * If we don't have a target already, find something to attack.
  * * Go and attack our target (which might be food, or might be a mob).
  */
-/datum/ai_controller/basic_controller/crocodile
+/datum/ai_controller/basic_controller/alligator
 	movement_delay = 3 SECONDS
 	blackboard = list(
 		BB_BASIC_MOB_STOP_FLEEING = TRUE,

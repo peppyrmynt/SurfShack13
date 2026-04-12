@@ -37,7 +37,7 @@
 #define FACTION_ILLUSION "illusion"
 /// Creatures of the never finished jungle planet, and gorillas
 #define FACTION_JUNGLE "jungle"
-/// Small lizards
+/// lizards
 #define FACTION_LIZARD "lizard"
 /// Maint creatures have mutual respect for each other.
 #define FACTION_MAINT_CREATURES "maint_creatures"
