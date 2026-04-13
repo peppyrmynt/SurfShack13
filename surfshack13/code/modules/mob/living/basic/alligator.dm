@@ -1,3 +1,7 @@
+#define STEP_TIME 2
+#define CYCLES 5
+#define ANIMATION_TIME (CYCLES * 4 * STEP_TIME)
+#define ROLL_COOLDOWN_TIME ANIMATION_TIME + 1 SECONDS
 
 //If I have to do another intensive animation, I will make a subsystem for it
 /mob/living/basic/alligator
@@ -17,7 +21,7 @@
 	combat_mode = TRUE
 	obj_damage = 10
 	melee_damage_lower = 5
-	melee_damage_upper = 15
+	melee_damage_upper = 10
 	attack_sound = 'sound/items/weapons/bite.ogg'
 	attack_vis_effect = ATTACK_EFFECT_BITE
 	attack_verb_continuous = "chomps"
@@ -26,10 +30,11 @@
 	ai_controller = /datum/ai_controller/basic_controller/alligator
 	SET_BASE_PIXEL(-9, -9)
 	/// if we are deathrolling this is set to the user
-	var/death_rolling_victim
-	/// The victims original tranform to restore.
-	var/initial_victim_transform
+	var/mob/living/carbon/human/eating_victim
+	/// cooldowns between deathrolls
+	COOLDOWN_DECLARE(roll_cooldown)
 
+//for ez badmin spawning
 /mob/living/basic/alligator/croc
 
 /mob/living/basic/alligator/Initialize(mapload)
@@ -52,35 +57,60 @@
 	ai_controller.set_blackboard_key(BB_BASIC_FOODS, typecacheof(desired_food))
 
 /mob/living/basic/alligator/Destroy()
-	if(death_rolling_victim)
-		reset_victim(death_rolling_victim)
+	if(eating_victim)
+		reset_victim()
 	. = ..()
 
 
-/mob/living/basic/alligator/UnarmedAttack(mob/living/simple_animal/user, list/modifiers)
-	if(death_rolling_victim)
-		return
+/mob/living/basic/alligator/death(gibbed)
+	. = ..()
+	if(eating_victim)
+		reset_victim()
 
-	if(ishuman(user) && prob(40))
-		death_roll(user)
-	else
+/mob/living/basic/alligator/UnarmedAttack(mob/living/carbon/human/user, list/modifiers)
+	if(eating_victim)
+		return
+	if(!istype(user))
 		return ..()
 
+	if(user.body_position == LYING_DOWN)
+		if(death_roll(user))
+			return
+	else
+		//have to hit them 3 times before they are on the ground and then finally we can rip off a leg
+		var/stamina_damage
+		switch(user.getStaminaLoss())
+			if(0 to 5)
+				stamina_damage = 6
+			if(6 to 8)
+				stamina_damage = 5
+			if(9 to 10)
+				stamina_damage = 4
+			else
+				user.Knockdown(SHOVE_KNOCKDOWN_SOLID)
+		if(stamina_damage)
+			user.adjustStaminaLoss(stamina_damage)
+	return ..()
 
+
+
+/// Check if the mob can be deathrolled, do the spin animation, and then rip off leg if all is well returns false on fail
 /mob/living/basic/alligator/proc/death_roll(mob/living/carbon/human/florida)
-	if(death_rolling_victim || !florida || !istype(florida))
-		return
-	var/dx = x - florida.x
-	var/dy = y - florida.y
-	//cardinals only
-	if(dx && dy)
-		return
+	if(!florida || !istype(florida) || florida.body_position == LYING_DOWN)
+		return FALSE
+	if(!COOLDOWN_FINISHED(src, roll_cooldown))
+		return FALSE
 	var/list/legs = list()
+	if(HAS_TRAIT(florida, TRAIT_ON_ELEVATED_SURFACE) && !HAS_TRAIT(src, TRAIT_ON_ELEVATED_SURFACE))
+		return FALSE
 	for(var/obj/item/bodypart/leg/leg in florida.bodyparts)
 		legs += leg
 	if(!length(legs))
-		return
-	death_rolling_victim = florida
+		return FALSE
+
+	eating_victim = florida
+	var/dx = x - florida.x
+	var/dy = y - florida.y
 	var/degrees = 90
 	var/pix_x, pix_y
 	if(abs(dx) < abs(dy))
@@ -106,14 +136,12 @@
 	RegisterSignal(florida, COMSIG_ATOM_PRE_DIR_CHANGE, PROC_REF(on_dir_change))
 	buckle_mob(florida, force = TRUE, check_loc = FALSE)
 	layer = ABOVE_ALL_MOB_LAYER
-	ADD_TRAIT(florida, TRAIT_CANNOT_BE_UNBUCKLED, REF(src))
-	ADD_TRAIT(florida, TRAIT_RESTRAINED, REF(src))
-	initial_victim_transform = florida.transform
+	florida.add_traits(list(TRAIT_CANNOT_BE_UNBUCKLED, TRAIT_INCAPACITATED, TRAIT_IMMOBILIZED, TRAIT_FLOORED, TRAIT_HANDS_BLOCKED), REF(src))
 	florida.transform = matrix().Turn(degrees)
 	if(pix_x)
 		florida.pixel_x = pix_x
 		florida.pixel_y = 0
-	if(pix_y)
+	else
 		florida.pixel_x = 0
 		florida.pixel_y = pix_y
 
@@ -122,16 +150,14 @@
 	if(shoes)
 		florida.dropItemToGround(shoes)
 
-#define STEP_TIME 2
-#define CYCLES 5
-#define TIME CYCLES * 4 * STEP_TIME
+
 	//spawn() is fine because lingmox fixed it in 1680, and I need motivation to move the codebase to 1680
-	spawn(TIME)
+	spawn(ANIMATION_TIME)
 		if(!QDELETED(src) && !stat)
 			icon_state = "croc"
 			var/obj/item/bodypart/ripped_limb = pick(legs)
 			ripped_limb.dismember()
-		reset_victim(florida)
+		reset_victim()
 		layer = initial(layer)
 		UnregisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE)
 
@@ -147,24 +173,34 @@
 		animate(time = STEP_TIME, icon_state = "croc_east")
 		animate(time = STEP_TIME, icon_state = "croc_north")
 		animate(time = STEP_TIME, icon_state = "croc_west")
+	COOLDOWN_START(src, roll_cooldown, ROLL_COOLDOWN_TIME)
+	return TRUE
 
-#undef CYCLES
-#undef STEP_TIME
-#undef TIME
+/mob/living/basic/alligator/proc/reset_victim()
+	if(!eating_victim)
+		return
 
-/mob/living/basic/alligator/proc/reset_victim(mob/living/carbon/human/florida)
-	if(florida.buckled)
-		unbuckle_mob(florida)
-	REMOVE_TRAIT(florida, TRAIT_CANNOT_BE_UNBUCKLED, REF(src))
-	REMOVE_TRAIT(florida, TRAIT_RESTRAINED, REF(src))
-	UnregisterSignal(florida, COMSIG_ATOM_PRE_DIR_CHANGE)
-	florida.transform = initial_victim_transform
-	florida.pixel_x = initial(florida.pixel_x)
-	florida.pixel_y = initial(florida.pixel_y)
-	death_rolling_victim = null
-	initial_victim_transform = null
+	if(eating_victim.buckled)
+		unbuckle_mob(eating_victim)
+	UnregisterSignal(eating_victim, COMSIG_ATOM_PRE_DIR_CHANGE)
+	eating_victim.remove_traits(list(TRAIT_CANNOT_BE_UNBUCKLED, TRAIT_INCAPACITATED, TRAIT_IMMOBILIZED, TRAIT_FLOORED, TRAIT_HANDS_BLOCKED), REF(src))
+	eating_victim.pixel_x = initial(eating_victim.pixel_x)
+	if(eating_victim.body_position == LYING_DOWN)
+		eating_victim.transform = matrix().Turn(GET_LYING_ANGLE(eating_victim))
+		eating_victim.pixel_y = -4
+	else
+		eating_victim.transform = null
+		eating_victim.pixel_y = initial(eating_victim.pixel_y)
+	eating_victim = null
 
 
 /mob/living/basic/alligator/proc/on_dir_change()
 	SIGNAL_HANDLER
 	return COMPONENT_ATOM_BLOCK_DIR_CHANGE
+
+
+
+#undef CYCLES
+#undef STEP_TIME
+#undef ANIMATION_TIME
+#undef ROLL_COOLDOWN_TIME
