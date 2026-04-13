@@ -1,6 +1,5 @@
 GLOBAL_VAR(playdate_time)
 
-// https://www.byond.com/forum/post/2986517 I hope and pray
 /world/proc/add_playdate()
 	var/date = GLOB.playdate_time
 	if(!date)
@@ -17,7 +16,7 @@ GLOBAL_VAR(playdate_time)
 		day_half = "PM"
 		if((hour/12) > 1)
 			hour -= 12
-
+	message_admins("playtime set for [weekday]. [month]/[day] at [hour]:[min] [day_half] UTC <a href='https://forgman6.github.io/?isoString=[date]'>View In Localtime")
 	return  "<br>Scheduled playtime on <b>[weekday]. [month]/[day] at [hour]:[min] [day_half] UTC</b> - \
 	<a href='https://forgman6.github.io/?isoString=[date]'>View In Localtime</a>"
 
@@ -25,13 +24,12 @@ GLOBAL_VAR(playdate_time)
 
 ADMIN_VERB(schedule_playtime, R_FUN, "Schedule Playtime", "Schedule the playtime to display on byond hub", ADMIN_CATEGORY_SERVER)
 	. = TRUE
-	RegisterSignal(src, COMSIG_TOPIC, PROC_REF(on_topic))
-	SSfrogui.open_ui(user.mob, src, file2text('surfshack13/frogui/datepicker.html'))
+	SSfrogui.open_ui(user.mob, src, file2text('surfshack13/frogui/datepicker.html'), ui_flags = FROG_UI_IGNORE_PROXIMITY)
 
-/datum/admin_verb/schedule_playtime/proc/on_topic(datum/source, usr, list/href_list)
-	SIGNAL_HANDLER
+/datum/admin_verb/schedule_playtime/frog_ui_topic(datum/source, usr, list/href_list)
+	. = ..()
 	if(href_list["datetime"])
 		GLOB.playdate_time = href_list["datetime"]
 		world.update_status()
-		UnregisterSignal(src, COMSIG_TOPIC)
 		SSfrogui.close_ui(usr, src)
+
