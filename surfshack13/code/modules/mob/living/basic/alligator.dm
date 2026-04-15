@@ -52,7 +52,7 @@
 		)
 	if(prob(1)) //*disk shaped thront... *burps...
 		desired_food += /obj/item/disk/nuclear
-
+		desc += " It likes floppy disks."
 	AddElement(/datum/element/basic_eating, food_types = desired_food)
 	ai_controller.set_blackboard_key(BB_BASIC_FOODS, typecacheof(desired_food))
 
@@ -73,9 +73,8 @@
 	if(!istype(user))
 		return ..()
 
-	if(user.body_position == LYING_DOWN)
-		if(death_roll(user))
-			return
+	if(user.body_position == LYING_DOWN && death_roll(user))
+		return
 	else
 		//have to hit them 3 times before they are on the ground and then finally we can rip off a leg
 		var/stamina_damage
@@ -98,14 +97,18 @@
 /mob/living/basic/alligator/proc/death_roll(mob/living/carbon/human/florida)
 	if(!florida || !istype(florida) || florida.body_position == LYING_DOWN)
 		return FALSE
+
 	if(!COOLDOWN_FINISHED(src, roll_cooldown))
+		to_chat(src, span_notice("Your still dizzy from the last death roll, wait a second."))
+		return FALSE
+	if(HAS_TRAIT(florida, TRAIT_ON_ELEVATED_SURFACE) && !HAS_TRAIT(src, TRAIT_ON_ELEVATED_SURFACE))
+		to_chat(src, "[florida] is too high up to grab and death roll.")
 		return FALSE
 	var/list/legs = list()
-	if(HAS_TRAIT(florida, TRAIT_ON_ELEVATED_SURFACE) && !HAS_TRAIT(src, TRAIT_ON_ELEVATED_SURFACE))
-		return FALSE
 	for(var/obj/item/bodypart/leg/leg in florida.bodyparts)
 		legs += leg
 	if(!length(legs))
+		to_chat(src, "[florida]\s legs are already gone!")
 		return FALSE
 
 	eating_victim = florida
@@ -150,13 +153,17 @@
 	if(shoes)
 		florida.dropItemToGround(shoes)
 
-
+	florida.visible_message(span_danger("\the [src] clamps down on your leg and starts death rolling. you feel your leg tearing!"),\
+		span_notice("\the [src] clamps down on [florida]\s leg and starts to death roll."))
+	COOLDOWN_START(src, roll_cooldown, ROLL_COOLDOWN_TIME)
 	//spawn() is fine because lingmox fixed it in 1680, and I need motivation to move the codebase to 1680
 	spawn(ANIMATION_TIME)
 		if(!QDELETED(src) && !stat)
 			icon_state = "croc"
 			var/obj/item/bodypart/ripped_limb = pick(legs)
 			ripped_limb.dismember()
+			if(prob(50)) //nom nom
+				ripped_limb.forceMove(src)
 		reset_victim()
 		layer = initial(layer)
 		UnregisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE)
@@ -173,7 +180,6 @@
 		animate(time = STEP_TIME, icon_state = "croc_east")
 		animate(time = STEP_TIME, icon_state = "croc_north")
 		animate(time = STEP_TIME, icon_state = "croc_west")
-	COOLDOWN_START(src, roll_cooldown, ROLL_COOLDOWN_TIME)
 	return TRUE
 
 /mob/living/basic/alligator/proc/reset_victim()
@@ -197,8 +203,6 @@
 /mob/living/basic/alligator/proc/on_dir_change()
 	SIGNAL_HANDLER
 	return COMPONENT_ATOM_BLOCK_DIR_CHANGE
-
-
 
 #undef CYCLES
 #undef STEP_TIME
