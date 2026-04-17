@@ -1,7 +1,7 @@
 #define STEP_TIME 2
 #define CYCLES 5
 #define ANIMATION_TIME (CYCLES * 4 * STEP_TIME)
-#define ROLL_COOLDOWN_TIME ANIMATION_TIME + 1 SECONDS
+#define ROLL_COOLDOWN_TIME ANIMATION_TIME + 1.5 SECONDS
 
 //If I have to do another intensive animation, I will make a subsystem for it
 /mob/living/basic/alligator
@@ -28,11 +28,15 @@
 	attack_verb_simple = "chomp"
 	faction = list(FACTION_LIZARD)
 	ai_controller = /datum/ai_controller/basic_controller/alligator
+	butcher_results = list(
+		/obj/item/stack/sheet/animalhide = 1,
+		/obj/item/food/meat/slab = 2,
+	)
 	SET_BASE_PIXEL(-9, -9)
-	/// if we are deathrolling this is set to the user
-	var/mob/living/carbon/human/eating_victim
 	/// cooldowns between deathrolls
 	COOLDOWN_DECLARE(roll_cooldown)
+	/// If we are deathrolling this is set.
+	var/mob/living/carbon/human/eating_victim
 
 //for ez badmin spawning
 /mob/living/basic/alligator/croc
@@ -54,11 +58,14 @@
 		desired_food += /obj/item/disk/nuclear
 		desc += " It likes floppy disks."
 	AddElement(/datum/element/basic_eating, food_types = desired_food)
+	AddElement(/datum/element/ai_retaliate)
+	RegisterSignal(src, COMSIG_LIVING_GIBBED, PROC_REF(on_gibbed))
 	ai_controller.set_blackboard_key(BB_BASIC_FOODS, typecacheof(desired_food))
 
 /mob/living/basic/alligator/Destroy()
 	if(eating_victim)
 		reset_victim()
+	UnregisterSignal(src, COMSIG_LIVING_GIBBED)
 	. = ..()
 
 
@@ -67,48 +74,49 @@
 	if(eating_victim)
 		reset_victim()
 
-/mob/living/basic/alligator/UnarmedAttack(mob/living/carbon/human/user, list/modifiers)
+
+
+
+
+/mob/living/basic/alligator/UnarmedAttack(mob/living/carbon/human/user, proximity_flag, list/modifiers)
 	if(eating_victim)
-		return
+		return TRUE
+
 	if(!istype(user))
 		return ..()
 
-	if(user.body_position == LYING_DOWN && death_roll(user))
-		return
+	if(user.body_position == LYING_DOWN)
+		death_roll(user)
 	else
-		//have to hit them 3 times before they are on the ground and then finally we can rip off a leg
+		//have to hit them 2 times before they are on the ground and then finally we can rip off a leg
 		var/stamina_damage
 		switch(user.getStaminaLoss())
 			if(0 to 5)
-				stamina_damage = 6
-			if(6 to 8)
 				stamina_damage = 5
-			if(9 to 10)
-				stamina_damage = 4
+			if(6 to 8)
+				stamina_damage = 3
 			else
 				user.Knockdown(SHOVE_KNOCKDOWN_SOLID)
 		if(stamina_damage)
 			user.adjustStaminaLoss(stamina_damage)
-	return ..()
-
-
+		melee_attack(user, modifiers)
 
 /// Check if the mob can be deathrolled, do the spin animation, and then rip off leg if all is well returns false on fail
 /mob/living/basic/alligator/proc/death_roll(mob/living/carbon/human/florida)
-	if(!florida || !istype(florida) || florida.body_position == LYING_DOWN)
+	if(!florida || !istype(florida) || !florida.body_position == LYING_DOWN)
 		return FALSE
 
 	if(!COOLDOWN_FINISHED(src, roll_cooldown))
 		to_chat(src, span_notice("Your still dizzy from the last death roll, wait a second."))
 		return FALSE
 	if(HAS_TRAIT(florida, TRAIT_ON_ELEVATED_SURFACE) && !HAS_TRAIT(src, TRAIT_ON_ELEVATED_SURFACE))
-		to_chat(src, "[florida] is too high up to grab and death roll.")
+		to_chat(src, span_notice("[florida] is too high up to grab and death roll."))
 		return FALSE
 	var/list/legs = list()
 	for(var/obj/item/bodypart/leg/leg in florida.bodyparts)
 		legs += leg
 	if(!length(legs))
-		to_chat(src, "[florida]\s legs are already gone!")
+		to_chat(src, span_notice("[florida]\s legs are already gone!"))
 		return FALSE
 
 	eating_victim = florida
@@ -134,7 +142,7 @@
 			degrees = 90
 			dir = EAST
 			pix_x = 32
-
+	RegisterSignal(florida, COMSIG_PRE_LYING_ANGLE_CHANGE, PROC_REF(on_lying_angle_change))
 	RegisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE, PROC_REF(on_dir_change))
 	RegisterSignal(florida, COMSIG_ATOM_PRE_DIR_CHANGE, PROC_REF(on_dir_change))
 	buckle_mob(florida, force = TRUE, check_loc = FALSE)
@@ -153,8 +161,8 @@
 	if(shoes)
 		florida.dropItemToGround(shoes)
 
-	florida.visible_message(span_danger("\the [src] clamps down on your leg and starts death rolling. you feel your leg tearing!"),\
-		span_notice("\the [src] clamps down on [florida]\s leg and starts to death roll."))
+	florida.visible_message(span_warning("\The [src] clamps down on [florida]\s leg and starts to death roll."),\
+		span_userdanger("\The [src] clamps down on your leg and starts death rolling. you feel your leg tearing!"))
 	COOLDOWN_START(src, roll_cooldown, ROLL_COOLDOWN_TIME)
 	//spawn() is fine because lingmox fixed it in 1680, and I need motivation to move the codebase to 1680
 	spawn(ANIMATION_TIME)
@@ -162,12 +170,11 @@
 			icon_state = "croc"
 			var/obj/item/bodypart/ripped_limb = pick(legs)
 			ripped_limb.dismember()
-			if(prob(50)) //nom nom
+			if(prob(50)) //nom nom,  half chance limbs can be recovered apon gibbing gator
 				ripped_limb.forceMove(src)
 		reset_victim()
 		layer = initial(layer)
 		UnregisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE)
-
 	animate(florida, flags = ANIMATION_END_NOW)
 	animate(src, flags = ANIMATION_END_NOW)
 	for(var/i in 1 to CYCLES)
@@ -188,7 +195,7 @@
 
 	if(eating_victim.buckled)
 		unbuckle_mob(eating_victim)
-	UnregisterSignal(eating_victim, COMSIG_ATOM_PRE_DIR_CHANGE)
+	UnregisterSignal(eating_victim, list(COMSIG_ATOM_PRE_DIR_CHANGE, COMSIG_PRE_LYING_ANGLE_CHANGE))
 	eating_victim.remove_traits(list(TRAIT_CANNOT_BE_UNBUCKLED, TRAIT_INCAPACITATED, TRAIT_IMMOBILIZED, TRAIT_FLOORED, TRAIT_HANDS_BLOCKED), REF(src))
 	eating_victim.pixel_x = initial(eating_victim.pixel_x)
 	if(eating_victim.body_position == LYING_DOWN)
@@ -197,12 +204,26 @@
 	else
 		eating_victim.transform = null
 		eating_victim.pixel_y = initial(eating_victim.pixel_y)
+	eating_victim.update_overlays()
 	eating_victim = null
-
 
 /mob/living/basic/alligator/proc/on_dir_change()
 	SIGNAL_HANDLER
 	return COMPONENT_ATOM_BLOCK_DIR_CHANGE
+
+/mob/living/basic/alligator/proc/on_lying_angle_change(datum/source, var/direct)
+	SIGNAL_HANDLER
+	return COMPONENT_LYING_BLOCK_ANGLE_CHANGE
+
+/mob/living/basic/alligator/proc/on_gibbed(datum/source, var/drop_bitflags)
+	SIGNAL_HANDLER
+	var/drop_loc = drop_location()
+	var/thrown
+	for(var/atom/movable/eaten_thing in src)
+		eaten_thing.forceMove(drop_loc)
+		if(thrown < 5)
+			eaten_thing.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1,3), 5)
+			thrown ++
 
 #undef CYCLES
 #undef STEP_TIME

@@ -152,6 +152,13 @@
 ///From base of mob/living/MobBump(): (mob/bumped, mob/living/bumper)
 #define COMSIG_LIVING_PRE_MOB_BUMP "movable_pre_bump"
 	#define COMPONENT_LIVING_BLOCK_PRE_MOB_BUMP (1<<0)
+
+//surfshack start
+///From the base of mob/living/lying_angle_on_movement() (direct)
+#define COMSIG_PRE_LYING_ANGLE_CHANGE "lying_angle_change"
+	#define COMPONENT_LYING_BLOCK_ANGLE_CHANGE (1 << 0)
+//surfshack end
+
 ///From base of mob/living/MobBump() (mob/living)
 #define COMSIG_LIVING_MOB_BUMP "living_mob_bump"
 ///From base of mob/living/MobBump() (mob/living)
