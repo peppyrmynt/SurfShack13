@@ -6579,6 +6579,7 @@
 #include "surfshack13\code\modules\bloodsuckers\vassals\types\revenge.dm"
 #include "surfshack13\code\modules\client\preferences.dm"
 #include "surfshack13\code\modules\client\preferences\inventory.dm"
+#include "surfshack13\code\modules\clothing\head\hat.dm"
 #include "surfshack13\code\modules\clown\clown_props.dm"
 #include "surfshack13\code\modules\datums\components\crafting\misc.dm"
 #include "surfshack13\code\modules\mob\living\basic\alligator.dm"

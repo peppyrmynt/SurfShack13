@@ -2,7 +2,6 @@
 #define CYCLES 5
 #define ANIMATION_TIME (CYCLES * 4 * STEP_TIME)
 #define ROLL_COOLDOWN_TIME ANIMATION_TIME + 1.5 SECONDS
-
 //If I have to do another intensive animation, I will make a subsystem for it
 /mob/living/basic/alligator
 	name = "space alligator"
@@ -29,7 +28,7 @@
 	faction = list(FACTION_LIZARD)
 	ai_controller = /datum/ai_controller/basic_controller/alligator
 	butcher_results = list(
-		/obj/item/stack/sheet/animalhide = 1,
+		/obj/item/clothing/head/costume/gator_cloak = 1,
 		/obj/item/food/meat/slab = 2,
 	)
 	SET_BASE_PIXEL(-9, -9)
@@ -84,7 +83,6 @@
 
 	if(!istype(user))
 		return ..()
-
 	if(user.body_position == LYING_DOWN)
 		death_roll(user)
 	else
