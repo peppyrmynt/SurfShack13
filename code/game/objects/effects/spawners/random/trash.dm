@@ -177,6 +177,7 @@
 		/mob/living/basic/frog = 2,
 		//surfshack begin
 		/obj/effect/spawner/random/space_frog = 1,
+		/mob/living/basic/alligator = 1,
 		//surfshack end
 		/obj/item/reagent_containers/cup/rag = 2,
 		/obj/item/reagent_containers/cup/bucket = 2,
