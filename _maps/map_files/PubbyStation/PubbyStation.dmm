@@ -284,26 +284,6 @@
 	dir = 4
 	},
 /area/station/medical/medbay/central)
-"aaK" = (
-/obj/machinery/computer/nanite_cloud_controller,
-/obj/structure/window/reinforced/spawner/directional/north,
-/obj/machinery/light_switch/directional/east,
-/obj/effect/turf_decal/bot_white{
-	color = "#D381C9"
-	},
-/obj/effect/turf_decal/trimline/purple/filled/line{
-	dir = 5
-	},
-/obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
-	dir = 4
-	},
-/obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
-	dir = 1
-	},
-/turf/open/floor/iron/dark/smooth_corner{
-	dir = 8
-	},
-/area/station/science/server)
 "aaQ" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -18720,9 +18700,8 @@
 "btt" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/effect/turf_decal/trimline/purple/filled/line,
-/obj/effect/turf_decal/trimline/purple/filled/mid_joiner,
-/obj/structure/extinguisher_cabinet/directional/south,
+/obj/effect/turf_decal/trimline/purple/filled/warning,
+/obj/effect/turf_decal/trimline/purple/mid_joiner,
 /turf/open/floor/iron/white/smooth_edge,
 /area/station/science/research)
 "btz" = (
@@ -19860,10 +19839,9 @@
 "bzh" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/effect/turf_decal/trimline/purple/filled/line,
-/obj/effect/turf_decal/trimline/purple/filled/mid_joiner,
-/obj/machinery/light/directional/south,
-/obj/structure/sign/departments/nanites/directional/south,
+/obj/effect/turf_decal/trimline/purple/filled/warning,
+/obj/effect/turf_decal/trimline/purple/mid_joiner,
+/obj/structure/cable,
 /turf/open/floor/iron/white/smooth_edge,
 /area/station/science/research)
 "bzi" = (
@@ -23875,22 +23853,14 @@
 	},
 /area/station/engineering/atmos/pumproom)
 "bSf" = (
-/obj/machinery/firealarm/directional/east,
-/obj/machinery/nanite_programmer,
-/obj/effect/turf_decal/bot_white{
-	color = "#D381C9"
-	},
-/obj/effect/turf_decal/trimline/purple/filled/line{
-	dir = 6
-	},
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/effect/turf_decal/trimline/purple/filled/line,
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner,
-/obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
-	dir = 4
-	},
-/turf/open/floor/iron/dark/smooth_corner{
-	dir = 1
-	},
-/area/station/science/server)
+/obj/machinery/light/directional/south,
+/obj/structure/sign/departments/nanites/directional/south,
+/turf/open/floor/iron/white/smooth_edge,
+/area/station/science/research)
 "bSj" = (
 /obj/structure/grille,
 /turf/closed/wall/r_wall,
@@ -33319,6 +33289,11 @@
 	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/port/aft)
+"dMq" = (
+/obj/structure/cable,
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/plating,
+/area/station/security/checkpoint/science)
 "dMB" = (
 /obj/structure/table,
 /obj/item/stack/sheet/cardboard/fifty,
@@ -36975,17 +36950,6 @@
 /obj/machinery/light/small/directional/south,
 /turf/open/floor/plating,
 /area/station/maintenance/fore)
-"fax" = (
-/obj/machinery/door/airlock/command{
-	name = "Research Division Server Room"
-	},
-/obj/effect/mapping_helpers/airlock/access/all/science/rd,
-/obj/machinery/door/firedoor,
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/turf/open/floor/iron/dark/textured_large,
-/area/station/science/server)
 "faz" = (
 /obj/machinery/atmospherics/pipe/smart/simple/dark/visible{
 	dir = 4
@@ -40125,19 +40089,6 @@
 /obj/machinery/light/small/directional/east,
 /turf/open/floor/engine/xenobio,
 /area/station/science/xenobiology)
-"gmE" = (
-/obj/machinery/power/apc/auto_name/directional/east,
-/obj/effect/turf_decal/trimline/purple/filled/line{
-	dir = 4
-	},
-/obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
-	dir = 4
-	},
-/obj/structure/cable,
-/turf/open/floor/iron/dark/smooth_edge{
-	dir = 4
-	},
-/area/station/science/server)
 "gmK" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/structure/grille,
@@ -40951,6 +40902,17 @@
 	dir = 4
 	},
 /area/station/service/theater_dressing)
+"gBP" = (
+/obj/machinery/door/airlock/command{
+	name = "Research Division Server Room"
+	},
+/obj/effect/mapping_helpers/airlock/access/all/science/rd,
+/obj/machinery/door/firedoor,
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/turf/open/floor/iron/dark/textured_large,
+/area/station/science/server)
 "gBW" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 8
@@ -47123,6 +47085,24 @@
 	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/starboard)
+"iYq" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/door/window/brigdoor/right/directional/north{
+	name = "Nanite Hub Room";
+	req_access = list("research")
+	},
+/obj/effect/turf_decal/trimline/purple/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/purple/mid_joiner{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/iron/dark/smooth_edge{
+	dir = 1
+	},
+/area/station/science/research)
 "iYM" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -48331,11 +48311,6 @@
 /obj/machinery/disposal/bin/tagger,
 /turf/open/floor/iron/large,
 /area/station/service/hydroponics)
-"jxr" = (
-/obj/structure/cable,
-/obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating,
-/area/station/security/checkpoint/science)
 "jyi" = (
 /obj/effect/mapping_helpers/mail_sorting/service/dormitories,
 /obj/structure/disposalpipe/sorting/mail{
@@ -49480,6 +49455,26 @@
 /obj/effect/mapping_helpers/burnt_floor,
 /turf/open/floor/iron/small,
 /area/station/maintenance/department/electrical)
+"jVJ" = (
+/obj/machinery/computer/nanite_cloud_controller,
+/obj/structure/window/reinforced/spawner/directional/north,
+/obj/machinery/light_switch/directional/east,
+/obj/effect/turf_decal/bot_white{
+	color = "#D381C9"
+	},
+/obj/effect/turf_decal/trimline/purple/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_corner{
+	dir = 8
+	},
+/area/station/science/server)
 "jVS" = (
 /obj/effect/spawner/random/trash/grime,
 /turf/open/floor/iron/white/textured_large,
@@ -75155,14 +75150,6 @@
 	},
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/security/office)
-"tCG" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/effect/turf_decal/trimline/purple/filled/warning,
-/obj/effect/turf_decal/trimline/purple/mid_joiner,
-/obj/structure/cable,
-/turf/open/floor/iron/white/smooth_edge,
-/area/station/science/research)
 "tCH" = (
 /obj/structure/window/reinforced/spawner/directional/south,
 /obj/structure/reagent_dispensers/plumbed{
@@ -78000,13 +77987,6 @@
 /obj/effect/spawner/random/clothing/funny_hats,
 /turf/open/floor/carpet,
 /area/station/commons/dorms/room1)
-"uGK" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/effect/turf_decal/trimline/purple/filled/warning,
-/obj/effect/turf_decal/trimline/purple/mid_joiner,
-/turf/open/floor/iron/white/smooth_edge,
-/area/station/science/research)
 "uGY" = (
 /obj/effect/turf_decal/tile/yellow/half{
 	dir = 8
@@ -84479,22 +84459,22 @@
 	},
 /area/station/hallway/secondary/exit)
 "wWy" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/door/window/brigdoor/right/directional/north{
-	name = "Nanite Hub Room";
-	req_access = list("research")
+/obj/machinery/firealarm/directional/east,
+/obj/machinery/nanite_programmer,
+/obj/effect/turf_decal/bot_white{
+	color = "#D381C9"
 	},
-/obj/effect/turf_decal/trimline/purple/filled/warning{
+/obj/effect/turf_decal/trimline/purple/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/purple/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_corner{
 	dir = 1
 	},
-/obj/effect/turf_decal/trimline/purple/mid_joiner{
-	dir = 1
-	},
-/turf/open/floor/iron/dark/smooth_edge{
-	dir = 1
-	},
-/area/station/science/research)
+/area/station/science/server)
 "wWz" = (
 /obj/machinery/atmospherics/pipe/smart/simple/yellow/visible,
 /turf/open/floor/iron,
@@ -87038,6 +87018,14 @@
 /obj/machinery/duct,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/hallway/secondary/service)
+"ydg" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/effect/turf_decal/trimline/purple/filled/line,
+/obj/effect/turf_decal/trimline/purple/filled/mid_joiner,
+/obj/structure/extinguisher_cabinet/directional/south,
+/turf/open/floor/iron/white/smooth_edge,
+/area/station/science/research)
 "ydh" = (
 /obj/machinery/door/window/brigdoor/security/cell/right/directional/east{
 	req_access = list("psychology");
@@ -87212,6 +87200,19 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/security/execution/education)
+"ygm" = (
+/obj/machinery/power/apc/auto_name/directional/east,
+/obj/effect/turf_decal/trimline/purple/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
+	dir = 4
+	},
+/obj/structure/cable,
+/turf/open/floor/iron/dark/smooth_edge{
+	dir = 4
+	},
+/area/station/science/server)
 "ygr" = (
 /obj/machinery/meter{
 	name = "Mixed Air Tank Out"
@@ -128459,10 +128460,10 @@ tIM
 bUe
 ksf
 miD
-bzh
+bSf
 mdR
 hFn
-jxr
+dMq
 hFn
 rNL
 bBM
@@ -129230,8 +129231,8 @@ dmP
 sPD
 bVv
 miD
-uGK
-wWy
+btt
+iYq
 gXw
 bxy
 azY
@@ -129488,10 +129489,10 @@ rJy
 brT
 miD
 cPE
-aaK
-gmE
+jVJ
+ygm
 bxJ
-bSf
+wWy
 fVg
 bBQ
 ogm
@@ -130001,8 +130002,8 @@ beL
 rJy
 brT
 nWj
-tCG
-fax
+bzh
+gBP
 xnV
 xoD
 bzi
@@ -130772,7 +130773,7 @@ bJV
 aot
 sPD
 vPk
-btt
+ydg
 eUn
 lNW
 ldQ
