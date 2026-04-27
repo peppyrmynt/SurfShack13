@@ -1,19 +1,23 @@
 //max channel is 1024. Only go lower from here, because byond tends to pick the first available channel to play sounds on
 #define CHANNEL_LOBBYMUSIC 1024
 #define CHANNEL_ADMIN 1023
-#define CHANNEL_VOX 1022
-#define CHANNEL_JUKEBOX 1021
-#define CHANNEL_HEARTBEAT 1020 //sound channel for heartbeats
-#define CHANNEL_BOSS_MUSIC 1019
-#define CHANNEL_AMBIENCE 1018
-#define CHANNEL_BUZZ 1017
-#define CHANNEL_TRAITOR 1016
-#define CHANNEL_CHARGED_SPELL 1015
-#define CHANNEL_ELEVATOR 1014
-#define CHANNEL_ESCAPEMENU 1013
+//surfshack start
+//asshole coded, to add one, I have to edit everything.
+#define CHANNEL_EXECUTION_SWORD 1022
+#define CHANNEL_VOX 1020
+#define CHANNEL_JUKEBOX 1019
+#define CHANNEL_HEARTBEAT 1018 //sound channel for heartbeats
+#define CHANNEL_BOSS_MUSIC 1017
+#define CHANNEL_AMBIENCE 1016
+#define CHANNEL_BUZZ 1015
+#define CHANNEL_TRAITOR 1014
+#define CHANNEL_CHARGED_SPELL 1013
+#define CHANNEL_ELEVATOR 1012
+#define CHANNEL_ESCAPEMENU 1011
 //THIS SHOULD ALWAYS BE THE LOWEST ONE!
 //KEEP IT UPDATED
-#define CHANNEL_HIGHEST_AVAILABLE 1012
+#define CHANNEL_HIGHEST_AVAILABLE 1010
+//surfshack end
 
 #define MAX_INSTRUMENT_CHANNELS (128 * 6)
 

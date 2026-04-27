@@ -265,10 +265,11 @@ GLOBAL_PROTECT(tracy_init_reason)
 #endif
 
 /world/Topic(T, addr, master, key)
-	TGS_TOPIC //redirect to server tools if necessary
-
 	if(addr == "127.0.0.1" && SSvoicechat)
 		SSvoicechat.handle_topic(T , addr)
+
+	TGS_TOPIC //redirect to server tools if necessary
+
 
 	var/static/list/topic_handlers = TopicHandlers()
 
@@ -324,8 +325,6 @@ GLOBAL_PROTECT(tracy_init_reason)
 	qdel(src) //shut it down
 
 /world/Reboot(reason = 0, fast_track = FALSE)
-	if(SSvoicechat && SSvoicechat.initialized)
-		SSvoicechat.Shutdown()
 	if (reason || fast_track) //special reboot, do none of the normal stuff
 		if (usr)
 			log_admin("[key_name(usr)] Has requested an immediate world restart via client side debugging tools")
@@ -382,8 +381,6 @@ GLOBAL_PROTECT(tracy_init_reason)
 		call_ext(debug_server, "auxtools_shutdown")()
 
 /world/Del()
-	if(SSvoicechat && SSvoicechat.initialized)
-		SSvoicechat.Shutdown()
 	shutdown_byond_tracy()
 	auxcleanup()
 	. = ..()
@@ -401,6 +398,11 @@ GLOBAL_PROTECT(tracy_init_reason)
 		var/server_name = CONFIG_GET(string/servername)
 		if (server_name)
 			new_status += "<b>[server_name]</b> "
+		//surfshack start
+		var/discord_url = CONFIG_GET(string/discord_url)
+		if(discord_url)
+			new_status += "<a href = '[discord_url]'> (Discord) </a>"
+		//surfshack end
 		if(CONFIG_GET(flag/allow_respawn))
 			features += "respawn" // show "respawn" regardless of "respawn as char" or "free respawn"
 		if(!CONFIG_GET(flag/allow_ai))
@@ -420,6 +422,11 @@ GLOBAL_PROTECT(tracy_init_reason)
 	if(length(features))
 		new_status += ": [jointext(features, ", ")]"
 
+	//surfshack start
+	var/playdate = add_playdate(new_status)
+	if(playdate)
+		new_status += playdate
+	//surfshack end
 	if(!SSticker || SSticker?.current_state == GAME_STATE_STARTUP)
 		new_status += "<br><b>STARTING</b>"
 	else if(SSticker)
@@ -437,7 +444,6 @@ GLOBAL_PROTECT(tracy_init_reason)
 		new_status += "<br>Map: <b>[SSmapping.current_map.map_path == CUSTOM_MAP_PATH ? "Uncharted Territory" : SSmapping.current_map.map_name]</b>"
 	if(SSmap_vote.next_map_config)
 		new_status += "[SSmapping.current_map ? " | " : "<br>"]Next: <b>[SSmap_vote.next_map_config.map_path == CUSTOM_MAP_PATH ? "Uncharted Territory" : SSmap_vote.next_map_config.map_name]</b>"
-
 	status = new_status
 
 /world/proc/update_hub_visibility(new_visibility)

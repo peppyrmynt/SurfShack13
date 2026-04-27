@@ -1,0 +1,9 @@
+author: "forgman6"
+delete-after: True
+changes:
+  - rscadd: "Public announcement console"
+  - rscadd: "Public announcement board and research"
+  - code_imp: "modified console research node to include announcment"
+  - map: "changed maps to have one announcement console per station."
+  - rscadd: "surfshack test"
+  - rscadd: "mapping test to ensure atleast one public announcement console per station"

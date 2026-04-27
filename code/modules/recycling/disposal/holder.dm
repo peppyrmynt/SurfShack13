@@ -33,12 +33,13 @@
 	return ..()
 
 /// Initializes a holder from the contents of a disposal unit
-/obj/structure/disposalholder/proc/init(obj/machinery/disposal/D)
-	gas = D.air_contents// transfer gas resv. into holder object
+/obj/structure/disposalholder/proc/init(obj/disposal_machine, ignore = null)
+
+	gas = istype(disposal_machine, /obj/machinery/disposal) ? disposal_machine:air_contents : take_morgue_air(disposal_machine)// transfer gas resv. into holder object
 
 	//Check for any living mobs trigger hasmob.
 	//hasmob effects whether the package goes to cargo or its tagged destination.
-	for(var/mob/living/M in D)
+	for(var/mob/living/M in disposal_machine)
 		if(M.client)
 			M.reset_perspective(src)
 		hasmob = TRUE
@@ -46,31 +47,38 @@
 
 	//Checks 1 contents level deep. This means that players can be sent through disposals mail...
 	//...but it should require a second person to open the package. (i.e. person inside a wrapped locker)
-	for(var/obj/O in D)
+	for(var/obj/O in disposal_machine)
 		if(locate(/mob/living) in O)
 			hasmob = TRUE
 			break
 
-	// now everything inside the disposal gets put into the holder
-	// note AM since can contain mobs or objs
-	for(var/A in D)
-		var/atom/movable/atom_in_transit = A
-		if(atom_in_transit == src)
+	//now everything inside the disposal gets put into the holder
+	//note AM since can contain mobs or objs
+	//ignore is for objects that shouldnt be put into the holder (morgue tray for example)
+	for(var/A in disposal_machine)
+		if(A == ignore || A == src)
 			continue
-		SEND_SIGNAL(atom_in_transit, COMSIG_MOVABLE_DISPOSING, src, D, hasmob)
+		var/atom/movable/atom_in_transit = A
+		SEND_SIGNAL(atom_in_transit, COMSIG_MOVABLE_DISPOSING, src, disposal_machine, hasmob)
 		atom_in_transit.forceMove(src)
 		if(iscyborg(atom_in_transit))
 			var/obj/item/dest_tagger/borg/tagger = locate() in atom_in_transit
 			if(tagger)
 				destinationTag = tagger.currTag
 
+//function to take away 240 litres of air into the chute (yea i just gave dimensions to the space the morgue can hold: 40w*200l*30h)
+#define MORGUE_TRAY_LITERS 240
+/obj/structure/disposalholder/proc/take_morgue_air(obj/structure/bodycontainer/chute/morgue)
+	var/datum/gas_mixture/env = morgue.loc.return_air()
+	return env.remove((MORGUE_TRAY_LITERS*env.return_pressure())/R_IDEAL_GAS_EQUATION*env.temperature)
 
+#undef MORGUE_TRAY_LITERS
 /// Starts the movement process, argument is the disposal unit the holder started in
-/obj/structure/disposalholder/proc/start(obj/machinery/disposal/D)
-	if(QDELETED(D.trunk))
-		D.expel(src) // no trunk connected, so expel immediately
+/obj/structure/disposalholder/proc/start(obj/disposal_machine)
+	if(QDELETED(disposal_machine:trunk))
+		disposal_machine:expel(src) // no trunk connected, so expel immediately
 		return
-	forceMove(D.trunk)
+	forceMove(disposal_machine:trunk)
 	active = TRUE
 	setDir(DOWN)
 	start_moving()

@@ -30,6 +30,106 @@
  */
 GLOBAL_LIST_EMPTY(bodycontainers) //Let them act as spawnpoints for revenants and other ghosties.
 
+/obj/structure/bodycontainer/chute
+	name = "morgue"
+	desc = "Used to keep bodies in until someone fetches them."
+	connected = /obj/structure/tray/m_tray
+	var/obj/structure/disposalpipe/trunk/trunk = null
+
+/obj/structure/bodycontainer/chute/Initialize(mapload)
+	..()
+	AddComponent(/datum/component/simple_rotation)
+	link_trunk()
+
+/obj/structure/bodycontainer/chute/Destroy()
+	if(trunk)
+		trunk.linked = null
+		trunk = null
+	. = ..()
+
+/obj/structure/bodycontainer/chute/close()
+	if(!COOLDOWN_FINISHED(src, open_close_cd))
+		return FALSE
+
+	COOLDOWN_START(src, open_close_cd, 0.5 SECONDS)
+	playsound(src, 'sound/effects/roll.ogg', 5, TRUE)
+	playsound(src, 'sound/items/deconstruct.ogg', 50, TRUE)
+	var/turf/close_loc = connected.loc
+
+	for(var/atom/movable/entering in close_loc)
+		if(entering.anchored && entering != connected)
+			continue
+		animate_slide_in(entering, close_loc)
+		entering.forceMove(src)
+
+	if(trunk)
+		var/obj/structure/disposalholder/holder = new(src)
+		holder.init(src, connected)
+		holder.start(src)
+
+	update_appearance()
+	return TRUE
+
+/obj/structure/bodycontainer/chute/proc/link_trunk()
+	var/obj/structure/disposalpipe/trunk/found_trunk = locate() in loc
+
+	if(!found_trunk)
+		return
+
+	found_trunk.set_linked(src) // link the pipe trunk to self
+	trunk = found_trunk
+
+/obj/structure/bodycontainer/chute/welder_act(mob/living/user, obj/item/item)
+	. = ITEM_INTERACT_SUCCESS
+	if(anchored)
+		to_chat(user, span_notice("[src] must be unwrenched from the floor first!"))
+		return
+	if(!item.tool_start_check(user, amount = 1, heat_required = HIGH_TEMPERATURE_REQUIRED))
+		return
+	to_chat(user, span_notice("You start deconstructing [src]..."))
+	if(!item.use_tool(src, user, 3 SECONDS, 1, 100))
+		return
+
+	deconstruct(TRUE)
+	return
+
+/obj/structure/bodycontainer/chute/can_be_unfasten_wrench(mob/user, silent)
+	if(!anchored)
+		var/obj/structure/disposalpipe/trunk/found_trunk = locate() in loc
+		if(!found_trunk)
+			to_chat(user, span_notice("[src] doesn't have a trunk below it!"))
+			return FAILED_UNFASTEN
+
+	. = ..()
+
+/obj/structure/bodycontainer/chute/wrench_act(mob/living/user, obj/item/tool)
+	if(default_unfasten_wrench(user, tool) == SUCCESSFUL_UNFASTEN)
+		if(anchored)
+			link_trunk()
+		else
+			close()
+			trunk.linked = null
+			trunk = null
+
+	return ITEM_INTERACT_SUCCESS
+
+/obj/structure/bodycontainer/chute/open()
+	if(!anchored)
+		return FALSE
+	. = ..()
+
+//moves everything back from the holder into the morgue
+/obj/structure/bodycontainer/chute/proc/expel(obj/structure/disposalholder/holder)
+	holder.active = FALSE
+	for(var/atom/movable/anything in holder)
+		if(anything == connected)
+			continue
+		anything.forceMove(src)
+
+	var/turf/turf = get_turf(loc)
+	if(turf)
+		turf.assume_air(holder.gas)
+
 /obj/structure/bodycontainer
 	icon = 'icons/obj/structures.dmi'
 	icon_state = "morgue1"
@@ -107,7 +207,8 @@ GLOBAL_LIST_EMPTY(bodycontainers) //Let them act as spawnpoints for revenants an
 	return attack_hand(user)
 
 /obj/structure/bodycontainer/atom_deconstruct(disassembled = TRUE)
-	new /obj/item/stack/sheet/iron(loc, 5)
+	var/amount = disassembled ? 10 : 5
+	new /obj/item/stack/sheet/iron(loc, amount)
 
 /obj/structure/bodycontainer/container_resist_act(mob/living/user)
 	if(!locked)

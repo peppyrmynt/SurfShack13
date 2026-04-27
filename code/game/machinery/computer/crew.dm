@@ -216,14 +216,19 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 			stack_trace("Non-human mob is in suit_sensors_list: [tracked_living_mob] ([tracked_living_mob.type])")
 			continue
 
+		// Do they have monitoring nanites?
+		var/nanite_sensors = FALSE
+		if(tracked_human in SSnanites.nanite_monitored_mobs)
+			nanite_sensors = TRUE
+
 		// Check they have a uniform
 		var/obj/item/clothing/under/uniform = tracked_human.w_uniform
-		if (!istype(uniform))
+		if (!istype(uniform) && !nanite_sensors)
 			stack_trace("Human without a suit sensors compatible uniform is in suit_sensors_list: [tracked_human] ([tracked_human.type]) ([uniform?.type])")
 			continue
 
-		// Check if their uniform is in a compatible mode.
-		if((uniform.has_sensor == NO_SENSORS) || !uniform.sensor_mode)
+		// Check if their uniform is in a compatible mode. OR if they have monitoring nanites, if they have monitoring nanites, then continue.
+		if((uniform.has_sensor == NO_SENSORS || !uniform.sensor_mode) && !nanite_sensors)
 			stack_trace("Human without active suit sensors is in suit_sensors_list: [tracked_human] ([tracked_human.type]) ([uniform.type])")
 			continue
 
@@ -246,7 +251,7 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 				entry["ijob"] = jobs[trim_assignment]
 
 		// Broken sensors show garbage data
-		if (uniform.has_sensor == BROKEN_SENSORS)
+		if (uniform.has_sensor == BROKEN_SENSORS && !nanite_sensors)
 			entry["life_status"] = rand(0,1)
 			entry["area"] = pick_list (ION_FILE, "ionarea")
 			entry["oxydam"] = rand(0,175)
@@ -259,11 +264,11 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 			continue
 
 		// Current status
-		if (sensor_mode >= SENSOR_LIVING)
+		if (sensor_mode >= SENSOR_LIVING || nanite_sensors)
 			entry["life_status"] = tracked_living_mob.stat
 
 		// Damage
-		if (sensor_mode >= SENSOR_VITALS)
+		if (sensor_mode >= SENSOR_VITALS || nanite_sensors)
 			entry += list(
 				"oxydam" = round(tracked_living_mob.getOxyLoss(), 1),
 				"toxdam" = round(tracked_living_mob.getToxLoss(), 1),
@@ -273,7 +278,7 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 			)
 
 		// Location
-		if (sensor_mode >= SENSOR_COORDS)
+		if (sensor_mode >= SENSOR_COORDS || nanite_sensors)
 			entry["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
 
 		// Trackability

@@ -15,11 +15,18 @@ SUBSYSTEM_DEF(library)
 
 	/// List of poster typepaths we're ok with being printable
 	var/list/printable_posters = list()
+	//surfshack start
+	/// all holo manuals.
+	var/list/manuals = alist()
+	//surfshack end
 	/// List of areas that count as "a library", modified by map config
 	var/list/library_areas = list()
 
 /datum/controller/subsystem/library/Initialize()
 	prepare_official_posters()
+	//surfshack start
+	prepare_manuals()
+	//surfshack end
 	prepare_library_areas()
 	load_shelves()
 	return SS_INIT_SUCCESS
@@ -56,6 +63,12 @@ SUBSYSTEM_DEF(library)
 	for(var/obj/structure/sign/poster/official/poster_type as anything in subtypesof(/obj/structure/sign/poster/official))
 		if (initial(poster_type.printable) == TRUE) //Mostly this check exists to keep directionals from ending up in the printable list
 			printable_posters[initial(poster_type.name)] = poster_type
+
+//surfshack start
+/datum/controller/subsystem/library/proc/prepare_manuals()
+	for(var/atom/manual_type as anything in subtypesof(/obj/item/holomanual))
+		manuals[initial(manual_type.name)] = manual_type
+//surfshack end
 
 /datum/controller/subsystem/library/proc/prepare_library_areas()
 	library_areas = typesof(/area/station/service/library) - /area/station/service/library/abandoned

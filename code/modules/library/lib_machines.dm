@@ -263,7 +263,10 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 #define LIBRARY_ARCHIVE 3
 #define LIBRARY_UPLOAD 4
 #define LIBRARY_PRINT 5
-#define LIBRARY_TOP_SNEAKY 6
+//surfshack start
+#define LIBRARY_MANUALS 6
+#define LIBRARY_TOP_SNEAKY 7
+//surfshack end
 #define MIN_LIBRARY LIBRARY_INVENTORY
 #define MAX_LIBRARY LIBRARY_TOP_SNEAKY
 
@@ -402,7 +405,12 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 			data["posters"] = list()
 			for(var/poster_name in SSlibrary.printable_posters)
 				data["posters"] += poster_name
-
+		//surfshack start
+		if(LIBRARY_MANUALS)
+			data["manuals"] = list()
+			for(var/manual_name in SSlibrary.manuals)
+				data["manuals"] += manual_name
+			//surfshack end
 	return data
 
 /obj/machinery/computer/libraryconsole/bookmanagement/ui_assets(mob/user)
@@ -534,6 +542,10 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 			var/poster_name = params["poster_name"]
 			attempt_print(CALLBACK(src, PROC_REF(print_poster), poster_name))
 			return TRUE
+		if("print_manual")
+			var/manual_name = params["manual_name"]
+			attempt_print(CALLBACK(src, PROC_REF(print_manual), manual_name))
+			return TRUE
 		if("lore_spawn")
 			if(obj_flags & EMAGGED && can_spawn_lore)
 				print_forbidden_lore(usr)
@@ -648,6 +660,14 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 	if(!poster_type)
 		return
 	new /obj/item/poster(loc, new poster_type)
+
+//surfshack start
+/obj/machinery/computer/libraryconsole/bookmanagement/proc/print_manual(manual_name)
+	var/manual_type = SSlibrary.manuals[manual_name]
+	if(!manual_type)
+		return
+	new manual_type(loc)
+//surfshack end
 
 /obj/machinery/computer/libraryconsole/bookmanagement/proc/print_book(id)
 	if (!SSdbcore.Connect())

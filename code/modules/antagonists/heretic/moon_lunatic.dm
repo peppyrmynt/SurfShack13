@@ -64,6 +64,7 @@
 	var/datum/mind/master
 	// If the person with this objective is a lunatic master
 	var/is_master = FALSE
+	reward_for_completion = FALSE
 
 /datum/objective/lunatic/update_explanation_text()
 	. = ..()

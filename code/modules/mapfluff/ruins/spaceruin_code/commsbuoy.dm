@@ -44,6 +44,10 @@
 		'sound/ambience/misc/signal.ogg',
 		'sound/ambience/misc/signal.ogg',
 		'sound/ambience/general/ambigen9.ogg',
+		//surfshack13 START
+		'surfshack13/sound/ambience/general/ambiencegenlawnmower.ogg',
+		'surfshack13/sound/ambience/general/ambiencegenscivir.ogg',
+		//surfshack13 END
 		'sound/ambience/engineering/ambitech.ogg',
 		'sound/ambience/engineering/ambitech2.ogg',
 		'sound/ambience/engineering/ambitech3.ogg',

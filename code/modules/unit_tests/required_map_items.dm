@@ -25,7 +25,9 @@
 
 /datum/unit_test/required_map_items/Run()
 	setup_expected_types()
-
+	//surfshack start
+	surfshack_setup_expected_types()
+	//surfshack end
 	var/list/required_map_items = GLOB.required_map_items.Copy()
 	for(var/got_type in expected_types)
 		var/datum/required_item/item = required_map_items[got_type]

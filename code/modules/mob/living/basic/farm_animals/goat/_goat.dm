@@ -45,12 +45,16 @@
 		/obj/structure/glowshroom,
 		/obj/structure/spacevine,
 	)
+
+//surfshack start
 #ifdef KING_ASS_RIPPER_GOAT
 	var/static/list/sounds = alist(
 		"dayum" = 'sound/mobs/non-humanoids/goat/got dayum.ogg',
 		"Im king ass ripper" = 'sound/mobs/non-humanoids/goat/king_ass_ripper_right_here.ogg',
 	)
 	#endif
+//surfshack end
+
 /mob/living/basic/goat/Initialize(mapload)
 	. = ..()
 	add_udder()
@@ -140,15 +144,17 @@
 			qdel(target)
 			eaten = TRUE
 	if(eaten)
+//surfshack start
 #ifdef KING_ASS_RIPPER_GOAT
 		if(prob(3))
 			var/word = pick("dayum", "Im king ass ripper")
 			say(word)
 			playsound(src, sounds[word], 70, FALSE)
-			spasm_animation(60)
+			AddComponent(/datum/component/tweak, time = 8 SECONDS)
 			return
 #else
 		if(prob(10))
 			say("Nom") // bon appetit
 			playsound(src, 'sound/items/eatfood.ogg', rand(30, 50), TRUE)
 #endif
+//surfshack end

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta charset='utf-8'>
+	<link rel='stylesheet' href='ui.css'>
+</head>
+
+<body>
+    <input id="dateInput" type="datetime-local"
+	defa/>
+    <input id="submit" class="btn" type="button" value="submit" />
+    <script>
+        const submit = document.getElementById("submit");
+        const dateInput = document.getElementById("dateInput");
+        /* ref insert */
+
+        function sendToByond(...pairs) {
+            const params = new URLSearchParams();
+            params.append('src', ref);
+
+            for (let i = 0; i < pairs.length; i += 2) {
+                if (pairs[i + 1] !== undefined) {
+                    params.append(pairs[i], pairs[i + 1]);
+                }
+            }
+            window.location.search = params.toString();
+        }
+        submit.addEventListener("click", function (event) {
+            const entry = dateInput.value;
+            if (!entry) { return }
+            let selectedDate = new Date(entry)
+            sendToByond("datetime", selectedDate.toISOString())
+        });
+    </script>
+</body>
+
+</html>

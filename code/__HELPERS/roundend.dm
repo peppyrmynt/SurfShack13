@@ -220,7 +220,9 @@ GLOBAL_LIST_INIT(achievements_unlocked, list())
 	LAZYCLEARLIST(round_end_events)
 
 	var/speed_round = (STATION_TIME_PASSED() <= 10 MINUTES)
-
+	//surfshack start
+	var/list/rewards = calculate_rewards()
+	//surfshack end
 	for(var/client/C in GLOB.clients)
 		if(!C?.credits)
 			C?.RollCredits()
@@ -287,7 +289,9 @@ GLOBAL_LIST_INIT(achievements_unlocked, list())
 
 	//stop collecting feedback during grifftime
 	SSblackbox.Seal()
-
+	//surfshack start
+	distribute_rewards(rewards)
+	//surfshack end
 	sleep(5 SECONDS)
 	ready_for_reboot = TRUE
 	standard_reboot()
@@ -658,7 +662,7 @@ GLOBAL_LIST_INIT(achievements_unlocked, list())
 
 /datum/controller/subsystem/ticker/proc/give_show_report_button(client/C)
 	var/datum/action/report/R = new
-	C.player_details.player_actions += R
+	C.persistent_client.player_actions += R
 	R.Grant(C.mob)
 	to_chat(C,span_infoplain("<a href='byond://?src=[REF(R)];report=1'>Show roundend report again</a>"))
 

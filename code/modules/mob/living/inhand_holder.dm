@@ -37,6 +37,9 @@
 	update_visuals(L)
 	held_mob = L
 	L.forceMove(src)
+	//surfshack start
+	L.on_picked_up(src)
+	//surfshack end
 	name = L.name
 	desc = L.desc
 	return TRUE

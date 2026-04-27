@@ -30,6 +30,11 @@
 /// server name (the name of the game window)
 /datum/config_entry/string/servername
 
+//surfshack start
+/// discord invite link, embedded in status.
+/datum/config_entry/string/discord_url
+//surfshack end
+
 /// short form server name used for the DB
 /datum/config_entry/string/serversqlname
 
