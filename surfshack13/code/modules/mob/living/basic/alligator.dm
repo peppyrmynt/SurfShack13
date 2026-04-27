@@ -2,6 +2,7 @@
 #define CYCLES 5
 #define ANIMATION_TIME (CYCLES * 4 * STEP_TIME)
 #define ROLL_COOLDOWN_TIME ANIMATION_TIME + 1.5 SECONDS
+
 //If I have to do another intensive animation, I will make a subsystem for it
 /mob/living/basic/alligator
 	name = "space alligator"
@@ -57,6 +58,7 @@
 		desired_food += /obj/item/disk/nuclear
 		desc += " It likes floppy disks."
 	AddElement(/datum/element/basic_eating, food_types = desired_food)
+	RegisterSignal(src, COMSIG_MOB_ATE, PROC_REF(on_mob_ate))
 	AddElement(/datum/element/ai_retaliate)
 	RegisterSignal(src, COMSIG_LIVING_GIBBED, PROC_REF(on_gibbed))
 	ai_controller.set_blackboard_key(BB_BASIC_FOODS, typecacheof(desired_food))
@@ -64,7 +66,7 @@
 /mob/living/basic/alligator/Destroy()
 	if(eating_victim)
 		reset_victim()
-	UnregisterSignal(src, COMSIG_LIVING_GIBBED)
+	UnregisterSignal(src, list(COMSIG_LIVING_GIBBED, COMSIG_MOB_ATE))
 	. = ..()
 
 
@@ -73,18 +75,16 @@
 	if(eating_victim)
 		reset_victim()
 
-
-
-
-
 /mob/living/basic/alligator/UnarmedAttack(mob/living/carbon/human/user, proximity_flag, list/modifiers)
 	if(eating_victim)
 		return TRUE
 
 	if(!istype(user))
 		return ..()
-	if(user.body_position == LYING_DOWN)
-		death_roll(user)
+
+	var/can_death_roll = check_death_roll(user)
+	if(can_death_roll)
+		death_roll(user, can_death_roll)
 	else
 		//have to hit them 2 times before they are on the ground and then finally we can rip off a leg
 		var/stamina_damage
@@ -99,17 +99,23 @@
 			user.adjustStaminaLoss(stamina_damage)
 		melee_attack(user, modifiers)
 
-/// Check if the mob can be deathrolled, do the spin animation, and then rip off leg if all is well returns false on fail
-/mob/living/basic/alligator/proc/death_roll(mob/living/carbon/human/florida)
-	if(!florida || !istype(florida) || !florida.body_position == LYING_DOWN)
+
+/mob/living/basic/alligator/proc/check_death_roll(mob/living/carbon/human/florida)
+	if(!florida || !istype(florida) || florida.body_position != LYING_DOWN)
 		return FALSE
+
+	if(!src.has_gravity())
+		to_chat(src, span_notice("You cant death roll without gravity!"))
+		return
 
 	if(!COOLDOWN_FINISHED(src, roll_cooldown))
 		to_chat(src, span_notice("Your still dizzy from the last death roll, wait a second."))
 		return FALSE
+
 	if(HAS_TRAIT(florida, TRAIT_ON_ELEVATED_SURFACE) && !HAS_TRAIT(src, TRAIT_ON_ELEVATED_SURFACE))
 		to_chat(src, span_notice("[florida] is too high up to grab and death roll."))
 		return FALSE
+
 	var/list/legs = list()
 	for(var/obj/item/bodypart/leg/leg in florida.bodyparts)
 		legs += leg
@@ -117,6 +123,10 @@
 		to_chat(src, span_notice("[florida]\s legs are already gone!"))
 		return FALSE
 
+	return legs
+
+/// Check if the mob can be deathrolled, do the spin animation, and then rip off leg if all is well returns false on fail
+/mob/living/basic/alligator/proc/death_roll(mob/living/carbon/human/florida, list/legs)
 	eating_victim = florida
 	var/dx = x - florida.x
 	var/dy = y - florida.y
@@ -168,8 +178,9 @@
 			icon_state = "croc"
 			var/obj/item/bodypart/ripped_limb = pick(legs)
 			ripped_limb.dismember()
-			if(prob(50)) //nom nom,  half chance limbs can be recovered apon gibbing gator
+			if(prob(80)) //nom nom, probablity that limbs can be recovered apon gibbing gator
 				ripped_limb.forceMove(src)
+				on_mob_ate()
 		reset_victim()
 		layer = initial(layer)
 		UnregisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE)
@@ -204,6 +215,13 @@
 		eating_victim.pixel_y = initial(eating_victim.pixel_y)
 	eating_victim.update_overlays()
 	eating_victim = null
+
+/mob/living/basic/alligator/proc/on_mob_ate(datum/source, atom/final_target, mob/living/feeder)
+	SIGNAL_HANDLER
+	if(!ai_controller || !istype(ai_controller, /datum/ai_controller/basic_controller/alligator))
+		return
+	var/datum/ai_controller/basic_controller/alligator/controller = ai_controller
+	controller.on_ate_food()
 
 /mob/living/basic/alligator/proc/on_dir_change()
 	SIGNAL_HANDLER
