@@ -37,6 +37,8 @@
 	COOLDOWN_DECLARE(roll_cooldown)
 	/// If we are deathrolling this is set.
 	var/mob/living/carbon/human/eating_victim
+	/// if the mouth is visually open
+	var/mouth_is_open = FALSE
 
 //for ez badmin spawning
 /mob/living/basic/alligator/croc
@@ -61,14 +63,18 @@
 	RegisterSignal(src, COMSIG_MOB_ATE, PROC_REF(on_mob_ate))
 	AddElement(/datum/element/ai_retaliate)
 	RegisterSignal(src, COMSIG_LIVING_GIBBED, PROC_REF(on_gibbed))
+	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
 	ai_controller.set_blackboard_key(BB_BASIC_FOODS, typecacheof(desired_food))
 
 /mob/living/basic/alligator/Destroy()
 	if(eating_victim)
 		reset_victim()
-	UnregisterSignal(src, list(COMSIG_LIVING_GIBBED, COMSIG_MOB_ATE))
+	UnregisterSignal(src, list(COMSIG_LIVING_GIBBED, COMSIG_MOB_ATE, COMSIG_MOVABLE_MOVED))
 	. = ..()
 
+/mob/living/basic/alligator/notify_ventcrawler_on_login()
+	. = ..()
+	to_chat(src, span_notice("You can open and close your mouth by switching combat mode."))
 
 /mob/living/basic/alligator/death(gibbed)
 	. = ..()
@@ -169,11 +175,12 @@
 	if(shoes)
 		florida.dropItemToGround(shoes)
 
-	florida.visible_message(span_warning("\The [src] clamps down on [florida]\s leg and starts to death roll."),\
-		span_userdanger("\The [src] clamps down on your leg and starts death rolling. you feel your leg tearing!"))
+	florida.visible_message(span_warning("\The [src] clamps down on [florida]\s leg and  death-rolls."),\
+		span_userdanger("\The [src] clamps down on your leg and death-rolls. Your leg is rippig!"))
 	COOLDOWN_START(src, roll_cooldown, ROLL_COOLDOWN_TIME)
 	//spawn() is fine because lingmox fixed it in 1680, and I need motivation to move the codebase to 1680
 	spawn(ANIMATION_TIME)
+		mouth_is_open = FALSE
 		if(!QDELETED(src) && !stat)
 			icon_state = "croc"
 			var/obj/item/bodypart/ripped_limb = pick(legs)
@@ -184,6 +191,7 @@
 		reset_victim()
 		layer = initial(layer)
 		UnregisterSignal(src, COMSIG_ATOM_PRE_DIR_CHANGE)
+
 	animate(florida, flags = ANIMATION_END_NOW)
 	animate(src, flags = ANIMATION_END_NOW)
 	for(var/i in 1 to CYCLES)
@@ -240,6 +248,24 @@
 		if(thrown < 5)
 			eaten_thing.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1,3), 5)
 			thrown ++
+
+/mob/living/basic/alligator/proc/on_moved()
+	SIGNAL_HANDLER
+	if(eating_victim)
+		return
+	var/set_mouth_open = FALSE
+	if(src.mind)
+		set_mouth_open = combat_mode
+	else
+		set_mouth_open = ai_controller?.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET)
+	if(set_mouth_open == mouth_is_open)
+		return
+
+	if(set_mouth_open)
+		icon_state = "croc_open"
+	else
+		icon_state = "croc"
+	mouth_is_open = set_mouth_open
 
 #undef CYCLES
 #undef STEP_TIME
