@@ -54,7 +54,7 @@
 		/mob/living/basic/frog,
 		/mob/living/basic/axolotl,
 		/mob/living/basic/chicken,
-		/mob/living/basic/mouse
+		/mob/living/basic/mouse,
 		)
 	if(prob(1)) //*disk shaped thront... *burps...
 		desired_food += /obj/item/disk/nuclear
@@ -251,7 +251,7 @@
 
 /mob/living/basic/alligator/proc/on_moved()
 	SIGNAL_HANDLER
-	if(eating_victim)
+	if(eating_victim || stat)
 		return
 	var/set_mouth_open = FALSE
 	if(src.mind)
