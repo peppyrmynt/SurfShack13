@@ -423,15 +423,15 @@
 	name = "\improper DNA injector (Anti-Paranoia)"
 	remove_mutations = list(/datum/mutation/human/paranoia)
 
-/obj/item/dnainjector/pressuremut
-	name = "\improper DNA injector (Pressure Adaptation)"
+/obj/item/dnainjector/spacemut
+	name = "\improper DNA injector (Space Adaptation)"
 	desc = "Gives you fire."
-	add_mutations = list(/datum/mutation/human/adaptation/pressure)
+	add_mutations = list(/datum/mutation/human/adaptation/space)
 
-/obj/item/dnainjector/antipressure
-	name = "\improper DNA injector (Anti-Pressure Adaptation)"
+/obj/item/dnainjector/antispace
+	name = "\improper DNA injector (Anti-Space Adaptation)"
 	desc = "Cures fire."
-	remove_mutations = list(/datum/mutation/human/adaptation/pressure)
+	remove_mutations = list(/datum/mutation/human/adaptation/space)
 
 /obj/item/dnainjector/radioactive
 	name = "\improper DNA injector (Radioactive)"
