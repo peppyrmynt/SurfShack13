@@ -500,12 +500,12 @@
 /obj/item/dnainjector/firemut
 	name = "\improper DNA injector (Fire Adaptation)"
 	desc = "Gives you fire."
-	add_mutations = list(/datum/mutation/human/adaptation/fire)
+	add_mutations = list(/datum/mutation/human/adaptation/heat)
 
 /obj/item/dnainjector/antifire
 	name = "\improper DNA injector (Anti-Fire Adaptation)"
 	desc = "Cures fire."
-	remove_mutations = list(/datum/mutation/human/adaptation/fire)
+	remove_mutations = list(/datum/mutation/human/adaptation/heat)
 
 /obj/item/dnainjector/thermal
 	name = "\improper DNA injector (Thermal Vision)"
