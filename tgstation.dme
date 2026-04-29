@@ -6531,6 +6531,7 @@
 #include "surfshack13\code\game\machinery\computer\public_announce.dm"
 #include "surfshack13\code\game\objects\items\battering_ram.dm"
 #include "surfshack13\code\game\objects\items\circuitboards\computer_circuitboards.dm"
+#include "surfshack13\code\game\objects\structures\creampie-torium.dm"
 #include "surfshack13\code\modules\improv_tools.dm"
 #include "surfshack13\code\modules\antagonists\_common\antag_spawner.dm"
 #include "surfshack13\code\modules\bloodsuckers\bloodsucker_assets.dm"
