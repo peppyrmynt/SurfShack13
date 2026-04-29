@@ -48,7 +48,8 @@ SUBSYSTEM_DEF(frogui)
 		atom_ui_clients[source] = list()
 	atom_ui_flags[source] = ui_flags
 
-	if(!(ui_flags & FROGUI_NO_TOPIC))
+	//if there are no current users, then signal needs to be registered
+	if(!length(atom_ui_clients[source]) && !(ui_flags & FROGUI_NO_TOPIC))
 		RegisterSignal(source, COMSIG_TOPIC, PROC_REF(on_topic))
 
 	var/source_ref = ref(source)

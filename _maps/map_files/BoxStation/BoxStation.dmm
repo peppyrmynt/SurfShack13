@@ -3626,7 +3626,6 @@
 "alZ" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden,
 /turf/open/floor/iron,
 /area/station/engineering/atmospherics_engine)
 "amc" = (
@@ -19347,17 +19346,13 @@
 /turf/open/floor/iron,
 /area/station/cargo/lobby)
 "boW" = (
+/obj/structure/transit_tube/crossing/horizontal,
+/obj/structure/lattice/catwalk,
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/atmospherics/pipe/smart/simple/violet/visible/layer1,
-/obj/machinery/door/airlock/external{
-	name = "Atmospherics Internal Access"
-	},
-/obj/effect/mapping_helpers/airlock/access/all/engineering/atmos,
-/obj/effect/mapping_helpers/airlock/cyclelink_helper,
-/turf/open/floor/plating,
-/area/station/engineering/atmospherics_engine)
+/turf/open/space/basic,
+/area/space/nearstation)
 "boX" = (
 /obj/machinery/door/poddoor/shutters/preopen{
 	dir = 8;
@@ -23166,8 +23161,6 @@
 /area/station/hallway/primary/central)
 "bBB" = (
 /obj/effect/turf_decal/tile/green/half,
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/disposalpipe/segment{
 	dir = 10
 	},
@@ -24375,13 +24368,10 @@
 /turf/open/floor/wood/parquet,
 /area/station/medical/psychology)
 "bFp" = (
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/siding/wood{
 	dir = 15
 	},
-/obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/wood/parquet,
 /area/station/medical/psychology)
 "bFr" = (
@@ -25095,9 +25085,7 @@
 /area/station/medical/psychology)
 "bHX" = (
 /obj/machinery/light/directional/south,
-/obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/carpet/blue,
 /area/station/medical/psychology)
 "bIc" = (
@@ -30358,10 +30346,13 @@
 /turf/open/floor/iron/large,
 /area/station/command/heads_quarters/ce)
 "cdY" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/cyan/visible,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/cyan/visible,
-/turf/open/floor/iron/white,
-/area/station/medical/cryo)
+/obj/structure/transit_tube/horizontal,
+/obj/structure/lattice/catwalk,
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/turf/open/space/basic,
+/area/space/nearstation)
 "cdZ" = (
 /obj/machinery/telecomms/processor/preset_two,
 /turf/open/floor/iron/dark/telecomms,
@@ -36056,9 +36047,6 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
 	},
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/disposalpipe/segment{
 	dir = 9
 	},
@@ -37641,6 +37629,9 @@
 	name = "Psychology Maintenance"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/medical/psychology,
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/plating,
 /area/station/medical/psychology)
 "dYZ" = (
@@ -44252,7 +44243,6 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/disposalpipe/segment{
 	dir = 9
 	},
@@ -47584,15 +47574,9 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
 "jEY" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/light/small/directional/east,
-/obj/structure/sign/warning/vacuum/external/directional/east,
-/obj/machinery/atmospherics/components/unary/airlock_pump{
-	dir = 1
-	},
-/turf/open/floor/plating,
-/area/station/engineering/atmospherics_engine)
+/obj/structure/lattice,
+/turf/closed/wall/r_wall,
+/area/station/engineering/transit_tube)
 "jFn" = (
 /obj/structure/sign/warning/directional/east,
 /turf/open/floor/iron,
@@ -56988,6 +56972,8 @@
 /obj/structure/transit_tube/crossing/horizontal,
 /obj/structure/cable,
 /obj/structure/lattice/catwalk,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/space/basic,
 /area/space/nearstation)
 "oVV" = (
@@ -62208,9 +62194,7 @@
 	pixel_y = 3
 	},
 /obj/item/pen/fountain,
-/obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/carpet/blue,
 /area/station/medical/psychology)
 "sfq" = (
@@ -66273,9 +66257,6 @@
 	name = "Asylum"
 	},
 /obj/structure/disposalpipe/segment,
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/mapping_helpers/airlock/access/all/medical/psychology,
 /turf/open/floor/wood/parquet,
 /area/station/medical/psychology)
@@ -69991,20 +69972,6 @@
 /obj/effect/landmark/start/hangover,
 /turf/open/floor/iron,
 /area/station/hallway/secondary/service)
-"wEh" = (
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/atmospherics/pipe/smart/simple/violet/visible/layer1,
-/obj/machinery/door/airlock/external{
-	name = "Atmospherics Space Bridge Access"
-	},
-/obj/effect/mapping_helpers/airlock/access/all/engineering/atmos,
-/obj/effect/mapping_helpers/airlock/cyclelink_helper{
-	dir = 1
-	},
-/turf/open/floor/plating,
-/area/station/engineering/atmospherics_engine)
 "wEl" = (
 /obj/structure/cable,
 /obj/machinery/light/floor,
@@ -105148,7 +105115,7 @@ dXQ
 xQy
 iek
 xQy
-xQy
+jEY
 xQy
 xQy
 aaa
@@ -108230,7 +108197,7 @@ pms
 pms
 pms
 aoV
-aaf
+gXs
 aaa
 aaa
 aaa
@@ -108486,8 +108453,8 @@ ueC
 vJQ
 bCJ
 pms
-pms
-pms
+gXs
+gXs
 gXs
 gXs
 gXs
@@ -108742,12 +108709,12 @@ xBX
 lNA
 duS
 wOO
-boW
-jEY
-wEh
-xwc
-xwc
-xwc
+pms
+aaa
+aaf
+aaa
+gXs
+aaa
 oVT
 aaa
 aaa
@@ -109000,12 +108967,12 @@ lNA
 lNA
 byN
 pms
-pms
-pms
-gXs
+aaa
+aaf
+aaa
 gXs
 aaa
-bKI
+cdY
 aaa
 iZd
 aSd
@@ -109262,7 +109229,7 @@ aaf
 aaa
 gXs
 aaa
-bKI
+cdY
 aaa
 gXs
 aSd
@@ -109519,7 +109486,7 @@ aaf
 gXs
 gXs
 gXs
-xLc
+boW
 gXs
 gXs
 aSd
@@ -109776,8 +109743,8 @@ aaf
 aaa
 gXs
 aaa
-bKI
-xwc
+cdY
+aSd
 cbM
 aSd
 nXv
@@ -109990,7 +109957,7 @@ bwF
 nbM
 bCE
 lHY
-cdY
+lHY
 bIn
 bzs
 xBk
