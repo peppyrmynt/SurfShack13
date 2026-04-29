@@ -425,12 +425,12 @@
 
 /obj/item/dnainjector/spacemut
 	name = "\improper DNA injector (Space Adaptation)"
-	desc = "Gives you fire."
+	desc = "Gives you space protection."
 	add_mutations = list(/datum/mutation/human/adaptation/space)
 
 /obj/item/dnainjector/antispace
 	name = "\improper DNA injector (Anti-Space Adaptation)"
-	desc = "Cures fire."
+	desc = "Cures space protection."
 	remove_mutations = list(/datum/mutation/human/adaptation/space)
 
 /obj/item/dnainjector/radioactive
@@ -498,14 +498,14 @@
 	remove_mutations = list(/datum/mutation/human/telekinesis)
 
 /obj/item/dnainjector/firemut
-	name = "\improper DNA injector (Temp Adaptation)"
+	name = "\improper DNA injector (Fire Adaptation)"
 	desc = "Gives you fire."
-	add_mutations = list(/datum/mutation/human/adaptation/thermal)
+	add_mutations = list(/datum/mutation/human/adaptation/fire)
 
 /obj/item/dnainjector/antifire
-	name = "\improper DNA injector (Anti-Temp Adaptation)"
+	name = "\improper DNA injector (Anti-Fire Adaptation)"
 	desc = "Cures fire."
-	remove_mutations = list(/datum/mutation/human/adaptation/thermal)
+	remove_mutations = list(/datum/mutation/human/adaptation/fire)
 
 /obj/item/dnainjector/thermal
 	name = "\improper DNA injector (Thermal Vision)"
