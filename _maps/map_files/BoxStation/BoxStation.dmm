@@ -17994,6 +17994,7 @@
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 1
 	},
+/obj/effect/landmark/start/cargo_technician,
 /turf/open/floor/iron/corner,
 /area/station/cargo/office)
 "biw" = (
@@ -19503,6 +19504,7 @@
 	dir = 1
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/effect/landmark/start/captain,
 /turf/open/floor/carpet,
 /area/station/command/heads_quarters/captain/private)
 "bmz" = (
@@ -19843,6 +19845,7 @@
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 4
 	},
+/obj/effect/landmark/start/cargo_technician,
 /turf/open/floor/iron/edge{
 	dir = 4
 	},
@@ -20066,6 +20069,7 @@
 /obj/machinery/light/small/directional/east,
 /obj/structure/bed/double,
 /obj/item/bedsheet/captain/double,
+/obj/effect/landmark/start/captain,
 /turf/open/floor/carpet,
 /area/station/command/heads_quarters/captain/private)
 "bob" = (
@@ -22834,7 +22838,6 @@
 	name = "Quartermaster"
 	},
 /obj/machinery/door/firedoor,
-/obj/effect/mapping_helpers/airlock/access/all/security/general,
 /obj/effect/mapping_helpers/airlock/access/all/supply/qm,
 /obj/effect/turf_decal/siding/wood{
 	dir = 8
@@ -23047,7 +23050,6 @@
 	name = "Quartermaster"
 	},
 /obj/machinery/door/firedoor,
-/obj/effect/mapping_helpers/airlock/access/all/security/general,
 /obj/effect/mapping_helpers/airlock/access/all/supply/qm,
 /obj/effect/turf_decal/siding/wood,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -23075,9 +23077,7 @@
 /obj/effect/turf_decal/trimline/brown/filled/line{
 	dir = 8
 	},
-/obj/effect/mapping_helpers/airlock/access/any/supply/bit_den,
 /obj/effect/mapping_helpers/airlock/access/all/security/general,
-/obj/effect/mapping_helpers/airlock/access/any/supply/mining,
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 4
 	},
@@ -23089,6 +23089,7 @@
 /obj/structure/disposalpipe/segment{
 	color = "lightblue"
 	},
+/obj/effect/mapping_helpers/airlock/access/all/supply/general,
 /turf/open/floor/iron/textured_half{
 	dir = 1
 	},
@@ -23330,6 +23331,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 15
 	},
+/obj/effect/landmark/start/quartermaster,
 /turf/open/floor/carpet,
 /area/station/cargo/qm)
 "bym" = (
@@ -23517,6 +23519,7 @@
 /obj/effect/turf_decal/tile/neutral/half/contrasted{
 	dir = 4
 	},
+/obj/effect/landmark/start/depsec/supply,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 8
 	},
@@ -23529,6 +23532,7 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
+/obj/effect/landmark/start/depsec/supply,
 /turf/open/floor/iron/dark,
 /area/station/security/checkpoint/supply)
 "byL" = (
@@ -23538,6 +23542,7 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
+/obj/effect/landmark/start/depsec/supply,
 /turf/open/floor/iron/dark,
 /area/station/security/checkpoint/supply)
 "byM" = (
@@ -23584,6 +23589,7 @@
 /obj/effect/turf_decal/tile/neutral/half/contrasted{
 	dir = 1
 	},
+/obj/effect/landmark/start/depsec/supply,
 /turf/open/floor/iron/dark/smooth_edge,
 /area/station/security/checkpoint/supply)
 "byR" = (
@@ -23876,6 +23882,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 9
 	},
+/obj/effect/landmark/start/quartermaster,
 /turf/open/floor/carpet,
 /area/station/cargo/qm)
 "bzS" = (
@@ -23971,6 +23978,7 @@
 /obj/effect/turf_decal/tile/neutral/half/contrasted{
 	dir = 8
 	},
+/obj/effect/landmark/start/depsec/supply,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 4
 	},
@@ -25634,6 +25642,7 @@
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 4
 	},
+/obj/effect/landmark/start/shaft_miner,
 /turf/open/floor/iron/edge{
 	dir = 4
 	},
@@ -26013,6 +26022,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
+/obj/effect/landmark/start/bitrunner,
 /turf/open/floor/iron/dark/smooth_half{
 	dir = 1
 	},
@@ -27329,6 +27339,7 @@
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 8
 	},
+/obj/effect/landmark/start/cargo_technician,
 /turf/open/floor/iron/large,
 /area/station/cargo/sorting)
 "bKI" = (
@@ -37879,6 +37890,7 @@
 /obj/effect/turf_decal/tile/neutral/half/contrasted{
 	dir = 8
 	},
+/obj/effect/landmark/start/depsec/medical,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 4
 	},
@@ -42589,6 +42601,7 @@
 /obj/item/bedsheet/orange{
 	dir = 1
 	},
+/obj/effect/landmark/start/prisoner,
 /turf/open/floor/iron/large,
 /area/station/security/prison/safe)
 "eGU" = (
@@ -43864,6 +43877,7 @@
 /area/station/maintenance/department/eva/abandoned)
 "ffm" = (
 /obj/structure/chair/stool/directional/north,
+/obj/effect/landmark/start/cargo_technician,
 /turf/open/floor/iron,
 /area/station/cargo/storage)
 "ffy" = (
@@ -48333,6 +48347,7 @@
 /area/station/medical/chemistry)
 "hbP" = (
 /obj/structure/chair/stool/directional/south,
+/obj/effect/landmark/start/cargo_technician,
 /turf/open/floor/iron,
 /area/station/cargo/office)
 "hbV" = (
@@ -52017,6 +52032,21 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/maintenance/port/central)
+"iLp" = (
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 4
+	},
+/obj/structure/chair{
+	dir = 8
+	},
+/obj/effect/landmark/start/shaft_miner,
+/turf/open/floor/iron/edge{
+	dir = 4
+	},
+/area/station/cargo/miningdock)
 "iLv" = (
 /obj/machinery/light/floor,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -53418,6 +53448,10 @@
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
 /turf/open/floor/iron/white/textured_edge,
 /area/station/medical/pharmacy)
+"juo" = (
+/obj/effect/landmark/start/cargo_technician,
+/turf/open/floor/iron,
+/area/station/cargo/storage)
 "jux" = (
 /obj/machinery/atmospherics/pipe/bridge_pipe/scrubbers/visible,
 /obj/machinery/atmospherics/pipe/bridge_pipe/cyan/visible{
@@ -62376,6 +62410,16 @@
 	dir = 1
 	},
 /area/station/hallway/secondary/entry)
+"nmd" = (
+/obj/structure/chair/comfy/brown{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/effect/landmark/start/captain,
+/turf/open/floor/carpet,
+/area/station/command/heads_quarters/captain)
 "nmn" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/structure/cable,
@@ -71683,6 +71727,7 @@
 	dir = 4;
 	color = "lightblue"
 	},
+/obj/effect/landmark/start/bitrunner,
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 1
 	},
@@ -72381,6 +72426,13 @@
 /obj/effect/spawner/random/maintenance/four,
 /turf/open/floor/iron/small,
 /area/station/service/kitchen/abandoned)
+"rCY" = (
+/obj/structure/railing,
+/obj/effect/turf_decal/trimline/brown/filled/line,
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner,
+/obj/effect/landmark/start/shaft_miner,
+/turf/open/floor/iron/edge,
+/area/station/cargo/miningdock)
 "rDK" = (
 /obj/effect/landmark/start/bartender,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -73276,6 +73328,7 @@
 /obj/structure/chair{
 	dir = 8
 	},
+/obj/effect/landmark/start/bitrunner,
 /turf/open/floor/iron/edge{
 	dir = 4
 	},
@@ -75424,6 +75477,7 @@
 /obj/structure/chair/comfy/brown{
 	dir = 8
 	},
+/obj/effect/landmark/start/captain,
 /turf/open/floor/carpet,
 /area/station/command/heads_quarters/captain)
 "tcv" = (
@@ -105522,7 +105576,7 @@ bjr
 bjr
 gJY
 bjr
-bjr
+juo
 buB
 bvU
 fxJ
@@ -106292,7 +106346,7 @@ eag
 rwx
 bjr
 bjr
-bjr
+juo
 bjr
 dWn
 taF
@@ -107318,7 +107372,7 @@ bjq
 bjr
 bjr
 rwx
-bjr
+juo
 bjr
 bjr
 bjr
@@ -109390,7 +109444,7 @@ fmj
 fmj
 yeg
 eqq
-jnH
+rCY
 qmA
 bxy
 gXs
@@ -109902,7 +109956,7 @@ bwe
 fGQ
 bBI
 scp
-scp
+iLp
 esV
 bGn
 pbv
@@ -118873,7 +118927,7 @@ aXd
 aYE
 aZV
 bbu
-hwa
+nmd
 hwa
 pbE
 nig
