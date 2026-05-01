@@ -4958,7 +4958,8 @@
 /area/station/security/processing)
 "anO" = (
 /obj/docking_port/stationary/laborcamp_home{
-	dir = 8
+	dir = 8;
+	roundstart_template = /datum/map_template/shuttle/labour/box
 	},
 /turf/open/space/basic,
 /area/space)
@@ -26866,7 +26867,8 @@
 /area/station/ai_monitored/turret_protected/aisat/atmos)
 "bJc" = (
 /obj/docking_port/stationary/mining_home{
-	dir = 8
+	dir = 8;
+	roundstart_template = /datum/map_template/shuttle/mining/box
 	},
 /turf/open/space/basic,
 /area/space)
@@ -47312,6 +47314,10 @@
 /obj/structure/table/reinforced/plastitaniumglass,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
+/obj/item/storage/fancy/donut_box{
+	pixel_w = 0;
+	pixel_z = 12
+	},
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/command/meeting_room/council)
 "gFd" = (
@@ -83170,7 +83176,8 @@
 /area/station/maintenance/port/aft)
 "wCV" = (
 /obj/docking_port/stationary/mining_home/common{
-	dir = 8
+	dir = 8;
+	roundstart_template = /datum/map_template/shuttle/mining_common/box
 	},
 /turf/open/space/basic,
 /area/space)

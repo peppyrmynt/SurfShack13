@@ -11,6 +11,10 @@
 /obj/effect/turf_decal/trimline/yellow/filled/line,
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
 /obj/effect/turf_decal/siding/white,
+/obj/item/storage/fancy/donut_box{
+	pixel_w = 0;
+	pixel_z = 5
+	},
 /turf/open/floor/iron/large,
 /area/shuttle/mining)
 "d" = (
@@ -167,6 +171,21 @@
 	dir = 1
 	},
 /area/shuttle/mining)
+"R" = (
+/obj/structure/table,
+/obj/effect/turf_decal/trimline/yellow/filled/line,
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
+/obj/effect/turf_decal/siding/white,
+/obj/item/gps{
+	pixel_w = -5;
+	pixel_z = 5
+	},
+/obj/item/gps{
+	pixel_w = 4;
+	pixel_z = 2
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/mining)
 "T" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 1
@@ -212,7 +231,7 @@ l
 "}
 (4,1,1) = {"
 a
-c
+R
 u
 G
 T
