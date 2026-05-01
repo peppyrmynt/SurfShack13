@@ -7,7 +7,7 @@
 * experimental for now
 * per client, you can only have one ui based from an atom.
 * if you want to have multiple UI's coming from the same atom, you can go fuck yourself.
-* ui closes if mob is far enough away from it
+* ui closes if mob is far enough away from it, unless flag is set
 */
 
 
@@ -48,7 +48,8 @@ SUBSYSTEM_DEF(frogui)
 		atom_ui_clients[source] = list()
 	atom_ui_flags[source] = ui_flags
 
-	if(!(ui_flags & FROG_UI_NO_TOPIC))
+	//if there are no current users, then signal needs to be registered
+	if(!length(atom_ui_clients[source]) && !(ui_flags & FROGUI_NO_TOPIC))
 		RegisterSignal(source, COMSIG_TOPIC, PROC_REF(on_topic))
 
 	var/source_ref = ref(source)
@@ -101,7 +102,7 @@ SUBSYSTEM_DEF(frogui)
 		atom_ui_clients[source] -= C
 
 	//If no one else is using the ui, stop listening to topic.
-	if(!length(atom_ui_clients[source]) && !(atom_ui_flags[source] & FROG_UI_NO_TOPIC))
+	if(!length(atom_ui_clients[source]) && !(atom_ui_flags[source] & FROGUI_NO_TOPIC))
 		UnregisterSignal(source, COMSIG_TOPIC)
 	atom_ui_flags -= source
 
@@ -113,7 +114,7 @@ SUBSYSTEM_DEF(frogui)
 		C << browse(null, "window=[source_ref]")
 		client_uis[C] -= source_ref
 
-	if(atom_ui_flags[source] & ~FROG_UI_NO_TOPIC)
+	if(atom_ui_flags[source] & ~FROGUI_NO_TOPIC)
 		UnregisterSignal(source, COMSIG_TOPIC)
 
 	atom_ui_clients[source] = null

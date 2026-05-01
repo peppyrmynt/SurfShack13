@@ -1,0 +1,12 @@
+author: "forgman6"
+delete-after: True
+changes:
+  - rscadd: "alligators that can deathroll"
+  - rscadd: "alligator ai and blackboard variables."
+  - rscadd: "COMSIG_PRE_LYING_ANGLE_CHANGE  signal"
+  - code_imp: "map loaded showers have a 2% chance to spawn a gator on interact."
+  - rscadd: "shower varient that always spawns gator."
+  - rscadd: "gator cloak and pelt"
+  - image: "added gator spirtes"
+  - image: "added gator cloak sprites"
+  - image: "added inhand gator cloak sprites"

@@ -23,4 +23,4 @@
 /obj/item/holomanual/xenobiology/ui_interact(mob/user)
 	if(!ui)
 		ui = 'surfshack13/frogui/slime_manual.html'
-	SSfrogui.open_ui(user, src, ui, "size=433x450;", ui_flags = FROG_UI_NO_TOPIC)
+	SSfrogui.open_ui(user, src, ui, "size=433x450;", ui_flags = FROGUI_NO_TOPIC)

@@ -214,6 +214,10 @@
 	icon_state = "bus"
 	},
 /area/ruin/space)
+"dQ" = (
+/obj/item/clothing/head/costume/paper_hat/savior,
+/turf/open/misc/asteroid/airless,
+/area/ruin/space)
 "iE" = (
 /obj/structure/table,
 /obj/item/pai_card,
@@ -501,7 +505,7 @@ ab
 yY
 yY
 yY
-yY
+dQ
 Bw
 yY
 Ne

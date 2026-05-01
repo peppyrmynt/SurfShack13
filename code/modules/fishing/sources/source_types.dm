@@ -67,6 +67,9 @@
 		/obj/item/fish/arctic_char = 1,
 		/obj/item/fish/pike = 1,
 		/obj/item/fish/goldfish/three_eyes = 1,
+		//surfshack start
+		/mob/living/basic/alligator = 1,
+		//surfshack end
 	)
 	fish_counts = list(
 		/obj/item/fish/pike = 3,
@@ -220,6 +223,9 @@
 		/obj/item/fish/jumpercable = 5,
 		/obj/item/fish/chainsawfish = 2,
 		/obj/item/fish/pike/armored = 2,
+		//surfshack start
+		/mob/living/basic/alligator = 2,
+		//surfshack end
 	)
 	fish_counts = list(
 		/obj/item/fish/chainsawfish = 1,
@@ -507,6 +513,7 @@
 		/mob/living/basic/frog = 1,
 		//surfshack start
 		/obj/effect/spawner/random/space_frog = 1,
+		/mob/living/basic/alligator = 1,
 		//surfshack end
 		/mob/living/basic/axolotl = 1,
 		/mob/living/basic/turtle = 2,
@@ -518,6 +525,7 @@
 		/obj/item/seeds/random = 1,
 		//surfshack start
 		/obj/effect/spawner/random/space_frog = 1,
+		/mob/living/basic/alligator = 1,
 		//surfshack end
 		/mob/living/basic/frog = 1,
 		/mob/living/basic/axolotl = 1,

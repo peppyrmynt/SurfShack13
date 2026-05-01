@@ -221,12 +221,6 @@
 	if(vname == NAMEOF(src, current_color))
 		update_appearance()
 
-/obj/item/toy/balloon/update_icon_state()
-	. = ..()
-	var/new_icon = "[initial(icon_state)][current_color ? "_[current_color]":null]"
-	inhand_icon_state = new_icon
-	icon_state = "[new_icon][isturf(loc) ? null : "_storage"]"
-
 /obj/item/toy/balloon/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change)
 	. = ..()
 	update_appearance()

@@ -2,4 +2,4 @@
 #define FROG_UI_IGNORE_PROXIMITY (1<<0)
 
 ///dont register topic - UI doesnt need to talk to game
-#define FROG_UI_NO_TOPIC (1<<1)
+#define FROGUI_NO_TOPIC (1<<1)

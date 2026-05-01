@@ -7,10 +7,8 @@
 	var/datum/weakref/last_heart_we_ate
 	/// List of all mutations allowed to get.
 	var/static/list/datum/mutation/human/mutations_list = list(
-		/datum/mutation/human/adaptation/cold,
 		/datum/mutation/human/adaptation/heat,
-		/datum/mutation/human/adaptation/pressure,
-		/datum/mutation/human/adaptation/thermal,
+		/datum/mutation/human/adaptation/space,
 		/datum/mutation/human/chameleon,
 		/datum/mutation/human/cryokinesis,
 		/datum/mutation/human/pyrokinesis,

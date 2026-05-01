@@ -19,7 +19,7 @@
 #define COMSIG_ATOM_START_PULL "movable_start_pull"
 /// called on /atom when something attempts to pass through it (atom/movable/source, atom/movable/passing, dir)
 #define COMSIG_ATOM_TRIED_PASS "atom_tried_pass"
-/// called on /movable when something attempts to pass through it (atom/movable/source, atom/movable/passing, dir) AND WHEN general_movement = FALSE for some fucking reason
+/// called on /movable when attempts to pass through it (atom/movable/source, atom/movable/passing, dir) AND WHEN general_movement = FALSE for some fucking reason
 #define COMSIG_MOVABLE_CAN_PASS_THROUGH "movable_can_pass_through"
 /// If given, we permit passage through
 #define COMSIG_COMPONENT_PERMIT_PASSAGE (1 << 0)
