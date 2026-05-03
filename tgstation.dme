@@ -6578,6 +6578,7 @@
 #include "surfshack13\code\modules\bloodsuckers\vassals\vassal_pinpointer.dm"
 #include "surfshack13\code\modules\bloodsuckers\vassals\types\favorite.dm"
 #include "surfshack13\code\modules\bloodsuckers\vassals\types\revenge.dm"
+#include "surfshack13\code\modules\client\ooc_flags.dm"
 #include "surfshack13\code\modules\client\preferences.dm"
 #include "surfshack13\code\modules\client\preferences\inventory.dm"
 #include "surfshack13\code\modules\clothing\head\hat.dm"
