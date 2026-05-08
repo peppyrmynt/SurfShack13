@@ -161,11 +161,6 @@
 	item_path = /obj/item/dnainjector/insulated
 	item_cost = 700
 
-/datum/store_item/roundstart/pressuremut
-	name = "DNA Mutator (Pressure Immunity)"
-	item_path = /obj/item/dnainjector/pressuremut
-	item_cost = 700
-
 /datum/store_item/roundstart/telemut
 	name = "DNA Mutator (Telekinesis)"
 	item_path = /obj/item/dnainjector/telemut
