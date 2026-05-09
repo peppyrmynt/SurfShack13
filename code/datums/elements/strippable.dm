@@ -290,6 +290,11 @@
 
 /// A utility function for `/datum/strippable_item`s to start unequipping an item from a mob.
 /proc/start_unequip_mob(obj/item/item, mob/source, mob/user, strip_delay, hidden = FALSE)
+	//surfshack start
+	strip_delay = strip_delay || item.strip_delay
+	if(source.stat == DEAD)
+		strip_delay = ceil(strip_delay / 7)
+	//surfshack end
 	if (!do_after(user, strip_delay || item.strip_delay, source, interaction_key = REF(item), hidden = hidden))
 		return FALSE
 
