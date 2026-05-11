@@ -27,6 +27,7 @@ let testSource = null;
 let delayNode = null;
 let volumeThreshold = DEFAULT_VOLUME_THRESHOLD;
 let sinkId = null; // Output device ID
+let darkMode = true;
 
 // Extract sessionId from URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -34,14 +35,31 @@ const sessionId = urlParams.get('sessionId');
 const socket_address = urlParams.get('socket_address');
 
 const ICE_SERVERS = [
-    { urls: 'stun:stun.l.google.com:19302' },    
-    { urls: 'stun:stun1.l.google.com:19302' }, 
-    { urls: 'stun:stun2.l.google.com:19302' },   
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' },
     { urls: `turn:${window.location.hostname}:3478`,
         credential: sessionId,
         username: sessionId,
     }
 ]
+
+function toggleDarkMode() {
+	darkMode = !darkMode;
+	let root = document.documentElement.style;
+	//inb4 there is a way to just do it in css with templates or whatever
+	if(darkMode) {
+		root.setProperty('--background_mode', '#1a1a1a');
+		root.setProperty('--bg-light', '#585858');
+		root.setProperty('--bg-medium', '#404040');
+		root.setProperty('--font_color', '#ffffff');
+	} else {
+		root.setProperty('--background_mode', '#ffffff');
+		root.setProperty('--bg-light', '#ededed');
+		root.setProperty('--bg-medium', '#cfcfcf');
+		root.setProperty('--font_color', '#000');
+	}
+}
 
 // Utility Functions
 function toggleButton(buttonId, isActive) {
@@ -515,9 +533,10 @@ function setupUIListeners() {
     });
 
     // Buttons
+	document.getElementById('dark_mode_toggle').addEventListener('click', toggleDarkMode)
     document.getElementById('mic').addEventListener('click', getMic);
-    document.getElementById('mute_toggle').addEventListener('click', () => toggleMute());
-    document.getElementById('deafen_toggle').addEventListener('click', () => toggleDeafen());
+    document.getElementById('mute_toggle').addEventListener('click', () => toggleMute);
+    document.getElementById('deafen_toggle').addEventListener('click', () => toggleDeafen);
     document.getElementById('settings_button').addEventListener('click', toggleSettings);
     document.querySelector('.mic_test_container button').addEventListener('click', toggleMicTest);
 

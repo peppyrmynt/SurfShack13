@@ -12,10 +12,13 @@
 <body>
     <!-- Main Status and Controls -->
     <div class="main">
-        <div id="status" class="tooltip" data-tip="status update<br>gives info about the client and server">
-            Connecting...
-        </div>
-        <button id="mic" style="width:298px; margin-bottom: 3px;"  class="tooltip" data-tip="click to try to grant mic permissions again. On firefox you will need reset permissions blocking by clicking on the microphone to the left of the search bar">
+		<div style="display: flex; flex-direction: row;">
+			<div id="status" class="tooltip" data-tip="status update<br>gives info about the client and server">
+				Connecting...
+        	</div>
+			<button id="dark_mode_toggle">&#127761</button>
+		</div>
+        <button id="mic" style="width:298px; margin-bottom: 3px;" class="tooltip" data-tip="click to try to grant mic permissions again. On firefox you will need reset permissions blocking by clicking on the microphone to the left of the search bar">
             try microphone again
         </button>
         <img class="tooltip" data-tip="voice connection status" id="room_status" src="stopclown.png">
