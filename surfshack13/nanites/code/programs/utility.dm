@@ -650,7 +650,6 @@
 /datum/nanite_program/botsummon
 	name = "Simple Bot Construction"
 	desc = "The nanites expend a large amount of themselves to develop a single simple bot capable of assisting the station and it's personnel."
-	unique = FALSE
 	can_trigger = TRUE
 	trigger_cost = 100
 	trigger_cooldown = 600
