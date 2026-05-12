@@ -51,6 +51,18 @@
 	uplink_item_flags = SYNDIE_TRIPS_CONTRABAND
 	surplus = 25
 
+/datum/uplink_item/role_restricted/clownade
+	name = "Clownade"
+	desc = "A sleek device often given to clowns on their 10th birthdays for protection, now brought to you by the Syndicate. You can hear faint scratching coming from within."
+	item = /obj/item/grenade/spawnergrenade/clown
+		deliveryamt = 5
+	cost = 5
+	restricted_roles = list(JOB_CLOWN)
+	uplink_item_flags = SYNDIE_TRIPS_CONTRABAND
+	surplus = 15
+
+
+
 /datum/uplink_item/role_restricted/ancient_jumpsuit
 	name = "Ancient Jumpsuit"
 	desc = "A tattered old jumpsuit that will provide absolutely no benefit to you."
