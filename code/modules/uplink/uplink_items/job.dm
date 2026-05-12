@@ -54,8 +54,7 @@
 /datum/uplink_item/role_restricted/clownade
 	name = "Clownade"
 	desc = "A sleek device often given to clowns on their 10th birthdays for protection, now brought to you by the Syndicate. You can hear faint scratching coming from within."
-	item = /obj/item/grenade/spawnergrenade/clown
-		deliveryamt = 5
+	item = /obj/item/grenade/spawnergrenade/clown/traitor
 	cost = 5
 	restricted_roles = list(JOB_CLOWN)
 	uplink_item_flags = SYNDIE_TRIPS_CONTRABAND
