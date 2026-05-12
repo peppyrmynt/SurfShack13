@@ -61,7 +61,7 @@
 	desc = "A sleek device often given to clowns on their 10th birthdays for protection. You can hear faint scratching coming from within."
 	icon_state = "clown_ball"
 	inhand_icon_state = null
-	spawner_type = list(/mob/living/basic/clown/fleshclown, /mob/living/basic/clown/clownhulk, /mob/living/basic/clown/longface, /mob/living/basic/clown/clownhulk/chlown, /mob/living/basic/clown/clownhulk/honkmunculus, /mob/living/basic/clown/mutant/glutton, /mob/living/basic/clown/banana, /mob/living/basic/clown/honkling, /mob/living/basic/clown/lube)
+	spawner_type = list(/mob/living/basic/clown/fleshclown, /mob/living/basic/clown/clownhulk, /mob/living/basic/clown/longface, /mob/living/basic/clown/clownhulk/chlown, /mob/living/basic/clown/clownhulk/honkmunculus, /mob/living/basic/clown/mutant/glutton, /mob/living/basic/clown/banana, /mob/living/basic/clown/honkling, /mob/living/basic/clown/lube, /mob/living/basic/clown/mutant)
 	deliveryamt = 1
 
 /obj/item/grenade/spawnergrenade/clown/traitor
