@@ -64,6 +64,14 @@
 	spawner_type = list(/mob/living/basic/clown/fleshclown, /mob/living/basic/clown/clownhulk, /mob/living/basic/clown/longface, /mob/living/basic/clown/clownhulk/chlown, /mob/living/basic/clown/clownhulk/honkmunculus, /mob/living/basic/clown/mutant/glutton, /mob/living/basic/clown/banana, /mob/living/basic/clown/honkling, /mob/living/basic/clown/lube)
 	deliveryamt = 1
 
+/obj/item/grenade/spawnergrenade/clown/traitor
+	name = "Clownade"
+	desc = "A sleek device often given to clowns on their 10th birthdays for protection, now brought to you by the Syndicate. You can hear faint scratching coming from within."
+	icon_state = "clown_ball"
+	inhand_icon_state = null
+	spawner_type = list(/mob/living/basic/clown/fleshclown, /mob/living/basic/clown/clownhulk, /mob/living/basic/clown/longface, /mob/living/basic/clown/clownhulk/chlown, /mob/living/basic/clown/clownhulk/honkmunculus, /mob/living/basic/clown/mutant/glutton, /mob/living/basic/clown/banana, /mob/living/basic/clown/honkling, /mob/living/basic/clown/lube)
+	deliveryamt = 6
+
 /obj/item/grenade/spawnergrenade/clown_broken
 	name = "stuffed C.L.U.W.N.E."
 	desc = "A sleek device often given to clowns on their 10th birthdays for protection. While a typical C.L.U.W.N.E only holds one creature, sometimes foolish young clowns try to cram more in, often to disasterous effect."
