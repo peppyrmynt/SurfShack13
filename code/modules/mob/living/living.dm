@@ -1045,6 +1045,10 @@
 
 ///Called by mob Move() when the lying_angle is different than zero, to better visually simulate crawling.
 /mob/living/proc/lying_angle_on_movement(direct)
+	//surfshack start
+	if(SEND_SIGNAL(src, COMSIG_PRE_LYING_ANGLE_CHANGE, direct) & COMPONENT_LYING_BLOCK_ANGLE_CHANGE)
+		return
+	//surfshack end
 	if(direct & EAST)
 		set_lying_angle(90)
 	else if(direct & WEST)
@@ -1938,6 +1942,12 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 	if(. && client)
 		reset_perspective()
 
+
+//surfshack start
+/// runs when mob is turned into an item
+/mob/living/proc/on_picked_up(obj/item/mob_item)
+	return
+//surfshack end
 
 /mob/living/proc/update_z(new_z) // 1+ to register, null to unregister
 	if(registered_z == new_z)

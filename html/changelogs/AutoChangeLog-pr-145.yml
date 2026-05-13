@@ -1,0 +1,4 @@
+author: "manofpepsi"
+delete-after: True
+changes:
+  - rscadd: "map vote is reverted to a normal voting system"

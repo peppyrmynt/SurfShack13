@@ -164,8 +164,9 @@
 
 	if(!awakened)
 		return
-
+	//surfshack start
 	src.AddComponent(/datum/component/tweak)
+	//surfshack end
 
 /obj/item/his_grace/proc/drowse() //Good night, Mr. Grace.
 	if(!awakened || ascended)

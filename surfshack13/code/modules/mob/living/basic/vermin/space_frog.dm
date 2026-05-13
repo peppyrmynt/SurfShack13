@@ -7,6 +7,7 @@
 
 /mob/living/basic/frog/space
 	icon = 'surfshack13/icons/mob/space_frog.dmi'
+	head_icon = 'surfshack13/icons/mob/head.dmi'
 	icon_state = "frog_white"
 	name = "albino frog"
 
@@ -25,6 +26,9 @@
 	. = ..()
 	set_light(2, 4, COLOR_GREEN)
 
+/mob/living/basic/frog/space/green/on_picked_up(obj/item/mob_item)
+	mob_item.set_light(2, 4, COLOR_GREEN)
+
 /mob/living/basic/frog/space/red
 	name = "plasma frog"
 	desc = "This frog eats plasma and it's rather warm. It could probably ignite items on contact. (secondary click to ignite item.)"
@@ -33,6 +37,9 @@
 	icon_dead = "frog_red_dead"
 	poison_type = /datum/reagent/stable_plasma
 	maximum_survivable_temperature = INFINITY
+
+/mob/living/basic/frog/space/red/on_picked_up(obj/item/mob_item)
+	mob_item.heat = HIGH_TEMPERATURE_REQUIRED - 100
 
 /mob/living/basic/frog/space/red/attackby_secondary(obj/item/weapon, mob/living/user, params)
 	. = ..()
@@ -117,7 +124,6 @@
 		drop_charging()
 	else
 		return ..()
-
 
 /mob/living/basic/frog/space/blue
 	name = "dew frog"

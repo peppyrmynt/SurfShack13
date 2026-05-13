@@ -2,7 +2,7 @@
 /mob/verb/join_vc()
 	set name = "Join"
 	set category = "ProxChat"
-	if(!SSvoicechat || !SSvoicechat.initialized)
+	if(!SSvoicechat || !SSvoicechat.actually_initialized)
 		to_chat(src, span_ooc("voicechat disabled"))
 		return
 	SSvoicechat.join_vc(client)
@@ -10,7 +10,7 @@
 /mob/verb/join_with_url()
 	set name = "Join with URL"
 	set category = "ProxChat"
-	if(!SSvoicechat || !SSvoicechat.initialized)
+	if(!SSvoicechat || !SSvoicechat.actually_initialized)
 		to_chat(src, span_ooc("voicechat disabled"))
 		return
 
@@ -96,10 +96,13 @@
 	to_chat(src, span_ooc("Disconnected"))
 
 ADMIN_VERB(restart_voicechat, R_ADMIN, "Restart Voicechat", "Disconnects voicechat clients and restarts voicechat", "ProxChat.Admin")
-	if(SSvoicechat)
+	if(!SSvoicechat)
+		return
+
+	var/confirm = alert(usr, "Restarting will disconnect everyone from voicechat.", "Restart Voicechat?", "yes", "no", "TWAT's option")
+
+	if(confirm == "yes")
 		SSvoicechat.restart()
-	else
-		to_chat(src, span_admin("voicechat subsystem not initialized, cant start"))
 
 ADMIN_VERB(stop_voicechat, R_ADMIN, "Stop Voicechat", "disconnects voicechat clients and stops voicechat", "ProxChat.Admin")
 	if(SSvoicechat)

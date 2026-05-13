@@ -23,7 +23,9 @@
 /datum/objective/space_carp
 	explanation_text = "Protect the rift to summon more carps."
 	var/datum/weakref/rift
+	//surfshack start
 	completion_credit_reward = 10
+	//surfshack end
 
 /datum/objective/space_carp/check_completion()
 	if(!rift.resolve())

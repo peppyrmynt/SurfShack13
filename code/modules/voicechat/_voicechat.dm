@@ -24,7 +24,8 @@ SUBSYSTEM_DEF(voicechat)
 	var/list/userCodes_active = list()
 	// each speaker per userCode
 	var/list/userCodes_speaking_icon = alist()
-
+	// SS_INIT_NO_NEED still sets initialized to true, so we use this instead
+	var/actually_initialized = FALSE
 /datum/controller/subsystem/voicechat/Initialize()
 	. = ..()
 
@@ -38,9 +39,9 @@ SUBSYSTEM_DEF(voicechat)
 	add_rooms(list("living", "ghost"))
 	add_rooms(list("lobby"), proximity_mode = FALSE)
 	start_node()
-	initialized = TRUE
 
 	RegisterSignal(SSticker, COMSIG_TICKER_ROUND_ENDED, PROC_REF(on_round_end)) //moves everyone to no prox room at round end.
+	actually_initialized = TRUE
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/voicechat/proc/restart()
@@ -74,9 +75,10 @@ SUBSYSTEM_DEF(voicechat)
 
 
 /datum/controller/subsystem/voicechat/Shutdown()
-	disconnect_all_clients()
-	stop_node()
-	send_ooc_announcement("voicechat stopped")
+	if(actually_initialized)
+		disconnect_all_clients()
+		stop_node()
+		send_ooc_announcement("voicechat stopped")
 	. = ..()
 
 /datum/controller/subsystem/voicechat/proc/disconnect_all_clients()

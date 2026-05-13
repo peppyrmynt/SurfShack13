@@ -8,14 +8,18 @@
 	if(brainwashed_datum)
 		for(var/O in directives)
 			var/datum/objective/brainwashing/objective = new(O)
+			//surfshack start
 			objective.reward_for_completion = FALSE
+			//surfshack end
 			brainwashed_datum.objectives += objective
 		brainwashed_datum.greet()
 	else
 		brainwashed_datum = new()
 		for(var/O in directives)
 			var/datum/objective/brainwashing/objective = new(O)
+			//surfshack start
 			objective.reward_for_completion = FALSE
+			//surfshack end
 			brainwashed_datum.objectives += objective
 		brainwash_mind.add_antag_datum(brainwashed_datum)
 

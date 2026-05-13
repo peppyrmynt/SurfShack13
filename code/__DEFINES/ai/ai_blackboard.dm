@@ -137,6 +137,11 @@
 ///key holding our eating cooldown
 #define BB_EAT_FOOD_COOLDOWN "BB_eat_food_cooldown"
 
+//surfshack start
+///key for next time we eat or hunt
+#define BB_NEXT_EAT_HUNT "BB_next_eat_hunt"
+//surfshack end
+
 /// Blackboard key for a held item
 #define BB_SIMPLE_CARRY_ITEM "BB_SIMPLE_CARRY_ITEM"
 

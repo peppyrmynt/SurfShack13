@@ -231,7 +231,9 @@
 /datum/objective/spendtime //spend some time around someone, handled by the obsessed trauma since that ticks
 	name = "spendtime"
 	var/timer = 1800 //5 minutes
+	//surfshack start
 	completion_credit_reward = 50
+	//surfshack end
 
 /datum/objective/spendtime/update_explanation_text()
 	if(timer == initial(timer))//just so admins can mess with it
@@ -250,7 +252,9 @@
 /datum/objective/hug//this objective isn't perfect. hugging the correct amount of times, then switching bodies, might fail the objective anyway. maybe i'll come back and fix this sometime.
 	name = "hugs"
 	var/hugs_needed
+	//surfshack start
 	completion_credit_reward = 10
+	//surfshack end
 
 /datum/objective/hug/update_explanation_text()
 	..()
@@ -270,7 +274,9 @@
 
 /datum/objective/polaroid //take a picture of the target with you in it.
 	name = "polaroid"
+	//surfshack start
 	completion_credit_reward = 20
+	//surfshack end
 
 /datum/objective/polaroid/update_explanation_text()
 	..()
@@ -295,7 +301,9 @@
 
 /datum/objective/steal/heirloom_thief //exactly what it sounds like, steal someone's heirloom.
 	name = "heirloomthief"
+	//surfshack start
 	completion_credit_reward = 50
+	//surfshack end
 
 /datum/objective/steal/heirloom_thief/update_explanation_text()
 	..()

@@ -1,0 +1,5 @@
+author: "IndieanaJones"
+delete-after: True
+changes:
+  - rscadd: "Space adaptation is back!"
+  - rscdel: "Remove cold, pressure, and thermal adaptation"

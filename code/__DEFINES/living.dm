@@ -11,5 +11,6 @@
  */
 #define STOP_OVERLAY_UPDATE_BODY_PARTS (1<<2)
 
+//GENIUS CODING!!!!!!
 /// Getter for a mob/living's lying angle, otherwise protected
 #define GET_LYING_ANGLE(mob) (UNLINT(mob.lying_angle))
