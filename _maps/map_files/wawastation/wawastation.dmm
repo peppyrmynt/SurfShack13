@@ -961,16 +961,6 @@
 	},
 /turf/open/floor/iron/dark/textured,
 /area/station/medical/morgue)
-"apu" = (
-/obj/structure/cable,
-/obj/effect/turf_decal/siding/purple{
-	dir = 4
-	},
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
-/turf/open/floor/iron/white/herringbone,
-/area/station/science/nanites)
 "apx" = (
 /obj/structure/table/reinforced,
 /obj/structure/desk_bell,
@@ -8240,13 +8230,6 @@
 /obj/effect/landmark/event_spawn,
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
-"cYo" = (
-/obj/effect/turf_decal/siding/purple{
-	dir = 8
-	},
-/obj/machinery/light_switch/directional/west,
-/turf/open/floor/iron/white/herringbone,
-/area/station/science/nanites)
 "cYs" = (
 /obj/effect/spawner/random/structure/crate,
 /obj/effect/spawner/random/maintenance,
@@ -15266,7 +15249,6 @@
 /area/station/science/explab)
 "fwT" = (
 /obj/structure/cable,
-/obj/machinery/light/cold/dim/directional/east,
 /turf/open/floor/iron/dark/textured,
 /area/station/science/robotics/lab)
 "fwU" = (
@@ -27819,10 +27801,6 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 9
 	},
-/obj/machinery/button/door/directional/north{
-	id = "nanite_lockdown_2";
-	name = "Emergency Doors Control"
-	},
 /turf/open/floor/iron/white/herringbone,
 /area/station/science/nanites)
 "jQo" = (
@@ -35845,6 +35823,7 @@
 	pixel_y = -6;
 	pixel_x = 7
 	},
+/obj/machinery/light_switch/directional/west,
 /turf/open/floor/iron/white/herringbone,
 /area/station/science/nanites)
 "mEN" = (
@@ -39846,9 +39825,6 @@
 "odS" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 8
-	},
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
 	},
 /turf/open/floor/iron/white/herringbone,
 /area/station/science/nanites)
@@ -54189,14 +54165,8 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/obj/machinery/door/airlock/research/glass{
-	name = "Nanite Lab"
-	},
 /obj/effect/mapping_helpers/airlock/access/all/science/general,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown_2";
-	name = "Security Blast Door"
-	},
+/obj/machinery/door/airlock/maintenance_hatch,
 /turf/open/floor/plating,
 /area/station/science/nanites)
 "sZs" = (
@@ -63471,6 +63441,7 @@
 "woz" = (
 /obj/structure/sign/poster/official/random/directional/east,
 /obj/structure/cable,
+/obj/machinery/light/cold/dim/directional/east,
 /turf/open/floor/iron/dark/textured,
 /area/station/science/robotics/lab)
 "woI" = (
@@ -65532,11 +65503,7 @@
 	dir = 4
 	},
 /obj/machinery/door/airlock/research/glass{
-	name = "Robotics Lab"
-	},
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown_2";
-	name = "Security Blast Door"
+	name = "Nanite Lab"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/science/research,
 /turf/open/floor/iron/dark,
@@ -105659,10 +105626,10 @@ xOU
 xOU
 xOU
 azv
-azv
-azv
+xOU
+mwW
 xad
-azv
+xOU
 sge
 sge
 sge
@@ -105917,7 +105884,7 @@ tJx
 kQt
 aCv
 jQl
-cYo
+odS
 kUz
 mEL
 tHh
@@ -106178,7 +106145,7 @@ gBk
 miA
 uJt
 uJt
-apu
+uJt
 umK
 jih
 dht

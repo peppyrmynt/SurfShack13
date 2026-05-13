@@ -31017,14 +31017,10 @@
 /turf/open/floor/engine,
 /area/station/science/xenobiology)
 "chz" = (
-/obj/effect/spawner/structure/window/reinforced/tinted,
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/obj/structure/curtain/cloth,
-/obj/machinery/door/poddoor/shutters/preopen{
-	id = "nanite_lockdown"
-	},
+/obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
 /area/station/science/nanites)
 "chA" = (
@@ -32871,15 +32867,15 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/obj/machinery/door/airlock/research{
-	name = "Nanite Lab"
-	},
 /obj/effect/mapping_helpers/airlock/access/any/science/maintenance,
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
+	},
+/obj/machinery/door/airlock/research/glass{
+	name = "Nanite Lab"
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
@@ -34949,14 +34945,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron/dark,
 /area/station/engineering/storage)
-"cJJ" = (
-/obj/effect/spawner/structure/window/reinforced/tinted,
-/obj/structure/curtain/cloth,
-/obj/machinery/door/poddoor/shutters/preopen{
-	id = "nanite_lockdown"
-	},
-/turf/open/floor/plating,
-/area/station/science/nanites)
 "cKs" = (
 /obj/structure/table/reinforced/rglass,
 /obj/effect/turf_decal/tile/blue/full{
@@ -36723,12 +36711,9 @@
 /turf/open/floor/iron/white/smooth_edge,
 /area/station/medical/chemistry)
 "dwb" = (
-/obj/structure/window/reinforced/spawner/directional/south,
 /obj/item/disk/nanite_program/good_mood,
 /obj/structure/table,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
+/obj/structure/window/spawner/directional/south,
 /turf/open/floor/circuit/off,
 /area/station/science/nanites)
 "dwn" = (
@@ -40697,10 +40682,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/door/poddoor/shutters{
-	dir = 1;
-	id = "nanite_sci_outer"
-	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "fBX" = (
@@ -44040,25 +44021,19 @@
 /turf/open/floor/iron/diagonal,
 /area/station/service/hydroponics/garden)
 "hyi" = (
-/obj/machinery/door/window/brigdoor/left/directional/south{
-	name = "Nanite Hub Room";
-	req_one_access = list("maint_tunnels","science")
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/landmark/start/scientist,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
+/obj/machinery/door/window/left/directional/south{
+	name = "Super Duper Strong Windoor";
+	max_integrity = 25
 	},
 /turf/open/floor/circuit/off,
 /area/station/science/nanites)
 "hyu" = (
-/obj/structure/window/reinforced/spawner/directional/south,
 /obj/item/disk/nanite_program/critstable,
 /obj/structure/table,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
+/obj/structure/window/spawner/directional/south,
 /turf/open/floor/circuit/off,
 /area/station/science/nanites)
 "hyQ" = (
@@ -47035,10 +47010,6 @@
 "jsw" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/door/poddoor/shutters{
-	dir = 1;
-	id = "nanite_sci_outer"
-	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "jsH" = (
@@ -48083,16 +48054,6 @@
 	},
 /obj/effect/turf_decal/tile/green/opposingcorners,
 /obj/structure/extinguisher_cabinet/directional/west,
-/obj/machinery/button/door/directional/south{
-	pixel_x = -8;
-	id = "nanite_sci_outer";
-	name = "Outer Shutters Control"
-	},
-/obj/machinery/button/door/directional/south{
-	pixel_x = 8;
-	id = "nanite_lockdown";
-	name = "Nanite Lab Security Shutter Control"
-	},
 /obj/effect/turf_decal/tile/purple{
 	dir = 8
 	},
@@ -55957,12 +55918,7 @@
 	},
 /area/station/hallway/primary/central)
 "onk" = (
-/obj/effect/spawner/structure/window/reinforced/tinted,
-/obj/structure/curtain/cloth,
-/obj/effect/mapping_helpers/damaged_window,
-/obj/machinery/door/poddoor/shutters/preopen{
-	id = "nanite_lockdown"
-	},
+/obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
 /area/station/science/nanites)
 "onz" = (
@@ -118973,7 +118929,7 @@ qEv
 caY
 moa
 tRd
-tRd
+onk
 tRd
 tRd
 tRd
@@ -120522,7 +120478,7 @@ jXV
 pAh
 egC
 vUa
-cJJ
+onk
 cFh
 cNW
 dFi

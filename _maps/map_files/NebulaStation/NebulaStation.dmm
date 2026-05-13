@@ -8141,10 +8141,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/obj/machinery/button/door/directional/north{
-	id = "nanite_lockdown_2";
-	name = "Emergency Doors Control"
-	},
+/obj/machinery/light/small/directional/north,
 /turf/open/floor/iron/smooth_large,
 /area/station/science/nanites)
 "bmE" = (
@@ -75703,11 +75700,12 @@
 /turf/open/floor/glass/reinforced,
 /area/station/science/research)
 "ljc" = (
-/obj/machinery/door/airlock/research{
-	name = "Nanite Labs"
-	},
 /obj/effect/turf_decal/tile/purple/fourcorners,
 /obj/effect/mapping_helpers/airlock/access/all/science/general,
+/obj/machinery/door/airlock/research/glass{
+	name = "Nanite Lab"
+	},
+/obj/machinery/door/firedoor,
 /turf/open/floor/iron/white,
 /area/station/science/nanites)
 "lje" = (
@@ -83251,10 +83249,6 @@
 	},
 /obj/machinery/door/airlock/maintenance{
 	name = "Research Maintenance"
-	},
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown_2";
-	name = "Security Blast Door"
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/department/science)
@@ -92124,15 +92118,16 @@
 /turf/open/floor/iron/dark/textured_large,
 /area/station/maintenance/aft/lesser)
 "nKh" = (
-/obj/machinery/door/airlock/research{
-	name = "Nanite Labs"
-	},
 /obj/effect/turf_decal/tile/purple/fourcorners,
 /obj/effect/mapping_helpers/airlock/access/all/science/general,
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/structure/disposalpipe/segment,
+/obj/machinery/door/airlock/research/glass{
+	name = "Nanite Lab"
+	},
+/obj/machinery/door/firedoor,
 /turf/open/floor/iron/white,
 /area/station/science/nanites)
 "nKp" = (
@@ -102511,14 +102506,6 @@
 /obj/machinery/light/directional/west,
 /turf/open/floor/wood/parquet,
 /area/station/cargo/mining_breakroom)
-"phO" = (
-/obj/effect/spawner/structure/window/reinforced,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown_2";
-	name = "Security Blast Door"
-	},
-/turf/open/floor/plating,
-/area/station/maintenance/department/science)
 "phR" = (
 /obj/effect/turf_decal/siding/brown{
 	dir = 8
@@ -109444,6 +109431,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 6
 	},
+/obj/machinery/light/small/directional/east,
 /turf/open/floor/grass,
 /area/station/science/nanites)
 "qiG" = (
@@ -136754,10 +136742,8 @@
 /area/station/hallway/primary/fore)
 "upM" = (
 /obj/machinery/airalarm/directional/north,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /obj/structure/cable,
+/obj/machinery/light/directional/north,
 /turf/open/floor/iron/smooth_large,
 /area/station/science/nanites)
 "upO" = (
@@ -142292,6 +142278,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 10
 	},
+/obj/machinery/light/small/directional/west,
 /turf/open/floor/grass,
 /area/station/science/nanites)
 "vfl" = (
@@ -150375,9 +150362,6 @@
 /turf/open/floor/engine,
 /area/station/engineering/supermatter/room)
 "wqW" = (
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /obj/structure/cable,
 /obj/machinery/power/apc/auto_name/directional/south,
 /turf/open/floor/iron/smooth_large,
@@ -203128,7 +203112,7 @@ lwf
 han
 rVD
 msa
-phO
+rVD
 rVD
 rVD
 rVD
