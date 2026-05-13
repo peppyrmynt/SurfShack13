@@ -55,15 +55,14 @@
 	name = "Syndi-kit Special"
 	desc = "Syndicate Bundles, also known as Syndi-Kits, are specialized groups of items that arrive in a plain box. \
 			In Syndi-kit Special, you will receive items used by famous syndicate agents of the past. \
-			Collectively worth more than 25 telecrystals, the syndicate loves a good throwback"
+			Collectively worth more than 25 telecrystals, the syndicate loves a good throwback."
 	item = /obj/item/storage/box/syndicate/bundle_b
 	cost = 20
 	purchasable_from = ~(UPLINK_ALL_SYNDIE_OPS | UPLINK_SPY)
 
 /datum/uplink_item/bundles_tc/surplus
 	name = "Syndicate Surplus Crate"
-	desc = "A dusty crate from the back of the Syndicate warehouse delivered directly to you via Supply Pod. \
-			If the rumors are true, it will fill it's contents based on your current reputation. Get on that grind. \
+	desc = "A dusty crate from the back of the Syndicate warehouse delivered directly to you via Supply Pod. \ 
 			Contents are sorted to always be worth 30 TC."
 	item = /obj/structure/closet/crate // will be replaced in purchase()
 	cost = 20
@@ -126,7 +125,7 @@
 	name = "United Surplus Crate"
 	desc = "A shiny and large crate to be delivered directly to you via Supply Pod. It has an advanced locking mechanism with an anti-tampering protocol. \
 			It is recommended that you only attempt to open it by having another agent purchase a Surplus Crate Key. Unite and fight. \
-			Contents are sorted to always be worth 80 TC. \
+			Contents are sorted to always be worth 80 TC."
 	cost = 20
 	item = /obj/structure/closet/crate/secure/syndicrate
 	crate_tc_value = 80
@@ -147,7 +146,7 @@
 /datum/uplink_item/bundles_tc/surplus_key
 	name = "United Surplus Crate Key"
 	desc = "This inconscpicous device is actually a key that can open any United Surplus Crate. It can only be used once. \
-			Though initially designed to encourage cooperation, agents quickly discovered that you can turn the key to the crate by yourself.  \
+			Though initially designed to encourage cooperation, agents quickly discovered that you can turn the key to the crate by yourself."
 	cost = 20
 	item = /obj/item/syndicrate_key
 	purchasable_from = ~(UPLINK_ALL_SYNDIE_OPS | UPLINK_SPY)
