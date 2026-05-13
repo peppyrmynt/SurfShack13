@@ -153,7 +153,7 @@
 		addtimer(CALLBACK(sacrifice, TYPE_PROC_REF(/obj/item/food/cheese/wheel, consume_cheese)), 10 SECONDS)
 	cheese_sacrificed += length(cheese_to_haunt)
 
-	user.say(magic_words[times_invoked], forced = "grand ritual invocation")
+	user.whisper(magic_words[times_invoked], forced = "grand ritual invocation")
 	remove_channel_effect(user)
 
 	for(var/obj/machinery/light/light in orange(4, src.loc))
