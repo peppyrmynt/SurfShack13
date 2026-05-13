@@ -43,6 +43,10 @@
 	provided_antag_datum = /datum/antagonist/changeling
 	refund_amount = 5000
 
+/obj/item/antag_maker/bloodsucker
+	provided_antag_datum = /datum/antagonist/bloodsucker
+	refund_amount = 5000
+
 /obj/item/antag_maker/spy
 	provided_antag_datum = /datum/antagonist/spy
 	refund_amount = 4000

@@ -247,6 +247,11 @@
 	item_path = /obj/item/antag_maker/changeling
 	item_cost = 5000
 
+/datum/store_item/roundstart/antag_token_bloodsucker
+	name = "Antag Token: Bloodsucker"
+	item_path = /obj/item/antag_maker/bloodsucker
+	item_cost = 5000
+
 /datum/store_item/roundstart/antag_token_spy
 	name = "Antag Token: Spy"
 	item_path = /obj/item/antag_maker/spy
@@ -258,11 +263,11 @@
 	item_cost = 8000
 
 /datum/store_item/roundstart/antag_token_nukie
-	name = "Antag Token: Nuclear Operative"
+	name = "Antag Token: (Solo) Nuclear Operative"
 	item_path = /obj/item/antag_maker/nukie
 	item_cost = 7000
 
 /datum/store_item/roundstart/antag_token_clown_op
-	name = "Antag Token: Clown Operative"
+	name = "Antag Token: (Solo) Clown Operative"
 	item_path = /obj/item/antag_maker/clown_op
 	item_cost = 7000

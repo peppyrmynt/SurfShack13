@@ -41,14 +41,10 @@
 
 /obj/item/implant/biosig/implant(mob/living/target, mob/user, silent = FALSE, force = FALSE)
 	. = ..()
-	SIGNAL_HANDLER
-
 	RegisterSignal(target, COMSIG_LIVING_DEATH, PROC_REF(on_mob_death))
 
 /obj/item/implant/biosig/removed(mob/target, silent = FALSE, special = FALSE)
 	. = ..()
-	SIGNAL_HANDLER
-
 	UnregisterSignal(target, COMSIG_LIVING_DEATH)
 
 /obj/item/implant/biosig/get_data()
