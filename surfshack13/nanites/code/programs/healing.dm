@@ -244,16 +244,15 @@
 
 /datum/nanite_program/naniteresus
 	name = "Nanite Resurrection"
-	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection. \
-			Only works on animals."
+	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection. Only works on animals."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
 	can_trigger = TRUE
-	trigger_cost = 100
+	trigger_cost = 200
 	trigger_cooldown = 600
 
 /datum/nanite_program/naniteresus/on_trigger(comm_message)
-	if(host_mob.stat == DEAD && !iscarbon(host_mob) && host_mob.getBruteLoss() < 50 && host_mob.getFireLoss() < 50)
+	if(host_mob.stat == DEAD && !iscarbon(host_mob))
 		host_mob.notify_revival("You're being resurrected by nanites! Re-enter your corpse at your earliest conveinence.")
 		host_mob.do_jitter_animation(10)
 		addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 4 SECONDS) //jitter immediately, then again after 4 and 8 seconds
@@ -262,7 +261,7 @@
 
 /datum/nanite_program/naniteresus/proc/do_revive()
 	host_mob.adjustOxyLoss(-200)
-	host_mob.adjustBruteLoss(-50)
-	host_mob.adjustFireLoss(-50)
+	host_mob.adjustBruteLoss(-1)
+	host_mob.adjustFireLoss(-1)
 	if(host_mob.revive(TRUE))
 		log_combat(host_mob, host_mob, "revived", src)

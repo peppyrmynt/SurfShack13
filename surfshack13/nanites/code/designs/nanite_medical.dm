@@ -81,7 +81,7 @@
 
 /datum/design/nanites/naniteresus
 	name = "Nanite Resurrection"
-	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection."
+	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection. Only works on animals."
 	id = "naniteresus_nanites"
 	program_type = /datum/nanite_program/naniteresus
 	category = list(NANITE_CATEGORY_MEDICAL)
