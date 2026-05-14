@@ -319,4 +319,4 @@
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS,
 		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_3_POINTS*NANITE_POINT_CONVERSION_RATE,)
 	prereq_ids = list(TECHWEB_NODE_NANITE_EXPERI, TECHWEB_NODE_NANITE_SYNAPTIC)
-	design_ids = list("antigibbing_nanites", "antirad_nanites", "weatherendure_nanites", "obsidian_nanites", "lungdestruction_nanites")
+	design_ids = list("antirad_nanites", "weatherendure_nanites", "obsidian_nanites", "lungdestruction_nanites")
