@@ -24,6 +24,7 @@
 	new /obj/item/disk/nanite_program/viral(src)
 	new /obj/item/disk/nanite_program/spreading(src)
 	new /obj/item/disk/nanite_program/nanite_sting(src)
+	new /obj/item/disk/nanite_program/explosive(src)
 	new /obj/item/disk/nanite_program/meltdown(src)
 	new /obj/item/disk/nanite_program/pacifying(src)
 	new /obj/item/disk/nanite_program/mind_control(src)
@@ -137,6 +138,9 @@
 
 /obj/item/disk/nanite_program/heart_stop
 	program = /datum/nanite_program/heart_stop
+
+/obj/item/disk/nanite_program/explosive
+	program = /datum/nanite_program/explosive
 
 /obj/item/disk/nanite_program/shock
 	program = /datum/nanite_program/shocking

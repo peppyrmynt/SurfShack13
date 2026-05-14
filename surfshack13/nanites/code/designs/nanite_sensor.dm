@@ -57,7 +57,7 @@
 /datum/design/nanites/sensor_assistant
 	name = "Assistant Sensor"
 	desc = "When triggered, the nanites scan the host's biodata and match it with Nanotrasen's private bio-records and outputs a signal if the host is an assistant."
-	id = "sensor_assisant_nanites"
+	id = "sensor_assistant_nanites"
 	category = list(NANITES_CATEGORY_SENSOR)
 	program_type = /datum/nanite_program/sensor/assistant
 

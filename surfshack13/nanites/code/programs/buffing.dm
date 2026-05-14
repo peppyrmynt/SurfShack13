@@ -72,13 +72,13 @@
 	. = ..()
 	if(ishuman(host_mob))
 		var/mob/living/carbon/human/host_human = host_mob
-		host_human.physiology.bleed_mod *= 0.1
+		host_human.physiology.bleed_mod *= 0.5
 
 /datum/nanite_program/coagulating/disable_passive_effect()
 	. = ..()
 	if(ishuman(host_mob))
 		var/mob/living/carbon/human/host_human = host_mob
-		host_human.physiology.bleed_mod *= 10
+		host_human.physiology.bleed_mod *= 2
 
 /datum/nanite_program/conductive
 	name = "Electric Conduction"
