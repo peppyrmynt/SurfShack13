@@ -121,29 +121,6 @@
 	category = list(NANITE_CATEGORY_UTILITIES)
 	program_type = /datum/nanite_program/construct_tool
 
-/datum/design/nanites/convert_nanites
-	name = "Convert Nanites"
-	desc = "The nanites gather into the palm of the host's hand and form a specific material such as metal sheets or glass sheets. \
-			The items do NOT disappear afterward."
-	id = "convert_nanites"
-	category = list(NANITE_CATEGORY_UTILITIES)
-	program_type = /datum/nanite_program/convert_nanites
-
-/datum/design/nanites/construct_tool_adv
-	name = "Construct Advanced Nanite Tool"
-	desc = "The nanites gather into the palm of the host's hand and form a specific tool such as a multitool or holofan projector."
-	id = "construct_tool_adv_nanites"
-	category = list(NANITE_CATEGORY_UTILITIES)
-	program_type = /datum/nanite_program/construct_tool_adv
-
-/datum/design/nanites/bluespace_blood
-	name = "Bluespace Harvestation"
-	desc = "The nanites will harvest foreign bluespace energies and store them away. Once the proper signal is recieved, \
-			the nanites invest the bluespace energies into the host's bloodstream. Causing temporary spontaneous short-range teleportation."
-	id = "bluespace_blood_nanites"
-	category = list(NANITE_CATEGORY_UTILITIES)
-	program_type = /datum/nanite_program/bluespace_blood
-
 /datum/design/nanites/botsummon
 	name = "Simple Bot Construction"
 	desc = "The nanites expend a large amount of themselves to develop a single simple bot capable of assisting \
@@ -152,32 +129,9 @@
 	category = list(NANITE_CATEGORY_UTILITIES)
 	program_type = /datum/nanite_program/botsummon
 
-/datum/design/nanites/researchplus
-	name = "Nanite Research Servers"
-	desc = "The nanites adopt research server programming and may expend themselves to \
-			generate both general and nanite research points in substantial amounts."
-	id = "researchplus_nanites"
-	category = list(NANITE_CATEGORY_UTILITIES)
-	program_type = /datum/nanite_program/researchplus
-
-/datum/design/nanites/deadchat
-	name = "Otherworldly Programming"
-	desc = "The nanites keep the host's brain in a constant state of near-death, \
-			causing strange yet vivid auditory hallucinations."
-	id = "deadchat_nanites"
-	category = list(NANITE_CATEGORY_UTILITIES)
-	program_type = /datum/nanite_program/deadchat
-
 /datum/design/nanites/monitoring
 	name = "Monitoring"
 	desc = "The nanites monitor the host's vitals and location, sending them to the suit sensor network. Cannot function if the host isn't wearing a suit."
 	id = "monitoring_nanites"
 	program_type = /datum/nanite_program/monitoring
-	category = list(NANITE_CATEGORY_UTILITIES)
-
-/datum/design/nanites/freedom
-	name = "Freedom Procedure"
-	desc = "The nanites search for restraints upon the host and remove them quickly."
-	id = "freedom_nanites"
-	program_type = /datum/nanite_program/freedom
 	category = list(NANITE_CATEGORY_UTILITIES)

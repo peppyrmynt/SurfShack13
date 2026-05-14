@@ -48,7 +48,6 @@
 		"relay_repeater_nanites",
 		"red_diag_nanites",
 		"monitoring_nanites",
-		"sensor_name_nanites",
 		"sensor_resting_nanites",
 	)
 	research_costs = list(
@@ -68,7 +67,7 @@
 		"sensor_voice_nanites",
 		"voice_nanites",
 		"research_nanites",
-		"sensor_job_nanites",
+		"sensor_assistant_nanites",
 		"sensor_incapacitated_nanites",
 	)
 	research_costs = list(

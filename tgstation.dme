@@ -6640,7 +6640,6 @@
 #include "surfshack13\nanites\code\programs\_programs.dm"
 #include "surfshack13\nanites\code\programs\buffing.dm"
 #include "surfshack13\nanites\code\programs\healing.dm"
-#include "surfshack13\nanites\code\programs\illegal.dm"
 #include "surfshack13\nanites\code\programs\protocols.dm"
 #include "surfshack13\nanites\code\programs\rogue.dm"
 #include "surfshack13\nanites\code\programs\sensor.dm"
