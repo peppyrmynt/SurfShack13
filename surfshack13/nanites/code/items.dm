@@ -64,9 +64,6 @@
 	shock_proofing = TRUE
 	emp_proofing = TRUE
 
-/obj/item/disk/nanite_program/no_dmg/syndicate
-	icon_state = "nanite_syndicate"
-
 /obj/item/disk/nanite_program/aggressive_replication
 	program = /datum/nanite_program/aggressive_replication
 
