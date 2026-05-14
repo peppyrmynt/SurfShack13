@@ -102,7 +102,7 @@
 		be defused, and some crew may attempt to do so. \
 		The bomb core can be pried out and manually detonated with other explosives."
 	item = /obj/item/sbeacondrop/bomb
-	cost = 9
+	cost = 8
 
 /datum/uplink_item/explosives/syndicate_bomb/New()
 	. = ..()
