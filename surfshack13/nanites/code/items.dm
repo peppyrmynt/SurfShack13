@@ -288,9 +288,6 @@
 /obj/item/disk/nanite_program/construct_tool
 	program = /datum/nanite_program/construct_tool
 
-/obj/item/disk/nanite_program/bluespace_blood
-	program = /datum/nanite_program/bluespace_blood
-
 /obj/item/disk/nanite_program/botsummon
 	program = /datum/nanite_program/botsummon
 

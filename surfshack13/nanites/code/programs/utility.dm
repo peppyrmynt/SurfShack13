@@ -392,14 +392,14 @@
 	new_tool.desc += " Upon closer inspection, the material is moving ever-so-slightly."
 	if(!host_mob.put_in_active_hand(new_tool))
 		new_tool.forceMove(host_mob.drop_location())
-	addtimer(CALLBACK(src, TYPE_PROC_REF(src, destroy_nanite_item_1), new_tool), 20 SECONDS)
+	addtimer(CALLBACK(src, .proc/destroy_nanite_item_1, new_tool), 20 SECONDS)
 
 /datum/nanite_program/construct_tool/proc/destroy_nanite_item_1(obj/item/nanite_tool)
-	visible_message(span_danger("[nanite_tool] is beginning to destabilize..."), span_userdanger("[nanite_tool] is destabilizing..."))
-	addtimer(CALLBACK(src, TYPE_PROC_REF(src, destroy_nanite_item_2), nanite_tool), 10 SECONDS)
+	nanite_tool.visible_message(span_danger("[nanite_tool] is beginning to destabilize..."), span_userdanger("[nanite_tool] is destabilizing..."))
+	addtimer(CALLBACK(src, .proc/destroy_nanite_item_2, nanite_tool), 10 SECONDS)
 
 /datum/nanite_program/construct_tool/proc/destroy_nanite_item_2(obj/item/nanite_tool)
-	visible_message(span_danger("[nanite_tool] crumbles into nothing..."), span_userdanger("[nanite_tool] suddenly vanishes with little fanfare."))
+	nanite_tool.visible_message(span_danger("[nanite_tool] crumbles into nothing..."), span_userdanger("[nanite_tool] suddenly vanishes with little fanfare."))
 	qdel(nanite_tool)
 
 /datum/nanite_program/botsummon
@@ -433,7 +433,7 @@
 		if("Securitron")
 			new_bot = new /mob/living/simple_animal/bot/secbot(host_mob.loc)
 	new_bot.setMaxHealth(1000)
-	addtimer(CALLBACK(src, TYPE_PROC_REF(src, destroy_bot), new_bot), 10 SECONDS)
+	addtimer(CALLBACK(src, .proc/destroy_bot, new_bot), 10 SECONDS)
 
 /datum/nanite_program/botsummon/proc/destroy_bot(mob/nanite_bot)
 	QDEL_NULL(nanite_bot)

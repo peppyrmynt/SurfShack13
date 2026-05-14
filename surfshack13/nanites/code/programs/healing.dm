@@ -254,12 +254,11 @@
 
 /datum/nanite_program/naniteresus/on_trigger(comm_message)
 	if(host_mob.stat == DEAD && !iscarbon(host_mob) && host_mob.getBruteLoss() < 50 && host_mob.getFireLoss() < 50)
-		if(check_revivable())
-			host_mob.notify_revival("You're being resurrected by nanites! Re-enter your corpse at your earliest conveinence.")
-			host_mob.do_jitter_animation(10)
-			addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 4 SECONDS) //jitter immediately, then again after 4 and 8 seconds
-			addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 8 SECONDS)
-			addtimer(CALLBACK(src, PROC_REF(do_revive)), 10 SECONDS)
+		host_mob.notify_revival("You're being resurrected by nanites! Re-enter your corpse at your earliest conveinence.")
+		host_mob.do_jitter_animation(10)
+		addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 4 SECONDS) //jitter immediately, then again after 4 and 8 seconds
+		addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 8 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(do_revive)), 10 SECONDS)
 
 /datum/nanite_program/naniteresus/proc/do_revive()
 	host_mob.adjustOxyLoss(-200)

@@ -40,19 +40,11 @@
 	category = list(NANITES_CATEGORY_AUGMENTATION)
 	program_type = /datum/nanite_program/mindshield
 
-
 /datum/design/nanites/bodily_augment
 	name = "Bodily Augmentation"
 	desc = "The nanites attach to cells in the body and reinforce them, allowing the host to sustain more damage than normal without falling into a critical state or dying outright."
 	id = "bodyaugment_nanites"
 	program_type = /datum/nanite_program/bodily_augment
-	category = list(NANITES_CATEGORY_AUGMENTATION)
-
-/datum/design/nanites/bluespace_blood
-	name = "Bluespace Harvestation"
-	desc = "The nanites will harvest foreign bluespace energies and store them away. Once the proper signal is recieved, the nanites invest the bluespace energies into the host's bloodstream. Causing temporary spontaneous short-range teleportation."
-	id = "bluespace_blood_nanites"
-	program_type = /datum/nanite_program/bluespace_blood
 	category = list(NANITES_CATEGORY_AUGMENTATION)
 
 /datum/design/nanites/antirad

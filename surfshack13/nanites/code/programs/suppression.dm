@@ -227,7 +227,7 @@
 	name = "Weakening Procedure"
 	desc = "The nanites inhibit muscular tension and modify the host's bones to be more brittle. This results in an increase of wounds and broken bones when the host is subjected to damage."
 	use_rate = 1
-	rogue_types = list(/datum/nanite_program/hardiness)
+	rogue_types = list(/datum/nanite_program/necrotic)
 
 /datum/nanite_program/weakness/enable_passive_effect()
 	. = ..()
