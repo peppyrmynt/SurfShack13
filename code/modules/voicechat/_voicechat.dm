@@ -61,7 +61,7 @@ SUBSYSTEM_DEF(voicechat)
 /datum/controller/subsystem/voicechat/proc/start_node()
 	var/byond_port = world.port
 	var/node_port = CONFIG_GET(number/port_voicechat)
-	var/pid = world.process
+	var/pid = UNLINT(world.process)
 	if(!byond_port || !node_port || !pid)
 		message_admins("missing variable {byond_port:[byond_port], node_port:[node_port], pid:[pid]}")
 		return FALSE
