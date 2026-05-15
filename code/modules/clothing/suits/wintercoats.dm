@@ -16,8 +16,6 @@
 	var/zipped = FALSE
 	/// Whether alt-clicking this coat zips/unzips it
 	var/can_altclick_zip = TRUE
-	/// Base icon state before greyscale initialization changes it.
-	var/post_init_icon_state
 
 /datum/armor/hooded_wintercoat
 	bio = 10
