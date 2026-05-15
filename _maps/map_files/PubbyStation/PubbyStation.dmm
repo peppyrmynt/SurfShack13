@@ -3191,7 +3191,7 @@
 /area/station/cargo/lobby)
 "akZ" = (
 /obj/machinery/door/airlock/command{
-	name = "Head of Security's Bedroom"
+	name = "Head of Security's Quarters"
 	},
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
@@ -6799,13 +6799,13 @@
 /turf/open/floor/plating,
 /area/station/command/bridge)
 "awT" = (
-/obj/machinery/door/airlock/maintenance{
-	name = "Captain's Office Maintenance"
-	},
 /obj/effect/mapping_helpers/airlock/access/all/command/captain,
 /obj/effect/turf_decal/bot,
 /obj/structure/cable,
 /obj/machinery/duct,
+/obj/machinery/door/airlock/maintenance_hatch{
+	name = "Captain's Office Maintenance"
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/department/bridge)
 "awY" = (
@@ -8238,7 +8238,7 @@
 /area/station/service/abandoned_gambling_den/gaming)
 "aCU" = (
 /obj/machinery/door/airlock/command{
-	name = "Head of Personnel's Bedroom"
+	name = "Head of Personnel's Quarters"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/command/hop,
 /obj/machinery/door/firedoor,
@@ -12980,7 +12980,7 @@
 	},
 /obj/structure/plasticflaps/opaque,
 /obj/machinery/navbeacon{
-	codes_txt = "delivery;dir=1";
+	codes_txt = "delivery;dir=2";
 	dir = 1;
 	location = "Janitor"
 	},
@@ -14125,9 +14125,18 @@
 /turf/open/floor/iron/small,
 /area/station/maintenance/starboard/fore)
 "aZC" = (
-/obj/machinery/light/directional/west,
-/obj/machinery/newscaster/directional/west,
-/turf/open/floor/iron,
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 8
+	},
+/obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
+	dir = 1
+	},
+/turf/open/floor/iron/edge{
+	dir = 8
+	},
 /area/station/cargo/storage)
 "aZD" = (
 /obj/effect/turf_decal/tile/neutral/half{
@@ -25905,7 +25914,7 @@
 /area/station/maintenance/disposal/incinerator)
 "cbl" = (
 /obj/machinery/navbeacon{
-	codes_txt = "delivery;dir=4";
+	codes_txt = "delivery;dir=2";
 	location = "Atmospherics"
 	},
 /obj/structure/plasticflaps/opaque,
@@ -31526,13 +31535,6 @@
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/iron/white/smooth_edge,
 /area/station/security/medical)
-"cYR" = (
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/structure/cable,
-/turf/open/floor/iron,
-/area/station/cargo/storage)
 "cZc" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/closet/emcloset,
@@ -32022,17 +32024,6 @@
 	dir = 1
 	},
 /area/station/engineering/lobby)
-"dkl" = (
-/obj/machinery/power/apc/auto_name/directional/east,
-/obj/structure/cable,
-/obj/machinery/byteforge,
-/obj/effect/turf_decal/bot,
-/obj/effect/turf_decal/siding/dark{
-	dir = 8
-	},
-/obj/machinery/light/small/directional/east,
-/turf/open/floor/iron/dark/textured_large,
-/area/station/cargo/bitrunning/den)
 "dku" = (
 /obj/machinery/vending/wardrobe/medi_wardrobe,
 /obj/effect/turf_decal/tile/blue/full,
@@ -32448,6 +32439,12 @@
 	name = "Holodeck Projector Floor"
 	},
 /area/station/holodeck/rec_center)
+"drC" = (
+/obj/effect/turf_decal/trimline/brown/filled/line,
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner,
+/obj/item/kirbyplants/random,
+/turf/open/floor/iron/edge,
+/area/station/cargo/storage)
 "drN" = (
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 4
@@ -45276,6 +45273,13 @@
 /obj/structure/sign/poster/random/directional/north,
 /turf/open/floor/plating,
 /area/station/maintenance/central)
+"iki" = (
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/cable,
+/turf/open/floor/iron,
+/area/station/cargo/storage)
 "iky" = (
 /obj/effect/turf_decal/trimline/white/mid_joiner{
 	color = "#ff8300";
@@ -48938,7 +48942,7 @@
 "jIY" = (
 /obj/structure/plasticflaps/opaque,
 /obj/machinery/navbeacon{
-	codes_txt = "delivery;dir=4";
+	codes_txt = "delivery;dir=1";
 	dir = 1;
 	location = "Security"
 	},
@@ -50283,7 +50287,7 @@
 /obj/structure/window/reinforced/spawner/directional/north,
 /obj/structure/plasticflaps/opaque,
 /obj/machinery/navbeacon{
-	codes_txt = "delivery;dir=1";
+	codes_txt = "delivery;dir=4";
 	location = "Medbay"
 	},
 /obj/effect/decal/cleanable/dirt,
@@ -54716,7 +54720,7 @@
 "lTy" = (
 /obj/structure/plasticflaps/opaque,
 /obj/machinery/navbeacon{
-	codes_txt = "delivery;dir=4";
+	codes_txt = "delivery;dir=2";
 	location = "Atmospherics"
 	},
 /obj/effect/decal/cleanable/dirt,
@@ -55786,6 +55790,11 @@
 /obj/structure/detectiveboard/directional/west,
 /turf/open/floor/carpet,
 /area/station/service/lawoffice)
+"mpz" = (
+/obj/machinery/light/directional/west,
+/obj/machinery/newscaster/directional/west,
+/turf/open/floor/iron,
+/area/station/cargo/storage)
 "mpR" = (
 /obj/structure/cable,
 /turf/open/floor/engine,
@@ -64056,12 +64065,6 @@
 	dir = 1
 	},
 /area/station/science/research)
-"ppc" = (
-/obj/effect/turf_decal/trimline/brown/filled/line,
-/obj/effect/turf_decal/trimline/brown/filled/mid_joiner,
-/obj/item/kirbyplants/random,
-/turf/open/floor/iron/edge,
-/area/station/cargo/storage)
 "pph" = (
 /obj/structure/lattice/catwalk,
 /obj/structure/cable,
@@ -65938,20 +65941,6 @@
 	dir = 4
 	},
 /area/station/engineering/gravity_generator)
-"qcg" = (
-/obj/effect/turf_decal/trimline/brown/filled/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
-	dir = 8
-	},
-/obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
-	dir = 1
-	},
-/turf/open/floor/iron/edge{
-	dir = 8
-	},
-/area/station/cargo/storage)
 "qch" = (
 /obj/machinery/chem_heater,
 /obj/effect/turf_decal/bot_white{
@@ -71281,10 +71270,6 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/navbeacon{
-	codes_txt = "patrol;next_patrol=2. N Fore";
-	location = "1. W Fore"
-	},
 /turf/open/floor/wood/large,
 /area/station/command/heads_quarters/captain)
 "sfg" = (
@@ -77406,13 +77391,16 @@
 /turf/open/floor/plating,
 /area/station/maintenance/starboard)
 "unY" = (
+/obj/machinery/power/apc/auto_name/directional/east,
 /obj/structure/cable,
-/obj/machinery/navbeacon{
-	codes_txt = "patrol;next_patrol=2. N Fore";
-	location = "1. W Fore"
+/obj/machinery/byteforge,
+/obj/effect/turf_decal/bot,
+/obj/effect/turf_decal/siding/dark{
+	dir = 8
 	},
-/turf/open/floor/wood/large,
-/area/station/command/heads_quarters/captain)
+/obj/machinery/light/small/directional/east,
+/turf/open/floor/iron/dark/textured_large,
+/area/station/cargo/bitrunning/den)
 "uoa" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 1
@@ -115847,7 +115835,7 @@ uIN
 afJ
 jsj
 aAw
-unY
+oUx
 swR
 mvY
 nfu
@@ -125887,7 +125875,7 @@ uzX
 mnw
 aWI
 fno
-cYR
+iki
 rZo
 igX
 pus
@@ -128720,7 +128708,7 @@ pPK
 php
 pTT
 pTT
-dkl
+unY
 pTT
 pTT
 irH
@@ -128975,7 +128963,7 @@ jgv
 mmX
 ttG
 vYi
-qcg
+aZC
 pTT
 pTT
 pTT
@@ -129233,7 +129221,7 @@ aBN
 tHx
 aUA
 tzj
-aZC
+mpz
 fER
 ksx
 ksx
@@ -129748,7 +129736,7 @@ tZH
 tHx
 tHx
 tHx
-ppc
+drC
 crZ
 xMV
 xMV
