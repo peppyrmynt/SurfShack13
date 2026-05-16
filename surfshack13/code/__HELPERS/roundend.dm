@@ -42,7 +42,7 @@
 		var/amount = reward[1]
 		var/reason = reward[2]
 		total_amount += amount
-		to_chat(client, span_rose(span_bold("[abs(amount)] Credits have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account! Reason: [reason]")))
+		to_chat(client, span_rose(span_bold("[abs(amount)] Doubloons have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account! Reason: [reason]")))
 	// don't do separate SQL queries for each reward, just add all the coins at once lol
 	if(total_amount)
 		client?.prefs?.adjust_metacoins(ckey, total_amount, reason = "roundend rewards", announces = FALSE)
