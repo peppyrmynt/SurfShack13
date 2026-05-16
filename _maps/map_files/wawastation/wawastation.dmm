@@ -47354,7 +47354,6 @@
 "qNU" = (
 /obj/effect/decal/cleanable/oil,
 /obj/machinery/light/small/directional/west,
-/obj/machinery/light/small/directional/west,
 /turf/open/floor/plating,
 /area/station/maintenance/port/lesser)
 "qOs" = (

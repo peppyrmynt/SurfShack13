@@ -8153,7 +8153,8 @@
 	},
 /area/station/medical/psychology{
 	name = "\improper Asylum"
-	})
+	},
+)
 "aCG" = (
 /obj/structure/table,
 /obj/item/ai_module/supplied/quarantine,

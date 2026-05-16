@@ -52424,7 +52424,8 @@
 	},
 /area/station/medical/medbay/aft{
 	name = "Asylum"
-	})
+	},
+)
 "mpq" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
