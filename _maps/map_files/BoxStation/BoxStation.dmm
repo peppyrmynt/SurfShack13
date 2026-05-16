@@ -44031,7 +44031,6 @@
 /turf/open/floor/circuit/off,
 /area/station/science/nanites)
 "hyu" = (
-/obj/item/disk/nanite_program/critstable,
 /obj/structure/table,
 /obj/structure/window/spawner/directional/south,
 /turf/open/floor/circuit/off,
