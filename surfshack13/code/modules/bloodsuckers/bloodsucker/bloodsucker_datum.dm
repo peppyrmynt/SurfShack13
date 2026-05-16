@@ -307,32 +307,23 @@
 	return finish_preview_icon(final_icon)
 
 /datum/antagonist/bloodsucker/ui_static_data(mob/user)
-	var/list/data = list()
-	//we don't need to update this that much.
-	data["in_clan"] = !!my_clan
-	var/list/clan_data = list()
+	. = ..()
 	if(my_clan)
-		clan_data["clan_name"] = my_clan.name
-		clan_data["clan_description"] = my_clan.description
-		clan_data["clan_icon"] = my_clan.join_icon_state
+		.["clan"] = list(
+			"name" = my_clan.name,
+			"desc" = my_clan.description,
+			"icon" = my_clan.join_icon,
+			"icon_state" = my_clan.join_icon_state,
+		)
 
-	data["clan"] += list(clan_data)
-
+	.["powers"] = list()
 	for(var/datum/action/cooldown/bloodsucker/power as anything in powers)
-		var/list/power_data = list()
-
-		power_data["power_name"] = power.name
-		power_data["power_explanation"] = power.power_explanation
-		power_data["power_icon"] = power.button_icon_state
-
-		data["power"] += list(power_data)
-
-	return data + ..()
-
-/datum/antagonist/bloodsucker/ui_assets(mob/user)
-	return list(
-		get_asset_datum(/datum/asset/simple/bloodsucker_icons),
-	)
+		.["powers"] += list(list(
+			"name" = power.name,
+			"explanation" = power.power_explanation,
+			"icon" = power.button_icon,
+			"icon_state" = power.button_icon_state,
+		))
 
 /datum/antagonist/bloodsucker/ui_act(action, params, datum/tgui/ui)
 	. = ..()
@@ -345,7 +336,7 @@
 				return
 			assign_clan_and_bane()
 			ui.send_full_update(force = TRUE)
-			return
+			return TRUE
 
 /datum/antagonist/bloodsucker/roundend_report()
 	var/list/report = list()

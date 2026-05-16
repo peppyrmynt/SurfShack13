@@ -878,3 +878,4 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 #undef MIN_LIBRARY
 #undef NEWSCASTER_COOLDOWN
 #undef PRINTER_COOLDOWN
+#undef LIBRARY_MANUALS

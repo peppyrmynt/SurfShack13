@@ -65,9 +65,9 @@ SUBSYSTEM_DEF(frogui)
 		atom_ui_clients[source] += C
 
 
-/datum/controller/subsystem/frogui/proc/on_topic(datum/source, usr, list/href_list)
+/datum/controller/subsystem/frogui/proc/on_topic(datum/source, user_generic, list/href_list)
 	SIGNAL_HANDLER
-	var/mob/user = usr
+	var/mob/user = user_generic
 
 	var/client/C = user.client
 	var/list/ui_clients = atom_ui_clients[source]
