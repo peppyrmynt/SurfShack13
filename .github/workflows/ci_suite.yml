@@ -140,8 +140,8 @@ jobs:
   compile_all_maps:
     name: Compile Maps
     needs: collect_data
-    runs-on: ubuntu-22.04
-    timeout-minutes: 5
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
