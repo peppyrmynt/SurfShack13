@@ -73,7 +73,7 @@
 		else
 			requestonly = TRUE
 			can_approve_requests = FALSE
-		if((ACCESS_QM in id_card.access))
+		if(ACCESS_QM in id_card.access)
 			// If buyer is a departmental budget, replaces "Cargo" with that budget - we're not using the cargo budget here
 			data["department"] = addtext(buyer.account_holder, " Requisitions")
 	else

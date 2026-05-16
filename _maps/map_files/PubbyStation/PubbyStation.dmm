@@ -9830,14 +9830,10 @@
 	dir = 1
 	},
 /turf/open/floor/iron/white/textured_large,
-/area/station/medical/psychology{
-	name = "\improper Asylum"
-	})
+/area/station/medical/psychology)
 "aJd" = (
 /turf/closed/wall,
-/area/station/medical/psychology{
-	name = "\improper Asylum"
-	})
+/area/station/medical/psychology)
 "aJk" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
