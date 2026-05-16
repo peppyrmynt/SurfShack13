@@ -1,4 +1,12 @@
-import { Box, Button, DmIcon, Flex, Section, Stack, Tabs } from 'tgui-core/components';
+import {
+  Box,
+  Button,
+  DmIcon,
+  Flex,
+  Section,
+  Stack,
+  Tabs,
+} from 'tgui-core/components';
 
 import { useBackend, useLocalState } from '../backend';
 import { Window } from '../layouts';
@@ -8,14 +16,12 @@ type BloodsuckerInformation = {
   clan?: ClanInfo;
   powers: PowerInfo[];
 };
-
 type ClanInfo = {
   name: string;
   desc: string;
   icon: string;
   icon_state: string;
 };
-
 type PowerInfo = {
   name: string;
   explanation: string;

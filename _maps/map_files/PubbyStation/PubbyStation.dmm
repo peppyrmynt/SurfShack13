@@ -8151,10 +8151,7 @@
 /turf/open/floor/iron/white/textured_corner{
 	dir = 4
 	},
-/area/station/medical/psychology{
-	name = "\improper Asylum"
-	},
-)
+/area/station/medical/psychology)
 "aCG" = (
 /obj/structure/table,
 /obj/item/ai_module/supplied/quarantine,
