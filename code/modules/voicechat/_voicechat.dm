@@ -3,7 +3,7 @@ SUBSYSTEM_DEF(voicechat)
 	name = "Voice Chat"
 	/// faster tick times means smoother proximity. If machine is lagging, increase.
 	wait = 3 //300 ms
-	flags = SS_KEEP_TIMING
+	flags = SS_KEEP_TIMING|SS_OK_TO_FAIL_INIT
 	init_order = INIT_ORDER_VOICECHAT
 	runlevels = RUNLEVEL_GAME|RUNLEVEL_POSTGAME
 	//userCodes associated thats been fully confirmed - browser paired and mic perms on
