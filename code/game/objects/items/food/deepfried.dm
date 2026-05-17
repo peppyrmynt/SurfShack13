@@ -20,10 +20,9 @@
 		on_consume = CALLBACK(src, PROC_REF(On_Consume)),\
 	)
 
-/obj/item/food/deepfryholder/Initialize(mapload, obj/item/fried)
+//Because red is my favorite color!!!!!!!!! ITS SOOOOO TASTY I LOVE THIS FUCKING MECHANIC!!!!!!!!!!!!!!!!!!
+/obj/item/food/deepfryholder/Initialize(mapload, obj/item/fried = new /obj/item/toy/crayon/red)
 	. = ..()
-	if(!fried)
-		return
 	name = fried.name //We'll determine the other stuff when it's actually removed
 	appearance = fried.appearance
 	layer = initial(layer)
