@@ -52649,7 +52649,6 @@
 /area/station/security/execution/transfer)
 "mwb" = (
 /turf/open/space/basic,
-/area/space,
 /area/space)
 "mwr" = (
 /obj/machinery/atmospherics/pipe/smart/simple/general/visible,
@@ -63640,8 +63639,6 @@
 "sYA" = (
 /obj/effect/landmark/carpspawn,
 /turf/open/space/basic,
-/area/space,
-/area/space,
 /area/space)
 "sYD" = (
 /obj/effect/turf_decal/siding/green{
