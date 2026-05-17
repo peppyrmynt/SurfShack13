@@ -118,6 +118,7 @@ SUBSYSTEM_DEF(frogui)
 		UnregisterSignal(source, COMSIG_TOPIC)
 
 	atom_ui_clients[source] = null
+	atom_ui_clients -= source
 
 /// Send data to ui
 /datum/controller/subsystem/frogui/proc/update_ui(mob/user, atom/source)
