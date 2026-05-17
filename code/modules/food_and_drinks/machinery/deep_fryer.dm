@@ -178,9 +178,6 @@ GLOBAL_LIST_INIT(oilfry_blacklisted_items, typecacheof(list(
 		reset_frying()
 
 /obj/machinery/deepfryer/proc/reset_frying()
-	if(!QDELETED(frying))
-		frying.AddElement(/datum/element/fried_item, cook_time)
-
 	frying = null
 	frying_fried = FALSE
 	frying_burnt = FALSE

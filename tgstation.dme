@@ -1607,7 +1607,6 @@
 #include "code\datums\elements\food\dunkable.dm"
 #include "code\datums\elements\food\food_trash.dm"
 #include "code\datums\elements\food\foodlike_drink.dm"
-#include "code\datums\elements\food\fried_item.dm"
 #include "code\datums\elements\food\grilled_item.dm"
 #include "code\datums\elements\food\microwavable.dm"
 #include "code\datums\elements\food\processable.dm"
