@@ -8046,24 +8046,22 @@
 /area/station/commons/toilet)
 "aBa" = (
 /obj/structure/table,
-/obj/item/storage/box/gum{
-	pixel_x = -11;
-	pixel_y = 0
-	},
-/obj/projectile/bullet/gumball{
-	pixel_x = 7;
-	pixel_y = 8
-	},
-/obj/effect/spawner/random/food_or_drink/any_snack_or_beverage{
-	pixel_x = -4;
-	pixel_y = 8
-	},
-/obj/effect/spawner/random/food_or_drink/any_snack_or_beverage{
-	pixel_x = 4;
-	pixel_y = 2
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sign/poster/contraband/donk_co/directional/north,
+/obj/item/food/gumball{
+	pixel_w = -5;
+	pixel_z = 8
+	},
+/obj/effect/spawner/random/food_or_drink/any_snack_or_beverage{
+	pixel_w = 7;
+	pixel_z = 3
+	},
+/obj/item/storage/box/gum{
+	pixel_x = -11;
+	pixel_y = 0;
+	pixel_w = -4;
+	pixel_z = 0
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/starboard/greater)
 "aBd" = (
@@ -11455,13 +11453,6 @@
 	dir = 1
 	},
 /area/station/hallway/primary/central)
-"aMh" = (
-/obj/machinery/camera/directional/east{
-	network = list("ss13","rd","xeno");
-	c_tag = "Xenobiology Lab - Pen #6"
-	},
-/turf/open/floor/engine,
-/area/station/science/xenobiology)
 "aMj" = (
 /mob/living/basic/goat/pete,
 /obj/machinery/holopad,
@@ -25788,6 +25779,10 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/burnt_floor,
 /obj/machinery/light/small/directional/west,
+/obj/effect/spawner/random/food_or_drink/snack{
+	pixel_w = 14;
+	pixel_z = 7
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/starboard/greater)
 "bFr" = (
@@ -25797,6 +25792,10 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/broken_floor,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
+/obj/effect/spawner/random/food_or_drink/any_snack_or_beverage{
+	pixel_w = 5;
+	pixel_z = 10
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/greater)
 "bFs" = (
@@ -39129,21 +39128,17 @@
 	pixel_x = -6;
 	pixel_y = 9
 	},
-/obj/projectile/bullet/gumball{
-	pixel_x = 5;
-	pixel_y = 9
-	},
-/obj/projectile/bullet/gumball{
-	pixel_x = -7;
-	pixel_y = -2
-	},
-/obj/effect/spawner/random/food_or_drink/snack{
-	pixel_x = 6;
-	pixel_y = 0
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sign/poster/contraband/eat/directional/west,
 /obj/effect/mapping_helpers/broken_floor,
+/obj/item/food/gumball{
+	pixel_w = -7;
+	pixel_z = -1
+	},
+/obj/item/food/gumball{
+	pixel_w = 4;
+	pixel_z = 7
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/greater)
 "dft" = (
@@ -46819,6 +46814,13 @@
 	},
 /turf/open/floor/iron/large,
 /area/station/hallway/secondary/service)
+"gqs" = (
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Xenobiology Lab - Pen #2"
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "gqy" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8
@@ -47008,13 +47010,6 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
-"gvZ" = (
-/obj/machinery/camera/directional/west{
-	c_tag = "Xenobiology Lab - Pen #7";
-	network = list("ss13","rd","xeno")
-	},
-/turf/open/floor/engine,
-/area/station/science/xenobiology)
 "gwo" = (
 /obj/machinery/atmospherics/components/binary/pump{
 	dir = 4;
@@ -51820,13 +51815,6 @@
 	dir = 1
 	},
 /area/station/science/research)
-"iCx" = (
-/obj/machinery/camera/directional/west{
-	c_tag = "Xenobiology Lab - Pen #3";
-	network = list("ss13","rd","xeno")
-	},
-/turf/open/floor/engine,
-/area/station/science/xenobiology)
 "iCy" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -59968,6 +59956,13 @@
 	},
 /turf/open/floor/iron/white/textured_half,
 /area/station/medical/psychology)
+"mbZ" = (
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Xenobiology Lab - Pen #8"
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "mcb" = (
 /obj/effect/turf_decal/delivery/white{
 	color = "#52B4E9"
@@ -61838,13 +61833,6 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/iron/small,
 /area/station/maintenance/radshelter)
-"mVV" = (
-/obj/machinery/camera/directional/east{
-	network = list("ss13","rd","xeno");
-	c_tag = "Xenobiology Lab - Pen #4"
-	},
-/turf/open/floor/engine,
-/area/station/science/xenobiology)
 "mWd" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -64149,6 +64137,13 @@
 "nVu" = (
 /turf/open/floor/wood/large,
 /area/station/medical/psychology)
+"nVJ" = (
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Pen #1";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "nVN" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/broken_floor,
@@ -66704,13 +66699,6 @@
 	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/engineering/supermatter/room)
-"oYx" = (
-/obj/machinery/camera/directional/east{
-	network = list("ss13","rd","xeno");
-	c_tag = "Xenobiology Lab - Pen #2"
-	},
-/turf/open/floor/engine,
-/area/station/science/xenobiology)
 "oYB" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
@@ -72403,13 +72391,6 @@
 	},
 /turf/open/floor/iron,
 /area/station/engineering/atmos/storage/gas)
-"ryX" = (
-/obj/machinery/camera/directional/east{
-	network = list("ss13","rd","xeno");
-	c_tag = "Xenobiology Lab - Pen #8"
-	},
-/turf/open/floor/engine,
-/area/station/science/xenobiology)
 "ryY" = (
 /obj/effect/turf_decal/trimline/white/filled/line{
 	color = "#ff8300";
@@ -73654,9 +73635,9 @@
 /obj/structure/closet/cardboard,
 /obj/effect/spawner/random/food_or_drink/jelly_donuts,
 /obj/effect/spawner/random/food_or_drink/jelly_donuts,
-/obj/projectile/bullet/gumball,
-/obj/projectile/bullet/gumball,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/item/food/gumball,
+/obj/item/food/gumball,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/greater)
 "sfq" = (
@@ -74745,6 +74726,13 @@
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
 /turf/open/floor/iron,
 /area/station/commons/fitness)
+"sEH" = (
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Pen #5";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "sFh" = (
 /obj/effect/turf_decal/tile/neutral,
 /turf/open/floor/iron,
@@ -78505,6 +78493,13 @@
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/iron/large,
 /area/station/commons/storage/primary)
+"usi" = (
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Xenobiology Lab - Pen #4"
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "usk" = (
 /obj/effect/turf_decal/stripes/corner,
 /obj/effect/decal/cleanable/dirt,
@@ -80096,6 +80091,13 @@
 /obj/structure/cable,
 /turf/open/floor/iron/edge,
 /area/station/security/prison/rec)
+"viG" = (
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Pen #7";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "viS" = (
 /obj/effect/turf_decal/stripes,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -80902,6 +80904,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating,
 /area/station/service/hydroponics/garden/abandoned)
+"vAz" = (
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Pen #3";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "vAB" = (
 /obj/machinery/portable_atmospherics/scrubber,
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
@@ -81113,13 +81122,6 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
-"vFH" = (
-/obj/machinery/camera/directional/west{
-	c_tag = "Xenobiology Lab - Pen #1";
-	network = list("ss13","rd","xeno")
-	},
-/turf/open/floor/engine,
-/area/station/science/xenobiology)
 "vFS" = (
 /obj/machinery/door/firedoor,
 /obj/item/radio/intercom/directional/west,
@@ -83552,13 +83554,6 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/maintenance/fore/greater)
-"wFi" = (
-/obj/machinery/camera/directional/west{
-	c_tag = "Xenobiology Lab - Pen #5";
-	network = list("ss13","rd","xeno")
-	},
-/turf/open/floor/engine,
-/area/station/science/xenobiology)
 "wGI" = (
 /obj/structure/table/reinforced/rglass,
 /obj/item/flashlight/pen{
@@ -86758,6 +86753,13 @@
 	dir = 4
 	},
 /area/station/science/robotics/lab)
+"ybM" = (
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Xenobiology Lab - Pen #6"
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "ybV" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/burnt_floor,
@@ -129462,19 +129464,19 @@ bRT
 tJc
 bIx
 kLj
-vFH
+nVJ
 kLj
 sIc
 kLj
-iCx
+vAz
 kLj
 sIc
 kLj
-wFi
+sEH
 kLj
 sIc
 kLj
-gvZ
+viG
 kLj
 pCj
 iet
@@ -132546,19 +132548,19 @@ qHT
 iLI
 xYx
 kLj
-oYx
+gqs
 kLj
 sIc
 kLj
-mVV
+usi
 kLj
 sIc
 kLj
-aMh
+ybM
 kLj
 sIc
 kLj
-ryX
+mbZ
 kLj
 pCj
 aaH
