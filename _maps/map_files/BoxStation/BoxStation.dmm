@@ -11455,6 +11455,13 @@
 	dir = 1
 	},
 /area/station/hallway/primary/central)
+"aMh" = (
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Xenobiology Lab - Pen #6"
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "aMj" = (
 /mob/living/basic/goat/pete,
 /obj/machinery/holopad,
@@ -16155,7 +16162,9 @@
 /obj/machinery/meter{
 	name = "Freezer Coolant"
 	},
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/ordnance)
 "bcm" = (
@@ -18122,7 +18131,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
 	dir = 1
 	},
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
 	},
@@ -18185,7 +18196,9 @@
 /obj/effect/turf_decal/siding/dark{
 	dir = 8
 	},
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/research)
 "biT" = (
@@ -18235,7 +18248,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
 	dir = 1
 	},
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
 	},
@@ -19096,7 +19111,9 @@
 /obj/item/crowbar/large,
 /obj/machinery/light/directional/south,
 /obj/structure/sign/poster/official/random/directional/south,
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/large,
 /area/station/science/robotics/mechbay)
 "blu" = (
@@ -21693,7 +21710,9 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
 /obj/machinery/duct,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
 	},
@@ -22348,7 +22367,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
 	dir = 4
 	},
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 4
 	},
@@ -23725,7 +23746,9 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/science/server)
 "bzz" = (
@@ -24181,7 +24204,9 @@
 /obj/effect/turf_decal/tile/neutral/half/contrasted{
 	dir = 4
 	},
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 8
 	},
@@ -24251,7 +24276,9 @@
 /area/station/maintenance/department/eva/abandoned)
 "bAR" = (
 /obj/structure/window/reinforced/spawner/directional/east,
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/engine,
 /area/station/science/genetics)
 "bAS" = (
@@ -24615,7 +24642,9 @@
 	},
 /obj/effect/turf_decal/trimline/purple/filled/line,
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner,
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/smooth_edge,
 /area/station/command/heads_quarters/rd)
 "bCh" = (
@@ -25463,7 +25492,10 @@
 /area/station/medical/storage)
 "bEn" = (
 /obj/machinery/light/directional/north,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	c_tag = "Xenobiology Lab - Test Chamber";
+	network = list("ss13","rd","xeno")
+	},
 /turf/open/floor/engine/xenobio,
 /area/station/science/xenobiology)
 "bEp" = (
@@ -25471,7 +25503,9 @@
 /obj/effect/turf_decal/bot_white{
 	color = "#D381C9"
 	},
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/ordnance/storage)
 "bEq" = (
@@ -25953,7 +25987,9 @@
 	dir = 1
 	},
 /obj/structure/sign/poster/official/random/directional/south,
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 4
 	},
@@ -27249,6 +27285,7 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/brown/filled/corner,
+/obj/structure/railing/corner/end/flip,
 /turf/open/floor/iron/corner{
 	dir = 4
 	},
@@ -27395,7 +27432,9 @@
 "bKW" = (
 /obj/effect/turf_decal/siding/dark,
 /obj/structure/cable,
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/xenobiology)
 "bKX" = (
@@ -28252,7 +28291,9 @@
 /obj/effect/turf_decal/siding/dark{
 	dir = 8
 	},
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/ordnance)
 "bNC" = (
@@ -28954,7 +28995,9 @@
 	pixel_x = -10;
 	pixel_y = 3
 	},
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/cytology)
 "bPH" = (
@@ -29589,7 +29632,10 @@
 	dir = 4;
 	name = "killroom vent"
 	},
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Euthanasia Chamber";
+	network = list("ss13","rd","xeno")
+	},
 /turf/open/floor/circuit/telecomms,
 /area/station/science/xenobiology)
 "bRY" = (
@@ -37598,7 +37644,9 @@
 /obj/effect/turf_decal/bot_white{
 	color = "#D381C9"
 	},
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/science/robotics/augments)
 "cIf" = (
@@ -39317,6 +39365,9 @@
 	},
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 1
+	},
+/obj/structure/railing{
+	dir = 4
 	},
 /turf/open/floor/iron/large,
 /area/station/cargo/miningdock)
@@ -46259,7 +46310,9 @@
 	},
 /area/station/cargo/office)
 "gfr" = (
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/engine,
 /area/station/science/explab)
 "gfs" = (
@@ -46955,6 +47008,13 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
+"gvZ" = (
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Pen #7";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "gwo" = (
 /obj/machinery/atmospherics/components/binary/pump{
 	dir = 4;
@@ -51760,6 +51820,13 @@
 	dir = 1
 	},
 /area/station/science/research)
+"iCx" = (
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Pen #3";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "iCy" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -54790,7 +54857,9 @@
 	pixel_x = -24;
 	pixel_y = 6
 	},
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd")
+	},
 /obj/machinery/power/apc/auto_name/directional/west{
 	pixel_w = -3;
 	pixel_z = -7
@@ -57791,7 +57860,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
 	dir = 8
 	},
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 8
 	},
@@ -59282,7 +59353,9 @@
 /obj/effect/turf_decal/siding/dark/corner{
 	dir = 4
 	},
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /obj/structure/table,
 /obj/item/paper_bin,
 /obj/item/pen,
@@ -61765,6 +61838,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/iron/small,
 /area/station/maintenance/radshelter)
+"mVV" = (
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Xenobiology Lab - Pen #4"
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "mWd" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -63078,6 +63158,9 @@
 "nBr" = (
 /obj/effect/turf_decal/trimline/brown/filled/line,
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner,
+/obj/structure/railing/corner/end{
+	dir = 4
+	},
 /turf/open/floor/iron/edge,
 /area/station/cargo/miningdock)
 "nBA" = (
@@ -66621,6 +66704,13 @@
 	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/engineering/supermatter/room)
+"oYx" = (
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Xenobiology Lab - Pen #2"
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "oYB" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
@@ -69922,7 +70012,9 @@
 	},
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/turf_decal/stripes/white/line,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/plating,
 /area/station/science/ordnance/testlab)
 "qwi" = (
@@ -70460,7 +70552,10 @@
 /turf/open/floor/plating,
 /area/station/maintenance/fore/greater)
 "qHT" = (
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Cytology Lab - Worklab"
+	},
 /turf/open/floor/engine,
 /area/station/science/cytology)
 "qHX" = (
@@ -72115,6 +72210,11 @@
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 1
 	},
+/obj/machinery/conveyor/inverted{
+	id = "brm";
+	dir = 9
+	},
+/obj/machinery/brm,
 /turf/open/floor/iron/textured_large,
 /area/station/cargo/miningdock)
 "ruD" = (
@@ -72303,6 +72403,13 @@
 	},
 /turf/open/floor/iron,
 /area/station/engineering/atmos/storage/gas)
+"ryX" = (
+/obj/machinery/camera/directional/east{
+	network = list("ss13","rd","xeno");
+	c_tag = "Xenobiology Lab - Pen #8"
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "ryY" = (
 /obj/effect/turf_decal/trimline/white/filled/line{
 	color = "#ff8300";
@@ -76847,7 +76954,9 @@
 /area/station/maintenance/port/central)
 "tDw" = (
 /obj/machinery/light_switch/directional/north,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /obj/item/kirbyplants/random,
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 1
@@ -78338,7 +78447,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
 	dir = 8
 	},
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 4
 	},
@@ -81002,6 +81113,13 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
+"vFH" = (
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Pen #1";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "vFS" = (
 /obj/machinery/door/firedoor,
 /obj/item/radio/intercom/directional/west,
@@ -83434,6 +83552,13 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/maintenance/fore/greater)
+"wFi" = (
+/obj/machinery/camera/directional/west{
+	c_tag = "Xenobiology Lab - Pen #5";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "wGI" = (
 /obj/structure/table/reinforced/rglass,
 /obj/item/flashlight/pen{
@@ -129337,19 +129462,19 @@ bRT
 tJc
 bIx
 kLj
-kLj
-kLj
-sIc
-kLj
-kLj
+vFH
 kLj
 sIc
 kLj
-kLj
+iCx
 kLj
 sIc
 kLj
+wFi
 kLj
+sIc
+kLj
+gvZ
 kLj
 pCj
 iet
@@ -132421,19 +132546,19 @@ qHT
 iLI
 xYx
 kLj
-kLj
-kLj
-sIc
-kLj
-kLj
+oYx
 kLj
 sIc
 kLj
-kLj
+mVV
 kLj
 sIc
 kLj
+aMh
 kLj
+sIc
+kLj
+ryX
 kLj
 pCj
 aaH
