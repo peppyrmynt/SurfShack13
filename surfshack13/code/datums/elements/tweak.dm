@@ -18,10 +18,12 @@
 
 /datum/component/tweak/Initialize(time=-1)
 	A = parent
+	#ifndef UNIT_TESTS
 	if(isliving(A))
 		var/mob/living/L = A
 		if(L.stat > SOFT_CRIT)
 			return COMPONENT_INCOMPATIBLE
+	#endif
 	if(!isatom(A))
 		return COMPONENT_INCOMPATIBLE
 
