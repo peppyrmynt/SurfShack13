@@ -35525,7 +35525,7 @@
 	dir = 8
 	},
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "cvv" = (
 /obj/machinery/button/door/directional/north{
 	id = "heads_meeting";
@@ -44722,7 +44722,7 @@
 	pixel_z = -1
 	},
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "fvG" = (
 /turf/open/floor/wood/large,
 /area/station/security/detectives_office)
@@ -46418,7 +46418,7 @@
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 8
 	},
-/area/station/science/circuits)
+/area/station/science/nanites)
 "gkF" = (
 /obj/structure/window/reinforced/spawner/directional/north,
 /obj/effect/turf_decal/tile/blue/full,
@@ -48203,7 +48203,7 @@
 	},
 /obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "gYd" = (
 /obj/machinery/deepfryer,
 /turf/open/floor/iron/white/smooth_large,
@@ -48450,7 +48450,7 @@
 	dir = 1
 	},
 /turf/open/floor/iron/dark/smooth_edge,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "hdl" = (
 /obj/structure/bookcase/random/reference,
 /obj/effect/turf_decal/siding/wood{
@@ -48612,7 +48612,7 @@
 	},
 /obj/effect/turf_decal/siding/dark,
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "hgx" = (
 /obj/structure/closet/crate/preopen,
 /obj/item/reagent_containers/blood,
@@ -55693,7 +55693,7 @@
 	color = "#D381C9"
 	},
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "kpG" = (
 /turf/open/floor/circuit,
 /area/station/ai_monitored/turret_protected/aisat/hallway)
@@ -57563,6 +57563,15 @@
 /obj/machinery/light/small/directional/west,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/fore)
+"lft" = (
+/obj/effect/spawner/structure/window,
+/obj/machinery/door/poddoor/shutters/preopen{
+	id = "rnd2";
+	name = "Research Lab Shutters";
+	dir = 8
+	},
+/turf/open/floor/plating,
+/area/station/science/nanites)
 "lfB" = (
 /obj/effect/landmark/event_spawn,
 /obj/effect/turf_decal/tile/neutral/half{
@@ -62679,7 +62688,7 @@
 	dir = 8
 	},
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "ntc" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
@@ -64666,7 +64675,7 @@
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 4
 	},
-/area/station/science/circuits)
+/area/station/science/nanites)
 "olk" = (
 /obj/structure/table/reinforced,
 /obj/effect/spawner/surgery_tray/full/morgue,
@@ -66881,7 +66890,7 @@
 	color = "#D381C9"
 	},
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "pfy" = (
 /obj/machinery/atmospherics/pipe/smart/simple/general/visible{
 	dir = 4
@@ -67954,7 +67963,7 @@
 	},
 /obj/item/kirbyplants/random,
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "pBt" = (
 /obj/structure/holosign/barrier/engineering,
 /obj/effect/turf_decal/stripes/corner,
@@ -72963,7 +72972,7 @@
 	dir = 8
 	},
 /turf/open/floor/iron/dark/smooth_edge,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "rTi" = (
 /obj/item/paper_bin/carbon,
 /obj/effect/turf_decal/tile/dark_blue/full,
@@ -73671,7 +73680,7 @@
 /obj/machinery/light/directional/west,
 /obj/effect/turf_decal/trimline/neutral/filled/corner,
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "sjE" = (
 /obj/effect/spawner/random/structure/steam_vent,
 /obj/effect/decal/cleanable/dirt,
@@ -74610,7 +74619,7 @@
 	},
 /obj/effect/turf_decal/siding/dark,
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "sGJ" = (
 /obj/machinery/atmospherics/components/unary/thermomachine/freezer/on{
 	dir = 1;
@@ -75547,7 +75556,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron/dark,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "tdE" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/rack,
@@ -79591,7 +79600,7 @@
 /area/station/science/lab)
 "vca" = (
 /turf/open/floor/iron/dark,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "vcr" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -83548,7 +83557,7 @@
 	dir = 6
 	},
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "wKW" = (
 /obj/effect/turf_decal/tile/green/full,
 /obj/structure/reagent_dispensers/watertank,
@@ -83897,6 +83906,9 @@
 /obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/department/prison)
+"wSC" = (
+/turf/closed/wall,
+/area/station/science/nanites)
 "wSQ" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -84814,7 +84826,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron/dark/smooth_large,
-/area/station/science/circuits)
+/area/station/science/nanites)
 "xmr" = (
 /obj/structure/table,
 /obj/item/ammo_casing/c9mm{
@@ -133590,9 +133602,9 @@ qaX
 jrH
 sve
 dYq
-aiG
-aiG
-wkN
+wSC
+wSC
+lft
 wkN
 wkN
 aiG
