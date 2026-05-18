@@ -1,0 +1,4 @@
+author: "forgman6"
+delete-after: True
+changes:
+  - code_imp: "switched moisture trap lootpool to not create another spawner"

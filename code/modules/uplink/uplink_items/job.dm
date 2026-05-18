@@ -419,13 +419,3 @@
 	item = /obj/item/reagent_containers/hypospray/medipen/manifoldinjector
 	cost = 5
 	restricted_roles = list(JOB_JANITOR, JOB_MEDICAL_DOCTOR, JOB_CHIEF_MEDICAL_OFFICER, JOB_PARAMEDIC, JOB_GENETICIST)
-
-/datum/uplink_item/role_restricted/no_dmg_nanite_disk
-	name = "Premium Nanite Program Disk"
-	desc = "One of Cybersun's former privately owned data disks for nanite programming. \
-			This prototype disk contains and injects copies of code sequences directly into loaded nanite programs to guard against electrical damage and electromagnetic pulses. \
-			Comes with our distinct black-and-red color scheme. Won't prevent people from deleteing your programs off the cloud."
-	item = /obj/item/disk/nanite_program/no_dmg/syndicate
-	cost = 12
-	surplus = 0
-	restricted_roles = list(JOB_SCIENTIST, JOB_RESEARCH_DIRECTOR)

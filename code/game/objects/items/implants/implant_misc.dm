@@ -22,7 +22,7 @@
 	uses--
 	empulse(imp_in, 3, 5)
 	if(!uses)
-		balloon_alert(imp_in, "Last emp charge activated!")
+		balloon_alert(imp_in, "last emp charge activated!")
 		qdel(src)
 	to_chat(imp_in, span_notice("Emp activated, charges left: [uses]"))
 

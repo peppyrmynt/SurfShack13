@@ -9176,9 +9176,6 @@
 /area/station/cargo/miningdock)
 "cyL" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "cyU" = (
@@ -32953,9 +32950,6 @@
 "jAI" = (
 /obj/machinery/light/directional/south,
 /obj/machinery/nanite_program_hub,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "jAO" = (
@@ -51440,9 +51434,6 @@
 "oNE" = (
 /obj/structure/sign/poster/official/random/directional/south,
 /obj/machinery/nanite_programmer,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "oNO" = (
@@ -83428,9 +83419,6 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
 "yeC" = (
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "yeD" = (

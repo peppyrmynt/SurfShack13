@@ -269,3 +269,7 @@
 
 	///Which ambient sound this client is currently being provided.
 	var/current_ambient_sound
+	//surfshack start
+	///country flag the client is connecting from
+	var/country_flag
+	//surfshack end

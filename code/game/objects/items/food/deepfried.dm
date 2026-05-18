@@ -20,10 +20,8 @@
 		on_consume = CALLBACK(src, PROC_REF(On_Consume)),\
 	)
 
-/obj/item/food/deepfryholder/Initialize(mapload, obj/item/fried)
-	if(!fried)
-		stack_trace("A deepfried object was created with no fried target")
-		return INITIALIZE_HINT_QDEL
+//Because red is my favorite color!!!!!!!!! ITS SOOOOO TASTY I LOVE THIS FUCKING MECHANIC!!!!!!!!!!!!!!!!!!
+/obj/item/food/deepfryholder/Initialize(mapload, obj/item/fried = new /obj/item/toy/crayon/red)
 	. = ..()
 	name = fried.name //We'll determine the other stuff when it's actually removed
 	appearance = fried.appearance

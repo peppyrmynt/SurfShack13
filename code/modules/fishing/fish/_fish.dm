@@ -269,7 +269,7 @@
 /obj/item/fish/proc/make_edible()
 	var/foodtypes = get_food_types()
 	if(foodtypes & RAW)
-		AddComponent(/datum/component/infective, GLOB.floor_diseases.Copy(), weak = TRUE, weak_infection_chance = PERFORM_ALL_TESTS(edible_fish) ? 100 : 15)
+		AddComponent(/datum/component/infective, GLOB.floor_diseases.Copy(), weak = TRUE, weak_infection_chance = 15)
 	else
 		AddComponent(/datum/component/germ_sensitive)
 	var/bites_to_finish = weight / FISH_WEIGHT_BITE_DIVISOR

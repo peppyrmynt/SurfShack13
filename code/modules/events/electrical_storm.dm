@@ -2,8 +2,10 @@
 	name = "Electrical Storm"
 	typepath = /datum/round_event/electrical_storm
 	earliest_start = 10 MINUTES
-	min_players = 5
-	weight = 20
+	//surfshack start
+	min_players = 15
+	weight = 10
+	//surfshack end
 	category = EVENT_CATEGORY_ENGINEERING
 	description = "Destroys all lights in a large area."
 	min_wizard_trigger_potency = 0

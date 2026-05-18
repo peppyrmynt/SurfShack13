@@ -1194,7 +1194,7 @@
 	},
 /obj/effect/decal/cleanable/blood/gibs,
 /obj/item/organ/brain,
-/obj/item/skillchip/research_director,
+/obj/item/skillchip/job/research_director,
 /obj/effect/turf_decal/tile/neutral/half{
 	dir = 4
 	},

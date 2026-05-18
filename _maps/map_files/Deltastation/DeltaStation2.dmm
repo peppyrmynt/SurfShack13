@@ -6810,7 +6810,6 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
 "bGn" = (
-/obj/machinery/airalarm/directional/south,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/table,
@@ -6834,6 +6833,8 @@
 /obj/item/clothing/glasses/hud/diagnostic{
 	pixel_y = 12
 	},
+/obj/machinery/light_switch/directional/south,
+/obj/machinery/light/small/directional/south,
 /turf/open/floor/iron/dark,
 /area/station/science/nanites)
 "bGr" = (
@@ -9145,9 +9146,6 @@
 	dir = 8
 	},
 /obj/machinery/nanite_programmer,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron/dark,
 /area/station/science/nanites)
 "cjN" = (
@@ -18785,8 +18783,11 @@
 	dir = 1
 	},
 /obj/machinery/nanite_program_hub,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
+/obj/machinery/light/small/directional/north,
+/obj/machinery/camera/directional/north{
+	c_tag = "Science - Experimentor Control";
+	name = "science camera";
+	network = list("ss13","rd")
 	},
 /turf/open/floor/iron/dark,
 /area/station/science/nanites)
@@ -27543,6 +27544,7 @@
 /obj/machinery/computer/nanite_chamber_control{
 	dir = 8
 	},
+/obj/machinery/airalarm/directional/east,
 /turf/open/floor/iron/dark,
 /area/station/science/nanites)
 "gLz" = (
@@ -30753,8 +30755,8 @@
 /turf/open/floor/iron/dark,
 /area/station/service/abandoned_gambling_den/gaming)
 "hFf" = (
-/obj/machinery/firealarm/directional/west,
 /obj/item/kirbyplants/random,
+/obj/structure/sign/departments/science/directional/west,
 /turf/open/floor/iron/white,
 /area/station/science/lobby)
 "hFk" = (
@@ -41195,13 +41197,9 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/mapping_helpers/airlock/access/all/science/general,
-/obj/machinery/door/airlock/research{
-	name = "Nanite Lab";
-	desc = "It opens and closes. Looks rather cramped in there, huh?"
-	},
 /obj/effect/landmark/navigate_destination,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
+/obj/machinery/door/airlock/research/glass{
+	name = "Nanite Lab"
 	},
 /turf/open/floor/iron,
 /area/station/science/nanites)
@@ -41719,10 +41717,6 @@
 /turf/open/floor/iron/dark,
 /area/station/security/brig)
 "kor" = (
-/obj/machinery/light_switch/directional/east{
-	pixel_x = 24
-	},
-/obj/machinery/light/small/directional/east,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple/half/contrasted{
 	dir = 4
@@ -43546,6 +43540,7 @@
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 9
 	},
+/obj/machinery/firealarm/directional/west,
 /turf/open/floor/iron/white,
 /area/station/science/lobby)
 "kPu" = (
@@ -44083,12 +44078,8 @@
 	},
 /area/station/security/execution/transfer)
 "kWH" = (
-/obj/structure/chair{
-	dir = 4
-	},
-/obj/structure/sign/departments/science/directional/west,
-/obj/effect/landmark/start/hangover,
-/turf/open/floor/iron/white,
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/plating,
 /area/station/science/lobby)
 "kWM" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -52719,9 +52710,6 @@
 	dir = 8
 	},
 /obj/machinery/computer/nanite_cloud_controller,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron/dark,
 /area/station/science/nanites)
 "nhA" = (
@@ -65513,7 +65501,6 @@
 /obj/structure/chair{
 	dir = 4
 	},
-/obj/item/radio/intercom/directional/west,
 /obj/effect/landmark/start/hangover,
 /turf/open/floor/iron/white,
 /area/station/science/lobby)
@@ -75665,7 +75652,7 @@
 /obj/structure/table,
 /obj/item/clothing/gloves/latex,
 /obj/item/clothing/glasses/science,
-/obj/structure/sign/poster/official/science/directional/west,
+/obj/item/radio/intercom/directional/west,
 /turf/open/floor/iron/white,
 /area/station/science/lobby)
 "sTR" = (
@@ -94762,13 +94749,7 @@
 /area/station/science/research)
 "xGn" = (
 /obj/structure/cable,
-/obj/machinery/newscaster/directional/north,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
-/obj/machinery/camera/directional/north{
-	c_tag = "Science - Experimentor Control";
-	name = "science camera";
-	network = list("ss13","rd")
-	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple/half/contrasted{
 	dir = 1
@@ -129038,8 +129019,8 @@ tTD
 jek
 kjI
 shP
-ptc
-dNS
+nlF
+kWH
 xGn
 mlo
 iEg
@@ -129295,7 +129276,7 @@ xez
 oTl
 khb
 bPY
-nlF
+ptc
 dNS
 gLh
 kor
@@ -129555,7 +129536,7 @@ wIa
 nlF
 dNS
 dNS
-dNS
+kWH
 dNS
 dNS
 dNS
@@ -129811,7 +129792,7 @@ wQs
 wIa
 nlF
 hFf
-kWH
+qsN
 qsN
 nKC
 sTG

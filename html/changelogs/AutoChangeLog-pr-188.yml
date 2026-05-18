@@ -1,0 +1,5 @@
+author: "forgman6"
+delete-after: True
+changes:
+  - code_imp: "sm surge, mice migration, blackout, grav gen blackout, comms black out, and carp migration can only happen on 15 pop"
+  - code_imp: "some of the listed events have lower probablities"

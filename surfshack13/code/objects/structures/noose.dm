@@ -31,13 +31,7 @@
 
 /obj/structure/noose/Initialize(mapload)
 	. = ..()
-	// if(prob(1) && !istype(src, /obj/structure/noose/gallows))
-	// 	anchored = FALSE
-	// 	name = "Walking noose"
-	// 	desc = "You swear you see several balloons fixed to the noose, they seem to sit just outside your comprehension. \
-	// 	Your brain starts to ache."
 	pixel_y = 16 //Noose looks like it's "hanging" in the air
-
 
 /obj/structure/noose/proc/create_noose_overlay()
 	noose_neck_overlay = SSvis_overlays._create_new_vis_overlay(icon, "noose_overlay", layer = ABOVE_MOB_LAYER, plane = src.plane, alpha = src.alpha)

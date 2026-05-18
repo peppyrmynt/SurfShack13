@@ -69,28 +69,6 @@
 	category = list(NANITES_CATEGORY_WEAPONIZED)
 	program_type = /datum/nanite_program/comm/mind_control
 
-
-/datum/design/nanites/construct_ammo
-	name = "Construct Ammunition"
-	desc = "The nanites expends a moderate amount of themselves to create a ammo box loaded with a certain kind of ammunition, ready for use."
-	id = "construct_ammo_nanites"
-	program_type = /datum/nanite_program/construct_ammo
-	category = list(NANITES_CATEGORY_WEAPONIZED)
-
-/datum/design/nanites/construct_c4
-	name = "Explosives Construction"
-	desc = "The nanites expends a large amount of themselves to create a C4 charge."
-	id = "construct_c4_nanites"
-	program_type = /datum/nanite_program/construct_c4
-	category = list(NANITES_CATEGORY_WEAPONIZED)
-
-/datum/design/nanites/kravmaga
-	name = "Martial Art Imprinting"
-	desc = "The nanites imprint the knowledge of krav maga onto the host, allowing them to use the martial art so long as this program exists."
-	id = "kravmaga_nanites"
-	program_type = /datum/nanite_program/kravmaga
-	category = list(NANITES_CATEGORY_WEAPONIZED)
-
 /datum/design/nanites/neuraltrauma
 	name = "Neural Traumatic Nanites"
 	desc = "The nanites inflict havoc with the host's brain by firing electrical signals spontaneously, resulting in neural trauma."
@@ -103,13 +81,6 @@
 	desc = "The nanites begin disassembling parts of the brain in a non-lethal manner, causing wide-spread chaos and trauma all across the brain. This results in severe brain trauma for the host."
 	id = "braintrauma_nanites"
 	program_type = /datum/nanite_program/braintrauma
-	category = list(NANITES_CATEGORY_WEAPONIZED)
-
-/datum/design/nanites/suicidal
-	name = "Suicide Procedure"
-	desc = "The nanites expend a large portion of themselves to synthesis cyanide within the host's blood. Resulting in either a severely damaged liver, or death in the host."
-	id = "suicidal_nanites"
-	program_type = /datum/nanite_program/suicidal
 	category = list(NANITES_CATEGORY_WEAPONIZED)
 
 /datum/design/nanites/lungdestruction

@@ -72,22 +72,6 @@
 	category = list(NANITE_CATEGORY_MEDICAL)
 	program_type = /datum/nanite_program/defib
 
-
-/datum/design/nanites/regenerative_oxy
-	name = "Blood Oxygenation"
-	desc = "The nanites expend themselves to enrich the host's blood with oxygen, whether it be synthesized or extracted from the environment around the host. \
-			Doesn't consume nanites should the host not be oxygen-deprived."
-	id = "oxyheal_nanites"
-	program_type = /datum/nanite_program/regenerative_oxy
-	category = list(NANITE_CATEGORY_MEDICAL)
-
-/datum/design/nanites/organrepair
-	name = "Organ Repair"
-	desc = "The nanites begin repairing the host's organs should they be damaged."
-	id = "organrepair_nanites"
-	program_type = /datum/nanite_program/organrepair
-	category = list(NANITE_CATEGORY_MEDICAL)
-
 /datum/design/nanites/corpsepreserve
 	name = "Corpse Preservation"
 	desc = "The nanites will synthesize a small amount of formaldehyde upon the host's death."
@@ -95,66 +79,9 @@
 	program_type = /datum/nanite_program/corpsepreserve
 	category = list(NANITE_CATEGORY_MEDICAL)
 
-/datum/design/nanites/critstable
-	name = "Critical Stabilization"
-	desc = "The nanites will synthesize epinephrine when the host enters a critical state."
-	id = "critstable_nanites"
-	program_type = /datum/nanite_program/critstable
-	category = list(NANITE_CATEGORY_MEDICAL)
-
 /datum/design/nanites/naniteresus
 	name = "Nanite Resurrection"
-	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection."
+	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection. Only works on animals."
 	id = "naniteresus_nanites"
 	program_type = /datum/nanite_program/naniteresus
-	category = list(NANITE_CATEGORY_MEDICAL)
-
-/datum/design/nanites/synthflesh
-	name = "Corpse Repair"
-	desc = "The nanites will slowly produce synthetic flesh over time, and use that to both patch the host's injuries and unhusk them."
-	id = "synthflesh_nanites"
-	program_type = /datum/nanite_program/synthflesh
-	category = list(NANITE_CATEGORY_MEDICAL)
-
-/datum/design/nanites/mendingbrute
-	name = "Brute Mending"
-	desc = "The nanites quickly and efficiently repair blunt force, slashes, and punctures within the host."
-	id = "mendingbrute_nanites"
-	program_type = /datum/nanite_program/mendingbrute
-	category = list(NANITE_CATEGORY_MEDICAL)
-
-/datum/design/nanites/mendingburn
-	name = "Burn Mending"
-	desc = "The nanites quickly and efficiently repair burns, frostbite, and electric scars within the host."
-	id = "mendingburn_nanites"
-	program_type = /datum/nanite_program/mendingburn
-	category = list(NANITE_CATEGORY_MEDICAL)
-
-/datum/design/nanites/mendingtoxin
-	name = "Toxin Cleansing"
-	desc = "The nanites run through the host's bloodstream and re-construct cells killed by toxins."
-	id = "mendingtoxin_nanites"
-	program_type = /datum/nanite_program/mendingtoxin
-	category = list(NANITE_CATEGORY_MEDICAL)
-
-/datum/design/nanites/selfresp
-	name = "Self-Respiration"
-	desc = "The nanites synthesize breathable air within the host's lungs and blood, negating the need to breathe."
-	id = "selfresp_nanites"
-	program_type = /datum/nanite_program/selfresp
-	category = list(NANITE_CATEGORY_MEDICAL)
-
-/datum/design/nanites/repairingplus
-	name = "Synthetic Regeneration"
-	desc = "The nanites repair damage within robotic organisms or limbs including both denting and melting."
-	id = "repairingplus_nanites"
-	program_type = /datum/nanite_program/repairingplus
-	category = list(NANITE_CATEGORY_MEDICAL)
-
-/datum/design/nanites/woundfixer
-	name = "Wound-Tending"
-	desc = "The nanites slowly and methodically scan the host for major injuries and will slowly fix any wounds detected such as broken bones or hairline fractures -- without ever needing surgery. \
-			This program shuts itself off should the host have no wounds to tend."
-	id = "woundfixer_nanites"
-	program_type = /datum/nanite_program/woundfixer
 	category = list(NANITE_CATEGORY_MEDICAL)
