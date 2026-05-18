@@ -173,16 +173,19 @@
 	spawn_scatter_radius = 1
 	loot = list( // This spawner will scatter water related items around a moist site.
 		//surfshack begin
-		/obj/item/clothing/head/cone = 8,
-		/obj/item/clothing/suit/caution = 4,
-		/mob/living/basic/frog = 3,
-		/obj/effect/spawner/random/space_frog = 2,
-		/mob/living/basic/alligator = 1,
-		/obj/item/reagent_containers/cup/rag = 3,
-		/obj/item/reagent_containers/cup/bucket = 3,
-		/obj/effect/decal/cleanable/blood/old = 3,
-		/obj/structure/mop_bucket = 2,
-		/mob/living/basic/axolotl = 2,
+		/obj/item/clothing/head/cone = 80,
+		/obj/item/clothing/suit/caution = 40,
+		/mob/living/basic/frog = 30,
+		/mob/living/basic/frog/space/blue = 5,
+		/mob/living/basic/frog/space/green = 5,
+		/mob/living/basic/frog/space/red = 5,
+		/mob/living/basic/frog/space/yellow = 5,
+		/mob/living/basic/alligator = 10,
+		/obj/item/reagent_containers/cup/rag = 30,
+		/obj/item/reagent_containers/cup/bucket = 30,
+		/obj/effect/decal/cleanable/blood/old = 30,
+		/obj/structure/mop_bucket = 20,
+		/mob/living/basic/axolotl = 20,
 		//surfshack end
 	)
 
