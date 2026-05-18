@@ -2,6 +2,9 @@
 	name = "Mice Migration"
 	typepath = /datum/round_event/mice_migration
 	weight = 10
+	//surfshack start
+	min_players = 15
+	//surfshack end
 	category = EVENT_CATEGORY_ENTITIES
 	description = "A horde of mice arrives, and perhaps even the Rat King themselves."
 
