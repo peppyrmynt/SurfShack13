@@ -66,6 +66,7 @@
 	deactivation_sound = 'sound/items/tools/wirecutter.ogg'
 	can_disable = FALSE
 	toolspeed = 2
+	change_icons = FALSE
 
 /datum/crafting_recipe/welder_improv
 	name = "Improvised Welding Tool"
