@@ -19,6 +19,7 @@ on:
 
 jobs:
   run_integration_tests:
+    name: Run Tests (${{ inputs.major && format('{0}.{1}; ', inputs.major, inputs.minor) || '' }}${{ inputs.map }}; ${{ inputs.max_required_byond_client }})
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     services:
