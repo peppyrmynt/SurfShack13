@@ -12,11 +12,11 @@ SUBSYSTEM_DEF(voicechat)
 	var/list/userCode_client_map = alist()
 	var/list/client_userCode_map = alist()
 	//change with add_rooms and remove_rooms.
-	var/list/current_rooms = alist()
+	var/list/current_rooms = alist(ROOM_NONE = list())
 	var/list/room_has_proximity = alist()
 	// usercode to room
 	var/list/userCode_room_map = alist()
-	// usercode to mob only really used for the overlays
+	// usercode to mob, only really used for the overlays
 	var/list/userCode_mob_map = alist()
 	// mob to client map, needed for tracking switched mobs
 	var/list/mob_client_map = alist()
@@ -36,8 +36,8 @@ SUBSYSTEM_DEF(voicechat)
 		message_admins("library test failed cant start voicechat")
 		return SS_INIT_FAILURE
 
-	add_rooms(list("living", "ghost"))
-	add_rooms(list("lobby"), proximity_mode = FALSE)
+	add_rooms(GLOB.rooms_proximity)
+	add_rooms(GLOB.rooms_global, proximity_mode = FALSE)
 	start_node()
 
 	RegisterSignal(SSticker, COMSIG_TICKER_ROUND_ENDED, PROC_REF(on_round_end)) //moves everyone to no prox room at round end.
@@ -140,22 +140,29 @@ SUBSYSTEM_DEF(voicechat)
 /// remove user from room
 /datum/controller/subsystem/voicechat/proc/clear_userCode(userCode)
 	var/own_room = userCode_room_map[userCode]
-	if(own_room)
+	if(own_room && own_room != ROOM_NONE)
 		current_rooms[own_room] -= userCode
 
-	userCode_room_map[userCode] = null
+	userCode_room_map[userCode] = ROOM_NONE
+	current_rooms[ROOM_NONE] |= userCode
 
 /datum/controller/subsystem/voicechat/proc/move_userCode_to_room(userCode, room)
+	if(room == ROOM_INVALID)
+		var/msg = "invalid room supplied. mob: [userCode_mob_map[userCode]]"
+		message_admins(msg)
+		CRASH(msg)
+	if(room == ROOM_NONE)
+		clear_userCode(userCode)
+		return
 	if(!room || !current_rooms.Find(room))
 		return
-
 	var/own_room = userCode_room_map[userCode]
 	if(own_room)
 		current_rooms[own_room] -= userCode
 
 	userCode_room_map[userCode] = room
 	current_rooms[room] += userCode
-	message_admins("move to room worked {room: [userCode_room_map[userCode] || "null"]}")
+	// message_admins("move to room worked {room: [userCode_room_map[userCode] || "null"]}")
 
 
 /datum/controller/subsystem/voicechat/proc/link_userCode_client(userCode, client)
@@ -175,6 +182,8 @@ SUBSYSTEM_DEF(voicechat)
 		var/room =  userCode_room_map[userCode]
 		if(!room || !C)
 			continue
+		if(room == ROOM_NONE)
+			continue
 		var/mob/M = C.mob
 		if(!M)
 			continue
@@ -192,13 +201,13 @@ SUBSYSTEM_DEF(voicechat)
 
 		locs_sent ++
 
-	if(!locs_sent) //dont send empty packets
+	if(!length(locs_sent)) //dont send empty packets
 		return
 	send_json(packet)
 
 
 /datum/controller/subsystem/voicechat/proc/on_round_end()
 	for(var/userCode in vc_clients)
-		move_userCode_to_room(userCode, "lobby")
+		move_userCode_to_room(userCode, ROOM_GLOBAL_LOBBY)
 
 #undef NODE_SERVER_PATH

@@ -2,6 +2,8 @@
 	icon_state = "monkey" //for mapping
 	race = /datum/species/monkey
 	ai_controller = /datum/ai_controller/monkey
+	//surfshack start
+	voice_chat_room = ROOM_MONKEY
 
 /mob/living/carbon/human/species/monkey/Initialize(mapload, cubespawned = FALSE, mob/spawner)
 	if (cubespawned)

@@ -30,6 +30,9 @@
 	lighting_cutoff_red = 22
 	lighting_cutoff_green = 5
 	lighting_cutoff_blue = 5
+	//surfshack start
+	voice_chat_room = ROOM_SPIDER
+	//surfshack end
 	/// Speed modifier to apply if controlled by a human player
 	var/player_speed_modifier = -4
 	/// What reagent the mob injects targets with
