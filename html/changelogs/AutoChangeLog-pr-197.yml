@@ -1,0 +1,4 @@
+author: "forgman6"
+delete-after: True
+changes:
+  - code_imp: "removed some things from trash spawners if there is no atmosphere"

@@ -1,6 +1,0 @@
-author: "IndieanaJones"
-delete-after: True
-changes:
-  - rscadd: "In-hands for bowling pins"
-  - rscadd: "Improvised crowbars show up on your belt"
-  - bugfix: "Pipeguns and rebar crossbows have in-hand sprites again"

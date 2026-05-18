@@ -19,6 +19,7 @@ on:
 
 jobs:
   run_integration_tests:
+    name: Run Tests (${{ inputs.major && format('{0}.{1}; ', inputs.major, inputs.minor) || '' }}${{ inputs.map }}; ${{ inputs.max_required_byond_client }})
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     services:
@@ -31,11 +32,16 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v4
-      - name: Restore BYOND cache
-        uses: actions/cache@v4
+      - name: Restore BYOND from Cache
+        uses: ./.github/actions/restore_or_install_byond
         with:
-          path: ~/BYOND
-          key: ${{ runner.os }}-byond-${{ hashFiles('dependencies.sh') }}
+          major: ${{ inputs.major }}
+          minor: ${{ inputs.minor }}
+      - name: Download build outputs
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact-${{ inputs.major || env.BYOND_MAJOR }}-${{ inputs.minor || env.BYOND_MINOR}}
+          path: ./
       - name: Setup database
         run: |
           sudo systemctl start mysql
@@ -54,17 +60,6 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo apt update || true
           sudo apt install -o APT::Immediate-Configure=false curl:i386
-      - name: Configure version
-        run: |
-          echo "BYOND_MAJOR=${{ inputs.major }}" >> $GITHUB_ENV
-          echo "BYOND_MINOR=${{ inputs.minor }}" >> $GITHUB_ENV
-        if: ${{ inputs.major }}
-      - name: Compile Tests
-        id: compile_tests
-        run: |
-          bash tools/ci/install_byond.sh
-          source $HOME/BYOND/byond/bin/byondsetup
-          tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror -ITG0001 -I"loop_checks"
       - name: Run Tests
         run: |
           source $HOME/BYOND/byond/bin/byondsetup

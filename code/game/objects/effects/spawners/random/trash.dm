@@ -54,6 +54,13 @@
 		/obj/item/stack/ore/gold = 1,
 	)
 
+/obj/effect/spawner/random/trash/deluxe_garbage/Initialize(mapload)
+	if(mapload)
+		var/turf/location = get_turf(loc)
+		if(location.initial_gas_mix != OPENTURF_DEFAULT_ATMOS && location.initial_gas_mix != OPENTURF_DIRTY_ATMOS)
+			loot -= /mob/living/basic/mouse
+	return ..()
+
 /obj/effect/spawner/random/trash/cigbutt
 	name = "cigarette butt spawner"
 	loot = list(
@@ -173,19 +180,16 @@
 	spawn_scatter_radius = 1
 	loot = list( // This spawner will scatter water related items around a moist site.
 		//surfshack begin
-		/obj/item/clothing/head/cone = 80,
-		/obj/item/clothing/suit/caution = 40,
-		/mob/living/basic/frog = 30,
-		/mob/living/basic/frog/space/blue = 5,
-		/mob/living/basic/frog/space/green = 5,
-		/mob/living/basic/frog/space/red = 5,
-		/mob/living/basic/frog/space/yellow = 5,
-		/mob/living/basic/alligator = 10,
-		/obj/item/reagent_containers/cup/rag = 30,
-		/obj/item/reagent_containers/cup/bucket = 30,
-		/obj/effect/decal/cleanable/blood/old = 30,
-		/obj/structure/mop_bucket = 20,
-		/mob/living/basic/axolotl = 20,
+		/obj/item/clothing/head/cone = 8,
+		/obj/item/clothing/suit/caution = 4,
+		/mob/living/basic/frog = 3,
+		/obj/effect/spawner/random/space_frog = 2,
+		/mob/living/basic/alligator = 1,
+		/obj/item/reagent_containers/cup/rag = 3,
+		/obj/item/reagent_containers/cup/bucket = 3,
+		/obj/effect/decal/cleanable/blood/old = 3,
+		/obj/structure/mop_bucket = 2,
+		/mob/living/basic/axolotl = 2,
 		//surfshack end
 	)
 
@@ -193,7 +197,14 @@
 	if(mapload)
 		var/turf/location = get_turf(loc)
 		if(location.initial_gas_mix != OPENTURF_DEFAULT_ATMOS && location.initial_gas_mix != OPENTURF_DIRTY_ATMOS)
-			loot -= list(/mob/living/basic/frog, /mob/living/basic/axolotl)
+			//surfshack start
+			loot -= list(
+				/mob/living/basic/frog,
+				/mob/living/basic/axolotl,
+				/obj/effect/spawner/random/space_frog,
+				/mob/living/basic/alligator,
+			)
+			//surfshack end
 	return ..()
 
 /obj/effect/spawner/random/trash/graffiti

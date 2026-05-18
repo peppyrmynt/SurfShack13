@@ -107,3 +107,15 @@
   - refactor: Bloodsucker UI works better now.
   hyperjll:
   - bugfix: Players are no longer told they've earned 'Credits' instead of 'Doubloons'.
+2026-05-18:
+  IndieanaJones:
+  - rscadd: A public announcements console was added to IceBox.
+  - rscadd: In-hands for bowling pins
+  - rscadd: Improvised crowbars show up on your belt
+  - bugfix: Pipeguns and rebar crossbows have in-hand sprites again
+  - rscdel: Temporarily removes Boxstation from rotation.
+  forgman6:
+  - code_imp: switched moisture trap lootpool to not create another spawner
+  - code_imp: sm surge, mice migration, blackout, grav gen blackout, comms black out,
+      and carp migration can only happen on 15 pop
+  - code_imp: some of the listed events have lower probablities
