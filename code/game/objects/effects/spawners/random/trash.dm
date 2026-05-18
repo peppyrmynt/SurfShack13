@@ -190,7 +190,14 @@
 	if(mapload)
 		var/turf/location = get_turf(loc)
 		if(location.initial_gas_mix != OPENTURF_DEFAULT_ATMOS && location.initial_gas_mix != OPENTURF_DIRTY_ATMOS)
-			loot -= list(/mob/living/basic/frog, /mob/living/basic/axolotl)
+			//surfshack start
+			loot -= list(
+				/mob/living/basic/frog,
+				/mob/living/basic/axolotl,
+				/obj/effect/spawner/random/space_frog,
+				/mob/living/basic/alligator,
+			)
+			//surfshack end
 	return ..()
 
 /obj/effect/spawner/random/trash/graffiti
