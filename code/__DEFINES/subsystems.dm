@@ -270,6 +270,10 @@
 #define FORCE_END_ROUND 1
 /// For admin forcing roundend, can be used to distinguish the two
 #define ADMIN_FORCE_END_ROUND 2
+// Surf Shack Edit
+/// For when a restart vote goes through on it's own. Used to prevent roundend doubloon give-aways.
+#define VOTE_FORCE_END_ROUND 3
+// Surf Shack End
 
 /**
 	Create a new timer and add it to the queue.
