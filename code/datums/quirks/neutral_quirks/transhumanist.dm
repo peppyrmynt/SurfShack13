@@ -67,10 +67,10 @@
 				organic_bodytypes += 0.02
 
 	return list(
-		BODYPART_SCORE_ORGANIC = organic_bodytypes,
-		BODYPART_SCORE_SILICON = silicon_bodytypes,
-		BODYPART_SCORE_OTHER_BODYTYPES = other_bodytypes,
-		BODYPART_SCORE_OVERALL = silicon_bodytypes - organic_bodytypes
+		/* BODYPART_SCORE_ORGANIC */ organic_bodytypes,
+		/* BODYPART_SCORE_SILICON */ silicon_bodytypes,
+		/* BODYPART_SCORE_OTHER_BODYTYPES */ other_bodytypes,
+		/* BODYPART_SCORE_OVERALL */ silicon_bodytypes - organic_bodytypes
 	)
 
 

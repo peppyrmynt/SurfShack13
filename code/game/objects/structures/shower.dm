@@ -60,6 +60,11 @@ GLOBAL_LIST_INIT(shower_mode_descriptions, list(
 	//surfshack13 START
 	///Whether or not the shower is shorted
 	var/is_shorted = FALSE
+	///If theres a fucking alligator hidding in the shower drain
+	var/contains_gator = FALSE
+
+/obj/machinery/shower/with_alligator
+	contains_gator = TRUE
 	//surfshack13 END
 
 MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
@@ -98,6 +103,11 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 	)
 	AddElement(/datum/element/connect_loc, loc_connections)
 
+	//surfshack start
+	if(mapload && prob(2))
+		contains_gator = TRUE
+	//surfshack end
+
 /obj/machinery/shower/examine(mob/user)
 	. = ..()
 	. += span_notice("It looks like the thermostat has an adjustment screw.")
@@ -105,7 +115,11 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 		. += span_notice("A water recycler is installed. It looks like you could pry it out.")
 	. += span_notice("The auto shut-off is programmed to [GLOB.shower_mode_descriptions["[mode]"]].")
 	. += span_notice("[reagents.total_volume]/[reagents.maximum_volume] liquids remaining.")
-	. += span_notice("The antishock mechanism is [is_shorted ? "de" : "at"]tached")
+	//surfshack start
+	. += span_notice("The antishock mechanism is [is_shorted ? "de" : "at"]tached.___TraitAdd")
+	if(contains_gator)
+		. += span_notice("You see something green in the drain for a second.")
+	//surfshack end
 
 /obj/machinery/shower/Destroy()
 	QDEL_NULL(soundloop)
@@ -116,7 +130,12 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/shower, (-16))
 	. = ..()
 	if(.)
 		return
-
+	//surfshack start
+	if(contains_gator && prob(50))
+		var/mob/living/basic/alligator/gentleman = new(loc)
+		visible_message(span_warning("\the [gentleman] wriggles out of \the [src] drain!"))
+		contains_gator = FALSE
+	//surfshack end
 	intended_on = !intended_on
 	if(!update_actually_on(intended_on))
 		balloon_alert(user, "[src] is dry!")

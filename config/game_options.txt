@@ -178,6 +178,9 @@ ALLOW_AI_MULTICAM
 ## Uncomment to prevent the peacekeeper cyborg model from being chosen
 #DISABLE_PEACEBORG
 
+## Maximum amount of players you can have before the AI loses it's ability to request a shell.
+MAX_PLAYERS_FOR_AI_SHELL 20
+
 ## AWAY MISSIONS ###
 
 ## Uncomment to load one of the missions from awaymissionconfig.txt or away_missions/ at roundstart.

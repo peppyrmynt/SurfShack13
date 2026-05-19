@@ -1,0 +1,7 @@
+author: "IndieanaJones"
+delete-after: True
+changes:
+  - bugfix: "Space dragons' eyes, teeths and claws (and shark form's underside) are once again of a different color than the rest of the body."
+  - refactor: "Rewrote some of HUD code so they're no longer colored in their owner's color"
+  - bugfix: "Space dragons no longer turn invisible when toggling seethrough mode"
+  - bugfix: "fixed seethrough mob offsetting your sprite"

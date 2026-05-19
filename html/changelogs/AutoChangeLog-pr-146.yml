@@ -1,0 +1,7 @@
+author: "hyperjll"
+delete-after: True
+changes:
+  - rscadd: "Emitter Diode Disks have been implemented! Allowing emitters to heal, ignite, drain sanity, drain stamina, attract, and more!"
+  - rscadd: "The Syndicate are now offering explosive diode disks for aspiring explosive engineers!"
+  - rscadd: "Emitters are now compatible with Circuits via the USB cable!"
+  - image: "Emitters now use overlays and have emissives (they glow in the dark)"

@@ -6810,12 +6810,33 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
 "bGn" = (
-/obj/machinery/airalarm/directional/south,
-/obj/structure/filingcabinet/chestdrawer,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple,
+/obj/structure/table,
+/obj/item/storage/box/disks_nanite{
+	pixel_y = -6;
+	pixel_x = 7
+	},
+/obj/item/clothing/glasses/hud/diagnostic{
+	pixel_y = 12
+	},
+/obj/item/nanite_remote{
+	pixel_y = -7;
+	pixel_x = -5
+	},
+/obj/item/nanite_remote{
+	pixel_y = -7;
+	pixel_x = -5
+	},
+/obj/item/nanite_scanner,
+/obj/item/nanite_scanner,
+/obj/item/clothing/glasses/hud/diagnostic{
+	pixel_y = 12
+	},
+/obj/machinery/light_switch/directional/south,
+/obj/machinery/light/small/directional/south,
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "bGr" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -9120,16 +9141,13 @@
 /area/station/medical/medbay)
 "cjH" = (
 /obj/machinery/firealarm/directional/south,
-/obj/structure/frame/computer{
-	anchored = 1;
-	dir = 4
-	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple{
 	dir = 8
 	},
+/obj/machinery/nanite_programmer,
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "cjN" = (
 /turf/closed/wall/r_wall,
 /area/station/security/office)
@@ -9858,6 +9876,11 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/tile/neutral,
+/obj/machinery/button/door/directional/south{
+	pixel_y = -36;
+	name = "Nanite Security Lockdown Control";
+	id = "nanite_lockdown"
+	},
 /turf/open/floor/iron,
 /area/station/command/heads_quarters/rd)
 "crT" = (
@@ -18755,15 +18778,19 @@
 /area/station/hallway/secondary/entry)
 "eGR" = (
 /obj/item/radio/intercom/directional/north,
-/obj/machinery/modular_computer/preset/civilian{
-	dir = 4
-	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
 	},
+/obj/machinery/nanite_program_hub,
+/obj/machinery/light/small/directional/north,
+/obj/machinery/camera/directional/north{
+	c_tag = "Science - Experimentor Control";
+	name = "science camera";
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "eGS" = (
 /obj/machinery/duct,
 /obj/effect/turf_decal/tile/purple/fourcorners,
@@ -27510,13 +27537,16 @@
 "gLh" = (
 /obj/structure/cable,
 /obj/machinery/power/apc/auto_name/directional/north,
-/obj/structure/tank_holder/extinguisher,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
+/obj/machinery/computer/nanite_chamber_control{
+	dir = 8
+	},
+/obj/machinery/airalarm/directional/east,
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "gLz" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -30725,8 +30755,8 @@
 /turf/open/floor/iron/dark,
 /area/station/service/abandoned_gambling_den/gaming)
 "hFf" = (
-/obj/machinery/firealarm/directional/west,
 /obj/item/kirbyplants/random,
+/obj/structure/sign/departments/science/directional/west,
 /turf/open/floor/iron/white,
 /area/station/science/lobby)
 "hFk" = (
@@ -31700,6 +31730,8 @@
 	name = "Experimentor Blast Door"
 	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
+/obj/machinery/power/apc/auto_name/directional/west,
+/obj/structure/cable,
 /turf/open/floor/iron/dark,
 /area/station/science/explab)
 "hSi" = (
@@ -32901,7 +32933,7 @@
 /area/station/command/heads_quarters/captain)
 "igg" = (
 /turf/closed/wall,
-/area/station/science/explab)
+/area/station/science/nanites)
 "igl" = (
 /obj/structure/disposalpipe/segment{
 	dir = 6
@@ -34640,7 +34672,7 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple/half/contrasted,
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "iEi" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
@@ -35449,6 +35481,13 @@
 	},
 /turf/open/floor/iron,
 /area/station/engineering/lobby)
+"iPG" = (
+/obj/effect/turf_decal/trimline/purple/filled/line{
+	dir = 10
+	},
+/obj/structure/tank_holder/extinguisher,
+/turf/open/floor/iron/white,
+/area/station/science/research)
 "iPH" = (
 /obj/structure/chair{
 	dir = 8
@@ -41158,12 +41197,12 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/mapping_helpers/airlock/access/all/science/general,
-/obj/machinery/door/airlock/research{
-	name = "Experimentor Control"
-	},
 /obj/effect/landmark/navigate_destination,
+/obj/machinery/door/airlock/research/glass{
+	name = "Nanite Lab"
+	},
 /turf/open/floor/iron,
-/area/station/science/explab)
+/area/station/science/nanites)
 "khE" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -41678,16 +41717,13 @@
 /turf/open/floor/iron/dark,
 /area/station/security/brig)
 "kor" = (
-/obj/machinery/light_switch/directional/east{
-	pixel_x = 24
-	},
-/obj/machinery/light/small/directional/east,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple/half/contrasted{
 	dir = 4
 	},
+/obj/machinery/nanite_chamber,
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "kot" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 1
@@ -43504,6 +43540,7 @@
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 9
 	},
+/obj/machinery/firealarm/directional/west,
 /turf/open/floor/iron/white,
 /area/station/science/lobby)
 "kPu" = (
@@ -44041,12 +44078,8 @@
 	},
 /area/station/security/execution/transfer)
 "kWH" = (
-/obj/structure/chair{
-	dir = 4
-	},
-/obj/structure/sign/departments/science/directional/west,
-/obj/effect/landmark/start/hangover,
-/turf/open/floor/iron/white,
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/plating,
 /area/station/science/lobby)
 "kWM" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -49132,7 +49165,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/landmark/start/scientist,
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "mlt" = (
 /obj/effect/landmark/start/hangover,
 /obj/effect/turf_decal/siding/wood{
@@ -52583,6 +52616,7 @@
 /obj/structure/table/reinforced,
 /obj/machinery/recharger,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
+/obj/structure/fireaxecabinet/batteringram/directional/north,
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/security/armory)
 "nga" = (
@@ -52671,35 +52705,13 @@
 /turf/closed/wall/r_wall,
 /area/station/maintenance/starboard/lesser)
 "nhn" = (
-/obj/structure/table/reinforced,
-/obj/item/clipboard{
-	pixel_x = 6;
-	pixel_y = 3
-	},
-/obj/item/paper{
-	pixel_x = 6;
-	pixel_y = 3
-	},
-/obj/item/pen{
-	pixel_x = 5;
-	pixel_y = 4
-	},
-/obj/machinery/button/door{
-	id = "sci_experimentor";
-	name = "Experimentor Containment Control";
-	pixel_x = -7;
-	pixel_y = 6;
-	req_access = list("science")
-	},
-/obj/item/assembly/signaler{
-	pixel_x = -5
-	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple/half/contrasted{
 	dir = 8
 	},
+/obj/machinery/computer/nanite_cloud_controller,
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "nhA" = (
 /obj/machinery/atmospherics/components/unary/portables_connector/visible{
 	dir = 8
@@ -52779,7 +52791,6 @@
 /turf/open/floor/wood,
 /area/station/security/detectives_office/private_investigators_office)
 "nil" = (
-/obj/structure/sign/warning/test_chamber/directional/north,
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -59830,6 +59841,7 @@
 /obj/effect/turf_decal/trimline/purple/filled/corner{
 	dir = 4
 	},
+/obj/structure/sign/departments/nanites/directional/north,
 /turf/open/floor/iron/white,
 /area/station/science/research)
 "pca" = (
@@ -65489,7 +65501,6 @@
 /obj/structure/chair{
 	dir = 4
 	},
-/obj/item/radio/intercom/directional/west,
 /obj/effect/landmark/start/hangover,
 /turf/open/floor/iron/white,
 /area/station/science/lobby)
@@ -68171,6 +68182,13 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/iron,
 /area/station/commons/storage/primary)
+"rdH" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/computer/public_announcement{
+	dir = 1
+	},
+/turf/open/floor/iron,
+/area/station/hallway/secondary/exit/departure_lounge)
 "rdJ" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -68335,7 +68353,6 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/entry)
 "rgb" = (
-/obj/structure/sign/departments/science/alt/directional/north,
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -68346,6 +68363,7 @@
 	dir = 1
 	},
 /obj/machinery/light/directional/north,
+/obj/structure/sign/warning/test_chamber/directional/north,
 /turf/open/floor/iron/white,
 /area/station/science/research)
 "rgf" = (
@@ -71689,7 +71707,7 @@
 	name = "Experimentor Blast Door"
 	},
 /turf/open/floor/plating,
-/area/station/science/explab)
+/area/station/science/nanites)
 "rUl" = (
 /obj/machinery/door/window/brigdoor/left/directional/south{
 	name = "Creature Pen";
@@ -75634,7 +75652,7 @@
 /obj/structure/table,
 /obj/item/clothing/gloves/latex,
 /obj/item/clothing/glasses/science,
-/obj/structure/sign/poster/official/science/directional/west,
+/obj/item/radio/intercom/directional/west,
 /turf/open/floor/iron/white,
 /area/station/science/lobby)
 "sTR" = (
@@ -93448,7 +93466,29 @@
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 6
 	},
-/obj/item/kirbyplants/organic/plant10,
+/obj/structure/table/reinforced,
+/obj/machinery/button/door{
+	id = "sci_experimentor";
+	name = "Experimentor Containment Control";
+	pixel_x = -7;
+	pixel_y = 6;
+	req_access = list("science")
+	},
+/obj/item/clipboard{
+	pixel_x = 6;
+	pixel_y = 3
+	},
+/obj/item/paper{
+	pixel_x = 6;
+	pixel_y = 3
+	},
+/obj/item/pen{
+	pixel_x = 5;
+	pixel_y = 4
+	},
+/obj/item/assembly/signaler{
+	pixel_x = -5
+	},
 /turf/open/floor/iron/white,
 /area/station/science/research)
 "xsb" = (
@@ -94709,19 +94749,13 @@
 /area/station/science/research)
 "xGn" = (
 /obj/structure/cable,
-/obj/machinery/newscaster/directional/north,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
-/obj/machinery/camera/directional/north{
-	c_tag = "Science - Experimentor Control";
-	name = "science camera";
-	network = list("ss13","rd")
-	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/tile/purple/half/contrasted{
 	dir = 1
 	},
 /turf/open/floor/iron/dark,
-/area/station/science/explab)
+/area/station/science/nanites)
 "xGu" = (
 /obj/structure/frame/machine{
 	anchored = 1
@@ -128483,7 +128517,7 @@ qmd
 bNU
 bNU
 hiq
-dxZ
+iPG
 nKA
 rVK
 bNU
@@ -128985,8 +129019,8 @@ tTD
 jek
 kjI
 shP
-ptc
-dNS
+nlF
+kWH
 xGn
 mlo
 iEg
@@ -129242,7 +129276,7 @@ xez
 oTl
 khb
 bPY
-nlF
+ptc
 dNS
 gLh
 kor
@@ -129502,7 +129536,7 @@ wIa
 nlF
 dNS
 dNS
-dNS
+kWH
 dNS
 dNS
 dNS
@@ -129758,7 +129792,7 @@ wQs
 wIa
 nlF
 hFf
-kWH
+qsN
 qsN
 nKC
 sTG
@@ -139322,7 +139356,7 @@ eFj
 thB
 ivz
 jTa
-eWi
+rdH
 hLt
 qYo
 aaa

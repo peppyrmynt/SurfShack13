@@ -243,11 +243,6 @@
 			if(ingredient.resistance_flags & INDESTRUCTIBLE)
 				continue
 
-			// Everything else will just get fried
-			if(isnull(ingredient.reagents) && !is_type_in_list(ingredient, required_ingredients))
-				ingredient.AddElement(/datum/element/fried_item, 30 SECONDS)
-				continue
-
 			// Things that had reagents or ingredients in the soup will get deleted
 			LAZYREMOVE(pot.added_ingredients, ingredient)
 			// Send everything left behind

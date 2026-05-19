@@ -148,85 +148,87 @@ const ItemList = (props: ItemListProps) => {
     <Icon m={compactMode ? '10px' : '26px'} name="spinner" spin />
   );
   return (
-    <Stack vertical mt={compactMode ? -0.5 : -1}>
-      {items.map((item, index) => (
-        <Stack.Item key={index} mt={compactMode ? 0.5 : 1}>
-          <Section key={item.name} fitted={compactMode ? true : false}>
-            <Stack>
-              <Stack.Item>
-                <Box
-                  width={compactMode ? '32px' : '64px'}
-                  height={compactMode ? '32px' : '64px'}
-                  position="relative"
-                  m={compactMode ? '2px' : 0}
-                  mr={1}
-                >
-                  <DmIcon
-                    position="absolute"
-                    bottom="0"
-                    fallback={fallback}
-                    icon={item.icon}
-                    icon_state={item.icon_state}
+    <Section fill scrollable>
+      <Stack vertical mt={compactMode ? -0.5 : -1}>
+        {items.map((item, index) => (
+          <Stack.Item key={index} mt={compactMode ? 0.5 : 1}>
+            <Section key={item.name} fitted={compactMode ? true : false}>
+              <Stack>
+                <Stack.Item>
+                  <Box
                     width={compactMode ? '32px' : '64px'}
-                  />
-                </Box>
-              </Stack.Item>
-              <Stack.Item grow={1}>
-                {compactMode ? (
-                  <Stack>
-                    <Stack.Item
-                      bold
-                      grow={1}
-                      lineHeight="36px"
-                      style={{
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis',
-                      }}
-                    >
-                      {item.name}
-                    </Stack.Item>
-                    <Stack.Item>
-                      <Tooltip content={item.desc}>
-                        <Icon name="info-circle" lineHeight="36px" />
-                      </Tooltip>
-                    </Stack.Item>
-                    <Stack.Item>
-                      <Button
-                        m="8px"
-                        disabled={item.disabled}
-                        onClick={(e) => handleBuy(item)}
-                      >
-                        {item.cost}
-                      </Button>
-                    </Stack.Item>
-                  </Stack>
-                ) : (
-                  <Section
-                    title={item.name}
-                    buttons={
-                      <Button
-                        disabled={item.disabled}
-                        onClick={(e) => handleBuy(item)}
-                      >
-                        {item.cost}
-                      </Button>
-                    }
+                    height={compactMode ? '32px' : '64px'}
+                    position="relative"
+                    m={compactMode ? '2px' : 0}
+                    mr={1}
                   >
-                    <Box
-                      style={{
-                        opacity: '0.75',
-                      }}
+                    <DmIcon
+                      position="absolute"
+                      bottom="0"
+                      fallback={fallback}
+                      icon={item.icon}
+                      icon_state={item.icon_state}
+                      width={compactMode ? '32px' : '64px'}
+                    />
+                  </Box>
+                </Stack.Item>
+                <Stack.Item grow={1}>
+                  {compactMode ? (
+                    <Stack>
+                      <Stack.Item
+                        bold
+                        grow={1}
+                        lineHeight="36px"
+                        style={{
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        {item.name}
+                      </Stack.Item>
+                      <Stack.Item>
+                        <Tooltip content={item.desc}>
+                          <Icon name="info-circle" lineHeight="36px" />
+                        </Tooltip>
+                      </Stack.Item>
+                      <Stack.Item>
+                        <Button
+                          m="8px"
+                          disabled={item.disabled}
+                          onClick={(e) => handleBuy(item)}
+                        >
+                          {item.cost}
+                        </Button>
+                      </Stack.Item>
+                    </Stack>
+                  ) : (
+                    <Section
+                      title={item.name}
+                      buttons={
+                        <Button
+                          disabled={item.disabled}
+                          onClick={(e) => handleBuy(item)}
+                        >
+                          {item.cost}
+                        </Button>
+                      }
                     >
-                      {item.desc}
-                    </Box>
-                  </Section>
-                )}
-              </Stack.Item>
-            </Stack>
-          </Section>
-        </Stack.Item>
-      ))}
-    </Stack>
+                      <Box
+                        style={{
+                          opacity: '0.75',
+                        }}
+                      >
+                        {item.desc}
+                      </Box>
+                    </Section>
+                  )}
+                </Stack.Item>
+              </Stack>
+            </Section>
+          </Stack.Item>
+        ))}
+      </Stack>
+    </Section>
   );
 };

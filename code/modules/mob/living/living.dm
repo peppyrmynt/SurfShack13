@@ -480,12 +480,12 @@
 		if(SOUTH)
 			animate(M, pixel_x = target_pixel_x, pixel_y = target_pixel_y - offset, 3)
 		if(EAST)
-			if(M.lying_angle == 270) //update the dragged dude's direction if we've turned
-				M.set_lying_angle(90)
+			if(M.lying_angle == LYING_ANGLE_WEST) //update the dragged dude's direction if we've turned
+				M.set_lying_angle(LYING_ANGLE_EAST)
 			animate(M, pixel_x = target_pixel_x + offset, pixel_y = target_pixel_y, 3)
 		if(WEST)
-			if(M.lying_angle == 90)
-				M.set_lying_angle(270)
+			if(M.lying_angle == LYING_ANGLE_EAST)
+				M.set_lying_angle(LYING_ANGLE_WEST)
 			animate(M, pixel_x = target_pixel_x - offset, pixel_y = target_pixel_y, 3)
 
 /mob/living/proc/reset_pull_offsets(mob/living/M, override)
@@ -730,7 +730,6 @@
 		setDir(pick(NORTH, SOUTH)) // We are and look helpless.
 	if(rotate_on_lying)
 		body_position_pixel_y_offset = PIXEL_Y_OFFSET_LYING
-
 
 /// Proc to append behavior related to lying down.
 /mob/living/proc/on_standing_up()
@@ -1045,6 +1044,10 @@
 
 ///Called by mob Move() when the lying_angle is different than zero, to better visually simulate crawling.
 /mob/living/proc/lying_angle_on_movement(direct)
+	//surfshack start
+	if(SEND_SIGNAL(src, COMSIG_PRE_LYING_ANGLE_CHANGE, direct) & COMPONENT_LYING_BLOCK_ANGLE_CHANGE)
+		return
+	//surfshack end
 	if(direct & EAST)
 		set_lying_angle(90)
 	else if(direct & WEST)
@@ -1938,6 +1941,12 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 	if(. && client)
 		reset_perspective()
 
+
+//surfshack start
+/// runs when mob is turned into an item
+/mob/living/proc/on_picked_up(obj/item/mob_item)
+	return
+//surfshack end
 
 /mob/living/proc/update_z(new_z) // 1+ to register, null to unregister
 	if(registered_z == new_z)

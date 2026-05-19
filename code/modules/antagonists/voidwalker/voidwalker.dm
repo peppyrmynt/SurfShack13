@@ -43,7 +43,9 @@
 	human.set_species(/datum/species/voidwalker)
 
 /datum/objective/voidwalker_objective
+	//surfshack start
 	completion_credit_reward = 10
+	//surfshack end
 
 /datum/objective/voidwalker_objective/New()
 	var/list/explanation_texts = list(

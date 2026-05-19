@@ -85,7 +85,9 @@
 
 /datum/objective/blob_takeover
 	explanation_text = "Reach critical mass!"
+	//surfshack start
 	completion_credit_reward = 200
+	//surfshack end
 
 //Non-overminds get this on blob antag assignment
 /datum/action/innate/blobpop

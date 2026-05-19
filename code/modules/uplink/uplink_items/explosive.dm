@@ -101,9 +101,8 @@
 		transported to you that will teleport the actual bomb to it upon activation. Note that this bomb can \
 		be defused, and some crew may attempt to do so. \
 		The bomb core can be pried out and manually detonated with other explosives."
-	progression_minimum = 30 MINUTES
 	item = /obj/item/sbeacondrop/bomb
-	cost = 11
+	cost = 8
 
 /datum/uplink_item/explosives/syndicate_bomb/New()
 	. = ..()

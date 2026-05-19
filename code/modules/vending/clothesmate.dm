@@ -84,6 +84,7 @@
 				/obj/item/clothing/under/dress/eveninggown = 3,
 				/obj/item/clothing/under/misc/pj/blue = 3,
 				/obj/item/clothing/under/misc/pj/red = 3,
+				/obj/item/clothing/under/color/grey/retro = 3,
 			),
 		),
 
@@ -95,6 +96,8 @@
 				/obj/item/clothing/suit/jacket/oversized = 4,
 				/obj/item/clothing/suit/jacket/fancy = 4,
 				/obj/item/clothing/suit/toggle/lawyer/greyscale = 4,
+				/obj/item/clothing/suit/hooded/wintercoat/pullover = 3,
+				/obj/item/clothing/suit/hooded/wintercoat/zipup = 3,
 				/obj/item/clothing/suit/hooded/wintercoat/custom = 3,
 				/obj/item/clothing/suit/hooded/wintercoat = 3,
 				/obj/item/clothing/under/suit/navy = 3,

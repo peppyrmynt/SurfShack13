@@ -199,6 +199,8 @@
 		   Aside from conventional sharpened iron rods, it can also fire specialty ammo made from the atmos crystalizer - zaukerite, metallic hydrogen, and healium rods all work. \
 		   Very slow to reload - you can craft the crossbow with a crowbar to loosen the crossbar, but risk a misfire, or worse..."
 	icon = 'icons/obj/weapons/guns/ballistic.dmi'
+	lefthand_file = 'icons/mob/inhands/weapons/guns_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/guns_righthand.dmi'
 	icon_state = "rebarxbow"
 	inhand_icon_state = "rebarxbow"
 	worn_icon_state = "rebarxbow"
@@ -297,6 +299,8 @@
 	name = "pipegun"
 	desc = "A symbol that the true masters of this place are not those who merely inhabit it, but the one willing to twist it towards a killing intent."
 	icon = 'icons/obj/weapons/guns/wide_guns.dmi'
+	lefthand_file = 'icons/mob/inhands/weapons/guns_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/guns_righthand.dmi'
 	icon_state = "pipegun"
 	inhand_icon_state = "pipegun"
 	worn_icon_state = "pipegun"

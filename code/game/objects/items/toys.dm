@@ -221,12 +221,6 @@
 	if(vname == NAMEOF(src, current_color))
 		update_appearance()
 
-/obj/item/toy/balloon/update_icon_state()
-	. = ..()
-	var/new_icon = "[initial(icon_state)][current_color ? "_[current_color]":null]"
-	inhand_icon_state = new_icon
-	icon_state = "[new_icon][isturf(loc) ? null : "_storage"]"
-
 /obj/item/toy/balloon/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change)
 	. = ..()
 	update_appearance()
@@ -694,7 +688,7 @@
 	desc = "A replica toolbox that rumbles when you turn the key."
 	icon = 'icons/obj/storage/toolbox.dmi'
 	icon_state = "green"
-	inhand_icon_state = "artistic_toolbox"
+	inhand_icon_state = "toolbox_green"
 	lefthand_file = 'icons/mob/inhands/equipment/toolbox_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/toolbox_righthand.dmi'
 	hitsound = 'sound/items/weapons/smash.ogg'

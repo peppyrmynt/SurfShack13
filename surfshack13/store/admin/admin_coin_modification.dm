@@ -31,3 +31,16 @@ ADMIN_VERB(mass_add_metacoins, R_FUN, "Mass Add Doubloons", "You give everyone s
 	log_admin("[key_name(user)] has mass adjusted doubloons.")
 	message_admins("[key_name_admin(user)] has mass adjusted doubloons.")
 	BLACKBOX_LOG_ADMIN_VERB("Mass Add Doubloons")
+
+ADMIN_VERB(check_players_metacoins, R_FUN, "Check Doubloons", "Check a certain players Doubloon balance.", ADMIN_CATEGORY_FUN)
+	var/mob/chosen_player
+	chosen_player = tgui_input_list(user, "Choose a Player", "Player List", GLOB.player_list)
+	if(!chosen_player)
+		return
+	var/client/chosen_client = chosen_player.client
+
+	var/chosen_player_balance = chosen_client.prefs.metacoins
+
+	log_admin("[key_name(user)] checked the doubloons of [key_name(chosen_client)], they have [chosen_player_balance].")
+	message_admins("[key_name_admin(user)] checked the doubloons of [key_name(chosen_client)], they have [chosen_player_balance].")
+	BLACKBOX_LOG_ADMIN_VERB("Check Doubloons")

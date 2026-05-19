@@ -1,0 +1,4 @@
+author: "hyperjll"
+delete-after: True
+changes:
+  - rscadd: "Added 'Crossing' variants to Curved and Junction transit tubes."

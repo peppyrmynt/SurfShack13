@@ -28,6 +28,7 @@
 			- typesof(/obj/item/clothing/under/color/jumpskirt) \
 			- /obj/item/clothing/under/color/random \
 			- /obj/item/clothing/under/color/grey/ancient \
+			- /obj/item/clothing/under/color/grey/retro \
 			- /obj/item/clothing/under/color/black/ghost \
 			- /obj/item/clothing/under/rank/prisoner \
 	)
@@ -94,6 +95,17 @@
 	name = "ancient jumpsuit"
 	desc = "A terribly ragged and frayed grey jumpsuit. It looks like it hasn't been washed in over a decade."
 	icon_state = "grey_ancient"
+	inhand_icon_state = "gy_suit"
+	greyscale_config = null
+	greyscale_config_inhand_left = null
+	greyscale_config_inhand_right = null
+	greyscale_config_worn = null
+	can_adjust = FALSE
+
+/obj/item/clothing/under/color/grey/retro
+	name = "retro jumpsuit"
+	desc = "A soulful grey jumpsuit with blue accents."
+	icon_state = "retro"
 	inhand_icon_state = "gy_suit"
 	greyscale_config = null
 	greyscale_config_inhand_left = null

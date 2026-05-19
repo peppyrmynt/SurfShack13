@@ -39,11 +39,6 @@
 	input_two = /datum/mutation/human/fire // fiery sweat NOT fiery breath
 	result = /datum/mutation/human/pyrokinesis
 
-/datum/generecipe/thermal_adaptation
-	input_one = /datum/mutation/human/adaptation/cold
-	input_two = /datum/mutation/human/adaptation/heat
-	result = /datum/mutation/human/adaptation/thermal
-
 /datum/generecipe/antiglow
 	input_one = /datum/mutation/human/glow
 	input_two = /datum/mutation/human/void

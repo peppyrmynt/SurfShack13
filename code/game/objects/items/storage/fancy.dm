@@ -508,13 +508,58 @@
 	icon = 'icons/obj/food/containers.dmi'
 	icon_state = "nuggetbox"
 	base_icon_state = "nuggetbox"
+	inhand_icon_state = "nuggetbox"
+	lefthand_file = 'icons/mob/inhands/items/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/food_righthand.dmi'
 	contents_tag = "nugget"
 	spawn_type = /obj/item/food/nugget
-	spawn_count = 6
+	spawn_count = 7
 
 /obj/item/storage/fancy/nugget_box/Initialize(mapload)
 	. = ..()
 	atom_storage.set_holdable(/obj/item/food/nugget)
+
+/obj/item/storage/fancy/nugget_box/red
+	name = "red nugget box"
+	icon_state = "rednuggetbox"
+	base_icon_state = "rednuggetbox"
+	inhand_icon_state = "rednuggetbox"
+
+/obj/item/storage/fancy/wing_box
+	name = "red wing box"
+	desc = "A cardboard box used for holding chicken wangs."
+	icon = 'icons/obj/food/containers.dmi'
+	icon_state = "redwingbox5"
+	base_icon_state = "redwingbox"
+	inhand_icon_state = "redwingbox"
+	lefthand_file = 'icons/mob/inhands/items/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/food_righthand.dmi'
+	contents_tag = "wings"
+	spawn_type = /obj/item/food/fried_chicken
+	spawn_count = 5
+	open_status = FANCY_CONTAINER_ALWAYS_OPEN
+
+/obj/item/storage/fancy/wing_box/Initialize(mapload)
+	. = ..()
+	atom_storage.set_holdable(/obj/item/food/fried_chicken)
+
+/obj/item/storage/fancy/fry_box
+	name = "red fry box"
+	desc = "A cardboard box used for holding fries."
+	icon = 'icons/obj/food/containers.dmi'
+	icon_state = "redfrybox2"
+	base_icon_state = "redfrybox"
+	inhand_icon_state = "redfrybox"
+	lefthand_file = 'icons/mob/inhands/items/food_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items/food_righthand.dmi'
+	contents_tag = "fries"
+	spawn_type = /obj/item/food/fries
+	spawn_count = 2
+	open_status = FANCY_CONTAINER_ALWAYS_OPEN
+
+/obj/item/storage/fancy/fry_box/Initialize(mapload)
+	. = ..()
+	atom_storage.set_holdable(/obj/item/food/fries)
 
 /*
  * Jar of pickles

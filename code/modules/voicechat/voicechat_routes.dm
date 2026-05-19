@@ -17,7 +17,7 @@
 	. = replacetext(., "\\", "\\\\")
 	return .
 
-
+/// this errors if voicechat isnt setup. To stop it, turn off voicechat in voicechat.txt config
 /datum/controller/subsystem/voicechat/proc/send_json(list/data)
 	var/json = json_encode_sanitize(data)
 	#ifdef LOG_TRAFFIC
@@ -65,3 +65,4 @@
 		return
 
 #undef VOICECHAT_LIB_PATH
+// #undef LOG_TRAFFIC

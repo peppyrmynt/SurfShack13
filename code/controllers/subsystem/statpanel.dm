@@ -22,7 +22,7 @@ SUBSYSTEM_DEF(statpanels)
 /datum/controller/subsystem/statpanels/fire(resumed = FALSE)
 	if (!resumed)
 		num_fires++
-		var/datum/map_config/cached = SSmap_vote.next_map_config
+		var/datum/map_config/cached = SSmapping.next_map_config
 		global_data = list(
 			"Map: [SSmapping.current_map?.map_name || "Loading..."]",
 			cached ? "Next Map: [cached.map_name]" : null,

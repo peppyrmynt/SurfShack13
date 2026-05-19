@@ -3,7 +3,7 @@ SUBSYSTEM_DEF(voicechat)
 	name = "Voice Chat"
 	/// faster tick times means smoother proximity. If machine is lagging, increase.
 	wait = 3 //300 ms
-	flags = SS_KEEP_TIMING
+	flags = SS_KEEP_TIMING|SS_OK_TO_FAIL_INIT
 	init_order = INIT_ORDER_VOICECHAT
 	runlevels = RUNLEVEL_GAME|RUNLEVEL_POSTGAME
 	//userCodes associated thats been fully confirmed - browser paired and mic perms on
@@ -24,7 +24,8 @@ SUBSYSTEM_DEF(voicechat)
 	var/list/userCodes_active = list()
 	// each speaker per userCode
 	var/list/userCodes_speaking_icon = alist()
-
+	// SS_INIT_NO_NEED still sets initialized to true, so we use this instead
+	var/actually_initialized = FALSE
 /datum/controller/subsystem/voicechat/Initialize()
 	. = ..()
 
@@ -38,9 +39,9 @@ SUBSYSTEM_DEF(voicechat)
 	add_rooms(list("living", "ghost"))
 	add_rooms(list("lobby"), proximity_mode = FALSE)
 	start_node()
-	initialized = TRUE
 
 	RegisterSignal(SSticker, COMSIG_TICKER_ROUND_ENDED, PROC_REF(on_round_end)) //moves everyone to no prox room at round end.
+	actually_initialized = TRUE
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/voicechat/proc/restart()
@@ -60,7 +61,7 @@ SUBSYSTEM_DEF(voicechat)
 /datum/controller/subsystem/voicechat/proc/start_node()
 	var/byond_port = world.port
 	var/node_port = CONFIG_GET(number/port_voicechat)
-	var/pid = world.process
+	var/pid = UNLINT(world.process)
 	if(!byond_port || !node_port || !pid)
 		message_admins("missing variable {byond_port:[byond_port], node_port:[node_port], pid:[pid]}")
 		return FALSE
@@ -74,9 +75,10 @@ SUBSYSTEM_DEF(voicechat)
 
 
 /datum/controller/subsystem/voicechat/Shutdown()
-	disconnect_all_clients()
-	stop_node()
-	send_ooc_announcement("voicechat stopped")
+	if(actually_initialized)
+		disconnect_all_clients()
+		stop_node()
+		send_ooc_announcement("voicechat stopped")
 	. = ..()
 
 /datum/controller/subsystem/voicechat/proc/disconnect_all_clients()

@@ -431,53 +431,6 @@
 		fish_table[fish_type] = 10
 	return ..()
 
-/datum/unit_test/edible_fish
-
-/datum/unit_test/edible_fish/Run()
-	var/obj/item/fish/fish = allocate(/obj/item/fish/testdummy/food)
-	var/datum/component/edible/edible = fish.GetComponent(/datum/component/edible)
-	TEST_ASSERT(edible, "Fish is not edible")
-	edible.eat_time = 0
-	TEST_ASSERT(fish.GetComponent(/datum/component/infective), "Fish doesn't have the infective component")
-	var/bite_size = edible.bite_consumption
-
-	var/mob/living/carbon/human/consistent/gourmet = allocate(/mob/living/carbon/human/consistent)
-
-	var/food_quality = edible.get_perceived_food_quality(gourmet)
-	TEST_ASSERT(food_quality < 0, "Humans don't seem to dislike raw, unprocessed fish when they should")
-	ADD_TRAIT(gourmet, TRAIT_FISH_EATER, TRAIT_FISH_TESTING)
-	food_quality = edible.get_perceived_food_quality(gourmet)
-	TEST_ASSERT(food_quality >= LIKED_FOOD_QUALITY_CHANGE, "mobs with the TRAIT_FISH_EATER traits don't seem to like fish when they should")
-	REMOVE_TRAIT(gourmet, TRAIT_FISH_EATER, TRAIT_FISH_TESTING)
-
-	fish.attack(gourmet, gourmet)
-	TEST_ASSERT(gourmet.has_reagent(/datum/reagent/consumable/nutriment/protein), "Human doesn't have ingested protein after eating fish")
-	TEST_ASSERT(gourmet.has_reagent(/datum/reagent/blood), "Human doesn't have ingested blood after eating fish")
-	TEST_ASSERT(gourmet.has_reagent(/datum/reagent/fishdummy), "Human doesn't have the reagent from /datum/fish_trait/dummy after eating fish")
-
-	TEST_ASSERT_EQUAL(fish.status, FISH_DEAD, "The fish is not dead, despite having sustained enough damage that it should. health: [fish.health]")
-
-	var/obj/item/organ/stomach/belly = gourmet.get_organ_slot(ORGAN_SLOT_STOMACH)
-	belly.reagents.clear_reagents()
-
-	fish.set_status(FISH_ALIVE)
-	TEST_ASSERT(!fish.bites_amount, "bites_amount wasn't reset after the fish revived")
-
-	fish.update_size_and_weight(fish.size, FISH_WEIGHT_BITE_DIVISOR)
-	fish.AddElement(/datum/element/fried_item, FISH_SAFE_COOKING_DURATION)
-	TEST_ASSERT_EQUAL(fish.status, FISH_DEAD, "The fish didn't die after being cooked")
-	TEST_ASSERT(bite_size < edible.bite_consumption, "The bite_consumption value hasn't increased after being cooked (it removes blood but doubles protein). Value: [bite_size]")
-	TEST_ASSERT(!(edible.foodtypes & (RAW|GORE)), "Fish still has the GORE and/or RAW foodtypes flags after being cooked")
-	TEST_ASSERT(!fish.GetComponent(/datum/component/infective), "Fish still has the infective component after being cooked for long enough")
-
-
-	food_quality = edible.get_perceived_food_quality(gourmet)
-	TEST_ASSERT(food_quality >= 0, "Humans still dislike fish, even when it's cooked")
-	fish.attack(gourmet, gourmet)
-	TEST_ASSERT(!gourmet.has_reagent(/datum/reagent/blood), "Human has ingested blood from eating a fish when it shouldn't since the fish has been cooked")
-
-	TEST_ASSERT(QDELETED(fish), "The fish is not being deleted, despite having sustained enough bites. Reagents volume left: [fish.reagents.total_volume]")
-
 /obj/item/fish/testdummy/food
 	average_weight = FISH_WEIGHT_BITE_DIVISOR * 2 //One bite, it's death; the other, it's gone.
 

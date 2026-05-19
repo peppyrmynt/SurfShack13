@@ -59,7 +59,6 @@
 	desc = "A weak welder made with a can, some beer, and a pipe. Once the beer is burning, you can't put it out. Use a screwdriver to put more beer in."
 	icon = 'surfshack13/icons/improvtools.dmi'
 	icon_state = "impwelder"
-	inhand_icon_state = "impwelder"
 	max_fuel = 10
 	reagent_fuel = /datum/reagent/consumable/ethanol/beer
 	custom_materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT)
@@ -67,6 +66,7 @@
 	deactivation_sound = 'sound/items/tools/wirecutter.ogg'
 	can_disable = FALSE
 	toolspeed = 2
+	change_icons = FALSE
 
 /datum/crafting_recipe/welder_improv
 	name = "Improvised Welding Tool"
