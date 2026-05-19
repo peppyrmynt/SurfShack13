@@ -1,6 +1,8 @@
 
 /mob/living/basic/slime/Life(seconds_per_tick = SSMOBS_DT, times_fired)
-	..()
+	. = ..()
+	if(!.) //dead or deleted
+		return
 
 	if(!HAS_TRAIT(src, TRAIT_STASIS)) //No hunger in stasis
 		handle_nutrition(seconds_per_tick)
@@ -16,8 +18,6 @@
 
 ///Handles if a slime's environment would cause it to enter stasis. Ignores TRAIT_STASIS
 /mob/living/basic/slime/proc/handle_slime_stasis(seconds_per_tick)
-	if(!loc)
-		return
 	var/datum/gas_mixture/environment = loc.return_air()
 
 	var/bz_percentage = 0
