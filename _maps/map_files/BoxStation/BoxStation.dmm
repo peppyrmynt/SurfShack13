@@ -1124,9 +1124,7 @@
 "adM" = (
 /obj/machinery/light/directional/south,
 /obj/machinery/modular_computer/preset/civilian{
-	dir = 8;
-	pixel_y = 2;
-	pixel_x = 5
+	dir = 8
 	},
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 6
@@ -5205,12 +5203,11 @@
 /area/station/hallway/primary/fore)
 "aoD" = (
 /obj/structure/extinguisher_cabinet/directional/south,
-/obj/machinery/computer/warrant{
-	dir = 8
-	},
 /obj/effect/turf_decal/tile/neutral/half,
-/obj/effect/turf_decal/bot,
 /obj/machinery/camera/autoname/directional/south,
+/obj/structure/railing/corner/end/flip{
+	dir = 4
+	},
 /turf/open/floor/iron/edge,
 /area/station/hallway/primary/fore)
 "aoH" = (
@@ -5232,13 +5229,14 @@
 /turf/open/floor/plating,
 /area/station/maintenance/fore/greater)
 "aoK" = (
-/obj/structure/railing{
-	dir = 9
-	},
-/obj/effect/turf_decal/tile/neutral/full,
-/obj/effect/spawner/random/vending/colavend,
 /obj/effect/turf_decal/bot,
-/turf/open/floor/iron/dark/smooth_large,
+/obj/structure/railing{
+	dir = 5
+	},
+/obj/machinery/computer/warrant{
+	dir = 8
+	},
+/turf/open/floor/iron/large,
 /area/station/hallway/primary/fore)
 "aoL" = (
 /obj/machinery/airalarm/directional/north,
@@ -14182,6 +14180,7 @@
 /obj/machinery/computer/public_announcement{
 	dir = 4
 	},
+/obj/effect/turf_decal/bot,
 /turf/open/floor/iron/edge{
 	dir = 8
 	},
@@ -15637,9 +15636,9 @@
 /area/station/hallway/primary/central)
 "aZZ" = (
 /obj/item/radio/intercom/directional/south,
-/obj/machinery/vending/cigarette,
 /obj/effect/turf_decal/tile/neutral/full,
 /obj/effect/turf_decal/bot,
+/obj/machinery/vending/coffee,
 /turf/open/floor/iron/large,
 /area/station/service/cafeteria)
 "bab" = (
@@ -20005,9 +20004,6 @@
 /turf/open/floor/iron/corner,
 /area/station/cargo/lobby)
 "bnJ" = (
-/obj/structure/chair{
-	dir = 8
-	},
 /obj/machinery/firealarm/directional/north,
 /obj/effect/turf_decal/trimline/brown/filled/line{
 	dir = 5
@@ -20019,6 +20015,7 @@
 	dir = 4
 	},
 /obj/machinery/camera/autoname/directional/north,
+/obj/item/kirbyplants/random,
 /turf/open/floor/iron/corner{
 	dir = 8
 	},
@@ -31276,6 +31273,8 @@
 /obj/effect/turf_decal/tile/neutral/anticorner{
 	dir = 8
 	},
+/obj/machinery/vending/coffee,
+/obj/effect/turf_decal/bot,
 /turf/open/floor/iron/corner{
 	dir = 4
 	},
@@ -31598,8 +31597,7 @@
 /area/station/hallway/primary/aft)
 "bZz" = (
 /obj/machinery/rnd/production/protolathe/department/engineering{
-	pixel_y = 0;
-	pixel_x = -3
+	pixel_y = 0
 	},
 /obj/effect/turf_decal/tile/yellow/full,
 /obj/structure/cable,
@@ -31831,10 +31829,7 @@
 /obj/machinery/airalarm/directional/west{
 	pixel_x = -30
 	},
-/obj/machinery/rnd/production/circuit_imprinter{
-	pixel_y = 3;
-	pixel_x = -3
-	},
+/obj/machinery/rnd/production/circuit_imprinter,
 /obj/effect/turf_decal/tile/yellow/full,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/iron/large,
@@ -44341,6 +44336,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/tile/neutral/half,
+/obj/effect/turf_decal/bot,
 /turf/open/floor/iron/edge,
 /area/station/hallway/secondary/exit/departure_lounge)
 "fkv" = (
@@ -46284,6 +46280,8 @@
 /obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
 	dir = 1
 	},
+/obj/machinery/vending/coffee,
+/obj/effect/turf_decal/bot,
 /turf/open/floor/iron/edge{
 	dir = 1
 	},
@@ -47476,13 +47474,12 @@
 /turf/open/floor/iron/dark/textured_half,
 /area/station/security/execution/education)
 "gDx" = (
-/obj/effect/spawner/random/entertainment/arcade{
-	dir = 1
-	},
 /obj/effect/turf_decal/tile/neutral/anticorner{
 	dir = 8
 	},
 /obj/item/radio/intercom/directional/south,
+/obj/machinery/vending/coffee,
+/obj/effect/turf_decal/bot,
 /turf/open/floor/iron/corner{
 	dir = 4
 	},
@@ -50644,9 +50641,6 @@
 	},
 /obj/effect/landmark/start/assistant,
 /obj/effect/turf_decal/tile/neutral/half,
-/obj/structure/railing/corner/end{
-	dir = 8
-	},
 /turf/open/floor/iron/dark/smooth_edge,
 /area/station/hallway/primary/fore)
 "hZM" = (
@@ -52973,6 +52967,8 @@
 /obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
 	dir = 1
 	},
+/obj/machinery/vending/coffee,
+/obj/effect/turf_decal/bot,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
 	},
@@ -55462,9 +55458,9 @@
 /turf/open/floor/iron/small,
 /area/station/commons/vacant_room/commissary)
 "kdH" = (
-/obj/effect/spawner/random/vending/snackvend,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/tile/neutral/full,
+/obj/machinery/vending/coffee,
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 8
 	},
@@ -67482,12 +67478,10 @@
 "pjA" = (
 /obj/structure/sign/poster/official/build/directional/north,
 /obj/machinery/light/directional/west,
-/obj/structure/table{
-	pixel_x = -3
-	},
+/obj/structure/table,
 /obj/item/flatpack/flatpacker{
-	pixel_x = -3;
-	pixel_y = 4
+	pixel_w = 0;
+	pixel_z = 5
 	},
 /obj/effect/turf_decal/tile/yellow/full,
 /turf/open/floor/iron/large,
@@ -76743,8 +76737,7 @@
 /area/station/science/circuits)
 "tuR" = (
 /obj/machinery/modular_computer/preset/cargochat/engineering{
-	dir = 1;
-	pixel_y = -5
+	dir = 1
 	},
 /obj/effect/turf_decal/trimline/yellow/filled/line,
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
