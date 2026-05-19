@@ -60,8 +60,6 @@
 	uplink_item_flags = SYNDIE_TRIPS_CONTRABAND
 	surplus = 15
 
-
-
 /datum/uplink_item/role_restricted/ancient_jumpsuit
 	name = "Ancient Jumpsuit"
 	desc = "A tattered old jumpsuit that will provide absolutely no benefit to you."
