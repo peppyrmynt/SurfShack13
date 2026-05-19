@@ -16,6 +16,8 @@
 
 ///Handles if a slime's environment would cause it to enter stasis. Ignores TRAIT_STASIS
 /mob/living/basic/slime/proc/handle_slime_stasis(seconds_per_tick)
+	if(!loc)
+		return
 	var/datum/gas_mixture/environment = loc.return_air()
 
 	var/bz_percentage = 0
