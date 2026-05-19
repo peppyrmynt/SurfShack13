@@ -320,7 +320,6 @@
 		if(WEST)
 			tube_dirs = list(WEST, SOUTHEAST, NORTHEAST)
 
-
 /obj/structure/transit_tube/crossing
 	icon_state = "crossing"
 	tube_construction = /obj/structure/c_transit_tube/crossing
