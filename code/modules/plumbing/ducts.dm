@@ -55,13 +55,11 @@ All the important duct code:
 	if(no_anchor)
 		active = FALSE
 		set_anchored(FALSE)
-#ifndef UNIT_TESTS // If whatever tile create_and_destroy runs on has a duct, this will fail it
 	else if(!can_anchor())
 		if(mapload)
 			log_mapping("Overlapping ducts detected at [AREACOORD(src)], unanchoring one.")
 		// Note that qdeling automatically drops a duct stack
 		return INITIALIZE_HINT_QDEL
-#endif
 
 	handle_layer()
 
