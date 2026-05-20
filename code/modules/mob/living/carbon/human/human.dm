@@ -1160,9 +1160,6 @@
 
 /mob/living/carbon/human/species/lizard/ashwalker
 	race = /datum/species/lizard/ashwalker
-	//surfshack start
-	voice_chat_room = ROOM_LIGGER
-	//surfshack end
 
 /mob/living/carbon/human/species/lizard/silverscale
 	race = /datum/species/lizard/silverscale

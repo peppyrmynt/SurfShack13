@@ -33,7 +33,7 @@
 	flags_1 = PREVENT_CONTENTS_EXPLOSION_1
 	can_buckle_to = FALSE
 	//surfshack start
-	voice_chat_room = ROOM_LIGGER
+	voice_chat_room = ROOM_LAVALAND
 	//surfshack end
 	/// Crusher loot dropped when the megafauna is killed with a crusher
 	var/list/crusher_loot

@@ -186,6 +186,9 @@ Lizard subspecies: ASHWALKERS
 		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/lizard,
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/lizard,
 	)
+	//surfshack start
+	voice_chat_room_on_gain = ROOM_LAVALAND
+	//surfshack end
 
 /datum/species/lizard/ashwalker/get_physical_attributes()
 	return "Ash Walkers are identical to lizardpeople in almost all aspects. \
