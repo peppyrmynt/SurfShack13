@@ -28,6 +28,26 @@
 	///Bank account we're connected to.
 	var/datum/bank_account/synced_bank_account
 
+	///Can we reset this bank machine back to the cargo department? Just to ensure mappers don't accidentally give out the cargo budget.
+	var/account_resetable = TRUE
+	///If reset, which dept budget do we reset to?
+	var/account_reset_dept = ACCOUNT_CAR
+	///If reset, what's the name of the dept budget we're resetting back to?
+	var/account_reset_name = ACCOUNT_CAR_NAME
+
+/obj/machinery/computer/bank_machine/examine(mob/user)
+	. = ..()
+	if(account_resetable)
+		. += "Ctrl-Click to reset the bank machine's linked departmental budget."
+
+/obj/machinery/computer/bank_machine/click_ctrl(mob/user)
+	if(account_department == account_reset_dept)
+		return
+	account_department = account_reset_dept
+	account_dept_name = account_reset_name
+	synced_bank_account = SSeconomy.get_dep_account(account_reset_dept)
+	say("Account department reset!")
+
 /obj/machinery/computer/bank_machine/Initialize(mapload)
 	. = ..()
 	radio = new(src)
