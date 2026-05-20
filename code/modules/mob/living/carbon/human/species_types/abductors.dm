@@ -29,6 +29,7 @@
 	)
 	//surfshack start
 	voice_chat_room_on_gain = ROOM_GLOBAL_ABDUCTOR
+	set_voice_icon_state = "ayy"
 	//surfshack end
 
 /datum/species/abductor/get_physical_attributes()

@@ -16,6 +16,7 @@
 	heat_protection = 0.5 // minor heat insulation
 	//surfshack start
 	voice_chat_room = ROOM_XENO
+	voice_icon_state = "ayy"
 	//surfshack end
 	///Whether or not the alien is leaping. Only used by hunters.
 	var/leaping = FALSE

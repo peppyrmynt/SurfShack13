@@ -18,7 +18,7 @@ this will be replaced by logic in  code/modules/language/_language_holder.dm
 #define ROOM_SPIDER "room_spider"
 /// for swarmers
 #define ROOM_SWARMER "room_swarmer"
-/// for aliens but not abductors, as they can speak common
+/// for aliens but not abductors
 #define ROOM_XENO "room_xeno"
 
 /// prevent mob from connecting to voice chat'

@@ -20,15 +20,11 @@ SUBSYSTEM_DEF(voicechat)
 	var/list/userCode_mob_map = alist()
 	// mob to client map, needed for tracking switched mobs
 	var/list/mob_client_map = alist()
-	// used to manage overlays
-	var/list/userCodes_active = list()
-	// each speaker per userCode
-	var/list/userCodes_speaking_icon = alist()
 	// SS_INIT_NO_NEED still sets initialized to true, so we use this instead
 	var/actually_initialized = FALSE
+
 /datum/controller/subsystem/voicechat/Initialize()
 	. = ..()
-
 	if(!CONFIG_GET(flag/enable_voicechat))
 		return SS_INIT_NO_NEED
 
@@ -48,7 +44,7 @@ SUBSYSTEM_DEF(voicechat)
 	send_ooc_announcement("Voicechat restarting in a few seconds, please reconnect with join")
 	disconnect_all_clients()
 	stop_node()
-	addtimer(CALLBACK(src, PROC_REF(start_node), 4 SECONDS))
+	spawn(4 SECONDS) start_node()
 
 /datum/controller/subsystem/voicechat/proc/on_ice_failed(userCode)
 	// if(!userCode)
@@ -88,8 +84,7 @@ SUBSYSTEM_DEF(voicechat)
 
 /datum/controller/subsystem/voicechat/proc/stop_node()
 	send_json(alist(cmd= "stop_node"))
-	addtimer(CALLBACK(src, PROC_REF(ensure_node_stopped), 3 SECONDS))
-
+	spawn(3 SECONDS) ensure_node_stopped()
 
 /datum/controller/subsystem/voicechat/proc/ensure_node_stopped()
 	var/pid = file2text("node.pid")
@@ -197,11 +192,11 @@ SUBSYSTEM_DEF(voicechat)
 			var/room_noprox = room + "_noprox"
 			if(!packet[room_noprox])
 				packet[room_noprox] = list()
-			packet[room_noprox][userCode] = list(1, 1) //very hacky bismallah
+			packet[room_noprox][userCode] = list(1, 1)
 
 		locs_sent ++
 
-	if(!length(locs_sent)) //dont send empty packets
+	if(!locs_sent) //dont send empty packets
 		return
 	send_json(packet)
 

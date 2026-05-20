@@ -50,6 +50,7 @@
 	worn_slot_flags = ITEM_SLOT_HEAD
 	//surfshack start
 	voice_chat_room = ROOM_DRONE
+	voice_icon_state = ""
 	//surfshack end
 	/// `TRUE` if we have picked our visual appearance, `FALSE` otherwise (default)
 	var/picked = FALSE

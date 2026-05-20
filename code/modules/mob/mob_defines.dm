@@ -214,4 +214,7 @@
 	//surfshack start
 	/// The voicechat room to use for this type
 	var/voice_chat_room = ROOM_INVALID
+	/// voice indicator image
+	var/obj/effect/voice_image
+	var/voice_icon_state = "default"
 	//surfshack end
