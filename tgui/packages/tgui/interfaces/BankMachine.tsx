@@ -15,6 +15,7 @@ type Data = {
   current_balance: number;
   siphoning: BooleanLike;
   station_name: string;
+  department_acc: string;
 };
 
 export const BankMachine = (props) => {
