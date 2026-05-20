@@ -895,7 +895,8 @@
 /area/station/security/prison/visit)
 "ade" = (
 /obj/structure/reagent_dispensers/plumbed{
-	name = "prison reservoir"
+	name = "prison reservoir";
+	dir = 4
 	},
 /obj/structure/window/reinforced/spawner/directional/north,
 /turf/open/floor/plating,
@@ -4749,7 +4750,6 @@
 /obj/structure/window/reinforced/spawner/directional/south,
 /obj/structure/window/reinforced/spawner/directional/east,
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/greater)
 "ano" = (
@@ -7106,14 +7106,14 @@
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/fore)
 "awF" = (
-/obj/structure/reagent_dispensers/plumbed{
-	name = "service reservoir"
-	},
 /obj/machinery/door/window/left/directional/south{
 	req_access = list("service");
 	name = "Service Water Supply"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/reagent_dispensers/plumbed{
+	name = "service reservoir"
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/fore)
 "awH" = (
@@ -13863,14 +13863,14 @@
 /turf/open/floor/iron/dark/textured_edge,
 /area/station/security/execution/education)
 "aTO" = (
-/obj/structure/reagent_dispensers/plumbed{
-	name = "service reservoir"
-	},
 /obj/machinery/door/window/right/directional/south{
 	name = "Service Water Supply";
 	req_access = list("service")
 	},
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/reagent_dispensers/plumbed{
+	name = "service reservoir"
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/fore)
 "aTP" = (
@@ -26145,10 +26145,7 @@
 	},
 /area/station/cargo/bitrunning/den)
 "bGq" = (
-/obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
@@ -29787,7 +29784,6 @@
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "bSs" = (
-/obj/structure/reagent_dispensers/watertank,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/sign/poster/random/directional/west,
 /obj/machinery/light/small/directional/west,
@@ -32082,7 +32078,6 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/duct,
 /obj/structure/disposalpipe/segment{
 	dir = 4;
 	color = "lightblue"
@@ -32275,6 +32270,7 @@
 	pixel_y = -3
 	},
 /obj/effect/decal/cleanable/dirt,
+/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "ccv" = (
@@ -32909,8 +32905,16 @@
 /turf/open/floor/iron/white,
 /area/station/science/research)
 "ceY" = (
-/obj/structure/reagent_dispensers/fueltank,
 /obj/effect/decal/cleanable/dirt,
+/obj/structure/reagent_dispensers/plumbed{
+	name = "engineering reservoir";
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/south,
+/obj/machinery/door/window/right/directional/east{
+	name = "Engineering Water Supply";
+	req_one_access = list("engine_equip","atmospherics")
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "ceZ" = (
@@ -40987,10 +40991,8 @@
 /area/station/science/xenobiology)
 "dSW" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/reagent_dispensers/plumbed{
-	name = "service reservoir"
-	},
 /obj/structure/window/reinforced/spawner/directional/east,
+/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "dTa" = (
@@ -43811,7 +43813,6 @@
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/greater)
 "eZH" = (
@@ -44340,9 +44341,16 @@
 /turf/open/floor/iron/edge,
 /area/station/hallway/secondary/exit/departure_lounge)
 "fkv" = (
-/obj/effect/spawner/random/structure/closet_maintenance,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/maintenance/three,
+/obj/machinery/plumbing/synthesizer{
+	reagent_id = /datum/reagent/water;
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/north,
+/obj/machinery/door/window/left/directional/east{
+	name = "Engineering Water Supply";
+	req_one_access = list("engine_equip","atmospherics")
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "fkx" = (
@@ -44677,6 +44685,14 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/greater)
+"fpG" = (
+/obj/structure/reagent_dispensers/plumbed{
+	name = "engineering reservoir";
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "fpH" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
@@ -45652,7 +45668,6 @@
 /obj/effect/spawner/random/maintenance,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "fMp" = (
@@ -45764,7 +45779,6 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/duct,
 /obj/structure/disposalpipe/segment{
 	dir = 9;
 	color = "lightblue"
@@ -51662,6 +51676,12 @@
 	color = "lightblue"
 	},
 /obj/machinery/light/small/directional/west,
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
+"ivW" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/mapping_helpers/burnt_floor,
+/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "iwh" = (
@@ -58496,7 +58516,7 @@
 "lwj" = (
 /obj/machinery/plumbing/synthesizer{
 	reagent_id = /datum/reagent/water;
-	dir = 1
+	dir = 4
 	},
 /obj/structure/window/reinforced/spawner/directional/south,
 /turf/open/floor/plating,
@@ -58578,7 +58598,8 @@
 "lyk" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/reagent_dispensers/plumbed{
-	name = "service reservoir"
+	name = "abandoned reservoir";
+	dir = 4
 	},
 /obj/effect/mapping_helpers/burnt_floor,
 /turf/open/floor/plating,
@@ -63932,9 +63953,9 @@
 "nPw" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/plumbing/synthesizer{
-	reagent_id = /datum/reagent/water
+	reagent_id = /datum/reagent/water;
+	dir = 4
 	},
-/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "nPC" = (
@@ -71237,7 +71258,6 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "qTM" = (
@@ -75967,7 +75987,6 @@
 /obj/structure/sign/poster/random/directional/east,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "teO" = (
@@ -77244,11 +77263,11 @@
 /turf/open/floor/circuit,
 /area/station/ai_monitored/turret_protected/ai_upload)
 "tHL" = (
+/obj/structure/window/reinforced/spawner/directional/south,
+/obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/reagent_dispensers/plumbed{
 	name = "service reservoir"
 	},
-/obj/structure/window/reinforced/spawner/directional/south,
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/fore)
 "tHP" = (
@@ -111661,7 +111680,7 @@ wJz
 fmC
 fLP
 fLP
-bGq
+oWS
 teJ
 qTD
 cbw
@@ -111921,9 +111940,9 @@ fGe
 fGe
 fGe
 amJ
-pIS
+fkM
 fkv
-amJ
+fpG
 ceY
 bSs
 soA
@@ -112179,9 +112198,9 @@ bWB
 fGe
 cax
 fPd
-soA
+bGq
 ccu
-xuw
+ivW
 oXI
 oru
 fGe
