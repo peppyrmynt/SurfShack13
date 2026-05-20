@@ -234,7 +234,6 @@
 		return
 	var/mob/M = C.mob
 	var/mob/old_mob = userCode_mob_map[userCode]
-	var/moved_mobs = (C.mob != userCode)
 	if(M != old_mob)
 		if(old_mob)
 			old_mob.toggle_voice_overlay(FALSE)
