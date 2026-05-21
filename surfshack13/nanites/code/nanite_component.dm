@@ -46,6 +46,11 @@
 	///The techweb these Nanites are synced to, to generate Nanite research points
 	var/datum/techweb/linked_techweb
 
+	///If any programs boost or lower the research rate, modify this var.
+	var/bonus_research_val = 0
+	///Alt var of the one above, boosts GENERAL research points.
+	var/bonus_gen_res_val = 0
+
 /datum/component/nanites/Initialize(
 	datum/techweb/linked_techweb,
 	nanite_volume = NANITE_DEFAULT_STARTING_VOLUME,
@@ -351,11 +356,14 @@
 /datum/component/nanites/proc/add_research()
 	if(host_mob.stat == DEAD || !host_mob.client)
 		return
-	var/research_value = NANITE_BASE_RESEARCH
+	var/research_value = NANITE_BASE_RESEARCH + bonus_research_val
 	if(!ishuman(host_mob))
 		research_value *= 0.5
 	if(linked_techweb)
 		linked_techweb.add_point_list(list(TECHWEB_POINT_TYPE_NANITES = research_value))
+	if(bonus_gen_res_val != 0)
+		var/datum/techweb/station_techweb = locate(/datum/techweb/science) in SSresearch.techwebs
+		station_techweb.add_point_list(list(TECHWEB_POINT_TYPE_GENERIC = bonus_gen_res_val))
 
 /datum/component/nanites/proc/on_healthscan(datum/source, list/render_list, advanced, mob/user, mode)
 	SIGNAL_HANDLER
