@@ -1,6 +1,6 @@
 // Ritual spells which affect the station at large
 /// How much threat we need to let these rituals happen on dynamic
-#define MINIMUM_THREAT_FOR_RITUALS 98
+#define MINIMUM_THREAT_FOR_RITUALS 0
 
 /datum/spellbook_entry/summon/ghosts
 	name = "Summon Ghosts"
