@@ -6596,6 +6596,7 @@
 #include "surfshack13\code\modules\swarmers\swarmer_ruleset.dm"
 #include "surfshack13\code\modules\unit_test\_unit_test.dm"
 #include "surfshack13\code\modules\uplink\uplink_items\dangerous.dm"
+#include "surfshack13\code\modules\uplink\uplink_items\job.dm"
 #include "surfshack13\code\modules\vehicles\mecha\combat\locker_mech.dm"
 #include "surfshack13\code\modules\voicechat\_voicechat.dm"
 #include "surfshack13\code\modules\voicechat\voicechat_clientstuff.dm"
