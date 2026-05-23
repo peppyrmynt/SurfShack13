@@ -17,7 +17,7 @@
 	return ..()
 
 /datum/nanite_program/regenerative/active_effect()
-	if(iscarbon(host_mob))
+	if(!iscarbon(host_mob))
 		host_mob.adjustBruteLoss(-0.5, TRUE)
 		host_mob.adjustFireLoss(-0.5, TRUE)
 		return
@@ -33,7 +33,7 @@
 	rogue_types = list(/datum/nanite_program/suffocating, /datum/nanite_program/necrotic)
 
 /datum/nanite_program/regenerative_advanced/active_effect()
-	if(iscarbon(host_mob))
+	if(!iscarbon(host_mob))
 		host_mob.adjustBruteLoss(-3, TRUE)
 		host_mob.adjustFireLoss(-3, TRUE)
 		return
@@ -59,15 +59,14 @@
 
 /datum/nanite_program/purging
 	name = "Blood Purification"
-	desc = "The nanites purge toxins and chemicals from the host's bloodstream. Doesn't consume nanites until the host is poisoned."
+	desc = "The nanites purge toxins and chemicals from the host's bloodstream. Consumes nanites even if it has no effect."
 	use_rate = 1
 	rogue_types = list(/datum/nanite_program/suffocating, /datum/nanite_program/necrotic)
 
 /datum/nanite_program/purging/check_conditions()
-	var/foreign_reagent = length(host_mob.reagents?.reagent_list)
-	if(!host_mob.getToxLoss() && !foreign_reagent)
-		return FALSE
-	return ..()
+	. = ..()
+	if(!. || !host_mob.reagents)
+		return FALSE // No trying to purge simple mobs
 
 /datum/nanite_program/purging/active_effect()
 	host_mob.adjustToxLoss(-1)
@@ -153,19 +152,14 @@
 /datum/nanite_program/purging_advanced
 	name = "Selective Blood Purification"
 	desc = "The nanites purge toxins and dangerous chemicals from the host's bloodstream, while ignoring beneficial chemicals. \
-			The added processing power required to analyze the chemicals severely increases the nanite consumption rate. \
-			Doesn't consume nanites should the host not be poisoned."
+			The added processing power required to analyze the chemicals severely increases the nanite consumption rate. Consumes nanites even if it has no effect."
 	use_rate = 2
 	rogue_types = list(/datum/nanite_program/suffocating, /datum/nanite_program/necrotic)
 
 /datum/nanite_program/purging_advanced/check_conditions()
-	var/foreign_reagent = FALSE
-	for(var/datum/reagent/toxin/toxic_reagents in host_mob.reagents.reagent_list)
-		foreign_reagent = TRUE
-		break
-	if(!host_mob.getToxLoss() && !foreign_reagent)
+	. = ..()
+	if(!. || !host_mob.reagents)
 		return FALSE
-	return ..()
 
 /datum/nanite_program/purging_advanced/active_effect()
 	host_mob.adjustToxLoss(-1)
@@ -178,16 +172,6 @@
 			Doesn't consume nanites if the host's brain isn't damaged in any capacity."
 	use_rate = 3
 	rogue_types = list(/datum/nanite_program/brain_decay, /datum/nanite_program/brain_misfire)
-
-/datum/nanite_program/brain_heal_advanced/check_conditions()
-	var/problems = FALSE
-	if(iscarbon(host_mob))
-		var/mob/living/carbon/carbon_host = host_mob
-		if(length(carbon_host.get_traumas()))
-			problems = TRUE
-	if(host_mob.get_organ_loss(ORGAN_SLOT_BRAIN) > 0)
-		problems = TRUE
-	return problems ? ..() : FALSE
 
 /datum/nanite_program/brain_heal_advanced/active_effect()
 	host_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, -2)
@@ -231,54 +215,6 @@
 	SEND_SIGNAL(carbon_host, COMSIG_LIVING_MINOR_SHOCK)
 	log_game("[carbon_host] has been successfully defibrillated by nanites.")
 
-
-/datum/nanite_program/regenerative_oxy
-	name = "Blood Oxygenation"
-	desc = "The nanites expend themselves to enrich the host's blood with oxygen, whether it be synthesized or extracted from the environment around the host. \
-			Doesn't consume nanites should the host not be oxygen-deprived."
-	use_rate = 0.2
-	rogue_types = list(/datum/nanite_program/necrotic)
-
-/datum/nanite_program/regenerative_oxy/check_conditions()
-	if(!iscarbon(host_mob))
-		return FALSE
-	if(!host_mob.getOxyLoss())
-		return FALSE
-	return ..()
-
-/datum/nanite_program/regenerative_oxy/active_effect()
-	if(iscarbon(host_mob))
-		host_mob.adjustOxyLoss(-0.2, TRUE)
-		return
-
-
-/datum/nanite_program/organrepair
-	name = "Organ Repair"
-	desc = "The nanites begin repairing the host's organs should they be damaged. Does not include brain damage."
-	use_rate = 0.4
-	rogue_types = list(/datum/nanite_program/necrotic)
-
-/datum/nanite_program/organrepair/check_conditions()
-	if(!iscarbon(host_mob))
-		return FALSE
-	return ..()
-
-/datum/nanite_program/organrepair/active_effect()
-	if(prob(2))
-		to_chat(host_mob, "<span class='warning'>You feel your innards twitch.")
-
-	if(iscarbon(host_mob))
-		var/mob/living/carbon/Carbon_mob = host_mob
-		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_HEART, -0.5)
-		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_LUNGS, -0.5)
-		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_LIVER, -0.5)
-		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_STOMACH, -0.5)
-		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EYES, -0.5)
-		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EARS, -0.5)
-		Carbon_mob.adjustOrganLoss(ORGAN_SLOT_APPENDIX, -0.5)
-		Carbon_mob.updatehealth()
-
-
 /datum/nanite_program/corpsepreserve
 	name = "Corpse Preservation"
 	desc = "The nanites will synthesize a small amount of formaldehyde upon the host's death."
@@ -306,278 +242,26 @@
 		spent = FALSE
 		return
 
-
-/datum/nanite_program/critstable
-	name = "Critical Stabilization"
-	desc = "The nanites will synthesize epinephrine when the host enters a critical state."
-	use_rate = 0
-	rogue_types = list(/datum/nanite_program/suffocating)
-	var/spent = FALSE
-
-/datum/nanite_program/critstable/check_conditions()
-	if(!iscarbon(host_mob))
-		return FALSE
-	return ..()
-
-/datum/nanite_program/critstable/active_effect()
-	if(HAS_TRAIT(host_mob, TRAIT_CRITICAL_CONDITION))
-		var/datum/reagent/S = host_mob.reagents?.has_reagent(/datum/reagent/medicine/epinephrine)
-		if(S)
-			return
-		if(!spent)
-			spent = TRUE
-			nanites.adjust_nanites(null, -15)
-			host_mob.reagents.add_reagent(/datum/reagent/medicine/epinephrine, 15)
-			return
-		return
-	else
-		spent = FALSE
-		return
-
-
 /datum/nanite_program/naniteresus
 	name = "Nanite Resurrection"
-	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection. \
-			Cannot repair corpses, and requires them to be unhusked."
+	desc = "The nanites expend a large portion of themselves to create a strange reagent while the host is dead, which may result in their resurrection. Only works on animals."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
 	can_trigger = TRUE
-	trigger_cost = 45 // Higher cost than defib
-	trigger_cooldown = 180 // Higher cooldown for a more effective revive.
-	var/hasnotified = FALSE
-
-/datum/nanite_program/naniteresus/proc/check_revivable()
-	if(!iscarbon(host_mob))
-		return FALSE
-	if((host_mob.getBruteLoss() + host_mob.getFireLoss() + host_mob.getToxLoss() >= 100 || HAS_TRAIT(host_mob, TRAIT_HUSK))) //body is too damaged to be revived
-		return FALSE // We don't repair corpses, just revive them. (and make them not die afterward)
-	var/mob/living/carbon/carbon_host = host_mob
-	return carbon_host.can_defib()
+	trigger_cost = 200
+	trigger_cooldown = 600
 
 /datum/nanite_program/naniteresus/on_trigger(comm_message)
-	if(host_mob.stat == DEAD)
-		if(check_revivable())
-			if(!hasnotified)
-				host_mob.notify_revival("You're being resurrected by nanites! Re-enter your corpse at your earliest conveinence.")
-				hasnotified = TRUE
-			host_mob.do_jitter_animation(10)
-			addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 40) //jitter immediately, then again after 4 and 8 seconds
-			addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 80)
-			sleep(10 SECONDS) //so the ghost has time to re-enter
-			if(iscarbon(host_mob))
-				var/mob/living/carbon/Carbon_mob = host_mob
-				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, -50)
-				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_HEART, -25)
-				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_LUNGS, -25)
-				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_LIVER, -25)
-				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_STOMACH, -25)
-				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EYES, -25)
-				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_EARS, -25)
-				Carbon_mob.adjustOrganLoss(ORGAN_SLOT_APPENDIX, -10)
-				Carbon_mob.adjustBruteLoss(-10)
-				Carbon_mob.adjustFireLoss(-10)
-				Carbon_mob.adjustOxyLoss(-101, 0)
-				Carbon_mob.adjustToxLoss(-20, 0, TRUE)
-				Carbon_mob.blood_volume += 10
-				Carbon_mob.set_heartattack(FALSE)
-				Carbon_mob.updatehealth()
-			if(host_mob.revive())
-				host_mob.emote("gasp")
-				nanites.adjust_nanites(null, -35)
-				log_combat(host_mob, host_mob, "revived", src)
-				hasnotified = FALSE
-		else // just for basic mobs, might as well.
-			if(!iscarbon(host_mob) && host_mob.revive())
-				nanites.adjust_nanites(null, -35)
-				log_combat(host_mob, host_mob, "revived", src)
-			else // Many programs like Accelerated Regeneration don't heal basic mobs. However, brute mending and burn mending are exceptions. But... i'll make it slowly revive em just to be safe.
-				host_mob.adjustBruteLoss(-5)
-				host_mob.adjustFireLoss(-5)
+	if(host_mob.stat == DEAD && !iscarbon(host_mob))
+		host_mob.notify_revival("You're being resurrected by nanites! Re-enter your corpse at your earliest conveinence.")
+		host_mob.do_jitter_animation(10)
+		addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 4 SECONDS) //jitter immediately, then again after 4 and 8 seconds
+		addtimer(CALLBACK(host_mob, TYPE_PROC_REF(/mob/living/carbon, do_jitter_animation), 10), 8 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(do_revive)), 10 SECONDS)
 
-
-/datum/nanite_program/synthflesh
-	name = "Corpse Repair"
-	desc = "The nanites will slowly produce synthetic flesh over time, and use that to both patch the host's injuries and unhusk them. It only works on dead people."
-	use_rate = 2
-	rogue_types = list(/datum/nanite_program/necrotic)
-
-/datum/nanite_program/synthflesh/check_conditions()
-	if(!host_mob.getBruteLoss() && !host_mob.getFireLoss())
-		return FALSE
-	return ..()
-
-/datum/nanite_program/synthflesh/active_effect(mob/living/M)
-	var/can_heal = FALSE
-	if(iscarbon(host_mob))
-		//var/mob/living/carbon/C = host_mob
-		if(host_mob.stat == DEAD)
-			can_heal = TRUE
-		if(can_heal)
-			if(!ishuman(host_mob))
-				host_mob.adjustBruteLoss(-1.25)
-				host_mob.adjustFireLoss(-1.25)
-			else
-				host_mob.adjustBruteLoss(-2)
-				host_mob.adjustFireLoss(-2)
-				host_mob.adjustToxLoss(-0.1, 0, TRUE) // Think of it as a slight bonus.
-				if(HAS_TRAIT_FROM(host_mob, TRAIT_HUSK, BURN) && (host_mob.getFireLoss() < 51) && host_mob.cure_husk(BURN)) //cure husk will return true if it cures the final husking source
-					sleep(3 SECONDS)
-	..()
-
-
-/datum/nanite_program/mendingbrute
-	name = "Brute Mending"
-	desc = "The nanites quickly and efficiently repair blunt force, slashes, and punctures within the host. This program shuts itself off when no damage is available to be healed."
-	use_rate = 2.5
-	rogue_types = list(/datum/nanite_program/necrotic)
-	var/healing = 1.25
-
-/datum/nanite_program/mendingbrute/check_conditions()
-	if(!host_mob.getBruteLoss())
-		return FALSE
-	if(iscarbon(host_mob))
-		var/mob/living/carbon/host_carbon = host_mob
-		var/list/parts = host_carbon.get_damaged_bodyparts(brute = TRUE, required_bodytype = BODYTYPE_ORGANIC)
-		if(!parts.len)
-			return FALSE
-	return ..()
-
-/datum/nanite_program/mendingbrute/active_effect()
-	if(!iscarbon(host_mob))
-		host_mob.adjustBruteLoss(-0.5, TRUE)
-		return
-	var/mob/living/carbon/carbon_mob = host_mob
-	carbon_mob.heal_overall_damage(brute = healing, brute = healing, required_bodytype = BODYTYPE_ORGANIC)
-	if(carbon_mob.getStaminaLoss() < 71)
-		carbon_mob.adjustStaminaLoss(1)
-		if(prob(5))
-			to_chat(carbon_mob, "<span class='notice'>You suddenly feel your flesh re-adjust.")
-
-/datum/nanite_program/mendingburn
-	name = "Burn Mending"
-	desc = "The nanites quickly and efficiently repair burns, frostbite, and electric scars within the host. This program shuts itself off when no damage is available to be healed."
-	use_rate = 2.5
-	rogue_types = list(/datum/nanite_program/pyro)
-	var/healing = 1.25
-
-/datum/nanite_program/mendingburn/check_conditions()
-	if(!host_mob.getFireLoss())
-		return FALSE
-	if(iscarbon(host_mob))
-		var/mob/living/carbon/host_carbon = host_mob
-		var/list/parts = host_carbon.get_damaged_bodyparts(burn = TRUE, required_bodytype = BODYTYPE_ORGANIC)
-		if(!parts.len)
-			return FALSE
-	return ..()
-
-/datum/nanite_program/mendingburn/active_effect()
-	if(!iscarbon(host_mob))
-		host_mob.adjustFireLoss(-0.5, TRUE)
-		return
-	var/mob/living/carbon/carbon_mob = host_mob
-	carbon_mob.heal_overall_damage(burn = healing, burn = healing, required_bodytype = BODYTYPE_ORGANIC)
-	if(carbon_mob.getStaminaLoss() < 71)
-		carbon_mob.adjustStaminaLoss(1)
-		if(prob(5))
-			to_chat(carbon_mob, "<span class='notice'>You suddenly feel your flesh re-adjust.")
-
-/datum/nanite_program/mendingtoxin
-	name = "Toxin Cleansing"
-	desc = "The nanites run through the host's bloodstream and re-construct cells killed by toxins. This program shuts itself off when no damage is available to be healed."
-	use_rate = 2.5
-	rogue_types = list(/datum/nanite_program/toxic)
-	var/healing = 1.25
-
-/datum/nanite_program/mendingtoxin/check_conditions()
-	if(!iscarbon(host_mob))
-		return FALSE
-	if(!host_mob.getToxLoss())
-		return FALSE
-	return ..()
-
-/datum/nanite_program/mendingtoxin/active_effect()
-	host_mob.adjustToxLoss(-healing, TRUE)
-	if(prob(5))
-		to_chat(host_mob, "<span class='notice'>For the briefest of moments, you feel your veins bulk up.")
-
-
-/datum/nanite_program/selfresp
-	name = "Self-Respiration"
-	desc = "The nanites synthesize breathable air within the host's lungs and blood, negating the need to breathe."
-	use_rate = 2.5
-	rogue_types = list(/datum/nanite_program/suffocating)
-	var/toggled = FALSE
-
-/datum/nanite_program/selfresp/enable_passive_effect()
-	var/mob/living/carbon/M = host_mob
-	if(iscarbon(host_mob))
-		if(toggled)
-			M.adjustOxyLoss(-7, 0)
-			M.losebreath = max(0, host_mob.losebreath - 4)
-			ADD_TRAIT(M, TRAIT_NOBREATH, TRAIT_NANITES)
-		else
-			toggled = TRUE
-
-/datum/nanite_program/selfresp/disable_passive_effect()
-	var/mob/living/carbon/M = host_mob
-	if(iscarbon(host_mob))
-		if(toggled)
-			toggled = FALSE
-			REMOVE_TRAIT(M, TRAIT_NOBREATH, TRAIT_NANITES)
-
-
-/datum/nanite_program/repairingplus
-	name = "Synthetic Regeneration"
-	desc = "The nanites repair damage within robotic organisms or limbs including both denting and melting. This program shuts itself off when no damage is available to be healed."
-	use_rate = 1.5 //still more efficient than organic healing
-	rogue_types = list(/datum/nanite_program/aggressive_replication)
-	var/healing = 2
-
-/datum/nanite_program/repairingplus/check_conditions()
-	if(!host_mob.getBruteLoss() && !host_mob.getFireLoss())
-		return FALSE
-
-	if(!iscarbon(host_mob))
-		if(!(host_mob.mob_biotypes & MOB_ROBOTIC))
-			return FALSE
-		return ..()
-
-	var/mob/living/carbon/carbon_host = host_mob
-	var/list/parts = carbon_host.get_damaged_bodyparts(brute = TRUE, burn = TRUE, required_bodytype = BODYTYPE_ROBOTIC)
-	if(!parts.len)
-		return FALSE
-	return ..()
-
-/datum/nanite_program/repairingplus/active_effect(mob/living/M)
-	if(!iscarbon(host_mob))
-		host_mob.adjustBruteLoss(-healing, TRUE)
-		host_mob.adjustFireLoss(-healing, TRUE)
-		return
-	host_mob.heal_overall_damage(brute = healing, brute = healing, required_bodytype = BODYTYPE_ROBOTIC)
-	host_mob.heal_overall_damage(burn = healing, burn = healing, required_bodytype = BODYTYPE_ROBOTIC)
-
-
-/datum/nanite_program/woundfixer
-	name = "Wound-Tending"
-	desc = "The nanites slowly and methodically scan the host for major injuries and will slowly fix any wounds detected such as broken bones or hairline fractures -- without ever needing surgery. \
-			This program shuts itself off should the host have no wounds to tend."
-	use_rate = 2
-	rogue_types = list(/datum/nanite_program/flesh_eating)
-	var/woundfixtimer = 0
-	var/max_woundfixtimer = 120
-
-/datum/nanite_program/woundfixer/check_conditions()
-	if(!iscarbon(host_mob))
-		return FALSE
-	var/mob/living/carbon/human/wounded = host_mob
-	if(!length(wounded.all_wounds))
-		return FALSE
-
-/datum/nanite_program/woundfixer/active_effect()
-	. = ..()
-	woundfixtimer = min(woundfixtimer + 1, max_woundfixtimer)
-	if(woundfixtimer >= max_woundfixtimer)
-		var/mob/living/carbon/C = host_mob
-		for(var/datum/wound/iter_wound as anything in C.all_wounds)
-			iter_wound.remove_wound()
-			woundfixtimer = 0
+/datum/nanite_program/naniteresus/proc/do_revive()
+	host_mob.adjustOxyLoss(-200)
+	host_mob.adjustBruteLoss(-1)
+	host_mob.adjustFireLoss(-1)
+	if(host_mob.revive(TRUE))
+		log_combat(host_mob, host_mob, "revived", src)

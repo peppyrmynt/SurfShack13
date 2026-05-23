@@ -1,7 +1,11 @@
 /datum/round_event_control/communications_blackout
 	name = "Communications Blackout"
 	typepath = /datum/round_event/communications_blackout
-	weight = 30
+	//surfshack start
+	weight = 10
+	max_occurrences = 2
+	min_players = 15
+	//surfshack end
 	category = EVENT_CATEGORY_ENGINEERING
 	description = "Heavily emps all telecommunication machines, blocking all communication for a while."
 	min_wizard_trigger_potency = 0

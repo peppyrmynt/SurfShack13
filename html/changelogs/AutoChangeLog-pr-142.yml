@@ -1,4 +1,0 @@
-author: "forgman6"
-delete-after: True
-changes:
-  - refactor: "fast strip only works on things without a mind like lavaland corpses"

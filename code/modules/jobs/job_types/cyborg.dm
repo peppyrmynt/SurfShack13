@@ -21,6 +21,9 @@
 	random_spawns_possible = FALSE
 	job_flags = JOB_NEW_PLAYER_JOINABLE | JOB_EQUIP_RANK | JOB_CANNOT_OPEN_SLOTS
 
+	// Surf Shack Edit
+	antag_tokenable = FALSE
+	// Surf Shack End
 
 /datum/job/cyborg/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()

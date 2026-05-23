@@ -376,280 +376,35 @@
 		return
 
 	var/datum/nanite_extra_setting/scanned_nanites = extra_settings[NES_TOOL_CHOICE]
+	var/obj/item/new_tool
 	switch(scanned_nanites.get_value())
 		if("Crowbar")
-			var/obj/item/crowbar/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
+			new_tool = new /obj/item/crowbar(host_mob.loc)
 		if("Screwdriver")
-			var/obj/item/screwdriver/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
+			new_tool = new /obj/item/screwdriver(host_mob.loc)
 		if("Welding Tool")
-			var/obj/item/weldingtool/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
+			new_tool = new /obj/item/weldingtool(host_mob.loc)
 		if("Wirecutters")
-			var/obj/item/wirecutters/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
+			new_tool = new /obj/item/wirecutters(host_mob.loc)
 		if("Wrench")
-			var/obj/item/wrench/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
+			new_tool = new /obj/item/wrench(host_mob.loc)
 
-/obj/item/crowbar/nanite
-	name = "nanite crowbar"
-	desc = "A small crowbar, upon closer inspection, the material is moving ever-so-slightly. Can be used for prying floor tiles or opening unpowered doors."
+	new_tool.desc += " Upon closer inspection, the material is moving ever-so-slightly."
+	if(!host_mob.put_in_active_hand(new_tool))
+		new_tool.forceMove(host_mob.drop_location())
+	addtimer(CALLBACK(src, .proc/destroy_nanite_item_1, new_tool), 20 SECONDS)
 
-/obj/item/crowbar/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 20 SECONDS)
+/datum/nanite_program/construct_tool/proc/destroy_nanite_item_1(obj/item/nanite_tool)
+	nanite_tool.visible_message(span_danger("[nanite_tool] is beginning to destabilize..."), span_userdanger("[nanite_tool] is destabilizing..."))
+	addtimer(CALLBACK(src, .proc/destroy_nanite_item_2, nanite_tool), 10 SECONDS)
 
-/obj/item/crowbar/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite crowbar is beginning to destabilize..."), span_userdanger("The nanite crowbar is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite crowbar crumbles into nothing..."), span_userdanger("The nanite crowbar suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/screwdriver/nanite
-	name = "nanite screwdriver"
-	desc = "A small screwdriver, upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/screwdriver/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 20 SECONDS)
-
-/obj/item/screwdriver/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite screwdriver is beginning to destabilize..."), span_userdanger("The nanite screwdriver is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite screwdriver crumbles into nothing..."), span_userdanger("The nanite screwdriver suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/weldingtool/nanite
-	name = "nanite welding tool"
-	desc = "A standard edition welder provided by Nanotrasen, upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/weldingtool/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 20 SECONDS)
-
-/obj/item/weldingtool/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite welding tool is beginning to destabilize..."), span_userdanger("The nanite welding tool is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite welding tool crumbles into nothing..."), span_userdanger("The nanite welding tool suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/wirecutters/nanite
-	name = "nanite wirecutters"
-	desc = "Your typical pair of wirecutters, upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/wirecutters/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 20 SECONDS)
-
-/obj/item/wirecutters/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite wirecutters is beginning to destabilize..."), span_userdanger("The nanite wirecutters is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite wirecutters crumbles into nothing..."), span_userdanger("The nanite wirecutters suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/wrench/nanite
-	name = "nanite wrench"
-	desc = "A wrench with common uses, upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/wrench/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 20 SECONDS)
-
-/obj/item/wrench/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite wrench is beginning to destabilize..."), span_userdanger("The nanite wrench is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite wrench crumbles into nothing..."), span_userdanger("The nanite wrench suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/datum/nanite_program/convert_nanites
-	name = "Convert Nanites"
-	desc = "The nanites gather into the palm of the host's hand and form a specific material such as metal sheets or glass sheets. The items do NOT disappear afterward."
-	unique = FALSE
-	can_trigger = TRUE
-	trigger_cost = 10
-	trigger_cooldown = 10
-	rogue_types = list(/datum/nanite_program/toxic)
-
-/datum/nanite_program/convert_nanites/register_extra_settings()
-	extra_settings[NES_MAT_CHOICE] = new /datum/nanite_extra_setting/type("One Iron Sheet", list("One Iron Sheet", "One Glass Sheet", "One Plastic Sheet", "One Plasma Sheet", "One Wood Sheet"))
-
-/datum/nanite_program/convert_nanites/on_trigger(comm_message)
-	if(host_mob.stat == DEAD)
-		return
-
-	var/datum/nanite_extra_setting/scanned_nanites = extra_settings[NES_MAT_CHOICE]
-	switch(scanned_nanites.get_value())
-		if("One Iron Sheet")
-			var/obj/item/stack/sheet/iron/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("One Glass Sheet")
-			var/obj/item/stack/sheet/glass/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("One Plastic Sheet")
-			var/obj/item/stack/sheet/plastic/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("One Plasma Sheet")
-			var/obj/item/stack/sheet/mineral/plasma/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("One Wood Sheet")
-			var/obj/item/stack/sheet/mineral/wood/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-
-/datum/nanite_program/construct_tool_adv
-	name = "Construct Advanced Nanite Tool"
-	desc = "The nanites gather into the palm of the host's hand and form a specific tool such as a multitool or holofan projector."
-	unique = FALSE
-	can_trigger = TRUE
-	trigger_cost = 50
-	trigger_cooldown = 60
-	rogue_types = list(/datum/nanite_program/toxic)
-
-/datum/nanite_program/construct_tool_adv/register_extra_settings()
-	extra_settings[NES_ADV_TOOL_CHOICE] = new /datum/nanite_extra_setting/type("Multitool", list("Multitool", "Jaws of Life", "RPD", "Fire Extinguisher", "Crew Pinpointer", "Holofan Projector"))
-
-/datum/nanite_program/construct_tool_adv/on_trigger(comm_message)
-	if(host_mob.stat == DEAD)
-		return
-
-	var/datum/nanite_extra_setting/scanned_nanites = extra_settings[NES_ADV_TOOL_CHOICE]
-	switch(scanned_nanites.get_value())
-		if("Multitool")
-			var/obj/item/multitool/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("Jaws of Life")
-			var/obj/item/crowbar/power/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("RPD")
-			var/obj/item/pipe_dispenser/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("Fire Extinguisher")
-			var/obj/item/extinguisher/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("Crew Pinpointer")
-			var/obj/item/pinpointer/crew/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-		if("Holofan Projector")
-			var/obj/item/holosign_creator/atmos/nanite/Newitem = new
-			if(!host_mob.put_in_active_hand(Newitem))
-				Newitem.forceMove(host_mob.drop_location())
-
-/obj/item/multitool/nanite
-	name = "nanite multitool"
-	desc = "Used for pulsing wires to test which to cut. Not recommended by doctors. Upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/multitool/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 50 SECONDS)
-
-/obj/item/multitool/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite multitool is beginning to destabilize..."), span_userdanger("The nanite multitool is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite multitool crumbles into nothing..."), span_userdanger("The nanite multitool suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/crowbar/power/nanite
-	name = "nanite jaws of life"
-	desc = "A set of jaws of life, compressed through the magic of science. Upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/crowbar/power/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 50 SECONDS)
-
-/obj/item/crowbar/power/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite jaws of life is beginning to destabilize..."), span_userdanger("The nanite jaws of life is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite jaws of life crumbles into nothing..."), span_userdanger("The nanite jaws of life suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/pipe_dispenser/nanite
-	name = "Nanite Rapid Pipe Dispenser (RPD)"
-	desc = "A device used to rapidly pipe things. Upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/pipe_dispenser/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 50 SECONDS)
-
-/obj/item/pipe_dispenser/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite rapid pipe dispenser is beginning to destabilize..."), span_userdanger("The nanite rapid pipe dispenser is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite rapid pipe dispenser crumbles into nothing..."), span_userdanger("The nanite rapid pipe dispenser suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/extinguisher/nanite
-	name = "nanite fire extinguisher"
-	desc = "A traditional red fire extinguisher. Upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/extinguisher/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 20 SECONDS)
-
-/obj/item/extinguisher/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite extinguisher is beginning to destabilize..."), span_userdanger("The nanite extinguisher is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite extinguisher crumbles into nothing..."), span_userdanger("The nanite extinguisher suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/pinpointer/crew/nanite
-	name = "nanite crew pinpointer"
-	desc = "A handheld tracking device that points to crew suit sensors. Upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/pinpointer/crew/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 50 SECONDS)
-
-/obj/item/pinpointer/crew/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite crew pinpointer is beginning to destabilize..."), span_userdanger("The nanite crew pinpointer is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite crew pinpointer crumbles into nothing..."), span_userdanger("The nanite crew pinpointer suddenly vanishes with little fanfare."))
-	qdel(src)
-
-/obj/item/holosign_creator/atmos/nanite
-	name = "nanite ATMOS holofan projector"
-	desc = "A holographic projector that creates hard light barriers that prevent changes in atmosphere conditions. Upon closer inspection, the material is moving ever-so-slightly."
-
-/obj/item/holosign_creator/atmos/nanite/Initialize(mapload)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(destroy_nanite_item)), 50 SECONDS)
-
-/obj/item/holosign_creator/atmos/nanite/proc/destroy_nanite_item()
-	visible_message(span_danger("The nanite ATMOS holofan projector is beginning to destabilize..."), span_userdanger("The nanite ATMOS holofan projector is destabilizing..."))
-	sleep(10 SECONDS)
-	visible_message(span_danger("The nanite ATMOS holofan projector crumbles into nothing..."), span_userdanger("The nanite ATMOS holofan projector suddenly vanishes with little fanfare."))
-	qdel(src)
-
-
-/datum/nanite_program/bluespace_blood
-	name = "Bluespace Harvestation"
-	desc = "The nanites will harvest foreign bluespace energies and store them away. Once the proper signal is recieved, the nanites invest the bluespace energies into the host's bloodstream. Causing temporary spontaneous short-range teleportation."
-	can_trigger = TRUE
-	trigger_cost = 25
-	trigger_cooldown = 100
-	rogue_types = list(/datum/nanite_program/toxic)
-
-/datum/nanite_program/bluespace_blood/on_trigger()
-	host_mob.reagents.add_reagent(/datum/reagent/bluespace, 10)
-
+/datum/nanite_program/construct_tool/proc/destroy_nanite_item_2(obj/item/nanite_tool)
+	nanite_tool.visible_message(span_danger("[nanite_tool] crumbles into nothing..."), span_userdanger("[nanite_tool] suddenly vanishes with little fanfare."))
+	qdel(nanite_tool)
 
 /datum/nanite_program/botsummon
 	name = "Simple Bot Construction"
-	desc = "The nanites expend a large amount of themselves to develop a single simple bot capable of assisting the station and it's personnel."
+	desc = "The nanites expend a large amount of themselves to develop a single simple bot for a short time."
 	can_trigger = TRUE
 	trigger_cost = 100
 	trigger_cooldown = 600
@@ -663,52 +418,25 @@
 		return
 
 	var/datum/nanite_extra_setting/scanned_nanites = extra_settings[NES_BOT_CHOICE]
+	var/mob/living/new_bot = null
 	switch(scanned_nanites.get_value())
 		if("Medibot")
-			new /mob/living/basic/bot/medbot(host_mob.loc)
+			new_bot = new /mob/living/basic/bot/medbot(host_mob.loc)
 		if("Cleanbot")
-			new /mob/living/basic/bot/cleanbot(host_mob.loc)
+			new_bot = new /mob/living/basic/bot/cleanbot(host_mob.loc)
 		if("Repairbot")
-			new /mob/living/basic/bot/repairbot(host_mob.loc)
+			new_bot = new /mob/living/basic/bot/repairbot(host_mob.loc)
 		if("Firebot")
-			new /mob/living/basic/bot/firebot(host_mob.loc)
+			new_bot = new /mob/living/basic/bot/firebot(host_mob.loc)
 		if("Honkbot")
-			new /mob/living/basic/bot/honkbot(host_mob.loc)
+			new_bot = new /mob/living/basic/bot/honkbot(host_mob.loc)
 		if("Securitron")
-			new /mob/living/simple_animal/bot/secbot(host_mob.loc)
+			new_bot = new /mob/living/simple_animal/bot/secbot(host_mob.loc)
+	new_bot.setMaxHealth(1000)
+	addtimer(CALLBACK(src, .proc/destroy_bot, new_bot), 10 SECONDS)
 
-
-/datum/nanite_program/researchplus
-	name = "Nanite Research Servers"
-	desc = "The nanites adopt research server programming and may expend themselves to generate both general and nanite research points in substantial amounts."
-	use_rate = 0.5
-	rogue_types = list(/datum/nanite_program/glitch)
-
-/datum/nanite_program/researchplus/active_effect()
-	if(!iscarbon(host_mob))
-		return
-	var/points = 0.2
-	if(!host_mob.client) //less brainpower
-		points *= 0.25
-	var/datum/techweb/station_techweb = locate(/datum/techweb/science) in SSresearch.techwebs
-	station_techweb.add_point_list(list(TECHWEB_POINT_TYPE_GENERIC = points))
-	station_techweb.add_point_list(list(TECHWEB_POINT_TYPE_NANITES = points))
-
-
-/datum/nanite_program/deadchat
-	name = "Otherworldly Programming"
-	desc = "The nanites keep the host's brain in a constant state of near-death, causing strange yet vivid auditory hallucinations."
-	use_rate = 0.6
-	rogue_types = list(/datum/nanite_program/nerve_decay)
-
-/datum/nanite_program/deadchat/enable_passive_effect()
-	. = ..()
-	host_mob.add_traits(list(TRAIT_SIXTHSENSE), TRAIT_NANITES)
-
-/datum/nanite_program/deadchat/disable_passive_effect()
-	. = ..()
-	host_mob.remove_traits(list(TRAIT_SIXTHSENSE), TRAIT_NANITES)
-
+/datum/nanite_program/botsummon/proc/destroy_bot(mob/nanite_bot)
+	QDEL_NULL(nanite_bot)
 
 /datum/nanite_program/monitoring
 	name = "Monitoring"

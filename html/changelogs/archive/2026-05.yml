@@ -1,0 +1,194 @@
+2026-05-15:
+  ElGitificador:
+  - balance: the reaper is more willing to play rock paper scizors now
+  - balance: arcades be giftin pulse rifles now fr fr
+  IndieanaJones:
+  - rscadd: Space adaptation is back!
+  - rscdel: Remove cold, pressure, and thermal adaptation
+  - rscdel: Removed the vendor shortage station trait.
+  - rscadd: The H.E.C.K. suit protects its wearer from the vacuum of space again.
+  - bugfix: The game should be affected when someone gets wabbajacked into a human
+      species.
+  - rscadd: Re-added gatfruits giving actual revolvers.
+  - rscdel: Removed everything related to the peashooter, since it is no longer a
+      part of the game.
+  - bugfix: Fire sounds aren't bugged anymore.
+  - bugfix: Fixed the missing trunk check in disposalholder
+  Twaticus:
+  - map: 'removes #%;#,%;'
+  forgman6:
+  - rscadd: adds creampie-torium
+  - bugfix: fixed creamtorium direction not inheriting
+  - rscadd: soda robot can hold reagents and you can add to it by injecting
+  - rscadd: soda bot ai chirps now
+  - refactor: chirp turned from emote into action
+  - rscdel: callouts and mob callout commands.
+  - refactor: fast strip only works on things without a mind like lavaland corpses
+  - rscdel: tutorials
+  - refactor: item_attack commented out tutorial code
+  - rscadd: exectution sword, there one in the HOS locker
+  - rscadd: exectution sword antag variant for 1 TC
+  - rscadd: exectution sword admin variant which plays song globaly
+  - rscadd: noose and 30 cable crafting recipie
+  - sound: added nasheed
+  - sound: added nasheed2
+  - sound: added bosanska
+  - image: added noose sprites
+  - refactor: removed excess css rules, clean up existing uis
+  - bugfix: removed some unused vars
+  - refactor: made strip speed faster
+  - rscadd: alligators that can deathroll
+  - rscadd: alligator ai and blackboard variables.
+  - rscadd: COMSIG_PRE_LYING_ANGLE_CHANGE  signal
+  - code_imp: map loaded showers have a 2% chance to spawn a gator on interact.
+  - rscadd: shower varient that always spawns gator.
+  - rscadd: gator cloak and pelt
+  - image: added gator spirtes
+  - image: added gator cloak sprites
+  - image: added inhand gator cloak sprites
+  - rscadd: Saviors paper hat.
+  - rscadd: Added worn and normal icon states for it in costume.dmi
+  - map: Modified bus.dmm to include the paper hat behind the main bus.
+  - rscadd: Public announcement console
+  - rscadd: Public announcement board and research
+  - code_imp: modified console research node to include announcment
+  - map: changed maps to have one announcement console per station.
+  - rscadd: surfshack test
+  - rscadd: mapping test to ensure atleast one public announcement console per station
+  - rscadd: soda robot
+  - rscadd: soda crafting datum
+  - sound: smoke detector chirp sound
+  - bugfix: frogui duplicate signals
+  - bugfix: gator spawn chance decreased abit
+  - bugfix: sprites dont update on gator death
+  - map: modified box
+  - rscadd: added holomanuals.
+  - rscadd: ooc_flags.dm  helper procs
+  - rscadd: client country_flag var that gets set on connect
+  - rscadd: countryflags to assets
+  - image: added flags.dmi
+  hyperjll:
+  - rscadd: Added the Power Exporter! A single exclusive machine available to the
+      Chief Engineer to provide credit income to both Cargo and the Engineering department.
+  - code_imp: Cleaned up some pre-round store code.
+  - qol: Nanite Chambers now directly tell people if the nanites were installed or
+      removed.
+  - balance: The nanite program 'Simple Bot Construction' is now unique to each cloud,
+      preventing more than 1 from being programmed.
+  - sound: Nanite Chambers will ding if nanites are installed.
+  manofpepsi:
+  - rscadd: map vote is reverted to a normal voting system
+  - rscadd: morgue chutes that you can build with 10 metal
+  - rscadd: darkmode for the voicechat window
+  - bugfix: scrollbars not having proper colors and uplink not having it
+  pbj567:
+  - image: Reverts balloon sprites
+  tuckerorchistra:
+  - code_imp: 'changed awaymissionconfix.txt
+
+      :cl:
+
+      <!-- Both :cl:''s are required for the changelog to work! You can put your name
+      to the right of the first :cl: if you want to overwrite your GitHub username
+      as author ingame. -->
+
+      <!-- You can use multiple of the same prefix (they''re only used for the icon
+      ingame) and delete the unneeded ones. Despite some of the tags, changelogs should
+      generally represent how a player might be affected by the changes rather than
+      a summary of the PR''s contents. -->'
+2026-05-16:
+  IndieanaJones:
+  - rscadd: AIs can examine now.
+  Twaticus:
+  - rscadd: Pubbystation and accompanying shuttles
+2026-05-17:
+  IndieanaJones:
+  - bugfix: A random Maint area on Wawastation had two lights on it. Now it doesn't.
+  - refactor: Bloodsucker UI works better now.
+  hyperjll:
+  - bugfix: Players are no longer told they've earned 'Credits' instead of 'Doubloons'.
+2026-05-18:
+  IndieanaJones:
+  - rscadd: A public announcements console was added to IceBox.
+  - rscadd: In-hands for bowling pins
+  - rscadd: Improvised crowbars show up on your belt
+  - bugfix: Pipeguns and rebar crossbows have in-hand sprites again
+  - rscdel: Temporarily removes Boxstation from rotation.
+  forgman6:
+  - code_imp: switched moisture trap lootpool to not create another spawner
+  - code_imp: sm surge, mice migration, blackout, grav gen blackout, comms black out,
+      and carp migration can only happen on 15 pop
+  - code_imp: some of the listed events have lower probablities
+2026-05-19:
+  IndieanaJones:
+  - bugfix: /datum/gas_machine_connector will abstract_move() if their parent also
+      abstract_move()s, preventing a runtime
+  forgman6:
+  - code_imp: removed some things from trash spawners if there is no atmosphere
+  hyperjll:
+  - admin: Admins can now print any player's Doubloon balance directly to admin log.
+2026-05-20:
+  ElGitificador:
+  - balance: syndi bombs cost 8 TC now
+  IndieanaJones:
+  - bugfix: Space dragons' eyes, teeths and claws (and shark form's underside) are
+      once again of a different color than the rest of the body.
+  - refactor: Rewrote some of HUD code so they're no longer colored in their owner's
+      color
+  - bugfix: Space dragons no longer turn invisible when toggling seethrough mode
+  - bugfix: fixed seethrough mob offsetting your sprite
+  Twaticus:
+  - image: gooning outfit
+  - rscadd: ports a handful of sprite related prs. trash carts, cardboard boxes, maid
+      outfit, schoolgirl outfit, sleeper, harvester, crafters toolbox, hoodies, nuggets/wing/fry
+      boxes
+  ZealousZeke:
+  - balance: Nooartrium no longer applies its side effects at double speed.
+  hyperjll:
+  - admin: Admins are sent messages to document any Pre-Round Store purchases.
+  - qol: Ghosts can now nanite-scan people, in addition to their other scan-abilities.
+  - server: Restarting the round via the voting system, if passed, will no longer
+      award Doubloons to ANY players should the round have not lasted at LEAST 20
+      minutes.
+  - rscadd: Emitter Diode Disks have been implemented! Allowing emitters to heal,
+      ignite, drain sanity, drain stamina, attract, and more!
+  - rscadd: The Syndicate are now offering explosive diode disks for aspiring explosive
+      engineers!
+  - rscadd: Emitters are now compatible with Circuits via the USB cable!
+  - image: Emitters now use overlays and have emissives (they glow in the dark)
+  - rscadd: Added 'Crossing' variants to Curved and Junction transit tubes.
+2026-05-21:
+  ElGitificador:
+  - sound: added sound feedback for supplexing rods
+  IndieanaJones:
+  - balance: Dubloon gain for playing certain jobs has been nerfed and no longer stacks
+      for Head of Security. Silicons now also get a bonus.
+  hyperjll:
+  - rscdel: Cryogelidia will no longer be required to cure any diseases.
+2026-05-22:
+  IndieanaJones:
+  - bugfix: Afro (Huge) layers correctly now
+  - bugfix: Plasmaman helmet hats layer correctly now, as does everything else with
+      the hat stabilizer component
+  - bugfix: Cyborg hats should now layer correctly, among other worn items
+  hyperjll:
+  - qol: Nanite Design icons in the tech tree are now color-coded to their program's
+      category.
+2026-05-23:
+  ZealousZeke:
+  - balance: Overdose thresholds now positively scale with high purity
+  - bugfix: Chemmaster no longer rounds reagent amounts when trying to transfer a
+      custom amount
+  cocothegogo:
+  - rscadd: MiniStation has been redeployed to active duty as MiniSurf.
+  forgman6:
+  - rscadd: voice chat rooms for different mobs
+  - rscadd: two voice indicators for different mobs.
+  - code_imp: moved voicechat into correct subfolder
+  - refactor: voice indicators are refactored to be a bit better, and mouse transparent
+  hyperjll:
+  - bugfix: conveyors now remember what they should be doing after losing and regaining
+      power.
+  - bugfix: Security roles (& the captain) can no longer use Antag Tokens. The tokens
+      will just be refunded.
+  - rscdel: Removed two unused reagents.

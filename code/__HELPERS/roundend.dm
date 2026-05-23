@@ -290,7 +290,12 @@ GLOBAL_LIST_INIT(achievements_unlocked, list())
 	//stop collecting feedback during grifftime
 	SSblackbox.Seal()
 	//surfshack start
-	distribute_rewards(rewards)
+	var/time_cap = 30 MINUTES // or '18000', if you're feeling classy.
+	var/round_time_passed = world.time - SSticker.round_start_time
+	if(was_forced == VOTE_FORCE_END_ROUND && (time_cap > round_time_passed))
+		to_chat(world, span_infoplain(span_big(span_bold("<BR><BR><BR>The round was voted to be restarted before [DisplayTimeText(time_cap)], no rewards shall be given."))))
+	else
+		distribute_rewards(rewards)
 	//surfshack end
 	sleep(5 SECONDS)
 	ready_for_reboot = TRUE

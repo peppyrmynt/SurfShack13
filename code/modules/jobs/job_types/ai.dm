@@ -22,6 +22,9 @@
 	job_flags = JOB_NEW_PLAYER_JOINABLE | JOB_EQUIP_RANK | JOB_BOLD_SELECT_TEXT | JOB_CANNOT_OPEN_SLOTS
 	config_tag = "AI"
 
+	// Surf Shack Edit
+	antag_tokenable = FALSE
+	// Surf Shack End
 
 /datum/job/ai/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()

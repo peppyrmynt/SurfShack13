@@ -177,6 +177,7 @@
 		"inducerengi",
 		"welding_goggles",
 		"tray_goggles",
+		"diode_disk_stamina",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS)
 	announce_channels = list(RADIO_CHANNEL_ENGINEERING)
@@ -204,6 +205,7 @@
 		"modular_shield_relay",
 		"modular_shield_charger",
 		"modular_shield_well",
+		"diode_disk_magnetic",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
 

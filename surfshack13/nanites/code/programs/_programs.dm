@@ -280,12 +280,12 @@
 #define SOFTWARE_ERROR_ROGUE 5
 
 /datum/nanite_program/proc/software_error()
-	var/list/software_errors_weighted = alist(
-		SOFTWARE_ERROR_DELETE = 1,
-		SOFTWARE_ERROR_DEPROGRAM = 2,
-		SOFTWARE_ERROR_TOGGLE = 2,
-		SOFTWARE_ERROR_TRIGGER = 2,
-		SOFTWARE_ERROR_ROGUE = 3,
+	var/list/software_errors_weighted = list(
+		/* SOFTWARE_ERROR_DELETE */ 1,
+		/* SOFTWARE_ERROR_DEPROGRAM */ 2,
+		/* SOFTWARE_ERROR_TOGGLE */ 2,
+		/* SOFTWARE_ERROR_TRIGGER */ 2,
+		/* SOFTWARE_ERROR_ROGUE */ 3,
 	)
 	var/error_type = pick_weight(software_errors_weighted)
 	switch(error_type)

@@ -27,6 +27,10 @@
 		BODY_ZONE_L_LEG = /obj/item/bodypart/leg/left/abductor,
 		BODY_ZONE_R_LEG = /obj/item/bodypart/leg/right/abductor,
 	)
+	//surfshack start
+	voice_chat_room_on_gain = ROOM_GLOBAL_ABDUCTOR
+	set_voice_icon_state = "ayy"
+	//surfshack end
 
 /datum/species/abductor/get_physical_attributes()
 	return "Abductors do not need to breathe, eat, do not have blood, a heart, stomach, or lungs and cannot be infected by human viruses. \

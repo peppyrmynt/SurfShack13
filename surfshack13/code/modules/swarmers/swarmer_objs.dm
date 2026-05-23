@@ -3,7 +3,7 @@
 	desc = null
 	gender = NEUTER
 	icon = 'surfshack13/icons/swarmers/swarmer.dmi'
-	icon_state = "ui_light"
+	icon_state = "trap"
 	layer = MOB_LAYER
 	resistance_flags = FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	max_integrity = 30
@@ -28,7 +28,6 @@
 /obj/structure/swarmer/trap
 	name = "swarmer trap"
 	desc = "A quickly assembled trap that electrifies living beings and overwhelms machine sensors. Will not retain its form if damaged enough."
-	icon_state = "trap"
 	max_integrity = 10
 	density = FALSE
 
@@ -65,10 +64,10 @@
 
 /obj/effect/temp_visual/swarmer //temporary swarmer visual feedback objects
 	icon = 'surfshack13/icons/swarmers/swarmer.dmi'
+	icon_state = "disintegrate"
 	layer = BELOW_MOB_LAYER
 
 /obj/effect/temp_visual/swarmer/disintegration
-	icon_state = "disintegrate"
 	duration = 1 SECONDS
 
 /obj/effect/temp_visual/swarmer/disintegration/Initialize(mapload)

@@ -4,6 +4,8 @@
 	max_integrity = 200
 	integrity_failure = 0.4
 	var/damaged_clothes = CLOTHING_PRISTINE //similar to machine's BROKEN stat and structure's broken var
+	/// Base icon state before greyscale initialization changes it.
+	var/post_init_icon_state
 
 	///What level of bright light protection item has.
 	var/flash_protect = FLASH_PROTECTION_NONE

@@ -42,7 +42,7 @@
 		var/amount = reward[1]
 		var/reason = reward[2]
 		total_amount += amount
-		to_chat(client, span_rose(span_bold("[abs(amount)] Credits have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account! Reason: [reason]")))
+		to_chat(client, span_rose(span_bold("[abs(amount)] Doubloons have been [amount >= 0 ? "deposited to" : "withdrawn from"] your account! Reason: [reason]")))
 	// don't do separate SQL queries for each reward, just add all the coins at once lol
 	if(total_amount)
 		client?.prefs?.adjust_metacoins(ckey, total_amount, reason = "roundend rewards", announces = FALSE)
@@ -63,12 +63,8 @@
 		return
 
 	queue[ckey] += list(list(round_end_bonus, "Played a Round"))
-
-	if(details?.mob?.mind?.assigned_role?.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND)
-		queue[ckey] += list(list(200, "Head of Staff Bonus"))
-
-	if(details?.mob?.mind?.assigned_role?.departments_bitflags & DEPARTMENT_BITFLAG_SECURITY)
-		queue[ckey] += list(list(100, "Security Role Bonus"))
+	if(details?.mob?.mind?.assigned_role?.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND|DEPARTMENT_BITFLAG_SECURITY|DEPARTMENT_BITFLAG_SILICON)
+		queue[ckey] += list(list(25, "Desired Role Bonus"))
 
 	if(is_janitor_job(details?.mob?.mind?.assigned_role))
 		var/cleaning_level = details?.mob?.mind?.get_skill_level(/datum/skill/cleaning)

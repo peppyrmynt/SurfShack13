@@ -14379,9 +14379,6 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/engine,
 /area/station/science/nanites)
 "dSI" = (
@@ -20148,9 +20145,6 @@
 /area/station/commons/vacant_room)
 "gcx" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/engine,
 /area/station/science/nanites)
 "gcE" = (
@@ -20211,6 +20205,7 @@
 	},
 /obj/machinery/computer/nanite_chamber_control,
 /obj/effect/turf_decal/tile/dark/full,
+/obj/machinery/light/directional/north,
 /turf/open/floor/iron/white,
 /area/station/science/nanites)
 "geA" = (
@@ -23778,11 +23773,7 @@
 /turf/open/floor/iron/dark,
 /area/station/science/ordnance/storage)
 "hvJ" = (
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown_2";
-	name = "Security Blast Door"
-	},
-/obj/effect/spawner/structure/window/reinforced,
+/obj/effect/spawner/structure/window,
 /turf/open/floor/plating,
 /area/station/science/nanites)
 "hvZ" = (
@@ -34556,9 +34547,6 @@
 /turf/open/floor/iron/grimy,
 /area/station/service/lawoffice)
 "ljI" = (
-/obj/machinery/door/airlock/research/glass{
-	name = "Experimentation Lab"
-	},
 /obj/effect/mapping_helpers/airlock/access/all/science/research,
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 4
@@ -34571,9 +34559,8 @@
 /obj/machinery/door/firedoor,
 /obj/structure/cable,
 /obj/structure/disposalpipe/segment,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown_2";
-	name = "Security Blast Door"
+/obj/machinery/door/airlock/research/glass{
+	name = "Nanite Lab"
 	},
 /turf/open/floor/iron/white,
 /area/station/science/nanites)
@@ -38409,9 +38396,6 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/command)
 "myo" = (
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/engine,
 /area/station/science/nanites)
 "myz" = (
@@ -43479,10 +43463,6 @@
 	name = "Testing Range Maintenance Hatch"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/science/research,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown_2";
-	name = "Security Blast Door"
-	},
 /turf/open/floor/catwalk_floor,
 /area/station/science/nanites)
 "onW" = (
@@ -47559,6 +47539,7 @@
 	network = list("ss13","rd");
 	c_tag = "Science - Lower Hall North"
 	},
+/obj/machinery/airalarm/directional/north,
 /turf/open/floor/iron/white,
 /area/station/science/lower)
 "pOi" = (
@@ -59118,6 +59099,9 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron,
 /area/station/hallway/primary/tram/center)
+"tQO" = (
+/turf/closed/wall,
+/area/station/science/nanites)
 "tRf" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -70952,10 +70936,6 @@
 /obj/effect/turf_decal/trimline/purple/filled/corner,
 /obj/effect/turf_decal/trimline/purple/filled/corner{
 	dir = 4
-	},
-/obj/machinery/button/door/directional/north{
-	id = "nanite_lockdown_2";
-	name = "Emergency Doors Control"
 	},
 /obj/structure/table,
 /obj/item/clothing/glasses/hud/diagnostic,
@@ -115445,7 +115425,7 @@ ePG
 qCX
 qfc
 uNs
-ePG
+tQO
 fFg
 jwZ
 bwO
@@ -115702,7 +115682,7 @@ ePG
 dSy
 myo
 gcx
-ePG
+tQO
 gHE
 xJR
 fWT
@@ -115959,7 +115939,7 @@ ePG
 gDU
 cVW
 vzo
-ePG
+hvJ
 vOx
 xJR
 fWT
@@ -116216,8 +116196,8 @@ ePG
 ogt
 eHR
 eHR
-ePG
-lyf
+hvJ
+vOx
 xJR
 fWT
 fip
@@ -116473,7 +116453,7 @@ ePG
 gex
 eHR
 eHR
-ePG
+tQO
 vOx
 xJR
 fWT
@@ -116730,7 +116710,7 @@ ePG
 ybp
 eHR
 eHR
-ePG
+tQO
 vca
 xJR
 cEA

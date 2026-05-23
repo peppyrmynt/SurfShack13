@@ -1,6 +1,0 @@
-author: "hyperjll"
-delete-after: True
-changes:
-  - qol: "Nanite Chambers now directly tell people if the nanites were installed or removed."
-  - balance: "The nanite program 'Simple Bot Construction' is now unique to each cloud, preventing more than 1 from being programmed."
-  - sound: "Nanite Chambers will ding if nanites are installed."

@@ -37,6 +37,9 @@
 	faction = list(FACTION_MONKEY, FACTION_JUNGLE)
 	butcher_results = list(/obj/item/food/meat/slab/gorilla = 4, /obj/effect/gibspawner/generic/animal = 1)
 	max_grab = GRAB_KILL
+	//surfshack start
+	voice_chat_room = ROOM_MONKEY
+	//surfshack end
 	/// How likely our meaty fist is to stun someone
 	var/paralyze_chance = 20
 	/// A counter for when we can scream again

@@ -239,7 +239,7 @@
 	current = null
 	bot_ref = null
 	controlled_equipment = null
-	linked_core = null
+	break_core_link()
 	apc_override = null
 	if(ai_voicechanger)
 		ai_voicechanger.owner = null

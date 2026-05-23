@@ -221,6 +221,6 @@ GLOBAL_LIST_INIT(guardian_radial_images, setup_guardian_radial())
 	)
 
 
-/obj/item/guardian_creator/chaplain/Initialize()
+/obj/item/guardian_creator/chaplain/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/anti_magic, TRUE, TRUE, FALSE, null, null, FALSE)

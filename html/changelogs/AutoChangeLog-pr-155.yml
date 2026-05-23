@@ -1,5 +1,0 @@
-author: "forgman6"
-delete-after: True
-changes:
-  - rscdel: "tutorials"
-  - refactor: "item_attack commented out tutorial code"
