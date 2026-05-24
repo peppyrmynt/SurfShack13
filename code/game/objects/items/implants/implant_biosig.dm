@@ -11,7 +11,7 @@
 /obj/item/implant/biosig/Initialize(mapload)
 	. = ..()
 	radio = new(src)
-	radio.listening = FALSE
+	radio.set_listening(FALSE)
 	radio.subspace_transmission = subspace_transmission
 	radio.canhear_range = 0
 	if(radio_key)
