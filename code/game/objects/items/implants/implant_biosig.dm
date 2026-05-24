@@ -47,6 +47,10 @@
 	. = ..()
 	UnregisterSignal(target, COMSIG_LIVING_DEATH)
 
+/obj/item/implant/biosig/Destroy()
+	QDEL_NULL(radio)
+	return ..()
+
 /obj/item/implant/biosig/get_data()
 	. = {"<b>Implant Specifications:</b><BR>
 		<b>Name:</b>Biosignaller Implant<BR>
