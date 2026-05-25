@@ -13,6 +13,9 @@
 	lighting_cutoff_red = 25
 	lighting_cutoff_green = 15
 	lighting_cutoff_blue = 35
+	//surfshack start
+	voice_chat_room = ROOM_LAVALAND
+	//surfshack end
 	/// Message to output if throwing damage is absorbed
 	var/throw_blocked_message = "bounces off"
 	/// What crusher trophy this mob drops, if any

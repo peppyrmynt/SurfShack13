@@ -36,6 +36,9 @@ GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 	var/health_scan = FALSE //Are health scans currently enabled?
 	var/chem_scan = FALSE //Are chem scans currently enabled?
 	var/gas_scan = FALSE //Are gas scans currently enabled?
+	// Surf Shack Edit
+	var/nanite_scan = FALSE //Are health scans currently enabled?
+	// Surf Shack End
 	var/ghost_orbit = GHOST_ORBIT_CIRCLE
 
 	//These variables store hair data if the ghost originates from a species with head and/or facial hair.
@@ -817,6 +820,20 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	else
 		to_chat(src, span_notice("Gas scan enabled."))
 		gas_scan = TRUE
+
+// Surf Shack Edit
+/mob/dead/observer/verb/toggle_nanite_scan()
+	set name = "Toggle Nanite Scan"
+	set desc = "Toggles whether you nanite-scan living beings on click"
+	set category = "Ghost"
+
+	if(nanite_scan)
+		to_chat(src, span_notice("Nanite scan disabled."))
+		nanite_scan = FALSE
+	else
+		to_chat(src, span_notice("Nanite scan enabled."))
+		nanite_scan = TRUE
+// Surf Shack End
 
 /mob/dead/observer/verb/restore_ghost_appearance()
 	set name = "Restore Ghost Character"

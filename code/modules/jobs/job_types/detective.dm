@@ -45,6 +45,9 @@
 
 	job_tone = "objection"
 
+	// Surf Shack Edit
+	antag_tokenable = FALSE
+	// Surf Shack End
 
 /datum/outfit/job/detective
 	name = "Detective"

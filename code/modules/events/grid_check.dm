@@ -2,7 +2,10 @@
 	name = "Grid Check"
 	typepath = /datum/round_event/grid_check
 	weight = 10
-	max_occurrences = 3
+	//surfshack start
+	max_occurrences = 2
+	min_players = 15
+	//surfshack end
 	category = EVENT_CATEGORY_ENGINEERING
 	description = "Turns off all APCs for a while, or until they are manually rebooted."
 	min_wizard_trigger_potency = 0

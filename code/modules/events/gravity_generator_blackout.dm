@@ -1,7 +1,11 @@
 /datum/round_event_control/gravity_generator_blackout
 	name = "Gravity Generator Blackout"
 	typepath = /datum/round_event/gravity_generator_blackout
-	weight = 30
+	//surfshack start
+	weight = 10
+	min_players = 15
+	max_occurrences = 2
+	//surfshack end
 	category = EVENT_CATEGORY_ENGINEERING
 	description = "Turns off the gravity generator."
 	min_wizard_trigger_potency = 0

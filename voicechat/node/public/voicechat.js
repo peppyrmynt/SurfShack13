@@ -535,8 +535,8 @@ function setupUIListeners() {
     // Buttons
 	document.getElementById('dark_mode_toggle').addEventListener('click', toggleDarkMode)
     document.getElementById('mic').addEventListener('click', getMic);
-    document.getElementById('mute_toggle').addEventListener('click', () => toggleMute);
-    document.getElementById('deafen_toggle').addEventListener('click', () => toggleDeafen);
+    document.getElementById('mute_toggle').addEventListener('click', () => toggleMute());
+    document.getElementById('deafen_toggle').addEventListener('click', () => toggleDeafen());
     document.getElementById('settings_button').addEventListener('click', toggleSettings);
     document.querySelector('.mic_test_container button').addEventListener('click', toggleMicTest);
 

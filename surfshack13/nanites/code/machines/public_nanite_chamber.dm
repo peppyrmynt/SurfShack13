@@ -39,6 +39,7 @@
 		log_game("[person_inside]'s nanites were cleared by [key_name(usr)] via [src] at [AREACOORD(src)].")
 
 /obj/machinery/nanite_chamber/public/complete_injection(locked_state)
+	playsound(src, 'sound/machines/ding.ogg', 50)
 	locked = locked_state
 	set_busy(FALSE)
 	if(!occupant || !linked_techweb)
@@ -49,3 +50,4 @@
 
 	SEND_SIGNAL(occupant, COMSIG_NANITE_SET_CLOUD, our_circuit.cloud_id)
 	SEND_SIGNAL(occupant, COMSIG_NANITE_SET_SAFETY, 50)
+	src.say("Nanites installed in [occupant.name].")

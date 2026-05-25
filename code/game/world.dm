@@ -442,8 +442,8 @@ GLOBAL_PROTECT(tracy_init_reason)
 			new_status += "<br><b>RESTARTING</b>"
 	if(SSmapping.current_map)
 		new_status += "<br>Map: <b>[SSmapping.current_map.map_path == CUSTOM_MAP_PATH ? "Uncharted Territory" : SSmapping.current_map.map_name]</b>"
-	if(SSmap_vote.next_map_config)
-		new_status += "[SSmapping.current_map ? " | " : "<br>"]Next: <b>[SSmap_vote.next_map_config.map_path == CUSTOM_MAP_PATH ? "Uncharted Territory" : SSmap_vote.next_map_config.map_name]</b>"
+	if(SSmapping.next_map_config)
+		new_status += "[SSmapping.current_map ? " | " : "<br>"]Next: <b>[SSmapping.next_map_config.map_path == CUSTOM_MAP_PATH ? "Uncharted Territory" : SSmapping.next_map_config.map_name]</b>"
 	status = new_status
 
 /world/proc/update_hub_visibility(new_visibility)

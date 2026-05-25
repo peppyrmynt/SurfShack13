@@ -54,12 +54,12 @@
 	category = list(NANITES_CATEGORY_SENSOR)
 	program_type = /datum/nanite_program/sensor/alive
 
-/datum/design/nanites/sensor_job
-	name = "Job Sensor"
-	desc = "When triggered, the nanites scan the host's biodata and match it with Nanotrasen's private bio-records and output a signal depending on the conditions set in the settings."
-	id = "sensor_job_nanites"
+/datum/design/nanites/sensor_assistant
+	name = "Assistant Sensor"
+	desc = "When triggered, the nanites scan the host's biodata and match it with Nanotrasen's private bio-records and outputs a signal if the host is an assistant."
+	id = "sensor_assistant_nanites"
 	category = list(NANITES_CATEGORY_SENSOR)
-	program_type = /datum/nanite_program/sensor/job
+	program_type = /datum/nanite_program/sensor/assistant
 
 /datum/design/nanites/sensor_incapacitated
 	name = "Incapacitated Sensor"
@@ -67,13 +67,6 @@
 	id = "sensor_incapacitated_nanites"
 	category = list(NANITES_CATEGORY_SENSOR)
 	program_type = /datum/nanite_program/sensor/incapacitated
-
-/datum/design/nanites/sensor_name
-	name = "Name Sensor"
-	desc = "Sends a signal when the nanites detect the host mob's identity to be that of the one specified."
-	id = "sensor_name_nanites"
-	category = list(NANITES_CATEGORY_SENSOR)
-	program_type = /datum/nanite_program/sensor/name
 
 /datum/design/nanites/sensor_resting
 	name = "Resting Sensor"

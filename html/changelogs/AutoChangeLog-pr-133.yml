@@ -1,6 +1,0 @@
-author: "forgman6"
-delete-after: True
-changes:
-  - rscadd: "soda robot"
-  - rscadd: "soda crafting datum"
-  - sound: "smoke detector chirp sound"

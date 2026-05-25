@@ -48,6 +48,10 @@
 	lighting_cutoff_blue = 25
 	can_be_held = TRUE
 	worn_slot_flags = ITEM_SLOT_HEAD
+	//surfshack start
+	voice_chat_room = ROOM_DRONE
+	voice_icon_state = ""
+	//surfshack end
 	/// `TRUE` if we have picked our visual appearance, `FALSE` otherwise (default)
 	var/picked = FALSE
 	/// Stored drone color, restored when unhacked
@@ -219,19 +223,18 @@
 	listener.RegisterSignal(src, COMSIG_LIVING_REVIVE, TYPE_PROC_REF(/datum/alarm_listener, allow_alarm_changes))
 
 /mob/living/basic/drone/med_hud_set_health()
-	var/image/holder = hud_list[DIAG_HUD]
-	holder.pixel_y = get_cached_height() - ICON_SIZE_Y
-	holder.icon_state = "huddiag[RoundDiagBar(health/maxHealth)]"
+	set_hud_image_state(DIAG_HUD, "huddiag[RoundDiagBar(health/maxHealth)]")
 
 /mob/living/basic/drone/med_hud_set_status()
-	var/image/holder = hud_list[DIAG_STAT_HUD]
-	holder.pixel_y = get_cached_height() - ICON_SIZE_Y
 	if(stat == DEAD)
-		holder.icon_state = "huddead2"
-	else if(incapacitated)
-		holder.icon_state = "hudoffline"
-	else
-		holder.icon_state = "hudstat"
+		set_hud_image_state(DIAG_STAT_HUD, "huddead2")
+		return
+
+	if(incapacitated)
+		set_hud_image_state(DIAG_STAT_HUD, "hudoffline")
+		return
+
+	set_hud_image_state(DIAG_STAT_HUD, "hudstat")
 
 /mob/living/basic/drone/Destroy()
 	GLOB.drones_list -= src

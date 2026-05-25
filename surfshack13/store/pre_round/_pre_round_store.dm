@@ -94,6 +94,7 @@ GLOBAL_LIST_INIT(pre_round_items, init_pre_round_items())
 		return
 	if(!owners_prefs.has_coins(bought_item::item_cost))
 		to_chat(new_player_mob, span_warning("It seems you're lacking doubloons to complete this transaction."))
+		message_admins("[new_player_mob] attempted to buy [bought_item] but lacks the sufficient currency.")
 		return
 	var/obj/item/created_item = new bought_item.item_path
 
@@ -107,4 +108,5 @@ GLOBAL_LIST_INIT(pre_round_items, init_pre_round_items())
 			created_item.forceMove(new_player_mob_living.drop_location())
 
 	owners_prefs.adjust_metacoins(new_player_mob.client.ckey, -bought_item::item_cost, "Bought [created_item] for [initial(bought_item.item_cost)] (Pre-round Store)")
+	message_admins("[new_player_mob] has bought pre-round item [bought_item] for [initial(bought_item.item_cost)] Dubloons.")
 	QDEL_NULL(new_player_mob.client.readied_store)

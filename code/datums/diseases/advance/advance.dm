@@ -121,7 +121,6 @@
 			/datum/reagent/medicine/c2/tirimol,
 			/datum/reagent/medicine/modafinil,
 			/datum/reagent/drug/methamphetamine,
-			/datum/reagent/inverse/cryostylane,
 		),
 		list( //level 12
 			/datum/reagent/pentaerythritol,

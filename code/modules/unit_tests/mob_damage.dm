@@ -449,7 +449,7 @@
 	test_sanity_complex(gusgus)
 
 /**
- * Check that the mob has a specific amount of damage. Note: basic mobs have all incoming damage types besides stam converted into brute damage.
+ * Check that the mob has a specific amount of damage. Note: basic mobs have all incoming damage types besides stam and oxygen damage converted into brute damage.
  *
  * By default this checks that the mob has <amount> of every type of damage.
  * Arguments:
@@ -463,14 +463,14 @@
 		TEST_ASSERT_EQUAL(testing_mob.getToxLoss(), 0, \
 			"[testing_mob] should have [0] toxin damage, instead they have [testing_mob.getToxLoss()]!")
 	if(included_types & BRUTELOSS)
-		TEST_ASSERT_EQUAL(round(testing_mob.getBruteLoss(), 1), expected || amount * 4, \
-			"[testing_mob] should have [expected || amount * 4] brute damage, instead they have [testing_mob.getBruteLoss()]!")
+		TEST_ASSERT_EQUAL(round(testing_mob.getBruteLoss(), 1), expected || amount * 3, \
+			"[testing_mob] should have [expected || amount * 3] brute damage, instead they have [testing_mob.getBruteLoss()]!")
 	if(included_types & FIRELOSS)
 		TEST_ASSERT_EQUAL(round(testing_mob.getFireLoss(), 1), 0, \
 			"[testing_mob] should have [0] burn damage, instead they have [testing_mob.getFireLoss()]!")
 	if(included_types & OXYLOSS)
-		TEST_ASSERT_EQUAL(testing_mob.getOxyLoss(), 0, \
-			"[testing_mob] should have [0] oxy damage, instead they have [testing_mob.getOxyLoss()]!")
+		TEST_ASSERT_EQUAL(testing_mob.getOxyLoss(), expected || amount, \
+			"[testing_mob] should have [expected || amount] oxy damage, instead they have [testing_mob.getOxyLoss()]!")
 	if(included_types & STAMINALOSS)
 		TEST_ASSERT_EQUAL(testing_mob.getStaminaLoss(), amount, \
 			"[testing_mob] should have [amount] stamina damage, instead they have [testing_mob.getStaminaLoss()]!")
@@ -487,22 +487,25 @@
 	if(!test_apply_damage(gusgus, amount = -1))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! healing was not applied correctly")
 
-	// Give 2 damage of every time (translates to 8 brute, 2 staminaloss)
+	// Give 2 damage of every time (translates to 6 brute, 2 oxy, 2 staminaloss)
 	if(!test_apply_damage(gusgus, amount = 2))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! damage was not applied correctly")
 
-	// underhealing: heal 1 damage of every type (translates to 4 brute, 1 staminaloss)
+	// underhealing: heal 1 damage of every type (translates to 3 brute, 1 oxy, 1 staminaloss)
 	if(!test_apply_damage(gusgus, amount = -1))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! healing was not applied correctly")
 
 	// overhealing
 
-	// heal 11 points of toxloss (should take care of all 4 brute damage remaining)
-	if(!apply_damage(gusgus, -11, expected = 4, included_types = TOXLOSS))
+	// heal 11 points of toxloss (should take care of all 3 brute damage remaining)
+	if(!apply_damage(gusgus, -11, expected = 3, included_types = TOXLOSS))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! toxloss was not applied correctly")
 	// heal the remaining point of staminaloss
 	if(!apply_damage(gusgus, -11, expected = 1, included_types = STAMINALOSS))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! failed to heal staminaloss correctly")
+	// heal the remaining point of oxyloss
+	if(!apply_damage(gusgus, -11, expected = 1, included_types = OXYLOSS))
+		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! failed to heal oxyloss correctly")
 	// heal 35 points of each type, we should already be at full health so nothing should happen
 	if(!test_apply_damage(gusgus, amount = -35, expected = 0))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! overhealing was not applied correctly")

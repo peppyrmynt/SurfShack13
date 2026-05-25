@@ -16,7 +16,7 @@
 	var/heal_regen_amount = 0.1
 	var/chaplain_focus = TRUE
 
-/mob/living/basic/guardian/chaplain/Initialize()
+/mob/living/basic/guardian/chaplain/Initialize(mapload, datum/guardian_fluff/theme)
 	. = ..()
 	AddComponent(\
 		/datum/component/healing_touch,\

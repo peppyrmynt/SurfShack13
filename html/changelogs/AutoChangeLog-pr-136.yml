@@ -1,6 +1,0 @@
-author: "forgman6"
-delete-after: True
-changes:
-  - rscadd: "soda robot can hold reagents and you can add to it by injecting"
-  - rscadd: "soda bot ai chirps now"
-  - refactor: "chirp turned from emote into action"

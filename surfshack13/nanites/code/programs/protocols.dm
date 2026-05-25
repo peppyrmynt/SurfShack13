@@ -19,11 +19,12 @@
  */
 /datum/nanite_program/protocol/kickstart
 	name = "Kickstart Protocol"
-	desc = "Replication Protocol: the nanites focus on early growth, heavily boosting replication rate for a few minutes after the initial implantation."
+	desc = "Replication Protocol: the nanites focus on early growth, heavily boosting replication rate for a few minutes after the initial implantation, \
+			resulting in an additional 420 nanite volume being produced during the first two minutes."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
 	protocol_class = NANITE_PROTOCOL_REPLICATION
-	var/boost_duration = 4 MINUTES
+	var/boost_duration = 1200
 
 /datum/nanite_program/protocol/kickstart/check_conditions()
 	if(!(world.time < nanites.start_time + boost_duration))
@@ -31,17 +32,18 @@
 	return ..()
 
 /datum/nanite_program/protocol/kickstart/active_effect()
-	nanites.adjust_nanites(null, 3.5)
+	nanites.adjust_nanites(null, 4)
 
 /datum/nanite_program/protocol/factory
 	name = "Factory Protocol"
-	desc = "Replication Protocol: the nanites build a factory matrix within the host, gradually increasing replication speed over time. \
-	The factory decays if the protocol is not active, or if the nanites are disrupted by shocks or EMPs."
+	desc = "Replication Protocol: the nanites build a factory matrix within the host, gradually increasing replication speed over time, \
+			granting a maximum of 2 additional nanite production after roughly 17 minutes. \
+			The factory decays if the protocol is not active, or if the nanites are disrupted by shocks or EMPs."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
 	protocol_class = NANITE_PROTOCOL_REPLICATION
 	var/factory_efficiency = 0
-	var/max_efficiency = 2500 //Goes up to 5 bonus regen per tick after 41 minutes~
+	var/max_efficiency = 1000 //Goes up to 2 bonus regen per tick after 16 minutes and 40 seconds
 
 /datum/nanite_program/protocol/factory/on_process()
 	if(!activated || !check_conditions())
@@ -109,12 +111,112 @@
 	var/boost = 3
 
 /datum/nanite_program/protocol/offline/check_conditions()
-	if(nanites.host_mob.stat == CONSCIOUS)
+	if(nanites.host_mob.stat == UNCONSCIOUS)
 		return FALSE
 	return ..()
 
 /datum/nanite_program/protocol/offline/active_effect()
 	nanites.adjust_nanites(null, boost)
+
+/datum/nanite_program/protocol/pyramid
+	name = "Pyramid Protocol"
+	desc = "Replication Protocol: the nanites implement an alternate cooperative replication protocol that is active as long as the nanite saturation level is above 50%, \
+			resulting in an additional volume production of 1.5 per second."
+	use_rate = 0
+	protocol_class = NANITE_PROTOCOL_REPLICATION
+	rogue_types = list(/datum/nanite_program/necrotic)
+	var/boost = 1.5
+
+/datum/nanite_program/protocol/pyramid/check_conditions()
+	if((nanites.nanite_volume / nanites.max_nanites) < 0.8)
+		return FALSE
+
+	return ..()
+
+/datum/nanite_program/protocol/pyramid/active_effect()
+	nanites.adjust_nanites(null, boost)
+
+/datum/nanite_program/protocol/eclipse
+	name = "Eclipse Protocol"
+	desc = "Replication Protocol: while the host is dead, the nanites exploit the reduced interference to replicate roughly 6x quicker than normal."
+	use_rate = 0
+	protocol_class = NANITE_PROTOCOL_REPLICATION
+	rogue_types = list(/datum/nanite_program/necrotic)
+	var/boost = 3
+
+/datum/nanite_program/protocol/eclipse/check_conditions()
+	if(host_mob.stat == DEAD)
+		return TRUE
+	return ..()
+
+/datum/nanite_program/protocol/eclipse/active_effect()
+	nanites.adjust_nanites(null, boost)
+
+/datum/nanite_program/protocol/collective
+	name = "Collective Protocol"
+	desc = "Replication Protocol: the nanites adopt more strategic protocols for mass-replication, decreasing replication speed by 0.5, but increasing replication speed by a small amount for each host using this protocol."
+	use_rate = 0.5
+	protocol_class = NANITE_PROTOCOL_REPLICATION
+	rogue_types = list(/datum/nanite_program/necrotic)
+	//var/extra_volume = 250
+	var/repspeed
+
+/datum/nanite_program/protocol/collective/enable_passive_effect()
+	. = ..()
+	if(!iscarbon(host_mob))
+		return
+	repspeed = host_mob.client ? 1 : 0.25
+	SSnanites.hive_protocol_count += repspeed
+
+/datum/nanite_program/protocol/collective/disable_passive_effect()
+	. = ..()
+	if(!iscarbon(host_mob))
+		return
+	SSnanites.hive_protocol_count -= repspeed
+
+/datum/nanite_program/protocol/collective/active_effect()
+	if(!iscarbon(host_mob))
+		return
+	var/mob/living/carbon/C = host_mob
+	var/repspeed = round(SSnanites.hive_protocol_count * 0.1, 0.1)
+	if(!C.client) //less brainpower
+		repspeed *= 0.25
+	nanites.adjust_nanites(null, repspeed)
+
+/datum/nanite_program/protocol/blood_storage
+	name = "BLOOD Protocol"
+	desc = "Replication Protocol: the nanites make themselves at home within the host's flesh and blood, but this comes at the cost of the host's blood and sometimes flesh."
+	use_rate = -3.5
+	protocol_class = NANITE_PROTOCOL_REPLICATION
+	rogue_types = list(/datum/nanite_program/necrotic)
+
+/datum/nanite_program/protocol/blood_storage/check_conditions()
+	if(iscarbon(host_mob))
+		var/mob/living/carbon/C = host_mob
+		if(C.blood_volume <= BLOOD_VOLUME_RISKY)
+			return FALSE
+	else
+		return FALSE
+	return ..()
+
+/datum/nanite_program/protocol/blood_storage/active_effect()
+	if(iscarbon(host_mob))
+		var/mob/living/carbon/C = host_mob
+		C.blood_volume -= 2.275
+		if(prob(5))
+			host_mob.adjustBruteLoss(-1, TRUE)
+
+
+/datum/nanite_program/protocol/emergency
+	name = "Emergency Protocol"
+	desc = "Replication Protocol: the nanites can capable of detecting if the host is severely injured (atleast 75 damage), and will ramp up production in response."
+	use_rate = 0
+	protocol_class = NANITE_PROTOCOL_REPLICATION
+	rogue_types = list(/datum/nanite_program/necrotic)
+
+/datum/nanite_program/protocol/emergency/active_effect()
+	if(host_mob.getBruteLoss() + host_mob.getFireLoss() + host_mob.getToxLoss() + host_mob.getOxyLoss() >= 75)
+		nanites.adjust_nanites(null, 1.5)
 
 /**
  * Storage Protocols
@@ -326,147 +428,3 @@
 
 #undef MINIMUM_WARNING_COOLDOWN
 #undef MAXIMUM_WARNING_COOLDOWN
-
-
-/datum/nanite_program/protocol/pyramid
-	name = "Pyramid Protocol"
-	desc = "Replication Protocol: the nanites implement an alternate cooperative replication protocol that is active as long as the nanite saturation level is above 50%, \
-			resulting in an additional volume production of 1.5 per second."
-	use_rate = 0
-	protocol_class = NANITE_PROTOCOL_REPLICATION
-	rogue_types = list(/datum/nanite_program/necrotic)
-	var/boost = 1.5
-
-/datum/nanite_program/protocol/pyramid/check_conditions()
-	if((nanites.nanite_volume / nanites.max_nanites) < 0.5)
-		return FALSE
-
-	return ..()
-
-/datum/nanite_program/protocol/pyramid/active_effect()
-	nanites.adjust_nanites(null, boost)
-
-
-/datum/nanite_program/protocol/eclipse
-	name = "Eclipse Protocol"
-	desc = "Replication Protocol: while the host is dead, the nanites exploit the reduced interference to replicate roughly 6x quicker than normal."
-	use_rate = 0
-	protocol_class = NANITE_PROTOCOL_REPLICATION
-	rogue_types = list(/datum/nanite_program/necrotic)
-	var/boost = 3
-
-/datum/nanite_program/protocol/eclipse/check_conditions()
-	if(host_mob.stat == DEAD) // Just to give this one a bit more use, let's consider death to be unconscious.
-		return TRUE
-	return ..()
-
-/datum/nanite_program/protocol/eclipse/active_effect()
-	nanites.adjust_nanites(null, boost)
-
-
-/datum/nanite_program/protocol/collective
-	name = "Collective Protocol"
-	desc = "Replication Protocol: the nanites adopt more strategic protocols for mass-replication, decreasing replication speed by 0.5, but increasing replication speed by a small amount for each host using this protocol."
-	use_rate = 0.5
-	protocol_class = NANITE_PROTOCOL_REPLICATION
-	rogue_types = list(/datum/nanite_program/necrotic)
-	//var/extra_volume = 250
-	var/repspeed
-
-/datum/nanite_program/protocol/collective/enable_passive_effect()
-	. = ..()
-	repspeed = host_mob.client ? 1 : 0.25
-	SSnanites.hive_protocol_count += repspeed
-
-/datum/nanite_program/protocol/collective/disable_passive_effect()
-	. = ..()
-	if(!iscarbon(host_mob))
-		return
-	SSnanites.hive_protocol_count -= repspeed
-
-/datum/nanite_program/protocol/collective/active_effect()
-	if(!iscarbon(host_mob))
-		return
-	var/mob/living/carbon/C = host_mob
-	var/repspeed = round(SSnanites.hive_protocol_count * 0.1, 0.1)
-	if(!C.client) //less brainpower
-		repspeed *= 0.25
-	nanites.adjust_nanites(null, repspeed)
-
-
-/datum/nanite_program/protocol/backup
-	name = "Backup Protocol"
-	desc = "Replication Protocol: the nanites siphon a small amount of themselves and stash them within the host for emergencies, slowing the replication speed by 0.5, but when the host falls to the default safety threshold of 50, they'll instantly recover a large amount of nanites."
-	use_rate = 0.5
-	protocol_class = NANITE_PROTOCOL_REPLICATION
-	rogue_types = list(/datum/nanite_program/necrotic)
-	var/restoreamt = 450
-	var/spent = FALSE
-
-/datum/nanite_program/protocol/backup/check_conditions()
-	if((nanites.nanite_volume / nanites.max_nanites) > 0.11)
-		return FALSE
-
-	return ..()
-
-/datum/nanite_program/protocol/backup/active_effect()
-	if(!spent)
-		spent = TRUE
-		nanites.adjust_nanites(null, restoreamt)
-		addtimer(CALLBACK(src, .proc/zip_cd), 2250)
-		return
-
-/datum/nanite_program/protocol/backup/proc/zip_cd()
-	spent = FALSE
-	return
-
-
-/datum/nanite_program/protocol/blood_storage
-	name = "BLOOD Protocol"
-	desc = "Replication Protocol: the nanites make themselves at home within the host's flesh and blood, but this comes at the cost of the host's blood and sometimes flesh."
-	use_rate = -4.5
-	protocol_class = NANITE_PROTOCOL_REPLICATION
-	rogue_types = list(/datum/nanite_program/necrotic)
-
-/datum/nanite_program/protocol/blood_storage/check_conditions()
-	if(iscarbon(host_mob))
-		var/mob/living/carbon/C = host_mob
-		if(C.blood_volume <= BLOOD_VOLUME_SAFE)
-			return FALSE
-	else
-		return FALSE
-	return ..()
-
-/datum/nanite_program/protocol/blood_storage/active_effect()
-	if(iscarbon(host_mob))
-		var/mob/living/carbon/C = host_mob
-		C.blood_volume -= 2.275
-		if(prob(5))
-			host_mob.adjustBruteLoss(-1, TRUE)
-
-
-/datum/nanite_program/protocol/emergency
-	name = "Emergency Protocol"
-	desc = "Replication Protocol: the nanites can capable of detecting if the host is severely injured (atleast 75 damage), and will ramp up production in response."
-	use_rate = 0
-	protocol_class = NANITE_PROTOCOL_REPLICATION
-	rogue_types = list(/datum/nanite_program/necrotic)
-
-/datum/nanite_program/protocol/emergency/active_effect()
-	if(host_mob.getBruteLoss() + host_mob.getFireLoss() + host_mob.getToxLoss() + host_mob.getOxyLoss() >= 75)
-		nanites.adjust_nanites(null, 1.5)
-
-
-/datum/nanite_program/protocol/stasis
-	name = "Stasis Protocol"
-	desc = "Replication Protocol: the nanites take advantage of innately inert environments such as stasis or dead hosts, and can now replicate quickly without trouble in such environments. \
-		Also slightly boosts replication speeds in hosts with perfect health."
-	use_rate = 0
-	protocol_class = NANITE_PROTOCOL_REPLICATION
-	rogue_types = list(/datum/nanite_program/necrotic)
-
-/datum/nanite_program/protocol/stasis/active_effect()
-	if(host_mob.getBruteLoss() + host_mob.getFireLoss() + host_mob.getToxLoss() + host_mob.getOxyLoss() <= 0)
-		nanites.adjust_nanites(null, 0.5)
-	if(HAS_TRAIT(host_mob, TRAIT_STASIS) || (host_mob.stat == DEAD))
-		nanites.adjust_nanites(null, 2)

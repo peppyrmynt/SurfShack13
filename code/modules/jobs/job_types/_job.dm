@@ -134,9 +134,13 @@
 
 	/// If set, look for a policy with this instead of the job title
 	var/policy_override
-
+	/// Surf Shack Edit
 	/// If this job gets bonus TC when assigned traitor and how much
 	var/traitor_bonus_tc = 0
+
+	/// Can a player with this role use an Antag Token?
+	var/antag_tokenable = TRUE
+	/// Surf Shack End
 
 /datum/job/New()
 	. = ..()
