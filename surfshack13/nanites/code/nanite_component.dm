@@ -4,7 +4,7 @@
 #define NANITE_DEFAULT_SAFETY_THRESHOLD 50
 
 ///The default amount of nanite research points to generate per person per tick, if unmodified.
-#define NANITE_BASE_RESEARCH 1.5
+#define NANITE_BASE_RESEARCH 1
 ///The factor by which we multiply node costs to balance the higher production of nanite points compared to general points.
 #define NANITE_POINT_CONVERSION_RATE 10
 ///The chance at a Nanite program randomly failing when it cannot sync
