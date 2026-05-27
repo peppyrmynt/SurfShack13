@@ -3,9 +3,6 @@
 
 /datum/asset/spritesheet/chat/create_spritesheets()
 	InsertAll("emoji", EMOJI_SET)
-	//surfshack start
-	InsertAll("flag", 'surfshack13/icons/flags.dmi')
-	//surfshack end
 	// pre-loading all lanugage icons also helps to avoid meta
 	InsertAll("language", 'icons/ui/chat/language.dmi')
 	// catch languages which are pulling icons from another file
