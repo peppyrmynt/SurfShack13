@@ -17,10 +17,8 @@
 	else //null response, ratelimited most likely. Try again in 60s
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(ip2country), ipaddr, origin), 60 SECONDS)
 
-GLOBAL_LIST_INIT(countries, icon_states('surfshack13/icons/flags.dmi'))
-
-/proc/country2chaticon(country_code, targets)
-	if(GLOB.countries.Find(country_code))
-		return "[icon2html('surfshack13/icons/flags.dmi', targets, country_code)]"
-	else
-		return "[icon2html('surfshack13/icons/flags.dmi', targets, "unknown")]"
+/proc/country2chat_flag(country)
+	var/datum/asset/spritesheet/sheet = get_asset_datum(/datum/asset/spritesheet/chat)
+	. = sheet.icon_tag("flag-[country]")
+	if(!.)
+		. = sheet.icon_tag("flag-unknown")

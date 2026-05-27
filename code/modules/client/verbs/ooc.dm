@@ -91,7 +91,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 			continue
 		var/avoid_highlight = receiver == src
 		//surfshack start
-		var/parsed_country_flag = country2chaticon(country_flag)
+		var/parsed_country_flag = country2chat_flag(country_flag)
 		if(holder)
 			if(!holder.fakekey || receiver.holder)
 				if(check_rights_for(src, R_ADMIN))
