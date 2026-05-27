@@ -74,3 +74,10 @@
 	id = "sensor_resting_nanites"
 	category = list(NANITES_CATEGORY_SENSOR)
 	program_type = /datum/nanite_program/sensor/resting
+
+/datum/design/nanites/sensor_organ
+	name = "Organ Damage Sensor"
+	desc = "The nanites receive a signal when a host's organ damage is above/below a target value."
+	id = "sensor_organ_nanites"
+	category = list(NANITES_CATEGORY_SENSOR)
+	program_type = /datum/nanite_program/sensor/organ_damage
