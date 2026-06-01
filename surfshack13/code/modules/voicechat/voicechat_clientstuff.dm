@@ -155,7 +155,7 @@
 	var/userCode = client_userCode_map[C]
 	if(!C || !userCode)
 		return
-	move_userCode_to_room(userCode, "living")
+	move_userCode_to_room(userCode, M.voice_chat_room)
 
 /datum/controller/subsystem/voicechat/proc/on_mob_death(mob/M)
 	SIGNAL_HANDLER
@@ -165,33 +165,26 @@
 	SIGNAL_HANDLER
 	check_mob_conditions(M)
 
-
 /datum/controller/subsystem/voicechat/proc/check_mob_conditions(mob/M)
 	if(!M)
 		return
-
 	var/client/C = M.client
 	var/userCode = client_userCode_map[C]
-
 	if(!C || !userCode)
 		return
-
-
-
 	var/room
-
 	// everyone goes to no prox to yell at each other at round end and round start.
-	if(isnewplayer(M) || SSticker.current_state == GAME_STATE_FINISHED)
-		room = "lobby"
+	if(SSticker.current_state == GAME_STATE_FINISHED)
+		room = ROOM_GLOBAL_LOBBY
 
-	else if(isdead(M) || M.stat == DEAD)
-		room = "ghost"
+	else if(M.stat == DEAD)
+		room = ROOM_GHOST
 
 	else if(isliving(M))
 		if(HAS_TRAIT(M, TRAIT_KNOCKEDOUT) || HAS_TRAIT(M, TRAIT_DEAF)|| HAS_TRAIT(M, TRAIT_MUTE) || HAS_TRAIT(M, TRAIT_MIMING))
-			clear_from_room(M)
+			room = ROOM_NONE
 		else
-			room = "living"
+			room = M.voice_chat_room
 
 	if(room && userCode_room_map[userCode] != room)
 		move_userCode_to_room(userCode, room)
@@ -219,10 +212,8 @@
 
 	var/mob/M = C.mob
 
-	if(userCodes_speaking_icon[userCode])
-		if(C && M)
-			M.cut_overlay(userCodes_speaking_icon[userCode])
-			unregister_mob_signals(M)
+	if(M)
+		unregister_mob_signals(M)
 
 	if(from_byond)
 		send_json(alist(cmd= "disconnect", userCode= userCode))
@@ -242,29 +233,17 @@
 	if(!C || !C.mob)
 		return
 	var/mob/M = C.mob
-	var/image/speaker
-	if(!userCodes_speaking_icon[userCode])
-		speaker = image('icons/mob/effects/talk.dmi', icon_state = "voice")
-		speaker.alpha = 200
-		userCodes_speaking_icon[userCode] = speaker
-	else
-		speaker = userCodes_speaking_icon[userCode]
-
 	var/mob/old_mob = userCode_mob_map[userCode]
 	if(M != old_mob)
 		if(old_mob)
-			old_mob.overlays -= speaker
+			old_mob.toggle_voice_overlay(FALSE)
 		userCode_mob_map[userCode] = M
-
 	var/room = userCode_room_map[userCode]
-
 	//stat is used to ensure dead people dont have talking overlays
 	if(is_active && room && !M.stat)
-		userCodes_active |= userCode
-		M.add_overlay(speaker)
+		M.toggle_voice_overlay(TRUE)
 	else
-		userCodes_active -= userCode
-		M.cut_overlay(speaker)
+		M.toggle_voice_overlay(FALSE)
 
 
 // Mutes or deafens a user's microphone

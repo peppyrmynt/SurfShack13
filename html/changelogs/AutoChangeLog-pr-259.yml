@@ -1,0 +1,4 @@
+author: "blackdav123"
+delete-after: True
+changes:
+  - balance: "Heparin now metabolizes slower, from 0.2 to 0.08."

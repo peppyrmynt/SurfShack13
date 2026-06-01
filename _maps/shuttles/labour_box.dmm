@@ -11,22 +11,66 @@
 	dir = 4
 	},
 /obj/structure/reagent_dispensers/wall/peppertank/directional/west,
-/turf/open/floor/mineral/plastitanium/red,
-/area/shuttle/labor)
-"d" = (
-/obj/structure/chair/office{
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 9
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
 	dir = 1
 	},
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/tile/neutral,
+/obj/effect/turf_decal/bot_red,
+/turf/open/floor/iron/dark/smooth_corner,
+/area/shuttle/labor)
+"d" = (
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral/half/contrasted,
+/obj/structure/chair/office{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_edge{
+	dir = 1
+	},
 /area/shuttle/labor)
 "e" = (
 /obj/structure/table,
 /obj/item/folder/red,
 /obj/item/restraints/handcuffs,
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_corner{
+	dir = 8
+	},
 /area/shuttle/labor)
 "f" = (
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/red/filled/warning,
+/obj/effect/turf_decal/trimline/red/mid_joiner,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_corner{
+	dir = 4
+	},
 /area/shuttle/labor)
 "g" = (
 /obj/machinery/button/flasher{
@@ -36,48 +80,106 @@
 	req_access = list("security")
 	},
 /obj/machinery/light/directional/south,
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner,
+/obj/effect/turf_decal/tile/neutral/half/contrasted{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_edge,
 /area/shuttle/labor)
 "h" = (
 /obj/machinery/mineral/stacking_unit_console{
 	pixel_x = 30;
 	pixel_y = 30
 	},
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_corner{
+	dir = 1
+	},
 /area/shuttle/labor)
 "i" = (
-/obj/machinery/door/airlock/titanium{
-	name = "Labor Shuttle Airlock"
-	},
-/obj/effect/mapping_helpers/airlock/access/all/security/brig,
-/turf/open/floor/plating,
+/obj/effect/turf_decal/trimline/neutral/filled/line,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/turf/open/floor/iron/edge,
 /area/shuttle/labor)
 "j" = (
 /obj/machinery/door/airlock/titanium{
 	name = "Labor Shuttle Airlock"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/security/brig,
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/trimline/red/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/warning,
+/obj/effect/turf_decal/trimline/neutral/mid_joiner,
+/turf/open/floor/iron/dark/textured_large,
 /area/shuttle/labor)
 "k" = (
 /obj/machinery/mineral/stacking_machine/laborstacker{
 	input_dir = 2;
 	output_dir = 1
 	},
-/turf/open/floor/iron/dark,
+/obj/effect/turf_decal/bot_red,
+/obj/effect/turf_decal/siding/dark,
+/obj/effect/turf_decal/siding/dark{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/textured_large,
 /area/shuttle/labor)
 "l" = (
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/corner,
 /area/shuttle/labor)
 "m" = (
 /obj/machinery/light/directional/north,
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/edge{
+	dir = 1
+	},
 /area/shuttle/labor)
 "n" = (
 /obj/machinery/mineral/labor_claim_console{
 	pixel_x = 30
 	},
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/corner{
+	dir = 8
+	},
 /area/shuttle/labor)
 "o" = (
 /obj/structure/chair/comfy/shuttle{
@@ -86,11 +188,29 @@
 /obj/machinery/flasher/directional/east{
 	id = "gulagshuttleflasher"
 	},
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/edge{
+	dir = 4
+	},
 /area/shuttle/labor)
 "p" = (
-/obj/structure/closet/crate,
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/turf/open/floor/iron/edge{
+	dir = 8
+	},
 /area/shuttle/labor)
 "q" = (
 /obj/docking_port/mobile{
@@ -99,8 +219,19 @@
 	name = "labor camp shuttle";
 	port_direction = 4
 	},
-/obj/effect/spawner/structure/window/reinforced/shuttle,
-/turf/open/floor/plating,
+/obj/machinery/door/airlock/titanium{
+	name = "Labor Shuttle Airlock"
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/textured_large,
 /area/shuttle/labor)
 "r" = (
 /obj/machinery/power/shuttle_engine/heater,
@@ -111,21 +242,61 @@
 /obj/machinery/power/shuttle_engine/propulsion,
 /turf/open/floor/plating/airless,
 /area/shuttle/labor)
-"W" = (
+"u" = (
 /obj/machinery/door/airlock/titanium{
 	name = "Labor Shuttle Airlock"
 	},
-/turf/open/floor/mineral/titanium,
+/obj/effect/mapping_helpers/airlock/access/all/security/brig,
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/textured_large,
+/area/shuttle/labor)
+"C" = (
+/turf/open/floor/iron/large,
+/area/shuttle/labor)
+"K" = (
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/structure/closet/crate,
+/turf/open/floor/iron/corner{
+	dir = 4
+	},
+/area/shuttle/labor)
+"W" = (
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/corner{
+	dir = 1
+	},
 /area/shuttle/labor)
 
 (1,1,1) = {"
 a
 a
-i
+b
 a
 a
 b
-W
+a
 a
 a
 "}
@@ -136,7 +307,7 @@ f
 j
 l
 p
-l
+K
 r
 s
 "}
@@ -146,8 +317,8 @@ d
 g
 a
 m
-l
-l
+C
+i
 r
 s
 "}
@@ -158,14 +329,14 @@ h
 k
 n
 o
-l
+W
 r
 s
 "}
 (5,1,1) = {"
 a
 a
-b
+u
 a
 a
 a

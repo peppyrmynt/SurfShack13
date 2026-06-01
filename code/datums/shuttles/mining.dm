@@ -68,3 +68,7 @@
 /datum/map_template/shuttle/mining_common/kilo
 	suffix = "kilo"
 	name = "lavaland shuttle (Kilo)"
+
+/datum/map_template/shuttle/mining_common/box
+	suffix = "box"
+	name = "lavaland shuttle (Box)"

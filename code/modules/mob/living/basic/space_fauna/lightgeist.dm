@@ -42,7 +42,9 @@
 	maximum_survivable_temperature = 1500
 	obj_damage = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE
-
+	//surfshack start
+	voice_chat_room = ROOM_SLIME
+	//surfshack end
 	ai_controller = /datum/ai_controller/basic_controller/lightgeist
 
 /mob/living/basic/lightgeist/Initialize(mapload)

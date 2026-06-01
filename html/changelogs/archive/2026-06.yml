@@ -1,0 +1,21 @@
+2026-06-01:
+  BobDABuilder9001:
+  - balance: solars now make 2.5kw each instead of 1.5kw
+  ZealousZeke:
+  - balance: Buffed Helgrasp's metabolism to 0.6u/tick
+  - balance: Buffed Eigenswap's metabolism to 0.1u/tick
+  - balance: Changed how prohol boosts alcohol power.
+  - balance: Made Benzoic Acid boost plant endurance and increased its inverse threshold.
+  - balance: Added the bloody mess trait to Bamethan and increased its inverse threshold.
+  - balance: Increased Oxandrolone's inverse threshold.
+  - balance: Pendetide now does 2 toxin/tick.
+  - balance: Increased Sadness' metabolism from 0.1u/tick to 0.4u/tick
+  - balance: Increases Rotatium Metabolism and adds a self-purging overdose effect.
+  cocothegogo:
+  - rscadd: 'MiniSurf: New Arrival Area'
+  - rscadd: 'MiniSurf: Moved HoP office'
+  - rscadd: 'MiniSurf: vacant office added to maints'
+  - rscadd: 'MiniSurf: new maint tunnels'
+  peppyrmynt:
+  - bugfix: added character limit to Play Internet Sound and Request Internet Sound
+      boxes

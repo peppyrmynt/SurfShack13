@@ -63,11 +63,8 @@
 		return
 
 	queue[ckey] += list(list(round_end_bonus, "Played a Round"))
-	if(details?.mob?.mind?.assigned_role?.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND)
-		queue[ckey] += list(list(200, "Head of Staff Bonus"))
-
-	if(details?.mob?.mind?.assigned_role?.departments_bitflags & DEPARTMENT_BITFLAG_SECURITY)
-		queue[ckey] += list(list(100, "Security Role Bonus"))
+	if(details?.mob?.mind?.assigned_role?.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND|DEPARTMENT_BITFLAG_SECURITY|DEPARTMENT_BITFLAG_SILICON)
+		queue[ckey] += list(list(25, "Desired Role Bonus"))
 
 	if(details?.mob?.mind?.antag_datums != null)
 		for(var/datum/antagonist/antag_datum as anything in details?.mob?.mind?.antag_datums)

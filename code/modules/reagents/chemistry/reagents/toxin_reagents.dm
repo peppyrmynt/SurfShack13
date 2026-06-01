@@ -916,6 +916,7 @@
 	metabolization_rate = 0.5 * REAGENTS_METABOLISM
 	toxpwr = 0
 	ph = 6
+	inverse_chem_val = 0.5
 	inverse_chem = /datum/reagent/impurity/ipecacide
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
@@ -992,13 +993,13 @@
 
 /datum/reagent/toxin/heparin //Based on a real-life anticoagulant. I'm not a doctor, so this won't be realistic.
 	name = "Heparin"
-	description = "A powerful anticoagulant. All open cut wounds on the victim will open up and bleed much faster. It directly purges sanguirite, a coagulant."
+	description = "A powerful anticoagulant. All open cut wounds on the victim will open up and bleed much faster. It directly purges sanguirite, a coagulant. Metabolizes very slowly."
 	silent_toxin = TRUE
 	reagent_state = LIQUID
 	creation_purity = REAGENT_STANDARD_PURITY
 	purity = REAGENT_STANDARD_PURITY
 	color = "#C8C8C8" //RGB: 200, 200, 200
-	metabolization_rate = 0.2 * REAGENTS_METABOLISM
+	metabolization_rate = 0.08 * REAGENTS_METABOLISM
 	toxpwr = 0
 	ph = 11.6
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
@@ -1008,38 +1009,6 @@
 	if(holder.has_reagent(/datum/reagent/medicine/coagulant)) //Directly purges coagulants from the system. Get rid of the heparin BEFORE attempting to use coagulants.
 		holder.remove_reagent(/datum/reagent/medicine/coagulant, 2 * REM * seconds_per_tick)
 	return ..()
-
-/datum/reagent/toxin/rotatium //Rotatium. Fucks up your rotation and is hilarious
-	name = "Rotatium"
-	description = "A constantly swirling, oddly colourful fluid. Causes the consumer's sense of direction and hand-eye coordination to become wild."
-	silent_toxin = TRUE
-	reagent_state = LIQUID
-	creation_purity = REAGENT_STANDARD_PURITY
-	purity = REAGENT_STANDARD_PURITY
-	color = "#AC88CA" //RGB: 172, 136, 202
-	metabolization_rate = 0.6 * REAGENTS_METABOLISM
-	toxpwr = 0.5
-	ph = 6.2
-	taste_description = "spinning"
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-
-/datum/reagent/toxin/rotatium/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
-	. = ..()
-	if(!affected_mob.hud_used || (current_cycle < 20 || (current_cycle % 20) == 0))
-		return
-	var/atom/movable/plane_master_controller/pm_controller = affected_mob.hud_used.plane_master_controllers[PLANE_MASTERS_GAME]
-
-	var/rotation = min(round(current_cycle/20), 89) // By this point the player is probably puking and quitting anyway
-	for(var/atom/movable/screen/plane_master/plane as anything in pm_controller.get_planes())
-		animate(plane, transform = matrix(rotation, MATRIX_ROTATE), time = 5, easing = QUAD_EASING, loop = -1)
-		animate(transform = matrix(-rotation, MATRIX_ROTATE), time = 5, easing = QUAD_EASING)
-
-/datum/reagent/toxin/rotatium/on_mob_end_metabolize(mob/living/affected_mob)
-	. = ..()
-	if(affected_mob?.hud_used)
-		var/atom/movable/plane_master_controller/pm_controller = affected_mob.hud_used.plane_master_controllers[PLANE_MASTERS_GAME]
-		for(var/atom/movable/screen/plane_master/plane as anything in pm_controller.get_planes())
-			animate(plane, transform = matrix(), time = 5, easing = QUAD_EASING)
 
 /datum/reagent/toxin/anacea
 	name = "Anacea"

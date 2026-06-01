@@ -18,6 +18,9 @@
 	lighting_cutoff_blue = 30
 	initial_language_holder = /datum/language_holder/empty
 	can_buckle_to = FALSE
+	//surfshack start
+	voice_chat_room = ROOM_NONE
+	//surfshack end
 
 /mob/living/basic/blob_minion/Initialize(mapload)
 	. = ..()

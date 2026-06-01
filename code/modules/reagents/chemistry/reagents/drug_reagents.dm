@@ -111,6 +111,8 @@
 	overdose_threshold = 20
 	ph = 9
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	inverse_chem_val = 0.3
+	inverse_chem = /datum/reagent/inverse/krokodil
 	addiction_types = list(/datum/addiction/opioids = 18) //7.2 per 2 seconds
 
 
@@ -267,6 +269,8 @@
 	reagent_state = LIQUID
 	color = "#78FFF0"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	inverse_chem_val = 0.5
+	inverse_chem = /datum/reagent/inverse/aranesp
 	addiction_types = list(/datum/addiction/stimulants = 8)
 	metabolized_traits = list(TRAIT_STIMULATED)
 
@@ -292,6 +296,8 @@
 	overdose_threshold = 20
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	taste_description = "paint thinner"
+	inverse_chem_val = 0.4
+	inverse_chem = /datum/reagent/inverse/happiness
 	addiction_types = list(/datum/addiction/hallucinogens = 18)
 	metabolized_traits = list(TRAIT_FEARLESS, TRAIT_ANALGESIA)
 
@@ -881,3 +887,50 @@
 	)
 	new /obj/structure/bouncy_castle(gored.loc, gored)
 	gored.gib()
+
+/datum/reagent/drug/rotatium //Rotatium. Fucks up your rotation and is hilarious
+	name = "Rotatium"
+	description = "A constantly swirling, oddly colourful fluid. Causes the consumer's sense of direction and hand-eye coordination to become wild."
+	reagent_state = LIQUID
+	creation_purity = REAGENT_STANDARD_PURITY
+	purity = REAGENT_STANDARD_PURITY
+	color = "#AC88CA" //RGB: 172, 136, 202
+	overdose_threshold = 20
+	metabolization_rate = REAGENTS_METABOLISM
+	ph = 6.2
+	taste_description = "spinning"
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	addiction_types = list(/datum/addiction/hallucinogens = 18)  //7.2 per 2 seconds
+
+/datum/reagent/drug/rotatium/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
+	. = ..()
+	if(!affected_mob.hud_used || (current_cycle % 10))
+		return
+	var/atom/movable/plane_master_controller/pm_controller = affected_mob.hud_used.plane_master_controllers[PLANE_MASTERS_GAME]
+
+	var/rotation = max(5, min(round(current_cycle/20), 89)) // By this point the player is probably puking and quitting anyway
+	for(var/atom/movable/screen/plane_master/plane as anything in pm_controller.get_planes())
+		animate(plane, transform = matrix(rotation, MATRIX_ROTATE), time = 9, easing = QUAD_EASING, loop = -1)
+		animate(transform = matrix(-rotation, MATRIX_ROTATE), time = 9, easing = QUAD_EASING)
+
+/datum/reagent/drug/rotatium/on_mob_end_metabolize(mob/living/affected_mob)
+	. = ..()
+	if(affected_mob?.hud_used)
+		var/atom/movable/plane_master_controller/pm_controller = affected_mob.hud_used.plane_master_controllers[PLANE_MASTERS_GAME]
+		for(var/atom/movable/screen/plane_master/plane as anything in pm_controller.get_planes())
+			animate(plane, transform = matrix(), time = 9, easing = QUAD_EASING)
+
+/datum/reagent/drug/rotatium/overdose_start(mob/living/affected_mob)
+	. = ..()
+	to_chat(affected_mob, span_userdanger("You start tripping hard!"))
+	affected_mob.add_mood_event("[type]_overdose", /datum/mood_event/overdose, name)
+
+/datum/reagent/drug/rotatium/overdose_process(mob/living/affected_mob, seconds_per_tick, times_fired)
+	. = ..()
+	affected_mob.reagents.remove_reagent(type, 4 * REM * seconds_per_tick)
+	var/hallucination_duration_in_seconds = (affected_mob.get_timed_status_effect_duration(/datum/status_effect/hallucination) / 10)
+	if(hallucination_duration_in_seconds < volume && SPT_PROB(10, seconds_per_tick))
+		affected_mob.adjust_hallucinations(10 SECONDS)
+		//surfshack start
+		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
+		//surfshack end

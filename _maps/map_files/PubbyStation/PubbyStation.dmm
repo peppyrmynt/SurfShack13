@@ -9793,9 +9793,6 @@
 	},
 /turf/open/floor/iron/white/textured_large,
 /area/station/medical/psychology)
-"aJd" = (
-/turf/closed/wall,
-/area/station/medical/psychology)
 "aJk" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -77190,6 +77187,7 @@
 /obj/item/gun/energy/e_gun/dragnet,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/structure/cable,
+/obj/item/gun/grenadelauncher,
 /turf/open/floor/iron/dark/textured,
 /area/station/ai_monitored/security/armory)
 "umc" = (
@@ -112487,7 +112485,7 @@ tYZ
 tYZ
 tYZ
 tYZ
-aJd
+tYZ
 eNp
 wKy
 nLN

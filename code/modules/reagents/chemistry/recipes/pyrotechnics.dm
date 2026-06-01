@@ -12,7 +12,7 @@
 	default_explode(holder, created_volume, modifier, strengthdiv)
 
 /datum/chemical_reaction/reagent_explosion/nitroglycerin
-	results = list(/datum/reagent/nitroglycerin = 2)
+	results = list(/datum/reagent/nitroglycerin = 3)
 	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/toxin/acid/nitracid = 1, /datum/reagent/toxin/acid = 1)
 	strengthdiv = 2
 
@@ -29,7 +29,7 @@
 	strengthdiv = 2
 
 /datum/chemical_reaction/reagent_explosion/rdx
-	results = list(/datum/reagent/rdx= 2)
+	results = list(/datum/reagent/rdx= 4)
 	required_reagents = list(/datum/reagent/phenol = 2, /datum/reagent/toxin/acid/nitracid = 1, /datum/reagent/acetone_oxide = 1 )
 	required_catalysts = list(/datum/reagent/gold) //royal explosive
 	required_temp = 404
@@ -75,7 +75,7 @@
 	..()
 
 /datum/chemical_reaction/reagent_explosion/tatp
-	results = list(/datum/reagent/tatp= 1)
+	results = list(/datum/reagent/tatp= 3)
 	required_reagents = list(/datum/reagent/acetone_oxide = 1, /datum/reagent/toxin/acid/nitracid = 1, /datum/reagent/pentaerythritol = 1 )
 	required_temp = 450
 	strengthdiv = 3

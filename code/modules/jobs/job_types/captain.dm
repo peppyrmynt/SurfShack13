@@ -50,6 +50,9 @@
 
 	voice_of_god_power = 1.4 //Command staff has authority
 
+	// Surf Shack Edit
+	antag_tokenable = FALSE
+	// Surf Shack End
 
 /datum/job/captain/get_captaincy_announcement(mob/living/captain)
 	return "Captain [captain.real_name] on deck!"

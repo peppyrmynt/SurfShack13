@@ -63,6 +63,7 @@
 /datum/reagent/inverse/eigenswap
 	name = "Eigenswap"
 	description = "This reagent is known to swap the handedness of a patient."
+	metabolization_rate = 0.25 * REAGENTS_METABOLISM
 	ph = 3.3
 	chemical_flags = REAGENT_DONOTSPLIT
 	tox_damage = 0

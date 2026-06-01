@@ -1,4 +1,0 @@
-author: "hyperjll"
-delete-after: True
-changes:
-  - server: "Restarting the round via the voting system, if passed, will no longer award Doubloons to ANY players should the round have not lasted at LEAST 20 minutes."
