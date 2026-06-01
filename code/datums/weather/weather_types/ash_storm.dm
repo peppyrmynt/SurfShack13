@@ -15,7 +15,6 @@
 
 	end_message = span_bolddanger("The shrieking wind whips away the last of the ash and falls to its usual murmur. It should be safe to go outside now.")
 	end_duration = 100
-	//surfshack end
 	end_overlay = "light_ash"
 
 	area_type = /area
@@ -24,7 +23,8 @@
 
 	immunity_type = TRAIT_ASHSTORM_IMMUNE
 
-	probability = 90
+	probability = 85
+	//surfshack end
 
 	barometer_predictable = TRUE
 	var/list/weak_sounds = list()
