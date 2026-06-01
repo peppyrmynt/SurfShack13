@@ -10,14 +10,22 @@ GLOBAL_LIST_EMPTY(total_extraction_beacons)
 	var/datum/weakref/beacon_ref
 	/// List of networks
 	var/list/beacon_networks = list("station")
+	//surfshack start
 	/// Number of uses left
-	var/uses_left = 3
+	var/uses_left = 9
+	//surfshack end
 	/// Can be used indoors
 	var/can_use_indoors
 	/// Can be used on living creatures
 	var/safe_for_living_creatures = TRUE
 	/// Maximum force that can be used to extract
 	var/max_force_fulton = MOVE_FORCE_STRONG
+
+//surfshack start
+/obj/item/extraction_pack/examine_more(mob/user)
+	. = ..()
+	. += "a tag on the harness says \"Restock at your local mining vendor\""
+//surfshack end
 
 /obj/item/extraction_pack/examine()
 	. = ..()

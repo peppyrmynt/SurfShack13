@@ -8,12 +8,14 @@
 	telegraph_overlay = "light_ash"
 
 	weather_message = span_userdanger("<i>Smoldering clouds of scorching ash billow down around you! Get inside!</i>")
-	weather_duration_lower = 600
-	weather_duration_upper = 1200
+	//surfshack start
+	weather_duration_lower = 500
+	weather_duration_upper = 800
 	weather_overlay = "ash_storm"
 
 	end_message = span_bolddanger("The shrieking wind whips away the last of the ash and falls to its usual murmur. It should be safe to go outside now.")
-	end_duration = 300
+	end_duration = 100
+	//surfshack end
 	end_overlay = "light_ash"
 
 	area_type = /area

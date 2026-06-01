@@ -40,6 +40,7 @@
 	noose_neck_overlay.pixel_y = src.pixel_y
 	noose_neck_overlay.atom_colours = src.atom_colours
 	noose_neck_overlay.update_atom_colour()
+	noose_neck_overlay.name = ""
 	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(move_overlay))
 
 /obj/structure/noose/proc/move_overlay()
@@ -66,8 +67,11 @@
 	if(!M.get_bodypart("head") || M.loc != src.loc)
 		return FALSE
 
-	M.visible_message(span_danger("[user] attempts to put [M]'s into \the [src]"))
-	if(!do_after(user, user == M ? 0 : 20 SECONDS, M) )
+	M.visible_message(span_danger("[user] attempts to put [M] into \the [src]"))
+	var/noosing_time = 15 SECONDS
+	if(M.stat == DEAD || M == user)
+		noosing_time = 2 SECONDS
+	if(!do_after(user, noosing_time, M))
 		return
 	if(!is_user_buckle_possible(M, user, check_loc))
 		return FALSE
