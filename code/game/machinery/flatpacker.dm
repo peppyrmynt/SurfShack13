@@ -484,5 +484,5 @@
 /obj/item/flatpack/mailsorter // to have a roundstart mail sorter at cargo
 	board = /obj/item/circuitboard/machine/mailsorter
 
-/obj/item/flatpack/ltsrbt // ez-peez setup
+/obj/item/flatpack/ltsrbt // easy set up
 	board = /obj/item/circuitboard/machine/ltsrbt
