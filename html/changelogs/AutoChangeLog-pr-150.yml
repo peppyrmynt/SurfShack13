@@ -1,5 +1,0 @@
-author: "IndieanaJones"
-delete-after: True
-changes:
-  - rscadd: "Re-added gatfruits giving actual revolvers."
-  - rscdel: "Removed everything related to the peashooter, since it is no longer a part of the game."

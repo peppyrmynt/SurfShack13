@@ -62,7 +62,7 @@
 			send_to_playing_players(span_boldannounce("The next map has been reset due to successful restart vote."))
 			revert_map_vote()
 
-		SSticker.force_ending = FORCE_END_ROUND
+		SSticker.force_ending = VOTE_FORCE_END_ROUND
 		log_game("End round forced by successful restart vote.")
 		return
 

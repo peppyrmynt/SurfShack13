@@ -19,7 +19,7 @@
 	if(isnull(imp_in))
 		return
 	if(!COOLDOWN_FINISHED(src, adrenal_cooldown))
-		balloon_alert(imp_in, "Ready to use in [round(COOLDOWN_TIMELEFT(src, adrenal_cooldown)/10)] seconds!")
+		balloon_alert(imp_in, "ready to use in [round(COOLDOWN_TIMELEFT(src, adrenal_cooldown)/10)] seconds!")
 		return
 
 	imp_in.SetAllImmobility(0)
@@ -30,7 +30,7 @@
 
 	uses--
 	if(uses < 1)
-		balloon_alert(imp_in, "Last Adrenal implant charge used!")
+		balloon_alert(imp_in, "last Adrenal implant charge used!")
 		qdel(src)
 		return
 	to_chat(imp_in, span_notice("Adrenal implant activated, charges left: [uses]!"))

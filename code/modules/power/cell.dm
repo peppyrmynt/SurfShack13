@@ -206,7 +206,7 @@
 	///How long it takes for us to regain power
 	var/recharge_time = 15 SECONDS
 
-/obj/item/stock_parts/power_store/cell/slime/Initialize()
+/obj/item/stock_parts/power_store/cell/slime/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 

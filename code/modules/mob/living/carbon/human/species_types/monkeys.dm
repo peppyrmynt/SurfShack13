@@ -38,6 +38,9 @@
 
 	payday_modifier = 1.5
 	ai_controlled_species = TRUE
+	//surfshack start
+	voice_chat_room_on_gain = ROOM_MONKEY
+	//surfshack end
 
 /datum/species/monkey/on_species_gain(mob/living/carbon/human/human_who_gained_species, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()

@@ -96,6 +96,8 @@
 	name = "bowling pins"
 	desc = "A set of four bowling pins, they can be placed."
 	icon = 'surfshack13/icons/obj/bowling.dmi'
+	righthand_file = 'surfshack13/icons/mob/inhands/righthand.dmi'
+	lefthand_file = 'surfshack13/icons/mob/inhands/lefthand.dmi'
 	icon_state = "bowling_pins"
 	inhand_icon_state = "bowling_pins"
 	/// if the pins are standing up

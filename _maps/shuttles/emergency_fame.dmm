@@ -315,7 +315,6 @@
 /turf/open/floor/carpet/royalblue,
 /area/shuttle/escape)
 "mx" = (
-/obj/effect/mapping_helpers/engraving,
 /turf/closed/wall/mineral/silver,
 /area/shuttle/escape)
 "mz" = (

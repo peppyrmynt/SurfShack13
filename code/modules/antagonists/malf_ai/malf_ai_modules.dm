@@ -78,6 +78,10 @@ GLOBAL_LIST_INIT(malf_modules, subtypesof(/datum/ai_module/malf))
 	else
 		owner_AI = owner
 
+/datum/action/innate/ai/Remove(mob/living/player)
+	. = ..()
+	owner_AI = null
+
 /datum/action/innate/ai/IsAvailable(feedback = FALSE)
 	. = ..()
 	if(owner_AI && owner_AI.malf_cooldown > world.time)

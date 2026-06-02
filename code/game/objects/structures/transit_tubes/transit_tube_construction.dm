@@ -140,18 +140,43 @@
 	flipped = TRUE
 
 
+/obj/structure/c_transit_tube/curved/crossing
+	icon_state = "curved_crossing0"
+	build_type = /obj/structure/transit_tube/curved/crossing
+	flipped_build_type = /obj/structure/transit_tube/curved/crossing/flipped
+	base_icon_state = "curved_crossing"
+
+/obj/structure/c_transit_tube/curved/crossing/flipped
+	icon_state = "curved_crossing1"
+	build_type = /obj/structure/transit_tube/curved/crossing/flipped
+	flipped_build_type = /obj/structure/transit_tube/curved/crossing
+	flipped = TRUE
+
+
 /obj/structure/c_transit_tube/junction
 	icon_state = "junction0"
 	build_type = /obj/structure/transit_tube/junction
 	flipped_build_type = /obj/structure/transit_tube/junction/flipped
 	base_icon_state = "junction"
 
-
 /obj/structure/c_transit_tube/junction/flipped
 	icon_state = "junction1"
 	flipped = TRUE
 	build_type = /obj/structure/transit_tube/junction/flipped
 	flipped_build_type = /obj/structure/transit_tube/junction
+
+
+/obj/structure/c_transit_tube/junction/crossing
+	icon_state = "junction_crossing0"
+	build_type = /obj/structure/transit_tube/junction/crossing
+	flipped_build_type = /obj/structure/transit_tube/junction/crossing/flipped
+	base_icon_state = "junction_crossing"
+
+/obj/structure/c_transit_tube/junction/crossing/flipped
+	icon_state = "junction_crossing1"
+	flipped = TRUE
+	build_type = /obj/structure/transit_tube/junction/crossing/flipped
+	flipped_build_type = /obj/structure/transit_tube/junction/crossing
 
 
 //transit tube pod

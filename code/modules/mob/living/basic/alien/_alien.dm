@@ -46,7 +46,10 @@
 	unsuitable_heat_damage = 20
 
 	ai_controller = /datum/ai_controller/basic_controller/alien
-
+	//surfshack start
+	voice_chat_room = ROOM_XENO
+	voice_icon_state = "ayy"
+	//surfshack end
 	///List of loot items to drop when deleted, if this is set then we apply DEL_ON_DEATH
 	var/list/loot
 	///Boolean on whether the xeno can plant weeds.

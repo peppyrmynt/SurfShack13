@@ -26,10 +26,10 @@ ADMIN_VERB(schedule_playtime, R_FUN, "Schedule Playtime", "Schedule the playtime
 	. = TRUE
 	SSfrogui.open_ui(user.mob, src, file2text('surfshack13/frogui/datepicker.html'), ui_flags = FROG_UI_IGNORE_PROXIMITY)
 
-/datum/admin_verb/schedule_playtime/frog_ui_topic(datum/source, usr, list/href_list)
+/datum/admin_verb/schedule_playtime/frog_ui_topic(datum/source, user, list/href_list)
 	. = ..()
 	if(href_list["datetime"])
 		GLOB.playdate_time = href_list["datetime"]
 		world.update_status()
-		SSfrogui.close_ui(usr, src)
+		SSfrogui.close_ui(user, src)
 

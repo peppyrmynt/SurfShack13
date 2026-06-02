@@ -1,5 +1,0 @@
-author: "manofpepsi"
-delete-after: True
-changes:
-  - rscadd: "darkmode for the voicechat window"
-  - bugfix: "scrollbars not having proper colors and uplink not having it"

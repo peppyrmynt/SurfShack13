@@ -11,18 +11,12 @@
 #define TECHWEB_NODE_NANITE_REPLICATION "nanite_replication_protocols"
 #define TECHWEB_NODE_NANITE_STORAGE "nanite_storage_protocols"
 
-
 #define TECHWEB_NODE_NANITE_BASIC_TOOL "nanite_tool"
 #define TECHWEB_NODE_NANITE_ADV_TOOL "nanite_tool_adv"
 #define TECHWEB_NODE_NANITE_EXPERI "nanite_experi"
-#define TECHWEB_NODE_NANITE_BRAINAUG "nanite_brainaug"
 #define TECHWEB_NODE_NANITE_ILLEGAL "nanite_illegal"
 #define TECHWEB_NODE_NANITE_EXPERI_MED "nanite_experi_med"
-#define TECHWEB_NODE_NANITE_EXPERI_MED_ADV "nanite_experi_med_adv"
-#define TECHWEB_NODE_NANITE_EXPERI_ADV "nanite_experi_adv"
 #define TECHWEB_NODE_NANITE_MAGIC "nanite_magical"
-
-#define TECHWEB_NODE_NANITE_REPLICATION_ADV "nanite_replication_protocols_adv"
 
 /datum/techweb_node/nanite_base
 	id = TECHWEB_NODE_NANITE_BASE
@@ -48,7 +42,6 @@
 		"relay_repeater_nanites",
 		"red_diag_nanites",
 		"monitoring_nanites",
-		"sensor_name_nanites",
 		"sensor_resting_nanites",
 	)
 	research_costs = list(
@@ -68,7 +61,7 @@
 		"sensor_voice_nanites",
 		"voice_nanites",
 		"research_nanites",
-		"sensor_job_nanites",
+		"sensor_assistant_nanites",
 		"sensor_incapacitated_nanites",
 	)
 	research_costs = list(
@@ -105,7 +98,6 @@
 		"regenerative_nanites",
 		"bloodheal_nanites",
 		"coagulating_nanites",
-		"oxyheal_nanites",
 		"poison_nanites",
 		"flesheating_nanites",
 		"sensor_crit_nanites",
@@ -151,7 +143,7 @@
 		"sleep_nanites",
 		"mute_nanites",
 		"speech_nanites",
-		"researchplus_nanites",
+		"neuraltrauma_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS,
@@ -170,7 +162,6 @@
 		"regenerative_plus_nanites",
 		"brainheal_plus_nanites",
 		"purging_plus_nanites",
-		"adrenaline_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS,
@@ -203,6 +194,7 @@
 		"spreading_nanites",
 		"mindcontrol_nanites",
 		"mitosis_nanites",
+		"braintrauma_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS,
@@ -221,29 +213,13 @@
 		"offline_nanites",
 		"collective_nanites",
 		"pyramid_nanites",
+		"eclipse_nanites",
+		"blood_storage_nanites",
+		"emergency_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS,
 		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_3_POINTS*NANITE_POINT_CONVERSION_RATE,
-	)
-	hidden = FALSE
-	experimental = TRUE
-
-/datum/techweb_node/nanite_replication_protocols_adv
-	id = TECHWEB_NODE_NANITE_REPLICATION_ADV
-	display_name = "Nanite Experimental Replication Protocols"
-	description = "Highly experimental behaviours that allow nanites to exploit certain circumstances to replicate faster."
-	prereq_ids = list(TECHWEB_NODE_NANITE_REPLICATION, TECHWEB_NODE_NANITE_SYNAPTIC)
-	design_ids = list(
-		"eclipse_nanites",
-		"backup_nanites",
-		"blood_storage_nanites",
-		"emergency_nanites",
-		"stasis_nanites",
-	)
-	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS,
-		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_4_POINTS*NANITE_POINT_CONVERSION_RATE,
 	)
 	hidden = FALSE
 	experimental = TRUE
@@ -270,23 +246,12 @@
 /datum/techweb_node/nanite_tools
 	id = TECHWEB_NODE_NANITE_BASIC_TOOL
 	display_name = "Basic Nanite Manufacturing"
-	description = "Nanites programs that allow for easy construction of basic items."
+	description = "Nanites programs that allow for easy construction of items."
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS,
 		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_1_POINTS*NANITE_POINT_CONVERSION_RATE,)
 	prereq_ids = list(TECHWEB_NODE_NANITE_BASE)
-	design_ids = list("construct_tool_nanites", "convert_nanites")
-
-/datum/techweb_node/nanite_tools_adv
-	id = TECHWEB_NODE_NANITE_ADV_TOOL
-	display_name = "Advanced Nanite Manufacturing"
-	description = "Nanites programs that allow for easy construction of advanced items."
-	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS,
-		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_2_POINTS*NANITE_POINT_CONVERSION_RATE,)
-	prereq_ids = list(TECHWEB_NODE_NANITE_BASIC_TOOL, TECHWEB_NODE_EXP_TOOLS)
-	design_ids = list("construct_tool_adv_nanites", "botsummon_nanites")
-
+	design_ids = list("construct_tool_nanites", "botsummon_nanites")
 
 /datum/techweb_node/nanite_experimental
 	id = TECHWEB_NODE_NANITE_EXPERI
@@ -296,27 +261,7 @@
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS,
 		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_2_POINTS*NANITE_POINT_CONVERSION_RATE,)
 	prereq_ids = list(TECHWEB_NODE_NANITE_BIO, TECHWEB_NODE_NANITE_SMART)
-	design_ids = list("stickyfingers_nanites", "accelerated_synthesis_nanites", "bluespace_blood_nanites", "extinguisher_nanites", "antishove_nanites", "gravity_nanites")
-
-/datum/techweb_node/nanite_brainaug
-	id = TECHWEB_NODE_NANITE_BRAINAUG
-	display_name = "Mental Augmentation Nanite Programming"
-	description = "Nanite programs that augment or change one's mind."
-	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS,
-		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_3_POINTS*NANITE_POINT_CONVERSION_RATE,)
-	prereq_ids = list(TECHWEB_NODE_NANITE_NEURAL, TECHWEB_NODE_NANITE_EXPERI)
-	design_ids = list("kravmaga_nanites", "neuraltrauma_nanites")
-
-/datum/techweb_node/nanite_illegal
-	id = TECHWEB_NODE_NANITE_ILLEGAL
-	display_name = "Illegal Nanite Programming"
-	description = "Dangerous nanite programs capable of causing or enabling significant harm, destruction, or mayhem."
-	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS,
-		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_5_POINTS*NANITE_POINT_CONVERSION_RATE,)
-	prereq_ids = list(TECHWEB_NODE_SYNDICATE_BASIC, TECHWEB_NODE_NANITE_SYNAPTIC)
-	design_ids = list("freedom_nanites", "construct_ammo_nanites", "construct_c4_nanites", "slipresist_nanites", "braintrauma_nanites", "suicidal_nanites")
+	design_ids = list("accelerated_synthesis_nanites", "gravity_nanites", "antirad_nanites", "weatherendure_nanites", "obsidian_nanites", "lungdestruction_nanites")
 
 /datum/techweb_node/nanite_experi_med
 	id = TECHWEB_NODE_NANITE_EXPERI_MED
@@ -326,34 +271,4 @@
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS,
 		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_3_POINTS*NANITE_POINT_CONVERSION_RATE,)
 	prereq_ids = list(TECHWEB_NODE_NANITE_EXPERI, TECHWEB_NODE_NANITE_NEURAL)
-	design_ids = list("bodyaugment_nanites", "critstable_nanites", "corpsepreserve_nanites", "organrepair_nanites", "antidismember_nanites", "weakness_nanites", "hardiness_nanites", "mendingbrute_nanites", "mendingburn_nanites")
-
-/datum/techweb_node/nanite_experi_med_adv
-	id = TECHWEB_NODE_NANITE_EXPERI_MED_ADV
-	display_name = "Experimental Medical Nanite Programming"
-	description = "Nanite programs that provide very useful medical-specific benefits to the host."
-	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS,
-		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_4_POINTS*NANITE_POINT_CONVERSION_RATE,)
-	prereq_ids = list(TECHWEB_NODE_NANITE_EXPERI_MED, TECHWEB_NODE_NANITE_HARMONIC)
-	design_ids = list("mendingtoxin_nanites", "selfresp_nanites", "repairingplus_nanites", "woundfixer_nanites", "naniteresus_nanites", "synthflesh_nanites", "painnull_nanites", "alcoholic_nanites", "antikpa_nanites", "limbtach_nanites")
-
-/datum/techweb_node/nanite_experi_adv
-	id = TECHWEB_NODE_NANITE_EXPERI_ADV
-	display_name = "Highly Experimental Nanite Programming"
-	description = "Nanite programs that often exceed the capabilities any normal scientist would expect of our favorite nano-machines."
-	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS,
-		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_3_POINTS*NANITE_POINT_CONVERSION_RATE,)
-	prereq_ids = list(TECHWEB_NODE_NANITE_EXPERI, TECHWEB_NODE_NANITE_SYNAPTIC)
-	design_ids = list("antigibbing_nanites", "antirad_nanites", "weatherendure_nanites", "obsidian_nanites", "plantlike_nanites", "lungdestruction_nanites")
-
-/datum/techweb_node/nanite_magical
-	id = TECHWEB_NODE_NANITE_MAGIC
-	display_name = "Borderline Magical Nanite Programming"
-	description = "Nanite programs that are confounding to our top researchers, you'd have to be a wizard to be able to fathom these programs."
-	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS,
-		TECHWEB_POINT_TYPE_NANITES = TECHWEB_TIER_4_POINTS*NANITE_POINT_CONVERSION_RATE,)
-	prereq_ids = list(TECHWEB_NODE_NANITE_EXPERI_ADV)
-	design_ids = list("magicshield_nanites", "deadchat_nanites")
+	design_ids = list("bodyaugment_nanites", "corpsepreserve_nanites", "weakness_nanites", "naniteresus_nanites", "alcoholic_nanites", "limbtach_nanites")

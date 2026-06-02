@@ -166,6 +166,7 @@
 #define INIT_ORDER_OUTPUTS 35
 #define INIT_ORDER_RESTAURANT 34
 #define INIT_ORDER_TTS 33
+#define INIT_ORDER_FLUIDS 32 // Needs to be above atoms, as some atoms may want to start fluids/gases on init
 #define INIT_ORDER_ATOMS 30
 #define INIT_ORDER_LANGUAGE 25
 #define INIT_ORDER_MACHINES 20
@@ -270,6 +271,10 @@
 #define FORCE_END_ROUND 1
 /// For admin forcing roundend, can be used to distinguish the two
 #define ADMIN_FORCE_END_ROUND 2
+// Surf Shack Edit
+/// For when a restart vote goes through on it's own. Used to prevent roundend doubloon give-aways.
+#define VOTE_FORCE_END_ROUND 3
+// Surf Shack End
 
 /**
 	Create a new timer and add it to the queue.

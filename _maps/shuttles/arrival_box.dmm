@@ -10,7 +10,11 @@
 	name = "Arrivals Shuttle Airlock"
 	},
 /obj/structure/fans/tiny,
-/turf/open/floor/plating,
+/obj/effect/turf_decal/stripes/line,
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 1
+	},
+/turf/open/floor/iron/textured_large,
 /area/shuttle/arrival)
 "d" = (
 /obj/effect/spawner/structure/window/reinforced/shuttle,
@@ -20,38 +24,78 @@
 "e" = (
 /obj/structure/table,
 /obj/item/storage/medkit/regular,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/warning/corner{
+	dir = 4
+	},
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 "f" = (
-/turf/open/floor/mineral/titanium/blue,
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner/directional/west,
+/turf/open/floor/iron/large,
 /area/shuttle/arrival)
 "g" = (
-/obj/effect/spawner/random/entertainment/arcade,
 /obj/machinery/light/directional/north,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/warning/corner{
+	dir = 1
+	},
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 "h" = (
-/obj/structure/closet/wardrobe/green,
-/turf/open/floor/mineral/titanium/blue,
+/obj/structure/closet/emcloset,
+/obj/effect/turf_decal/trimline/neutral/filled/warning/corner{
+	dir = 8
+	},
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 "i" = (
-/obj/structure/closet/wardrobe/black,
-/turf/open/floor/mineral/titanium/blue,
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 9
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner/directional/west,
+/obj/effect/turf_decal/siding/white{
+	dir = 9
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/arrival)
 "j" = (
-/obj/structure/closet/wardrobe/mixed,
-/turf/open/floor/mineral/titanium/blue,
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 "k" = (
-/obj/structure/closet/wardrobe/grey,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 1
+	},
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 "l" = (
 /obj/machinery/requests_console/directional/north{
 	department = "Arrival shuttle";
 	name = "Arrival Shuttle Requests Console"
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/warning/corner{
+	dir = 4
+	},
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 "m" = (
 /obj/machinery/power/shuttle_engine/heater{
@@ -68,18 +112,21 @@
 /area/shuttle/arrival)
 "p" = (
 /obj/structure/chair/comfy/shuttle,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/siding/white,
+/turf/open/floor/iron/large,
 /area/shuttle/arrival)
 "q" = (
-/obj/structure/chair/comfy/shuttle,
 /obj/machinery/light/small/directional/east,
-/turf/open/floor/mineral/titanium/blue,
+/obj/structure/chair/comfy/shuttle,
+/obj/effect/turf_decal/trimline/neutral/filled/line,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/siding/white,
+/turf/open/floor/iron/large,
 /area/shuttle/arrival)
 "r" = (
-/obj/structure/chair/comfy/shuttle{
-	dir = 8
-	},
-/turf/open/floor/mineral/titanium,
+/turf/open/floor/iron/large,
 /area/shuttle/arrival)
 "s" = (
 /obj/machinery/power/shuttle_engine/propulsion{
@@ -91,7 +138,19 @@
 /obj/machinery/door/airlock/titanium{
 	name = "Arrivals Shuttle Airlock"
 	},
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/textured_large,
 /area/shuttle/arrival)
 "u" = (
 /obj/machinery/power/shuttle_engine/propulsion{
@@ -104,22 +163,49 @@
 /obj/structure/chair/comfy/shuttle{
 	dir = 1
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 1
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/arrival)
 "w" = (
+/obj/machinery/light/small/directional/east,
 /obj/structure/chair/comfy/shuttle{
 	dir = 1
 	},
-/obj/machinery/light/small/directional/east,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 1
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/arrival)
 "x" = (
-/obj/structure/closet/emcloset,
-/turf/open/floor/mineral/titanium/blue,
+/obj/structure/closet/wardrobe/black,
+/obj/effect/turf_decal/trimline/neutral/filled/warning/corner,
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 "y" = (
 /obj/machinery/light/directional/south,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/warning/corner,
+/turf/open/floor/iron,
+/area/shuttle/arrival)
+"z" = (
+/obj/structure/closet/wardrobe/grey,
+/obj/effect/turf_decal/trimline/neutral/filled/warning/corner{
+	dir = 1
+	},
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 "A" = (
 /obj/machinery/power/shuttle_engine/propulsion/burst/left{
@@ -127,12 +213,194 @@
 	},
 /turf/open/floor/plating/airless,
 /area/shuttle/arrival)
+"C" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/effect/turf_decal/siding/white{
+	dir = 6
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
+"D" = (
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
+"E" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/effect/turf_decal/siding/white{
+	dir = 5
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
+"F" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner/directional/west,
+/obj/effect/turf_decal/siding/white{
+	dir = 10
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
+"G" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 9
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner/directional/west,
+/obj/effect/turf_decal/siding/white{
+	dir = 9
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
+"H" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner/directional/west,
+/obj/effect/turf_decal/siding/white{
+	dir = 10
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
+"J" = (
+/obj/effect/turf_decal/trimline/neutral/filled/warning,
+/turf/open/floor/iron,
+/area/shuttle/arrival)
+"K" = (
+/obj/effect/turf_decal/trimline/neutral/filled/warning,
+/obj/effect/turf_decal/trimline/neutral/mid_joiner,
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
+"L" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
 "S" = (
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/shuttle/arrival)
+"T" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/effect/turf_decal/siding/white{
+	dir = 5
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/arrival)
 "U" = (
 /obj/item/radio/intercom/directional/south,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/warning/corner{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/shuttle/arrival)
+"V" = (
+/obj/machinery/door/airlock/titanium{
+	name = "Arrivals Shuttle Airlock"
+	},
+/obj/structure/fans/tiny,
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/warning,
+/turf/open/floor/iron/textured_large,
+/area/shuttle/arrival)
+"W" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/effect/turf_decal/siding/white{
+	dir = 6
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/arrival)
+"X" = (
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 4
+	},
+/turf/open/floor/iron,
 /area/shuttle/arrival)
 
 (1,1,1) = {"
@@ -148,7 +416,7 @@ a
 a
 b
 p
-S
+j
 v
 b
 a
@@ -157,7 +425,7 @@ a
 a
 b
 q
-S
+X
 w
 b
 a
@@ -174,82 +442,82 @@ b
 (5,1,1) = {"
 b
 e
+h
 S
-S
-S
+z
 x
 b
 "}
 (6,1,1) = {"
-c
-f
-r
-r
-r
-f
+V
+k
+j
+j
+j
+J
 c
 "}
 (7,1,1) = {"
 b
 g
+G
 f
-f
-f
+F
 U
 b
 "}
 (8,1,1) = {"
 d
-h
+j
+D
 r
-r
-r
-f
+K
+j
 d
 "}
 (9,1,1) = {"
 d
-i
-f
-f
-f
-f
+j
+T
+L
+W
+j
 d
 "}
 (10,1,1) = {"
 d
 j
-r
-r
-r
+i
 f
+H
+j
 d
 "}
 (11,1,1) = {"
 d
-k
-f
-f
-f
-f
+j
+D
+r
+K
+j
 d
 "}
 (12,1,1) = {"
 b
 l
-r
-r
-r
+E
+L
+C
 y
 b
 "}
 (13,1,1) = {"
-c
-f
-S
-S
-S
-f
+V
+k
+j
+j
+j
+J
 c
 "}
 (14,1,1) = {"

@@ -1,5 +1,0 @@
-author: "forgman6"
-delete-after: True
-changes:
-  - bugfix: "removed some unused vars"
-  - refactor: "made strip speed faster"

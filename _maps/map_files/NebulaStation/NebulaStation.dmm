@@ -16943,10 +16943,8 @@
 /obj/effect/turf_decal/siding/dark_blue{
 	dir = 8
 	},
-/obj/item/clothing/gloves/maid,
 /obj/item/clothing/accessory/maidapron,
 /obj/item/clothing/under/costume/maid,
-/obj/item/clothing/neck/maid,
 /obj/effect/spawner/random/clothing/kittyears_or_rabbitears,
 /obj/structure/disposalpipe/segment{
 	dir = 9

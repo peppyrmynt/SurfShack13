@@ -412,6 +412,14 @@
 	progression_minimum = 30 MINUTES
 	purchasable_from = parent_type::purchasable_from & ~UPLINK_SPY
 
+/datum/uplink_item/role_restricted/concussivedisk
+	name = "Hyperconcussive Diode Disk"
+	desc = "A diode configuration disk that allows an emitter to shoot potent explosive lasers. \
+	Please note that this will halve the fire-rate of the emitter."
+	item = /obj/item/emitter_disk/blast
+	cost = 5
+	restricted_roles = list(JOB_STATION_ENGINEER, JOB_CHIEF_ENGINEER)
+
 /datum/uplink_item/role_restricted/manifold_injector
 	name = "EHMS Autoinjector"
 	desc = "Stands for Experimental Hereditary Manifold Sickness. Inject this into a target to greatly dehabilitate them, though the effects \
@@ -419,13 +427,3 @@
 	item = /obj/item/reagent_containers/hypospray/medipen/manifoldinjector
 	cost = 5
 	restricted_roles = list(JOB_JANITOR, JOB_MEDICAL_DOCTOR, JOB_CHIEF_MEDICAL_OFFICER, JOB_PARAMEDIC, JOB_GENETICIST)
-
-/datum/uplink_item/role_restricted/no_dmg_nanite_disk
-	name = "Premium Nanite Program Disk"
-	desc = "One of Cybersun's former privately owned data disks for nanite programming. \
-			This prototype disk contains and injects copies of code sequences directly into loaded nanite programs to guard against electrical damage and electromagnetic pulses. \
-			Comes with our distinct black-and-red color scheme. Won't prevent people from deleteing your programs off the cloud."
-	item = /obj/item/disk/nanite_program/no_dmg/syndicate
-	cost = 12
-	surplus = 0
-	restricted_roles = list(JOB_SCIENTIST, JOB_RESEARCH_DIRECTOR)

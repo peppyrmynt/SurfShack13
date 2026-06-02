@@ -1,7 +1,0 @@
-author: "forgman6"
-delete-after: True
-changes:
-  - bugfix: "frogui duplicate signals"
-  - bugfix: "gator spawn chance decreased abit"
-  - bugfix: "sprites dont update on gator death"
-  - map: "modified box"
