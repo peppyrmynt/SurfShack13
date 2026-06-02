@@ -51,6 +51,15 @@
 	QDEL_NULL(radio)
 	return ..()
 
+/obj/item/implant/biosig/get_data()
+	. = {"<b>Implant Specifications:</b><BR>
+		<b>Name:</b>Biosignaller Implant<BR>
+		<b>Life:</b>Until death<BR>
+		<b>Important Notes:</b>Broadcasts a message to radio listeners over an encrypted channel.<BR>
+		<HR>
+		<b>Implant Details:</b><BR>
+		<b>Function:</b>Contains a miniature radio connected to a bioscanner encased in a blue, EMP-resistant shell. Broadcasts the death and last known position of the user over an encrypted radio channel.<BR>"}
+
 /obj/item/implanter/biosig
 	name = "implanter (biosignaller)"
 	imp_type = /obj/item/implant/biosig
