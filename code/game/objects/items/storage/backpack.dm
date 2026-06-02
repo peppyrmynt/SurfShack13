@@ -416,7 +416,7 @@
 	actions_types = list(/datum/action/item_action/zipper)
 	storage_type = /datum/storage/duffel
 	// How much to slow you down if your bag isn't zipped up
-	var/zip_slowdown = 1
+	var/zip_slowdown = 0.2
 	/// If this bag is zipped (contents hidden) up or not
 	/// Starts enabled so you're forced to interact with it to "get" it
 	var/zipped_up = TRUE
@@ -644,8 +644,8 @@
 	inhand_icon_state = "duffel-syndieammo"
 	storage_type = /datum/storage/duffel/syndicate
 	resistance_flags = FIRE_PROOF
-	// Less slowdown while unzipped. Still bulky, but it won't halve your movement speed in an active combat situation.
-	zip_slowdown = 0.3
+	// Less slowdown while unzipped. Still bulky, but it won't penalize your movement speed greatly in an active combat situation.
+	zip_slowdown = 0.1
 	// Faster unzipping. Utilizes the same noise as zipping up to fit the unzip duration.
 	unzip_duration = 0.5 SECONDS
 	unzip_sfx = 'sound/items/zip/zip_up.ogg'
