@@ -23,6 +23,6 @@
 /datum/crafting_recipe/noose
 	name = "noose"
 	result = /obj/structure/noose
-	reqs = list(/obj/item/stack/cable_coil =  30)
+	reqs = list(/obj/item/stack/cable_coil =  NOOSE_CABLE_COST)
 	time = 1 SECONDS
 	category = CAT_STRUCTURE

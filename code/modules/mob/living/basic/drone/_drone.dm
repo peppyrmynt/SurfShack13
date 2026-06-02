@@ -48,6 +48,10 @@
 	lighting_cutoff_blue = 25
 	can_be_held = TRUE
 	worn_slot_flags = ITEM_SLOT_HEAD
+	//surfshack start
+	voice_chat_room = ROOM_DRONE
+	voice_icon_state = ""
+	//surfshack end
 	/// `TRUE` if we have picked our visual appearance, `FALSE` otherwise (default)
 	var/picked = FALSE
 	/// Stored drone color, restored when unhacked

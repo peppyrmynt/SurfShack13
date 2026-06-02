@@ -31,6 +31,11 @@ map metastation
 	votable
 endmap
 
+map boxstation
+	minplayers 25
+	votable
+endmap
+
 map tramstation
 	minplayers 35
 	votable
@@ -48,6 +53,12 @@ endmap
 
 map pubbystation
 	minplayers 20
+	votable
+endmap
+
+map minisurf
+	minplayers 0
+	maxplayers 25
 	votable
 endmap
 

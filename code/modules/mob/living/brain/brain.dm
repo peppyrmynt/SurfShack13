@@ -5,6 +5,9 @@
 	stat = DEAD //we start dead by default
 	see_invisible = SEE_INVISIBLE_LIVING
 	speech_span = SPAN_ROBOT
+	//surfshack start
+	voice_chat_room = ROOM_GHOST
+	//surfshack end
 
 /mob/living/brain/Initialize(mapload)
 	. = ..()

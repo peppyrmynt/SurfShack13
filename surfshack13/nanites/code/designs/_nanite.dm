@@ -6,6 +6,7 @@
 	construction_time = 50
 	category = list()
 	research_icon = 'surfshack13/nanites/icons/nanite_device.dmi'
-	research_icon_state = "nanite_program"
+	///Default green icon
+	research_icon_state = "nanite_program_sensor"
 	///The nanite program researching this will unlock.
 	var/program_type = /datum/nanite_program

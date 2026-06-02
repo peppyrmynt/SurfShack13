@@ -165,3 +165,98 @@
       for Head of Security. Silicons now also get a bonus.
   hyperjll:
   - rscdel: Cryogelidia will no longer be required to cure any diseases.
+2026-05-22:
+  IndieanaJones:
+  - bugfix: Afro (Huge) layers correctly now
+  - bugfix: Plasmaman helmet hats layer correctly now, as does everything else with
+      the hat stabilizer component
+  - bugfix: Cyborg hats should now layer correctly, among other worn items
+  hyperjll:
+  - qol: Nanite Design icons in the tech tree are now color-coded to their program's
+      category.
+2026-05-23:
+  ZealousZeke:
+  - balance: Overdose thresholds now positively scale with high purity
+  - bugfix: Chemmaster no longer rounds reagent amounts when trying to transfer a
+      custom amount
+  cocothegogo:
+  - rscadd: MiniStation has been redeployed to active duty as MiniSurf.
+  forgman6:
+  - rscadd: voice chat rooms for different mobs
+  - rscadd: two voice indicators for different mobs.
+  - code_imp: moved voicechat into correct subfolder
+  - refactor: voice indicators are refactored to be a bit better, and mouse transparent
+  hyperjll:
+  - bugfix: conveyors now remember what they should be doing after losing and regaining
+      power.
+  - bugfix: Security roles (& the captain) can no longer use Antag Tokens. The tokens
+      will just be refunded.
+  - rscdel: Removed two unused reagents.
+2026-05-24:
+  cocothegogo:
+  - bugfix: minor minisurf changes
+  - rscadd: added maint kitchen to med maints
+2026-05-25:
+  cocothegogo:
+  - rscadd: extended maint shafts around xenobio
+  - rscadd: 1 extra small room in med maint
+  - bugfix: fixed atmos piping issues
+2026-05-26:
+  ZealousZeke:
+  - qol: 'Big Manipulator: Now you can change manipualtor work speed to slow down
+      manipulator manipulations.'
+  - qol: 'Big Manipulator: Use mode now can work with "empty hand" - monkey worker
+      will use its paw to interact with objects without requiring item in paw.'
+  - qol: 'Big Manipulator: Manipulator now can be locked with using id prevents anybody
+      else configurate manipulator settings.'
+  - bugfix: 'Big Manipulator: Fixes random disappearance of a part of the manipulator
+      ui.'
+  - bugfix: Harvesting botany plants actually uses the right drop location. Botany
+      plants harvested by monkey hardworkers on big manipulators harvesting using
+      a full plant bag no longer puts the resulting items inside of the big manipulator.
+  - qol: Added screentips to the big manipulator.
+  - bugfix: You can actually open the big manipulator's wires UI while holding an
+      assembly.
+  - refactor: Reworked the Big Manipulators UI
+  - refactor: Minor Big Manipulator code refactoring
+  cocothegogo:
+  - rscadd: REDESIGNED ATMOS
+  - rscadd: clown and mime offices
+  - bugfix: atmos
+  dwasint:
+  - rscadd: Ghosts now have runechat
+2026-05-27:
+  ZealousZeke:
+  - rscadd: Introduces new inverse reagents for Krokodil, ~~Bath Salts~~, Aranesp,
+      Happiness, Baldium, Colorful Reagent and Gravitum!
+  - rscadd: 'Adds a medicine: Naloxone! Requires equal parts Morphine, Hydrogen Peroxide,
+      Bromine and Ethanol to be made. Purges opioid-class reagents, can also help
+      with mitigating drowsiness and breath loss. Also purges good moodlets associated
+      with opiates and replaces them with negative moodlets, so don''t expect your
+      patient to be happy about losing their high!'
+2026-05-28:
+  JohnFulpWillard:
+  - rscadd: Added flags of Wales, Scotland and Quebec to OOC.
+  ZealousZeke:
+  - balance: rebalanced rotatium into a drug instead of it being a shitty poison.
+  hyperjll:
+  - sound: Cyborg players recieve a unique sound effect only audible to them when
+      they're emagged.
+  - bugfix: Fixes nanite healing programs not healing any burn damage.
+2026-05-30:
+  cocothegogo:
+  - rscadd: 'MiniSurf: minor fixes across station'
+  - rscadd: 'MiniSurf: fire alarms in more ergonomic locations'
+  - rscadd: 'MiniSurf: gives sec a flasher at brig doors + door cycling buttons'
+  - rscadd: 'MiniSurf: Clown and Mime now have own rooms'
+  - rscadd: 'MiniSurf: more maint space below medical and chapel maints
+
+      fixes:MiniSurf: adjust maint loot spawns
+
+      fixes:MiniSurf: moves atmos pipe dispenser to chapel maints for assistant access
+      (theyre never really used anyway)'
+  hyperjll:
+  - rscdel: 'Removed the tech nodes: Nanite Experimental Replication Protocols, Mental
+      Augmentation Nanite Programming, Experimental Medical Nanite Programming, Highly
+      Experimental Nanite Programming. All designs unlocked from these nodes may be
+      found elsewhere.'

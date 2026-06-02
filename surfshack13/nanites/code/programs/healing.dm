@@ -22,7 +22,7 @@
 		host_mob.adjustFireLoss(-0.5, TRUE)
 		return
 	var/healing_given = (lavaland_equipment_pressure_check(get_turf(host_mob)) ? 0.5 : 0.3)
-	host_mob.heal_overall_damage(brute = healing_given, brute = healing_given, required_bodytype = BODYTYPE_ORGANIC)
+	host_mob.heal_overall_damage(brute = healing_given, burn = healing_given, required_bodytype = BODYTYPE_ORGANIC)
 
 /datum/nanite_program/regenerative_advanced
 	name = "Bio-Reconstruction"
@@ -38,7 +38,7 @@
 		host_mob.adjustFireLoss(-3, TRUE)
 		return
 	var/healing_given = (lavaland_equipment_pressure_check(get_turf(host_mob)) ? 1.5 : 1.2)
-	host_mob.heal_overall_damage(brute = healing_given, brute = healing_given, required_bodytype = BODYTYPE_ORGANIC)
+	host_mob.heal_overall_damage(brute = healing_given, burn = healing_given, required_bodytype = BODYTYPE_ORGANIC)
 
 /datum/nanite_program/temperature
 	name = "Temperature Adjustment"
@@ -147,7 +147,7 @@
 		host_mob.adjustBruteLoss(-1.5, TRUE)
 		host_mob.adjustFireLoss(-1.5, TRUE)
 		return
-	host_mob.heal_overall_damage(brute = 1.5, brute = 1.5, required_bodytype = BODYTYPE_ROBOTIC)
+	host_mob.heal_overall_damage(brute = 1.5, burn = 1.5, required_bodytype = BODYTYPE_ROBOTIC)
 
 /datum/nanite_program/purging_advanced
 	name = "Selective Blood Purification"

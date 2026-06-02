@@ -275,7 +275,7 @@
 	overdose_threshold = 25
 	ph = 10.7
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	inverse_chem_val = 0.3
+	inverse_chem_val = 0.4
 	inverse_chem = /datum/reagent/inverse/oxandrolone
 
 /datum/reagent/medicine/oxandrolone/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
@@ -538,7 +538,7 @@
 	overdose_threshold = 25
 	ph = 2.1
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	inverse_chem_val = 0.3
+	inverse_chem_val = 0.5
 	inverse_chem = /datum/reagent/inverse/sal_acid
 
 /datum/reagent/medicine/sal_acid/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
@@ -565,7 +565,7 @@
 	metabolization_rate = 0.25 * REAGENTS_METABOLISM
 	ph = 2
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	inverse_chem_val = 0.25
+	inverse_chem_val = 0.4
 	inverse_chem = /datum/reagent/inverse/salbutamol
 
 /datum/reagent/medicine/salbutamol/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
@@ -1812,30 +1812,33 @@
 			. = UPDATE_MOB_HEALTH
 	affected_mob.adjust_disgust(-10 * REM * seconds_per_tick)
 
-/datum/reagent/antihardcrit
-	name = "Conscience Stabilizers"
-	description = "A reagent specifically used to stabilize critical patients to allow them to move despite the severity of their injuries. Impossible to synthesize outside of virology."
-	color = "#78008C"
-	metabolization_rate = 0.25 * REAGENTS_METABOLISM
+/datum/reagent/medicine/naloxone
+	name = "Naloxone"
+	description = "Opioid antagonist that purges drowsiness and narcotics from the patient, restores breath loss and accelerates addiction recovery."
+	color = "#f5f5dc"
+	metabolization_rate = 0.2 * REM
+	ph = 4
+	penetrates_skin = TOUCH|VAPOR
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	metabolized_traits = list(TRAIT_ADDICTIONRESILIENT)
+	var/static/list/opiates_to_clear = list(
+		/datum/reagent/medicine/morphine,
+		/datum/reagent/impedrezene,
+		/datum/reagent/toxin/fentanyl,
+		/datum/reagent/drug/krokodil,
+		/datum/reagent/inverse/krokodil,
+	)
 
-/datum/reagent/antihardcrit/on_mob_metabolize(mob/living/L)
-	..()
-	ADD_TRAIT(L,TRAIT_NOHARDCRIT,type)
+/datum/reagent/medicine/naloxone/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
+	. = ..()
+	for(var/opiate in opiates_to_clear)
+		holder.remove_reagent(opiate, 3 * REM * seconds_per_tick)
 
-/datum/reagent/antihardcrit/on_mob_end_metabolize(mob/living/L)
-	REMOVE_TRAIT(L,TRAIT_NOHARDCRIT,type)
-	..()
+	affected_mob.clear_mood_event("numb")
+	affected_mob.clear_mood_event("smacked out")
+	affected_mob.add_mood_event("not numb", /datum/mood_event/antinarcotic_medium)
 
-/datum/reagent/diseasensstim
-	name = "Neurological Stimulants"
-	description = "A minor neurological sitmulant capable of boosting the host's movement speed. Impossible to synthesize outside of virology."
-	color = "#78008C"
-	metabolization_rate = 0.25 * REAGENTS_METABOLISM
-
-/datum/reagent/diseasensstim/on_mob_metabolize(mob/living/L)
-	..()
-	L.add_movespeed_modifier(/datum/movespeed_modifier/reagent/diseasestim)
-
-/datum/reagent/diseasensstim/on_mob_end_metabolize(mob/living/L)
-	L.remove_movespeed_modifier(/datum/movespeed_modifier/reagent/diseasestim)
-	..()
+	affected_mob.adjust_drowsiness(-5 SECONDS * REM * seconds_per_tick)
+	if(affected_mob.losebreath >= 1)
+		affected_mob.losebreath -= 1 * REM * seconds_per_tick
+		return UPDATE_MOB_HEALTH

@@ -2,8 +2,13 @@
 "b" = (
 /turf/closed/wall/mineral/titanium,
 /area/shuttle/supply)
+"c" = (
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
 "e" = (
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/brown/filled/line,
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner,
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/supply)
 "f" = (
 /obj/machinery/conveyor{
@@ -21,7 +26,25 @@
 	name = "Supply Shuttle Airlock"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/supply/general,
-/turf/open/floor/plating,
+/obj/effect/turf_decal/trimline/brown/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/brown/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/textured_large,
+/area/shuttle/supply)
+"h" = (
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/supply)
 "i" = (
 /obj/machinery/door/airlock/titanium{
@@ -29,7 +52,16 @@
 	},
 /obj/docking_port/mobile/supply,
 /obj/effect/mapping_helpers/airlock/access/all/supply/general,
-/turf/open/floor/plating,
+/obj/effect/turf_decal/trimline/brown/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/brown/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/textured_large,
 /area/shuttle/supply)
 "j" = (
 /obj/machinery/conveyor{
@@ -45,10 +77,35 @@
 "l" = (
 /turf/closed/wall/mineral/titanium/interior,
 /area/shuttle/supply)
+"m" = (
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 9
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
+"o" = (
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
 "p" = (
 /obj/structure/window/reinforced/spawner/directional/north,
 /obj/machinery/power/shuttle_engine/heater,
 /turf/open/floor/plating/airless,
+/area/shuttle/supply)
+"r" = (
+/obj/effect/turf_decal/trimline/brown/filled/corner,
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/supply)
 "s" = (
 /turf/template_noop,
@@ -67,11 +124,42 @@
 /area/shuttle/supply)
 "x" = (
 /obj/machinery/light/directional/west,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
+"y" = (
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/supply)
 "C" = (
 /obj/machinery/light/directional/east,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
+"D" = (
+/obj/effect/turf_decal/trimline/brown/filled/corner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/supply)
 "F" = (
 /obj/machinery/button/door/directional/east{
@@ -84,7 +172,51 @@
 	name = "Loading Doors";
 	pixel_y = -8
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/brown/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/brown/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
+"L" = (
+/obj/effect/turf_decal/trimline/brown/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/brown/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
+"S" = (
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
+"T" = (
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/supply)
+"V" = (
+/obj/effect/turf_decal/trimline/brown/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/brown/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/supply)
 
 (1,1,1) = {"
@@ -103,69 +235,69 @@ s
 "}
 (2,1,1) = {"
 b
-e
+m
 x
-e
-e
-e
-e
-e
-e
+T
+T
+T
+T
+T
+S
 l
 b
 t
 "}
 (3,1,1) = {"
 b
-e
-e
-e
-e
-e
-e
-e
-e
-e
+o
+c
+c
+c
+c
+c
+c
+D
+S
 p
 u
 "}
 (4,1,1) = {"
 b
-e
-e
-e
-e
-e
-e
-e
-e
+o
+c
+c
+c
+c
+c
+c
+c
 e
 p
 u
 "}
 (5,1,1) = {"
 b
-e
-e
-e
-e
-e
-e
-e
-e
-e
+o
+c
+c
+c
+c
+c
+c
+r
+V
 p
 u
 "}
 (6,1,1) = {"
 b
-e
-e
-e
-e
+y
+h
+L
+L
 F
-e
-e
+L
+L
 C
 l
 b

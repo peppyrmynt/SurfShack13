@@ -518,7 +518,10 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 	"Layer 3" = image(icon = 'icons/hud/radial.dmi', icon_state = "coil-blue"),
 	"Multilayer cable hub" = image(icon = 'icons/obj/pipes_n_cables/structures.dmi', icon_state = "cable_bridge"),
 	"Multi Z layer cable hub" = image(icon = 'icons/obj/pipes_n_cables/structures.dmi', icon_state = "cablerelay-broken-cable"),
-	"Cable restraints" = restraints_icon
+	//surfshack start
+	"Cable restraints" = restraints_icon,
+	"Noose" = image(icon = 'surfshack13/icons/obj/structures/noose.dmi', icon_state = "noose"),
+	//surfshack end
 	)
 
 	var/layer_result = show_radial_menu(user, src, radial_menu, custom_check = CALLBACK(src, PROC_REF(check_menu), user), require_near = TRUE, tooltips = TRUE)
@@ -561,6 +564,11 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 				if(use(CABLE_RESTRAINTS_COST))
 					var/obj/item/restraints/handcuffs/cable/restraints = new(null, cable_color)
 					user.put_in_hands(restraints)
+		//surfshack start
+		if("Noose")
+			if(amount >= NOOSE_CABLE_COST && use(NOOSE_CABLE_COST))
+				new /obj/structure/noose (get_turf(src))
+		//surfshack end
 	update_appearance()
 
 
