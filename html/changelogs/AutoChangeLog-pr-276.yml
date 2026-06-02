@@ -1,0 +1,4 @@
+author: "cocothegogo"
+delete-after: True
+changes:
+  - bugfix: "MiniSurf: fixed the grav gen not being wired correctly"
