@@ -264,6 +264,7 @@
 #include "code\__DEFINES\wounds.dm"
 #include "code\__DEFINES\xenobiology.dm"
 #include "code\__DEFINES\zoom.dm"
+#include "code\__DEFINES\__SURFSHACK\crafting.dm"
 #include "code\__DEFINES\__SURFSHACK\voicechat_rooms.dm"
 #include "code\__DEFINES\ai\ai.dm"
 #include "code\__DEFINES\ai\ai_blackboard.dm"

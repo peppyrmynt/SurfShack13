@@ -72,6 +72,9 @@
 	..()
 	new /obj/item/crowbar/red(src)
 	new /obj/item/healthanalyzer/simple/miner(src)
+	//surfshack start
+	new /obj/item/extinguisher/mini(src)
+	//surfshack end
 
 // Engineer survival box
 /obj/item/storage/box/survival/engineer

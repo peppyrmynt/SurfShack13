@@ -19,3 +19,32 @@
   peppyrmynt:
   - bugfix: added character limit to Play Internet Sound and Request Internet Sound
       boxes
+2026-06-02:
+  Jacquerel:
+  - rscadd: You can now add bell-detonated TTVs to wheelchairs.
+  - rscadd: Ringing the bell on an emagged wheelchair may cause it to explode.
+  Twaticus:
+  - map: Overhauls(dehauls) Boxstation and accompanying shuttles
+  ZealousZeke:
+  - balance: Increases Ipecacide's Inverse Threshold
+  - balance: Reworks the effects of ipecacide to be a vomit inducing chem purger.
+  - balance: Made high explosives mix 1:1 so their effort is more equal to their reward.
+  blackdav123:
+  - balance: Heparin now metabolizes slower, from 0.2 to 0.08.
+  forgman6:
+  - map: fixed cargo access
+  - map: rotated disposals so it fires east
+  - map: extended maint and added a gator room.
+  - qol: Added noose to radial cable menu.
+  - rscdel: Removed toolbox deploying tools on click.
+  - balance: You can lynch dead mobs faster.
+  - qol: You can put gps in shoes.
+  - qol: Fulton kit starts with 9 fultons, and tells you that you can get more out
+      of mining vendor.
+  - rscadd: mini fire extinguisher was added to mining survival box
+  - balance: Average ash storm time shortened a bit.
+  - balance: Ash storm probability decreased a little bit.
+  hyperjll:
+  - rscadd: PubbyStation's Armory now has a Grenade Launcher.
+  - rscadd: Adds the Grenade Launcher to the uplink for traitor Chemists and Chief
+      Medical Officers for 9 TC.

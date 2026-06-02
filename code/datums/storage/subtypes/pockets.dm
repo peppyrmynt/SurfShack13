@@ -114,6 +114,9 @@
 		/obj/item/holochip,
 		/obj/item/toy/crayon,
 		/obj/item/reagent_containers/cup/glass/flask),
+		//surfshack start
+		/obj/item/gps,
+		//surfshack end
 		list(/obj/item/screwdriver/power,
 		/obj/item/ammo_casing/rocket,
 		/obj/item/cigarette/pipe,
