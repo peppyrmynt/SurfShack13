@@ -212,7 +212,7 @@
 		control_activation(set_active = TRUE)
 		playsound(src, 'sound/machines/synth/synth_yes.ogg', 50, TRUE, SHORT_RANGE_SOUND_EXTRARANGE, frequency = 6000)
 		if(!malfunctioning)
-			wearer.playsound_local(get_turf(src), 'sound/vehicles/mecha/nominal.ogg', 50)
+			wearer.playsound_local(get_turf(src), 'sound/vehicles/mecha/mechmove03.ogg', 50)
 
 	to_chat(wearer, span_notice("Systems [active ? "started up. Parts sealed. Welcome" : "shut down. Parts unsealed. Goodbye"], [wearer]."))
 	if(ai_assistant)
