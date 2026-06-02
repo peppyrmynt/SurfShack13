@@ -507,3 +507,18 @@
 /obj/item/mod/module/anomaly_locked/update_icon_state()
 	icon_state = initial(icon_state) + (core ? "-core" : "")
 	return ..()
+
+/obj/item/mod/module/proc/try_activate(mod_parts, set_active = FALSE)
+	if(part_activated || !has_required_parts(mod_parts, need_active = TRUE))
+		return
+	part_activated = TRUE
+	on_part_activation()
+
+
+/obj/item/mod/module/proc/try_deactivate(mod_parts)
+	if(!part_activated || has_required_parts(mod_parts, need_active = TRUE))
+		return
+	part_activated = FALSE
+	on_part_deactivation()
+	if(!active || !(allow_flags & MODULE_ALLOW_INACTIVE))
+		deactivate(display_message = FALSE)

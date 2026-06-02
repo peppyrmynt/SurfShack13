@@ -17,11 +17,9 @@
 	strip_delay = 10 SECONDS
 	armor_type = /datum/armor/none
 	actions_types = list(
-		/datum/action/item_action/mod/deploy,
 		/datum/action/item_action/mod/activate,
 		/datum/action/item_action/mod/panel,
 		/datum/action/item_action/mod/module,
-		/datum/action/item_action/mod/deploy/ai,
 		/datum/action/item_action/mod/activate/ai,
 		/datum/action/item_action/mod/panel/ai,
 		/datum/action/item_action/mod/module/ai,
@@ -512,13 +510,13 @@
 				continue
 			module.deactivate(display_message = FALSE)
 		for(var/obj/item/part as anything in get_parts())
-			seal_part(part, is_sealed = FALSE)
+			seal_part(part, set_sealed = FALSE)
 	for(var/obj/item/part as anything in get_parts())
 		if(part.loc == src)
 			continue
 		INVOKE_ASYNC(src, PROC_REF(retract), wearer, part, /* instant = */ TRUE) // async to appease spaceman DMM because the branch we don't run has a do_after
 	if(active)
-		control_activation(is_on = FALSE)
+		control_activation(set_active = FALSE)
 		mod_link?.end_call()
 	var/mob/old_wearer = wearer
 	unset_wearer()
@@ -722,7 +720,7 @@
 			return
 		var/datum/mod_part/part_datum = get_part_datum(part)
 		if(part_datum.sealed)
-			seal_part(part, is_sealed = FALSE)
+			seal_part(part, set_sealed = FALSE)
 		if(isnull(part.loc))
 			return
 		if(!wearer)

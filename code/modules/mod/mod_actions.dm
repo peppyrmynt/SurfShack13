@@ -59,7 +59,7 @@
 
 /datum/action/item_action/mod/activate
 	name = "Activate MODsuit"
-	desc = "LMB: Activate/Deactivate suit with prompt. RMB: Activate/Deactivate suit skipping prompt."
+	desc = "Activate/Deactivate suit."
 	button_icon_state = "activate"
 	/// First time clicking this will set it to TRUE, second time will activate it.
 	var/ready = FALSE

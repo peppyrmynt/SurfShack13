@@ -567,7 +567,7 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 		//surfshack start
 		if("Noose")
 			if(amount >= NOOSE_CABLE_COST && use(NOOSE_CABLE_COST))
-				new /obj/structure/noose (get_turf(src))
+				new /obj/structure/noose(get_turf(src))
 		//surfshack end
 	update_appearance()
 
