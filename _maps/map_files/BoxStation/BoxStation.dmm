@@ -23327,7 +23327,6 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "bxS" = (
@@ -40264,11 +40263,6 @@
 	},
 /turf/open/floor/carpet,
 /area/station/service/chapel)
-"dye" = (
-/obj/structure/cable,
-/obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating,
-/area/station/maintenance/port/aft)
 "dyx" = (
 /turf/closed/wall/r_wall,
 /area/station/hallway/primary/central)
@@ -57323,11 +57317,6 @@
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
 /turf/open/floor/wood/large,
 /area/station/medical/psychology)
-"kNi" = (
-/obj/structure/cable,
-/obj/machinery/power/apc/auto_name/directional/east,
-/turf/open/floor/plating,
-/area/station/maintenance/port/aft)
 "kNm" = (
 /obj/structure/table/wood,
 /obj/machinery/computer/security/wooden_tv{
@@ -58994,6 +58983,16 @@
 	},
 /turf/open/floor/wood/tile,
 /area/station/service/library/artgallery)
+"lCe" = (
+/mob/living/basic/alligator{
+	name = "Chimpston"
+	},
+/turf/open/water/no_planet_atmos{
+	fishing_datum = /datum/fish_source/toilet;
+	name = "stagnant sewage water";
+	desc = "Stagnant water. Time to take a dip and give the virologist a job! Oh, wait."
+	},
+/area/station/maintenance/port/aft)
 "lCi" = (
 /obj/docking_port/stationary/public_mining_dock{
 	dir = 8
@@ -61548,6 +61547,7 @@
 /area/station/cargo/sorting)
 "mHL" = (
 /obj/item/grenade/frag,
+/obj/machinery/light/small/directional/north,
 /turf/open/water/no_planet_atmos{
 	fishing_datum = /datum/fish_source/toilet;
 	name = "stagnant sewage water";
@@ -61926,7 +61926,6 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/bot,
-/obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "mPl" = (
@@ -62245,6 +62244,11 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/fore)
+"mWl" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/spawner/random/trash/moisture_trap,
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "mWw" = (
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
@@ -73203,7 +73207,7 @@
 /turf/open/floor/plating,
 /area/station/maintenance/port/central)
 "rFT" = (
-/obj/structure/cable,
+/obj/structure/sign/poster/random/directional/east,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "rFV" = (
@@ -85806,7 +85810,6 @@
 /area/station/engineering/atmos)
 "xnA" = (
 /obj/structure/holosign/barrier/engineering,
-/obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "xnW" = (
@@ -108057,11 +108060,11 @@ gXs
 amJ
 dQj
 bxR
-kNi
+iDt
 ybP
 amJ
 rim
-wPR
+lCe
 amJ
 cgD
 rcg
@@ -108572,7 +108575,7 @@ amJ
 sJF
 xnA
 tMG
-soA
+mWl
 hqB
 wdC
 pnZ
@@ -108822,12 +108825,12 @@ cyL
 amJ
 qlI
 qlI
+iDt
 rFT
-rFT
-rFT
-rFT
-dye
-rFT
+hqB
+soA
+soA
+iDt
 hqB
 hqB
 hqB
