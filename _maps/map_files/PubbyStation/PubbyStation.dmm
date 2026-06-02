@@ -49026,8 +49026,8 @@
 /obj/effect/turf_decal/trimline/yellow/filled/line,
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
 /obj/machinery/camera/autoname/directional/north,
-/obj/machinery/chem_heater,
 /obj/effect/turf_decal/siding,
+/obj/machinery/chem_heater/withbuffer,
 /turf/open/floor/iron/white/textured_large,
 /area/station/medical/chemistry)
 "jKE" = (
@@ -65934,7 +65934,6 @@
 	},
 /area/station/engineering/gravity_generator)
 "qch" = (
-/obj/machinery/chem_heater,
 /obj/effect/turf_decal/bot_white{
 	color = "#EFB341"
 	},
@@ -65944,6 +65943,7 @@
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 4
 	},
+/obj/machinery/chem_heater/withbuffer,
 /turf/open/floor/iron/white/textured_edge{
 	dir = 4
 	},
