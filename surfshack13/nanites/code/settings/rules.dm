@@ -190,10 +190,10 @@
 	var/mob/living/carbon/human/our_fella = program.host_mob
 
 	if(mode)
-		if(host_mob.mind?.assigned_role.title == "Assistant")
+		if(our_fella.mind?.assigned_role.title == "Assistant")
 			return TRUE
 	else
-		if(host_mob.mind?.assigned_role.title == "Assistant")
+		if(our_fella.mind?.assigned_role.title == "Assistant")
 			return FALSE
 	return FALSE
 
