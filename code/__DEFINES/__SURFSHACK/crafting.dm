@@ -1,0 +1,1 @@
+#define NOOSE_CABLE_COST 30

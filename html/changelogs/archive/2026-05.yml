@@ -225,3 +225,38 @@
   - bugfix: atmos
   dwasint:
   - rscadd: Ghosts now have runechat
+2026-05-27:
+  ZealousZeke:
+  - rscadd: Introduces new inverse reagents for Krokodil, ~~Bath Salts~~, Aranesp,
+      Happiness, Baldium, Colorful Reagent and Gravitum!
+  - rscadd: 'Adds a medicine: Naloxone! Requires equal parts Morphine, Hydrogen Peroxide,
+      Bromine and Ethanol to be made. Purges opioid-class reagents, can also help
+      with mitigating drowsiness and breath loss. Also purges good moodlets associated
+      with opiates and replaces them with negative moodlets, so don''t expect your
+      patient to be happy about losing their high!'
+2026-05-28:
+  JohnFulpWillard:
+  - rscadd: Added flags of Wales, Scotland and Quebec to OOC.
+  ZealousZeke:
+  - balance: rebalanced rotatium into a drug instead of it being a shitty poison.
+  hyperjll:
+  - sound: Cyborg players recieve a unique sound effect only audible to them when
+      they're emagged.
+  - bugfix: Fixes nanite healing programs not healing any burn damage.
+2026-05-30:
+  cocothegogo:
+  - rscadd: 'MiniSurf: minor fixes across station'
+  - rscadd: 'MiniSurf: fire alarms in more ergonomic locations'
+  - rscadd: 'MiniSurf: gives sec a flasher at brig doors + door cycling buttons'
+  - rscadd: 'MiniSurf: Clown and Mime now have own rooms'
+  - rscadd: 'MiniSurf: more maint space below medical and chapel maints
+
+      fixes:MiniSurf: adjust maint loot spawns
+
+      fixes:MiniSurf: moves atmos pipe dispenser to chapel maints for assistant access
+      (theyre never really used anyway)'
+  hyperjll:
+  - rscdel: 'Removed the tech nodes: Nanite Experimental Replication Protocols, Mental
+      Augmentation Nanite Programming, Experimental Medical Nanite Programming, Highly
+      Experimental Nanite Programming. All designs unlocked from these nodes may be
+      found elsewhere.'

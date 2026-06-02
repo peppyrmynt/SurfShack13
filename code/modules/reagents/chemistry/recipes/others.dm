@@ -30,7 +30,7 @@
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_UNIQUE | REACTION_TAG_OTHER
 
 /datum/chemical_reaction/glycerol
-	results = list(/datum/reagent/glycerol = 1)
+	results = list(/datum/reagent/glycerol = 2)
 	required_reagents = list(/datum/reagent/consumable/nutriment/fat/oil/corn = 3, /datum/reagent/toxin/acid = 1)
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_UNIQUE | REACTION_TAG_EXPLOSIVE
 
@@ -804,7 +804,7 @@
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_CHEMICAL | REACTION_TAG_DAMAGING | REACTION_TAG_BURN
 
 /datum/chemical_reaction/pentaerythritol
-	results = list(/datum/reagent/pentaerythritol = 2)
+	results = list(/datum/reagent/pentaerythritol = 5)
 	required_reagents = list(/datum/reagent/acetaldehyde = 1, /datum/reagent/toxin/formaldehyde = 3, /datum/reagent/lye = 1)
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_CHEMICAL
 

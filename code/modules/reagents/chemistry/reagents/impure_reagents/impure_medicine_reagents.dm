@@ -57,7 +57,7 @@
 /datum/reagent/inverse/helgrasp
 	name = "Helgrasp"
 	description = "This rare and forbidden concoction is thought to bring you closer to the grasp of the Norse goddess Hel."
-	metabolization_rate = 1*REM //This is fast
+	metabolization_rate = 0.6*REM //This is fast
 	tox_damage = 0.25
 	ph = 14
 	//Compensates for seconds_per_tick lag by spawning multiple hands at the end
@@ -689,7 +689,7 @@ Basically, we fill the time between now and 2s from now with hands based off the
 /datum/reagent/inverse/antihol/on_mob_life(mob/living/carbon/C, seconds_per_tick, times_fired)
 	. = ..()
 	for(var/datum/reagent/consumable/ethanol/alcohol in C.reagents.reagent_list)
-		alcohol.boozepwr += seconds_per_tick
+		alcohol.boozepwr = min(alcohol.boozepwr * 1.1, initial(alcohol.boozepwr) * 2)
 
 /datum/reagent/inverse/oculine
 	name = "Oculater"
@@ -701,7 +701,6 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	taste_description = "funky toxin"
 	ph = 13
 	tox_damage = 0
-	metabolization_rate = 0.2 * REM
 	///Did we get a headache?
 	var/headache = FALSE
 
@@ -774,6 +773,7 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	mytray.myseed?.adjust_production(-round(volume * 0.8))
 	mytray.myseed?.adjust_potency(round(volume))
 	mytray.myseed?.adjust_yield(round(volume * 0.8))
+	mytray.myseed?.adjust_endurance(round(volume * 0.5))
 
 /datum/reagent/inverse/oxandrolone
 	name = "Oxymetholone"
@@ -811,7 +811,7 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	ph = 4.5
 	metabolization_rate = 0.08 * REM
 	tox_damage = 0
-	metabolized_traits = list(TRAIT_EASYBLEED)
+	metabolized_traits = list(TRAIT_EASYBLEED, TRAIT_BLOODY_MESS)
 
 /datum/reagent/inverse/pen_acid
 	name = "Pendetide"
@@ -821,7 +821,7 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	ph = 3.7
 	taste_description = "venom"
 	metabolization_rate = 0.25 * REM
-	tox_damage = 0
+	tox_damage = 2
 
 /datum/reagent/inverse/pen_acid/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	holder.remove_reagent(/datum/reagent/medicine/c2/seiver, 5 * REM * seconds_per_tick)
@@ -1037,7 +1037,7 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	description = "Causes severe depressive behavior in users, and actively purges other antidepressants."
 	color = "#0004ff"
 	ph = 12
-	metabolization_rate = 0.1 * REM
+	metabolization_rate = 0.4 * REM
 	tox_damage = 0
 	penetrates_skin = TOUCH|VAPOR
 
