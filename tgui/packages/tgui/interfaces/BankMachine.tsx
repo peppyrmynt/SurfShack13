@@ -26,7 +26,7 @@ export const BankMachine = (props) => {
     <Window width={350} height={175}>
       <Window.Content>
         <NoticeBox danger>Authorized personnel only</NoticeBox>
-		<NoticeBox info>Accessing {department_acc}</NoticeBox>
+        <NoticeBox info>Accessing {department_acc}</NoticeBox>
         <Section title={station_name + ' Vault'}>
           <LabeledList>
             <LabeledList.Item
