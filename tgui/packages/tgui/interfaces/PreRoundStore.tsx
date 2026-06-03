@@ -1,15 +1,16 @@
-import { useBackend } from '../backend';
 import {
   BlockQuote,
   Box,
   Button,
   Divider,
-  Flex,
-  Stack,
-  Section,
-  Icon,
   DmIcon,
+  Flex,
+  Icon,
+  Section,
+  Stack,
 } from 'tgui-core/components';
+
+import { useBackend } from '../backend';
 import { Window } from '../layouts';
 
 type Item = {
@@ -70,7 +71,7 @@ export const PreRoundStore = (_props) => {
   } = useBackend<Data>();
 
   return (
-    <Window resizable title="Pre Round Shop" width={450} height={700}>
+    <Window title="Pre Round Shop" width={450} height={700}>
       <Window.Content scrollable>
         <Section>
           <BlockQuote>

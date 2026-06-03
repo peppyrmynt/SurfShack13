@@ -7,7 +7,9 @@
 	stat = DEAD
 	hud_type = /datum/hud/new_player
 	hud_possible = list()
-
+	//surfshack start
+	voice_chat_room = ROOM_GLOBAL_LOBBY
+	//surfshack end
 	var/ready = FALSE
 	/// Referenced when you want to delete the new_player later on in the code.
 	var/spawning = FALSE

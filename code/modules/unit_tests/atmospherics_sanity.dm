@@ -85,6 +85,7 @@
 		/area/station/science/ordnance/freezerchamber,
 		/area/station/solars,
 		/area/station/tcommsat/server,
+		/area/station/science/nanites,
 	)
 
 	for(var/area/ignored as anything in ignored_types)

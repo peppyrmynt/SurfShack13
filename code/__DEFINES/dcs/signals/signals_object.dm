@@ -90,6 +90,12 @@
 #define COMSIG_FIREALARM_ON_TRIGGER "firealarm_trigger"
 #define COMSIG_FIREALARM_ON_RESET "firealarm_reset"
 
+/// from /obj/machinery/power/emitter/interact(mob/user): (on)
+#define COMSIG_EMITTER_MACHINE_SET_ON "emitter_machine_set_on"
+
+/// from /obj/machinery/power/emitter/fire_beam(mob/user): (fired)
+#define COMSIG_EMITTER_MACHINE_ON_FIRE "emitter_machine_fire"
+
 // /obj access signals
 
 #define COMSIG_OBJ_ALLOWED "door_try_to_activate"

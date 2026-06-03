@@ -26,7 +26,7 @@
 		return ..()
 
 	ADD_TRAIT(living.mind, TRAIT_HOT_SPRING_CURSED, TRAIT_GENERIC)
-	var/mob/living/transformed_mob = living.wabbajack(pick(WABBAJACK_HUMAN, WABBAJACK_ANIMAL), change_flags = RACE_SWAP)
+	var/mob/living/transformed_mob = UNLINT(living.wabbajack(pick(WABBAJACK_HUMAN, WABBAJACK_ANIMAL), change_flags = RACE_SWAP))
 	if(!transformed_mob)
 		// Wabbajack failed, maybe the mob had godmode or something.
 		if(!QDELETED(living))

@@ -64,11 +64,13 @@
 	// At this point it means the attack was "successful", or at least unhandled, in some way
 	// This can mean nothing happened, this can mean the target took damage, etc.
 
-	if(user.client && isitem(target))
-		if(isnull(user.get_inactive_held_item()))
-			SStutorials.suggest_tutorial(user, /datum/tutorial/switch_hands, params2list(params))
-		else
-			SStutorials.suggest_tutorial(user, /datum/tutorial/drop, params2list(params))
+	//surfshack start
+	// if(user.client && isitem(target))
+	// 	if(isnull(user.get_inactive_held_item()))
+	// 		SStutorials.suggest_tutorial(user, /datum/tutorial/switch_hands, params2list(params))
+	// 	else
+	// 		SStutorials.suggest_tutorial(user, /datum/tutorial/drop, params2list(params))
+	//surfshack end
 
 	return TRUE
 

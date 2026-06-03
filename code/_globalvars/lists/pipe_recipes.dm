@@ -56,9 +56,11 @@ GLOBAL_LIST_INIT(transit_tube_recipes, list(
 		new /datum/pipe_info/transit("Straight Tube", /obj/structure/c_transit_tube, PIPE_STRAIGHT),
 		new /datum/pipe_info/transit("Straight Tube with Crossing", /obj/structure/c_transit_tube/crossing, PIPE_STRAIGHT),
 		new /datum/pipe_info/transit("Curved Tube", /obj/structure/c_transit_tube/curved, PIPE_UNARY_FLIPPABLE),
+		new /datum/pipe_info/transit("Curved Tube with Crossing", /obj/structure/c_transit_tube/curved/crossing, PIPE_UNARY_FLIPPABLE),
 		new /datum/pipe_info/transit("Diagonal Tube", /obj/structure/c_transit_tube/diagonal, PIPE_STRAIGHT),
 		new /datum/pipe_info/transit("Diagonal Tube with Crossing", /obj/structure/c_transit_tube/diagonal/crossing, PIPE_STRAIGHT),
 		new /datum/pipe_info/transit("Junction", /obj/structure/c_transit_tube/junction, PIPE_UNARY_FLIPPABLE),
+		new /datum/pipe_info/transit("Junction with Crossing", /obj/structure/c_transit_tube/junction/crossing, PIPE_UNARY_FLIPPABLE),
 	),
 	"Station Equipment" = list(
 		new /datum/pipe_info/transit("Through Tube Station", /obj/structure/c_transit_tube/station, PIPE_STRAIGHT),

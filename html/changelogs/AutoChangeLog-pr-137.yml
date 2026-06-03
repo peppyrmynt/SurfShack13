@@ -1,7 +1,0 @@
-author: "forgman6"
-delete-after: True
-changes:
-  - rscadd: "ooc_flags.dm  helper procs"
-  - rscadd: "client country_flag var that gets set on connect"
-  - rscadd: "countryflags to assets"
-  - image: "added flags.dmi"

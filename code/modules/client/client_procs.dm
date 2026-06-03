@@ -554,7 +554,8 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	view_size.setZoomMode()
 	Master.UpdateTickRate()
 	//surfshack start
-	country_flag = ip2country(address)
+	spawn if(src)
+		ip2country(address, src)
 	//surfshack end
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_CLIENT_CONNECT, src)
 	fully_created = TRUE

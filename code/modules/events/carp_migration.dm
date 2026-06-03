@@ -1,8 +1,10 @@
 /datum/round_event_control/carp_migration
 	name = "Carp Migration"
 	typepath = /datum/round_event/carp_migration
-	weight = 15
-	min_players = 12
+	//surfshack start
+	weight = 10
+	min_players = 15
+	//surfshack end
 	earliest_start = 10 MINUTES
 	max_occurrences = 6
 	category = EVENT_CATEGORY_ENTITIES

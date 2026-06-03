@@ -97,20 +97,19 @@
 /datum/nanite_program/fake_death
 	name = "Death Simulation"
 	desc = "The nanites induce a death-like coma into the host, able to fool most medical scans."
+	use_rate = 3.5
 	rogue_types = list(/datum/nanite_program/nerve_decay, /datum/nanite_program/necrotic, /datum/nanite_program/brain_decay)
-	can_trigger = TRUE
-	trigger_cost = 20
-	trigger_cooldown = 60
-	var/fakedeath_dur = 30 SECONDS
 
-/datum/nanite_program/fake_death/on_trigger(comm_message)
+/datum/nanite_program/fake_death/enable_passive_effect()
+	. = ..()
 	host_mob.emote("deathgasp")
 	host_mob.fakedeath("nanites")
-	addtimer(CALLBACK(src, PROC_REF(unfake_my_death)), fakedeath_dur)
 
-/datum/nanite_program/fake_death/proc/unfake_my_death()
+/datum/nanite_program/fake_death/disable_passive_effect()
+	. = ..()
 	host_mob.cure_fakedeath("nanites")
 
+//Can receive transmissions from a nanite communication remote for customized messages
 /datum/nanite_program/comm
 	can_trigger = TRUE
 	var/comm_message = ""
@@ -217,34 +216,18 @@
 	desc = "The nanites expend themselves to create alcoholic substances, and invest them into the host's bloodstream, causing temporary drunkeness."
 	can_trigger = TRUE
 	trigger_cost = 20
-	trigger_cooldown = 200
+	trigger_cooldown = 600
 	rogue_types = list(/datum/nanite_program/suffocating)
 
 /datum/nanite_program/alcoholic/on_trigger()
 	. = ..()
 	host_mob.reagents.add_reagent(/datum/reagent/consumable/ethanol, 10)
 
-/**
-/datum/nanite_program/antistunweapons
-	name = "Electrophobia"
-	desc = "The nanites alter the brain within the host, causing them to fear stun-based weaponry. This results in the inability to use stun-based weapons."
-	use_rate = 2
-	rogue_types = list(/datum/nanite_program/glitch)
-
-/datum/nanite_program/antistunweapons/enable_passive_effect()
-	. = ..()
-	host_mob.add_traits(list(TRAIT_NO_STUN_WEAPONS), TRAIT_NANITES)
-
-/datum/nanite_program/antistunweapons/disable_passive_effect()
-	. = ..()
-	host_mob.remove_traits(list(TRAIT_NO_STUN_WEAPONS), TRAIT_NANITES)
-**/
-
 /datum/nanite_program/weakness
 	name = "Weakening Procedure"
 	desc = "The nanites inhibit muscular tension and modify the host's bones to be more brittle. This results in an increase of wounds and broken bones when the host is subjected to damage."
 	use_rate = 1
-	rogue_types = list(/datum/nanite_program/hardiness)
+	rogue_types = list(/datum/nanite_program/necrotic)
 
 /datum/nanite_program/weakness/enable_passive_effect()
 	. = ..()

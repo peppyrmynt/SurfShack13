@@ -11,7 +11,9 @@
 	layer = LARGE_MOB_LAYER //above most mobs, but below speechbubbles
 	pressure_resistance = 200 //Because big, stompy xenos should not be blown around like paper.
 	butcher_results = list(/obj/item/food/meat/slab/xeno = 20, /obj/item/stack/sheet/animalhide/xeno = 3)
-
+	//surfshack start
+	voice_icon_state = "ayy_lmao"
+	//surfshack end
 	var/alt_inhands_file = 'icons/mob/nonhuman-player/alienqueen.dmi'
 
 /mob/living/carbon/alien/adult/royal/Initialize(mapload)

@@ -7,7 +7,9 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 	move_resist = INFINITY
 	interaction_flags_atom = parent_type::interaction_flags_atom | INTERACT_ATOM_MOUSEDROP_IGNORE_CHECKS
 	throwforce = 0
-
+	//surfshack start
+	voice_chat_room = ROOM_GHOST
+	//usrfshack end
 /mob/dead/Initialize(mapload)
 	SHOULD_CALL_PARENT(FALSE)
 	if(flags_1 & INITIALIZED_1)

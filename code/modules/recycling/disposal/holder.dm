@@ -75,9 +75,16 @@
 #undef MORGUE_TRAY_LITERS
 /// Starts the movement process, argument is the disposal unit the holder started in
 /obj/structure/disposalholder/proc/start(obj/disposal_machine)
-	if(QDELETED(disposal_machine:trunk))
-		disposal_machine:expel(src) // no trunk connected, so expel immediately
-		return
+	if(istype(disposal_machine, /obj/machinery/disposal))
+		var/obj/machinery/disposal/actual_disposal = disposal_machine
+		if(QDELETED(actual_disposal.trunk))
+			actual_disposal.expel(src) // no trunk connected, so expel immediately
+			return
+	else if(istype(disposal_machine, /obj/structure/bodycontainer/chute))
+		var/obj/structure/bodycontainer/chute/bodychute = disposal_machine
+		if(QDELETED(bodychute.trunk))
+			bodychute.expel(src) // no trunk connected, so expel immediately
+			return
 	forceMove(disposal_machine:trunk)
 	active = TRUE
 	setDir(DOWN)

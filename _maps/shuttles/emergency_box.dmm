@@ -15,17 +15,46 @@
 "af" = (
 /obj/structure/table,
 /obj/machinery/recharger,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/siding/dark/corner,
+/obj/effect/turf_decal/trimline/dark_blue/filled/corner,
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "ag" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 1
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/siding/dark,
+/obj/effect/turf_decal/trimline/dark_blue/filled/line,
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "ah" = (
 /obj/machinery/computer/emergency_shuttle,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/dark_blue/filled/line,
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner,
+/obj/effect/turf_decal/bot_white{
+	color = "#486091"
+	},
+/obj/effect/turf_decal/siding/dark,
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "ai" = (
 /obj/structure/table,
@@ -35,54 +64,128 @@
 	},
 /obj/item/crowbar,
 /obj/item/storage/medkit/fire,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/siding/dark/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "al" = (
 /obj/machinery/computer/atmos_alert{
 	dir = 4
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/bot_white{
+	color = "#486091"
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "am" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 10
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "an" = (
-/turf/open/floor/mineral/titanium/blue,
+/obj/vehicle/ridden/wheelchair/motorized{
+	dir = 8
+	},
+/obj/effect/turf_decal/bot_white,
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "ao" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 4
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 4
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "ap" = (
 /obj/machinery/computer/security{
 	dir = 8
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/bot_white{
+	color = "#486091"
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "aq" = (
 /obj/machinery/computer/crew{
 	dir = 4
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/bot_white{
+	color = "#486091"
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "ar" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
 	},
 /obj/structure/extinguisher_cabinet/directional/south,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/siding/dark{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "as" = (
 /obj/item/radio/intercom/directional/south,
 /obj/machinery/camera/autoname{
 	dir = 5
 	},
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 10
+	},
+/turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "at" = (
 /obj/machinery/button/flasher{
@@ -91,27 +194,64 @@
 	pixel_y = -24
 	},
 /obj/machinery/light/directional/south,
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/dark_blue/filled/line,
+/turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "au" = (
 /obj/machinery/computer/communications{
 	dir = 8
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/bot_white{
+	color = "#486091"
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "ay" = (
 /obj/machinery/door/airlock/public/glass{
 	name = "Emergency Shuttle Cockpit"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/command/general,
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/dark_blue/filled/warning,
+/obj/effect/turf_decal/trimline/dark_blue/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/dark_blue/mid_joiner,
+/obj/effect/turf_decal/trimline/dark_blue/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/textured_large,
 /area/shuttle/escape)
 "aA" = (
 /obj/structure/chair/comfy/shuttle,
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_corner{
+	dir = 8
+	},
 /area/shuttle/escape/brig)
 "aC" = (
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/dark_blue/filled/warning,
+/obj/effect/turf_decal/trimline/dark_blue/filled/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/dark_blue/mid_joiner,
+/turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "aE" = (
 /obj/structure/table,
@@ -121,38 +261,97 @@
 	pixel_y = 3
 	},
 /obj/item/crowbar,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/siding/white,
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "aG" = (
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral/half/contrasted{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_edge{
+	dir = 4
+	},
 /area/shuttle/escape/brig)
 "aH" = (
 /obj/machinery/door/airlock/public/glass{
 	name = "Emergency Shuttle Brig"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/security/general,
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/textured_large,
 /area/shuttle/escape/brig)
 "aI" = (
 /obj/machinery/door/airlock/titanium{
 	name = "Emergency Shuttle Airlock"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/security/general,
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/textured_large,
 /area/shuttle/escape/brig)
 "aJ" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 1
 	},
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_corner{
+	dir = 1
+	},
 /area/shuttle/escape/brig)
 "aK" = (
 /obj/structure/chair/comfy/shuttle,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 1
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "aM" = (
 /obj/structure/table,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/siding/white,
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "aP" = (
 /obj/machinery/door/airlock/titanium{
@@ -161,49 +360,110 @@
 /obj/docking_port/mobile/emergency{
 	name = "Box emergency shuttle"
 	},
-/turf/open/floor/plating,
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/textured_large,
 /area/shuttle/escape)
 "aQ" = (
 /obj/structure/extinguisher_cabinet/directional/north,
-/turf/open/floor/mineral/titanium,
+/turf/open/floor/iron,
 /area/shuttle/escape)
 "aR" = (
 /obj/structure/extinguisher_cabinet/directional/east,
 /obj/machinery/light/small/directional/east,
-/turf/open/floor/mineral/titanium,
+/turf/open/floor/iron,
 /area/shuttle/escape)
 "aV" = (
 /obj/machinery/door/airlock/titanium{
 	name = "Emergency Shuttle Airlock"
 	},
-/turf/open/floor/plating,
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/textured_large,
 /area/shuttle/escape)
 "aW" = (
 /obj/structure/extinguisher_cabinet/directional/south,
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/yellow/filled/corner,
+/turf/open/floor/iron,
 /area/shuttle/escape)
 "aX" = (
 /obj/machinery/door/airlock/titanium{
 	name = "Emergency Shuttle Cargo"
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/yellow/filled/warning,
+/obj/effect/turf_decal/trimline/yellow/mid_joiner,
+/obj/effect/turf_decal/trimline/yellow/filled/warning{
+	icon_state = "trimline_warn_fill";
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/yellow/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/textured_large,
 /area/shuttle/escape)
 "aZ" = (
 /obj/machinery/door/airlock/public/glass{
 	name = "Emergency Shuttle Infirmary"
 	},
-/turf/open/floor/mineral/titanium/white,
+/obj/effect/turf_decal/trimline/blue/filled/warning,
+/obj/effect/turf_decal/trimline/blue/mid_joiner,
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/blue/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/white/textured_large,
 /area/shuttle/escape)
 "bb" = (
-/turf/open/floor/mineral/titanium/yellow,
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "bc" = (
 /obj/structure/extinguisher_cabinet/directional/east,
-/turf/open/floor/mineral/titanium/yellow,
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/corner{
+	dir = 8
+	},
 /area/shuttle/escape)
 "bd" = (
 /obj/machinery/stasis,
-/turf/open/floor/mineral/titanium/white,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/box/white{
+	color = "#52B4E9"
+	},
+/turf/open/floor/iron/white/smooth_corner{
+	dir = 8
+	},
 /area/shuttle/escape)
 "be" = (
 /obj/structure/table,
@@ -215,15 +475,27 @@
 /obj/item/crowbar,
 /obj/structure/extinguisher_cabinet/directional/east,
 /obj/machinery/light/small/directional/east,
-/turf/open/floor/mineral/titanium/white,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/white/smooth_edge{
+	dir = 4
+	},
 /area/shuttle/escape)
 "bf" = (
 /obj/structure/closet,
-/turf/open/floor/mineral/titanium/yellow,
+/obj/effect/turf_decal/trimline/yellow/filled/line,
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
+/turf/open/floor/iron/edge,
 /area/shuttle/escape)
 "bg" = (
 /obj/structure/closet/crate,
-/turf/open/floor/mineral/titanium/yellow,
+/obj/effect/turf_decal/trimline/yellow/filled/line,
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
+/turf/open/floor/iron/edge,
 /area/shuttle/escape)
 "bj" = (
 /turf/closed/wall/mineral/titanium/nodiagonal,
@@ -235,79 +507,458 @@
 "bp" = (
 /obj/machinery/light/directional/south,
 /obj/machinery/status_display/evac/directional/south,
-/turf/open/floor/mineral/titanium,
+/turf/open/floor/iron,
 /area/shuttle/escape)
 "bq" = (
 /obj/machinery/light/small/directional/west,
-/turf/open/floor/mineral/titanium/yellow,
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/edge{
+	dir = 8
+	},
 /area/shuttle/escape)
 "br" = (
 /obj/machinery/light/small/directional/east,
 /obj/machinery/camera/autoname{
 	dir = 4
 	},
-/turf/open/floor/mineral/titanium/yellow,
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/edge{
+	dir = 4
+	},
 /area/shuttle/escape)
 "bs" = (
 /obj/machinery/light/small/directional/west,
 /obj/machinery/camera/autoname{
 	dir = 10
 	},
-/turf/open/floor/mineral/titanium/white,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/white/smooth_edge{
+	dir = 8
+	},
 /area/shuttle/escape)
 "cY" = (
 /obj/structure/window/reinforced/spawner/directional/north,
 /obj/machinery/power/shuttle_engine/heater,
 /turf/open/floor/plating/airless,
 /area/shuttle/escape)
+"eR" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/edge{
+	dir = 1
+	},
+/area/shuttle/escape)
 "ga" = (
-/turf/open/floor/mineral/titanium/white,
+/turf/open/floor/iron/white/smooth_large,
+/area/shuttle/escape)
+"is" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 9
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 9
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "iN" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 4
 	},
 /obj/machinery/light/small/directional/west,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 6
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"jr" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/dark{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/escape)
 "jA" = (
 /obj/machinery/camera/autoname{
 	dir = 5
 	},
-/turf/open/floor/mineral/titanium,
+/obj/effect/turf_decal/trimline/yellow/filled/corner{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/shuttle/escape)
+"jZ" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/machinery/light/small/directional/west,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 5
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"kc" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/shuttle/escape)
+"kk" = (
+/obj/effect/turf_decal/trimline/dark_blue/filled/warning{
+	dir = 1
+	},
+/turf/open/floor/iron,
+/area/shuttle/escape)
+"lQ" = (
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 1
+	},
+/turf/open/floor/iron/dark,
+/area/shuttle/escape)
+"nf" = (
+/obj/structure/chair/comfy/shuttle,
+/obj/effect/turf_decal/tile/neutral,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 9
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_corner,
+/area/shuttle/escape/brig)
+"nR" = (
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/white/smooth_edge{
+	dir = 1
+	},
 /area/shuttle/escape)
 "oY" = (
 /obj/machinery/camera/autoname{
 	dir = 6
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/item/kirbyplants/random{
+	pixel_w = 0
+	},
+/turf/open/floor/iron,
 /area/shuttle/escape)
 "pW" = (
 /obj/machinery/camera/autoname{
 	dir = 5
 	},
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/filled/corner,
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_corner{
+	dir = 4
+	},
 /area/shuttle/escape/brig)
 "qJ" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 1
 	},
 /obj/machinery/light/small/directional/south,
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner,
+/obj/effect/turf_decal/tile/neutral/half/contrasted{
+	dir = 1
+	},
+/turf/open/floor/iron/dark/smooth_edge,
 /area/shuttle/escape/brig)
 "rX" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
 	},
 /obj/structure/window/reinforced/spawner/directional/east,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 10
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"sa" = (
+/obj/structure/closet/emcloset,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/white/smooth_corner{
+	dir = 4
+	},
+/area/shuttle/escape)
+"to" = (
+/obj/machinery/door/airlock/titanium{
+	name = "Emergency Shuttle Airlock"
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/warning{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/yellow/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/floor/iron/textured_large,
+/area/shuttle/escape)
+"uo" = (
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 9
+	},
+/turf/open/floor/iron/dark,
+/area/shuttle/escape)
+"vh" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 1
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"wV" = (
+/obj/structure/chair/comfy/shuttle,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral/half/contrasted,
+/turf/open/floor/iron/dark/smooth_edge{
+	dir = 1
+	},
+/area/shuttle/escape/brig)
+"xQ" = (
+/obj/effect/turf_decal/trimline/blue/filled/line,
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
+/turf/open/floor/iron/white/smooth_edge,
+/area/shuttle/escape)
+"yA" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/dark{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/dark_blue/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/escape)
+"yE" = (
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/blue/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/white/smooth_edge{
+	dir = 1
+	},
+/area/shuttle/escape)
+"AK" = (
+/obj/machinery/stasis,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/box/white{
+	color = "#52B4E9"
+	},
+/turf/open/floor/iron/white/smooth_corner{
+	dir = 1
+	},
+/area/shuttle/escape)
+"CI" = (
+/obj/effect/turf_decal/trimline/neutral/filled/warning{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/shuttle/escape)
+"Dd" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner,
+/turf/open/floor/iron,
 /area/shuttle/escape)
 "Dk" = (
 /obj/machinery/vending/wallmed/directional/north{
 	use_power = 0
 	},
-/turf/open/floor/mineral/titanium,
+/turf/open/floor/iron,
 /area/shuttle/escape)
+"EC" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 8
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"Gg" = (
+/obj/effect/turf_decal/trimline/blue/filled/warning,
+/turf/open/floor/iron,
+/area/shuttle/escape)
+"Hp" = (
+/obj/structure/table,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 5
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"Hx" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 8
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"HF" = (
+/obj/structure/table,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 6
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"JV" = (
+/obj/effect/turf_decal/trimline/yellow/filled/warning{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/yellow/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/corner,
+/area/shuttle/escape)
+"Kl" = (
+/obj/effect/turf_decal/trimline/blue/filled/corner{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/shuttle/escape)
+"Lg" = (
+/obj/effect/turf_decal/tile/neutral/full,
+/turf/open/floor/iron/dark/smooth_large,
+/area/shuttle/escape/brig)
 "Lq" = (
 /obj/machinery/button/flasher{
 	id = "shuttle_flasher";
@@ -317,38 +968,194 @@
 /obj/machinery/flasher/directional/west{
 	id = "shuttle_flasher"
 	},
-/turf/open/floor/mineral/plastitanium/red,
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/neutral/half/contrasted{
+	dir = 4
+	},
+/turf/open/floor/iron/dark/smooth_edge{
+	dir = 8
+	},
 /area/shuttle/escape/brig)
 "LQ" = (
 /obj/machinery/light/directional/north,
-/turf/open/floor/mineral/titanium/blue,
+/obj/structure/closet/firecloset,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 10
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"Nf" = (
+/obj/structure/closet,
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 10
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/corner{
+	dir = 4
+	},
+/area/shuttle/escape)
+"NM" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 9
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 9
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"QP" = (
+/obj/effect/turf_decal/trimline/dark_blue/filled/line{
+	dir = 5
+	},
+/turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "Rm" = (
 /obj/structure/extinguisher_cabinet/directional/east,
 /obj/machinery/light/directional/east,
-/turf/open/floor/mineral/titanium,
+/turf/open/floor/iron,
+/area/shuttle/escape)
+"RU" = (
+/obj/effect/turf_decal/trimline/yellow/filled/warning,
+/turf/open/floor/iron,
+/area/shuttle/escape)
+"Sq" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/west,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 6
+	},
+/turf/open/floor/iron/large,
 /area/shuttle/escape)
 "SX" = (
 /obj/structure/closet/emcloset,
 /obj/machinery/status_display/evac/directional/north,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line,
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
+/obj/effect/turf_decal/siding/white,
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"TD" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 4
+	},
+/obj/structure/window/reinforced/spawner/directional/west,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 5
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 5
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"Uz" = (
+/turf/open/floor/iron,
 /area/shuttle/escape)
 "Xw" = (
 /obj/machinery/flasher/directional/north{
 	id = "cockpit_flasher"
 	},
-/turf/open/floor/mineral/titanium/blue,
+/obj/item/kirbyplants/random,
+/obj/effect/turf_decal/trimline/dark_blue/filled/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/red/filled/corner{
+	dir = 8
+	},
+/turf/open/floor/iron,
 /area/shuttle/escape)
 "XC" = (
 /obj/structure/closet/emcloset,
-/turf/open/floor/mineral/titanium/white,
+/obj/effect/turf_decal/trimline/blue/filled/line{
+	dir = 9
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/blue/filled/mid_joiner{
+	dir = 8
+	},
+/turf/open/floor/iron/white/smooth_corner,
+/area/shuttle/escape)
+"XX" = (
+/obj/effect/turf_decal/trimline/yellow/filled/warning{
+	icon_state = "trimline_warn_fill";
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/yellow/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/edge{
+	dir = 1
+	},
 /area/shuttle/escape)
 "Yk" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 4
 	},
 /obj/structure/window/reinforced/spawner/directional/west,
-/turf/open/floor/mineral/titanium/blue,
+/obj/effect/turf_decal/trimline/neutral/filled/line{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 4
+	},
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"ZW" = (
+/obj/structure/closet/crate,
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 6
+	},
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
+/obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
+	dir = 4
+	},
+/turf/open/floor/iron/corner{
+	dir = 1
+	},
 /area/shuttle/escape)
 
 (1,1,1) = {"
@@ -369,7 +1176,7 @@ ac
 ad
 aV
 ad
-aV
+to
 ad
 ad
 ad
@@ -381,21 +1188,21 @@ ad
 ad
 ad
 ad
-aA
+nf
 Lq
 pW
 ad
-aC
-iN
+CI
+jZ
 ao
 ao
 ao
 iN
-aC
+CI
 ad
-bb
+JV
 bq
-bf
+Nf
 ad
 ad
 "}
@@ -405,19 +1212,19 @@ ae
 al
 aq
 ad
-aA
-aG
+wV
+Lg
 qJ
 ad
 aQ
-aC
-aC
-aC
-aC
-aC
+Uz
+Uz
+Uz
+Uz
+Uz
 aW
 ad
-bb
+eR
 bb
 bf
 cY
@@ -426,22 +1233,22 @@ bk
 (4,1,1) = {"
 ac
 af
-am
+jr
 ar
 ad
 aA
 aG
 aJ
 ad
-aC
+Uz
+NM
+Hx
+Hx
+Hx
 rX
-rX
-rX
-rX
-rX
-aC
+RU
 aX
-bb
+XX
 bb
 bg
 cY
@@ -450,7 +1257,7 @@ bk
 (5,1,1) = {"
 ac
 ag
-aC
+uo
 as
 ad
 ac
@@ -458,35 +1265,35 @@ aH
 ac
 bj
 Dk
+TD
 Yk
 Yk
 Yk
-Yk
-Yk
+Sq
 jA
 ad
 bc
 br
-bg
+ZW
 cY
 bk
 "}
 (6,1,1) = {"
 ac
 ah
-aC
+lQ
 at
 ad
 Xw
-aC
+kc
 aK
 aM
-aC
-aC
-aC
-aC
-aC
-aC
+Uz
+Uz
+Uz
+Uz
+Uz
+Uz
 bp
 ad
 ad
@@ -498,48 +1305,48 @@ bk
 (7,1,1) = {"
 ac
 ag
-aC
+QP
 aC
 ay
-aC
-aC
-ao
+kk
+Uz
+vh
 aM
-aC
+Uz
+NM
+Hx
+Hx
+Hx
 rX
-rX
-rX
-rX
-rX
-aC
+Dd
 ac
 XC
 bs
-XC
+sa
 cY
 bk
 "}
 (8,1,1) = {"
 ac
 ai
-ao
-ao
+yA
+yA
 ad
 LQ
-aC
-aM
-aM
-aC
+Uz
+Hp
+HF
+Uz
+TD
 Yk
 Yk
 Yk
-Yk
-Yk
-aC
+Sq
+Gg
 aZ
+yE
 ga
-ga
-ga
+xQ
 cY
 bk
 "}
@@ -550,20 +1357,20 @@ ap
 au
 ad
 SX
-aC
-aC
-aC
-aC
-aC
-aC
-aC
-aC
-aC
-aC
+Uz
+Uz
+Uz
+Uz
+Uz
+Uz
+Uz
+Uz
+Uz
+Kl
 ac
+nR
 ga
-ga
-ga
+xQ
 cY
 bk
 "}
@@ -578,16 +1385,16 @@ an
 an
 oY
 Rm
-am
-am
-am
-am
+is
+EC
+EC
+EC
 am
 aR
 ac
 bd
 be
-bd
+AK
 ad
 ad
 "}

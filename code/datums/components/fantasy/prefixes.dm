@@ -123,7 +123,6 @@
 		/datum/reagent/toxin/lipolicide,
 		/datum/reagent/toxin/spewium,
 		/datum/reagent/toxin/heparin,
-		/datum/reagent/toxin/rotatium,
 		/datum/reagent/toxin/histamine
 	))
 	var/list/names = list(
@@ -133,7 +132,6 @@
 		/datum/reagent/toxin/lipolicide = "famineblood",
 		/datum/reagent/toxin/spewium = "gulchergut",
 		/datum/reagent/toxin/heparin = "jabberwound",
-		/datum/reagent/toxin/rotatium = "spindown",
 		/datum/reagent/toxin/histamine = "creeping malaise"
 	)
 	var/poisonname = names[picked_poison]

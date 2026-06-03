@@ -3,6 +3,12 @@
 #define ROLE_GHOST_COOK "All-American Cook"
 #define ROLE_GHOST_REGULAR "Fake Health Inspector"
 
+/obj/effect/mob_spawn/ghost_role/human/allamerican
+	name = "We love generic types"
+	prompt_name = "something that exists to pass unit tests"
+	you_are_text = "You are a mistake."
+	flavour_text = "If you see this, somebody fucked up."
+
 /obj/effect/mob_spawn/ghost_role/human/allamerican/chef
 	name = "All-American Chef"
 	desc = "A cryogenics pod, storing a trained chef to prepare meals when activity is detected in this sector."

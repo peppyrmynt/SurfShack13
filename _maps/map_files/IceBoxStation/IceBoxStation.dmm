@@ -6879,12 +6879,14 @@
 /turf/open/floor/iron/textured,
 /area/station/engineering/atmos)
 "bSH" = (
-/obj/effect/landmark/start/hangover,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
 /obj/structure/cable,
+/obj/machinery/computer/public_announcement{
+	dir = 8
+	},
 /turf/open/floor/iron,
 /area/station/hallway/secondary/exit/departure_lounge)
 "bSW" = (
@@ -9176,9 +9178,6 @@
 /area/station/cargo/miningdock)
 "cyL" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "cyU" = (
@@ -32953,9 +32952,6 @@
 "jAI" = (
 /obj/machinery/light/directional/south,
 /obj/machinery/nanite_program_hub,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "jAO" = (
@@ -51440,9 +51436,6 @@
 "oNE" = (
 /obj/structure/sign/poster/official/random/directional/south,
 /obj/machinery/nanite_programmer,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "oNO" = (
@@ -83428,9 +83421,6 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
 "yeC" = (
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/explab)
 "yeD" = (

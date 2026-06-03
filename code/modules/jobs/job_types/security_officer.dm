@@ -46,6 +46,9 @@
 	)
 	job_flags = STATION_JOB_FLAGS
 
+	// Surf Shack Edit
+	antag_tokenable = FALSE
+	// Surf Shack End
 
 GLOBAL_LIST_INIT(available_depts, list(SEC_DEPT_ENGINEERING, SEC_DEPT_MEDICAL, SEC_DEPT_SCIENCE, SEC_DEPT_SUPPLY))
 

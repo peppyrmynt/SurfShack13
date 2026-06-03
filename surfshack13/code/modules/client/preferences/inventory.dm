@@ -1,6 +1,5 @@
-/datum/preferences/proc/load_inventory(mob/M)
-	var/ckey = M.ckey
-	if(!ckey || !SSdbcore.IsConnected())
+/datum/preferences/proc/load_inventory(ckey)
+	if(!ckey || ckey == "mockclient" || !SSdbcore.IsConnected())
 		return
 	var/datum/db_query/query_gear = SSdbcore.NewQuery(
 		"SELECT item_id,amount FROM [format_table_name("metacoin_item_purchases")] WHERE ckey = :ckey",
@@ -15,7 +14,7 @@
 	qdel(query_gear)
 
 /datum/preferences/proc/load_metacoins(ckey)
-	if(!ckey || !SSdbcore.IsConnected())
+	if(!ckey || ckey == "mockclient" || !SSdbcore.IsConnected())
 		metacoins = 100
 		return
 	var/datum/db_query/query_get_metacoins = SSdbcore.NewQuery(
@@ -31,7 +30,7 @@
 	metacoins = text2num(mc_count)
 
 /datum/preferences/proc/adjust_metacoins(ckey, amount, reason = null, announces = TRUE, respects_roundcap = FALSE)
-	if(!ckey || !SSdbcore.IsConnected())
+	if(!ckey || ckey == "mockclient" || !SSdbcore.IsConnected())
 		return FALSE
 
 	if(!max_round_coins && respects_roundcap)

@@ -81,6 +81,7 @@
 	results = list(/datum/reagent/drug/bath_salts = 7)
 	required_reagents = list(/datum/reagent/toxin/bad_food = 1, /datum/reagent/saltpetre = 1, /datum/reagent/consumable/nutriment = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/consumable/enzyme = 1, /datum/reagent/consumable/tea = 1, /datum/reagent/mercury = 1)
 	required_temp = 374
+	reaction_flags = REACTION_CLEAR_INVERSE
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING
 
 /datum/chemical_reaction/aranesp
@@ -92,6 +93,7 @@
 	results = list(/datum/reagent/drug/happiness = 4)
 	required_reagents = list(/datum/reagent/nitrous_oxide = 2, /datum/reagent/medicine/epinephrine = 1, /datum/reagent/consumable/ethanol = 1)
 	required_catalysts = list(/datum/reagent/toxin/plasma = 5)
+	reaction_flags = REACTION_CLEAR_INVERSE
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING
 
 /datum/chemical_reaction/pumpup
@@ -160,3 +162,23 @@
 		var/obj/item/food/drug/saturnx/new_glob = new(location)
 		new_glob.pixel_x = rand(-6, 6)
 		new_glob.pixel_y = rand(-6, 6)
+
+/datum/chemical_reaction/rotatium
+	results = list(/datum/reagent/drug/rotatium = 3)
+	required_reagents = list(/datum/reagent/toxin/mindbreaker = 1, /datum/reagent/teslium = 1, /datum/reagent/toxin/fentanyl = 1)
+	mix_message = span_danger("After sparks, fire, and the smell of mindbreaker, the mix is constantly spinning with no stop in sight.")
+	is_cold_recipe = FALSE
+	required_temp = 100
+	optimal_temp = 450
+	overheat_temp = 900
+	optimal_ph_min = 3
+	optimal_ph_max = 9
+	determin_ph_range = 2.5
+	temp_exponent_factor = 2.5
+	ph_exponent_factor = 2
+	thermic_constant = -425
+	H_ion_release = 4
+	rate_up_lim = 15
+	purity_min = 0.6
+	reaction_flags = REACTION_PH_VOL_CONSTANT
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_DAMAGING | REACTION_TAG_OTHER

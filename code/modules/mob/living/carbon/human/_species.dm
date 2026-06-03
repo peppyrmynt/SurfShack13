@@ -60,6 +60,12 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	/// What languages this species can understand and say.
 	/// Use a [language holder datum][/datum/language_holder] typepath in this var.
 	/// Should never be null.
+	//surfshack start
+	///If set, moves holder to given voice chat room
+	var/voice_chat_room_on_gain
+	///If set changes voice indictor to given
+	var/set_voice_icon_state
+	//surfshack end
 	var/datum/language_holder/species_language_holder = /datum/language_holder/human_basic
 	///The bodyparts this species uses. assoc of bodypart string - bodypart type. Make sure all the fucking entries are in or I'll skin you alive.
 	var/list/bodypart_overrides = list(
@@ -422,7 +428,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	properly_gained = TRUE
 
 	human_who_gained_species.living_flags &= ~STOP_OVERLAY_UPDATE_BODY_PARTS
-
+	//surfshack start
+	if(voice_chat_room_on_gain)
+		human_who_gained_species.voice_chat_room =  voice_chat_room_on_gain
+	if(set_voice_icon_state)
+		human_who_gained_species.voice_icon_state = set_voice_icon_state
 /**
  * Proc called when a carbon is no longer this species.
  *

@@ -389,6 +389,9 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 
 	SetEmagged(1)
 	SetStun(60) //Borgs were getting into trouble because they would attack the emagger before the new laws were shown
+	/// Surf Shack Edit
+	src.playsound_local(null, 'surfshack13/sound/ambience/antag/emagged_borg.ogg', 70, FALSE, pressure_affected = FALSE, use_reverb = FALSE)
+	/// Surf Shack End
 	lawupdate = FALSE
 	set_connected_ai(null)
 	message_admins("[ADMIN_LOOKUPFLW(user)] emagged cyborg [ADMIN_LOOKUPFLW(src)].  Laws overridden.")

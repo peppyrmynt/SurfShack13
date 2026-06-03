@@ -37,7 +37,7 @@ GLOBAL_LIST_EMPTY(bodycontainers) //Let them act as spawnpoints for revenants an
 	var/obj/structure/disposalpipe/trunk/trunk = null
 
 /obj/structure/bodycontainer/chute/Initialize(mapload)
-	..()
+	. = ..()
 	AddComponent(/datum/component/simple_rotation)
 	link_trunk()
 

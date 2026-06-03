@@ -32,6 +32,29 @@
 		/obj/item/clothing/head/costume/gator_cloak = 1,
 		/obj/item/food/meat/slab = 2,
 	)
+	/// Normal diet
+	var/static/list/desired_food = list(
+		/obj/item/food/meat/slab,
+		/obj/item/food/meat/rawcutlet,
+		/obj/item/bodypart/arm,
+		/obj/item/bodypart/leg,
+		/mob/living/basic/frog,
+		/mob/living/basic/axolotl,
+		/mob/living/basic/chicken,
+		/mob/living/basic/mouse,
+	)
+	/// Apex predator diet
+	var/static/list/desired_food_floppy = list(
+		/obj/item/food/meat/slab,
+		/obj/item/food/meat/rawcutlet,
+		/obj/item/bodypart/arm,
+		/obj/item/bodypart/leg,
+		/mob/living/basic/frog,
+		/mob/living/basic/axolotl,
+		/mob/living/basic/chicken,
+		/mob/living/basic/mouse,
+		/obj/item/disk/nuclear,
+	)
 	SET_BASE_PIXEL(-9, -9)
 	/// cooldowns between deathrolls
 	COOLDOWN_DECLARE(roll_cooldown)
@@ -46,25 +69,17 @@
 /mob/living/basic/alligator/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
-	var/list/desired_food = list(
-		/obj/item/food/meat/slab,
-		/obj/item/food/meat/rawcutlet,
-		/obj/item/bodypart/arm,
-		/obj/item/bodypart/leg,
-		/mob/living/basic/frog,
-		/mob/living/basic/axolotl,
-		/mob/living/basic/chicken,
-		/mob/living/basic/mouse,
-		)
 	if(prob(1)) //*disk shaped thront... *burps...
-		desired_food += /obj/item/disk/nuclear
+		AddElement(/datum/element/basic_eating, food_types = desired_food_floppy)
+		ai_controller.set_blackboard_key(BB_BASIC_FOODS, typecacheof(desired_food_floppy))
 		desc += " It likes floppy disks."
-	AddElement(/datum/element/basic_eating, food_types = desired_food)
+	else
+		AddElement(/datum/element/basic_eating, food_types = desired_food)
+		ai_controller.set_blackboard_key(BB_BASIC_FOODS, typecacheof(desired_food))
 	RegisterSignal(src, COMSIG_MOB_ATE, PROC_REF(on_mob_ate))
 	AddElement(/datum/element/ai_retaliate)
 	RegisterSignal(src, COMSIG_LIVING_GIBBED, PROC_REF(on_gibbed))
 	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
-	ai_controller.set_blackboard_key(BB_BASIC_FOODS, typecacheof(desired_food))
 
 /mob/living/basic/alligator/Destroy()
 	if(eating_victim)

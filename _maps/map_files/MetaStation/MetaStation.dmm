@@ -4717,10 +4717,6 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
 	},
-/obj/machinery/button/door/directional/north{
-	id = "nanite_lockdown";
-	name = "Nanite Security Lockdown Control"
-	},
 /turf/open/floor/iron/grimy,
 /area/station/science/nanites)
 "bHr" = (
@@ -6196,13 +6192,7 @@
 /area/station/maintenance/starboard/aft)
 "cln" = (
 /obj/effect/turf_decal/tile/purple/opposingcorners,
-/obj/structure/window/reinforced/plasma/spawner/directional/north,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
+/obj/structure/window/spawner/directional/north,
 /turf/open/floor/iron,
 /area/station/science/breakroom)
 "clp" = (
@@ -9751,11 +9741,8 @@
 /area/station/security/prison)
 "dBb" = (
 /obj/effect/turf_decal/tile/purple/opposingcorners,
-/obj/structure/window/reinforced/plasma/spawner/directional/north,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /obj/structure/cable,
+/obj/structure/window/spawner/directional/north,
 /turf/open/floor/iron,
 /area/station/science/breakroom)
 "dBE" = (
@@ -12765,9 +12752,6 @@
 	},
 /obj/structure/cable,
 /obj/machinery/power/apc/auto_name/directional/north,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron/grimy,
 /area/station/science/nanites)
 "eAL" = (
@@ -16896,9 +16880,6 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron/grimy,
 /area/station/science/nanites)
 "gda" = (
@@ -21766,13 +21747,10 @@
 /area/station/service/chapel)
 "hQY" = (
 /obj/machinery/door/window/right/directional/north{
-	name = "Petting Zoo";
-	max_integrity = 400
+	name = "Super Duper Strong Windoor";
+	max_integrity = 25
 	},
 /obj/effect/turf_decal/tile/purple/opposingcorners,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/breakroom)
 "hRf" = (
@@ -26611,13 +26589,10 @@
 /area/station/ai_monitored/turret_protected/aisat_interior)
 "jvQ" = (
 /obj/machinery/door/window/left/directional/north{
-	name = "Reinforced Security Windoor";
-	max_integrity = 400
+	name = "Super Duper Strong Windoor";
+	max_integrity = 25
 	},
 /obj/effect/turf_decal/tile/purple/opposingcorners,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron,
 /area/station/science/breakroom)
 "jvX" = (
@@ -38872,9 +38847,6 @@
 	dir = 10
 	},
 /obj/structure/cable,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
 /turf/open/floor/iron/grimy,
 /area/station/science/nanites)
 "nNo" = (
@@ -55552,14 +55524,6 @@
 /obj/structure/cable,
 /turf/open/floor/iron,
 /area/station/security/prison)
-"tHn" = (
-/obj/effect/turf_decal/tile/purple/opposingcorners,
-/obj/structure/window/reinforced/plasma/spawner/directional/north,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
-/turf/open/floor/iron,
-/area/station/science/breakroom)
 "tHE" = (
 /obj/structure/disposalpipe/segment{
 	dir = 6
@@ -65899,10 +65863,7 @@
 /obj/machinery/disposal/bin,
 /obj/structure/disposalpipe/trunk,
 /obj/effect/turf_decal/tile/purple/opposingcorners,
-/obj/structure/window/reinforced/plasma/spawner/directional/north,
-/obj/machinery/door/poddoor/preopen{
-	id = "nanite_lockdown"
-	},
+/obj/structure/window/spawner/directional/north,
 /turf/open/floor/iron,
 /area/station/science/breakroom)
 "xga" = (
@@ -107313,7 +107274,7 @@ fbl
 khN
 pOw
 gqa
-tHn
+cln
 sgB
 pbb
 bnf
