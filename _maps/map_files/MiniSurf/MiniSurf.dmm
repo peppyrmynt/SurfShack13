@@ -7959,7 +7959,7 @@
 /area/station/engineering/atmos)
 "fKg" = (
 /obj/structure/cable,
-/mob/living/basic/slime,
+/mob/living/basic/slime/random,
 /turf/open/floor/engine,
 /area/station/science/xenobiology)
 "fKn" = (
@@ -11200,6 +11200,11 @@
 	},
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
+"ieh" = (
+/obj/effect/decal/cleanable/dirt,
+/mob/living/basic/slime/random,
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "ieo" = (
 /obj/machinery/atmospherics/pipe/layer_manifold/general/visible,
 /turf/open/floor/iron,
@@ -80227,7 +80232,7 @@ jcg
 jcg
 lso
 jcg
-jGR
+ieh
 dHQ
 hAk
 jcg

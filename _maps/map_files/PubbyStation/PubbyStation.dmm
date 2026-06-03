@@ -42138,7 +42138,7 @@
 /area/station/maintenance/starboard)
 "hbV" = (
 /obj/structure/cable,
-/mob/living/basic/slime,
+/mob/living/basic/slime/random,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/xenobiology)
 "hcd" = (
@@ -75932,6 +75932,10 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron/large,
 /area/station/service/hydroponics)
+"tPz" = (
+/mob/living/basic/slime/random,
+/turf/open/floor/iron/dark/textured_large,
+/area/station/science/xenobiology)
 "tPP" = (
 /obj/item/kirbyplants/random,
 /obj/effect/turf_decal/trimline/blue/filled/line{
@@ -135858,7 +135862,7 @@ bTl
 uMt
 knc
 msw
-aui
+tPz
 uKI
 hqr
 oaW

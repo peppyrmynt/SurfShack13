@@ -647,10 +647,10 @@
 	contents_overlay_icon = "slime"
 
 /obj/machinery/smartfridge/extract/accept_check(obj/item/weapon)
-	return (istype(weapon, /obj/item/slime_extract) || istype(weapon, /obj/item/slime_scanner) || istype(weapon, /obj/item/holomanual/xenobiology))
+	return (istype(weapon, /obj/item/slime_extract) || istype(weapon, /obj/item/slime_scanner) || istype(weapon, /obj/item/holomanual/xenobiology) || istype(weapon, /obj/item/food/monkeycube) || istype(weapon, /obj/item/slimepotion))
 
 /obj/machinery/smartfridge/extract/preloaded
-	initial_contents = list(/obj/item/slime_scanner = 2, /obj/item/holomanual/xenobiology = 1)
+	initial_contents = list(/obj/item/slime_scanner = 2, /obj/item/holomanual/xenobiology = 1, /obj/item/food/monkeycube = 4, /obj/item/slimepotion/slime/mutator = 2)
 
 // -------------------------------------
 // Cytology Petri Dish Smartfridge

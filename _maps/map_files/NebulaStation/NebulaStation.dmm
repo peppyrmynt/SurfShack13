@@ -44054,6 +44054,12 @@
 	dir = 6
 	},
 /area/station/security/prison/safe)
+"gAI" = (
+/obj/effect/turf_decal/box,
+/obj/machinery/light/floor,
+/mob/living/basic/slime/random,
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "gAJ" = (
 /obj/structure/table/reinforced/rglass,
 /obj/machinery/fax{
@@ -199258,7 +199264,7 @@ gIQ
 gIQ
 dPx
 gdF
-rWr
+gAI
 cYv
 gQs
 qVp
@@ -201326,7 +201332,7 @@ qLU
 yhJ
 dGu
 nxQ
-rWr
+gAI
 nNt
 suG
 otn

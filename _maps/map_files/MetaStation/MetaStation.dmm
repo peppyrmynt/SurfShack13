@@ -17393,6 +17393,10 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/plating,
 /area/station/maintenance/solars/port/aft)
+"gnN" = (
+/mob/living/basic/slime/random,
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "gnS" = (
 /obj/structure/cable,
 /obj/structure/disposalpipe/segment{
@@ -112683,7 +112687,7 @@ iWc
 ces
 elm
 mtu
-aTs
+gnN
 mtu
 cXP
 aaa
@@ -116278,7 +116282,7 @@ mtu
 kbz
 gva
 fff
-aTs
+gnN
 kbz
 fff
 mtu

@@ -18060,6 +18060,11 @@
 /obj/machinery/camera/autoname/directional/south,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/ai_monitored/turret_protected/aisat/teleporter)
+"bih" = (
+/obj/machinery/light/floor,
+/mob/living/basic/slime/random,
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "bik" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/chair/stool/directional/east,
@@ -130401,7 +130406,7 @@ tpc
 kLj
 sIc
 kLj
-waR
+bih
 kLj
 sIc
 kLj
@@ -132975,7 +132980,7 @@ tpc
 kLj
 sIc
 kLj
-waR
+bih
 kLj
 pCj
 gXs

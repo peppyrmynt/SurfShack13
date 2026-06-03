@@ -13583,6 +13583,11 @@
 /obj/structure/cable,
 /turf/open/floor/iron,
 /area/station/security/prison/safe)
+"dpD" = (
+/obj/structure/cable,
+/mob/living/basic/slime/random,
+/turf/open/floor/circuit/green,
+/area/station/science/xenobiology)
 "dpI" = (
 /obj/structure/table,
 /obj/item/clothing/gloves/latex,
@@ -118496,7 +118501,7 @@ pWL
 jjm
 rUl
 rTW
-vlS
+dpD
 rTW
 oVW
 oUe
@@ -120038,7 +120043,7 @@ kSA
 jjm
 nkj
 rTW
-vlS
+dpD
 rTW
 oVW
 fmi

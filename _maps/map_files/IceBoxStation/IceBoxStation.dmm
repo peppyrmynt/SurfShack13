@@ -21314,6 +21314,10 @@
 /obj/machinery/power/apc/auto_name/directional/south,
 /turf/open/floor/plating,
 /area/station/maintenance/port/lesser)
+"gcK" = (
+/mob/living/basic/slime/random,
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "gcP" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
@@ -192153,10 +192157,10 @@ tsa
 wHb
 qLY
 eea
-wFN
+gcK
 abe
 nFz
-wFN
+gcK
 abe
 nFz
 abe

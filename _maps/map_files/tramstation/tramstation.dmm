@@ -23138,6 +23138,10 @@
 	},
 /turf/open/floor/iron,
 /area/station/security/prison/workout)
+"hiK" = (
+/mob/living/basic/slime/random,
+/turf/open/floor/engine,
+/area/station/science/xenobiology)
 "hiR" = (
 /obj/machinery/door/airlock{
 	name = "Bathroom"
@@ -115712,7 +115716,7 @@ hik
 sml
 bfH
 bfH
-oxe
+hiK
 jTC
 qVr
 aaa
@@ -118784,7 +118788,7 @@ hFH
 tYB
 qVr
 jTC
-oxe
+hiK
 bfH
 bfH
 nbI
@@ -118796,7 +118800,7 @@ rbU
 uAF
 ahk
 hdA
-oxe
+hiK
 bfH
 qVr
 aaa
