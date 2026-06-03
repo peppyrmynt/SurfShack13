@@ -266,3 +266,18 @@
 	cost = CARGO_CRATE_VALUE * 2
 	contains = list(/mob/living/basic/turtle)
 	crate_name = "flora-turtle crate"
+
+/datum/supply_pack/critter/grey_slime
+	name = "Grey Slime Crate"
+	desc = "A slimy, grey blob of unknown origin. May have unpredictable effects."
+	cost = CARGO_CRATE_VALUE * 4
+	contains = list(/mob/living/basic/slime)
+	crate_name = "slime crate"
+
+/datum/supply_pack/critter/random_slime
+	name = "Random Slime Crate"
+	desc = "A mysterious blob of unknown origin. May have unpredictable effects."
+	cost = CARGO_CRATE_VALUE * 10
+	contraband = TRUE
+	contains = list(/mob/living/basic/slime/random)
+	crate_name = "random slime crate"
