@@ -230,44 +230,44 @@
 /datum/store_item/roundstart/antag_token_traitor
 	name = "Antag Token: Traitor"
 	item_path = /obj/item/antag_maker
-	item_cost = 5000
+	item_cost = 7500
 
 /datum/store_item/roundstart/antag_token_heretic
 	name = "Antag Token: Heretic"
 	item_path = /obj/item/antag_maker/heretic
-	item_cost = 5000
+	item_cost = 7500
 
 /datum/store_item/roundstart/antag_token_brother
 	name = "Antag Token: Blood Brother"
 	item_path = /obj/item/antag_maker/brother
-	item_cost = 4000
+	item_cost = 6000
 
 /datum/store_item/roundstart/antag_token_changeling
 	name = "Antag Token: Changeling"
 	item_path = /obj/item/antag_maker/changeling
-	item_cost = 5000
+	item_cost = 8000
 
 /datum/store_item/roundstart/antag_token_bloodsucker
 	name = "Antag Token: Bloodsucker"
 	item_path = /obj/item/antag_maker/bloodsucker
-	item_cost = 5000
+	item_cost = 8000
 
 /datum/store_item/roundstart/antag_token_spy
 	name = "Antag Token: Spy"
 	item_path = /obj/item/antag_maker/spy
-	item_cost = 4000
+	item_cost = 6000
 
 /datum/store_item/roundstart/antag_token_wizard
 	name = "Antag Token: Wizard"
 	item_path = /obj/item/antag_maker/wizard
-	item_cost = 8000
+	item_cost = 12500
 
 /datum/store_item/roundstart/antag_token_nukie
 	name = "Antag Token: (Solo) Nuclear Operative"
 	item_path = /obj/item/antag_maker/nukie
-	item_cost = 7000
+	item_cost = 10000
 
 /datum/store_item/roundstart/antag_token_clown_op
 	name = "Antag Token: (Solo) Clown Operative"
 	item_path = /obj/item/antag_maker/clown_op
-	item_cost = 7000
+	item_cost = 10000
