@@ -186,6 +186,11 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 	/// If the SM is decorated with holiday lights
 	var/holiday_lights = FALSE
 
+	// Surf Shack 13 Edit
+	/// This var determines whether or not the anti-grief warning message has been broadcasted, to ensure people aren't spammed with messages if the sm is delamming.
+	var/warning_message = FALSE
+	// Surf Shack 13 End
+
 	/// Cooldown for sending emergency alerts to the common radio channel
 	COOLDOWN_DECLARE(common_radio_cooldown)
 
@@ -329,7 +334,25 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 		set_delam(SM_DELAM_PRIO_NONE, SM_DELAM_STRATEGY_PURGE) // This one cant clear any forced delams.
 	delamination_strategy.delam_progress(src)
 	if(damage > explosion_point && !final_countdown)
-		count_down()
+		// Surf Shack 13 Edit
+		var/round_time_passed = world.time - SSticker.round_start_time
+		if(round_time_passed < SUPERMATTER_DELAMINATION_MINIMUM_TIME)
+			if(damage >= explosion_point && !warning_message)
+				var/minimum_time_minute = num2text(SUPERMATTER_DELAMINATION_MINIMUM_TIME / 600)
+				radio.talk_into(
+					src,
+					"Emergency causality destabilization field has been activated. Please ensure the supermatter recovers before we reach the [minimum_time_minute] minute mark into this shift.",
+					emergency_channel,
+					list(SPAN_COMMAND)
+				)
+				warning_message = TRUE
+			if(damage < explosion_point && warning_message)
+				warning_message = FALSE
+			// We're slowly reversing damage automatically to prevent the SM from just blowing up the exact second we hit 30 minutes in, it keeps accumulating damage despite not being able to blow up!
+			damage--
+		else
+			// Surf Shack End (Also, there's an extra tab below this line for count_down()) Which is an edit
+			count_down()
 
 	// PART 5: WASTE GAS PROCESSING
 	waste_multiplier_factors = calculate_waste_multiplier()

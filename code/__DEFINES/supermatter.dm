@@ -62,6 +62,11 @@
 /// How long it takes for the supermatter to delaminate after hitting 0 integrity if a sliver has been removed
 #define SUPERMATTER_SLIVER_REMOVED_COUNTDOWN_TIME (5 SECONDS)
 
+// Surf Shack 13 Edit
+/// How long into the round must we be before the supermatter CAN delaminate. To prevent griefing and engineers rolling antag who immediately delam SM.
+#define SUPERMATTER_DELAMINATION_MINIMUM_TIME (30 MINUTES)
+// Surf Shack 13 End
+
 ///to prevent accent sounds from layering
 #define SUPERMATTER_ACCENT_SOUND_MIN_COOLDOWN (2 SECONDS)
 
