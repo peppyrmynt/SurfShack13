@@ -260,7 +260,7 @@
 
 /datum/nanite_program/sensor/species
 	name = "Species Sensor"
-	desc = "When triggered, the nanites scan the host to determine their species and output a signal depending on the conditions set in the settings."
+	desc = "The nanites scan the host to determine their species and output a signal depending on the conditions set in the settings."
 	can_rule = TRUE
 
 	///List of all species we can add special sensors for.
@@ -332,7 +332,7 @@
 
 /datum/nanite_program/sensor/assistant
 	name = "Assistant Sensor"
-	desc = "When triggered, the nanites scan the host's biodata and match it with Nanotrasen's private bio-records and output a signal if the host is an assistant."
+	desc = "The nanites scan the host's biodata and match it with Nanotrasen's private bio-records and output a signal if the host is an assistant."
 	can_rule = TRUE
 
 /datum/nanite_program/sensor/assistant/register_extra_settings()
