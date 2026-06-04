@@ -66,7 +66,7 @@ for code_file in glob.glob(parent_directory, recursive=True):
 located_error_tuples = []
 
 for applicable_file in files_to_scan:
-    with open(applicable_file, encoding="utf8", errors='ignore') as file:
+    with open(applicable_file, encoding="utf8") as file:
         file_contents = file.read()
         for define in define_regex.finditer(file_contents):
             number_of_defines += 1
