@@ -582,3 +582,11 @@
 /obj/item/dnainjector/anticlever
 	name = "\improper DNA injector (Anti-Clever)"
 	remove_mutations = list(/datum/mutation/human/clever)
+
+// Surf Shack 13 Edit
+
+/obj/item/dnainjector/lay_on_hands
+	name = "\improper DNA injector (Mending Touch)"
+	add_mutations = list(/datum/mutation/human/lay_on_hands)
+
+// Surf Shack 13 End
