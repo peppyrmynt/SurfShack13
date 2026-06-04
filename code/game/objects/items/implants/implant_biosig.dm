@@ -22,12 +22,15 @@
 	if(!imp_in)
 		return FALSE
 
+	if(!radio)
+		return FALSE
+
 	// Location.
 	var/area = get_area_name(get_turf(imp_in))
 	// Name of implant user.
 	var/mobname = imp_in.mind ? imp_in.mind.name : imp_in.real_name
 	// What is to be said.
-	var/message = "DEATH ALERT: [mobname]'s lifesig//N&#@$¤#§>..." // Default message for unexpected causes.
+	var/message = "DEATH ALERT: [mobname]'s lifesigns ceased unexpectedly in [area]!" // Default message for unexpected causes.
 	if(cause == "death")
 		message = "DEATH ALERT: [mobname]'s lifesigns ceased in [area]!"
 
@@ -52,13 +55,13 @@
 	return ..()
 
 /obj/item/implant/biosig/get_data()
-	. = {"<b>Implant Specifications:</b><BR>
-		<b>Name:</b>Biosignaller Implant<BR>
-		<b>Life:</b>Until death<BR>
-		<b>Important Notes:</b>Broadcasts a message to radio listeners over an encrypted channel.<BR>
-		<HR>
-		<b>Implant Details:</b><BR>
-		<b>Function:</b>Contains a miniature radio connected to a bioscanner encased in a blue, EMP-resistant shell. Broadcasts the death and last known position of the user over an encrypted radio channel.<BR>"}
+	return "<b>Implant Specifications:</b><BR> \
+		<b>Name:</b>Biosignaller Implant<BR> \
+		<b>Life:</b>Until death<BR> \
+		<b>Important Notes:</b>Broadcasts a message to radio listeners over an encrypted channel.<BR> \
+		<HR> \
+		<b>Implant Details:</b><BR> \
+		<b>Function:</b>Contains a miniature radio connected to a bioscanner encased in a blue, EMP-resistant shell. Broadcasts the death and last known position of the user over an encrypted radio channel.<BR>"
 
 /obj/item/implanter/biosig
 	name = "implanter (biosignaller)"
