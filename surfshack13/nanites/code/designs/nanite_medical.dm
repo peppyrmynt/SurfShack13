@@ -1,6 +1,6 @@
 /datum/design/nanites/regenerative
 	name = "Accelerated Regeneration"
-	desc = "The nanites boost the host's natural regeneration, increasing their healing speed."
+	desc = "The nanites boost the host's natural regeneration, increasing their healing speed. Works better in low-pressure environments."
 	research_icon_state = "nanite_program_medical"
 	id = "regenerative_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
@@ -25,7 +25,7 @@
 
 /datum/design/nanites/purging
 	name = "Blood Purification"
-	desc = "The nanites purge toxins and chemicals from the host's bloodstream. Doesn't consume nanites until the host is poisoned."
+	desc = "The nanites purge toxins and chemicals from the host's bloodstream. Consumes nanites even if it has no effect."
 	research_icon_state = "nanite_program_medical"
 	id = "purging_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
@@ -35,7 +35,7 @@
 	name = "Selective Blood Purification"
 	desc = "The nanites purge toxins and dangerous chemicals from the host's bloodstream, while ignoring beneficial chemicals. \
 			The added processing power required to analyze the chemicals severely increases the nanite consumption rate. \
-			Doesn't consume nanites should the host not be poisoned."
+			Consumes nanites even if the host is not poisoned."
 	research_icon_state = "nanite_program_medical"
 	id = "purging_plus_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)
@@ -52,7 +52,7 @@
 /datum/design/nanites/brain_heal_advanced
 	name = "Neural Reimaging"
 	desc = "The nanites are able to backup and restore the host's neural connections, potentially replacing entire chunks of missing or damaged brain matter. \
-			Doesn't consume nanites if the host's brain isn't damaged in any capacity."
+			Consumes nanites even if it doesn't have any effect."
 	research_icon_state = "nanite_program_medical"
 	id = "brainheal_plus_nanites"
 	category = list(NANITE_CATEGORY_MEDICAL)

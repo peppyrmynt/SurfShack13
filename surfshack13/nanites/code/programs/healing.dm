@@ -169,7 +169,7 @@
 /datum/nanite_program/brain_heal_advanced
 	name = "Neural Reimaging"
 	desc = "The nanites are able to backup and restore the host's neural connections, potentially replacing entire chunks of missing or damaged brain matter. \
-			Doesn't consume nanites if the host's brain isn't damaged in any capacity."
+			Consumes nanites even if it doesn't have any effect."
 	use_rate = 3
 	rogue_types = list(/datum/nanite_program/brain_decay, /datum/nanite_program/brain_misfire)
 
