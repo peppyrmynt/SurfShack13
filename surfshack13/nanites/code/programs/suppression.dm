@@ -22,7 +22,7 @@
 
 /datum/nanite_program/paralyzing/active_effect()
 	paralysis_timer++
-	if(paralysis_timer > 30) // 30 second grace period.
+	if(paralysis_timer > 12) // 12 second grace period.
 		host_mob.Stun(40)
 		use_rate += 0.1
 		if(!warned)
