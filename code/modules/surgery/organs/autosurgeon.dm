@@ -54,7 +54,8 @@
 		return
 	var/mob/living/carbon/human/H = user
 	for(var/obj/item/bodypart/arm/ripped in H.bodyparts)
-		to_chat(user, span_userdanger("\The [src] Malfunctions and starts to prod and carve your [ripped]."))
+		to_chat(user, span_userdanger("\The [src] Malfunctions and starts to prod and carve your arm."))
+		playsound(target.loc, 'sound/items/weapons/chainsawhit.ogg', 50, vary = TRUE)
 		ripped.dismember()
 		return
 //surfshack end
