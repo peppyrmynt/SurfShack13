@@ -103,6 +103,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_PUSHIMMUNE "push_immunity"
 /// can't be kicked to the side
 #define TRAIT_NO_SIDE_KICK "no_side_kick"
+/// Are we immune to emp's? (This is used as a flag, not the actual immunity)
+#define TRAIT_EMPIMMUNE "emp_immunity"
 /// Are we immune to shocks?
 #define TRAIT_SHOCKIMMUNE "shock_immunity"
 /// Are we immune to specifically tesla / SM shocks?

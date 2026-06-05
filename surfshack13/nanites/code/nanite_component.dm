@@ -240,6 +240,10 @@
 /datum/component/nanites/proc/on_emp(datum/source, severity)
 	SIGNAL_HANDLER
 
+	// Maybe i'm just stupid and blind, but i had to make a trait for this because i cant find any procs that'll let me find the empprotection element.
+	if(HAS_TRAIT(host_mob, TRAIT_EMPIMMUNE))
+		return
+
 	nanite_volume *= (rand(60, 90) * 0.01) //Lose 10-40% of nanites
 	adjust_nanites(null, -(rand(5, 50))) //Lose 5-50 flat nanite volume
 	if(prob(40 / severity))
@@ -247,14 +251,18 @@
 	for(var/datum/nanite_program/all_program as anything in programs)
 		all_program.on_emp(severity)
 
-
 /datum/component/nanites/proc/on_shock(datum/source, shock_damage, siemens_coeff = 1, flags = NONE)
 	SIGNAL_HANDLER
 
-	if(flags & SHOCK_ILLUSION || shock_damage < 1)
+	if(flags & SHOCK_ILLUSION || shock_damage < 1) // not actually shocked?
 		return
 
-	if(!HAS_TRAIT_NOT_FROM(host_mob, TRAIT_SHOCKIMMUNE, TRAIT_NANITES))//Another shock protection must protect nanites too, but nanites protect only host
+	if(iscarbon(host_mob))
+		var/mob/living/carbon/our_carbon = host_mob
+		if(our_carbon.wearing_shock_proof_gloves() && !(flags & SHOCK_NOGLOVES))
+			return
+
+	if(!HAS_TRAIT(host_mob, TRAIT_SHOCKIMMUNE))
 		nanite_volume *= (rand(45, 80) * 0.01) //Lose 20-55% of nanites
 		adjust_nanites(null, -(rand(5, 50))) //Lose 5-50 flat nanite volume
 		for(var/X in programs)
@@ -264,9 +272,15 @@
 /datum/component/nanites/proc/on_minor_shock(datum/source)
 	SIGNAL_HANDLER
 
-	adjust_nanites(null, -(rand(5, 15))) //Lose 5-15 flat nanite volume
-	for(var/datum/nanite_program/all_program as anything in programs)
-		all_program.on_minor_shock()
+	if(iscarbon(host_mob))
+		var/mob/living/carbon/our_carbon = host_mob
+		if(our_carbon.wearing_shock_proof_gloves()) // We don't have flags for this signal, so let's just assume insuls protect you from everything.
+			return
+
+	if(!HAS_TRAIT(host_mob, TRAIT_SHOCKIMMUNE))
+		adjust_nanites(null, -(rand(5, 15))) //Lose 5-15 flat nanite volume
+		for(var/datum/nanite_program/all_program as anything in programs)
+			all_program.on_minor_shock()
 
 /datum/component/nanites/proc/check_stealth(datum/source)
 	SIGNAL_HANDLER
