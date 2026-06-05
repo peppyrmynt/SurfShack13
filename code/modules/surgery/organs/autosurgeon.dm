@@ -19,6 +19,20 @@
 	var/surgery_speed = 1
 	/// The overlay that shows when the autosurgeon has an organ inside of it.
 	var/loaded_overlay = "autosurgeon_loaded_overlay"
+	//surfshack start
+	/// Organs that cant be put in by players, but still hard coded into autosurgeons
+	var/list/organ_blacklist = list(
+		/obj/item/organ/brain,
+		)
+	/// amount of uses left before theres a risk of malfunction
+	var/malfunction_threshold = 3
+	/// amount of times its been used
+	var/use_counter = 0
+
+/obj/item/autosurgeon/examine_more(mob/user)
+	. = ..()
+	. += span_warning("Warrenty void after [malfunction_threshold] uses.")
+	//surfshack end
 
 /obj/item/autosurgeon/attack_self_tk(mob/user)
 	return //stops TK fuckery
@@ -34,6 +48,17 @@
 		. += loaded_overlay
 		. += emissive_appearance(icon, loaded_overlay, src)
 
+//surfshack start
+/obj/item/autosurgeon/proc/malfunction(mob/living/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	for(var/obj/item/bodypart/arm/ripped in H.bodyparts)
+		to_chat(user, span_userdanger("\The [src] Malfunctions and starts to prod and carve your [ripped]."))
+		ripped.dismember()
+		return
+//surfshack end
+
 /obj/item/autosurgeon/proc/load_organ(obj/item/organ/loaded_organ, mob/living/user)
 	if(user)
 		if(stored_organ)
@@ -43,7 +68,11 @@
 		if(uses <= 0)
 			to_chat(user, span_alert("[src] is used up and cannot be loaded with more implants."))
 			return
-
+		//surfshack start
+		if(organ_blacklist.Find(loaded_organ.type))
+			to_chat(user, span_alert("[src] cant implant the [loaded_organ] and refuses it!"))
+			return
+		//surfshack end
 		if(organ_whitelist.len)
 			var/organ_whitelisted
 			for(var/whitelisted_organ in organ_whitelist)
@@ -80,7 +109,6 @@
 		)
 		if(!do_after(user, (implant_time * surgery_speed), target))
 			return
-
 	if(target != user)
 		log_combat(user, target, "autosurgeon implanted [stored_organ] into", "[src]", "in [AREACOORD(target)]")
 		user.visible_message(span_notice("[user] presses a button on [src] as it plunges into [target]'s body."), span_notice("You press a button on [src] as it plunges into [target]'s body."))
@@ -89,6 +117,10 @@
 			span_notice("[user] pressses a button on [src] as it plunges into [user.p_their()] body."),
 			span_notice("You press a button on [src] as it plunges into your body."),
 		)
+	//surfshack start
+	if(use_counter >= malfunction_threshold && prob(30))
+		malfunction(user)
+		return
 
 	stored_organ.Insert(target)//insert stored organ into the user
 	stored_organ = null
@@ -96,9 +128,11 @@
 	playsound(target.loc, 'sound/items/weapons/circsawhit.ogg', 50, vary = TRUE)
 	update_appearance()
 
+	use_counter ++
 	uses--
 	if(uses <= 0)
 		desc = "[initial(desc)] Looks like it's been used up."
+	//surfshack end
 
 /obj/item/autosurgeon/attack_self(mob/user)//when the object it used...
 	use_autosurgeon(user, user)
