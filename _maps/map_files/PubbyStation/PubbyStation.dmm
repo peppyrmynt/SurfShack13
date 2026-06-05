@@ -75218,7 +75218,7 @@
 /turf/open/floor/iron/white/smooth_large,
 /area/station/medical/office)
 "tzT" = (
-/obj/docking_port/stationary/mining_home{
+/obj/docking_port/stationary/mining_home/pubby{
 	dir = 4
 	},
 /turf/open/space/basic,
