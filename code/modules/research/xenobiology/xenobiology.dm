@@ -62,18 +62,20 @@
 *
 * By using a valid core on a living adult slime, then feeding it nine more of the same type, you can mutate it into more useful items. Not every slime type has an implemented core cross.
 */
-/obj/item/slime_extract/attack(mob/living/basic/slime/target_slime, mob/user)
-	if(!isslime(target_slime))
-		return ..()
+/obj/item/slime_extract/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	var/mob/living/basic/slime/target_slime = interacting_with
+	if(!istype(target_slime))
+		return NONE
+
 	if(target_slime.stat)
 		to_chat(user, span_warning("The slime is dead!"))
-		return
+		return ITEM_INTERACT_BLOCKING
 	if(target_slime.life_stage != SLIME_LIFE_STAGE_ADULT)
 		to_chat(user, span_warning("The slime must be an adult to cross its core!"))
-		return
+		return ITEM_INTERACT_BLOCKING
 	if(target_slime.crossbreed_modification && target_slime.crossbreed_modification != crossbreed_modification)
 		to_chat(user, span_warning("The slime is already being crossed with a different extract!"))
-		return
+		return ITEM_INTERACT_BLOCKING
 
 	if(!target_slime.crossbreed_modification)
 		target_slime.crossbreed_modification = crossbreed_modification
@@ -85,6 +87,65 @@
 
 	if(target_slime.applied_crossbreed_amount >= SLIME_EXTRACT_CROSSING_REQUIRED)
 		target_slime.spawn_corecross()
+	return ITEM_INTERACT_SUCCESS
+
+/**
+* Effect when activated by selfsustaining crossbreed or rainbow slime
+*
+* * arg1 - The reaction being triggered. If null, a random reaction is picked
+*/
+/obj/item/slime_extract/proc/auto_activate_reaction(datum/chemical_reaction/slime/slime_reaction = null)
+	if(QDELETED(src))
+		return
+
+	if(isnull(slime_reaction))
+		var/list/slime_reactions = GLOB.slime_extract_auto_activate_reactions[type]
+		if(isnull(slime_reactions))
+			return
+		slime_reaction = pick(slime_reactions)
+
+	var/list/required_reagents = slime_reaction.required_reagents
+	for(var/datum/reagent/chem as anything in required_reagents)
+		reagents.add_reagent(chem, required_reagents[chem])
+
+/// An assoc list of slime extracts to their allowed recipes
+GLOBAL_LIST_INIT(slime_extract_auto_activate_reactions, init_slime_auto_activate_reaction_list())
+
+/proc/init_slime_auto_activate_reaction_list()
+	var/list/recipe_list = list()
+
+	// Only reactions with these reagent requirements are allowed to auto_activate
+	var/list/auto_activate_reagent_whistlist = list(
+		/datum/reagent/toxin/plasma,
+		/datum/reagent/water,
+		/datum/reagent/blood,
+		/datum/reagent/water/holywater,
+		/datum/reagent/uranium,
+		/datum/reagent/uranium/radium,
+		/datum/reagent/toxin/slimejelly
+	)
+
+	var/list/slime_extract_paths = subtypesof(/obj/item/slime_extract)
+	for(var/datum/chemical_reaction/slime/slime_reaction as anything in subtypesof(/datum/chemical_reaction/slime))
+		var/recipe_extract_type = slime_reaction.required_container
+		if(!(recipe_extract_type in slime_extract_paths))
+			continue
+
+		var/skip = FALSE
+		for(var/datum/reagent/chem as anything in slime_reaction.required_reagents)
+			if(!(chem in auto_activate_reagent_whistlist))
+				skip = TRUE
+				break
+		if(skip)
+			continue
+
+		var/list/recipes = recipe_list[recipe_extract_type]
+		if(!recipes)
+			recipes = list()
+			recipe_list[recipe_extract_type] = recipes
+		recipes.Add(new slime_reaction())
+
+	return recipe_list
 
 /obj/item/slime_extract/grey
 	name = "grey slime extract"
