@@ -999,3 +999,50 @@
 	message_admins("[ADMIN_LOOKUPFLW(voidwalker)] has been made into a Voidwalker by the midround ruleset.")
 	log_dynamic("[key_name(voidwalker)] was spawned as a Voidwalker by the midround ruleset.")
 	return voidwalker
+
+// Surf Shack Edits below
+
+//////////////////////////////////////////////
+//                                          //
+//         WEREWOLVES (Midround)            //
+//                                          //
+//////////////////////////////////////////////
+
+/datum/dynamic_ruleset/midround/from_living/werewolves
+	name = "Lycanthropy Victim"
+	midround_ruleset_style = MIDROUND_RULESET_STYLE_HEAVY
+	antag_datum = /datum/antagonist/werewolf/lycanthropy
+	antag_flag = ROLE_LYCANTHROPY_VICTIM
+	antag_flag_override = ROLE_WEREWOLF
+	minimum_required_age = 0
+	protected_roles = list(
+		JOB_CAPTAIN,
+		JOB_DETECTIVE,
+		JOB_HEAD_OF_SECURITY,
+		JOB_SECURITY_OFFICER,
+		JOB_WARDEN,
+	)
+	restricted_roles = list(
+		JOB_AI,
+		JOB_CYBORG,
+		ROLE_POSITRONIC_BRAIN,
+	)
+	required_candidates = 1
+	weight = 0 // Currently only comes from lycanthropy. Should NEVER roll naturally.
+	cost = 10
+	scaling_cost = 10
+	requirements = list(50,45,40,30,15,10,10,10,10,10)
+	antag_cap = list("denominator" = 38)
+	repeatable = TRUE
+
+/datum/dynamic_ruleset/midround/from_living/werewolves/pre_execute(population)
+	. = ..()
+	for (var/i in 1 to get_antag_cap_scaling_included(population))
+		if(candidates.len <= 0)
+			break
+		var/mob/M = pick_n_take(candidates)
+		assigned += M.mind
+		M.mind.special_role = ROLE_LYCANTHROPY_VICTIM
+		M.mind.restricted_roles = restricted_roles
+		GLOB.pre_setup_antags += M.mind
+	return TRUE

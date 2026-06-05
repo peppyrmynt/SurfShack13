@@ -1810,7 +1810,15 @@
 	icon = 'icons/mob/human/species/monkey/monkey_tail.dmi'
 	icon_state = "default"
 	color_src = FALSE
+//Surf Shack Start
+/datum/sprite_accessory/tails/werewolf
+	name = "Werewolf"
+	icon = 'surfshack13/icons/mob/human/werewolf_features.dmi'
+	color_src = HAIR_COLOR
 
+/datum/sprite_accessory/tails/werewolf/default
+	icon_state = "default"
+//Surf Shack End
 /datum/sprite_accessory/pod_hair
 	icon = 'icons/mob/human/species/podperson_hair.dmi'
 	em_block = TRUE
@@ -1934,7 +1942,14 @@
 	icon_state = "fox"
 	color_src = HAIR_COLOR
 	locked = TRUE
-
+//Surf Shack Start
+/datum/sprite_accessory/ears/werewolf
+	icon = 'surfshack13/icons/mob/human/werewolf_features.dmi'
+	name = "Werewolf"
+	icon_state = "werewolf"
+	color_src = HAIR_COLOR
+	locked = TRUE
+//Surf Shack End
 /datum/sprite_accessory/wings
 	icon = 'icons/mob/human/species/wings.dmi'
 	em_block = TRUE

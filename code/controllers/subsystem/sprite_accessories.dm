@@ -47,6 +47,9 @@ SUBSYSTEM_DEF(accessories) // just 'accessories' for brevity
 	var/list/tails_list_lizard
 	var/list/tails_list_monkey
 	var/list/tails_list_fish
+	//Surf Shack Edit
+	var/list/tails_list_werewolf
+	//Surf Shack End
 	var/list/ears_list
 	var/list/wings_list
 	var/list/wings_open_list
@@ -93,6 +96,9 @@ SUBSYSTEM_DEF(accessories) // just 'accessories' for brevity
 	tails_list_monkey = init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/monkey)[DEFAULT_SPRITE_LIST]
 	//tails fo fish organ infusions, not for prefs.
 	tails_list_fish = init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/fish)[DEFAULT_SPRITE_LIST]
+	//Surf Shack Edit
+	tails_list_werewolf = init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/werewolf)[DEFAULT_SPRITE_LIST]
+	//Surf Shack End
 	snouts_list = init_sprite_accessory_subtypes(/datum/sprite_accessory/snouts)[DEFAULT_SPRITE_LIST]
 	horns_list = init_sprite_accessory_subtypes(/datum/sprite_accessory/horns, add_blank = TRUE)[DEFAULT_SPRITE_LIST]
 	ears_list = init_sprite_accessory_subtypes(/datum/sprite_accessory/ears, add_blank = TRUE)[DEFAULT_SPRITE_LIST]
