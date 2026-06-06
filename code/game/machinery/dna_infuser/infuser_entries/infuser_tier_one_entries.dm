@@ -219,7 +219,7 @@
 	name = "Sheep"
 	infuse_mob_name = "sheep"
 	desc = "Skittish and fluffy creatures, most psychologists warn that infusing yourself with sheep DNA may make one more prone to manipulation tactics."
-	threshold_desc = "their flesh will develop a certain fluffiness and texture similiar to wool. Such changes provide great insulation against all extreme temperatures."
+	threshold_desc = "their flesh will develop a certain fluffiness and texture similiar to wool. Such changes provide great insulation against all extremely cold temperatures."
 	qualities = list(
 		"skittish",
 		"fluffy",
