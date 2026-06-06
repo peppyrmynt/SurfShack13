@@ -383,7 +383,7 @@
 		/obj/item/gun/energy/disabler/smoothbore = 1,
 		/obj/item/stack/sheet/mineral/gold = 5,
 		/obj/item/stock_parts/power_store/cell/hyper = 1,
-		/datum/reagent/reaction_agent/speed_agent = 10,
+		/datum/reagent/catalyst_agent/speed/tempomyocin = 10,
 	)
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	time = 20 SECONDS

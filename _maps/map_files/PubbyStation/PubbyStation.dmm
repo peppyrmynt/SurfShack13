@@ -906,6 +906,7 @@
 "adD" = (
 /obj/machinery/suit_storage_unit/hos,
 /obj/effect/turf_decal/bot_red,
+/obj/structure/reagent_dispensers/wall/peppertank/directional/south,
 /turf/open/floor/wood/large,
 /area/station/command/heads_quarters/hos)
 "adM" = (
@@ -2217,6 +2218,7 @@
 	dir = 8
 	},
 /obj/machinery/camera/autoname/directional/east,
+/obj/structure/reagent_dispensers/wall/peppertank/directional/east,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 4
 	},
@@ -3066,6 +3068,7 @@
 	},
 /obj/machinery/power/apc/auto_name/directional/north,
 /obj/structure/cable,
+/obj/structure/reagent_dispensers/wall/peppertank/directional/west,
 /turf/open/floor/iron/white/smooth_corner,
 /area/station/security/medical)
 "akC" = (
@@ -5905,6 +5908,10 @@
 /obj/structure/closet/secure_closet/security/science,
 /obj/machinery/firealarm/directional/south,
 /obj/structure/extinguisher_cabinet/directional/east,
+/obj/structure/reagent_dispensers/wall/peppertank/directional/east{
+	pixel_w = 0;
+	pixel_z = -30
+	},
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 1
 	},
@@ -6334,6 +6341,7 @@
 	dir = 1
 	},
 /obj/effect/landmark/start/security_officer,
+/obj/structure/reagent_dispensers/wall/peppertank/directional/east,
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 1
 	},
@@ -9404,7 +9412,9 @@
 	dir = 1
 	},
 /obj/machinery/firealarm/directional/north,
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 8
 	},
@@ -9573,8 +9583,8 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/tile/yellow,
-/obj/machinery/firealarm/directional/north,
 /obj/structure/cable,
+/obj/machinery/firealarm/directional/west,
 /turf/open/floor/iron/corner,
 /area/station/maintenance/disposal/incinerator)
 "aHF" = (
@@ -14733,7 +14743,9 @@
 	dir = 4
 	},
 /obj/structure/extinguisher_cabinet/directional/east,
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron/white/smooth_edge{
@@ -16353,7 +16365,9 @@
 /obj/effect/turf_decal/bot_white{
 	color = "#D381C9"
 	},
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/large,
 /area/station/science/robotics/mechbay)
 "bia" = (
@@ -17300,6 +17314,9 @@
 /obj/effect/turf_decal/trimline/yellow/mid_joiner{
 	dir = 8
 	},
+/obj/structure/disposalpipe/segment{
+	color = "lightgreen"
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 8
 	},
@@ -17317,7 +17334,9 @@
 	dir = 4
 	},
 /obj/machinery/light/directional/east,
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 8
 	},
@@ -17525,7 +17544,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/corner,
 /obj/item/radio/intercom/directional/west,
 /obj/machinery/firealarm/directional/north,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/science/genetics)
 "boc" = (
@@ -17640,10 +17661,6 @@
 	},
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 1
-	},
-/obj/structure/disposalpipe/segment{
-	dir = 9;
-	color = "lightgreen"
 	},
 /turf/open/floor/iron/white/smooth_corner{
 	dir = 8
@@ -18047,7 +18064,9 @@
 	dir = 4
 	},
 /obj/item/kirbyplants/random,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/white/smooth_corner{
 	dir = 8
 	},
@@ -18394,7 +18413,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
 	dir = 1
 	},
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd","xeno")
+	},
 /turf/open/floor/iron/dark/smooth_corner,
 /area/station/science/xenobiology)
 "bse" = (
@@ -19207,7 +19228,9 @@
 	dir = 8
 	},
 /obj/machinery/light_switch/directional/south,
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 4
 	},
@@ -19240,6 +19263,9 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/disposalpipe/segment{
+	color = "lightgreen"
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 8
 	},
@@ -19291,21 +19317,6 @@
 /turf/open/floor/plating,
 /area/station/medical/pharmacy)
 "bwS" = (
-/obj/structure/rack,
-/obj/item/reagent_containers/cup/beaker/large{
-	pixel_x = 7;
-	pixel_y = 5
-	},
-/obj/item/reagent_containers/cup/beaker/large{
-	pixel_x = -5;
-	pixel_y = 5
-	},
-/obj/item/reagent_containers/cup/beaker/large{
-	pixel_x = 1;
-	pixel_y = 0
-	},
-/obj/item/reagent_containers/dropper,
-/obj/item/reagent_containers/dropper,
 /obj/structure/sign/warning/chem_diamond/directional/west,
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 9
@@ -19318,6 +19329,7 @@
 	},
 /obj/effect/turf_decal/tile/yellow,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/closet/secure_closet/chemical,
 /turf/open/floor/iron/white/textured_corner,
 /area/station/medical/chem_storage)
 "bwT" = (
@@ -19638,10 +19650,6 @@
 	dir = 1
 	},
 /obj/machinery/airalarm/directional/north,
-/obj/structure/disposalpipe/segment{
-	dir = 4;
-	color = "lightgreen"
-	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
 	},
@@ -19788,7 +19796,9 @@
 /obj/machinery/computer/rdservercontrol{
 	dir = 1
 	},
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /obj/machinery/airalarm/directional/south,
 /obj/effect/turf_decal/bot_white{
 	color = "#D381C9"
@@ -19971,7 +19981,6 @@
 /area/station/medical/pharmacy)
 "bAe" = (
 /obj/structure/rack,
-/obj/item/storage/box/syringes,
 /obj/machinery/power/apc/auto_name/directional/west,
 /obj/machinery/light_switch/directional/west{
 	pixel_x = -38;
@@ -19986,6 +19995,20 @@
 	},
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/item/reagent_containers/cup/beaker/large{
+	pixel_x = -5;
+	pixel_y = 5
+	},
+/obj/item/reagent_containers/cup/beaker/large{
+	pixel_x = 7;
+	pixel_y = 5
+	},
+/obj/item/reagent_containers/cup/beaker/large{
+	pixel_x = 1;
+	pixel_y = 0
+	},
+/obj/item/reagent_containers/dropper,
+/obj/item/reagent_containers/dropper,
 /turf/open/floor/iron/white/textured_corner{
 	dir = 4
 	},
@@ -20565,15 +20588,12 @@
 /turf/open/floor/plating,
 /area/station/maintenance/port/fore)
 "bCx" = (
-/obj/machinery/vending/wardrobe/chem_wardrobe,
-/obj/effect/turf_decal/bot_white{
-	color = "#EFB341"
-	},
 /obj/effect/turf_decal/trimline/yellow/filled/line,
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
-/obj/effect/turf_decal/siding,
 /obj/machinery/firealarm/directional/north,
-/turf/open/floor/iron/white/smooth_large,
+/obj/machinery/chem_dispenser,
+/obj/effect/turf_decal/siding,
+/turf/open/floor/iron/white/textured_large,
 /area/station/medical/chemistry)
 "bCB" = (
 /obj/structure/chair,
@@ -20710,10 +20730,6 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/structure/disposalpipe/segment{
-	dir = 4;
-	color = "lightgreen"
-	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
 	},
@@ -22442,7 +22458,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
 	dir = 1
 	},
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /obj/structure/sign/warning/explosives/directional/north,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/ordnance)
@@ -25425,7 +25443,9 @@
 	},
 /obj/machinery/power/apc/auto_name/directional/east,
 /obj/machinery/light/directional/north,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /obj/structure/cable,
 /turf/open/floor/iron/white/smooth_corner{
 	dir = 8
@@ -25440,6 +25460,7 @@
 	dir = 4;
 	mapping_id = "main_turbine"
 	},
+/obj/structure/cable,
 /turf/open/floor/engine,
 /area/station/maintenance/disposal/incinerator)
 "bZE" = (
@@ -28448,7 +28469,9 @@
 /obj/effect/turf_decal/bot_white{
 	color = "#D381C9"
 	},
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/ordnance/storage)
 "coj" = (
@@ -31062,6 +31085,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/delivery,
+/obj/structure/cable,
 /turf/open/floor/iron/edge,
 /area/station/command/heads_quarters/ce)
 "cQL" = (
@@ -32601,6 +32625,14 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/science/research/abandoned)
+"dxV" = (
+/obj/machinery/light/small/directional/south,
+/obj/machinery/camera/directional/south{
+	c_tag = "Xenobiology Lab - Pen #6";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/iron/dark/textured_large,
+/area/station/science/xenobiology)
 "dyd" = (
 /obj/effect/turf_decal/trimline/neutral/filled/line{
 	dir = 4
@@ -33141,11 +33173,12 @@
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 4
 	},
-/obj/effect/turf_decal/siding{
-	dir = 4
-	},
 /obj/structure/sign/warning/no_smoking/directional/west,
-/obj/structure/chair{
+/obj/machinery/vending/wardrobe/chem_wardrobe,
+/obj/effect/turf_decal/bot_white{
+	color = "#EFB341"
+	},
+/obj/effect/turf_decal/siding{
 	dir = 4
 	},
 /turf/open/floor/iron/white/smooth_large,
@@ -35193,9 +35226,8 @@
 	},
 /area/station/engineering/transit_tube)
 "ett" = (
-/mob/living/basic/carp/passive{
-	dir = 8
-	},
+/obj/machinery/light/small/directional/north,
+/obj/effect/spawner/random/contraband/grenades/dangerous,
 /turf/open/water/no_planet_atmos{
 	fishing_datum = /datum/fish_source/toilet;
 	name = "stagnant sewage water";
@@ -40958,6 +40990,9 @@
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/broken_floor,
+/obj/structure/railing/corner{
+	dir = 1
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/fore)
 "gCk" = (
@@ -41446,6 +41481,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 6
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/edge{
 	dir = 1
 	},
@@ -42864,6 +42900,7 @@
 /obj/effect/turf_decal/siding/dark{
 	dir = 1
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/maintenance/disposal/incinerator)
 "hrz" = (
@@ -43161,10 +43198,6 @@
 	pixel_y = 26
 	},
 /obj/machinery/light/directional/north,
-/obj/structure/disposalpipe/segment{
-	dir = 4;
-	color = "lightgreen"
-	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
 	},
@@ -43293,6 +43326,17 @@
 "hxH" = (
 /turf/closed/wall/r_wall,
 /area/station/science/xenobiology)
+"hxZ" = (
+/mob/living/basic/alligator{
+	name = "McKlusky";
+	dir = 8
+	},
+/turf/open/water/no_planet_atmos{
+	fishing_datum = /datum/fish_source/toilet;
+	name = "stagnant sewage water";
+	desc = "Stagnant water. Time to take a dip and give the virologist a job! Oh, wait."
+	},
+/area/station/maintenance/starboard/fore)
 "hyF" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/disposalpipe/segment{
@@ -44685,6 +44729,9 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/disposalpipe/segment{
+	color = "lightgreen"
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 8
 	},
@@ -45552,7 +45599,9 @@
 	},
 /obj/item/radio/intercom/directional/north,
 /obj/machinery/light/directional/north,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /obj/machinery/disposal/bin,
 /obj/structure/disposalpipe/trunk{
 	dir = 2
@@ -46013,7 +46062,9 @@
 /obj/effect/turf_decal/trimline/purple/filled/mid_joiner{
 	dir = 8
 	},
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd","xeno")
+	},
 /obj/structure/cable,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
 /turf/open/floor/iron/dark/smooth_edge{
@@ -47408,6 +47459,14 @@
 /obj/structure/cable,
 /turf/open/floor/carpet,
 /area/station/service/chapel)
+"jeO" = (
+/obj/machinery/light/small/directional/north,
+/obj/machinery/camera/directional/north{
+	c_tag = "Xenobiology Lab - Pen #3";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/iron/dark/textured_large,
+/area/station/science/xenobiology)
 "jeP" = (
 /obj/effect/turf_decal/trimline/dark_blue/filled/warning{
 	dir = 4
@@ -48203,6 +48262,9 @@
 	},
 /obj/item/radio/intercom/directional/west,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	dir = 1
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/starboard/fore)
 "juC" = (
@@ -48961,16 +49023,12 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/entry)
 "jKD" = (
-/obj/effect/turf_decal/delivery/white{
-	color = "#EFB341"
-	},
 /obj/effect/turf_decal/trimline/yellow/filled/line,
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
-/obj/effect/turf_decal/siding,
 /obj/machinery/camera/autoname/directional/north,
-/obj/structure/disposalpipe/trunk,
-/obj/machinery/disposal/bin/tagger,
-/turf/open/floor/iron/white/smooth_large,
+/obj/effect/turf_decal/siding,
+/obj/machinery/chem_heater/withbuffer,
+/turf/open/floor/iron/white/textured_large,
 /area/station/medical/chemistry)
 "jKE" = (
 /obj/effect/turf_decal/trimline/blue/filled/warning,
@@ -49995,6 +50053,10 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/disposalpipe/segment{
+	dir = 9;
+	color = "lightgreen"
+	},
 /turf/open/floor/iron/white/smooth_corner{
 	dir = 4
 	},
@@ -51604,7 +51666,9 @@
 /area/station/security/lockers)
 "kKB" = (
 /obj/machinery/light/small/directional/east,
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd","xeno")
+	},
 /turf/open/floor/engine/xenobio,
 /area/station/science/xenobiology)
 "kKC" = (
@@ -52257,6 +52321,7 @@
 	dir = 8
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
+/obj/structure/cable,
 /turf/open/floor/iron/dark/textured_corner{
 	dir = 4
 	},
@@ -52694,10 +52759,6 @@
 	},
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 1
-	},
-/obj/structure/disposalpipe/segment{
-	dir = 4;
-	color = "lightgreen"
 	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
@@ -56870,6 +56931,9 @@
 /obj/machinery/light/directional/west,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/disposalpipe/segment{
+	color = "lightgreen"
+	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 8
 	},
@@ -57332,6 +57396,7 @@
 /obj/effect/turf_decal/tile/neutral/half/contrasted{
 	dir = 4
 	},
+/obj/structure/reagent_dispensers/wall/peppertank/directional/west,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 8
 	},
@@ -57665,7 +57730,9 @@
 	dir = 8
 	},
 /obj/item/radio/intercom/directional/west,
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd")
+	},
 /obj/machinery/atmospherics/components/tank/air{
 	dir = 8
 	},
@@ -57746,7 +57813,9 @@
 /obj/machinery/power/apc/auto_name/directional/east,
 /obj/machinery/firealarm/directional/north,
 /obj/machinery/light/directional/east,
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd")
+	},
 /obj/structure/cable,
 /turf/open/floor/iron/dark/smooth_large,
 /area/station/science/circuits)
@@ -58455,7 +58524,6 @@
 /obj/item/stack/ducts/fifty,
 /obj/item/stack/ducts/fifty,
 /obj/item/stack/ducts/fifty,
-/obj/item/plunger,
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 4
 	},
@@ -58467,6 +58535,11 @@
 	},
 /obj/machinery/newscaster/directional/west,
 /obj/machinery/camera/autoname/directional/west,
+/obj/item/storage/toolbox/mechanical{
+	pixel_w = 1;
+	pixel_z = 11
+	},
+/obj/item/plunger,
 /turf/open/floor/iron/white/smooth_large,
 /area/station/medical/chemistry)
 "nlY" = (
@@ -60838,7 +60911,9 @@
 /obj/effect/mapping_helpers/requests_console/assistance,
 /obj/effect/mapping_helpers/requests_console/information,
 /obj/machinery/light/directional/west,
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd")
+	},
 /obj/machinery/requests_console/auto_name/directional/west,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/ordnance/testlab)
@@ -62327,7 +62402,9 @@
 	},
 /obj/item/radio/intercom/directional/south,
 /obj/machinery/light/directional/south,
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/robotics/lab)
 "oJQ" = (
@@ -63229,10 +63306,6 @@
 	},
 /obj/machinery/power/apc/auto_name/directional/north,
 /obj/structure/cable,
-/obj/structure/disposalpipe/segment{
-	dir = 4;
-	color = "lightgreen"
-	},
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
 	},
@@ -64909,7 +64982,9 @@
 	},
 /obj/item/kirbyplants/random,
 /obj/machinery/firealarm/directional/south,
-/obj/machinery/camera/autoname/directional/west,
+/obj/machinery/camera/autoname/directional/west{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/iron/white/smooth_corner{
 	dir = 4
 	},
@@ -65313,7 +65388,9 @@
 /turf/open/floor/iron/edge,
 /area/station/hallway/primary/central)
 "pNH" = (
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /turf/open/floor/engine,
 /area/station/science/explab)
 "pNR" = (
@@ -65857,7 +65934,6 @@
 	},
 /area/station/engineering/gravity_generator)
 "qch" = (
-/obj/machinery/chem_heater,
 /obj/effect/turf_decal/bot_white{
 	color = "#EFB341"
 	},
@@ -65867,6 +65943,7 @@
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 4
 	},
+/obj/machinery/chem_heater/withbuffer,
 /turf/open/floor/iron/white/textured_edge{
 	dir = 4
 	},
@@ -66605,6 +66682,14 @@
 /obj/structure/cable,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/ai_monitored/turret_protected/ai)
+"qse" = (
+/obj/item/rubber_chicken,
+/turf/open/water/no_planet_atmos{
+	fishing_datum = /datum/fish_source/toilet;
+	name = "stagnant sewage water";
+	desc = "Stagnant water. Time to take a dip and give the virologist a job! Oh, wait."
+	},
+/area/station/maintenance/starboard/fore)
 "qsk" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/broken_floor,
@@ -66907,6 +66992,14 @@
 	dir = 4
 	},
 /area/station/hallway/primary/central)
+"qyB" = (
+/obj/machinery/light/small/directional/north,
+/obj/machinery/camera/directional/north{
+	c_tag = "Xenobiology Lab - Pen #2";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/iron/dark/textured_large,
+/area/station/science/xenobiology)
 "qyD" = (
 /obj/effect/turf_decal/loading_area,
 /obj/effect/turf_decal/siding/dark{
@@ -67592,7 +67685,9 @@
 /obj/machinery/computer/nanite_chamber_control{
 	dir = 1
 	},
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /obj/machinery/newscaster/directional/south,
 /obj/effect/turf_decal/bot_white{
 	color = "#D381C9"
@@ -69926,7 +70021,9 @@
 /obj/machinery/firealarm/directional/south,
 /obj/structure/extinguisher_cabinet/directional/west,
 /obj/machinery/light/directional/west,
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd")
+	},
 /obj/effect/turf_decal/bot_white{
 	color = "#D381C9"
 	},
@@ -70338,7 +70435,9 @@
 /turf/open/space/basic,
 /area/space/nearstation)
 "rNI" = (
-/mob/living/basic/carp/passive,
+/mob/living/basic/alligator{
+	name = "Eustaquio"
+	},
 /turf/open/water/no_planet_atmos{
 	fishing_datum = /datum/fish_source/toilet;
 	name = "stagnant sewage water";
@@ -71914,6 +72013,14 @@
 /obj/structure/cable,
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
+"stp" = (
+/obj/machinery/light/small/directional/south,
+/obj/machinery/camera/directional/south{
+	c_tag = "Xenobiology Lab - Pen #5";
+	network = list("ss13","rd","xeno")
+	},
+/turf/open/floor/iron/dark/textured_large,
+/area/station/science/xenobiology)
 "sts" = (
 /obj/structure/flora/bush/sparsegrass/style_random,
 /obj/structure/flora/bush/flowers_yw/style_random,
@@ -72264,7 +72371,9 @@
 	dir = 1
 	},
 /obj/machinery/light/directional/south,
-/obj/machinery/camera/autoname/directional/south,
+/obj/machinery/camera/autoname/directional/south{
+	network = list("ss13","rd","xeno")
+	},
 /obj/structure/cable,
 /obj/machinery/airalarm/directional/south,
 /turf/open/floor/iron/white/smooth_edge,
@@ -72296,13 +72405,13 @@
 /turf/open/floor/iron/small,
 /area/station/maintenance/starboard)
 "sAC" = (
-/obj/structure/closet/secure_closet/chemical,
 /obj/effect/turf_decal/trimline/yellow/filled/line,
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
-/obj/effect/turf_decal/siding,
 /obj/item/radio/intercom/directional/north,
 /obj/machinery/light/directional/north,
-/turf/open/floor/iron/white/smooth_large,
+/obj/machinery/chem_master,
+/obj/effect/turf_decal/siding,
+/turf/open/floor/iron/white/textured_large,
 /area/station/medical/chemistry)
 "sAK" = (
 /obj/effect/turf_decal/trimline/white/filled/line{
@@ -73749,6 +73858,7 @@
 /obj/machinery/newscaster/directional/north,
 /obj/machinery/light/directional/north,
 /obj/effect/turf_decal/bot_red,
+/obj/structure/reagent_dispensers/wall/peppertank/directional/east,
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 8
 	},
@@ -74791,10 +74901,6 @@
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 1
 	},
-/obj/structure/disposalpipe/segment{
-	dir = 4;
-	color = "lightgreen"
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 1
@@ -75112,7 +75218,7 @@
 /turf/open/floor/iron/white/smooth_large,
 /area/station/medical/office)
 "tzT" = (
-/obj/docking_port/stationary/mining_home{
+/obj/docking_port/stationary/mining_home/pubby{
 	dir = 4
 	},
 /turf/open/space/basic,
@@ -75146,6 +75252,10 @@
 /obj/machinery/light/small/directional/south,
 /turf/open/floor/engine/vacuum,
 /area/station/maintenance/disposal/incinerator)
+"tAE" = (
+/obj/structure/cable,
+/turf/closed/wall/r_wall,
+/area/station/command/heads_quarters/ce)
 "tAF" = (
 /obj/effect/spawner/random/trash/garbage{
 	spawn_scatter_radius = 1
@@ -75826,6 +75936,7 @@
 /obj/effect/turf_decal/trimline/red/filled/line,
 /obj/effect/turf_decal/trimline/red/filled/mid_joiner,
 /obj/machinery/light/directional/north,
+/obj/structure/reagent_dispensers/wall/peppertank/directional/north,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/security/lockers)
 "tNH" = (
@@ -75959,6 +76070,19 @@
 /obj/structure/cable,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/ai_monitored/turret_protected/aisat_interior)
+"tQa" = (
+/obj/effect/turf_decal/trimline/red/filled/line{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral/half/contrasted,
+/obj/structure/reagent_dispensers/wall/peppertank/directional/north,
+/turf/open/floor/iron/dark/smooth_edge{
+	dir = 1
+	},
+/area/station/security/brig)
 "tQb" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/burnt_floor,
@@ -76132,6 +76256,10 @@
 /area/station/service/library/private)
 "tTj" = (
 /obj/machinery/light/small/directional/north,
+/obj/machinery/camera/directional/north{
+	c_tag = "Xenobiology Lab - Pen #1";
+	network = list("ss13","rd","xeno")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/xenobiology)
 "tTn" = (
@@ -76449,7 +76577,9 @@
 	dir = 1
 	},
 /obj/machinery/light/directional/east,
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd","xeno")
+	},
 /obj/structure/sign/warning/xeno_mining/directional/east,
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 1
@@ -77966,7 +78096,6 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/bot,
-/obj/structure/cable,
 /obj/structure/sign/warning/fire/directional/east,
 /turf/open/floor/iron/dark/textured_corner{
 	dir = 8
@@ -78315,6 +78444,10 @@
 /area/station/security/prison/rec)
 "uKI" = (
 /obj/machinery/light/small/directional/south,
+/obj/machinery/camera/directional/south{
+	c_tag = "Xenobiology Lab - Pen #4";
+	network = list("ss13","rd","xeno")
+	},
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/xenobiology)
 "uKK" = (
@@ -78339,15 +78472,15 @@
 /obj/effect/turf_decal/trimline/yellow/mid_joiner{
 	dir = 8
 	},
-/obj/structure/disposalpipe/segment{
-	dir = 4;
-	color = "lightgreen"
-	},
 /obj/effect/turf_decal/trimline/yellow/filled/warning{
 	dir = 8
 	},
 /obj/effect/turf_decal/trimline/yellow/filled/corner{
 	dir = 4
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 10;
+	color = "lightgreen"
 	},
 /turf/open/floor/iron/white/smooth_corner,
 /area/station/medical/chemistry)
@@ -78669,7 +78802,9 @@
 /obj/effect/turf_decal/bot_red,
 /obj/machinery/power/apc/auto_name/directional/north,
 /obj/machinery/light/small/directional/north,
-/obj/machinery/camera/autoname/directional/north,
+/obj/machinery/camera/autoname/directional/north{
+	network = list("ss13","rd")
+	},
 /obj/structure/cable,
 /turf/open/floor/iron/dark/smooth_corner,
 /area/station/security/checkpoint/science)
@@ -79263,6 +79398,9 @@
 /obj/effect/spawner/random/trash/food_packaging{
 	pixel_x = 6;
 	pixel_y = -9
+	},
+/obj/structure/railing{
+	dir = 1
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/fore)
@@ -83012,10 +83150,14 @@
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 4
 	},
+/obj/machinery/disposal/bin/tagger,
+/obj/effect/turf_decal/delivery/white{
+	color = "#EFB341"
+	},
 /obj/effect/turf_decal/siding{
 	dir = 4
 	},
-/obj/structure/chair{
+/obj/structure/disposalpipe/trunk{
 	dir = 4
 	},
 /turf/open/floor/iron/white/smooth_large,
@@ -85632,7 +85774,9 @@
 	dir = 4
 	},
 /obj/structure/extinguisher_cabinet/directional/east,
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd","xeno")
+	},
 /turf/open/floor/iron/dark/smooth_corner{
 	dir = 1
 	},
@@ -86969,7 +87113,9 @@
 	},
 /obj/item/radio/intercom/directional/east,
 /obj/machinery/light/directional/east,
-/obj/machinery/camera/autoname/directional/east,
+/obj/machinery/camera/autoname/directional/east{
+	network = list("ss13","rd","xeno")
+	},
 /turf/open/floor/iron/white/smooth_corner{
 	dir = 8
 	},
@@ -111387,7 +111533,7 @@ dzn
 apM
 dzn
 jCR
-wji
+tQa
 xzx
 anl
 atE
@@ -120721,7 +120867,7 @@ mQm
 lMa
 mgW
 cQp
-iYk
+tAE
 aHB
 jRk
 qCG
@@ -129629,7 +129775,7 @@ aaa
 xMV
 aaa
 npr
-cba
+ett
 nYn
 vyw
 npr
@@ -129886,8 +130032,8 @@ aaa
 xMV
 aaa
 tfM
-rNI
 aUC
+rNI
 aUC
 tfM
 lTd
@@ -130144,7 +130290,7 @@ xMV
 aaa
 tfM
 aUC
-aUC
+qse
 nYn
 npr
 kdZ
@@ -130401,7 +130547,7 @@ xMV
 aaa
 tfM
 aUC
-ett
+aUC
 aUC
 npr
 npr
@@ -130658,7 +130804,7 @@ xMV
 aaa
 tfM
 nYn
-aUC
+hxZ
 nYn
 juv
 dKY
@@ -134820,7 +134966,7 @@ bnb
 lJa
 iKn
 fAd
-tTj
+qyB
 hbV
 dci
 bqL
@@ -134831,7 +134977,7 @@ reH
 bxR
 bzp
 bDD
-uKI
+stp
 pgN
 tFd
 dxy
@@ -135848,7 +135994,7 @@ stK
 fTR
 hUa
 fAd
-tTj
+jeO
 aui
 xdc
 wOF
@@ -135859,7 +136005,7 @@ uMt
 knc
 msw
 aui
-uKI
+dxV
 hqr
 oaW
 pAz

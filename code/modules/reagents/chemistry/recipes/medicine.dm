@@ -146,6 +146,7 @@
 	results = list(/datum/reagent/medicine/sal_acid = 5)
 	required_reagents = list(/datum/reagent/sodium = 1, /datum/reagent/phenol = 1, /datum/reagent/carbon = 1, /datum/reagent/oxygen = 1, /datum/reagent/toxin/acid = 1)
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_HEALING | REACTION_TAG_BRUTE
+	reaction_flags = REACTION_CLEAR_INVERSE
 
 /datum/chemical_reaction/medicine/oxandrolone
 	results = list(/datum/reagent/medicine/oxandrolone = 6)
