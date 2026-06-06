@@ -49,6 +49,10 @@
 	provided_antag_datum = /datum/antagonist/heretic
 	refund_amount = 5000
 
+/obj/item/antag_maker/werewolf
+	provided_antag_datum = /datum/antagonist/werewolf
+	refund_amount = 8000
+
 /obj/item/antag_maker/brother
 	provided_antag_datum = /datum/antagonist/brother
 	refund_amount = 4000
