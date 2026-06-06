@@ -1813,7 +1813,7 @@
 //Surf Shack Start
 /datum/sprite_accessory/tails/werewolf
 	name = "Werewolf"
-	icon = 'surfshack13/icons/mob/human/werewolf_features.dmi'
+	icon = 'icons/mob/human/species/werewolf_features.dmi'
 	color_src = HAIR_COLOR
 
 /datum/sprite_accessory/tails/werewolf/default
@@ -1944,7 +1944,7 @@
 	locked = TRUE
 //Surf Shack Start
 /datum/sprite_accessory/ears/werewolf
-	icon = 'surfshack13/icons/mob/human/werewolf_features.dmi'
+	icon = 'icons/mob/human/species/werewolf_features.dmi'
 	name = "Werewolf"
 	icon_state = "werewolf"
 	color_src = HAIR_COLOR
