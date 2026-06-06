@@ -102,18 +102,17 @@
 			objectives += ending_objective
 
 /datum/antagonist/werewolf/get_preview_icon()
-	var/mob/living/carbon/human/dummy/consistent/werewolfman = new
+	var/mob/living/carbon/human/dummy/consistent/werewolfman = new()
 
 	werewolfman.hair_color = COLOR_DARK_MODERATE_ORANGE
+	werewolfman.update_hair()
 	werewolfman.set_species(/datum/species/werewolf)
 
 	var/icon/werewolf_icon = render_preview_outfit(/datum/outfit/job/assistant, werewolfman)
 
-	var/icon/final_icon = werewolf_icon
-
 	qdel(werewolfman)
 
-	return finish_preview_icon(final_icon)
+	return finish_preview_icon(werewolf_icon)
 
 
 /datum/objective/eat_hearts
