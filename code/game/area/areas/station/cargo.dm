@@ -82,3 +82,6 @@
 	name = "\improper Quartermaster's Office"
 	icon_state = "qm_office"
 
+/area/station/cargo/qm/private
+	name = "\improper Quartermaster's Quarters"
+	icon_state = "qm_private"

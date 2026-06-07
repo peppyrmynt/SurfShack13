@@ -57,21 +57,41 @@
 	name = "\improper Chief Engineer's Office"
 	icon_state = "ce_office"
 
+/area/station/command/heads_quarters/ce/private
+	name = "\improper Chief Engineer's Quarters"
+	icon_state = "ce_private"
+
 /area/station/command/heads_quarters/cmo
 	name = "\improper Chief Medical Officer's Office"
 	icon_state = "cmo_office"
+
+/area/station/command/heads_quarters/cmo/private
+	name = "\improper Chief Medical Officer's Quarters"
+	icon_state = "cmo_private"
 
 /area/station/command/heads_quarters/hop
 	name = "\improper Head of Personnel's Office"
 	icon_state = "hop_office"
 
+/area/station/command/heads_quarters/hop/private
+	name = "\improper Head of Personnel's Quarters"
+	icon_state = "hop_private"
+
 /area/station/command/heads_quarters/hos
 	name = "\improper Head of Security's Office"
 	icon_state = "hos_office"
 
+/area/station/command/heads_quarters/hos/private
+	name = "\improper Head of Security's Quarters"
+	icon_state = "hos_private"
+
 /area/station/command/heads_quarters/rd
 	name = "\improper Research Director's Office"
 	icon_state = "rd_office"
+
+/area/station/command/heads_quarters/rd/private
+	name = "\improper Research Director's Quarters"
+	icon_state = "rd_private"
 
 /*
 * Command - Teleporter

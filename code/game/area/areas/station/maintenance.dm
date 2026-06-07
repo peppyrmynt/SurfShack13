@@ -306,39 +306,39 @@
 
 /area/station/maintenance/floor1/central
 	name = "\improper 1st Floor Central Maint"
-	icon_state = "maint_central"
+	icon_state = "centralmaint"
 
 /area/station/maintenance/floor1/fore
 	name = "\improper 1st Floor Fore Maint"
-	icon_state = "maint_fore"
+	icon_state = "foremaint"
 
 /area/station/maintenance/floor1/aft
 	name = "\improper 1st Floor Aft Maint"
-	icon_state = "maint_aft"
+	icon_state = "aftmaint"
 
 /area/station/maintenance/floor1/starboard
 	name = "\improper 1st Floor Starboard Maint"
-	icon_state = "maint_starboard"
+	icon_state = "starboardmaint"
 
 /area/station/maintenance/floor1/starboard/fore
 	name = "\improper 1st Floor Fore Starboard Maint"
-	icon_state = "maint_starboard_fore"
+	icon_state = "fsmaint"
 
 /area/station/maintenance/floor1/starboard/aft
 	name = "\improper 1st Floor Aft Starboard Maint"
-	icon_state = "maint_starboard_aft"
+	icon_state = "asmaint"
 
 /area/station/maintenance/floor1/port
 	name = "\improper 1st Floor Port Maint"
-	icon_state = "maint_port"
+	icon_state = "portmaint"
 
 /area/station/maintenance/floor1/port/fore
 	name = "\improper 1st Floor Fore Port Maint"
-	icon_state = "maint_port_fore"
+	icon_state = "fpmaint"
 
 /area/station/maintenance/floor1/port/aft
 	name = "\improper 1st Floor Aft Port Maint"
-	icon_state = "maint_port_aft"
+	icon_state = "apmaint"
 
 //2
 /area/station/maintenance/floor2
@@ -346,36 +346,36 @@
 
 /area/station/maintenance/floor2/central
 	name = "\improper 2nd Floor Central Maint"
-	icon_state = "maint_central"
+	icon_state = "centralmaint"
 
 /area/station/maintenance/floor2/fore
 	name = "\improper 2nd Floor Fore Maint"
-	icon_state = "maint_fore"
+	icon_state = "foremaint"
 
 /area/station/maintenance/floor2/aft
 	name = "\improper 2nd Floor Aft Maint"
-	icon_state = "maint_aft"
+	icon_state = "aftmaint"
 
 /area/station/maintenance/floor2/starboard
 	name = "\improper 2nd Floor Starboard Maint"
-	icon_state = "maint_starboard"
+	icon_state = "starboardmaint"
 
 /area/station/maintenance/floor2/starboard/fore
 	name = "\improper 2nd Floor Central Fore Starboard Maint"
-	icon_state = "maint_starboard_fore"
+	icon_state = "fsmaint"
 
 /area/station/maintenance/floor2/starboard/aft
 	name = "\improper 2nd Floor Aft Starboard Maint"
-	icon_state = "maint_starboard_aft"
+	icon_state = "asmaint"
 
 /area/station/maintenance/floor2/port
 	name = "\improper 2nd Floor Port Maint"
-	icon_state = "maint_port"
+	icon_state = "portmaint"
 
 /area/station/maintenance/floor2/port/fore
 	name = "\improper 2nd Floor Fore Port Maint"
-	icon_state = "maint_port_fore"
+	icon_state = "fpmaint"
 
 /area/station/maintenance/floor2/port/aft
 	name = "\improper 2nd Floor Aft Port Maint"
-	icon_state = "maint_port_aft"
+	icon_state = "apmaint"
