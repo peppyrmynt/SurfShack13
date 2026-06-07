@@ -43,6 +43,8 @@
 	var/stealth = FALSE
 	///if TRUE, displays program list when scanned by nanite scanners
 	var/diagnostics = TRUE
+	///Are we currently conductive? We're shock immune via a program, but can still be harmed.
+	var/conductive = FALSE
 	///The techweb these Nanites are synced to, to generate Nanite research points
 	var/datum/techweb/linked_techweb
 
@@ -262,7 +264,7 @@
 		if(our_carbon.wearing_shock_proof_gloves() && !(flags & SHOCK_NOGLOVES))
 			return
 
-	if(!HAS_TRAIT(host_mob, TRAIT_SHOCKIMMUNE))
+	if(!HAS_TRAIT(host_mob, TRAIT_SHOCKIMMUNE) || conductive)
 		nanite_volume *= (rand(45, 80) * 0.01) //Lose 20-55% of nanites
 		adjust_nanites(null, -(rand(5, 50))) //Lose 5-50 flat nanite volume
 		for(var/X in programs)
@@ -277,7 +279,7 @@
 		if(our_carbon.wearing_shock_proof_gloves()) // We don't have flags for this signal, so let's just assume insuls protect you from everything.
 			return
 
-	if(!HAS_TRAIT(host_mob, TRAIT_SHOCKIMMUNE))
+	if(!HAS_TRAIT(host_mob, TRAIT_SHOCKIMMUNE) || conductive)
 		adjust_nanites(null, -(rand(5, 15))) //Lose 5-15 flat nanite volume
 		for(var/datum/nanite_program/all_program as anything in programs)
 			all_program.on_minor_shock()
