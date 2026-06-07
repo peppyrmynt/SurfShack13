@@ -8,10 +8,18 @@
 	name = "\improper Delivery Office"
 	icon_state = "cargo_delivery"
 
+/area/station/cargo/sorting/abandoned
+	name = "\improper Abandoned Delivery Office"
+	icon_state = "cargo_delivery"
+
 /area/station/cargo/warehouse
 	name = "\improper Warehouse"
 	icon_state = "cargo_warehouse"
 	sound_environment = SOUND_AREA_LARGE_ENCLOSED
+
+/area/station/cargo/warehouse/abandoned
+	name = "\improper Abandoned Warehouse"
+	icon_state = "cargo_warehouse"
 
 /area/station/cargo/drone_bay
 	name = "\improper Drone Bay"

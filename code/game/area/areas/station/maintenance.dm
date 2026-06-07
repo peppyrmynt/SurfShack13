@@ -297,115 +297,85 @@
 	name = "\improper Port Bow External Hull Access"
 
 /*
-* Station Specific Areas
-* If another station gets added, and you make specific areas for it
-* Please make its own section in this file
-* The areas below belong to North Star's Maintenance
+* Multiz Maint Floors
 */
 
 //1
 /area/station/maintenance/floor1
-	name = "\improper 1st Floor Maint"
+	icon_state = "error"
 
-/area/station/maintenance/floor1/port
-	name = "\improper 1st Floor Central Port Maint"
-	icon_state = "maintcentral"
+/area/station/maintenance/floor1/central
+	name = "\improper 1st Floor Central Maint"
+	icon_state = "maint_central"
 
-/area/station/maintenance/floor1/port/fore
-	name = "\improper 1st Floor Fore Port Maint"
-	icon_state = "maintfore"
-/area/station/maintenance/floor1/port/aft
-	name = "\improper 1st Floor Aft Port Maint"
-	icon_state = "maintaft"
+/area/station/maintenance/floor1/fore
+	name = "\improper 1st Floor Fore Maint"
+	icon_state = "maint_fore"
+
+/area/station/maintenance/floor1/aft
+	name = "\improper 1st Floor Aft Maint"
+	icon_state = "maint_aft"
 
 /area/station/maintenance/floor1/starboard
-	name = "\improper 1st Floor Central Starboard Maint"
-	icon_state = "maintcentral"
+	name = "\improper 1st Floor Starboard Maint"
+	icon_state = "maint_starboard"
 
 /area/station/maintenance/floor1/starboard/fore
 	name = "\improper 1st Floor Fore Starboard Maint"
-	icon_state = "maintfore"
+	icon_state = "maint_starboard_fore"
 
 /area/station/maintenance/floor1/starboard/aft
 	name = "\improper 1st Floor Aft Starboard Maint"
-	icon_state = "maintaft"
+	icon_state = "maint_starboard_aft"
+
+/area/station/maintenance/floor1/port
+	name = "\improper 1st Floor Port Maint"
+	icon_state = "maint_port"
+
+/area/station/maintenance/floor1/port/fore
+	name = "\improper 1st Floor Fore Port Maint"
+	icon_state = "maint_port_fore"
+
+/area/station/maintenance/floor1/port/aft
+	name = "\improper 1st Floor Aft Port Maint"
+	icon_state = "maint_port_aft"
+
 //2
 /area/station/maintenance/floor2
-	name = "\improper 2nd Floor Maint"
-/area/station/maintenance/floor2/port
-	name = "\improper 2nd Floor Central Port Maint"
-	icon_state = "maintcentral"
+	icon_state = "error"
 
-/area/station/maintenance/floor2/port/fore
-	name = "\improper 2nd Floor Fore Port Maint"
-	icon_state = "maintfore"
+/area/station/maintenance/floor2/central
+	name = "\improper 2nd Floor Central Maint"
+	icon_state = "maint_central"
 
-/area/station/maintenance/floor2/port/aft
-	name = "\improper 2nd Floor Aft Port Maint"
-	icon_state = "maintaft"
+/area/station/maintenance/floor2/fore
+	name = "\improper 2nd Floor Fore Maint"
+	icon_state = "maint_fore"
+
+/area/station/maintenance/floor2/aft
+	name = "\improper 2nd Floor Aft Maint"
+	icon_state = "maint_aft"
 
 /area/station/maintenance/floor2/starboard
-	name = "\improper 2nd Floor Central Starboard Maint"
-	icon_state = "maintcentral"
+	name = "\improper 2nd Floor Starboard Maint"
+	icon_state = "maint_starboard"
 
 /area/station/maintenance/floor2/starboard/fore
-	name = "\improper 2nd Floor Fore Starboard Maint"
-	icon_state = "maintfore"
+	name = "\improper 2nd Floor Central Fore Starboard Maint"
+	icon_state = "maint_starboard_fore"
 
 /area/station/maintenance/floor2/starboard/aft
 	name = "\improper 2nd Floor Aft Starboard Maint"
-	icon_state = "maintaft"
-//3
-/area/station/maintenance/floor3
-	name = "\improper 3rd Floor Maint"
+	icon_state = "maint_starboard_aft"
 
-/area/station/maintenance/floor3/port
-	name = "\improper 3rd Floor Central Port Maint"
-	icon_state = "maintcentral"
+/area/station/maintenance/floor2/port
+	name = "\improper 2nd Floor Port Maint"
+	icon_state = "maint_port"
 
-/area/station/maintenance/floor3/port/fore
-	name = "\improper 3rd Floor Fore Port Maint"
-	icon_state = "maintfore"
+/area/station/maintenance/floor2/port/fore
+	name = "\improper 2nd Floor Fore Port Maint"
+	icon_state = "maint_port_fore"
 
-/area/station/maintenance/floor3/port/aft
-	name = "\improper 3rd Floor Aft Port Maint"
-	icon_state = "maintaft"
-
-/area/station/maintenance/floor3/starboard
-	name = "\improper 3rd Floor Central Starboard Maint"
-	icon_state = "maintcentral"
-
-/area/station/maintenance/floor3/starboard/fore
-	name = "\improper 3rd Floor Fore Starboard Maint"
-	icon_state = "maintfore"
-
-/area/station/maintenance/floor3/starboard/aft
-	name = "\improper 3rd Floor Aft Starboard Maint"
-	icon_state = "maintaft"
-//4
-/area/station/maintenance/floor4
-	name = "\improper 4th Floor Maint"
-
-/area/station/maintenance/floor4/port
-	name = "\improper 4th Floor Central Port Maint"
-	icon_state = "maintcentral"
-
-/area/station/maintenance/floor4/port/fore
-	name = "\improper 4th Floor Fore Port Maint"
-	icon_state = "maintfore"
-
-/area/station/maintenance/floor4/port/aft
-	name = "\improper 4th Floor Aft Port Maint"
-	icon_state = "maintaft"
-
-/area/station/maintenance/floor4/starboard
-	name = "\improper 4th Floor Central Starboard Maint"
-	icon_state = "maintcentral"
-
-/area/station/maintenance/floor4/starboard/fore
-	name = "\improper 4th Floor Fore Starboard Maint"
-	icon_state = "maintfore"
-
-/area/station/maintenance/floor4/starboard/aft
-	name = "\improper 4th Floor Aft Starboard Maint"
-	icon_state = "maintaft"
+/area/station/maintenance/floor2/port/aft
+	name = "\improper 2nd Floor Aft Port Maint"
+	icon_state = "maint_port_aft"

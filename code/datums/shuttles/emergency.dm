@@ -503,4 +503,12 @@
 /datum/map_template/shuttle/emergency/zeta/prerequisites_met()
 	return SSshuttle.shuttle_purchase_requirements_met[SHUTTLE_UNLOCK_ALIENTECH]
 
+/datum/map_template/shuttle/emergency/ironlung
+	suffix = "ironlung"
+	name = "Dogrun Emergency Shuttle"
+	description = "Dual lobe-shaped sections with a connecting walkway."
+	admin_notes = "Don't eat the honey!"
+	credit_cost = CARGO_CRATE_VALUE * 2
+	occupancy_limit = "60"
+
 #undef EMAG_LOCKED_SHUTTLE_COST

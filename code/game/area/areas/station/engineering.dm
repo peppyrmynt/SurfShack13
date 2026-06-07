@@ -46,6 +46,10 @@
 	name = "\improper Atmospherics Mixing Room"
 	icon_state = "atmos_mix"
 
+/area/station/engineering/atmos/mix/abandoned
+	name = "\improper Abandoned Atmospherics Mixing Room"
+	icon_state = "atmos_mix"
+
 /area/station/engineering/atmos/storage
 	name = "\improper Atmospherics Storage Room"
 	icon_state = "atmos_storage"

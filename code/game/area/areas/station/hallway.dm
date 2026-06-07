@@ -102,53 +102,85 @@
 	icon_state = "hall"
 
 /*
-* Station Specific Areas
-* If another station gets added, and you make specific areas for it
-* Please make its own section in this file
-* The areas below belong to North Star's Hallways
+* Multiz Hallway Floors
 */
 
 //1
 /area/station/hallway/floor1
-	name = "\improper First Floor Hallway"
+	icon_state = "error"
 
-/area/station/hallway/floor1/aft
-	name = "\improper First Floor Aft Hallway"
-	icon_state = "1_aft"
+/area/station/hallway/floor1/central
+	name = "\improper 1st Floor Central Hallway"
+	icon_state = "hallway_central"
 
 /area/station/hallway/floor1/fore
-	name = "\improper First Floor Fore Hallway"
-	icon_state = "1_fore"
+	name = "\improper 1st Floor Fore Hallway"
+	icon_state = "hallway_fore"
+
+/area/station/hallway/floor1/aft
+	name = "\improper 1st Floor Aft Hallway"
+	icon_state = "hallway_aft"
+
+/area/station/hallway/floor1/starboard
+	name = "\improper 1st Floor Starboard Hallway"
+	icon_state = "hallway_starboard"
+
+/area/station/hallway/floor1/starboard/fore
+	name = "\improper 1st Floor Fore Starboard Hallway"
+	icon_state = "hallway_starboard_fore"
+
+/area/station/hallway/floor1/starboard/aft
+	name = "\improper 1st Floor Aft Starboard Hallway"
+	icon_state = "hallway_starboard_aft"
+
+/area/station/hallway/floor1/port
+	name = "\improper 1st Floor Port Hallway"
+	icon_state = "hallway_port"
+
+/area/station/hallway/floor1/port/fore
+	name = "\improper 1st Floor Fore Port Hallway"
+	icon_state = "hallway_port_fore"
+
+/area/station/hallway/floor1/port/aft
+	name = "\improper 1st Floor Aft Port Hallway"
+	icon_state = "hallway_port_aft"
+
 //2
 /area/station/hallway/floor2
-	name = "\improper Second Floor Hallway"
+	icon_state = "error"
 
-/area/station/hallway/floor2/aft
-	name = "\improper Second Floor Aft Hallway"
-	icon_state = "2_aft"
+/area/station/hallway/floor2/central
+	name = "\improper 2nd Floor Central Hallway"
+	icon_state = "hallway_central"
 
 /area/station/hallway/floor2/fore
-	name = "\improper Second Floor Fore Hallway"
-	icon_state = "2_fore"
-//3
-/area/station/hallway/floor3
-	name = "\improper Third Floor Hallway"
+	name = "\improper 2nd Floor Fore Hallway"
+	icon_state = "hallway_fore"
 
-/area/station/hallway/floor3/aft
-	name = "\improper Third Floor Aft Hallway"
-	icon_state = "3_aft"
+/area/station/hallway/floor2/aft
+	name = "\improper 2nd Floor Aft Hallway"
+	icon_state = "hallway_aft"
 
-/area/station/hallway/floor3/fore
-	name = "\improper Third Floor Fore Hallway"
-	icon_state = "3_fore"
-//4
-/area/station/hallway/floor4
-	name = "\improper Fourth Floor Hallway"
+/area/station/hallway/floor2/starboard
+	name = "\improper 2nd Floor Starboard Hallway"
+	icon_state = "hallway_starboard"
 
-/area/station/hallway/floor4/aft
-	name = "\improper Fourth Floor Aft Hallway"
-	icon_state = "4_aft"
+/area/station/hallway/floor2/starboard/fore
+	name = "\improper 2nd Floor Fore Starboard Hallway"
+	icon_state = "hallway_starboard_fore"
 
-/area/station/hallway/floor4/fore
-	name = "\improper Fourth Floor Fore Hallway"
-	icon_state = "4_fore"
+/area/station/hallway/floor2/starboard/aft
+	name = "\improper 2nd Floor Aft Starboard Hallway"
+	icon_state = "hallway_starboard_aft"
+
+/area/station/hallway/floor2/port
+	name = "\improper 2nd Floor Port Hallway"
+	icon_state = "hallway_port"
+
+/area/station/hallway/floor2/port/fore
+	name = "\improper 2nd Floor Fore Port Hallway"
+	icon_state = "hallway_port_fore"
+
+/area/station/hallway/floor2/port/aft
+	name = "\improper 2nd Floor Aft Port Hallway"
+	icon_state = "hallway_port_aft"
