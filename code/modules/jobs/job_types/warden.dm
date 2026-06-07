@@ -56,6 +56,9 @@
 	suit_store = /obj/item/gun/energy/disabler
 	backpack_contents = list(
 		/obj/item/evidencebag = 1,
+		/obj/item/gun/ballistic/automatic/pistol/mk58/rubber = 1,
+		/obj/item/ammo_box/magazine/v38/rubber = 1,
+		/obj/item/ammo_box/magazine/v38 = 1,
 		)
 	belt = /obj/item/modular_computer/pda/warden
 	ears = /obj/item/radio/headset/headset_sec/alt

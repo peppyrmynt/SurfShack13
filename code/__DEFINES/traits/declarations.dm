@@ -1320,7 +1320,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 /// Trait which means that this item is considered illegal contraband, and valid for the contraband bounty or when scanned by an nspect scanner.
 #define TRAIT_CONTRABAND "illegal_contraband"
-
+// Surf Shack 13 Edit
+/// Trait which means that this item is except from any contraband scanning.
+#define TRAIT_CONTRABAND_EXCEPTION "contraband_exception"
+// Surf Shack 13 End
 /// Traits given by settler, each with their own specific effects for cases where someone would have that trait, but not the other settler effects
 
 #define TRAIT_EXPERT_FISHER "expert_fisher" // fishing is easier

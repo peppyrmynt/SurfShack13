@@ -1747,6 +1747,8 @@
  * Returns true when an item has the contraband trait, or is included in the traitor uplink.
  */
 /obj/item/proc/is_contraband()
+	if(HAS_TRAIT(src, TRAIT_CONTRABAND_EXCEPTION) || HAS_TRAIT(src, TRAIT_CONTRABAND_BLOCKER))
+		return FALSE
 	if(HAS_TRAIT(src, TRAIT_CONTRABAND))
 		return TRUE
 	for(var/datum/uplink_item/traitor_item as anything in SStraitor.uplink_items)

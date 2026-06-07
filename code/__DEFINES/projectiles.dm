@@ -62,6 +62,12 @@
 #define CALIBER_TENTACLE "tentacle"
 /// The caliber used by pipeguns and pipe pistols
 #define CALIBER_JUNK "junk"
+//Surf Shack Edit
+/// The caliber used by the Mk58.
+#define CALIBER_38SPECIAL ".38 Special"
+/// The caliber used by the Drozd SMG and the Lecter Rifle.
+#define CALIBER_556 "a556"
+//Surf Shack End
 
 /// For gunpoints, how many tiles around the target the shooter can roam without losing their shot
 #define GUNPOINT_SHOOTER_STRAY_RANGE 2

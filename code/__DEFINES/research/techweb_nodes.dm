@@ -120,3 +120,9 @@
 #define TECHWEB_NODE_TELECOMS "telecoms"
 #define TECHWEB_NODE_UNREGULATED_BLUESPACE "unregulated_bluespace"
 #define TECHWEB_NODE_XENOBIOLOGY "xenobiology"
+
+//Surf Shack Edits Below
+#define TECHWEB_NODE_BALLISTICS "ballistics"
+#define TECHWEB_NODE_BALLISTICS_ADV "ballistics_adv"
+#define TECHWEB_NODE_BALLISTICS_SUPER "ballistics_super"
+// Surf Shack End

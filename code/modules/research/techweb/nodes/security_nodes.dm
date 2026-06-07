@@ -81,6 +81,9 @@
 		"c38_hotshot",
 		"c38_iceblox",
 		"techshotshell",
+		"v38_frost",
+		"v38_talon",
+		"v38_bluespace",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
 	discount_experiments = list(/datum/experiment/ordnance/explosive/highyieldbomb = TECHWEB_TIER_4_POINTS)

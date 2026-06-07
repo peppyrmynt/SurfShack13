@@ -721,7 +721,13 @@
 		/obj/item/ammo_casing/a357,
 		/obj/item/ammo_casing/junk,
 	))
-
+// Surf Shack Edit
+/obj/item/storage/belt/bandolier/hristov/PopulateContents()
+	var/static/items_inside = list(
+		/obj/item/ammo_casing/a762 = 12
+	)
+	generate_items_inside(items_inside, src)
+// Surf Shack End
 /obj/item/storage/belt/fannypack
 	name = "fannypack"
 	desc = "A dorky fannypack for keeping small items in. Concealed enough, or ugly enough to avert their eyes, that others won't see what you put in or take out easily."
