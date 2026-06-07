@@ -36,7 +36,7 @@
 #define CALIBER_N762 "n762"
 /// The caliber used by the the M-90gl Carbine, and NT-ARG 'Boarder'.
 #define CALIBER_A223 "a223"
-/// The caliber used by bolt action rifles.
+/// The caliber used by bolt action rifles. SURF SHACK 13 EDIT: and the hristov...
 #define CALIBER_A762 "a762"
 /// The caliber used by shotguns.
 #define CALIBER_SHOTGUN "shotgun"

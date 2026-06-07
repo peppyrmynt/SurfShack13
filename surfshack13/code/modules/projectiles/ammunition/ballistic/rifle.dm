@@ -28,13 +28,6 @@
 
 // 7.62 (Hristov)
 
-/obj/item/ammo_casing/a762
-	name = "7.62mm bullet casing"
-	desc = "A 7.62mm bullet casing."
-	icon_state = "762-casing"
-	caliber = CALIBER_N762
-	projectile_type = /obj/projectile/bullet/a762
-
 /obj/item/ammo_casing/a762/raze
 	name = "7.62mm Raze bullet casing"
 	desc = "A 7.62mm Raze bullet casing."
