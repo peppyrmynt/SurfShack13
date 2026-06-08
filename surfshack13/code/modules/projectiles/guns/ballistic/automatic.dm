@@ -16,8 +16,8 @@
 	slot_flags = ITEM_SLOT_BACK
 	weapon_weight = WEAPON_MEDIUM
 	mag_display = TRUE
-	mag_display_ammo = TRUE
-	empty_indicator = TRUE
+	mag_display_ammo = FALSE
+	empty_indicator = FALSE
 	custom_price = 7500
 	worn_icon = 'surfshack13/icons/mob/clothing/back.dmi'
 
@@ -47,8 +47,8 @@
 	slot_flags = ITEM_SLOT_BACK
 	weapon_weight = WEAPON_MEDIUM
 	mag_display = TRUE
-	mag_display_ammo = TRUE
-	empty_indicator = TRUE
+	mag_display_ammo = FALSE
+	empty_indicator = FALSE
 	custom_price = 8000
 	worn_icon = 'surfshack13/icons/mob/clothing/back.dmi'
 
