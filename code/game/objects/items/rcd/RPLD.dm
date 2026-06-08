@@ -50,6 +50,7 @@
 		//category 2 distributors i.e devices which inject , move around , remove chemicals from the network
 		"Distributors" = list(
 			/obj/machinery/duct = 1,
+			/obj/machinery/duct/multiz = 5,
 			/obj/machinery/plumbing/layer_manifold = 5,
 			/obj/machinery/plumbing/input = 5,
 			/obj/machinery/plumbing/filter = 5,
@@ -327,6 +328,7 @@
 		//Category 2 distributors
 		"Distributors" = list(
 			/obj/machinery/duct = 1,
+			/obj/machinery/duct/multiz = 5,
 			/obj/machinery/plumbing/layer_manifold = 5,
 			/obj/machinery/plumbing/input = 5,
 			/obj/machinery/plumbing/filter = 5,

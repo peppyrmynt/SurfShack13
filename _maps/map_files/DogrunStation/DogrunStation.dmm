@@ -1588,13 +1588,16 @@
 	},
 /area/station/medical/medbay/lobby)
 "aoR" = (
-/obj/effect/turf_decal/tile/green/opposingcorners,
-/obj/effect/turf_decal/tile/purple/opposingcorners{
-	dir = 1
+/obj/machinery/hydroponics/constructable,
+/obj/effect/turf_decal/bot_white{
+	color = "#9FED58"
 	},
-/obj/effect/landmark/event_spawn,
-/turf/open/floor/iron/dark/textured,
-/area/station/service/janitor)
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/duct,
+/turf/open/floor/iron/dark/smooth_large,
+/area/station/service/hydroponics)
 "aoX" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -1961,6 +1964,7 @@
 /obj/effect/turf_decal/trimline/green/filled/warning,
 /obj/effect/turf_decal/trimline/green/mid_joiner,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/duct,
 /turf/open/floor/iron/white/smooth_edge,
 /area/station/medical/virology)
 "arT" = (
@@ -1999,6 +2003,7 @@
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 8
 	},
+/obj/machinery/duct,
 /turf/open/floor/iron/white/smooth_edge{
 	dir = 4
 	},
@@ -4886,13 +4891,15 @@
 	},
 /area/station/security/brig/lower)
 "aVT" = (
-/obj/structure/closet/emcloset,
 /obj/effect/turf_decal/trimline/green/filled/line{
 	dir = 1
 	},
 /obj/effect/turf_decal/trimline/green/filled/mid_joiner{
 	dir = 1
 	},
+/obj/machinery/shower/directional/south,
+/obj/structure/fluff/shower_drain,
+/obj/effect/turf_decal/trimline/green/end,
 /turf/open/floor/iron/white/textured_edge{
 	dir = 1
 	},
@@ -11280,7 +11287,6 @@
 	dir = 9;
 	color = "lightblue"
 	},
-/obj/machinery/duct,
 /obj/effect/landmark/start/assistant,
 /turf/open/floor/iron/freezer,
 /area/station/commons/fitness/locker_room)
@@ -12584,6 +12590,9 @@
 /obj/machinery/shower/directional/east,
 /obj/structure/fluff/shower_drain,
 /obj/structure/cable,
+/obj/effect/turf_decal/trimline/yellow/end{
+	dir = 4
+	},
 /turf/open/floor/iron/dark/textured_corner{
 	dir = 4
 	},
@@ -12744,9 +12753,6 @@
 "cxf" = (
 /obj/machinery/shower/directional/east,
 /obj/structure/fluff/shower_drain,
-/obj/effect/turf_decal/siding/wideplating_new/light{
-	dir = 8
-	},
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 8
 	},
@@ -12757,6 +12763,12 @@
 	dir = 4
 	},
 /obj/machinery/airalarm/directional/west,
+/obj/effect/turf_decal/siding/wideplating_new/light/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating_new/light/corner{
+	dir = 1
+	},
 /turf/open/floor/iron/white/textured_edge{
 	dir = 8
 	},
@@ -15475,13 +15487,12 @@
 	},
 /area/station/medical/treatment_center)
 "dao" = (
-/obj/machinery/plumbing/synthesizer{
-	reagent_id = /datum/reagent/water;
-	name = "Service Water Supply Synthesizer"
-	},
 /obj/machinery/light/small/directional/south,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/structure/reagent_dispensers/plumbed{
+	name = "service reservoir"
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/port)
 "dat" = (
@@ -15709,6 +15720,9 @@
 /obj/machinery/firealarm/directional/west,
 /obj/machinery/light/directional/west,
 /obj/structure/cable,
+/obj/effect/turf_decal/trimline/yellow/end{
+	dir = 4
+	},
 /turf/open/floor/iron/dark/textured_edge{
 	dir = 8
 	},
@@ -18987,6 +19001,7 @@
 	dir = 1
 	},
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
+/obj/machinery/duct,
 /turf/open/floor/iron/dark/textured,
 /area/station/service/janitor)
 "dJF" = (
@@ -23260,11 +23275,10 @@
 /area/station/commons/fitness/locker_room)
 "ezQ" = (
 /obj/structure/window/reinforced/spawner/directional/north,
-/obj/machinery/plumbing/synthesizer{
-	reagent_id = /datum/reagent/water;
-	name = "Secure Water Supply Synthesizer"
-	},
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/reagent_dispensers/plumbed{
+	name = "secure reservoir"
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/port)
 "ezS" = (
@@ -24941,12 +24955,9 @@
 /turf/open/floor/iron/white/smooth_corner,
 /area/station/command/heads_quarters/cmo)
 "eRw" = (
-/obj/machinery/plumbing/synthesizer{
-	reagent_id = /datum/reagent/water;
-	name = "Science Water Supply Synthesizer"
-	},
 /obj/structure/window/reinforced/spawner/directional/east,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/duct,
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/starboard/aft)
 "eRE" = (
@@ -25435,7 +25446,6 @@
 /obj/structure/disposalpipe/segment{
 	color = "lightblue"
 	},
-/obj/machinery/duct,
 /turf/open/floor/iron/freezer,
 /area/station/commons/fitness/locker_room)
 "eXE" = (
@@ -33235,6 +33245,7 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/duct,
 /turf/open/floor/iron/dark/textured_edge,
 /area/station/service/janitor)
 "gIH" = (
@@ -41590,6 +41601,9 @@
 /obj/structure/fluff/shower_drain,
 /obj/machinery/airalarm/directional/west,
 /obj/structure/cable,
+/obj/effect/turf_decal/trimline/yellow/end{
+	dir = 4
+	},
 /turf/open/floor/iron/dark/textured_corner,
 /area/station/engineering/atmos)
 "ipO" = (
@@ -41767,7 +41781,6 @@
 /turf/open/floor/plating,
 /area/station/commons/dorms/laundry)
 "irp" = (
-/obj/structure/closet/l3closet/virology,
 /obj/effect/turf_decal/trimline/green/filled/line{
 	dir = 5
 	},
@@ -41777,6 +41790,7 @@
 /obj/effect/turf_decal/trimline/green/filled/mid_joiner{
 	dir = 1
 	},
+/obj/structure/closet/emcloset,
 /turf/open/floor/iron/white/textured_corner{
 	dir = 8
 	},
@@ -43832,6 +43846,7 @@
 	dir = 6;
 	color = "lightblue"
 	},
+/obj/machinery/duct,
 /turf/open/floor/iron/dark,
 /area/station/service/bar)
 "iMp" = (
@@ -47847,6 +47862,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/broken_floor,
 /obj/structure/cable,
+/obj/machinery/duct,
 /turf/open/floor/iron/small,
 /area/station/service/hydroponics/garden/abandoned)
 "jzW" = (
@@ -49415,6 +49431,7 @@
 /obj/structure/disposalpipe/segment{
 	color = "lightblue"
 	},
+/obj/machinery/duct,
 /turf/open/floor/iron/dark/smooth_edge,
 /area/station/service/bar)
 "jPX" = (
@@ -54561,13 +54578,8 @@
 /turf/open/floor/plating,
 /area/station/maintenance/floor2/starboard/aft)
 "kYz" = (
-/obj/machinery/shower/directional/north,
-/obj/structure/fluff/shower_drain,
 /obj/effect/turf_decal/trimline/green/filled/line,
 /obj/effect/turf_decal/trimline/green/filled/mid_joiner,
-/obj/effect/turf_decal/trimline/green/end{
-	dir = 1
-	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -61737,7 +61749,6 @@
 /obj/structure/disposalpipe/segment{
 	color = "lightgreen"
 	},
-/obj/machinery/duct,
 /turf/open/floor/iron/dark/textured_edge{
 	dir = 4
 	},
@@ -63146,6 +63157,7 @@
 /obj/structure/disposalpipe/trunk{
 	dir = 4
 	},
+/obj/machinery/duct,
 /turf/open/floor/iron/white/smooth_corner{
 	dir = 1
 	},
@@ -66455,6 +66467,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/burnt_floor,
+/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/floor1/starboard)
 "nrH" = (
@@ -68929,6 +68942,7 @@
 /obj/structure/window/reinforced/spawner/directional/east,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/burnt_floor,
+/obj/machinery/duct,
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/starboard/fore)
 "nUp" = (
@@ -70458,12 +70472,9 @@
 /turf/open/floor/plating,
 /area/station/maintenance/floor1/starboard/fore)
 "oll" = (
-/obj/machinery/plumbing/synthesizer{
-	reagent_id = /datum/reagent/water;
-	name = "Cargo Water Supply Synthesizer"
-	},
 /obj/machinery/light/small/directional/east,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/duct,
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/starboard)
 "olm" = (
@@ -73211,10 +73222,9 @@
 /turf/open/floor/catwalk_floor/iron,
 /area/station/hallway/floor2/fore)
 "oOC" = (
-/turf/open/floor/iron/freezer,
-/area/station/cargo/breakroom{
-	name = "\improper Cargo Bathroom"
-	})
+/obj/machinery/duct,
+/turf/closed/wall,
+/area/station/medical/break_room)
 "oOE" = (
 /turf/open/floor/iron,
 /area/station/command/bridge)
@@ -73223,10 +73233,10 @@
 /area/station/medical/morgue)
 "oPz" = (
 /obj/structure/window/reinforced/spawner/directional/north,
-/obj/structure/reagent_dispensers/plumbed{
-	name = "dormitory reservoir"
-	},
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/closet/crate/trashcart/filled{
+	name = "Dormitory Trash Cart"
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/starboard/fore)
 "oPB" = (
@@ -73424,17 +73434,13 @@
 /turf/open/floor/plating,
 /area/station/cargo/warehouse)
 "oRB" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/duct,
-/obj/structure/disposalpipe/segment{
-	dir = 4;
-	color = "yellow"
+/obj/machinery/hydroponics/constructable,
+/obj/effect/turf_decal/bot_white{
+	color = "#9FED58"
 	},
-/turf/open/floor/plating,
-/area/station/maintenance/floor2/port)
+/obj/machinery/duct,
+/turf/open/floor/iron/dark/smooth_large,
+/area/station/service/hydroponics)
 "oRG" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/maintenance,
@@ -79248,6 +79254,7 @@
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 8
 	},
+/obj/machinery/duct,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
 	},
@@ -79622,6 +79629,7 @@
 /obj/structure/disposalpipe/segment{
 	color = "orange"
 	},
+/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/floor2/port)
 "qeb" = (
@@ -81170,6 +81178,7 @@
 /obj/effect/turf_decal/trimline/green/filled/line,
 /obj/effect/turf_decal/trimline/green/filled/mid_joiner,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/duct,
 /turf/open/floor/iron/white/smooth_edge,
 /area/station/medical/virology)
 "quP" = (
@@ -87715,7 +87724,6 @@
 /obj/effect/mapping_helpers/burnt_floor,
 /obj/effect/spawner/random/trash/botanical_waste,
 /obj/structure/cable,
-/obj/machinery/duct,
 /turf/open/floor/iron/dark/small,
 /area/station/service/kitchen/abandoned)
 "rLE" = (
@@ -90968,13 +90976,10 @@
 /turf/open/floor/carpet,
 /area/station/service/lawoffice)
 "suE" = (
-/obj/machinery/plumbing/synthesizer{
-	reagent_id = /datum/reagent/water;
-	name = "Medical Water Supply Synthesizer"
-	},
 /obj/machinery/light/small/directional/north,
 /obj/effect/mapping_helpers/broken_floor,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/duct,
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/aft)
 "suM" = (
@@ -94865,10 +94870,10 @@
 	},
 /area/station/cargo/sorting)
 "tmM" = (
-/obj/structure/closet/crate/trashcart/filled{
-	name = "Dormitory Trash Cart"
-	},
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/reagent_dispensers/plumbed{
+	name = "dormitory reservoir"
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/starboard/fore)
 "tmQ" = (
@@ -95396,13 +95401,12 @@
 /turf/open/floor/plating,
 /area/station/maintenance/floor1/starboard/fore)
 "trS" = (
-/obj/machinery/plumbing/synthesizer{
-	reagent_id = /datum/reagent/water;
-	name = "Dormitory Water Supply Synthesizer"
-	},
 /obj/machinery/light/small/directional/west,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/burnt_floor,
+/obj/structure/reagent_dispensers/plumbed{
+	name = "dormitory reservoir"
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/starboard/fore)
 "trU" = (
@@ -96160,6 +96164,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/broken_floor,
+/obj/machinery/duct,
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/starboard/fore)
 "tAA" = (
@@ -96328,6 +96333,7 @@
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 1
 	},
+/obj/machinery/duct,
 /turf/open/floor/iron/white/small,
 /area/station/maintenance/floor1/starboard)
 "tCv" = (
@@ -102191,6 +102197,7 @@
 /obj/machinery/light/small/directional/west,
 /obj/structure/window/reinforced/spawner/directional/north,
 /obj/structure/cable,
+/obj/machinery/duct,
 /turf/open/floor/iron/textured_large,
 /area/station/security/prison/safe)
 "uNc" = (
@@ -106266,11 +106273,11 @@
 /area/station/commons/fitness/recreation/entertainment)
 "vID" = (
 /obj/structure/window/reinforced/spawner/directional/south,
-/obj/structure/closet/crate/trashcart/filled{
-	name = "Dormitory Trash Cart"
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/burnt_floor,
+/obj/structure/reagent_dispensers/plumbed{
+	name = "dormitory reservoir"
+	},
 /turf/open/floor/iron/small,
 /area/station/maintenance/floor2/starboard/fore)
 "vIJ" = (
@@ -107608,6 +107615,7 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/service/hydroponics/garden/abandoned)
 "vVT" = (
@@ -112905,6 +112913,9 @@
 /obj/structure/extinguisher_cabinet/directional/west,
 /obj/machinery/light/directional/west,
 /obj/structure/cable,
+/obj/effect/turf_decal/trimline/yellow/end{
+	dir = 4
+	},
 /turf/open/floor/iron/dark/textured_edge{
 	dir = 8
 	},
@@ -114641,6 +114652,23 @@
 	layer = 10005
 	},
 /obj/machinery/shower/directional/north,
+/obj/effect/turf_decal/trimline/white/end{
+	dir = 1;
+	color = "#ff8300"
+	},
+/obj/effect/turf_decal/trimline/white/mid_joiner{
+	color = "#ff8300";
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/white/mid_joiner{
+	color = "#ff8300";
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/white/mid_joiner{
+	color = "#ff8300";
+	dir = 4
+	},
+/obj/structure/fluff/shower_drain,
 /turf/open/floor/iron/textured_large,
 /area/station/security/prison/safe)
 "xlz" = (
@@ -115307,6 +115335,7 @@
 "xrs" = (
 /obj/structure/table,
 /obj/effect/landmark/start/hangover,
+/obj/machinery/duct,
 /turf/open/floor/iron/freezer,
 /area/station/commons/fitness/locker_room)
 "xrt" = (
@@ -115493,9 +115522,6 @@
 "xtE" = (
 /obj/structure/window/reinforced/spawner/directional/north,
 /obj/structure/window/reinforced/spawner/directional/east,
-/obj/structure/reagent_dispensers/plumbed{
-	name = "dormitory reservoir"
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/burnt_floor,
 /turf/open/floor/iron/small,
@@ -115573,6 +115599,7 @@
 /obj/structure/disposalpipe/segment{
 	color = "orange"
 	},
+/obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/floor2/port)
 "xul" = (
@@ -116065,6 +116092,7 @@
 	name = "Shower"
 	},
 /obj/machinery/light/small/directional/north,
+/obj/machinery/duct,
 /turf/open/floor/iron/freezer,
 /area/station/cargo/breakroom{
 	name = "\improper Cargo Bathroom"
@@ -117599,6 +117627,7 @@
 /obj/effect/mapping_helpers/broken_floor,
 /obj/effect/spawner/random/trash/botanical_waste,
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
+/obj/machinery/duct,
 /turf/open/floor/iron/dark/small,
 /area/station/service/kitchen/abandoned)
 "xMo" = (
@@ -119769,7 +119798,6 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/duct,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 8
 	},
@@ -139424,8 +139452,8 @@ qJV
 uUv
 mie
 pZT
-eLA
-jnv
+oRB
+aoR
 uXo
 gif
 riD
@@ -144568,7 +144596,7 @@ gGK
 mca
 ttA
 gCA
-aoR
+npu
 dJz
 gIB
 own
@@ -159566,7 +159594,7 @@ ahJ
 iHN
 nmb
 aJl
-oOC
+hio
 dia
 shs
 cdO
@@ -206026,7 +206054,7 @@ kDm
 ydT
 eQn
 gbX
-oRB
+nfD
 soi
 nxG
 pKM
@@ -210932,7 +210960,7 @@ mmq
 nKE
 wmu
 dat
-qrs
+fyh
 oAa
 fyh
 rMG
@@ -211192,7 +211220,7 @@ oox
 xMC
 fyh
 btI
-fyh
+qrs
 eUg
 vSw
 lYB
@@ -211450,7 +211478,7 @@ xUm
 sBY
 wiY
 ttG
-wiY
+oOC
 oxQ
 vSw
 lYB

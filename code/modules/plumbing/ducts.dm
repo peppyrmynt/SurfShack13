@@ -90,6 +90,11 @@ All the important duct code:
 	if(!active || !other.active)
 		return
 
+	if(istype(other, /obj/machinery/duct/multiz))
+		var/obj/machinery/duct/multiz/other_multiz = other
+		if(opposite_dir != other_multiz.dir && opposite_dir != UP && opposite_dir != DOWN)
+			return FALSE
+
 	if(!dumb && other.dumb && !(opposite_dir & other.connects))
 		return
 	if(dumb && other.dumb && !(connects & other.connects)) //we eliminated a few more scenarios in attempt connect
@@ -383,3 +388,56 @@ All the important duct code:
 
 /obj/item/stack/ducts/fifty
 	amount = 50
+
+/obj/machinery/duct/multiz
+	name = "multi deck fluid duct adapter"
+	desc = "A fluid duct adapter which allows fluid ducts to connect to other ductnets on different decks."
+	icon_state = "adapter"
+	dir = SOUTH
+
+	/// Our central icon for multiz connection
+	var/mutable_appearance/multiz_center = null
+
+/obj/machinery/duct/multiz/Initialize(mapload, no_anchor, color_of_duct = null, layer_of_duct = null, force_connects, force_ignore_colors)
+	multiz_center = mutable_appearance('icons/obj/pipes_n_cables/hydrochem/fluid_ducts.dmi', "adapter", layer = PLUMBING_PIPE_VISIBILE_LAYER + 0.1)
+	. = ..()
+	AddComponent(/datum/component/simple_rotation)
+
+/obj/machinery/duct/multiz/update_overlays()
+	. = ..()
+	if(multiz_center)
+		multiz_center.color = duct_color
+		. += multiz_center
+
+/obj/machinery/duct/multiz/attempt_connect()
+	// Only check our facing direction (dir) horizontally
+	if(dir in GLOB.cardinals)
+		for(var/atom/movable/duct_candidate in get_step(src, dir))
+			if(connect_network(duct_candidate, dir))
+				add_connects(dir)
+
+	// Check vertically
+	var/turf/local_turf = get_turf(src)
+	if(local_turf)
+		var/turf/above = GET_TURF_ABOVE(local_turf)
+		if(above)
+			for(var/obj/machinery/duct/multiz/other in above)
+				if(connect_network(other, UP))
+					add_connects(UP)
+		var/turf/below = GET_TURF_BELOW(local_turf)
+		if(below)
+			for(var/obj/machinery/duct/multiz/other in below)
+				if(connect_network(other, DOWN))
+					add_connects(DOWN)
+	update_appearance()
+
+/obj/machinery/duct/multiz/connect_duct(obj/machinery/duct/other, direction)
+	if(direction != dir && direction != UP && direction != DOWN)
+		return FALSE
+	return ..()
+
+/obj/machinery/duct/multiz/connect_plumber(datum/component/plumbing/plumbing, direction)
+	if(direction != dir && direction != UP && direction != DOWN)
+		return FALSE
+	return ..()
+
