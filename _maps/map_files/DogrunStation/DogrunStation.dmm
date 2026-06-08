@@ -934,9 +934,7 @@
 "ahJ" = (
 /obj/machinery/duct,
 /turf/open/floor/iron/freezer,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "ahL" = (
 /obj/structure/table,
 /obj/item/pai_card,
@@ -2897,9 +2895,7 @@
 "aAR" = (
 /obj/effect/turf_decal/tile/yellow/opposingcorners,
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "aAY" = (
 /obj/effect/turf_decal/trimline/neutral/filled/warning{
 	dir = 4
@@ -3520,6 +3516,11 @@
 /obj/structure/cable,
 /turf/open/floor/iron/white/textured_edge,
 /area/station/medical/chem_storage)
+"aHK" = (
+/obj/machinery/atmospherics/pipe/smart/simple/brown/visible,
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/plating,
+/area/station/engineering/atmos)
 "aHU" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/burnt_floor,
@@ -5213,10 +5214,6 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/floor2/port)
-"aYX" = (
-/obj/machinery/atmospherics/pipe/smart/simple/brown/visible,
-/turf/open/floor/engine/hull/reinforced,
-/area/space/nearstation)
 "aZk" = (
 /obj/effect/turf_decal/tile/neutral/half,
 /obj/effect/turf_decal/siding/wideplating_new,
@@ -8106,9 +8103,7 @@
 	},
 /obj/effect/landmark/start/atmospheric_technician,
 /turf/open/floor/iron/edge,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "bBB" = (
 /obj/effect/turf_decal/siding/wideplating_new{
 	dir = 4
@@ -9179,9 +9174,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "bNr" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
@@ -9410,9 +9403,7 @@
 /obj/effect/spawner/random/food_or_drink/refreshing_beverage,
 /obj/effect/turf_decal/tile/yellow/opposingcorners,
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "bPs" = (
 /obj/machinery/door/airlock/public{
 	name = "Locker Room"
@@ -18030,6 +18021,14 @@
 	dir = 1
 	},
 /area/station/commons/storage/primary)
+"dAn" = (
+/obj/structure/lattice/catwalk,
+/obj/effect/turf_decal/siding/wideplating_new/dark{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/wideplating_new/dark,
+/turf/open/openspace,
+/area/station/engineering/atmos)
 "dAo" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt,
@@ -21564,9 +21563,7 @@
 /turf/open/floor/iron/edge{
 	dir = 1
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "eiR" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
@@ -24405,9 +24402,7 @@
 /obj/effect/turf_decal/tile/yellow/opposingcorners,
 /obj/effect/landmark/start/station_engineer,
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "eLR" = (
 /obj/machinery/vending/wallmed/directional/east,
 /obj/effect/turf_decal/trimline/blue/filled/line{
@@ -25129,6 +25124,10 @@
 /obj/effect/turf_decal/box,
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
+"eTH" = (
+/obj/machinery/atmospherics/pipe/smart/simple/brown/visible,
+/turf/open/floor/engine/hull/reinforced,
+/area/space/nearstation)
 "eTQ" = (
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/trimline/purple/filled/line,
@@ -28120,9 +28119,9 @@
 /turf/open/floor/iron/small,
 /area/station/engineering/atmos/mix/abandoned)
 "fyh" = (
-/obj/structure/cable,
-/turf/open/floor/iron/white,
-/area/station/science/xenobiology)
+/obj/machinery/atmospherics/pipe/smart/simple/brown/visible,
+/turf/open/floor/iron/dark,
+/area/station/engineering/atmos)
 "fyl" = (
 /obj/machinery/holopad,
 /obj/effect/turf_decal/box,
@@ -29003,9 +29002,7 @@
 /turf/open/floor/iron/edge{
 	dir = 4
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "fJr" = (
 /obj/structure/railing{
 	dir = 1
@@ -29551,10 +29548,9 @@
 /turf/open/floor/iron/small,
 /area/station/maintenance/hallway/abandoned_recreation)
 "fRo" = (
-/turf/closed/wall/r_wall,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/glass,
+/area/station/maintenance/floor2/starboard/aft)
 "fRr" = (
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/visible,
 /obj/effect/spawner/structure/window/reinforced,
@@ -29743,12 +29739,9 @@
 /turf/open/floor/plating,
 /area/station/maintenance/floor1/starboard/aft)
 "fTG" = (
-/obj/machinery/atmospherics/pipe/bridge_pipe/yellow/visible{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/bridge_pipe/brown/visible,
-/turf/open/floor/iron/dark,
-/area/station/engineering/atmos)
+/obj/machinery/portable_atmospherics/canister/plasma,
+/turf/open/floor/plating,
+/area/station/engineering/main)
 "fTQ" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 8
@@ -35390,9 +35383,7 @@
 /turf/open/floor/iron/corner{
 	dir = 8
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "hcY" = (
 /obj/machinery/atmospherics/pipe/heat_exchanging/simple,
 /obj/machinery/newscaster/directional/west,
@@ -35422,10 +35413,12 @@
 /turf/open/floor/iron/dark/textured_large,
 /area/station/service/janitor)
 "hdd" = (
-/obj/effect/spawner/structure/window/reinforced,
-/obj/structure/cable,
-/turf/open/floor/plating,
-/area/station/engineering/storage_shared)
+/obj/machinery/atmospherics/pipe/bridge_pipe/yellow/visible{
+	dir = 4
+	},
+/obj/machinery/atmospherics/pipe/bridge_pipe/brown/visible,
+/turf/open/floor/iron/dark,
+/area/station/engineering/atmos)
 "hdi" = (
 /obj/effect/turf_decal/siding/wideplating_new/dark{
 	dir = 1
@@ -40747,9 +40740,7 @@
 /obj/structure/toilet,
 /obj/machinery/light/small/directional/north,
 /turf/open/floor/iron/freezer,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "igu" = (
 /obj/structure/railing/corner,
 /obj/structure/railing/corner{
@@ -45782,9 +45773,7 @@
 /turf/open/floor/iron/corner{
 	dir = 8
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "jgE" = (
 /obj/effect/turf_decal/stripes{
 	dir = 6
@@ -49979,9 +49968,7 @@
 /turf/open/floor/iron/edge{
 	dir = 4
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "jWw" = (
 /obj/structure/bookcase/random,
 /obj/structure/cable,
@@ -50097,13 +50084,9 @@
 /turf/open/floor/plating,
 /area/station/maintenance/floor1/port/aft)
 "jXZ" = (
-/obj/machinery/door/poddoor{
-	id = "Secure Storage";
-	name = "Secure Storage"
-	},
-/obj/machinery/door/firedoor,
-/turf/open/floor/plating,
-/area/station/engineering/main)
+/obj/structure/cable,
+/turf/open/floor/iron/white,
+/area/station/science/xenobiology)
 "jYi" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 1
@@ -51243,9 +51226,7 @@
 	pixel_z = 7
 	},
 /turf/open/floor/iron/freezer,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "klf" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/structure/cable,
@@ -53100,9 +53081,7 @@
 /turf/open/floor/iron/edge{
 	dir = 8
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "kHo" = (
 /obj/machinery/holopad/secure,
 /turf/open/floor/carpet,
@@ -54054,9 +54033,7 @@
 	color = "lightblue"
 	},
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "kTP" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/burnt_floor,
@@ -56728,9 +56705,7 @@
 /obj/effect/turf_decal/tile/yellow/opposingcorners,
 /obj/effect/landmark/event_spawn,
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "lub" = (
 /obj/effect/turf_decal/trimline/dark_blue/filled/corner{
 	dir = 4
@@ -57815,9 +57790,10 @@
 /turf/open/floor/iron/cafeteria,
 /area/station/service/kitchen/diner)
 "lEv" = (
-/obj/machinery/portable_atmospherics/canister/plasma,
+/obj/effect/spawner/structure/window/reinforced,
+/obj/structure/cable,
 /turf/open/floor/plating,
-/area/station/engineering/main)
+/area/station/engineering/storage_shared)
 "lEU" = (
 /obj/effect/turf_decal/siding/thinplating_new/dark{
 	dir = 4
@@ -58371,9 +58347,7 @@
 /turf/open/floor/iron/edge{
 	dir = 1
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "lMx" = (
 /obj/structure/railing{
 	dir = 4
@@ -58785,10 +58759,6 @@
 /obj/machinery/duct,
 /turf/open/floor/iron/edge,
 /area/station/security/prison/garden)
-"lQt" = (
-/obj/machinery/atmospherics/pipe/smart/simple/brown/visible,
-/turf/open/floor/iron/dark,
-/area/station/engineering/atmos)
 "lQC" = (
 /obj/machinery/computer/slot_machine{
 	pixel_y = 2
@@ -59973,9 +59943,8 @@
 /turf/closed/wall,
 /area/station/hallway/floor2/port)
 "mbP" = (
-/obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/glass,
-/area/station/maintenance/floor2/starboard/aft)
+/turf/closed/wall/r_wall,
+/area/station/engineering/break_room)
 "mbR" = (
 /obj/structure/table,
 /obj/item/reagent_containers/condiment/saltshaker{
@@ -62527,9 +62496,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "mAo" = (
 /obj/machinery/light/small/directional/north,
 /turf/open/floor/engine/hull/reinforced,
@@ -62728,9 +62695,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron/edge,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "mCA" = (
 /obj/machinery/portable_atmospherics/canister,
 /obj/effect/turf_decal/trimline/yellow/filled/line,
@@ -64834,9 +64799,7 @@
 /obj/effect/turf_decal/tile/yellow/opposingcorners,
 /obj/structure/chair/stool/directional/south,
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "naA" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/siding/wideplating_new/corner,
@@ -67765,6 +67728,10 @@
 	dir = 8
 	},
 /area/station/security/brig)
+"nHb" = (
+/obj/structure/cable,
+/turf/open/floor/iron/white,
+/area/station/science/cytology)
 "nHd" = (
 /obj/structure/sign/directions/command{
 	pixel_w = 0;
@@ -73199,9 +73166,7 @@
 	color = "lightblue"
 	},
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "oOf" = (
 /obj/effect/decal/cleanable/glass,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -75046,9 +75011,7 @@
 	dir = 1
 	},
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "pkL" = (
 /obj/effect/turf_decal/tile/neutral/half{
 	dir = 4
@@ -80698,9 +80661,7 @@
 	},
 /obj/machinery/duct,
 /turf/open/floor/iron/edge,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "qoU" = (
 /turf/open/openspace,
 /area/station/service/bar/backroom)
@@ -80881,17 +80842,9 @@
 /turf/open/floor/plating,
 /area/station/commons/vacant_room/office)
 "qrs" = (
-/obj/effect/turf_decal/siding/wideplating_new/dark{
-	dir = 8
-	},
-/obj/effect/turf_decal/siding/wideplating_new/dark/corner{
-	dir = 4
-	},
-/obj/effect/turf_decal/siding/wideplating_new/dark/corner,
-/turf/open/floor/engine{
-	icon_state = "reinforced_hull"
-	},
-/area/station/engineering/atmos)
+/obj/effect/spawner/structure/window/reinforced/plasma,
+/turf/open/floor/plating,
+/area/station/engineering/storage_shared)
 "qrw" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -83557,9 +83510,13 @@
 /turf/open/floor/iron,
 /area/station/service/hydroponics/garden)
 "qTc" = (
-/obj/effect/spawner/structure/window/reinforced/plasma,
+/obj/machinery/door/poddoor{
+	id = "Secure Storage";
+	name = "Secure Storage"
+	},
+/obj/machinery/door/firedoor,
 /turf/open/floor/plating,
-/area/station/engineering/storage_shared)
+/area/station/engineering/main)
 "qTe" = (
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 10
@@ -85180,9 +85137,7 @@
 /turf/open/floor/iron/corner{
 	dir = 4
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "rjq" = (
 /obj/structure/stairs/wood{
 	dir = 8
@@ -87837,6 +87792,24 @@
 	dir = 1
 	},
 /area/station/medical/medbay/central)
+"rMO" = (
+/obj/effect/turf_decal/trimline/red/filled/line,
+/obj/effect/turf_decal/trimline/red/filled/mid_joiner,
+/obj/effect/turf_decal/siding/thinplating_new/dark{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral/half/contrasted{
+	dir = 1
+	},
+/obj/structure/cable,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/structure/reagent_dispensers/wall/peppertank/directional/south,
+/turf/open/floor/iron/dark/smooth_edge,
+/area/station/security/brig)
 "rNj" = (
 /obj/structure/chair/office/light{
 	dir = 4
@@ -90315,9 +90288,7 @@
 /turf/open/floor/iron/corner{
 	dir = 1
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "smz" = (
 /obj/effect/turf_decal/tile/neutral/opposingcorners,
 /obj/effect/spawner/random/engineering/tracking_beacon,
@@ -90953,9 +90924,7 @@
 	name = "Shower"
 	},
 /turf/open/floor/iron/freezer,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "suf" = (
 /obj/machinery/atmospherics/pipe/smart/simple/scrubbers/visible/layer1{
 	dir = 4
@@ -91676,9 +91645,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron/corner,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "sCc" = (
 /obj/machinery/vending/games,
 /obj/effect/turf_decal/siding/wood{
@@ -92706,9 +92673,7 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron/edge,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "sOq" = (
 /obj/structure/window/reinforced/spawner/directional/north,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -95215,10 +95180,6 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/security/prison/workout)
-"tpz" = (
-/obj/structure/cable,
-/turf/open/floor/iron/white,
-/area/station/science/cytology)
 "tpG" = (
 /obj/machinery/porta_turret/ai{
 	dir = 4
@@ -99373,13 +99334,6 @@
 	},
 /turf/open/floor/iron/corner,
 /area/station/security/prison/mess)
-"uiq" = (
-/obj/machinery/atmospherics/pipe/bridge_pipe/green/visible{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/bridge_pipe/brown/visible,
-/turf/open/floor/iron/dark,
-/area/station/engineering/atmos)
 "uiy" = (
 /obj/machinery/conveyor/inverted{
 	dir = 9;
@@ -102960,9 +102914,7 @@
 /turf/open/floor/iron/edge{
 	dir = 8
 	},
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "uVp" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/burnt_floor,
@@ -103850,9 +103802,7 @@
 /obj/machinery/door/firedoor,
 /obj/machinery/duct,
 /turf/open/floor/iron/freezer,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "vgM" = (
 /obj/structure/table/wood,
 /obj/item/ph_booklet{
@@ -104774,9 +104724,16 @@
 /turf/open/floor/iron/white,
 /area/station/science/xenobiology)
 "vqY" = (
-/obj/machinery/atmospherics/pipe/smart/simple/brown/visible,
-/obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating,
+/obj/effect/turf_decal/siding/wideplating_new/dark{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating_new/dark/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating_new/dark/corner,
+/turf/open/floor/engine{
+	icon_state = "reinforced_hull"
+	},
 /area/station/engineering/atmos)
 "vqZ" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
@@ -105492,9 +105449,7 @@
 /obj/item/radio/intercom/directional/west,
 /obj/machinery/camera/autoname/directional/north,
 /turf/open/floor/iron/corner,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "vzu" = (
 /obj/machinery/computer/security/telescreen/engine/directional/east,
 /obj/effect/turf_decal/trimline/red/filled/line{
@@ -110326,9 +110281,7 @@
 /obj/machinery/holopad,
 /obj/effect/turf_decal/box,
 /turf/open/floor/iron,
-/area/station/engineering/break_room{
-	name = "\improper Engineering Break Room"
-	})
+/area/station/engineering/break_room)
 "wud" = (
 /obj/structure/table,
 /obj/item/reagent_containers/condiment/ketchup{
@@ -110481,6 +110434,13 @@
 	},
 /turf/open/floor/iron/white,
 /area/station/medical/chemistry)
+"wvr" = (
+/obj/machinery/atmospherics/pipe/bridge_pipe/green/visible{
+	dir = 4
+	},
+/obj/machinery/atmospherics/pipe/bridge_pipe/brown/visible,
+/turf/open/floor/iron/dark,
+/area/station/engineering/atmos)
 "wvw" = (
 /obj/structure/bed/double{
 	dir = 1
@@ -111961,24 +111921,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/iron,
 /area/station/hallway/floor1/central)
-"wLR" = (
-/obj/effect/turf_decal/trimline/red/filled/line,
-/obj/effect/turf_decal/trimline/red/filled/mid_joiner,
-/obj/effect/turf_decal/siding/thinplating_new/dark{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/neutral/half/contrasted{
-	dir = 1
-	},
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/structure/disposalpipe/segment{
-	dir = 4
-	},
-/obj/structure/reagent_dispensers/wall/peppertank/directional/south,
-/turf/open/floor/iron/dark/smooth_edge,
-/area/station/security/brig)
 "wLS" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 4
@@ -114877,14 +114819,6 @@
 /obj/effect/landmark/start/hangover,
 /turf/open/floor/iron/large,
 /area/station/hallway/secondary/entry)
-"xmy" = (
-/obj/structure/lattice/catwalk,
-/obj/effect/turf_decal/siding/wideplating_new/dark{
-	dir = 1
-	},
-/obj/effect/turf_decal/siding/wideplating_new/dark,
-/turf/open/openspace,
-/area/station/engineering/atmos)
 "xmE" = (
 /obj/structure/railing/corner,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -159407,7 +159341,7 @@ xlz
 jSf
 jSf
 jSf
-fRo
+mbP
 vgv
 iHN
 qLB
@@ -160181,7 +160115,7 @@ syW
 jSf
 jSf
 jSf
-fRo
+mbP
 sud
 iHN
 eOT
@@ -160439,8 +160373,8 @@ jSf
 jSf
 yiC
 mmh
-fRo
-fRo
+mbP
+mbP
 iHN
 iCF
 aJl
@@ -160693,7 +160627,7 @@ dcE
 rpP
 hKE
 ioR
-jXZ
+qTc
 rnG
 yiC
 yiC
@@ -160951,7 +160885,7 @@ dcE
 rpP
 hKE
 ioR
-jXZ
+qTc
 eYw
 eYw
 sSI
@@ -161209,9 +161143,9 @@ dcE
 rpP
 hKE
 ioR
-jXZ
-lEv
-lEv
+qTc
+fTG
+fTG
 cMc
 xoX
 xoX
@@ -163015,7 +162949,7 @@ wMe
 cLb
 fgT
 wwL
-qTc
+qrs
 sPh
 tiv
 tUn
@@ -163789,7 +163723,7 @@ was
 fIl
 dFH
 sZw
-qTc
+qrs
 hIS
 iQR
 hoz
@@ -202759,7 +202693,7 @@ xPC
 xPC
 xPC
 dGJ
-wLR
+rMO
 nqG
 lAs
 jiY
@@ -226210,7 +226144,7 @@ dNj
 xFl
 ufl
 stW
-lQt
+fyh
 mLn
 mHM
 bCh
@@ -227299,7 +227233,7 @@ hhE
 eQm
 vqT
 iUO
-fyh
+jXZ
 njs
 wuz
 wuz
@@ -227557,7 +227491,7 @@ pqo
 bKl
 rQM
 vKE
-tpz
+nHb
 hJL
 pqo
 pqo
@@ -227754,11 +227688,11 @@ rKO
 rKO
 lTS
 gvF
-aYX
-vqY
+eTH
+aHK
 hoZ
-uiq
-fTG
+wvr
+hdd
 nRv
 rYx
 gtM
@@ -228292,7 +228226,7 @@ dun
 rjY
 kcV
 eGM
-hdd
+lEv
 xnR
 khD
 wac
@@ -228808,7 +228742,7 @@ dun
 dun
 jiB
 mNK
-hdd
+lEv
 mKg
 iuI
 wac
@@ -230089,7 +230023,7 @@ dJG
 ipW
 bTK
 aei
-qrs
+vqY
 aei
 bTK
 ipW
@@ -230146,8 +230080,8 @@ gcj
 gcj
 hKO
 wKb
-mbP
-mbP
+fRo
+fRo
 wKb
 nlm
 nlm
@@ -230347,7 +230281,7 @@ oEv
 dun
 dun
 dun
-xmy
+dAn
 dun
 dun
 dun
@@ -230605,7 +230539,7 @@ oEv
 dun
 dun
 dun
-xmy
+dAn
 dun
 dun
 dun

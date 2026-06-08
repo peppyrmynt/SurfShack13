@@ -96,7 +96,7 @@
 	sound_environment = SOUND_AREA_LARGE_ENCLOSED
 
 /area/station/engineering/break_room
-	name = "\improper Engineering Foyer"
+	name = "\improper Engineering Break Room"
 	icon_state = "engine_break"
 	sound_environment = SOUND_AREA_SMALL_ENCLOSED
 
