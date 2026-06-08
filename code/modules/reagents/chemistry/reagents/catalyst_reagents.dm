@@ -39,11 +39,19 @@
 	if(.)
 		equilibrium.thermic_mod = ((creation_purity-0.5)*2)*modifier //So a purity 1 = the modifier, and a purity 0 = the inverse modifier
 
-///These affect medicines
-/datum/reagent/catalyst_agent/speed/medicine
+///This affects ALL reagents now
+/datum/reagent/catalyst_agent/speed/palladium
 	name = "Palladium Synthate Catalyst"
-	description = "This catalyst reagent will speed up all medicine reactions that it shares a beaker with by a dramatic amount."
-	target_reagent_type = /datum/reagent/medicine
-	modifier = 2
-	ph = 2 //drift towards acidity
+	description = "This catalyst reagent will increase the speed of reactions that it shares a beaker with by a dramatic amount."
+	target_reagent_type = /datum/reagent
+	modifier = 5
+	ph = 7
 	color = "#b1b1b1"
+
+/datum/reagent/catalyst_agent/speed/tempomyocin
+	name = "Tempomyocin"
+	description = "This catalyst reagent will reduce the speed of reactions that it shares a beaker with by a dramatic amount."
+	target_reagent_type = /datum/reagent
+	modifier = 0.15
+	ph = 7
+	color = "#e61f82"

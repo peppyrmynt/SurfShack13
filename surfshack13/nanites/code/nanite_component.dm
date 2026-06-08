@@ -4,7 +4,7 @@
 #define NANITE_DEFAULT_SAFETY_THRESHOLD 50
 
 ///The default amount of nanite research points to generate per person per tick, if unmodified.
-#define NANITE_BASE_RESEARCH 1.5
+#define NANITE_BASE_RESEARCH 1
 ///The factor by which we multiply node costs to balance the higher production of nanite points compared to general points.
 #define NANITE_POINT_CONVERSION_RATE 10
 ///The chance at a Nanite program randomly failing when it cannot sync
@@ -45,6 +45,11 @@
 	var/diagnostics = TRUE
 	///The techweb these Nanites are synced to, to generate Nanite research points
 	var/datum/techweb/linked_techweb
+
+	///If any programs boost or lower the research rate, modify this var.
+	var/bonus_research_val = 0
+	///Alt var of the one above, boosts GENERAL research points.
+	var/bonus_gen_res_val = 0
 
 /datum/component/nanites/Initialize(
 	datum/techweb/linked_techweb,
@@ -351,11 +356,14 @@
 /datum/component/nanites/proc/add_research()
 	if(host_mob.stat == DEAD || !host_mob.client)
 		return
-	var/research_value = NANITE_BASE_RESEARCH
+	var/research_value = NANITE_BASE_RESEARCH + bonus_research_val
 	if(!ishuman(host_mob))
 		research_value *= 0.5
 	if(linked_techweb)
 		linked_techweb.add_point_list(list(TECHWEB_POINT_TYPE_NANITES = research_value))
+	if(bonus_gen_res_val != 0)
+		var/datum/techweb/station_techweb = locate(/datum/techweb/science) in SSresearch.techwebs
+		station_techweb.add_point_list(list(TECHWEB_POINT_TYPE_GENERIC = bonus_gen_res_val))
 
 /datum/component/nanites/proc/on_healthscan(datum/source, list/render_list, advanced, mob/user, mode)
 	SIGNAL_HANDLER

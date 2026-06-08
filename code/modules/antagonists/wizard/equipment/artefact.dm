@@ -394,7 +394,7 @@
 
 /////////////////////////////////////////Scepter of Vendormancy///////////////////
 #define RUNIC_SCEPTER_MAX_CHARGES 3
-#define RUNIC_SCEPTER_MAX_RANGE 7
+#define RUNIC_SCEPTER_MAX_RANGE 11
 
 /obj/item/runic_vendor_scepter
 	name = "scepter of runic vendormancy"
@@ -415,7 +415,7 @@
 	/// Range cap on where you can summon vendors.
 	var/max_summon_range = RUNIC_SCEPTER_MAX_RANGE
 	/// Channeling time to summon a vendor.
-	var/summoning_time = 1 SECONDS
+	var/summoning_time = 0.5 SECONDS
 	/// Checks if the scepter is channeling a vendor already.
 	var/scepter_is_busy_summoning = FALSE
 	/// Checks if the scepter is busy channeling recharges

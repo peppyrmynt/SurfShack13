@@ -100,6 +100,7 @@
 
 	// Traitor steal objective
 	new /obj/item/reagent_containers/hypospray/cmo(src)
+	new /obj/item/card/id/departmental_budget/med(src)
 
 /obj/structure/closet/secure_closet/animal
 	name = "animal control locker"

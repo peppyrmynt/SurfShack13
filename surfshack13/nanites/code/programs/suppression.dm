@@ -13,20 +13,33 @@
 
 /datum/nanite_program/paralyzing
 	name = "Paralysis"
-	desc = "The nanites force muscle contraction, effectively paralyzing the host."
-	use_rate = 3
+	desc = "The nanites force muscle contraction, effectively paralyzing the host. \
+			Costs more nanites the longer the effect remains active."
+	use_rate = 2
 	rogue_types = list(/datum/nanite_program/nerve_decay)
+	var/paralysis_timer = 0
+	var/warned = FALSE
 
 /datum/nanite_program/paralyzing/active_effect()
-	host_mob.Stun(40)
+	paralysis_timer++
+	if(paralysis_timer > 12) // 12 second grace period.
+		host_mob.Stun(40)
+		use_rate += 0.1
+		if(!warned)
+			to_chat(host_mob, span_warning("Your muscles seize! You cannot move!"))
+			warned = TRUE
+	else
+		use_rate = 2 // setting this value in disable_passive_effect doesn't work.
 
 /datum/nanite_program/paralyzing/enable_passive_effect()
 	. = ..()
-	to_chat(host_mob, span_warning("Your muscles seize! You can't move!"))
+	to_chat(host_mob, span_warning("Your muscles begin to seize! Something is wrong!"))
 
 /datum/nanite_program/paralyzing/disable_passive_effect()
 	. = ..()
 	to_chat(host_mob, span_notice("Your muscles relax, and you can move again."))
+	paralysis_timer = 0 // reset timer.
+	warned = FALSE // and of course...
 
 /datum/nanite_program/shocking
 	name = "Electric Shock"

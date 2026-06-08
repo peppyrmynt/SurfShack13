@@ -135,7 +135,7 @@
 	description = "A luxurious golden shuttle complete with an indoor swimming pool. Each crewmember wishing to board must bring 500 credits, payable in cash and mineral coin."
 	extra_desc = "This shuttle costs 500 credits to board."
 	admin_notes = "Due to the limited space for non paying crew, this shuttle may cause a riot."
-	credit_cost = EMAG_LOCKED_SHUTTLE_COST
+	credit_cost = CARGO_CRATE_VALUE * 20
 	occupancy_limit = "75"
 
 /datum/map_template/shuttle/emergency/medisim
@@ -371,11 +371,7 @@
 	Needless to say, no engineering team wanted to go near the thing, and it's only being used as an Emergency Escape Shuttle because there is literally nothing else available."
 	admin_notes = "If the crew can solve the puzzle, they will wake the wabbajack statue. It will likely not end well. There's a reason it's boarded up. Maybe they should have just left it alone."
 	credit_cost = CARGO_CRATE_VALUE * 30
-	occupancy_limit = "30"
-	prerequisites = "This shuttle requires an act of magical polymorphism to occur before it can be purchased."
-
-/datum/map_template/shuttle/emergency/wabbajack/prerequisites_met()
-	return SSshuttle.shuttle_purchase_requirements_met[SHUTTLE_UNLOCK_WABBAJACK]
+	occupancy_limit = "45"
 
 /datum/map_template/shuttle/emergency/omega
 	suffix = "omega"

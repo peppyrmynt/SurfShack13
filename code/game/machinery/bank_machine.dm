@@ -23,8 +23,30 @@
 
 	///What department to check to link our bank account to.
 	var/account_department = ACCOUNT_CAR
+	///What's the departmental budget name? For the TGUI.
+	var/account_dept_name = ACCOUNT_CAR_NAME
 	///Bank account we're connected to.
 	var/datum/bank_account/synced_bank_account
+
+	///Can we reset this bank machine back to the cargo department? Just to ensure mappers don't accidentally give out the cargo budget.
+	var/account_resetable = TRUE
+	///If reset, which dept budget do we reset to?
+	var/account_reset_dept = ACCOUNT_CAR
+	///If reset, what's the name of the dept budget we're resetting back to?
+	var/account_reset_name = ACCOUNT_CAR_NAME
+
+/obj/machinery/computer/bank_machine/examine(mob/user)
+	. = ..()
+	if(account_resetable)
+		. += "Ctrl-Click to reset the bank machine's linked departmental budget."
+
+/obj/machinery/computer/bank_machine/click_ctrl(mob/user)
+	if(account_department == account_reset_dept)
+		return
+	account_department = account_reset_dept
+	account_dept_name = account_reset_name
+	synced_bank_account = SSeconomy.get_dep_account(account_reset_dept)
+	say("Account department reset!")
 
 /obj/machinery/computer/bank_machine/Initialize(mapload)
 	. = ..()
@@ -51,6 +73,12 @@
 	else if(istype(weapon, /obj/item/holochip))
 		var/obj/item/holochip/inserted_holochip = weapon
 		value = inserted_holochip.credits
+	else if(istype(weapon, /obj/item/card/id/departmental_budget))
+		var/obj/item/card/id/departmental_budget/my_dep_card = weapon
+		account_department = my_dep_card.department_ID
+		account_dept_name = my_dep_card.department_name
+		say("Account department changed! Now accessing the funds of the [my_dep_card.name].")
+		synced_bank_account = SSeconomy.get_dep_account(account_department)
 	if(value)
 		if(synced_bank_account)
 			synced_bank_account.adjust_money(value)
@@ -95,6 +123,7 @@
 	data["current_balance"] = synced_bank_account?.account_balance || 0
 	data["siphoning"] = siphoning
 	data["station_name"] = station_name()
+	data["department_acc"] = account_dept_name
 
 	return data
 

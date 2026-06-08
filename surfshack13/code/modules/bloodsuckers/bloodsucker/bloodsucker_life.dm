@@ -104,7 +104,7 @@
 			mult *= 5 // Increase multiplier if we're sleeping in a coffin.
 			costMult /= 2 // Decrease cost if we're sleeping in a coffin.
 			user.extinguish_mob()
-			user.remove_all_embedded_objects() // Remove Embedded!
+			INVOKE_ASYNC(user, TYPE_PROC_REF(/mob/living/carbon, remove_all_embedded_objects)) // Remove Embedded!
 			if(check_limbs(costMult))
 				return TRUE
 		// In Torpor, but not in a Coffin? Heal faster anyways.

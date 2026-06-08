@@ -1,6 +1,0 @@
-author: "forgman6"
-delete-after: True
-changes:
-  - map: "fixed cargo access"
-  - map: "rotated disposals so it fires east"
-  - map: "extended maint and added a gator room."

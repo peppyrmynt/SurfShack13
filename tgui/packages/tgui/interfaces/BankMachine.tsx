@@ -15,16 +15,18 @@ type Data = {
   current_balance: number;
   siphoning: BooleanLike;
   station_name: string;
+  department_acc: string;
 };
 
 export const BankMachine = (props) => {
   const { act, data } = useBackend<Data>();
-  const { current_balance, siphoning, station_name } = data;
+  const { current_balance, siphoning, station_name, department_acc } = data;
 
   return (
-    <Window width={350} height={155}>
+    <Window width={350} height={175}>
       <Window.Content>
         <NoticeBox danger>Authorized personnel only</NoticeBox>
+        <NoticeBox info>Accessing {department_acc}</NoticeBox>
         <Section title={station_name + ' Vault'}>
           <LabeledList>
             <LabeledList.Item

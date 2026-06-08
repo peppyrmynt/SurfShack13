@@ -48,6 +48,8 @@
 
 /obj/structure/closet/secure_closet/hop/populate_contents_immediate()
 	new /obj/item/gun/energy/e_gun(src)
+	new /obj/item/card/id/departmental_budget/srv(src)
+	new /obj/item/card/id/departmental_budget/civ(src)
 
 /obj/structure/closet/secure_closet/hos
 	name = "head of security's locker"
@@ -80,6 +82,7 @@
 	// Traitor steal objectives
 	new /obj/item/gun/energy/e_gun/hos(src)
 	new /obj/item/pinpointer/nuke(src)
+	new /obj/item/card/id/departmental_budget/sec(src)
 
 /obj/structure/closet/secure_closet/warden
 	name = "warden's locker"

@@ -209,3 +209,10 @@
 	crate_name = "body freezer"
 	crate_type = /obj/structure/closet/crate/secure/freezer
 
+/datum/supply_pack/medical/chiral_inversing_buffer
+	name = "Chiral Inversing Buffer Crate"
+	desc = "A crate containing a rare sample of an inversing buffer. \
+		It can transform impure reagents into their inverse counterparts when the right conditions are met."
+	cost = CARGO_CRATE_VALUE * 3
+	contains = list(/obj/item/reagent_containers/cup/bottle/inversing_buffer)
+	crate_name = "chiral inversing buffer crate"

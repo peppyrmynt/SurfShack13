@@ -12,6 +12,8 @@
 	var/refund_amount = 5000
 	// Safety check to prevent exploits with lag and such
 	var/has_used = FALSE
+	// Do we make the user drop all of their shit to make room for new outfits?
+	var/force_drop_equipment = FALSE
 
 /obj/item/antag_maker/attack_self(mob/living/carbon/user)
 	if(!user)
@@ -33,6 +35,11 @@
 		qdel(src)
 		return
 
+	if(force_drop_equipment)
+		owner.drop_all_equipment()
+		/// We're paralyzing you for 30 seconds to ensure you don't just pick your shit back up before you can get teleported.
+		owner.Paralyze(30 SECONDS)
+
 	if(!has_used)
 		has_used = TRUE
 		user.mind?.add_antag_datum(provided_antag_datum)
@@ -40,7 +47,7 @@
 
 /obj/item/antag_maker/heretic
 	provided_antag_datum = /datum/antagonist/heretic
-	refund_amount = 7000
+	refund_amount = 5000
 
 /obj/item/antag_maker/brother
 	provided_antag_datum = /datum/antagonist/brother
@@ -50,6 +57,22 @@
 	provided_antag_datum = /datum/antagonist/changeling
 	refund_amount = 5000
 
+/obj/item/antag_maker/bloodsucker
+	provided_antag_datum = /datum/antagonist/bloodsucker
+	refund_amount = 5000
+
 /obj/item/antag_maker/spy
 	provided_antag_datum = /datum/antagonist/spy
 	refund_amount = 4000
+
+/obj/item/antag_maker/wizard
+	provided_antag_datum = /datum/antagonist/wizard
+	refund_amount = 8000
+
+/obj/item/antag_maker/nukie
+	provided_antag_datum = /datum/antagonist/nukeop
+	refund_amount = 7000
+
+/obj/item/antag_maker/clown_op
+	provided_antag_datum = /datum/antagonist/nukeop/clownop
+	refund_amount = 7000

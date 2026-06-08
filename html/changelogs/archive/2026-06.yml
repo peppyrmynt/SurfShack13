@@ -19,3 +19,128 @@
   peppyrmynt:
   - bugfix: added character limit to Play Internet Sound and Request Internet Sound
       boxes
+2026-06-02:
+  Jacquerel:
+  - rscadd: You can now add bell-detonated TTVs to wheelchairs.
+  - rscadd: Ringing the bell on an emagged wheelchair may cause it to explode.
+  Twaticus:
+  - map: Overhauls(dehauls) Boxstation and accompanying shuttles
+  ZealousZeke:
+  - balance: Increases Ipecacide's Inverse Threshold
+  - balance: Reworks the effects of ipecacide to be a vomit inducing chem purger.
+  - balance: Made high explosives mix 1:1 so their effort is more equal to their reward.
+  blackdav123:
+  - balance: Heparin now metabolizes slower, from 0.2 to 0.08.
+  forgman6:
+  - map: fixed cargo access
+  - map: rotated disposals so it fires east
+  - map: extended maint and added a gator room.
+  - qol: Added noose to radial cable menu.
+  - rscdel: Removed toolbox deploying tools on click.
+  - balance: You can lynch dead mobs faster.
+  - qol: You can put gps in shoes.
+  - qol: Fulton kit starts with 9 fultons, and tells you that you can get more out
+      of mining vendor.
+  - rscadd: mini fire extinguisher was added to mining survival box
+  - balance: Average ash storm time shortened a bit.
+  - balance: Ash storm probability decreased a little bit.
+  hyperjll:
+  - rscadd: PubbyStation's Armory now has a Grenade Launcher.
+  - rscadd: Adds the Grenade Launcher to the uplink for traitor Chemists and Chief
+      Medical Officers for 9 TC.
+2026-06-03:
+  cocothegogo:
+  - bugfix: 'MiniSurf: fixed the grav gen not being wired correctly'
+2026-06-04:
+  Jacquerel:
+  - bugfix: Folding a wheelchair will no longer destroy attached bells or bombs.
+  breadcrombs:
+  - balance: EMP's will have the same size as the volume it was created in and no
+      longer two thirds of it.
+  hyperjll:
+  - bugfix: Fixes the nanite program 'Distributed Computing' causing frequent periods
+      of lag, preventing point generation.
+  - balance: Nanite point generation per person has been reduced from 1.5 to 1.
+  - balance: The nanite program 'Paralysis' now has a grace period before activation,
+      and ramps its cost up while activated to ensure no stunlocks.
+  - rscadd: Added all the previously non-existent Departmental Budget Cards.
+  - rscadd: Bank Machines can now accept departmental budget cards to switch between
+      department accounts.
+  - rscadd: The Syndicate may task it's agents to steal any of the station's departmental
+      budget cards.
+2026-06-05:
+  hyperjll:
+  - rscadd: Added a LOT of new Listings to the Pre-Round Store.
+  - rscadd: Three new implant types unique to the Pre-Round Store (for now).
+  - balance: Many items on the Pre-Round store have seen price reductions.
+  - balance: Antag tokens in the pre-round store cost substantially more.
+2026-06-06:
+  ElGitificador:
+  - sound: supplex rod sound fix
+  - balance: wizs can now cast all of their rituals anytime
+  - balance: luxury shuttle is no longer emag only
+  - balance: wabbajack shuttle has had it s unlock requeriment removed
+  - balance: increased runic vendor range and decreased time it takes to spawn a vendor
+  Twaticus:
+  - map: various fixes for box and pubby + croc spawns
+  ZealousZeke:
+  - rscadd: 'Chiral Inversing Buffer : A new way to convert your hidden impurities
+      and inverses into their true form! Requires a purchase from Cargo or a trip
+      to Lavaland to acquire.'
+  - balance: A new geyser has been added to Lavaland that outputs Chiral Inversing
+      Buffer. Geyser weights have been adjusted to accommodate this addition.
+  - rscadd: Add irradiation to radioactive reagents uranium, radium, and polonium.
+  - balance: Radioactive reagents uranium, radium, and polonium now cause irradiate
+      effects when they come into contact with mobs or objects. This can be via several
+      means, ingestion, touch, or vapors. The more radioactive the reagent, the more
+      likely it is to irradiate. Polonium is the most radioactive with a x4 multiplier,
+      uranium is next with a x3 multiplier, and radium is the weakest with just a
+      x2 multiplier.
+  - balance: Polonium no longer guarantees instant irradiation when the reagent is
+      inside a mob.
+  - rscdel: Removed Purity testing reagent to repurpose prefactor a for Palladium
+      Synthate catalyst.
+  - balance: Prefactor a and b are no longer competitive reactions. Prefactor b uses
+      acetone instead of phenol. Improved ease of mixing.
+  - balance: Buffed Palladium's mix speed increase to 5x. Changed the recipe to mirror
+      Tempomyocin's.
+  - balance: Tempomyocin is now a catalyst that reduces reaction speed down to 15%
+      of its original speed.
+  - balance: Increased optimal pH range and overheat of Palladium and Tempomyocin
+      for easier mixing.
+  - balance: Increased the base 300k reaction speed of Strong basic and acidic pH
+      buffers.
+  - refactor: Completely rewrote all item and projectile embedding code
+  - bugfix: Instant summons now actually drags people who had the summoned item embedded
+      into them
+  - bugfix: Items embedded into limbs no longer get shoved into limbs deep enough
+      for them to never be found again upon delimbing.
+  - bugfix: You can see scar descriptions upon detailed examination of targets
+  - rscadd: Foam darts now stick to people when they have their cap on, riot foam
+      darts also can passively deal a bit of stamina damage when you move with one.
+  - rscadd: Syringes can be inserted into foam darts, making them embed and slowly
+      leak their reagents into their victim.
+  - rscadd: Syringe guns can be toggled (with right click) between high power and
+      low power modes, former being their normal functionality and latter making syringes
+      embed and slowly leak their contents.
+  - bugfix: Fixed projectiles sometimes not embedding when they should've
+  - code_imp: Cleaned embedding code up
+  - bugfix: Fixed items not embedding
+  - bugfix: Projectiles can once again embed targets that are armoured.
+  - bugfix: You can remove embeds during surgery
+  - bugfix: Fixed dropdel embeds runtiming upon removal
+  - bugfix: Benzoic Acid mixes into its proper form for botany usage, rather than
+      on metabolism, because that doesn't work in botany trays.
+  hyperjll:
+  - bugfix: Rainbow slime + slime jelly reactions will no longer leave behind slime
+      extracts that are partially full, and thus won't activate.
+  - bugfix: Same fix but for self-sustaining extracts as well.
+  - bugfix: Diagnostic vision now reveals nanite supply once more.
+  - rscadd: Added two new reagents which directly interact with a person's nanite
+      supply. The anti-nanite reagent will now be stocked within pharmacy smartfridges.
+  - bugfix: Fixed some nanite program descriptions.
+  - bugfix: You now drop all of your stuff when using certain antag tokens, to ensure
+      you're given all of the gear you SHOULD have been given.
+2026-06-07:
+  IndieanaJones:
+  - bugfix: Fixes the Desired Role Bonus.
