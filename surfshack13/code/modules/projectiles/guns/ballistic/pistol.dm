@@ -14,6 +14,7 @@
 	fire_sound = 'surfshack13/sound/weapons/mk58.ogg'
 	custom_price = 2500
 	worn_icon = 'surfshack13/icons/mob/clothing/belt.dmi'
+	worn_icon_state = "Mk58"
 
 /obj/item/gun/ballistic/automatic/pistol/mk58/Initialize(mapload) // this is a security pistol, not contraband.
 	. = ..()

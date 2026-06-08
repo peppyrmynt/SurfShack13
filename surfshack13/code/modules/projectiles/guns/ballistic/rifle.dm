@@ -25,6 +25,7 @@
 	semi_auto = FALSE
 	custom_price = 10000
 	worn_icon = 'surfshack13/icons/mob/clothing/back.dmi'
+	worn_icon_state = "Hristov"
 
 /obj/item/gun/ballistic/rifle/sniper_rifle/hristov/Initialize(mapload)
 	. = ..()

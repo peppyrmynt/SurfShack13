@@ -20,6 +20,7 @@
 	empty_indicator = FALSE
 	custom_price = 7500
 	worn_icon = 'surfshack13/icons/mob/clothing/back.dmi'
+	worn_icon_state = "Lecter"
 
 /obj/item/gun/ballistic/automatic/lecter/Initialize(mapload)
 	. = ..()
@@ -51,6 +52,7 @@
 	empty_indicator = FALSE
 	custom_price = 8000
 	worn_icon = 'surfshack13/icons/mob/clothing/back.dmi'
+	worn_icon_state = "Drozd"
 
 /obj/item/gun/ballistic/automatic/drozd/Initialize(mapload)
 	. = ..()

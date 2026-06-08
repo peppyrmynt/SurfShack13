@@ -12,6 +12,7 @@
 	accepted_magazine_type = /obj/item/ammo_box/magazine/internal/shot/kammerer
 	w_class = WEIGHT_CLASS_HUGE
 	worn_icon = 'surfshack13/icons/mob/clothing/back.dmi'
+	worn_icon_state = "Kammerer"
 
 /obj/item/gun/ballistic/shotgun/automatic/combat/kammerer/nopin
 	pin = null
@@ -37,6 +38,7 @@
 	semi_auto = TRUE
 	custom_price = 7500
 	worn_icon = 'surfshack13/icons/mob/clothing/back.dmi'
+	worn_icon_state = "Enforcer"
 
 /obj/item/gun/ballistic/shotgun/enforcer/nopin
 	pin = null
