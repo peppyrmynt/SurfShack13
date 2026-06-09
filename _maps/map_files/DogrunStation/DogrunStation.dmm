@@ -28612,6 +28612,30 @@
 	},
 /turf/open/floor/iron/textured_large,
 /area/station/ai_monitored/turret_protected/ai)
+"fDV" = (
+/obj/effect/turf_decal/tile/dark/half{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/dark/filled/mid_joiner{
+	dir = 1;
+	pixel_w = 16;
+	pixel_z = 0
+	},
+/obj/effect/turf_decal/trimline/dark/mid_joiner{
+	dir = 1;
+	pixel_w = 16;
+	pixel_z = -4
+	},
+/obj/effect/turf_decal/tile/neutral/fourcorners,
+/obj/effect/turf_decal/tile/neutral/half/contrasted,
+/obj/item/toy/beach_ball{
+	pixel_y = 1
+	},
+/turf/open/water/no_planet_atmos{
+	icon = 'icons/turf/beach.dmi';
+	icon_state = "water"
+	},
+/area/station/commons/fitness/recreation/pool)
 "fDY" = (
 /obj/structure/bookcase/random,
 /turf/open/floor/carpet,
@@ -33975,6 +33999,15 @@
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /turf/open/floor/plating,
 /area/station/science/research/abandoned)
+"gQj" = (
+/obj/effect/turf_decal/tile/neutral/fourcorners,
+/obj/effect/turf_decal/tile/neutral/fourcorners,
+/obj/item/toy/plush/shark,
+/turf/open/water/no_planet_atmos{
+	icon = 'icons/turf/beach.dmi';
+	icon_state = "water"
+	},
+/area/station/commons/fitness/recreation/pool)
 "gQk" = (
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 4
@@ -78940,6 +78973,7 @@
 /obj/effect/turf_decal/siding/wideplating_new/light{
 	dir = 9
 	},
+/obj/effect/landmark/start/hangover,
 /turf/open/floor/iron/white/small,
 /area/station/commons/fitness/recreation/pool)
 "pXe" = (
@@ -81631,6 +81665,34 @@
 "qAs" = (
 /turf/closed/wall/r_wall,
 /area/station/maintenance/floor1/aft)
+"qAy" = (
+/obj/effect/turf_decal/tile/dark/half{
+	dir = 1
+	},
+/obj/effect/turf_decal/trimline/dark/filled/mid_joiner{
+	dir = 1;
+	pixel_w = 16;
+	pixel_z = 0
+	},
+/obj/effect/turf_decal/trimline/dark/mid_joiner{
+	dir = 1;
+	pixel_w = 16;
+	pixel_z = -4
+	},
+/obj/effect/turf_decal/tile/neutral/fourcorners,
+/obj/effect/turf_decal/tile/neutral/half/contrasted,
+/obj/structure/grille/broken{
+	icon_state = "ladder10";
+	pixel_y = 4;
+	name = "Pool Ladder";
+	desc = "A slippy pool ladder. Be Careful!";
+	max_integrity = 100
+	},
+/turf/open/water/no_planet_atmos{
+	icon = 'icons/turf/beach.dmi';
+	icon_state = "water"
+	},
+/area/station/commons/fitness/recreation/pool)
 "qAH" = (
 /turf/closed/wall/r_wall,
 /area/station/maintenance/floor2/port/fore)
@@ -154676,7 +154738,7 @@ dTL
 kbf
 jAz
 fOx
-hCR
+fDV
 xRw
 xRw
 xRw
@@ -154934,7 +154996,7 @@ dTL
 dKv
 idj
 sjO
-hCR
+qAy
 xRw
 xRw
 xRw
@@ -155710,7 +155772,7 @@ gKP
 cmi
 hCR
 xRw
-xRw
+gQj
 xRw
 jsD
 liy
