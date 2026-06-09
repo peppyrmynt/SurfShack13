@@ -28612,30 +28612,6 @@
 	},
 /turf/open/floor/iron/textured_large,
 /area/station/ai_monitored/turret_protected/ai)
-"fDV" = (
-/obj/item/toy/beach_ball{
-	pixel_y = 1
-	},
-/obj/effect/turf_decal/tile/dark/half{
-	dir = 1
-	},
-/obj/effect/turf_decal/trimline/dark/filled/mid_joiner{
-	dir = 1;
-	pixel_w = 16;
-	pixel_z = 0
-	},
-/obj/effect/turf_decal/trimline/dark/mid_joiner{
-	dir = 1;
-	pixel_w = 16;
-	pixel_z = -4
-	},
-/obj/effect/turf_decal/tile/neutral/fourcorners,
-/obj/effect/turf_decal/tile/neutral/half/contrasted,
-/turf/open/water/no_planet_atmos{
-	icon = 'icons/turf/beach.dmi';
-	icon_state = "water"
-	},
-/area/station/commons/fitness/recreation/pool)
 "fDY" = (
 /obj/structure/bookcase/random,
 /turf/open/floor/carpet,
@@ -33999,15 +33975,6 @@
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /turf/open/floor/plating,
 /area/station/science/research/abandoned)
-"gQj" = (
-/obj/item/toy/plush/shark,
-/obj/effect/turf_decal/tile/neutral/fourcorners,
-/obj/effect/turf_decal/tile/neutral/fourcorners,
-/turf/open/water/no_planet_atmos{
-	icon = 'icons/turf/beach.dmi';
-	icon_state = "water"
-	},
-/area/station/commons/fitness/recreation/pool)
 "gQk" = (
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 4
@@ -81664,34 +81631,6 @@
 "qAs" = (
 /turf/closed/wall/r_wall,
 /area/station/maintenance/floor1/aft)
-"qAy" = (
-/obj/structure/grille/broken{
-	icon_state = "ladder10";
-	pixel_y = 4;
-	name = "Pool Ladder";
-	desc = "A slippy pool ladder. Be Careful!";
-	max_integrity = 100
-	},
-/obj/effect/turf_decal/tile/dark/half{
-	dir = 1
-	},
-/obj/effect/turf_decal/trimline/dark/filled/mid_joiner{
-	dir = 1;
-	pixel_w = 16;
-	pixel_z = 0
-	},
-/obj/effect/turf_decal/trimline/dark/mid_joiner{
-	dir = 1;
-	pixel_w = 16;
-	pixel_z = -4
-	},
-/obj/effect/turf_decal/tile/neutral/fourcorners,
-/obj/effect/turf_decal/tile/neutral/half/contrasted,
-/turf/open/water/no_planet_atmos{
-	icon = 'icons/turf/beach.dmi';
-	icon_state = "water"
-	},
-/area/station/commons/fitness/recreation/pool)
 "qAH" = (
 /turf/closed/wall/r_wall,
 /area/station/maintenance/floor2/port/fore)
@@ -98714,15 +98653,6 @@
 /obj/machinery/light/directional/south,
 /turf/open/floor/iron/dark/smooth_edge,
 /area/station/maintenance/disposal/incinerator)
-"tZS" = (
-/obj/effect/turf_decal/tile/neutral/fourcorners,
-/obj/effect/turf_decal/tile/neutral/fourcorners,
-/obj/effect/landmark/start/hangover,
-/turf/open/water/no_planet_atmos{
-	icon = 'icons/turf/beach.dmi';
-	icon_state = "water"
-	},
-/area/station/commons/fitness/recreation/pool)
 "tZZ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/burnt_floor,
@@ -154746,9 +154676,9 @@ dTL
 kbf
 jAz
 fOx
-fDV
+hCR
 xRw
-tZS
+xRw
 xRw
 rZH
 liy
@@ -155004,7 +154934,7 @@ dTL
 dKv
 idj
 sjO
-qAy
+hCR
 xRw
 xRw
 xRw
@@ -155780,7 +155710,7 @@ gKP
 cmi
 hCR
 xRw
-gQj
+xRw
 xRw
 jsD
 liy
