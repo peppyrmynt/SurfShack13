@@ -133,6 +133,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NUKEIMMUNE "nuke_immunity"
 /// Can't be given viruses
 #define TRAIT_VIRUSIMMUNE "virus_immunity"
+/// Our organs won't decay, if we're a carbon mob and thus have organs...
+#define TRAIT_ROTIMMUNE "rot_immunity"
 /// Won't become a husk under any circumstances
 #define TRAIT_UNHUSKABLE "trait_unhuskable"
 /// Reduces the chance viruses will spread to this mob, and if the mob has a virus, slows its advancement
