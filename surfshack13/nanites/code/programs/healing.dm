@@ -187,15 +187,14 @@
 	trigger_cooldown = 120
 	rogue_types = list(/datum/nanite_program/shocking)
 
+/datum/nanite_program/defib/check_conditions()
+	if(!iscarbon(host_mob))
+		return FALSE
+	return ..()
+
 /datum/nanite_program/defib/on_trigger(comm_message)
 	host_mob.notify_revival("Your heart is being defibrillated by nanites. Re-enter your corpse if you want to be revived!")
 	addtimer(CALLBACK(src, PROC_REF(start_defibrilation)), 5 SECONDS)
-
-/datum/nanite_program/defib/proc/check_revivable()
-	if(!iscarbon(host_mob))
-		return FALSE
-	var/mob/living/carbon/carbon_host = host_mob
-	return carbon_host.can_defib()
 
 /datum/nanite_program/defib/proc/start_defibrilation()
 	playsound(host_mob, 'sound/machines/defib/defib_charge.ogg', 50, FALSE)
@@ -204,8 +203,12 @@
 /datum/nanite_program/defib/proc/perform_defibrilation()
 	var/mob/living/carbon/carbon_host = host_mob
 	playsound(carbon_host, 'sound/machines/defib/defib_zap.ogg', 50, FALSE)
-	if(!check_revivable())
+	if(!carbon_host.can_be_revived())
 		playsound(carbon_host, 'sound/machines/defib/defib_failed.ogg', 50, FALSE)
+		if(carbon_host.getOxyLoss() >= 100)
+			var/totaloxyloss = carbon_host.getOxyLoss()
+			// Exists to prevent endless defib spam which makes spectating abysmal, no, i dont want to have to manually ghost to spectate.
+			carbon_host.adjustOxyLoss((-totaloxyloss + 100), updating_health = TRUE) // You'll be passed out if you only accumulated oxyloss, should recover.
 		return
 	playsound(carbon_host, 'sound/machines/defib/defib_success.ogg', 50, FALSE)
 	carbon_host.set_heartattack(FALSE)
