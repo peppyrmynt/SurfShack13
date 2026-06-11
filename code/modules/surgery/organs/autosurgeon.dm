@@ -198,7 +198,6 @@
 
 /obj/item/autosurgeon/unlocked
 	name = "autosurgeon"
-	desc = "A single use autosurgeon that can be loaded with any implant, though can only be used once."
 	//surfshack start
 	// uses = 1
 	//surfshack end
