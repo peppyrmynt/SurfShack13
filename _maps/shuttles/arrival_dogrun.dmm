@@ -2,17 +2,16 @@
 "a" = (
 /obj/structure/window/reinforced/survival_pod/spawner/directional/west,
 /obj/item/kirbyplants/organic/plant22,
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 10
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 8
-	},
 /obj/effect/turf_decal/siding/dark{
 	dir = 8
 	},
 /obj/machinery/light/directional/south,
+/obj/effect/turf_decal/siding/wideplating_new{
+	dir = 10
+	},
+/obj/effect/turf_decal/tile/neutral/anticorner{
+	dir = 8
+	},
 /turf/open/floor/iron/corner{
 	dir = 4
 	},
@@ -24,11 +23,8 @@
 /turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/arrival)
 "c" = (
-/obj/effect/turf_decal/trimline/neutral/filled/corner,
-/obj/effect/turf_decal/siding/dark/corner,
-/obj/effect/turf_decal/siding/dark/corner{
-	dir = 4
-	},
+/obj/effect/turf_decal/siding/wideplating_new/corner,
+/obj/effect/turf_decal/tile/neutral,
 /turf/open/floor/iron,
 /area/shuttle/arrival)
 "d" = (
@@ -41,17 +37,24 @@
 	},
 /obj/effect/turf_decal/trimline/neutral/filled/warning,
 /obj/effect/turf_decal/siding/dark/corner,
+/obj/effect/turf_decal/siding/wideplating_new/corner,
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 8
+	},
 /turf/open/floor/iron/textured_large,
 /area/shuttle/arrival)
+"e" = (
+/obj/effect/turf_decal/siding/thinplating_new/end{
+	dir = 4
+	},
+/turf/open/floor/glass/reinforced,
+/area/shuttle/arrival)
 "f" = (
-/obj/effect/turf_decal/trimline/neutral/filled/corner{
+/obj/effect/turf_decal/siding/wideplating_new/corner{
 	dir = 8
 	},
-/obj/effect/turf_decal/siding/dark/corner{
+/obj/effect/turf_decal/tile/neutral{
 	dir = 8
-	},
-/obj/effect/turf_decal/siding/dark/corner{
-	dir = 1
 	},
 /turf/open/floor/iron,
 /area/shuttle/arrival)
@@ -59,13 +62,10 @@
 /turf/template_noop,
 /area/template_noop)
 "h" = (
-/obj/effect/turf_decal/trimline/neutral/filled/line{
+/obj/effect/turf_decal/siding/wideplating_new{
 	dir = 8
 	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 8
-	},
-/obj/effect/turf_decal/siding/dark{
+/obj/effect/turf_decal/tile/neutral/half{
 	dir = 8
 	},
 /turf/open/floor/iron/edge{
@@ -74,12 +74,6 @@
 /area/shuttle/arrival)
 "i" = (
 /obj/structure/chair/comfy/shuttle{
-	dir = 1
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 1
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
 	dir = 1
 	},
 /turf/open/floor/iron/dark/smooth_large,
@@ -99,37 +93,30 @@
 /turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/arrival)
 "l" = (
-/obj/effect/turf_decal/siding/dark{
+/obj/effect/turf_decal/siding/thinplating_new/end{
 	dir = 8
 	},
-/turf/open/floor/iron,
+/turf/open/floor/glass/reinforced,
 /area/shuttle/arrival)
 "n" = (
-/obj/effect/turf_decal/trimline/neutral/filled/line,
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
-/obj/effect/turf_decal/siding/dark,
-/obj/effect/turf_decal/siding/dark{
-	dir = 1
-	},
+/obj/effect/turf_decal/siding/wideplating_new,
+/obj/effect/turf_decal/tile/neutral/half,
 /turf/open/floor/iron/edge,
 /area/shuttle/arrival)
 "o" = (
 /obj/structure/window/reinforced/survival_pod/spawner/directional/east,
 /obj/item/kirbyplants/organic/plant22,
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 5
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 4
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 1
-	},
 /obj/effect/turf_decal/siding/dark{
 	dir = 4
 	},
 /obj/machinery/light/directional/north,
 /obj/machinery/vending/wallmed/directional/north,
+/obj/effect/turf_decal/siding/wideplating_new{
+	dir = 5
+	},
+/obj/effect/turf_decal/tile/neutral/anticorner{
+	dir = 4
+	},
 /turf/open/floor/iron/corner{
 	dir = 8
 	},
@@ -137,12 +124,6 @@
 "p" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 4
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 8
 	},
 /turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/arrival)
@@ -162,16 +143,24 @@
 /turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/arrival)
 "s" = (
-/obj/effect/turf_decal/trimline/neutral/filled/corner{
-	dir = 8
-	},
 /obj/effect/turf_decal/trimline/neutral/filled/warning{
 	dir = 1
 	},
-/obj/effect/turf_decal/siding/dark/corner{
+/obj/effect/turf_decal/siding/wideplating_new{
 	dir = 8
 	},
-/turf/open/floor/iron/corner,
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/edge{
+	dir = 1
+	},
 /area/shuttle/arrival)
 "t" = (
 /obj/machinery/power/shuttle_engine/propulsion{
@@ -188,13 +177,10 @@
 /turf/open/floor/plating/airless,
 /area/shuttle/arrival)
 "v" = (
-/obj/effect/turf_decal/trimline/neutral/filled/line{
+/obj/effect/turf_decal/siding/wideplating_new{
 	dir = 4
 	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 4
-	},
-/obj/effect/turf_decal/siding/dark{
+/obj/effect/turf_decal/tile/neutral/half{
 	dir = 4
 	},
 /turf/open/floor/iron/edge{
@@ -209,55 +195,56 @@
 /turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/arrival)
 "x" = (
-/obj/effect/turf_decal/siding/dark{
-	dir = 4
-	},
 /turf/open/floor/iron,
 /area/shuttle/arrival)
 "y" = (
 /obj/structure/window/reinforced/survival_pod/spawner/directional/east,
 /obj/item/kirbyplants/organic/plant22,
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 6
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 4
-	},
 /obj/effect/turf_decal/siding/dark{
 	dir = 4
 	},
 /obj/machinery/light/directional/south,
 /obj/structure/extinguisher_cabinet/directional/south,
+/obj/effect/turf_decal/siding/wideplating_new{
+	dir = 6
+	},
+/obj/effect/turf_decal/tile/neutral/anticorner,
 /turf/open/floor/iron/corner{
 	dir = 1
 	},
 /area/shuttle/arrival)
 "z" = (
-/obj/effect/turf_decal/trimline/neutral/filled/corner{
+/obj/effect/turf_decal/siding/wideplating_new/corner{
 	dir = 1
 	},
-/obj/effect/turf_decal/siding/dark/corner{
+/obj/effect/turf_decal/tile/neutral{
 	dir = 1
-	},
-/obj/effect/turf_decal/siding/dark/corner{
-	dir = 8
 	},
 /turf/open/floor/iron,
 /area/shuttle/arrival)
 "A" = (
-/obj/effect/turf_decal/trimline/neutral/filled/corner,
 /obj/effect/turf_decal/trimline/neutral/filled/warning{
 	dir = 1
 	},
-/obj/effect/turf_decal/siding/dark{
+/obj/effect/turf_decal/siding/wideplating_new{
 	dir = 4
 	},
-/turf/open/floor/iron/corner{
-	dir = 8
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral,
+/obj/effect/turf_decal/trimline/neutral/mid_joiner{
+	dir = 1
+	},
+/turf/open/floor/iron/edge{
+	dir = 1
 	},
 /area/shuttle/arrival)
 "B" = (
+/obj/effect/turf_decal/siding/thinplating_new,
+/obj/effect/turf_decal/siding/thinplating_new{
+	dir = 1
+	},
 /turf/open/floor/glass/reinforced,
 /area/shuttle/arrival)
 "C" = (
@@ -270,40 +257,22 @@
 /turf/closed/wall/mineral/titanium,
 /area/shuttle/arrival)
 "E" = (
-/turf/open/floor/iron/dark/smooth_large,
+/turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/shuttle/arrival)
 "F" = (
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 8
-	},
-/turf/open/floor/iron/dark/smooth_large,
+/turf/closed/wall/mineral/titanium/nodiagonal,
 /area/shuttle/arrival)
 "G" = (
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 4
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 4
-	},
 /obj/structure/closet/emcloset,
 /obj/item/storage/medkit/o2,
 /obj/item/tank/internals/emergency_oxygen,
 /obj/item/clothing/mask/breath,
 /obj/machinery/light/small/directional/north,
-/turf/open/floor/iron/dark/smooth_large,
+/turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/shuttle/arrival)
 "H" = (
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 4
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 4
-	},
 /obj/structure/closet/wardrobe/grey,
-/turf/open/floor/iron/dark/smooth_large,
+/turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/shuttle/arrival)
 "I" = (
 /obj/machinery/door/airlock/titanium{
@@ -314,16 +283,21 @@
 /obj/effect/turf_decal/trimline/neutral/filled/warning{
 	dir = 1
 	},
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 1
+	},
 /turf/open/floor/iron/textured_large,
 /area/shuttle/arrival)
 "J" = (
-/obj/effect/turf_decal/trimline/neutral/filled/corner{
+/obj/effect/turf_decal/siding/wideplating_new/corner{
 	dir = 4
 	},
-/obj/effect/turf_decal/siding/dark/corner{
+/obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/obj/effect/turf_decal/siding/dark/corner,
 /turf/open/floor/iron,
 /area/shuttle/arrival)
 "K" = (
@@ -336,31 +310,22 @@
 /obj/structure/chair/comfy/shuttle{
 	dir = 4
 	},
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 8
-	},
 /obj/item/radio/intercom/directional/north,
 /turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/arrival)
 "M" = (
 /obj/structure/window/reinforced/survival_pod/spawner/directional/west,
 /obj/item/kirbyplants/organic/plant22,
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 9
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 1
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 8
-	},
 /obj/effect/turf_decal/siding/dark{
 	dir = 8
 	},
 /obj/machinery/light/directional/north,
+/obj/effect/turf_decal/siding/wideplating_new{
+	dir = 9
+	},
+/obj/effect/turf_decal/tile/neutral/anticorner{
+	dir = 1
+	},
 /turf/open/floor/iron/corner,
 /area/shuttle/arrival)
 "N" = (
@@ -372,19 +337,23 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/trimline/neutral/filled/warning,
+/obj/effect/turf_decal/siding/wideplating_new/corner,
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 8
+	},
 /turf/open/floor/iron/textured_large,
 /area/shuttle/arrival)
 "O" = (
-/obj/effect/turf_decal/trimline/neutral/filled/corner{
-	dir = 1
-	},
 /obj/effect/turf_decal/trimline/neutral/filled/warning,
-/obj/effect/turf_decal/siding/dark/corner{
+/obj/effect/turf_decal/siding/wideplating_new{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wideplating_new/corner,
+/obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
-/turf/open/floor/iron/corner{
-	dir = 4
-	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner,
+/turf/open/floor/iron/edge,
 /area/shuttle/arrival)
 "P" = (
 /obj/machinery/door/airlock/titanium{
@@ -397,6 +366,12 @@
 	},
 /obj/effect/turf_decal/siding/dark/corner{
 	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 1
 	},
 /turf/open/floor/iron/textured_large,
 /area/shuttle/arrival)
@@ -419,60 +394,44 @@
 /turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/arrival)
 "T" = (
-/obj/effect/turf_decal/trimline/neutral/filled/line{
+/obj/effect/turf_decal/siding/wideplating_new{
 	dir = 1
 	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
+/obj/effect/turf_decal/tile/neutral/half{
 	dir = 1
 	},
-/obj/effect/turf_decal/siding/dark{
-	dir = 1
-	},
-/obj/effect/turf_decal/siding/dark,
 /turf/open/floor/iron/edge{
 	dir = 1
 	},
 /area/shuttle/arrival)
 "U" = (
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 4
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 4
-	},
 /obj/structure/closet/firecloset,
 /obj/item/storage/medkit/fire,
 /obj/item/storage/toolbox/emergency,
 /obj/machinery/light/small/directional/south,
-/turf/open/floor/iron/dark/smooth_large,
+/turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/shuttle/arrival)
 "V" = (
 /obj/structure/chair/comfy/shuttle,
-/obj/effect/turf_decal/trimline/neutral/filled/line,
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
 /turf/open/floor/iron/dark/smooth_large,
 /area/shuttle/arrival)
 "X" = (
-/obj/effect/turf_decal/trimline/neutral/filled/corner{
-	dir = 4
-	},
 /obj/effect/turf_decal/trimline/neutral/filled/warning,
-/obj/effect/turf_decal/siding/dark{
+/obj/effect/turf_decal/siding/wideplating_new{
 	dir = 4
 	},
-/turf/open/floor/iron/corner{
-	dir = 1
+/obj/effect/turf_decal/siding/wideplating_new/corner{
+	dir = 8
 	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/neutral/mid_joiner,
+/turf/open/floor/iron/edge,
 /area/shuttle/arrival)
 "Y" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 4
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
-	dir = 8
 	},
 /obj/machinery/newscaster/directional/south,
 /turf/open/floor/iron/dark/smooth_large,
@@ -492,11 +451,11 @@ g
 "}
 (2,1,1) = {"
 D
-D
+F
 G
 H
 U
-D
+F
 D
 "}
 (3,1,1) = {"
@@ -521,7 +480,7 @@ D
 u
 V
 T
-B
+l
 n
 i
 u
@@ -548,7 +507,7 @@ u
 u
 V
 T
-B
+e
 n
 i
 u
@@ -557,7 +516,7 @@ u
 D
 M
 z
-l
+x
 f
 a
 D
@@ -575,7 +534,7 @@ P
 D
 L
 p
-F
+E
 p
 Y
 D

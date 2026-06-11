@@ -67,6 +67,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "eg" = (
+/obj/effect/turf_decal/siding/thinplating_new,
 /turf/open/floor/glass/reinforced,
 /area/shuttle/escape)
 "eh" = (
@@ -157,7 +158,6 @@
 /obj/effect/turf_decal/trimline/neutral/filled/line,
 /obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
 /obj/item/reagent_containers/condiment/honey,
-/obj/effect/turf_decal/siding/wideplating_new,
 /turf/open/floor/iron/large,
 /area/shuttle/escape)
 "gr" = (
@@ -263,7 +263,6 @@
 /obj/effect/turf_decal/trimline/neutral/filled/line,
 /obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
 /obj/machinery/light/floor,
-/obj/effect/turf_decal/siding/wideplating_new,
 /turf/open/floor/iron/large,
 /area/shuttle/escape)
 "iS" = (
@@ -457,7 +456,7 @@
 /area/shuttle/escape)
 "nO" = (
 /obj/structure/fake_stairs/directional/west,
-/turf/open/floor/iron/dark/textured_large,
+/turf/open/floor/glass/reinforced,
 /area/shuttle/escape)
 "oB" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
@@ -852,7 +851,7 @@
 	dir = 8
 	},
 /obj/structure/window/reinforced/survival_pod/spawner/directional/east,
-/turf/open/floor/catwalk_floor/iron_dark,
+/turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/shuttle/escape)
 "yn" = (
 /obj/structure/table,
@@ -1338,7 +1337,7 @@
 /area/shuttle/escape)
 "Jo" = (
 /obj/machinery/light/floor,
-/turf/open/floor/catwalk_floor/iron_dark,
+/turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/shuttle/escape)
 "Km" = (
 /obj/effect/turf_decal/tile/neutral/half{
@@ -1407,9 +1406,6 @@
 /obj/effect/turf_decal/trimline/neutral/filled/mid_joiner{
 	dir = 1
 	},
-/obj/effect/turf_decal/siding/wideplating_new{
-	dir = 1
-	},
 /turf/open/floor/iron/large,
 /area/shuttle/escape)
 "Mv" = (
@@ -1419,7 +1415,7 @@
 /area/shuttle/escape)
 "MC" = (
 /obj/structure/fake_stairs/directional/east,
-/turf/open/floor/iron/dark/textured_large,
+/turf/open/floor/glass/reinforced,
 /area/shuttle/escape)
 "MG" = (
 /obj/machinery/door/airlock/public/glass{
@@ -1627,7 +1623,7 @@
 	dir = 4
 	},
 /obj/structure/window/reinforced/survival_pod/spawner/directional/west,
-/turf/open/floor/catwalk_floor/iron_dark,
+/turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/shuttle/escape)
 "Qq" = (
 /obj/structure/table,
@@ -1640,10 +1636,13 @@
 	dir = 1
 	},
 /obj/machinery/light/floor,
-/obj/effect/turf_decal/siding/wideplating_new{
+/turf/open/floor/iron/large,
+/area/shuttle/escape)
+"Qs" = (
+/obj/effect/turf_decal/siding/thinplating_new{
 	dir = 1
 	},
-/turf/open/floor/iron/large,
+/turf/open/floor/glass/reinforced,
 /area/shuttle/escape)
 "QB" = (
 /obj/effect/turf_decal/trimline/neutral/filled/warning,
@@ -1909,7 +1908,7 @@
 /turf/open/floor/iron/dark/smooth_edge,
 /area/shuttle/escape)
 "Wf" = (
-/turf/open/floor/catwalk_floor/iron_dark,
+/turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/shuttle/escape)
 "Wh" = (
 /obj/effect/turf_decal/tile/neutral/fourcorners,
@@ -1971,7 +1970,6 @@
 /obj/structure/reagent_dispensers/water_cooler,
 /obj/effect/turf_decal/trimline/neutral/filled/line,
 /obj/effect/turf_decal/trimline/neutral/filled/mid_joiner,
-/obj/effect/turf_decal/siding/wideplating_new,
 /turf/open/floor/iron/large,
 /area/shuttle/escape)
 "Yo" = (
@@ -2379,7 +2377,7 @@ eh
 eh
 cc
 Xo
-eg
+Qs
 eg
 LB
 cc
@@ -2405,7 +2403,7 @@ eh
 eh
 cc
 ic
-eg
+Qs
 eg
 Qq
 cc
@@ -2431,7 +2429,7 @@ eh
 eh
 cc
 gb
-eg
+Qs
 eg
 LB
 cc
