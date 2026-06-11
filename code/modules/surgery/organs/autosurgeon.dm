@@ -26,13 +26,24 @@
 		)
 	/// amount of uses left before theres a risk of malfunction
 	var/malfunction_threshold = 3
-	/// amount of times its been used
-	var/use_counter = 0
+
+/obj/item/autosurgeon/emag_act(mob/user, obj/item/card/emag/emag_card)
+	if(obj_flags & EMAGGED)
+		return FALSE
+	obj_flags |= EMAGGED
+	visible_message(span_warning("\The [src] whirs gently!"))
+	return TRUE
+
+/obj/item/autosurgeon/Destroy(force)
+	if(stored_organ)
+		stored_organ.forceMove(get_turf(src))
+	do_sparks(1)
+	. = ..()
 
 /obj/item/autosurgeon/examine_more(mob/user)
 	. = ..()
-	. += span_warning("Warrenty void after [malfunction_threshold] uses.")
-	//surfshack end
+	. += span_warning("Warrenty void after [malfunction_threshold] operations.")
+//surfshack end
 
 /obj/item/autosurgeon/attack_self_tk(mob/user)
 	return //stops TK fuckery
@@ -49,14 +60,17 @@
 		. += emissive_appearance(icon, loaded_overlay, src)
 
 //surfshack start
-/obj/item/autosurgeon/proc/malfunction(mob/living/user)
-	if(!ishuman(user))
+/obj/item/autosurgeon/proc/malfunction(mob/living/carbon/human/H)
+	if(!ishuman(H))
 		return
-	var/mob/living/carbon/human/H = user
 	for(var/obj/item/bodypart/arm/ripped in H.bodyparts)
-		to_chat(user, span_userdanger("\The [src] Malfunctions and starts to prod and carve your arm."))
-		playsound(user.loc, 'sound/items/weapons/chainsawhit.ogg', 50, vary = TRUE)
-		ripped.dismember()
+		//dismember 25% of the time, otherwise apply same damage as circular saw.
+		to_chat(H, span_userdanger("\The [src] Malfunctions and starts to prod and carve your arm."))
+		playsound(src, 'sound/items/weapons/chainsawhit.ogg', 60, vary = TRUE)
+		if(prob(25))
+			ripped.dismember()
+		else
+			ripped.receive_damage(brute = 30, sharpness = SHARP_EDGED)
 		return
 //surfshack end
 
@@ -119,21 +133,28 @@
 			span_notice("You press a button on [src] as it plunges into your body."),
 		)
 	//surfshack start
-	if(use_counter >= malfunction_threshold && prob(30))
-		malfunction(user)
-		return
-
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		if(obj_flags & EMAGGED)
+			malfunction(H)
+			obj_flags -= EMAGGED
+			visible_message(span_warning("\The [src] stops whirring!"))
+			return
+		else if(H.auto_surgeon_uses >= malfunction_threshold && prob(40))
+			malfunction(H)
+			Destroy()
+			return
+		else
+			H.auto_surgeon_uses ++
+	//surfshack end
 	stored_organ.Insert(target)//insert stored organ into the user
 	stored_organ = null
 	name = initial(name) //get rid of the organ in the name
 	playsound(target.loc, 'sound/items/weapons/circsawhit.ogg', 50, vary = TRUE)
 	update_appearance()
-
-	use_counter ++
 	uses--
 	if(uses <= 0)
 		desc = "[initial(desc)] Looks like it's been used up."
-	//surfshack end
 
 /obj/item/autosurgeon/attack_self(mob/user)//when the object it used...
 	use_autosurgeon(user, user)

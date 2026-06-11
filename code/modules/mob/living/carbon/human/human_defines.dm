@@ -100,3 +100,7 @@
 
 	/// Height of the mob
 	VAR_PROTECTED/mob_height = HUMAN_HEIGHT_MEDIUM
+	//surfshack start
+	/// how many times an autosurgeon has been used on the mob
+	var/auto_surgeon_uses = 0
+	//surfshack end
