@@ -21332,8 +21332,8 @@
 	dir = 8
 	},
 /obj/effect/mapping_helpers/airlock/access/all/security/entrance,
-/obj/effect/mapping_helpers/airlock/cyclelink_helper_multi{
-	cycle_id = "brig_entrance"
+/obj/effect/mapping_helpers/airlock/cyclelink_helper{
+	dir = 1
 	},
 /turf/open/floor/iron/dark/textured_half{
 	dir = 1
@@ -51689,13 +51689,11 @@
 	dir = 4
 	},
 /obj/effect/mapping_helpers/airlock/access/all/security/entrance,
-/obj/effect/mapping_helpers/airlock/cyclelink_helper_multi{
-	cycle_id = "brig_entrance"
-	},
 /obj/machinery/door/airlock/security/glass{
 	id_tag = "outerbrig";
 	name = "Brig"
 	},
+/obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/security/brig/entrance)
 "koZ" = (
@@ -74013,9 +74011,7 @@
 	dir = 1
 	},
 /obj/effect/mapping_helpers/airlock/access/all/security/entrance,
-/obj/effect/mapping_helpers/airlock/cyclelink_helper_multi{
-	cycle_id = "brig_entrance"
-	},
+/obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/security/brig/entrance)
 "oWT" = (
@@ -117085,7 +117081,6 @@
 /obj/machinery/button/door{
 	id = "cell";
 	name = "Brig Cell Lockdown";
-	normaldoorcontrol = 1;
 	req_access = list("security");
 	pixel_w = -6;
 	pixel_z = -3
@@ -120019,8 +120014,8 @@
 	dir = 4
 	},
 /obj/effect/mapping_helpers/airlock/access/all/security/entrance,
-/obj/effect/mapping_helpers/airlock/cyclelink_helper_multi{
-	cycle_id = "brig_entrance"
+/obj/effect/mapping_helpers/airlock/cyclelink_helper{
+	dir = 1
 	},
 /turf/open/floor/iron/dark/textured_half{
 	dir = 1
