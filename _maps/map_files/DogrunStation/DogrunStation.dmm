@@ -5687,6 +5687,8 @@
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 4
 	},
+/obj/machinery/power/apc/auto_name/directional/west,
+/obj/structure/cable,
 /turf/open/floor/iron/white/textured_large,
 /area/station/medical/virology/isolation)
 "bdQ" = (
@@ -15703,10 +15705,10 @@
 /obj/machinery/status_display/evac/directional/south,
 /obj/structure/extinguisher_cabinet/directional/east,
 /obj/structure/cable/multilayer/multiz,
-/obj/machinery/atmospherics/pipe/multiz/scrubbers/visible/layer2{
+/obj/machinery/atmospherics/pipe/multiz/scrubbers/hidden/layer2{
 	dir = 1
 	},
-/obj/machinery/atmospherics/pipe/multiz/supply/visible/layer4{
+/obj/machinery/atmospherics/pipe/multiz/supply/hidden/layer4{
 	dir = 1
 	},
 /turf/open/floor/catwalk_floor/iron/glass,
@@ -17928,14 +17930,14 @@
 	dir = 4
 	},
 /obj/structure/cable/multilayer/multiz,
-/obj/machinery/atmospherics/pipe/multiz/scrubbers/visible/layer2{
-	dir = 8
-	},
-/obj/machinery/atmospherics/pipe/multiz/supply/visible/layer4{
-	dir = 8
-	},
 /obj/structure/window/reinforced/survival_pod/spawner/directional/north,
 /obj/structure/window/reinforced/survival_pod/spawner/directional/east,
+/obj/machinery/atmospherics/pipe/multiz/supply/hidden/layer4{
+	dir = 8
+	},
+/obj/machinery/atmospherics/pipe/multiz/scrubbers/hidden/layer2{
+	dir = 8
+	},
 /turf/open/floor/catwalk_floor/iron_dark/glass,
 /area/station/ai_monitored/turret_protected/ai)
 "dzj" = (
@@ -20620,10 +20622,10 @@
 	dir = 8
 	},
 /obj/structure/cable/multilayer/multiz,
-/obj/machinery/atmospherics/pipe/multiz/scrubbers/visible/layer2,
-/obj/machinery/atmospherics/pipe/multiz/supply/visible/layer4{
+/obj/machinery/atmospherics/pipe/multiz/supply/hidden/layer4{
 	dir = 8
 	},
+/obj/machinery/atmospherics/pipe/multiz/scrubbers/hidden/layer2,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/ai_monitored/turret_protected/aisat_interior)
 "eap" = (
@@ -50952,7 +50954,8 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/effect/mapping_helpers/airlock/access/all/security/general,
+/obj/effect/mapping_helpers/airlock/access/any/security/general,
+/obj/effect/mapping_helpers/airlock/access/any/security/court,
 /turf/open/floor/iron/dark/textured_large,
 /area/station/security/brig)
 "kgD" = (
@@ -86582,8 +86585,8 @@
 /obj/machinery/status_display/evac/directional/north,
 /obj/machinery/firealarm/directional/east,
 /obj/structure/cable/multilayer/multiz,
-/obj/machinery/atmospherics/pipe/multiz/scrubbers/visible/layer2,
-/obj/machinery/atmospherics/pipe/multiz/supply/visible/layer4,
+/obj/machinery/atmospherics/pipe/multiz/scrubbers/hidden/layer2,
+/obj/machinery/atmospherics/pipe/multiz/supply/hidden/layer4,
 /turf/open/floor/catwalk_floor/iron/glass,
 /area/station/ai_monitored/turret_protected/aisat/hallway)
 "rwe" = (
@@ -90967,7 +90970,6 @@
 /obj/effect/turf_decal/trimline/green/filled/mid_joiner{
 	dir = 8
 	},
-/obj/machinery/power/apc/auto_name/directional/west,
 /obj/structure/cable,
 /turf/open/floor/iron/white/textured_large,
 /area/station/medical/virology/isolation)
@@ -94339,6 +94341,10 @@
 	dir = 1
 	},
 /area/station/security/checkpoint/engineering)
+"tcS" = (
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/plating,
+/area/station/medical/virology/isolation)
 "tdf" = (
 /obj/machinery/door/airlock/public/glass{
 	name = "Art Galleria"
@@ -141577,7 +141583,7 @@ hnZ
 mEB
 sDJ
 sDJ
-sDJ
+tcS
 sDJ
 sDJ
 qQQ
@@ -142091,7 +142097,7 @@ siP
 lzH
 hnZ
 dcE
-sDJ
+tcS
 bIB
 iiv
 prI
