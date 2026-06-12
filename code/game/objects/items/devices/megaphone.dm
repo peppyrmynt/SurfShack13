@@ -8,6 +8,7 @@
 	righthand_file = 'icons/mob/inhands/items/megaphone_righthand.dmi'
 	w_class = WEIGHT_CLASS_SMALL
 	siemens_coefficient = 1
+	emag_desc = "Overloads the voice synthesizer, making it louder."
 	var/spamcheck = 0
 	var/list/voicespan = list(SPAN_COMMAND)
 

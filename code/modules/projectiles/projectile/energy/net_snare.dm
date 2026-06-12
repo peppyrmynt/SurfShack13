@@ -58,6 +58,7 @@
 /obj/item/dragnet_beacon
 	name = "\improper DRAGnet beacon"
 	desc = "Can be synced with a DRAGnet to set it as a designated teleporting point."
+	emag_desc = "Unlocks the beacon and unsecures it from the floor."
 	icon = 'icons/obj/devices/tracker.dmi'
 	icon_state = "dragnet_beacon"
 	inhand_icon_state = "beacon"

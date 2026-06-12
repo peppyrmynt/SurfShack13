@@ -2,6 +2,7 @@
 /obj/machinery/vatgrower
 	name = "growing vat"
 	desc = "Tastes just like the chef's soup."
+	emag_desc = "Overloads the resampling ciruit so it cant be toggled."
 	icon = 'icons/obj/science/vatgrowing.dmi'
 	icon_state = "growing_vat"
 	density = TRUE

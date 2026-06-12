@@ -7,6 +7,7 @@
 	circuit = /obj/item/circuitboard/machine/quantum_server
 	density = TRUE
 	desc = "A hulking computational machine designed to fabricate virtual domains."
+	emag_desc = "Doubles the chance for glitches to spawn, and doubles the maximum chance for a glitch to spawn."
 	icon = 'icons/obj/machines/bitrunning.dmi'
 	base_icon_state = "qserver"
 	icon_state = "qserver"

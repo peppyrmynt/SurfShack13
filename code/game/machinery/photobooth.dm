@@ -19,6 +19,7 @@
 	light_on = FALSE
 	interaction_flags_atom = INTERACT_ATOM_ATTACK_HAND
 	req_one_access = list(ACCESS_LAWYER, ACCESS_SECURITY)
+	emag_desc = "Flashes users"
 	///Boolean on whether we should add a height chart to the underlays of the people we take photos of.
 	var/add_height_chart = FALSE
 	///Boolean on whether the machine is currently busy taking someone's pictures, so you can't start taking pictures while it's working.

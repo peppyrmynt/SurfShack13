@@ -3,6 +3,7 @@
 /obj/structure/closet/crate/secure/loot
 	name = "abandoned crate"
 	desc = "What could be inside?"
+	emag_desc = "Causes it to explode."
 	icon_state = "securecrate"
 	base_icon_state = "securecrate"
 	integrity_failure = 0 //no breaking open the crate

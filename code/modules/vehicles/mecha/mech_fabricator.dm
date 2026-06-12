@@ -3,6 +3,7 @@
 	icon_state = "fab-idle"
 	name = "exosuit fabricator"
 	desc = "Nothing is being built."
+	emag_desc  = "Allows printing of illegal mech parts, if the desigsn are researched."
 	density = TRUE
 	req_access = list(ACCESS_ROBOTICS)
 	circuit = /obj/item/circuitboard/machine/mechfab

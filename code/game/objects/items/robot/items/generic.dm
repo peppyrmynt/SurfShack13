@@ -323,6 +323,7 @@
 	desc = "Releases a harmless blast that confuses most organics. For when the harm is JUST TOO MUCH."
 	icon = 'icons/obj/devices/voice.dmi'
 	icon_state = "megaphone"
+	emag_desc = "Toggles the safety making the siren loud enough to deafen people."
 	/// Harm alarm cooldown
 	COOLDOWN_DECLARE(alarm_cooldown)
 

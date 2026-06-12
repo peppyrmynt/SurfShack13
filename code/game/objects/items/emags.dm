@@ -14,6 +14,7 @@
 	item_flags = NO_MAT_REDEMPTION | NOBLUDGEON
 	slot_flags = ITEM_SLOT_ID
 	worn_icon_state = "emag"
+	emag_desc = "Transfers emag charge to this emag up to initial starting charge capacity."
 	var/prox_check = TRUE //If the emag requires you to be in range
 	var/type_blacklist //List of types that require a specialized emag
 
@@ -96,6 +97,7 @@
 	icon_state = /obj/item/card/emag::icon_state
 	worn_icon_state = /obj/item/card/emag::worn_icon_state
 	slot_flags = ITEM_SLOT_ID
+	emag_desc = "Causes it to explode on use"
 	/// Whether we are exploding
 	var/exploding = FALSE
 

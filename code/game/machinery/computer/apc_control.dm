@@ -6,6 +6,7 @@
 	req_access = list(ACCESS_CE)
 	circuit = /obj/item/circuitboard/computer/apc_control
 	light_color = LIGHT_COLOR_DIM_YELLOW
+	emag_desc = "Shorts the access controller."
 	///The APC we're remotely connected to right now
 	var/obj/machinery/power/apc/active_apc
 	///Whether actions are being logged to the console's logs or not

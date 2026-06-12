@@ -1,6 +1,7 @@
 /obj/machinery/chem_dispenser
 	name = "chem dispenser"
 	desc = "Creates and dispenses chemicals."
+	emag_desc = "Shorts the safeties, allowing synthesis of dangerous reagents."
 	density = TRUE
 	icon = 'icons/obj/medical/chemical.dmi'
 	icon_state = "dispenser"

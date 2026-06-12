@@ -32,6 +32,7 @@ GLOBAL_LIST_INIT(typecache_holodeck_linked_floorcheck_ok, typecacheof(list(/turf
 /obj/machinery/computer/holodeck
 	name = "holodeck control console"
 	desc = "A computer used to control a nearby holodeck."
+	emag_desc = "Allows loading unsafe holograms, and increases the maximum power, letting things leave the area."
 	icon_screen = "holocontrol"
 
 	//new vars

@@ -334,7 +334,7 @@ GLOBAL_LIST_EMPTY(bodycontainers) //Let them act as spawnpoints for revenants an
 	base_icon_state = "morgue"
 	dir = EAST
 	interaction_flags_click = ALLOW_SILICON_REACH|ALLOW_RESTING
-
+	emag_desc = "Shorts the indicator light so it only displays brain dead or off."
 	connected = /obj/structure/tray/m_tray
 
 	/// Whether or not this morgue beeps to alert parameds of revivable corpses.

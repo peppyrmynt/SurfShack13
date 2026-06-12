@@ -3,20 +3,21 @@
 	desc = "A heads-up display that provides important info in (almost) real time."
 	flags_1 = null //doesn't protect eyes because it's a monocle, duh
 
-/obj/item/clothing/glasses/hud/emp_act(severity)
-	. = ..()
-	if(obj_flags & EMAGGED || . & EMP_PROTECT_SELF)
-		return
-	obj_flags |= EMAGGED
-	desc = "[desc] The display is flickering slightly."
+// this is useless
+// /obj/item/clothing/glasses/hud/emp_act(severity)
+// 	. = ..()
+// 	if(obj_flags & EMAGGED || . & EMP_PROTECT_SELF)
+// 		return
+// 	obj_flags |= EMAGGED
+// 	desc = "[desc] The display is flickering slightly."
 
-/obj/item/clothing/glasses/hud/emag_act(mob/user, obj/item/card/emag/emag_card)
-	if(obj_flags & EMAGGED)
-		return FALSE
-	obj_flags |= EMAGGED
-	balloon_alert(user, "display scrambled")
-	desc = "[desc] The display is flickering slightly."
-	return TRUE
+// /obj/item/clothing/glasses/hud/emag_act(mob/user, obj/item/card/emag/emag_card)
+// 	if(obj_flags & EMAGGED)
+// 		return FALSE
+// 	obj_flags |= EMAGGED
+// 	balloon_alert(user, "display scrambled")
+// 	desc = "[desc] The display is flickering slightly."
+// 	return TRUE
 
 /obj/item/clothing/glasses/hud/suicide_act(mob/living/user)
 	if(user.is_blind())

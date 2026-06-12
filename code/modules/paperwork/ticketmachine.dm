@@ -7,6 +7,7 @@
 	icon_state = "ticketmachine"
 	base_icon_state = "ticketmachine"
 	desc = "A marvel of bureaucratic engineering encased in an efficient plastic shell. It can be refilled with a hand labeler refill roll and linked to buttons with a multitool."
+	emag_desc = "Causes all the tickets to be called at once."
 	density = FALSE
 	maptext_height = 26
 	maptext_width = 32

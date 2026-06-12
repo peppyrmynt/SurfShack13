@@ -12,6 +12,7 @@
 /mob/living/simple_animal/bot/mulebot
 	name = "\improper MULEbot"
 	desc = "A Multiple Utility Load Effector bot."
+	emag_desc = "unlocks the cover, if open, then removes the crush safety, allowing the mulebut to crush people."
 	icon_state = "mulebot0"
 	light_color = "#ffcc99"
 	light_power = 0.8

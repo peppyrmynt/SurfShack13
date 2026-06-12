@@ -21,6 +21,7 @@
 
 /obj/machinery/computer/shuttle/pod
 	name = "pod control computer"
+	emag_desc = "Lets you launch the pod to lavaland regardless of alert."
 	locked = TRUE
 	possible_destinations = "pod_asteroid"
 	icon = 'icons/obj/machines/wallmounts.dmi'

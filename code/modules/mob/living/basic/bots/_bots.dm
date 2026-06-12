@@ -15,7 +15,7 @@ GLOBAL_LIST_INIT(command_strings, list(
 	mob_biotypes = MOB_ROBOTIC
 	basic_mob_flags = DEL_ON_DEATH
 	density = FALSE
-
+	emag_desc = "Unlocks the cover, which can then be pried open and emagged again to change the behavior"
 	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 0, STAMINA = 0, OXY = 0)
 	habitable_atmos = null
 	hud_possible = list(DIAG_STAT_HUD, DIAG_BOT_HUD, DIAG_HUD, DIAG_BATT_HUD, DIAG_PATH_HUD = HUD_LIST_LIST)

@@ -403,6 +403,7 @@
 	name = "R&D Console"
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE
 	build_path = /obj/machinery/computer/rdconsole
+	emag_desc = "Overloads the node announcement chip, forcing every node to be announced on common channel."
 	var/silence_announcements = FALSE
 
 /obj/item/circuitboard/computer/rdconsole/examine(mob/user)
@@ -516,6 +517,7 @@
 	name = "Supply Console"
 	greyscale_colors = CIRCUIT_COLOR_SUPPLY
 	build_path = /obj/machinery/computer/cargo
+	emag_desc = "Unlocks special supplies and contraband."
 	var/contraband = FALSE
 
 /obj/item/circuitboard/computer/cargo/multitool_act(mob/living/user)
@@ -547,6 +549,7 @@
 
 /obj/item/circuitboard/computer/cargo/express
 	name = "Express Supply Console"
+	emag_desc = "Unlocks special supplies and contraband. Allows drop pods to be delivered anywhere on station."
 	build_path = /obj/machinery/computer/cargo/express
 
 /obj/item/circuitboard/computer/cargo/express/emag_act(mob/user, obj/item/card/emag/emag_card)

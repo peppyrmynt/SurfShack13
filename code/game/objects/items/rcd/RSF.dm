@@ -174,6 +174,7 @@ RSF
 	discriptor = "cookie-units"
 	action_type = "Fabricates"
 	cooldowndelay = 10 SECONDS
+	emag_desc = "Toggles the creation of poisoned cookies (chloral hydrate)."
 	///Tracks whether or not the cookiesynth is about to print a poisoned cookie
 	var/toxin = FALSE //This might be better suited to some initialize fuckery, but I don't have a good "poisoned" sprite
 

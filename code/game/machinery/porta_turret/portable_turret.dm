@@ -42,6 +42,7 @@ DEFINE_BITFIELD(turret_flags, list(
 	blocks_emissive = EMISSIVE_BLOCK_UNIQUE
 	// Same faction mobs will never be shot at, no matter the other settings
 	faction = list(FACTION_TURRET)
+	emag_desc = "Targets everything except syndicate borgs, draws twice the power"
 
 	///if TRUE this will cause the turret to stop working if the stored_gun var is null in process()
 	var/uses_stored = TRUE
@@ -925,6 +926,7 @@ DEFINE_BITFIELD(turret_flags, list(
 	req_access = list(ACCESS_AI_UPLOAD)
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	interaction_flags_click = ALLOW_SILICON_REACH
+	emag_desc = "unlocks id"
 	/// Variable dictating if linked turrets are active and will shoot targets
 	var/enabled = TRUE
 	/// Variable dictating if linked turrets will shoot lethal projectiles

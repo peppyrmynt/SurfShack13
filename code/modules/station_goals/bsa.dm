@@ -266,6 +266,7 @@ GLOBAL_VAR_INIT(bsa_unlock, FALSE)
 
 /obj/machinery/computer/bsa_control
 	name = "bluespace artillery control"
+	emag_desc = "Rigs it to explode."
 	use_power = NO_POWER_USE
 	circuit = /obj/item/circuitboard/computer/bsa_control
 	icon = 'icons/obj/machines/particle_accelerator.dmi'

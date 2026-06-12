@@ -60,6 +60,7 @@
 /obj/machinery/satellite/meteor_shield
 	name = "\improper Meteor Shield Satellite"
 	desc = "A meteor point-defense satellite."
+	emag_desc = "Increases chance of meteor strikes."
 	mode = "M-SHIELD"
 	/// the range a meteor shield sat can destroy meteors
 	var/kill_range = 14

@@ -26,7 +26,8 @@
 	light_power = 1
 	light_range = 1.6
 	light_color = LIGHT_COLOR_ELECTRIC_CYAN
-
+	//surfshack start
+	emag_desc = "Turns the speaker off, and disables robots ability to toggle fire detection on or off."
 	//We want to use area sensitivity, let us
 	always_area_sensitive = TRUE
 	///Buildstate for contruction steps

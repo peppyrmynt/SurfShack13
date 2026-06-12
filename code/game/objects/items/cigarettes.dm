@@ -866,7 +866,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	w_class = WEIGHT_CLASS_TINY
 	slot_flags = ITEM_SLOT_MASK
 	flags_1 = IS_PLAYER_COLORABLE_1
-
+	emag_desc = "Causes it to explode randomly while on."
 	/// The capacity of the vape.
 	var/chem_volume = 100
 	/// The amount of time between drags.

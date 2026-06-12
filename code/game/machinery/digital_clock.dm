@@ -9,6 +9,9 @@
 	density = FALSE
 	layer = ABOVE_WINDOW_LAYER
 	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 7, /datum/material/glass = SHEET_MATERIAL_AMOUNT * 4)
+	//surfshack start
+	emag_desc = "Sets the clock to random times. It can be reset with a multitool."
+	//surfshack end
 
 /obj/item/wallframe/digital_clock
 	name = "digital clock frame"

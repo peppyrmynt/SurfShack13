@@ -7,7 +7,9 @@
 	icon_state = "limbgrower_idleoff"
 	density = TRUE
 	circuit = /obj/item/circuitboard/machine/limbgrower
-
+	//surfshack start
+	emag_desc = "Allows you to build synthetic armblades."
+	//surfshack end
 	/// The category of limbs we're browing in our UI.
 	var/selected_category = SPECIES_HUMAN
 	/// If we're currently printing something.

@@ -474,6 +474,7 @@
 	density = FALSE
 	max_integrity = 100
 	req_access = null
+	emag_desc = "Destorys the paylock on the case."
 	alert = FALSE //No, we're not calling the fire department because someone stole your cookie.
 	glass_fix = FALSE //Fixable with tools instead.
 	pass_flags = PASSTABLE ///Can be placed and moved onto a table.

@@ -5,6 +5,7 @@
 /obj/machinery/mineral/labor_claim_console
 	name = "point claim console"
 	desc = "A stacking console with an electromagnetic writer, used to track ore mined by prisoners."
+	emag_desc = "Shorts the authentication mechanism, allowing you to go home."
 	icon = 'icons/obj/machines/mining_machines.dmi'
 	icon_state = "console"
 	density = FALSE

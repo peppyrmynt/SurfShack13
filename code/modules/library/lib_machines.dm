@@ -280,6 +280,7 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 /obj/machinery/computer/libraryconsole/bookmanagement
 	name = "book inventory management console"
 	desc = "Librarian's command station."
+	emag_desc = "Unlocks forbidden knowledge, reading it may have adverse affects on the user."
 	verb_say = "beeps"
 	verb_ask = "beeps"
 	verb_exclaim = "beeps"

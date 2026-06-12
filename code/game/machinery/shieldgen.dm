@@ -146,6 +146,7 @@
 	pressure_resistance = 2*ONE_ATMOSPHERE
 	req_access = list(ACCESS_ENGINEERING)
 	max_integrity = 100
+	emag_desc = "Shorts the access controller."
 	var/active = FALSE
 	var/list/deployed_shields
 	var/locked = FALSE

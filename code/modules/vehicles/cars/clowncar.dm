@@ -1,6 +1,7 @@
 /obj/vehicle/sealed/car/clowncar
 	name = "clown car"
 	desc = "How someone could even fit in there is byond me."
+	emag_desc = "Engages fun mode, added more buttons, and making the car waddle."
 	icon_state = "clowncar"
 	max_integrity = 150
 	armor_type = /datum/armor/car_clowncar

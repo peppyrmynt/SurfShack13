@@ -44,6 +44,7 @@
 	obj_flags = CONDUCTS_ELECTRICITY
 	slot_flags = ITEM_SLOT_BELT
 	force = 8
+	emag_desc = "Replaced lights will now be filled with plasma, and explode when on."
 
 	/// How many uses does our light replacer have?
 	var/uses = 10
@@ -335,6 +336,7 @@
 	name = "bluespace light replacer"
 	desc = "A modified light replacer that zaps lights into place. Refill with broken or working lightbulbs, or sheets of glass."
 	icon_state = "lightreplacer_blue"
+	emag_desc = null
 	bluespace_toggle = TRUE
 
 /obj/item/lightreplacer/blue/emag_act()

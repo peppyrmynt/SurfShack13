@@ -554,6 +554,7 @@
 	desc = "A module which engages with the various locks and seals tied to the suit's systems, \
 		enabling it to only be worn by someone corresponding with the user's exact DNA profile; \
 		however, this incredibly sensitive module is shorted out by EMPs. Luckily, cloning has been outlawed."
+	emag_desc = "Removes the DNA lock."
 	icon_state = "dnalock"
 	module_type = MODULE_USABLE
 	complexity = 1

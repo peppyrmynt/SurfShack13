@@ -5,7 +5,7 @@
 	desc = "Learn how our ancestors got to Orion, and have fun in the process!"
 	icon_state = "arcade"
 	circuit = /obj/item/circuitboard/computer/arcade/orion_trail
-
+	emag_desc = "Activates realism mode, and drops a custom minibomb if you win."
 	///List of all orion events, created on Initialize.
 	var/static/list/orion_events
 	var/busy = FALSE //prevent clickspam that allowed people to ~speedrun~ the game.

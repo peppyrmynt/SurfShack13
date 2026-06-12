@@ -31,6 +31,9 @@
 	circuit = /obj/item/circuitboard/machine/big_manipulator
 	greyscale_colors = "#d8ce13"
 	greyscale_config = /datum/greyscale_config/big_manipulator
+	//surfshack start
+	emag_desc = "Allows the manipulator to pick up living mobs."
+	//surfshack end
 	/// Min time manipulator can have in delay. Changing on upgrade.
 	var/minimal_delay = MIN_DELAY_TIER_1
 	/// The time it takes for the manipulator to complete the action cycle.

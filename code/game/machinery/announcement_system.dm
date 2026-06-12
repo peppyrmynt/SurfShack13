@@ -35,6 +35,9 @@ GLOBAL_LIST_EMPTY(announcement_systems)
 	var/announce_research_node = TRUE
 	/// The text that we send when announcing researched nodes.
 	var/node_message = "The %NODE techweb node has been researched"
+	//surfshack start
+	emag_desc = "Causes the arrival message, The new head message, and the tech tree unlock message to become scrambled words"
+	//surfshack end
 
 /obj/machinery/announcement_system/Initialize(mapload)
 	. = ..()

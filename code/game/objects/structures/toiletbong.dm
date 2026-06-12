@@ -6,6 +6,7 @@
 	base_icon_state = "toiletbong"
 	density = FALSE
 	anchored = TRUE
+	emag_desc = "Breaks the toilet. Gets your hand wet."
 	var/smokeradius = 1
 	var/mutable_appearance/weed_overlay
 

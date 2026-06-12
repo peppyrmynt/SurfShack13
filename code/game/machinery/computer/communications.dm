@@ -15,7 +15,7 @@
 	req_access = list(ACCESS_COMMAND)
 	circuit = /obj/item/circuitboard/computer/communications
 	light_color = LIGHT_COLOR_BLUE
-
+	emag_desc = "Summons a syndicate battle cruiser."
 	/// If the battlecruiser has been called
 	var/static/battlecruiser_called = FALSE
 

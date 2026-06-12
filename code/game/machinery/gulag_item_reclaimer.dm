@@ -5,7 +5,9 @@
 	icon_state = "gulag_off"
 	req_access = list(ACCESS_BRIG) //REQACCESS TO ACCESS ALL STORED ITEMS
 	density = FALSE
-
+	//surfshack start
+	desc = "Lets anyone reclaim all the items."
+	//surfshack end
 	var/list/stored_items = list()
 	var/obj/machinery/gulag_teleporter/linked_teleporter = null
 	///Icon of the current screen status

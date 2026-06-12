@@ -3,6 +3,7 @@
 	can_buckle_to = FALSE
 	density = FALSE
 	desc = "A generic pAI hard-light holographics emitter."
+	emag_desc = "Replaces the pai laws making them loyal to the syndicate and removing their master."
 	health = 500
 	held_lh = 'icons/mob/inhands/pai_item_lh.dmi'
 	held_rh = 'icons/mob/inhands/pai_item_rh.dmi'

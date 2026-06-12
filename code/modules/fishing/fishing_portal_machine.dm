@@ -8,7 +8,7 @@
 	anchored = FALSE
 	density = TRUE
 	circuit = /obj/item/circuitboard/machine/fishing_portal_generator
-
+	emag_desc = "Allows fishing in the Syndicate dimension waters."
 	///The current fishing spot loaded in
 	var/datum/component/fishing_spot/active
 	///A list of fishing spot it's linked to with a multitool.

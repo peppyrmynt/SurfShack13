@@ -17,7 +17,7 @@
 	w_class = WEIGHT_CLASS_BULKY
 	actions_types = list(/datum/action/item_action/toggle_paddles)
 	armor_type = /datum/armor/item_defibrillator
-
+	emag_desc = "Toggles the shock safety."
 	var/obj/item/shockpaddles/paddle_type = /obj/item/shockpaddles
 	/// If the paddles are equipped (1) or on the defib (0)
 	var/on = FALSE

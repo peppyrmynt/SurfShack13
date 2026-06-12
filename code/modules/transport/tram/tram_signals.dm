@@ -2,6 +2,7 @@
 /obj/machinery/transport/crossing_signal
 	name = "crossing signal"
 	desc = "Indicates to pedestrians if it's safe to cross the tracks. Connects to sensors down the track."
+	emag_desc = "Disables the motion sensors, essentially turning off the signal."
 	icon = 'icons/obj/tram/crossing_signal.dmi'
 	icon_state = "crossing-inbound"
 	base_icon_state = "crossing-inbound"

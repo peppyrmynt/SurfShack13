@@ -4,6 +4,7 @@
 /obj/machinery/computer/public_announcement
 	name = "Public Announcements console"
 	desc = "A commerical announcement console, with built in transmitters."
+	emag_desc = "Disables the breaker circuit, causing the console to explode and shock the user when used."
 	icon_screen = "civ_bounty"
 	icon_keyboard = "tech_key"
 	circuit = /obj/item/circuitboard/computer/public_announcement

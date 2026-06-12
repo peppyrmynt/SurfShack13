@@ -7,6 +7,7 @@
 /obj/item/nanite_remote
 	name = "nanite remote control"
 	desc = "A device that can remotely control active nanites through wireless signals."
+	emag_desc = "Overides the ID lock."
 	w_class = WEIGHT_CLASS_SMALL
 	req_access = list(ACCESS_RESEARCH)
 	icon = 'surfshack13/nanites/icons/nanite_device.dmi'

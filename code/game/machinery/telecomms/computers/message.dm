@@ -16,6 +16,7 @@
 	icon_screen = "comm_logs"
 	circuit = /obj/item/circuitboard/computer/message_monitor
 	light_color = LIGHT_COLOR_GREEN
+	emag_desc = "Toggles the linked message server off for temporary amout of time based on how long the password is."
 	/// Server linked to.
 	var/obj/machinery/telecomms/message_server/linkedServer = null
 	/// Sparks effect - For emag

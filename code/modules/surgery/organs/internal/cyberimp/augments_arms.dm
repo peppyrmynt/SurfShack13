@@ -264,6 +264,7 @@
 /obj/item/organ/cyberimp/arm/toolset
 	name = "integrated toolset implant"
 	desc = "A stripped-down version of the engineering cyborg toolset, designed to be installed on subject's arm. Contain advanced versions of every tool."
+	emag_desc  = "Adds a combat knife to the tools."
 	icon_state = "toolkit_engineering"
 	actions_types = list(/datum/action/item_action/organ_action/toggle/toolkit)
 	items_to_create = list(
@@ -282,6 +283,7 @@
 /obj/item/organ/cyberimp/arm/paperwork
 	name = "integrated paperwork implant"
 	desc = "A highly sought out implant among heads of personnel, and other high up command staff in Nanotrasen. This implant allows the user to always have the tools necesarry for paperwork handy"
+	emag_desc = "Adds chameleon stamp to tools."
 	icon_state = "toolkit_engineering"
 	actions_types = list(/datum/action/item_action/organ_action/toggle/toolkit)
 	items_to_create = list(

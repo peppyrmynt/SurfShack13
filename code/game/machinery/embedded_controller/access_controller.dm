@@ -4,6 +4,7 @@
 	idle_power_usage = BASE_MACHINE_IDLE_CONSUMPTION * 0.05
 	active_power_usage = BASE_MACHINE_ACTIVE_CONSUMPTION * 0.04
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
+	emag_desc = "Shorts the access controller"
 	var/idSelf
 
 /obj/machinery/door_buttons/attackby(obj/O, mob/user)

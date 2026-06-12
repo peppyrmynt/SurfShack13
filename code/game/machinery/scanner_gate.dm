@@ -14,7 +14,7 @@
 	layer = ABOVE_MOB_LAYER
 	circuit = /obj/item/circuitboard/machine/scanner_gate
 	COOLDOWN_DECLARE(next_beep)
-
+	emag_desc = "Disables id checker, allowing anyone access."
 	var/scanline_timer
 	///Bool to check if the scanner's controls are locked by an ID.
 	var/locked = FALSE

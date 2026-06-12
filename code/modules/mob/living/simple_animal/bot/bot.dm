@@ -29,6 +29,7 @@
 	del_on_death = TRUE
 	req_one_access = list(ACCESS_ROBOTICS)
 	interaction_flags_click = ALLOW_SILICON_REACH
+	emag_desc = "Unlocks the cover, if open, emags the bot."
 
 	///Cooldown between salutations for commissioned bots
 	COOLDOWN_DECLARE(next_salute_check)

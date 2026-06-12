@@ -9,7 +9,7 @@
 	state_open = TRUE
 	interaction_flags_mouse_drop = NEED_DEXTERITY
 	circuit = /obj/item/circuitboard/machine/sleeper
-
+	emag_desc = "Scrambles the chemical injection buttons."
 	payment_department = ACCOUNT_MED
 	fair_market_price = 5
 
@@ -335,6 +335,7 @@
 	controls_inside = TRUE
 	deconstructable = TRUE
 	enter_message = span_boldnotice("You're surrounded by some funky music inside the chamber. You zone out as you feel waves of krunk vibe within you.")
+	emag_desc = "Scrambles the chemical injection buttons, and injects lead acetate"
 
 	//Exclusively uses non-lethal, "fun" chems. At an obvious downside.
 	possible_chems = list(

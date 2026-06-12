@@ -12,6 +12,7 @@
 	req_access = list(ACCESS_CARGO)
 	is_express = TRUE
 	interface_type = "CargoExpress"
+	emag_desc = "Changes the routing protocols, allowing the Supply Pod to land anywhere on the station."
 
 	var/message
 	var/list/meme_pack_data

@@ -1,6 +1,7 @@
 /obj/machinery/computer/rdservercontrol
 	name = "R&D Server Controller"
 	desc = "Manages access to research databases and consoles."
+	emag_desc = "Grants access."
 	icon_screen = "rdcomp"
 	icon_keyboard = "rd_key"
 	circuit = /obj/item/circuitboard/computer/rdservercontrol

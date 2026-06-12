@@ -140,7 +140,9 @@
 	var/interaction_flags_click = NONE
 	/// Flags to check for in can_perform_action for mouse drag & drop checks. To bypass checks see interaction_flags_atom mouse drop flags
 	var/interaction_flags_mouse_drop = NONE
-
+	//surfshack start
+	/// if emagging this atom does something, this describes it - autowiki prototype
+	var/emag_desc
 /**
  * Top level of the destroy chain for most atoms
  *

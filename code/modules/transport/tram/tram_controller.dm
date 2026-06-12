@@ -754,6 +754,7 @@
 /obj/machinery/transport/tram_controller
 	name = "tram controller"
 	desc = "Makes the tram go, or something. Holds the tram's electronics, controls, and maintenance panel. A sticker above the card reader says 'Engineering access only.'"
+	emag_desc = "Grants access, and breaks the ID lock."
 	icon = 'icons/obj/tram/tram_controllers.dmi'
 	icon_state = "tram-controller"
 	base_icon_state = "tram"

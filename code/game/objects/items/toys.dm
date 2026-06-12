@@ -950,6 +950,7 @@
 	icon = 'icons/obj/toys/toy.dmi'
 	icon_state = "nuketoyidle"
 	w_class = WEIGHT_CLASS_SMALL
+	emag_desc = "Makes it explode on use."
 	var/cooldown = 0
 
 /obj/item/toy/nuke/attack_self(mob/user)
@@ -994,6 +995,7 @@
 	icon_state = "minimeteor"
 	inhand_icon_state = "minimeteor"
 	w_class = WEIGHT_CLASS_SMALL
+	emag_desc = "Causes it to explode on throw impact."
 
 /obj/item/toy/minimeteor/emag_act(mob/user, obj/item/card/emag/emag_card)
 	if (obj_flags & EMAGGED)
@@ -1584,7 +1586,7 @@ GLOBAL_LIST_EMPTY(intento_players)
 	icon = 'icons/obj/toys/intents.dmi'
 	icon_state = "blank"
 	custom_price = PAYCHECK_COMMAND * 1.25
-
+	emag_desc = "Sticks itself to the users hand, and starts attacking them with different intents"
 	/// Current sequence of intents
 	var/list/current_sequence = list()
 	/// Sequence player inputs

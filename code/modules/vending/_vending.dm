@@ -55,6 +55,7 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 /obj/machinery/vending
 	name = "\improper Vendomat"
 	desc = "A generic vending machine."
+	emag_desc = "Disables the product lock granting access to contraband."
 	icon = 'icons/obj/machines/vending.dmi'
 	icon_state = "generic"
 	layer = BELOW_OBJ_LAYER

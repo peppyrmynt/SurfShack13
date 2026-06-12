@@ -13,6 +13,7 @@
 /obj/machinery/research/anomaly_refinery
 	name = "anomaly refinery"
 	desc = "An advanced machine capable of implosion-compressing raw anomaly cores into finished artifacts. Also equipped with state of the art bomb prediction software."
+	emag_desc = "Ejects a live TTV."
 	circuit = /obj/item/circuitboard/machine/anomaly_refinery
 	icon = 'icons/obj/machines/research.dmi'
 	base_icon_state = "explosive_compressor"

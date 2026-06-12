@@ -485,6 +485,7 @@
 /obj/item/survivalcapsule/fishing
 	name = "fishing spot capsule"
 	desc = "An illegally modified mining capsule containing a small fishing spot connected to some faraway place."
+	emag_desc = "Disables the fishing safety setup, allowing you to select unsafe fishing spots like lava and plasma."
 	icon_state = "capsule_fishing"
 	initial_language_holder = /datum/language_holder/speaking_machine
 	verb_say = "beeps"

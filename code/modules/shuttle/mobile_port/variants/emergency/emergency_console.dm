@@ -6,6 +6,7 @@
 /obj/machinery/computer/emergency_shuttle
 	name = "emergency shuttle console"
 	desc = "For shuttle control."
+	emag_desc = "Early launches and hijacks the shuttle after several seconds, and throws people around harder on take off."
 	icon_screen = "shuttle"
 	icon_keyboard = "tech_key"
 	resistance_flags = INDESTRUCTIBLE

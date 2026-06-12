@@ -80,6 +80,7 @@
 /////////////////
 /obj/machinery/power/port_gen/pacman
 	name = "\improper P.A.C.M.A.N.-type portable generator"
+	emag_desc = "Increases the maximum power output and emp's the machine."
 	circuit = /obj/item/circuitboard/machine/pacman
 	power_gen = 10 KILO JOULES
 	var/sheets = 0

@@ -43,7 +43,7 @@
 	icon_state = "arcade"
 	icon_screen = "fighters"
 	circuit = /obj/item/circuitboard/computer/arcade/battle
-
+	emag_desc = "Enables hard mode, The game gets dangerous and gives out bombs if you win."
 	///List of all battle arcade gear that is available in the shop in game.
 	var/static/list/battle_arcade_gear_list
 	///List of all worlds in the game.
