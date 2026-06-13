@@ -330,7 +330,6 @@
 /obj/structure/ladder/one_way
 	name = "one-way ladder"
 	desc = "A ladder rigged to only allow downward movement."
-	icon_state = "ladder10"
 
 /// Skip auto-linking
 /obj/structure/ladder/one_way/LateInitialize()
@@ -338,7 +337,9 @@
 
 /// Don't recalculate icon_state based on up/down links
 /obj/structure/ladder/one_way/update_icon_state()
-	return
+	. = ..()
+	icon_state = "ladder10"
+	return .
 
 /obj/structure/ladder/one_way/add_context(atom/source, list/context, obj/item/held_item, mob/user)
 	context[SCREENTIP_CONTEXT_RMB] = "Climb down"
