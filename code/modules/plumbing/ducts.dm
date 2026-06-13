@@ -37,6 +37,8 @@ All the important duct code:
 	var/list/neighbours = list()
 	///what stack to drop when disconnected. Must be /obj/item/stack/ducts or a subtype
 	var/drop_on_wrench = /obj/item/stack/ducts
+	///whether we delete when disconnected (e.g. unanchored)
+	var/delete_on_disconnect = TRUE
 
 /obj/machinery/duct/Initialize(mapload, no_anchor, color_of_duct = null, layer_of_duct = null, force_connects, force_ignore_colors)
 	. = ..()
@@ -159,6 +161,8 @@ All the important duct code:
 	lose_neighbours()
 	reset_connects(0)
 	update_appearance()
+	if(!delete_on_disconnect)
+		return
 	if(ispath(drop_on_wrench))
 		var/obj/item/stack/ducts/duct_stack = new drop_on_wrench(drop_location())
 		duct_stack.duct_color = GLOB.pipe_color_name[duct_color] || DUCT_COLOR_OMNI
@@ -394,6 +398,7 @@ All the important duct code:
 	desc = "A fluid duct adapter which allows fluid ducts to connect to other ductnets on different decks."
 	icon_state = "adapter"
 	dir = SOUTH
+	delete_on_disconnect = FALSE
 
 	/// Our central icon for multiz connection
 	var/mutable_appearance/multiz_center = null

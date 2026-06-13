@@ -219,7 +219,8 @@
 	playsound(loc, 'sound/machines/click.ogg', 50, TRUE)
 	if(ispath(blueprint, /obj/machinery/duct))
 		var/is_omni = current_color == DUCT_COLOR_OMNI
-		new blueprint(destination, FALSE, GLOB.pipe_paint_colors[current_color], GLOB.plumbing_layers[current_layer], null, is_omni)
+		var/no_anchor = ispath(blueprint, /obj/machinery/duct/multiz)
+		new blueprint(destination, no_anchor, GLOB.pipe_paint_colors[current_color], GLOB.plumbing_layers[current_layer], null, is_omni)
 	else
 		new blueprint(destination, FALSE, GLOB.plumbing_layers[current_layer])
 	return TRUE

@@ -325,3 +325,59 @@
 
 /obj/structure/ladder/crafted
 	crafted = TRUE
+
+// Down-only ladder
+/obj/structure/ladder/one_way
+	name = "one-way ladder"
+	desc = "A ladder rigged to only allow downward movement."
+	icon_state = "ladder10"
+
+/// Skip auto-linking
+/obj/structure/ladder/one_way/LateInitialize()
+	update_appearance()
+
+/// Don't recalculate icon_state based on up/down links
+/obj/structure/ladder/one_way/update_icon_state()
+	return
+
+/obj/structure/ladder/one_way/add_context(atom/source, list/context, obj/item/held_item, mob/user)
+	context[SCREENTIP_CONTEXT_RMB] = "Climb down"
+	return CONTEXTUAL_SCREENTIP_SET
+
+/obj/structure/ladder/one_way/examine(mob/user)
+	. = ..()
+	. += span_info("It only allows movement <b>down</b>.")
+
+/obj/structure/ladder/one_way/use(mob/user, going_up = TRUE)
+	if(going_up)
+		balloon_alert(user, "only goes down!")
+		return
+	if(!in_range(src, user) || DOING_INTERACTION(user, DOAFTER_SOURCE_CLIMBING_LADDER))
+		return
+	if(user.buckled && user.buckled.anchored)
+		balloon_alert(user, "buckled to something anchored!")
+		return
+	if(travel_time)
+		INVOKE_ASYNC(src, PROC_REF(start_travelling), user, FALSE)
+	else
+		travel(user, FALSE)
+	add_fingerprint(user)
+
+/// Drop directly to the turf below
+/obj/structure/ladder/one_way/travel(mob/user, going_up = TRUE, is_ghost = FALSE, grant_exp = FALSE)
+	if(going_up)
+		return
+	var/turf/src_turf = get_turf(src)
+	var/turf/below = GET_TURF_BELOW(src_turf)
+	if(!below)
+		balloon_alert(user, "there's nothing below!")
+		return
+	var/response = SEND_SIGNAL(user, COMSIG_LADDER_TRAVEL, src, null, FALSE)
+	if(response & LADDER_TRAVEL_BLOCK)
+		return
+	user.zMove(target = below, z_move_flags = ZMOVE_CHECK_PULLEDBY|ZMOVE_ALLOW_BUCKLED|ZMOVE_INCLUDE_PULLED)
+	if(grant_exp)
+		user.mind?.adjust_experience(/datum/skill/athletics, 10)
+	if(!is_ghost)
+		show_final_fluff_message(user, null, FALSE)
+
