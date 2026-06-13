@@ -16,7 +16,7 @@
 		#include "map_files\wawastation\wawastation.dmm"
 		#include "map_files\PubbyStation\PubbyStation.dmm"
 		#include "map_files\MiniSurf\MiniSurf.dmm"
-		#include "map_files\MiniSurf\DogrunStation.dmm"
+		#include "map_files\DogrunStation\DogrunStation.dmm"
 
 		#ifdef CIBUILDING
 			#include "templates.dm"
