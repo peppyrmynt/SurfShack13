@@ -70846,6 +70846,7 @@
 "onb" = (
 /obj/effect/turf_decal/siding/wideplating_new/corner,
 /obj/structure/railing/corner,
+/obj/effect/turf_decal/tile/neutral,
 /turf/open/floor/iron,
 /area/station/hallway/floor2/central)
 "onk" = (
@@ -73045,8 +73046,8 @@
 /obj/effect/turf_decal/tile/neutral/half{
 	dir = 8
 	},
-/obj/machinery/requests_console/auto_name/directional/east,
 /obj/structure/cable,
+/obj/machinery/newscaster/directional/east,
 /turf/open/floor/iron/edge{
 	dir = 8
 	},
