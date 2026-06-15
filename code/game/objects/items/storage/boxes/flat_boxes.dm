@@ -29,4 +29,4 @@
 /obj/item/storage/box/flat/fentanylpatches/Initialize(mapload)
 	. = ..()
 	for(var/i = 1 to 3)
-		new /obj/item/reagent_containers/applicator/patch/fent(src)
+		new /obj/item/reagent_containers/pill/patch/fent(src)
