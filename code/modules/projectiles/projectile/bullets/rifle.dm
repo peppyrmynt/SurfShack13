@@ -66,7 +66,7 @@
 /obj/projectile/bullet/rebar
 	name = "rebar"
 	icon_state = "rebar"
-	damage = 30
+	damage = 25
 	speed = 2.5
 	dismemberment = 1 //because a 1 in 100 chance to just blow someones arm off is enough to be cool but also not enough to be reliable
 	armour_penetration = 10
@@ -98,6 +98,7 @@
 	wound_bonus = 40 // lets just WOUND
 	bare_wound_bonus = 0
 	embed_falloff_tile = 0 // BONK!
+	accurate_range = 250 // cuz i wanna snipoor
 	embed_type = /datum/embedding/rebar_syndie
 	shrapnel_type = /obj/item/ammo_casing/rebar/syndie
 
