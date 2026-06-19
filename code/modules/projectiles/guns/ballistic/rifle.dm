@@ -221,7 +221,7 @@
 	fire_sound = 'sound/items/xbow_lock.ogg'
 	can_be_sawn_off = FALSE
 	tac_reloads = FALSE
-	var/draw_time = 3 SECONDS
+	var/draw_time = 2.5 SECONDS
 	SET_BASE_PIXEL(0, 0)
 
 /obj/item/gun/ballistic/rifle/rebarxbow/rack(mob/user = null)
@@ -273,7 +273,7 @@
 	desc = "Some idiot decided that they would risk shooting themselves in the face if it meant they could have a draw this crossbow a bit faster. Hopefully, it was worth it."
 	// Feel free to add a recipe to allow you to change it back if you would like, I just wasn't sure if you could have two recipes for the same thing.
 	can_misfire = TRUE
-	draw_time = 1.5
+	draw_time = 10
 	misfire_probability = 25
 	accepted_magazine_type = /obj/item/ammo_box/magazine/internal/boltaction/rebarxbow/force
 
@@ -286,7 +286,7 @@
 	worn_icon_state = "rebarxbowsyndie"
 	w_class = WEIGHT_CLASS_NORMAL
 	initial_caliber = CALIBER_REBAR
-	draw_time = 1
+	draw_time = 0.5
 	accepted_magazine_type = /obj/item/ammo_box/magazine/internal/boltaction/rebarxbow/syndie
 
 /obj/item/gun/ballistic/rifle/rebarxbow/syndie/Initialize(mapload)
