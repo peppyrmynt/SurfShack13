@@ -14,4 +14,4 @@
 
 /obj/projectile/ion/weak
 	emp_radius = 0
-	damage = 5
+	damage = 3
