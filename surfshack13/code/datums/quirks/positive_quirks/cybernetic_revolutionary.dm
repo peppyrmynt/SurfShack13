@@ -1,7 +1,7 @@
 /datum/quirk/cyber_rev
 	name = "Cybernetic Revolutionary"
 	desc = "You believe in the superiority of cybernetic enhancements and have since opted to have one installed!"
-	icon = FA_ICON_LUNGS
+	icon = FA_ICON_HEART
 	value = 8
 	hardcore_value = -8
 	medical_record_text = "Patient has had a cybernetic organ installed within them."

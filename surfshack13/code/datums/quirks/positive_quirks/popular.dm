@@ -2,7 +2,7 @@
 	name = "Popular"
 	desc = "You've become rather popular by chance after signing up to work aboard Space Station 13 and have gained many loyal fans. \
 			You'll likely recieve some luxury or otherwise useful items in the mail."
-	icon = FA_ICON_BOX_OPEN
+	icon = FA_ICON_BOX
 	value = 9
 	hardcore_value = -1
 	medical_record_text = "Patient was busy opening mail during the interview and kept unwrapping expensive goods."
