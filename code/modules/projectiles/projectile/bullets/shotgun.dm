@@ -95,7 +95,6 @@
 	sharpness = NONE
 	embed_type = null
 	speed = 0.8
-	damage_falloff_tile = 0
 	stamina_falloff_tile = 0
 	ricochets_max = 4
 	ricochet_chance = 120
