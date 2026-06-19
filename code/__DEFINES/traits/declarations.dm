@@ -1363,6 +1363,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// This atom has a tether attached to it
 #define TRAIT_TETHER_ATTACHED "tether_attached"
 
+/// While starving, will this mob start accumulating damage?
+#define TRAIT_HUNGER_DAMAGE "hunger_damage"
+
+/// While 'determined', will we extra benefits?
+#define TRAIT_NOSOFTCRIT_DETERMINED "too_determined_to_crit"
+
 /**
  *
  * This trait is used in some interactions very high in the interaction chain to allow

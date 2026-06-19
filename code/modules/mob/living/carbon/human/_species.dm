@@ -599,6 +599,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		return
 	if(HAS_TRAIT(H, TRAIT_NOBREATH) && (H.health < H.crit_threshold) && !HAS_TRAIT(H, TRAIT_NOCRITDAMAGE))
 		H.adjustBruteLoss(0.5 * seconds_per_tick)
+	if(H.nutrition <= (NUTRITION_LEVEL_STARVING - 150) && HAS_TRAIT(H, TRAIT_HUNGER_DAMAGE))
+		H.take_overall_damage(brute = 0.1, required_bodytype = BODYTYPE_ORGANIC)
 
 /datum/species/proc/can_equip(obj/item/I, slot, disable_warning, mob/living/carbon/human/H, bypass_equip_delay_self = FALSE, ignore_equipped = FALSE, indirect_action = FALSE)
 	if(no_equip_flags & slot)
