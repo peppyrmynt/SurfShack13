@@ -70,11 +70,11 @@
 	speed = 2.5
 	dismemberment = 1 //because a 1 in 100 chance to just blow someones arm off is enough to be cool but also not enough to be reliable
 	armour_penetration = 10
-	wound_bonus = -20
+	wound_bonus = 5
 	bare_wound_bonus = 20
 	embed_type = /datum/embedding/rebar
 	embed_falloff_tile = -5
-	wound_falloff_tile = -2
+	wound_falloff_tile = 0
 	shrapnel_type = /obj/item/ammo_casing/rebar
 
 /datum/embedding/rebar
@@ -92,12 +92,12 @@
 /obj/projectile/bullet/rebar/syndie
 	name = "rebar"
 	icon_state = "rebar"
-	damage = 45
-	dismemberment = 2 //It's a budget sniper rifle.
-	armour_penetration = 20 //A bit better versus armor. Gets past anti laser armor or a vest, but doesnt wound proc on sec armor.
-	wound_bonus = 10
-	bare_wound_bonus = 20
-	embed_falloff_tile = -3
+	damage = 50
+	dismemberment = 5 //It's a budget sniper rifle.
+	armour_penetration = 30
+	wound_bonus = 40 // lets just WOUND
+	bare_wound_bonus = 0
+	embed_falloff_tile = 0 // BONK!
 	embed_type = /datum/embedding/rebar_syndie
 	shrapnel_type = /obj/item/ammo_casing/rebar/syndie
 
