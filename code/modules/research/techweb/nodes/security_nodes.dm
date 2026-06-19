@@ -112,7 +112,7 @@
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SECURITY)
 
-	/datum/techweb_node/ballistic_ammo
+/datum/techweb_node/ballistic_ammo
 	id = TECHWEB_NODE_BALLISTIC_AMMO
 	display_name = "Ballistic Ammunition"
 	description = "Standard ballistic ammunition for shotguns."
