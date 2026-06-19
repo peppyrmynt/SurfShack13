@@ -22,7 +22,20 @@
 		/obj/item/multitool,
 		/obj/item/clothing/gloves/color/yellow,
 		/obj/item/stack/sheet/cloth/ten,
-		/obj/item/assembly/flash/handheld
+		/obj/item/assembly/flash/handheld,
+		/obj/item/stack/sticky_tape,
+		/obj/item/pizzabox/margherita,
+		/obj/item/pizzabox/meat,
+		/obj/item/pizzabox/vegetable,
+		/obj/item/reagent_containers/cup/glass/bottle/whiskey,
+		/obj/item/reagent_containers/cup/glass/bottle/lizardwine,
+		/obj/item/storage/box/gum/happiness,
+		/obj/item/storage/box/gum/wake_up,
+		/obj/item/food/pie/cream,
+		/obj/item/stack/sheet/cloth/ten,
+		/obj/item/reagent_containers/hypospray/medipen/survival,
+		/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+		/obj/item/disk/design_disk/bepis/remove_tech
 	)
 
 	var/item_to_give = pick(item_list)
