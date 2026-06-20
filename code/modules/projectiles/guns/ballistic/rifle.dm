@@ -216,6 +216,7 @@
 	magazine_wording = "rod"
 	cartridge_wording = "rod"
 	weapon_weight = WEAPON_HEAVY
+    w_class = WEIGHT_CLASS_NORMAL
 	initial_caliber = CALIBER_REBAR
 	accepted_magazine_type = /obj/item/ammo_box/magazine/internal/boltaction/rebarxbow/normal
 	fire_sound = 'sound/items/xbow_lock.ogg'
@@ -280,13 +281,12 @@
 /obj/item/gun/ballistic/rifle/rebarxbow/syndie
 	name = "syndicate rebar crossbow"
 	desc = "The syndicate liked the bootleg rebar crossbow NT engineers made, so they showed what it could be if properly developed. \
-			Holds three shots without a chance of exploding, and features a built in scope. Compatible with all known crossbow ammunition."
+			Holds four shots without a chance of exploding, and features a built in scope. Compatible with all known crossbow ammunition."
 	icon_state = "rebarxbowsyndie"
 	inhand_icon_state = "rebarxbowsyndie"
 	worn_icon_state = "rebarxbowsyndie"
-	w_class = WEIGHT_CLASS_NORMAL
 	initial_caliber = CALIBER_REBAR
-	draw_time = 1
+	draw_time = 0.5
 	accepted_magazine_type = /obj/item/ammo_box/magazine/internal/boltaction/rebarxbow/syndie
 
 /obj/item/gun/ballistic/rifle/rebarxbow/syndie/Initialize(mapload)
