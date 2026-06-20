@@ -216,7 +216,7 @@
 	magazine_wording = "rod"
 	cartridge_wording = "rod"
 	weapon_weight = WEAPON_HEAVY
-    w_class = WEIGHT_CLASS_NORMAL
+	w_class = WEIGHT_CLASS_NORMAL
 	initial_caliber = CALIBER_REBAR
 	accepted_magazine_type = /obj/item/ammo_box/magazine/internal/boltaction/rebarxbow/normal
 	fire_sound = 'sound/items/xbow_lock.ogg'
