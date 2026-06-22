@@ -7,10 +7,6 @@
 #define NANITE_SHOCK_IMMUNE (1<<0)
 #define NANITE_EMP_IMMUNE (1<<1)
 
-///Nanite Protocol types
-#define NANITE_PROTOCOL_REPLICATION "nanite_replication"
-#define NANITE_PROTOCOL_STORAGE "nanite_storage"
-
 ///Nanite extra settings types: used to help uis know what type an extra setting is
 #define NESTYPE_TEXT "text"
 #define NESTYPE_NUMBER "number"

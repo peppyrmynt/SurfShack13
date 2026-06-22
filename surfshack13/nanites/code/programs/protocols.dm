@@ -1,10 +1,6 @@
 /datum/nanite_program/protocol
 	name = "Nanite Protocol"
 
-	///If specified, you may only have one of these protocol types active at once.
-	///Selection: (NANITE_PROTOCOL_REPLICATION | NANITE_PROTOCOL_STORAGE)
-	var/protocol_class = NONE
-
 /datum/nanite_program/protocol/on_add(datum/component/nanites/_nanites)
 	. = ..()
 	nanites.protocols += src
@@ -23,7 +19,6 @@
 			resulting in an additional 420 nanite volume being produced during the first two minutes."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	var/boost_duration = 1200
 
 /datum/nanite_program/protocol/kickstart/check_conditions()
@@ -41,7 +36,6 @@
 			The factory decays if the protocol is not active, or if the nanites are disrupted by shocks or EMPs."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	var/factory_efficiency = 0
 	var/max_efficiency = 1000 //Goes up to 2 bonus regen per tick after 16 minutes and 40 seconds
 
@@ -71,7 +65,6 @@
 	desc = "Replication Protocol: the nanites learn to use metallic material in the host's bloodstream and stomach to speed up the replication process."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	var/boost = 2
 	var/list/datum/reagent/valid_reagents = list(
 		/datum/reagent/iron,
@@ -107,7 +100,6 @@
 	desc = "Replication Protocol: while the host is asleep or otherwise unconcious, the nanites exploit the reduced interference to replicate more quickly."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	var/boost = 3
 
 /datum/nanite_program/protocol/offline/check_conditions()
@@ -123,7 +115,6 @@
 	desc = "Replication Protocol: the nanites implement an alternate cooperative replication protocol that is active as long as the nanite saturation level is above 50%, \
 			resulting in an additional volume production of 1.5 per second."
 	use_rate = 0
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	rogue_types = list(/datum/nanite_program/necrotic)
 	var/boost = 1.5
 
@@ -140,7 +131,6 @@
 	name = "Eclipse Protocol"
 	desc = "Replication Protocol: while the host is dead, the nanites exploit the reduced interference to replicate roughly 6x quicker than normal."
 	use_rate = 0
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	rogue_types = list(/datum/nanite_program/necrotic)
 	var/boost = 3
 
@@ -156,7 +146,6 @@
 	name = "Collective Protocol"
 	desc = "Replication Protocol: the nanites adopt more strategic protocols for mass-replication, decreasing replication speed by 0.5, but increasing replication speed by a small amount for each host using this protocol."
 	use_rate = 0.5
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	rogue_types = list(/datum/nanite_program/necrotic)
 	//var/extra_volume = 250
 	var/repspeed
@@ -187,7 +176,6 @@
 	name = "BLOOD Protocol"
 	desc = "Replication Protocol: the nanites make themselves at home within the host's flesh and blood, but this comes at the cost of the host's blood and sometimes flesh."
 	use_rate = -3.5
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	rogue_types = list(/datum/nanite_program/necrotic)
 
 /datum/nanite_program/protocol/blood_storage/check_conditions()
@@ -211,7 +199,6 @@
 	name = "Emergency Protocol"
 	desc = "Replication Protocol: the nanites can capable of detecting if the host is severely injured (atleast 75 damage), and will ramp up production in response."
 	use_rate = 0
-	protocol_class = NANITE_PROTOCOL_REPLICATION
 	rogue_types = list(/datum/nanite_program/necrotic)
 
 /datum/nanite_program/protocol/emergency/active_effect()
@@ -226,7 +213,6 @@
 	desc = "Storage Protocol: the nanites use a more efficient grid arrangment for volume storage, increasing maximum volume by 250."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
-	protocol_class = NANITE_PROTOCOL_STORAGE
 	///How much extra volume the protocol gives the nanite user.
 	var/extra_volume = 250
 
@@ -245,7 +231,6 @@
 	desc = "Storage Protocol: the nanites are disassembled and compacted when unused, increasing the maximum volume to 1000. However, the process slows down their replication rate slightly."
 	use_rate = 0.2
 	rogue_types = list(/datum/nanite_program/necrotic)
-	protocol_class = NANITE_PROTOCOL_STORAGE
 	///How much extra volume the protocol gives the nanite user.
 	var/extra_volume = 500
 
@@ -264,7 +249,6 @@
 	desc = "Storage Protocol: the nanites discard their default storage protocols in favour of a cheaper and more organic approach. Reduces maximum volume to 250, but increases the replication rate by 0.5."
 	use_rate = -0.5
 	rogue_types = list(/datum/nanite_program/necrotic)
-	protocol_class = NANITE_PROTOCOL_STORAGE
 	///How much extra volume the protocol gives the nanite user. Since this is negative, we take away.
 	var/extra_volume = -250
 
@@ -284,7 +268,6 @@
 			allowing them to reach a whopping maximum volume level of 2000, but at the risk of causing damage to the host at nanite concentrations above the standard limit of 500."
 	use_rate = 0
 	rogue_types = list(/datum/nanite_program/necrotic)
-	protocol_class = NANITE_PROTOCOL_STORAGE
 	///How much extra volume the protocol gives the nanite user.
 	var/extra_volume = 1500
 	///The timer between warnings.
