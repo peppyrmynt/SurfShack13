@@ -242,6 +242,8 @@
 		return
 	if(!consume_nanites(trigger_cost))
 		return
+	if(!check_conditions())
+		return
 	next_trigger = world.time + trigger_cooldown
 	on_trigger(comm_message)
 
