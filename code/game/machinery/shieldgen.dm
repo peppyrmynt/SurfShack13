@@ -289,6 +289,7 @@
 /obj/machinery/power/shieldwallgen
 	name = "shield wall generator"
 	desc = "A shield generator."
+	auto_wiki_datum = /datum/wiki_data/sheild_gen
 	icon = 'icons/obj/machines/shield_generator.dmi'
 	icon_state = "shield_wall_gen"
 	base_icon_state = "shield_wall_gen"
@@ -312,6 +313,10 @@
 	var/shield_range = 8
 	/// the attached cable under us
 	var/obj/structure/cable/attached
+
+/datum/wiki_data/sheild_gen
+	atom_template = /obj/machinery/power/shieldwallgen
+	emag_description = "Emagging grants access to the controls."
 
 /obj/machinery/power/shieldwallgen/xenobiologyaccess //use in xenobiology containment
 	name = "xenobiology shield wall generator"

@@ -5,13 +5,15 @@
 	icon_state = "gulag_off"
 	req_access = list(ACCESS_BRIG) //REQACCESS TO ACCESS ALL STORED ITEMS
 	density = FALSE
-	//surfshack start
-	desc = "Lets anyone reclaim all the items."
-	//surfshack end
+	auto_wiki_datum = /datum/wiki_data/gulag_item_reclaimer
 	var/list/stored_items = list()
 	var/obj/machinery/gulag_teleporter/linked_teleporter = null
 	///Icon of the current screen status
 	var/screen_icon = "gulag_on"
+
+/datum/wiki_data/gulag_item_reclaimer
+	atom_template = /obj/machinery/gulag_item_reclaimer
+	emag_description = "Emagging shorts access restrictions, allowing anyone to steal or claim another prisoners gear."
 
 /obj/machinery/gulag_item_reclaimer/Exited(atom/movable/gone, direction)
 	. = ..()

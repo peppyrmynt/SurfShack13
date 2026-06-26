@@ -284,7 +284,7 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 	verb_ask = "beeps"
 	verb_exclaim = "beeps"
 	pass_flags = PASSTABLE
-
+	auto_wiki_datum = /datum/wiki_data/libraryconsole
 	icon_state = "oldcomp"
 	icon_screen = "library"
 	icon_keyboard = null

@@ -14,6 +14,7 @@
 	name = "encrypted curiosity"
 	desc = "Needs to be decrypted at the safehouse to be opened."
 	resistance_flags =  INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
+	auto_wiki_datum = null
 	/// Path for the loot we are assigned
 	var/loot_path
 
@@ -25,6 +26,7 @@
 	desc = "Compiled from the virtual domain. An extra reward of a successful bitrunner."
 	/// What virtual domain did we come from.
 	var/datum/lazy_template/virtual_domain/source_domain
+	auto_wiki_datum = null
 
 /obj/item/storage/lockbox/bitrunning/decrypted/Initialize(
 	mapload,
