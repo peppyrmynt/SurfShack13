@@ -1,7 +1,7 @@
 /obj/machinery/chem_dispenser
 	name = "chem dispenser"
 	desc = "Creates and dispenses chemicals."
-	emag_desc = "Shorts the safeties, allowing synthesis of dangerous reagents."
+	auto_wiki_datum = /datum/wiki_data/chem_dispenser
 	density = TRUE
 	icon = 'icons/obj/medical/chemical.dmi'
 	icon_state = "dispenser"
@@ -91,6 +91,11 @@
 		/datum/reagent/drug/space_drugs,
 		/datum/reagent/toxin
 	)
+
+/datum/wiki_data/chem_dispenser
+	atom_template = /obj/machinery/chem_dispenser
+	emag_description = "Emagging shorts chemical prohibitors, allowing the synthesis of some illegal chemicals like morphine and carpotoxin."
+
 /obj/machinery/chem_dispenser/Initialize(mapload)
 	if(dispensable_reagents != null && !dispensable_reagents.len)
 		dispensable_reagents = default_dispensable_reagents

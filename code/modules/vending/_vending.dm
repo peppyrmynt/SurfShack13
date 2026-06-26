@@ -55,7 +55,7 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 /obj/machinery/vending
 	name = "\improper Vendomat"
 	desc = "A generic vending machine."
-	emag_desc = "Disables the product lock granting access to contraband."
+	auto_wiki_datum = /datum/wiki_data/vending
 	icon = 'icons/obj/machines/vending.dmi'
 	icon_state = "generic"
 	layer = BELOW_OBJ_LAYER
@@ -226,6 +226,9 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 	fire = 50
 	acid = 70
 
+/datum/wiki_data/vending
+	atom_template = /obj/machinery/vending
+	emag_description = "Emagging disables the product lock granting access to contraband."
 /**
  * Initialize the vending machine
  *

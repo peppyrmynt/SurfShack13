@@ -5,7 +5,7 @@
 /obj/machinery/mineral/labor_claim_console
 	name = "point claim console"
 	desc = "A stacking console with an electromagnetic writer, used to track ore mined by prisoners."
-	emag_desc = "Shorts the authentication mechanism, allowing you to go home."
+	auto_wiki_datum = /datum/wiki_data/labor_console
 	icon = 'icons/obj/machines/mining_machines.dmi'
 	icon_state = "console"
 	density = FALSE
@@ -17,6 +17,10 @@
 	var/initiated_launch = FALSE
 	/// Cooldown for console says.
 	COOLDOWN_DECLARE(say_cooldown)
+
+/datum/wiki_data/labor_console
+	atom_template = /obj/machinery/mineral/labor_claim_console
+	emag_description = "Emagging the console shorts the point tally system, allowing prisoners to go back to station."
 
 /obj/machinery/mineral/labor_claim_console/Initialize(mapload)
 	. = ..()

@@ -26,8 +26,7 @@
 	light_power = 1
 	light_range = 1.6
 	light_color = LIGHT_COLOR_ELECTRIC_CYAN
-	//surfshack start
-	emag_desc = "Turns the speaker off, and disables robots ability to toggle fire detection on or off."
+	auto_wiki_datum = /datum/wiki_data/firealarm
 	//We want to use area sensitivity, let us
 	always_area_sensitive = TRUE
 	///Buildstate for contruction steps
@@ -36,6 +35,10 @@
 	var/area/my_area = null
 	///looping sound datum for our fire alarm siren.
 	var/datum/looping_sound/firealarm/soundloop
+
+/datum/wiki_data/firealarm
+	atom_template = /obj/machinery/firealarm
+	emag_description = "Emagging turns the alarm speaker off and disables access for robots."
 
 /datum/armor/machinery_firealarm
 	fire = 90

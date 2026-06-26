@@ -13,7 +13,7 @@
 	integrity_failure = 0.33
 	armor_type = /datum/armor/machinery_airalarm
 	resistance_flags = FIRE_PROOF
-	emag_desc = "Disables the authentication system."
+	auto_wiki_datum = /datum/wiki_data/airalarm
 	/// Current alert level of our air alarm.
 	/// [AIR_ALARM_ALERT_NONE], [AIR_ALARM_ALERT_MINOR], [AIR_ALARM_ALERT_SEVERE]
 	var/danger_level = AIR_ALARM_ALERT_NONE
@@ -77,6 +77,10 @@
 	var/air_sensor_chamber_id = ""
 	/// Whether it is possible to link/unlink this air alarm from a sensor
 	var/allow_link_change = TRUE
+
+/datum/wiki_data/airalarm
+	atom_template = /obj/machinery/airalarm
+	emag_description = "Emagging grants access to the maintance panel."
 
 GLOBAL_LIST_EMPTY_TYPED(air_alarms, /obj/machinery/airalarm)
 

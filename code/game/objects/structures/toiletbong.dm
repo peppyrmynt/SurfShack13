@@ -6,9 +6,13 @@
 	base_icon_state = "toiletbong"
 	density = FALSE
 	anchored = TRUE
-	emag_desc = "Breaks the toilet. Gets your hand wet."
+	auto_wiki_datum = /datum/wiki_data/toiletbong
 	var/smokeradius = 1
 	var/mutable_appearance/weed_overlay
+
+/datum/wiki_data/toiletbong
+	atom_template = /obj/structure/toiletbong
+	emag_description = "Emagging the bong, clogs it breaking the bong and getting your emag card wet."
 
 /obj/structure/toiletbong/Initialize(mapload)
 	. = ..()

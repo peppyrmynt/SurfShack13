@@ -21,7 +21,7 @@
 	buckle_lying = 0
 	max_integrity = 200
 	interaction_flags_click = NEED_DEXTERITY|FORBID_TELEKINESIS_REACH|ALLOW_RESTING
-	emag_desc = "Overrides the machine's safety protocols, and activate realistic combat mode. A toolbox will pop out of a slot on the top."
+	auto_wiki_datum = /datum/wiki_data/training_machine
 	///Is the machine moving? Setting this to FALSE will automatically call stop_moving()
 	var/moving = FALSE
 	///The distance the machine is allowed to roam from its starting point
@@ -38,6 +38,10 @@
 	COOLDOWN_DECLARE(attack_cooldown)
 	///Cooldown macro to control how fast this will move. Used in process()
 	COOLDOWN_DECLARE(move_cooldown)
+
+/datum/wiki_data/training_machine
+	atom_template = /obj/structure/training_machine
+	emag_description = "Emagging the trainer overrides the machine's safety protocols, and activates realistic combat mode. A toolbox will pop out of a slot on the top."
 
 /**
  * Called on qdel(), so we don't want a cool explosion to happen

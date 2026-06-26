@@ -16,7 +16,7 @@
 	has_limbs = TRUE
 	hud_type = /datum/hud/robot
 	unique_name = TRUE
-	emag_desc = "unlocks the panel, if the panel is open hacks the interface"
+	auto_wiki_datum = /datum/wiki_data/silicon/ai
 	///Represents the cyborg's model (engineering, medical, etc.)
 	var/obj/item/robot_model/model = null
 

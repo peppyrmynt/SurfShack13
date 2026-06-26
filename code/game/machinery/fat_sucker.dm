@@ -7,8 +7,7 @@
 	state_open = FALSE
 	density = TRUE
 	req_access = list(ACCESS_KITCHEN)
-	//surfshack start
-	emag_desc = "Removes any access restrictions, and lowers the automatic ejection threshold."
+	auto_wiki_datum = /datum/wiki_data/fat_sucker
 	var/processing = FALSE
 	var/start_at = NUTRITION_LEVEL_WELL_FED
 	var/stop_at = NUTRITION_LEVEL_STARVING
@@ -28,6 +27,10 @@
 	"Saturated fat should form no more than 11% of your daily calories.", \
 	"Unsaturated fat, that is monounsaturated fats, polyunsaturated fats and omega-3 fatty acids, is found in plant foods and fish." \
 	)
+
+/datum/wiki_data/fat_sucker
+	atom_template = /obj/machinery/fat_sucker
+	emag_description = "Emagging removes any access restrictions, and disables the automatic ejection threshold, so the lipid extractor can remove lethal amounts of fat."
 
 /obj/machinery/fat_sucker/Initialize(mapload)
 	. = ..()

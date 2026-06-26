@@ -1,10 +1,17 @@
 // This code allows for airlocks to be controlled externally by setting an id_tag and comm frequency (disables ID access)
 /obj/machinery/door/airlock
 	opens_with_door_remote = TRUE
-	emag_desc = "Opens the airlock and permanently locks it open."
+	auto_wiki_datum = /datum/wiki_data/airlock
 	/// The current state of the airlock, used to construct the airlock overlays
 	var/airlock_state
 	var/frequency
+
+//surfshack start
+/datum/wiki_data/airlock
+	atom_template = /obj/machinery/door
+	name = "Airlock"
+	emag_description = "Emagging forces the airlock open and fries the electronics so it will no longer close."
+//surfshack end
 
 /// Forces the airlock to unbolt and open
 /obj/machinery/door/airlock/proc/secure_open()

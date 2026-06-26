@@ -6,7 +6,7 @@
 /obj/machinery/computer/emergency_shuttle
 	name = "emergency shuttle console"
 	desc = "For shuttle control."
-	emag_desc = "Early launches and hijacks the shuttle after several seconds, and throws people around harder on take off."
+	auto_wiki_datum = /datum/wiki_data/emergency_shuttle_console
 	icon_screen = "shuttle"
 	icon_keyboard = "tech_key"
 	resistance_flags = INDESTRUCTIBLE
@@ -20,6 +20,10 @@
 	var/hijack_completion_flight_time_set = 10 SECONDS //How long in deciseconds to set shuttle's timer after hijack is done.
 	var/hijack_hacking = FALSE
 	var/hijack_announce = TRUE
+
+/datum/wiki_data/emergency_shuttle_console
+	atom_template = /obj/machinery/computer/emergency_shuttle
+	emag_description = "Emagging early launches or hijacks the escapes the shuttle. It also makes the launch faster which can throw people around."
 
 /obj/machinery/computer/emergency_shuttle/Destroy()
 	// Our fake IDs that the emag generated are just there for colour

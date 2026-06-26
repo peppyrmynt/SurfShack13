@@ -8,13 +8,17 @@
 	righthand_file = 'icons/mob/inhands/equipment/briefcase_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
 	req_access = list(ACCESS_ARMORY)
-	emag_desc = "Destroys the lock."
+	auto_wiki_datum = /datum/wiki_data/lockbox
 	var/broken = FALSE
 	var/open = FALSE
 	var/icon_locked = "lockbox+l"
 	var/icon_closed = "lockbox"
 	var/icon_open = "lockbox"
 	var/icon_broken = "lockbox+b"
+
+/datum/wiki_data/lockbox
+	atom_template = /obj/item/storage/lockbox
+	emag_description = "Emagging Destroys the lockbox lock."
 
 /obj/item/storage/lockbox/Initialize(mapload)
 	. = ..()

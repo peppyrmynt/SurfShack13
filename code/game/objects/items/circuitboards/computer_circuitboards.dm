@@ -403,8 +403,13 @@
 	name = "R&D Console"
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE
 	build_path = /obj/machinery/computer/rdconsole
-	emag_desc = "Overloads the node announcement chip, forcing every node to be announced on common channel."
+	auto_wiki_datum = /datum/wiki_data/rdconsole
 	var/silence_announcements = FALSE
+
+/datum/wiki_data/rdconsole
+	atom_template = /obj/machinery/computer/rdconsole
+	emag_description = "Emagging the computer unlocks manufacturing ofillegal and security only designs.\
+	Emagging the circuit board spams general radio everytime something is researched."
 
 /obj/item/circuitboard/computer/rdconsole/examine(mob/user)
 	. = ..()
@@ -517,8 +522,12 @@
 	name = "Supply Console"
 	greyscale_colors = CIRCUIT_COLOR_SUPPLY
 	build_path = /obj/machinery/computer/cargo
-	emag_desc = "Unlocks special supplies and contraband."
+	auto_wiki_datum = /datum/wiki_data/cargo_console
 	var/contraband = FALSE
+
+/datum/wiki_data/cargo_console
+	atom_template = /obj/machinery/computer/cargo
+	emag_description = "Emagging the console or the circuit board unlocks blackmarket supplies and contraband."
 
 /obj/item/circuitboard/computer/cargo/multitool_act(mob/living/user)
 	. = ..()
@@ -549,8 +558,14 @@
 
 /obj/item/circuitboard/computer/cargo/express
 	name = "Express Supply Console"
-	emag_desc = "Unlocks special supplies and contraband. Allows drop pods to be delivered anywhere on station."
+	auto_wiki_datum = /datum/wiki_data/cargo_console/express
 	build_path = /obj/machinery/computer/cargo/express
+
+/datum/wiki_data/cargo_console/express
+	atom_template = /obj/machinery/computer/cargo/express
+	emag_description = "Emagging the console or the circuit board unlocks blackmarket supplies and contraband. \
+	It also allows the express console to deliver drops pods anywhere on station."
+
 
 /obj/item/circuitboard/computer/cargo/express/emag_act(mob/user, obj/item/card/emag/emag_card)
 	if (obj_flags & EMAGGED)

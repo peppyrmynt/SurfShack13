@@ -13,7 +13,7 @@
 	name = "elevator panel"
 	// Fire alarm reference.
 	desc = "<i>\"In case of emergency, please use the stairs.\"</i> Thus, always use the stairs."
-	emag_desc = "Removes the safety, allowing for very fast vertical travel, and mutes warning speakers."
+	auto_wiki_datum = /datum/wiki_data/elevator
 	density = FALSE
 
 	icon = 'icons/obj/wallmounts.dmi'

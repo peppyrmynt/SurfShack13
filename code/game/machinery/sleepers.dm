@@ -9,7 +9,7 @@
 	state_open = TRUE
 	interaction_flags_mouse_drop = NEED_DEXTERITY
 	circuit = /obj/item/circuitboard/machine/sleeper
-	emag_desc = "Scrambles the chemical injection buttons."
+	auto_wiki_datum = /datum/wiki_data/sleeper
 	payment_department = ACCOUNT_MED
 	fair_market_price = 5
 
@@ -52,6 +52,10 @@
 			/datum/reagent/medicine/omnizine,
 		),
 	)
+
+/datum/wiki_data/sleeper
+	atom_template = /obj/machinery/sleeper
+	emag_description = "Emagging scrambles the chemical injection buttons, so random chemicals get injected."
 
 /obj/machinery/sleeper/Initialize(mapload)
 	. = ..()
@@ -335,7 +339,7 @@
 	controls_inside = TRUE
 	deconstructable = TRUE
 	enter_message = span_boldnotice("You're surrounded by some funky music inside the chamber. You zone out as you feel waves of krunk vibe within you.")
-	emag_desc = "Scrambles the chemical injection buttons, and injects lead acetate"
+	auto_wiki_datum = /datum/wiki_data/party_sleeper
 
 	//Exclusively uses non-lethal, "fun" chems. At an obvious downside.
 	possible_chems = list(
@@ -363,6 +367,10 @@
 		/datum/reagent/baldium,
 		/datum/reagent/barbers_aid,
 	)
+
+/datum/wiki_data/party_sleeper
+	atom_template = /obj/machinery/sleeper/party
+	emag_description = "Emagging scrambles the chemical injection buttons, on injection theres also a chance lead acetate gets injected."
 
 /obj/machinery/sleeper/party/inject_chem(chem, mob/user)
 	if(obj_flags & EMAGGED)

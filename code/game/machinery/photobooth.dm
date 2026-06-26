@@ -19,13 +19,17 @@
 	light_on = FALSE
 	interaction_flags_atom = INTERACT_ATOM_ATTACK_HAND
 	req_one_access = list(ACCESS_LAWYER, ACCESS_SECURITY)
-	emag_desc = "Flashes users"
+	auto_wiki_datum = /datum/wiki_data/photobooth
 	///Boolean on whether we should add a height chart to the underlays of the people we take photos of.
 	var/add_height_chart = FALSE
 	///Boolean on whether the machine is currently busy taking someone's pictures, so you can't start taking pictures while it's working.
 	var/taking_pictures = FALSE
 	///The ID of the photobooth, used to connect it to a button.
 	var/button_id = "photobooth_machine_default"
+
+/datum/wiki_data/photobooth
+	atom_template = /obj/machinery/photobooth
+	emag_description = "Emagging overloads the camera bulb, causing the photobooth to flash users."
 
 /**
  * Security photobooth

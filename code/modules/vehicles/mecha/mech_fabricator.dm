@@ -3,7 +3,7 @@
 	icon_state = "fab-idle"
 	name = "exosuit fabricator"
 	desc = "Nothing is being built."
-	emag_desc  = "Allows printing of illegal mech parts, if the desigsn are researched."
+	auto_wiki_datum = /datum/wiki_data/mecha_part_fabricator
 	density = TRUE
 	req_access = list(ACCESS_ROBOTICS)
 	circuit = /obj/item/circuitboard/machine/mechfab
@@ -59,6 +59,10 @@
 
 	/// Direction the produced items will drop (0 means on top of us)
 	var/drop_direction = SOUTH
+
+/datum/wiki_data/mecha_part_fabricator
+	atom_template = /obj/machinery/mecha_part_fabricator
+	emag_description = "Emagging Allows printing of illegal mech parts, if the desigsn are researched."
 
 /obj/machinery/mecha_part_fabricator/Initialize(mapload)
 	print_sound = new(src,  FALSE)

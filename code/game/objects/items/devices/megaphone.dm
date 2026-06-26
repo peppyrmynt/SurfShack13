@@ -8,9 +8,13 @@
 	righthand_file = 'icons/mob/inhands/items/megaphone_righthand.dmi'
 	w_class = WEIGHT_CLASS_SMALL
 	siemens_coefficient = 1
-	emag_desc = "Overloads the voice synthesizer, making it louder."
+	auto_wiki_datum = /datum/wiki_data/megaphone
 	var/spamcheck = 0
 	var/list/voicespan = list(SPAN_COMMAND)
+
+/datum/wiki_data/megaphone
+	atom_template = /obj/item/megaphone
+	emag_description = "Emagging overloads the amplifier, making the megaphone much louder."
 
 /obj/item/megaphone/suicide_act(mob/living/carbon/user)
 	user.visible_message(span_suicide("[user] is uttering [user.p_their()] last words into \the [src]! It looks like [user.p_theyre()] trying to commit suicide!"))

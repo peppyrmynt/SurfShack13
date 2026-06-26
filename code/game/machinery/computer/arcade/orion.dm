@@ -5,7 +5,7 @@
 	desc = "Learn how our ancestors got to Orion, and have fun in the process!"
 	icon_state = "arcade"
 	circuit = /obj/item/circuitboard/computer/arcade/orion_trail
-	emag_desc = "Activates realism mode, and drops a custom minibomb if you win."
+	auto_wiki_datum = /datum/wiki_data/arcade_trail
 	///List of all orion events, created on Initialize.
 	var/static/list/orion_events
 	var/busy = FALSE //prevent clickspam that allowed people to ~speedrun~ the game.
@@ -31,6 +31,10 @@
 	var/obj/item/radio/radio
 	var/list/gamers = list()
 	var/killed_crew = 0
+
+/datum/wiki_data/arcade_trail
+	atom_template = /obj/machinery/computer/arcade/orion_trail
+	emag_description = "Emagging activates realism mode, making it so you die if you loose. The winning prize becomes a spaceship toy that overheats and blows up."
 
 /obj/machinery/computer/arcade/orion_trail/Initialize(mapload)
 	. = ..()

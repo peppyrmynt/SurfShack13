@@ -3,7 +3,7 @@ GLOBAL_VAR_INIT(nt_fax_department, pick("NT HR Department", "NT Legal Department
 /obj/machinery/fax
 	name = "Fax Machine"
 	desc = "Bluespace technologies on the application of bureaucracy."
-	emag_desc = "Makes the syndicate fax network visible."
+	auto_wiki_datum = /datum/wiki_data/fax
 	icon = 'icons/obj/machines/fax.dmi'
 	icon_state = "fax"
 	density = TRUE
@@ -60,6 +60,10 @@ GLOBAL_VAR_INIT(nt_fax_department, pick("NT HR Department", "NT Legal Department
 		nanotrasen = list(fax_name = "NT HR Department", fax_id = "central_command", color = "teal", emag_needed = FALSE),
 		syndicate = list(fax_name = "Sabotage Department", fax_id = "syndicate", color = "red", emag_needed = TRUE),
 	)
+
+/datum/wiki_data/fax
+	atom_template = /obj/machinery/fax
+	emag_description = "Emagging makes the syndicate fax network visible."
 
 /obj/machinery/fax/auto_name
 	name = "Auto-naming Fax Machine"

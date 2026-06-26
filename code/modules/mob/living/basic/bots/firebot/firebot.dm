@@ -3,7 +3,7 @@
 /mob/living/basic/bot/firebot
 	name = "\improper Firebot"
 	desc = "A little fire extinguishing bot. He looks rather anxious."
-	emag_desc = "If the cover is unlocked, makes it fight fire with fire."
+	auto_wiki_datum = /datum/wiki_data/bot/fire
 	icon = 'icons/mob/silicon/aibots.dmi'
 	icon_state = "firebot1"
 	light_color = "#8cffc9"
@@ -27,6 +27,10 @@
 	///cooldown before we release foam all over
 	COOLDOWN_DECLARE(foam_cooldown)
 
+/datum/wiki_data/bot/fire
+	name = "Firebot"
+	atom_template = /mob/living/basic/bot/firebot
+	emag_description = "Emagging the bot changes its behavior to fight fire with more fire."
 
 /mob/living/basic/bot/firebot/generate_speak_list()
 	var/static/list/idle_lines = list(

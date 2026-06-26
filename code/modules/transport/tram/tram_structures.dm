@@ -464,7 +464,7 @@
 	name = "tram spoiler"
 	icon = 'icons/obj/tram/tram_structure.dmi'
 	desc = "Nanotrasen bought the luxury package under the impression titanium spoilers make the tram go faster. They're just for looks, or potentially stabbing anybody who gets in the way."
-	emag_desc = "Overheats the spoiler servo so It can no longer be raised or lowered."
+	auto_wiki_datum = /datum/wiki_data/tram_spoiler
 	icon_state = "tram-spoiler-retracted"
 	max_integrity = 400
 	obj_flags = CAN_BE_HIT
@@ -481,6 +481,10 @@
 	var/datum/weakref/tram_ref
 	/// The tram we're attached to
 	var/tram_id = TRAMSTATION_LINE_1
+
+/datum/wiki_data/tram_spoiler
+	atom_template = /obj/structure/tram/spoiler
+	emag_description = "Emagging shorts the tram spoiler servo so It can no longer be raised or lowered."
 
 /obj/structure/tram/spoiler/Initialize(mapload)
 	. = ..()

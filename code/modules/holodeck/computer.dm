@@ -32,7 +32,7 @@ GLOBAL_LIST_INIT(typecache_holodeck_linked_floorcheck_ok, typecacheof(list(/turf
 /obj/machinery/computer/holodeck
 	name = "holodeck control console"
 	desc = "A computer used to control a nearby holodeck."
-	emag_desc = "Allows loading unsafe holograms, and increases the maximum power, letting things leave the area."
+	auto_wiki_datum = /datum/wiki_data/holodeck
 	icon_screen = "holocontrol"
 
 	//new vars
@@ -84,6 +84,11 @@ GLOBAL_LIST_INIT(typecache_holodeck_linked_floorcheck_ok, typecacheof(list(/turf
 
 	//creates the timer that determines if another program can be manually loaded
 	COOLDOWN_DECLARE(holodeck_cooldown)
+
+/datum/wiki_data/holodeck
+	atom_template = /obj/machinery/computer/holodeck
+	emag_description = "Emagging allows the loading of unsafe programs, and increases the projector power, allowing holograms to exit the room"
+
 
 /obj/machinery/computer/holodeck/post_machine_initialize() //from here linked is populated and the program list is generated. its also set to load the offline program
 	. = ..()

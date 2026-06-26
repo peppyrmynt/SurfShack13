@@ -14,9 +14,13 @@
 	item_flags = NO_MAT_REDEMPTION | NOBLUDGEON
 	slot_flags = ITEM_SLOT_ID
 	worn_icon_state = "emag"
-	emag_desc = "Transfers emag charge to this emag up to initial starting charge capacity."
+	auto_wiki_datum = /datum/wiki_data/emag
 	var/prox_check = TRUE //If the emag requires you to be in range
 	var/type_blacklist //List of types that require a specialized emag
+
+/datum/wiki_data/emag
+	atom_template = /obj/item/card/emag
+	emag_description = "Emagging an emag tranfers charges to the target card. Charges can only be transfered up to initial starting capactiy."
 
 /obj/item/card/emag/attack_self(mob/user) //for traitors with balls of plastitanium
 	if(Adjacent(user))
@@ -97,9 +101,13 @@
 	icon_state = /obj/item/card/emag::icon_state
 	worn_icon_state = /obj/item/card/emag::worn_icon_state
 	slot_flags = ITEM_SLOT_ID
-	emag_desc = "Causes it to explode on use"
+	auto_wiki_datum = /datum/wiki_data/emag/fake
 	/// Whether we are exploding
 	var/exploding = FALSE
+
+/datum/wiki_data/emag/fake
+	name = "Fake emag"
+	emag_description = "Emagging a fake emag causes it to explode on use."
 
 /obj/item/card/emagfake/attack_self(mob/user) //for assistants with balls of plasteel
 	if(Adjacent(user))

@@ -7,7 +7,7 @@
 	icon_state = "ticketmachine"
 	base_icon_state = "ticketmachine"
 	desc = "A marvel of bureaucratic engineering encased in an efficient plastic shell. It can be refilled with a hand labeler refill roll and linked to buttons with a multitool."
-	emag_desc = "Causes all the tickets to be called at once."
+	auto_wiki_datum = /datum/wiki_data/ticket_machine
 	density = FALSE
 	maptext_height = 26
 	maptext_width = 32
@@ -28,6 +28,10 @@
 	var/list/obj/item/ticket_machine_ticket/tickets = list()
 	///Current ticket to be served, essentially the head of the tickets queue
 	var/obj/item/ticket_machine_ticket/current_ticket
+
+/datum/wiki_data/ticket_machine
+	atom_template = /obj/machinery/ticket_machine
+	emag_description = "Emagging causes all the tickets to be called at once."
 
 /obj/machinery/ticket_machine/Initialize(mapload)
 	. = ..()

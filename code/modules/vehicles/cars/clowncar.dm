@@ -1,7 +1,7 @@
 /obj/vehicle/sealed/car/clowncar
 	name = "clown car"
 	desc = "How someone could even fit in there is byond me."
-	emag_desc = "Engages fun mode, added more buttons, and making the car waddle."
+	auto_wiki_datum = /datum/wiki_data/clowncar
 	icon_state = "clowncar"
 	max_integrity = 150
 	armor_type = /datum/armor/car_clowncar
@@ -25,6 +25,10 @@
 	var/cannonmode = CLOWN_CANNON_INACTIVE
 	///Does the driver require the clown role to drive it
 	var/enforce_clown_role = TRUE
+
+/datum/wiki_data/clowncar
+	atom_template = /obj/vehicle/sealed/car/clowncar
+	emag_description = "Emagging engages fun mode, added more buttons, and making the car waddle."
 
 /datum/armor/car_clowncar
 	melee = 70

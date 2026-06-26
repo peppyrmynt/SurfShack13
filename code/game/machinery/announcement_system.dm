@@ -35,9 +35,13 @@ GLOBAL_LIST_EMPTY(announcement_systems)
 	var/announce_research_node = TRUE
 	/// The text that we send when announcing researched nodes.
 	var/node_message = "The %NODE techweb node has been researched"
-	//surfshack start
-	emag_desc = "Causes the arrival message, The new head message, and the tech tree unlock message to become scrambled words"
-	//surfshack end
+	auto_wiki_datum = /datum/wiki_data/announcement_system
+
+//surfshack start
+/datum/wiki_data/announcement_system
+	atom_template = /obj/machinery/announcement_system
+	emag_description = "If a new crew joins, a new head joins, or if a new tech node is unlocked the resulting announcement will be gibberish."
+//surfshack end
 
 /obj/machinery/announcement_system/Initialize(mapload)
 	. = ..()

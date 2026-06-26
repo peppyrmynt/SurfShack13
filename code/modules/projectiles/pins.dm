@@ -1,7 +1,7 @@
 /obj/item/firing_pin
 	name = "electronic firing pin"
 	desc = "A small authentication device, to be inserted into a firearm receiver to allow operation. NT safety regulations require all new designs to incorporate one."
-	emag_desc = "Removes authentication checks."
+	auto_wiki_datum = /datum/wiki_data/firing_pin
 	icon = 'icons/obj/devices/gunmod.dmi'
 	icon_state = "firing_pin"
 	inhand_icon_state = "pen"
@@ -20,6 +20,10 @@
 	///Can be removed from the gun using tools or replaced by a pin with force_replace
 	var/pin_removable = TRUE
 	var/obj/item/gun/gun
+
+/datum/wiki_data/firing_pin
+	atom_template = /obj/item/firing_pin
+	emag_description = "Emagging removes firing pin authentication checks."
 
 /obj/item/firing_pin/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	if(!isgun(interacting_with))

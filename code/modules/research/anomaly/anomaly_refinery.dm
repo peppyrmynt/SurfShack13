@@ -13,7 +13,7 @@
 /obj/machinery/research/anomaly_refinery
 	name = "anomaly refinery"
 	desc = "An advanced machine capable of implosion-compressing raw anomaly cores into finished artifacts. Also equipped with state of the art bomb prediction software."
-	emag_desc = "Ejects a live TTV."
+	auto_wiki_datum = /datum/wiki_data/anomaly_refinery
 	circuit = /obj/item/circuitboard/machine/anomaly_refinery
 	icon = 'icons/obj/machines/research.dmi'
 	base_icon_state = "explosive_compressor"
@@ -38,6 +38,10 @@
 	var/datum/gas_mixture/combined_gasmix
 	/// Here for the UI, tracks the amounts of reaction that has occured. 1 means valve opened but not reacted.
 	var/reaction_increment = 0
+
+/datum/wiki_data/anomaly_refinery
+	atom_template = /obj/machinery/research/anomaly_refinery
+	emag_description = "Emagging causes the refinery to eject a live fucking maxcap."
 
 /obj/machinery/research/anomaly_refinery/Initialize(mapload)
 	. = ..()

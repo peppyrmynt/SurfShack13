@@ -9,7 +9,7 @@
 	state_open = FALSE
 	circuit = /obj/item/circuitboard/machine/harvester
 	light_color = LIGHT_COLOR_BLUE
-	emag_desc = "Allows harvesting from living people."
+	auto_wiki_datum = /datum/wiki_data/harvester
 	var/interval = 20
 	var/harvesting = FALSE
 	var/warming_up = FALSE
@@ -17,6 +17,10 @@
 	var/output_dir = SOUTH //Direction to drop the limbs in
 	var/allow_clothing = FALSE
 	var/allow_living = FALSE
+
+/datum/wiki_data/harvester
+	atom_template = /obj/machinery/harvester
+	emag_description = "Emagging disables the vital sensors, allowing harvesting from living people."
 
 /obj/machinery/harvester/Initialize(mapload)
 	. = ..()

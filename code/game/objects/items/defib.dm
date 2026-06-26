@@ -17,7 +17,7 @@
 	w_class = WEIGHT_CLASS_BULKY
 	actions_types = list(/datum/action/item_action/toggle_paddles)
 	armor_type = /datum/armor/item_defibrillator
-	emag_desc = "Toggles the shock safety."
+	auto_wiki_datum = /datum/wiki_data/defibrillator
 	var/obj/item/shockpaddles/paddle_type = /obj/item/shockpaddles
 	/// If the paddles are equipped (1) or on the defib (0)
 	var/on = FALSE
@@ -43,6 +43,10 @@
 	var/nocell_state = "defibunit-nocell"
 	/// The icon state for the emagged overlay, not applied if null
 	var/emagged_state = "defibunit-emagged"
+
+/datum/wiki_data/defibrillator
+	atom_template = /obj/item/defibrillator
+	emag_description = "Emagging toggles the shock safety, allowing you to use the defib as a shock weapon."
 
 /datum/armor/item_defibrillator
 	fire = 50

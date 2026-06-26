@@ -2,7 +2,7 @@
 /obj/machinery/vatgrower
 	name = "growing vat"
 	desc = "Tastes just like the chef's soup."
-	emag_desc = "Overloads the resampling ciruit so it cant be toggled."
+	auto_wiki_datum = /datum/wiki_data/vatgrower
 	icon = 'icons/obj/science/vatgrowing.dmi'
 	icon_state = "growing_vat"
 	density = TRUE
@@ -16,6 +16,10 @@
 	var/datum/biological_sample/biological_sample
 	///If the vat will restart the sample upon completion
 	var/resampler_active = FALSE
+
+/datum/wiki_data/vatgrower
+	atom_template = /obj/machinery/vatgrower
+	emag_description = "Emagging overloads the resampling circuit so it can no longer be toggled."
 
 /obj/machinery/vatgrower/Initialize(mapload, bolt, layer)
 	. = ..()

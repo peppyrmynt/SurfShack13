@@ -8,7 +8,7 @@
 	anchored = FALSE
 	density = TRUE
 	circuit = /obj/item/circuitboard/machine/fishing_portal_generator
-	emag_desc = "Allows fishing in the Syndicate dimension waters."
+	auto_wiki_datum = /datum/wiki_data/fishing_portal
 	///The current fishing spot loaded in
 	var/datum/component/fishing_spot/active
 	///A list of fishing spot it's linked to with a multitool.
@@ -21,6 +21,10 @@
 	var/all_destinations = FALSE
 	/// If the current active fishing spot is from multitool linkage, this value is the atom it would originally belong to.
 	var/atom/current_linked_atom
+
+/datum/wiki_data/fishing_portal
+	atom_template = /obj/machinery/fishing_portal_generator
+	emag_description = "Emagging the fish portal unlocks the syndicate dimension, where you can catch dangerous things, like a chainsaw fish."
 
 /obj/machinery/fishing_portal_generator/Initialize(mapload)
 	. = ..()

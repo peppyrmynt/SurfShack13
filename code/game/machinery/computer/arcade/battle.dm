@@ -43,7 +43,7 @@
 	icon_state = "arcade"
 	icon_screen = "fighters"
 	circuit = /obj/item/circuitboard/computer/arcade/battle
-	emag_desc = "Enables hard mode, The game gets dangerous and gives out bombs if you win."
+	auto_wiki_datum = /datum/wiki_data/arcade_battle
 	///List of all battle arcade gear that is available in the shop in game.
 	var/static/list/battle_arcade_gear_list
 	///List of all worlds in the game.
@@ -107,6 +107,10 @@
 	var/enemy_gold_reward
 	///unique to the emag mode, acts as a time limit where the player dies when it reaches 0.
 	var/bomb_cooldown = 19
+
+/datum/wiki_data/arcade_battle
+	atom_template = /obj/machinery/computer/arcade/battle
+	emag_description = "Emagging maxes the game difficulty. Upon losing the user dies. Upon wining, the user gets a nice hat and a free bomb."
 
 /obj/machinery/computer/arcade/battle/Initialize(mapload, obj/item/circuitboard/C)
 	. = ..()

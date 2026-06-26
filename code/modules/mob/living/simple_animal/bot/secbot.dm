@@ -1,7 +1,7 @@
 /mob/living/simple_animal/bot/secbot
 	name = "\improper Securitron"
 	desc = "A little security robot. He looks less than thrilled."
-	emag_desc = "unlocks the cover, if open, then makes the bot arrest everyone."
+	auto_wiki_datum = /datum/wiki_data/silicon/secbot
 	icon = 'icons/mob/silicon/aibots.dmi'
 	icon_state = "secbot"
 	light_color = "#f56275"
@@ -65,6 +65,13 @@
 	var/weapon_force = 20
 	///The department the secbot will deposit collected money into
 	var/payment_department = ACCOUNT_SEC
+
+
+
+/datum/wiki_data/silicon/secbot
+	atom_template = /mob/living/simple_animal/bot/secbot
+	name = "Securitron"
+	emag_description = "Emagging makes the secbot arrest anything that moves, a serious crime."
 
 /mob/living/simple_animal/bot/secbot/beepsky
 	name = "Commander Beep O'sky"

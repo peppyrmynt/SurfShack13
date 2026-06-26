@@ -21,9 +21,7 @@
 	density = TRUE
 	circuit = /obj/item/circuitboard/machine/medical_kiosk
 	payment_department = ACCOUNT_MED
-	//surfshack start
-	emag_desc = "Makes the UI display gibberish and/or incorrect/erratic information."
-	//surfshack end
+	auto_wiki_datum = /datum/wiki_data/medical_kiosk
 	var/obj/item/scanner_wand
 	/// How much it costs to use the kiosk by default.
 	var/default_price = 15          //I'm defaulting to a low price on this, but in the future I wouldn't have an issue making it more or less expensive.
@@ -42,6 +40,10 @@
 	var/datum/weakref/paying_ref //The person using the console in each instance. Used for paying for the kiosk.
 	/// Who's getting scanned?
 	var/datum/weakref/patient_ref //If scanning someone else, this will be the target.
+
+/datum/wiki_data/medical_kiosk
+	atom_template = /obj/machinery/medical_kiosk
+	emag_description = "Emagging overloads the health sensors, causing the kiosk to diagnose incorrectly, and display gibberish."
 
 /obj/machinery/medical_kiosk/Initialize(mapload) //loaded subtype for mapping use
 	. = ..()

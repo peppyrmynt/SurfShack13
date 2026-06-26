@@ -3,7 +3,7 @@
 /obj/item/grapple_gun
 	name = "grapple gun"
 	desc = "A small specialised airgun capable of launching a climbing hook into a distant rock face and pulling the user toward it via motorised zip-line. A handy tool for traversing the craggy landscape of lavaland!"
-	emag_desc = "Overides the pressure lock, letting it be used inside."
+	auto_wiki_datum = /datum/wiki_data/grapple
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "grapple_gun"
 	lefthand_file = 'icons/mob/inhands/weapons/guns_lefthand.dmi'
@@ -30,6 +30,10 @@
 	var/datum/looping_sound/zipline/zipline_sound
 	///our initial matrix
 	var/matrix/initial_matrix
+
+/datum/wiki_data/grapple
+	atom_template = /obj/item/grapple_gun
+	emag_description = "Emagging shorts the pressure sensor allowing the grapple gun to be used indoors"
 
 /obj/item/grapple_gun/Initialize(mapload)
 	. = ..()

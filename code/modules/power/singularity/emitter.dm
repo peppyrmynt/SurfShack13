@@ -1,7 +1,7 @@
 /obj/machinery/power/emitter
 	name = "emitter"
 	desc = "A heavy-duty industrial laser, often used in containment fields and power generation."
-	emag_desc = "Breaks the ID lock."
+	auto_wiki_datum = /datum/wiki_data/emitter
 	icon = 'icons/obj/machines/engine/singularity.dmi'
 	icon_state = "emitter"
 	base_icon_state = "emitter"
@@ -64,6 +64,10 @@
 	var/last_projectile_params
 	//the disk in the gun
 	var/obj/item/emitter_disk/diskie
+
+/datum/wiki_data/emitter
+	atom_template = /obj/machinery/power/emitter
+	emag_description = "Emagging shorts the ID lock."
 
 /obj/machinery/power/emitter/Initialize(mapload)
 	. = ..()

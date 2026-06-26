@@ -12,7 +12,7 @@
 /mob/living/simple_animal/bot/mulebot
 	name = "\improper MULEbot"
 	desc = "A Multiple Utility Load Effector bot."
-	emag_desc = "unlocks the cover, if open, then removes the crush safety, allowing the mulebut to crush people."
+	auto_wiki_datum = /datum/wiki_data/silicon/mulebot
 	icon_state = "mulebot0"
 	light_color = "#ffcc99"
 	light_power = 0.8
@@ -56,7 +56,10 @@
 	var/cell_move_power_usage = 1///How much power we use when we move.
 	var/num_steps = 0 ///The amount of steps we should take until we rest for a time.
 
-
+/datum/wiki_data/silicon/mulebot
+	atom_template = /mob/living/simple_animal/bot/mulebot
+	name = "Mule Bot"
+	emag_description = "Disables the crush sensors allowing the mule bot to run over living mobs."
 
 /mob/living/simple_animal/bot/mulebot/Initialize(mapload)
 	. = ..()

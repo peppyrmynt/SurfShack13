@@ -9,7 +9,7 @@
 /obj/machinery/computer/shuttle
 	name = "shuttle console"
 	desc = "A shuttle control computer."
-	emag_desc = "Grants access."
+	auto_wiki_datum = /datum/wiki_data/shuttle_computer
 	icon_screen = "shuttle"
 	icon_keyboard = "tech_key"
 	light_color = LIGHT_COLOR_CYAN
@@ -31,6 +31,10 @@
 	var/static/list/dumb_rev_heads = list()
 	/// Authorization request cooldown to prevent request spam to admin staff
 	COOLDOWN_DECLARE(request_cooldown)
+
+/datum/wiki_data/shuttle_computer
+	atom_template = /obj/machinery/computer/shuttle
+	emag_description = "Emagging grants access."
 
 /obj/machinery/computer/shuttle/Initialize(mapload)
 	. = ..()

@@ -25,7 +25,7 @@
 	circuit = /obj/item/circuitboard/computer/slot_machine
 	light_color = LIGHT_COLOR_BROWN
 	interaction_flags_machine = INTERACT_MACHINE_ALLOW_SILICON // don't need to be literate to play slots
-	emag_desc = "Rigs the machine."
+	auto_wiki_datum = /datum/wiki_data/slot_machine
 	var/money = 3000 //How much money it has CONSUMED
 	var/plays = 0
 	var/working = FALSE
@@ -47,6 +47,10 @@
 	var/static/list/coinvalues
 	var/list/reels = list(list("", "", "") = 0, list("", "", "") = 0, list("", "", "") = 0, list("", "", "") = 0, list("", "", "") = 0)
 	var/static/list/ray_filter = list(type = "rays", y = 16, size = 40, density = 4, color = COLOR_RED_LIGHT, factor = 15, flags = FILTER_OVERLAY)
+
+/datum/wiki_data/slot_machine
+	atom_template = /obj/machinery/computer/slot_machine
+	emag_description = "Emagging rigs the machine against the player."
 
 /obj/machinery/computer/slot_machine/Initialize(mapload)
 	. = ..()

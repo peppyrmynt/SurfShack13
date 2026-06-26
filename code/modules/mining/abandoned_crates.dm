@@ -3,7 +3,7 @@
 /obj/structure/closet/crate/secure/loot
 	name = "abandoned crate"
 	desc = "What could be inside?"
-	emag_desc = "Causes it to explode."
+	auto_wiki_datum = /datum/wiki_data/loot_crate
 	icon_state = "securecrate"
 	base_icon_state = "securecrate"
 	integrity_failure = 0 //no breaking open the crate
@@ -17,6 +17,10 @@
 
 	// Stop people from "diving into" the crate accidentally, and then detonating it.
 	divable = FALSE
+
+/datum/wiki_data/loot_crate
+	atom_template = /obj/structure/closet/crate/secure/loot
+	emag_description = "Emagging the crate activates the antitampor lock causing it to explode."
 
 /obj/structure/closet/crate/secure/loot/Initialize(mapload)
 	. = ..()

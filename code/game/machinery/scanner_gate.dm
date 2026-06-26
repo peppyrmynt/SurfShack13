@@ -14,7 +14,7 @@
 	layer = ABOVE_MOB_LAYER
 	circuit = /obj/item/circuitboard/machine/scanner_gate
 	COOLDOWN_DECLARE(next_beep)
-	emag_desc = "Disables id checker, allowing anyone access."
+	auto_wiki_datum = /datum/wiki_data/scanner_gate
 	var/scanline_timer
 	///Bool to check if the scanner's controls are locked by an ID.
 	var/locked = FALSE
@@ -53,6 +53,10 @@
 	)
 	/// Overlay object we're using for scanlines
 	var/obj/effect/overlay/scanline = null
+
+/datum/wiki_data/scanner_gate
+	atom_template = /obj/machinery/scanner_gate
+	emag_description = "Emagging grants access to the maintance panel."
 
 /obj/machinery/scanner_gate/Initialize(mapload)
 	. = ..()

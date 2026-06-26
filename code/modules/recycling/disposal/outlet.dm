@@ -16,7 +16,7 @@
 /obj/structure/disposaloutlet
 	name = "disposal outlet"
 	desc = "An outlet for the pneumatic disposal system."
-	emag_desc = "Maximizes the ejection force."
+	auto_wiki_datum = /datum/wiki_data/disposal_outlet
 	icon = 'icons/obj/pipes_n_cables/disposal.dmi'
 	icon_state = "outlet"
 	density = TRUE
@@ -29,6 +29,10 @@
 	var/eject_range = EJECT_RANGE_SLOW
 	/// how fast we're spitting fir- atoms
 	var/eject_speed = EJECT_SPEED_SLOW
+
+/datum/wiki_data/disposal_outlet
+	atom_template = /obj/structure/disposaloutlet
+	emag_description = "Emagging maximizes the ejection force."
 
 /obj/structure/disposaloutlet/Initialize(mapload, obj/structure/disposalconstruct/make_from)
 	. = ..()

@@ -554,7 +554,7 @@
 	desc = "A module which engages with the various locks and seals tied to the suit's systems, \
 		enabling it to only be worn by someone corresponding with the user's exact DNA profile; \
 		however, this incredibly sensitive module is shorted out by EMPs. Luckily, cloning has been outlawed."
-	emag_desc = "Removes the DNA lock."
+	auto_wiki_datum = /datum/wiki_data/dna_lock
 	icon_state = "dnalock"
 	module_type = MODULE_USABLE
 	complexity = 1
@@ -563,6 +563,10 @@
 	cooldown_time = 0.5 SECONDS
 	/// The DNA we lock with.
 	var/dna = null
+
+/datum/wiki_data/dna_lock
+	atom_template = /obj/item/mod/module/dna_lock
+	emag_description = "Emagging removes the DNA lock on the module."
 
 /obj/item/mod/module/dna_lock/on_install()
 	RegisterSignal(mod, COMSIG_MOD_ACTIVATE, PROC_REF(on_mod_activation))

@@ -45,10 +45,10 @@ GLOBAL_LIST_INIT(hailer_phrases, list(
 /obj/item/clothing/mask/gas/sechailer
 	name = "security gas mask"
 	desc = "A standard issue Security gas mask with integrated 'Compli-o-nator 3000' device. Plays over a dozen pre-recorded compliance phrases designed to get scumbags to stand still whilst you tase them. Do not tamper with the device."
-	emag_desc = "Fries the profanity safety circuit, causing the mask to spew profanity."
 	actions_types = list(/datum/action/item_action/halt, /datum/action/item_action/adjust)
 	icon_state = "sechailer"
 	inhand_icon_state = "sechailer"
+	auto_wiki_datum = /datum/wiki_data/hailer
 	clothing_flags = BLOCK_GAS_SMOKE_EFFECT | MASKINTERNALS | GAS_FILTERING
 	flags_inv = HIDEFACIALHAIR | HIDEFACE | HIDESNOUT
 	w_class = WEIGHT_CLASS_SMALL
@@ -72,6 +72,10 @@ GLOBAL_LIST_INIT(hailer_phrases, list(
 	var/safety = TRUE
 	voice_filter = @{"[0:a] asetrate=%SAMPLE_RATE%*0.7,aresample=16000,atempo=1/0.7,lowshelf=g=-20:f=500,highpass=f=500,aphaser=in_gain=1:out_gain=1:delay=3.0:decay=0.4:speed=0.5:type=t [out]; [out]atempo=1.2,volume=15dB [final]; anoisesrc=a=0.01:d=60 [noise]; [final][noise] amix=duration=shortest"}
 	use_radio_beeps_tts = TRUE
+
+/datum/wiki_data/hailer
+	atom_template = /obj/item/clothing/mask/gas/sechailer
+	emag_description = "Emagging the hailer fries the  safety circuit, causing the mask to spew profanity."
 
 /obj/item/clothing/mask/gas/sechailer/plasmaman
 	starting_filter_type = /obj/item/gas_filter/plasmaman

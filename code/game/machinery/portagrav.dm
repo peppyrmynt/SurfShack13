@@ -11,9 +11,7 @@
 	circuit = /obj/item/circuitboard/machine/portagrav
 	armor_type = /datum/armor/portable_gravity
 	interaction_flags_click = ALLOW_SILICON_REACH
-	//surfshack start
-	emag_desc = "Unlocks higher gravity settings."
-	//surfshack end
+	auto_wiki_datum = /datum/wiki_data/portagrav
 	//We don't use area power
 	use_power = NO_POWER_USE
 	///The cell we spawn with
@@ -32,6 +30,10 @@
 	var/max_range = 6
 	/// draw per range
 	var/draw_per_range = BASE_MACHINE_ACTIVE_CONSUMPTION
+
+/datum/wiki_data/portagrav
+	atom_template = /obj/machinery/power/portagrav
+	emag_description = "Emagging allows the generator to produce dangerous levels of gravity."
 
 /datum/armor/portable_gravity
 	fire = 100

@@ -19,7 +19,7 @@ Nothing else in the console has ID requirements.
 /obj/machinery/computer/rdconsole
 	name = "R&D Console"
 	desc = "A console used to interface with R&D tools."
-	emag_desc = "allows printing of illegal or security only designs."
+	auto_wiki_datum = /datum/wiki_data/rdconsole
 	icon_screen = "rdcomp"
 	icon_keyboard = "rd_key"
 	circuit = /obj/item/circuitboard/computer/rdconsole

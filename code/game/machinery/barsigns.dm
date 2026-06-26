@@ -14,9 +14,13 @@
 	var/change_area_name = FALSE
 	/// What kind of sign do we drop upon being disassembled?
 	var/disassemble_result = /obj/item/wallframe/barsign
-	//surfshack start
-	emag_desc = "loads all the illegal barsigns"
-	//surfshack end
+	auto_wiki_datum = /datum/wiki_data/barsign
+
+//surfshack start
+/datum/wiki_data/barsign
+	atom_template = /obj/machinery/barsign
+	emag_description = "Emagging the barsign unlocks access to all the illegal sign designs."
+//surfshack end
 
 /datum/armor/sign_barsign
 	melee = 20

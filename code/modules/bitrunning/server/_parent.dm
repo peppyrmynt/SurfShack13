@@ -7,7 +7,7 @@
 	circuit = /obj/item/circuitboard/machine/quantum_server
 	density = TRUE
 	desc = "A hulking computational machine designed to fabricate virtual domains."
-	emag_desc = "Doubles the chance for glitches to spawn, and doubles the maximum chance for a glitch to spawn."
+	auto_wiki_datum = /datum/wiki_data/quantum_server
 	icon = 'icons/obj/machines/bitrunning.dmi'
 	base_icon_state = "qserver"
 	icon_state = "qserver"
@@ -51,6 +51,10 @@
 	var/broadcasting = FALSE
 	/// Cooldown between being able to toggle broadcasting
 	COOLDOWN_DECLARE(broadcast_toggle_cd)
+
+/datum/wiki_data/quantum_server
+	atom_template = /obj/machinery/quantum_server
+	emag_description = "Emagging the server doubles the chance for glitches to spawn (dangerous bitrunning anomolies)."
 
 /obj/machinery/quantum_server/post_machine_initialize()
 	. = ..()

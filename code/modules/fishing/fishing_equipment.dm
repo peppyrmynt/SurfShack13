@@ -485,7 +485,7 @@
 /obj/item/survivalcapsule/fishing
 	name = "fishing spot capsule"
 	desc = "An illegally modified mining capsule containing a small fishing spot connected to some faraway place."
-	emag_desc = "Disables the fishing safety setup, allowing you to select unsafe fishing spots like lava and plasma."
+	auto_wiki_datum = /datum/wiki_data/fishing_capsule
 	icon_state = "capsule_fishing"
 	initial_language_holder = /datum/language_holder/speaking_machine
 	verb_say = "beeps"
@@ -493,6 +493,11 @@
 	voice_filter = "alimiter=0.9,acompressor=threshold=0.3:ratio=40:attack=15:release=350:makeup=1.5,highpass=f=1000,rubberband=pitch=1.5"
 	template_id = "fishing_default"
 	yeet_back = FALSE
+
+/datum/wiki_data/fishing_capsule
+	atom_template = /obj/item/survivalcapsule/fishing
+	emag_description = "Emagging disables the fishing safety setup, allowing you to select unsafe fishing spots, like lava or plasma."
+
 
 /obj/item/survivalcapsule/fishing/Initialize(mapload)
 	. = ..()

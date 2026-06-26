@@ -12,7 +12,7 @@
 	max_integrity = 80
 	use_power = NO_POWER_USE
 	var/obj/machinery/porta_turret/parent_turret = null
-	emag_desc = "Targets everything except syndicate borgs, draws twice the power"
+	auto_wiki_datum = /datum/wiki_data/turret
 
 /obj/machinery/porta_turret_cover/Destroy()
 	if(parent_turret)

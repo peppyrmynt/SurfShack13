@@ -60,7 +60,7 @@
 /obj/machinery/satellite/meteor_shield
 	name = "\improper Meteor Shield Satellite"
 	desc = "A meteor point-defense satellite."
-	emag_desc = "Increases chance of meteor strikes."
+	auto_wiki_datum = /datum/wiki_data/meteor_shield
 	mode = "M-SHIELD"
 	/// the range a meteor shield sat can destroy meteors
 	var/kill_range = 14
@@ -76,6 +76,10 @@
 	var/static/highest_emagged_threshold_reached = 0
 	/// cooldown on emagging meteor shields because instantly summoning a dark matt-eor is very unfun
 	STATIC_COOLDOWN_DECLARE(shared_emag_cooldown)
+
+/datum/wiki_data/meteor_shield
+	atom_template = /obj/machinery/satellite/meteor_shield
+	emag_description = "Emagging the shield increases the chance of meteor showers."
 
 /obj/machinery/satellite/meteor_shield/examine(mob/user)
 	. = ..()

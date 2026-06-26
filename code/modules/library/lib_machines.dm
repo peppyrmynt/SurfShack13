@@ -280,7 +280,6 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 /obj/machinery/computer/libraryconsole/bookmanagement
 	name = "book inventory management console"
 	desc = "Librarian's command station."
-	emag_desc = "Unlocks forbidden knowledge, reading it may have adverse affects on the user."
 	verb_say = "beeps"
 	verb_ask = "beeps"
 	verb_exclaim = "beeps"
@@ -317,6 +316,10 @@ GLOBAL_VAR_INIT(library_table_modified, 0)
 	COOLDOWN_DECLARE(printer_cooldown)
 	///Our cooldown on publishing books to the newscaster's "book club" channel
 	COOLDOWN_DECLARE(newscaster_cooldown)
+
+/datum/wiki_data/libraryconsole
+	atom_template = /obj/machinery/computer/libraryconsole
+	emag_description = "Emagging unlocks forbidden knowledge, reading the forbidden knowledge may have adverse affects on the user."
 
 /obj/machinery/computer/libraryconsole/bookmanagement/Initialize(mapload)
 	. = ..()

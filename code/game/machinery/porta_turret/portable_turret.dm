@@ -42,7 +42,7 @@ DEFINE_BITFIELD(turret_flags, list(
 	blocks_emissive = EMISSIVE_BLOCK_UNIQUE
 	// Same faction mobs will never be shot at, no matter the other settings
 	faction = list(FACTION_TURRET)
-	emag_desc = "Targets everything except syndicate borgs, draws twice the power"
+	auto_wiki_datum = /datum/wiki_data/turret
 
 	///if TRUE this will cause the turret to stop working if the stored_gun var is null in process()
 	var/uses_stored = TRUE
@@ -106,6 +106,12 @@ DEFINE_BITFIELD(turret_flags, list(
 	var/mob/remote_controller
 	/// While the cooldown is still going on, it cannot be re-enabled.
 	COOLDOWN_DECLARE(disabled_time)
+
+
+/datum/wiki_data/turret
+	atom_template = /obj/machinery/porta_turret
+	emag_description = "Emagging causes the turret to target everything accept syndicate borgs, It also doubles the power draw."
+
 
 /datum/armor/machinery_porta_turret
 	melee = 50
@@ -926,7 +932,7 @@ DEFINE_BITFIELD(turret_flags, list(
 	req_access = list(ACCESS_AI_UPLOAD)
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	interaction_flags_click = ALLOW_SILICON_REACH
-	emag_desc = "unlocks id"
+	auto_wiki_datum = /datum/wiki_data/turret_control
 	/// Variable dictating if linked turrets are active and will shoot targets
 	var/enabled = TRUE
 	/// Variable dictating if linked turrets will shoot lethal projectiles
@@ -941,6 +947,11 @@ DEFINE_BITFIELD(turret_flags, list(
 	var/shoot_cyborgs = FALSE
 	/// List of weakrefs to all turrets
 	var/list/turrets = list()
+
+
+/datum/wiki_data/turret_control
+	atom_template = /obj/machinery/turretid
+	emag_description = "Emagging grants access to the control panel."
 
 /obj/machinery/turretid/Initialize(mapload, ndir = 0, built = 0)
 	. = ..()

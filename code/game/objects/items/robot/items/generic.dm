@@ -323,9 +323,13 @@
 	desc = "Releases a harmless blast that confuses most organics. For when the harm is JUST TOO MUCH."
 	icon = 'icons/obj/devices/voice.dmi'
 	icon_state = "megaphone"
-	emag_desc = "Toggles the safety making the siren loud enough to deafen people."
+	auto_wiki_datum = /datum/wiki_data/harmalarm
 	/// Harm alarm cooldown
 	COOLDOWN_DECLARE(alarm_cooldown)
+
+/datum/wiki_data/harmalarm
+	atom_template = /obj/item/harmalarm
+	emag_description = "Emagging toggles the amplifier on or off. If the amplifies is on, the siren is loud enough to deafen people."
 
 /obj/item/harmalarm/emag_act(mob/user, obj/item/card/emag/emag_card)
 	obj_flags ^= EMAGGED

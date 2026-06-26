@@ -19,10 +19,15 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/button/elevator, 32)
 /obj/item/assembly/control/elevator
 	name = "elevator controller"
 	desc = "A small device used to call elevators to the current floor."
-	emag_desc = "Removes the safety, allowing for very fast vertical travel, and mutes warning speakers."
+	auto_wiki_datum = /datum/wiki_data/elevator
 	/// A weakref to the transport_controller datum we control
 	var/datum/weakref/lift_weakref
 	COOLDOWN_DECLARE(elevator_cooldown)
+
+/datum/wiki_data/elevator
+	atom_template = /obj/machinery/elevator_control_panel
+	name = "Elevator"
+	emag_description = "Emagging removes shorts the speaker and motion sensors, allowing for very fast vertical travel, and silencing warning speakers."
 
 /obj/item/assembly/control/elevator/Initialize(mapload)
 	. = ..()

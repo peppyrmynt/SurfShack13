@@ -1,7 +1,7 @@
 /obj/machinery/computer/cargo
 	name = "supply console"
 	desc = "Used to order supplies, approve requests, and control the shuttle."
-	emag_desc = "Unlocks special supplies and contraband."
+	auto_wiki_datum = /datum/wiki_data/cargo_console
 	icon_screen = "supply"
 	circuit = /obj/item/circuitboard/computer/cargo
 	light_color = COLOR_BRIGHT_ORANGE

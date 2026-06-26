@@ -21,7 +21,7 @@
 
 /obj/machinery/computer/shuttle/pod
 	name = "pod control computer"
-	emag_desc = "Lets you launch the pod to lavaland regardless of alert."
+	auto_wiki_datum = /datum/wiki_data/emergency_pod
 	locked = TRUE
 	possible_destinations = "pod_asteroid"
 	icon = 'icons/obj/machines/wallmounts.dmi'
@@ -31,6 +31,10 @@
 	density = FALSE
 	icon_keyboard = null
 	icon_screen = "pod_on"
+
+/datum/wiki_data/emergency_pod
+	atom_template = /obj/machinery/computer/shuttle/pod
+	emag_description = "Emagging allows you to lauch to pod to lavaland regardless of the current alert level."
 
 /obj/machinery/computer/shuttle/pod/Initialize(mapload)
 	. = ..()

@@ -12,9 +12,7 @@
 	idle_power_usage = BASE_MACHINE_IDLE_CONSUMPTION * 0.02
 	resistance_flags = LAVA_PROOF | FIRE_PROOF
 	interaction_flags_machine = parent_type::interaction_flags_machine | INTERACT_MACHINE_OPEN
-	//surfshack start
-	emag_desc = "Removes any access restrictions, If there is a device inside the button, it also gets affected."
-	//surfshack end
+	auto_wiki_datum = /datum/wiki_data/button
 	///Icon suffix for the skin of the front pannel that is added to base_icon_state
 	var/skin = ""
 	///Whether it is possible to change the panel skin
@@ -26,6 +24,12 @@
 	var/id = null
 	var/initialized_button = FALSE
 	var/silicon_access_disabled = FALSE
+
+/datum/wiki_data/button
+	name = "Wall Button"
+	atom_template = /obj/machinery/button
+	emag_description = "Emagging removes any access restrictions on the button, and will also emag any device inside the button."
+
 
 /obj/machinery/button/indestructible
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF

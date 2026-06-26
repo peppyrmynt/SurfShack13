@@ -5,10 +5,14 @@
 	icon = 'icons/obj/clothing/modsuit/mod_clothing.dmi'
 	worn_icon = 'icons/mob/clothing/modsuit/mod_clothing.dmi'
 
+/datum/wiki_data/mod_control
+	atom_template = /obj/item/mod/control
+	emag_description = "Emagging unlocks the mod unit."
+
 /obj/item/mod/control
 	name = "MOD control unit"
 	desc = "The control unit of a Modular Outerwear Device, a powered suit that protects against various environments."
-	emag_desc = "Unlocks the unit"
+	auto_wiki_datum = /datum/wiki_data/mod_control
 	icon_state = "standard-control"
 	inhand_icon_state = "mod_control"
 	base_icon_state = "control"

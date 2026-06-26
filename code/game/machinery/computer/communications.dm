@@ -15,7 +15,7 @@
 	req_access = list(ACCESS_COMMAND)
 	circuit = /obj/item/circuitboard/computer/communications
 	light_color = LIGHT_COLOR_BLUE
-	emag_desc = "Summons a syndicate battle cruiser."
+	auto_wiki_datum = /datum/wiki_data/communications_console
 	/// If the battlecruiser has been called
 	var/static/battlecruiser_called = FALSE
 
@@ -57,6 +57,10 @@
 	var/toggle_max_uses = 3
 	///when was emergency access last toggled
 	var/last_toggled
+
+/datum/wiki_data/communications_console
+	atom_template = /obj/machinery/computer/communications
+	emag_description = "Emagging summons a syndicate battle cruiser."
 
 /obj/machinery/computer/communications/syndicate
 	icon_screen = "commsyndie"

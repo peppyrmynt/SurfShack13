@@ -44,7 +44,7 @@
 	obj_flags = CONDUCTS_ELECTRICITY
 	slot_flags = ITEM_SLOT_BELT
 	force = 8
-	emag_desc = "Replaced lights will now be filled with plasma, and explode when on."
+	auto_wiki_datum = /datum/wiki_data/lightreplacer
 
 	/// How many uses does our light replacer have?
 	var/uses = 10
@@ -58,6 +58,10 @@
 
 	/// whether it is "bluespace powered" (can be used at a range)
 	var/bluespace_toggle = FALSE
+
+/datum/wiki_data/lightreplacer
+	atom_template = /obj/item/lightreplacer
+	emag_description = "Emagging causes replaced lights to be filled with plasma, and explode when turned on."
 
 /obj/item/lightreplacer/examine(mob/user)
 	. = ..()
@@ -336,7 +340,7 @@
 	name = "bluespace light replacer"
 	desc = "A modified light replacer that zaps lights into place. Refill with broken or working lightbulbs, or sheets of glass."
 	icon_state = "lightreplacer_blue"
-	emag_desc = null
+	auto_wiki_datum = null
 	bluespace_toggle = TRUE
 
 /obj/item/lightreplacer/blue/emag_act()

@@ -9,7 +9,7 @@
 	plane = ABOVE_GAME_PLANE
 	density = TRUE
 	circuit = /obj/item/circuitboard/machine/recycler
-	emag_desc = "Disables grinding safties, allowing living mobs to be recycled."
+	auto_wiki_datum = /datum/wiki_data/recycler
 	var/safety_mode = FALSE // Temporarily stops machine if it detects a mob
 	var/icon_name = "grinder-o"
 	var/bloody = FALSE
@@ -18,6 +18,10 @@
 	var/eat_victim_items = TRUE
 	var/item_recycle_sound = 'sound/items/tools/welder.ogg'
 	var/datum/component/material_container/materials
+
+/datum/wiki_data/recycler
+	atom_template = /obj/machinery/recycler
+	emag_description = "Emagging disables vital sensors, allowing living mobs to be recycled."
 
 /obj/machinery/recycler/Initialize(mapload)
 	materials = AddComponent(

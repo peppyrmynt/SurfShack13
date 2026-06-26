@@ -4,7 +4,7 @@
 /obj/item/modular_computer
 	name = "modular microcomputer"
 	desc = "A small portable microcomputer."
-	emag_desc = "Loads syndieOS."
+	auto_wiki_datum = /datum/wiki_data/modular_computer
 	icon = 'icons/obj/machines/computer.dmi'
 	icon_state = "laptop"
 	light_on = FALSE
@@ -121,6 +121,10 @@
 	 * such as creating and deleting unremovable circuit comps based on the programs installed.
 	 */
 	var/datum/component/shell/shell
+
+/datum/wiki_data/modular_computer
+	atom_template = /obj/item/modular_computer
+	emag_description = "Emagging the computer part loads syndieOS onto it."
 
 /datum/armor/item_modular_computer
 	bullet = 20

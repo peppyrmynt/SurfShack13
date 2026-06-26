@@ -1,7 +1,7 @@
 /obj/machinery/computer/rdservercontrol
 	name = "R&D Server Controller"
 	desc = "Manages access to research databases and consoles."
-	emag_desc = "Grants access."
+	auto_wiki_datum = /datum/wiki_data/rdserver
 	icon_screen = "rdcomp"
 	icon_keyboard = "rd_key"
 	circuit = /obj/item/circuitboard/computer/rdservercontrol
@@ -9,6 +9,10 @@
 
 	///Connected techweb node the server is connected to.
 	var/datum/techweb/stored_research
+
+/datum/wiki_data/rdserver
+	atom_template = /obj/machinery/computer/rdservercontrol
+	emag_description = "Emagging grants access."
 
 /obj/machinery/computer/rdservercontrol/post_machine_initialize()
 	. = ..()

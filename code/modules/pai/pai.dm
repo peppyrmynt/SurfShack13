@@ -3,7 +3,7 @@
 	can_buckle_to = FALSE
 	density = FALSE
 	desc = "A generic pAI hard-light holographics emitter."
-	emag_desc = "Replaces the pai laws making them loyal to the syndicate and removing their master."
+	auto_wiki_datum = /datum/wiki_data/pai
 	health = 500
 	held_lh = 'icons/mob/inhands/pai_item_lh.dmi'
 	held_rh = 'icons/mob/inhands/pai_item_rh.dmi'
@@ -138,6 +138,10 @@
 		"sunglasses",
 		"what"
 	)
+
+/datum/wiki_data/pai
+	atom_template = /mob/living/silicon/pai
+	emag_description = "Emagging replaces the pai laws making them loyal to the syndicate and removes their current master."
 
 /mob/living/silicon/pai/add_sensors() //pAIs have to buy their HUDs
 	return

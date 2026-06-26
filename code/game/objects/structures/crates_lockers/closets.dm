@@ -20,7 +20,7 @@ GLOBAL_LIST_EMPTY(roundstart_station_closets)
 	/// How insulated the thing is, for the purposes of calculating body temperature. Must be between 0 and 1!
 	contents_thermal_insulation = 0
 	pass_flags_self = PASSSTRUCTURE | LETPASSCLICKS
-	emag_desc = "Opens the closet and breaks the lock if there is one."
+	auto_wiki_datum = /datum/wiki_data/closet
 	/// The overlay for the closet's door
 	var/obj/effect/overlay/closet_door/door_obj
 	/// Whether or not this door is being animated
@@ -98,6 +98,10 @@ GLOBAL_LIST_EMPTY(roundstart_station_closets)
 	var/x_shake_pixel_shift = 2
 	/// how many pixels the closet can shift on the y axes when shaking
 	var/y_shake_pixel_shift = 1
+
+/datum/wiki_data/closet
+	atom_template = /obj/structure/closet
+	emag_description = "Emagging shorts the lock on the closet if there is one."
 
 /datum/armor/structure_closet
 	melee = 20

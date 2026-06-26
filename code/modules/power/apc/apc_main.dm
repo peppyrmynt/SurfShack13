@@ -17,7 +17,7 @@
 /obj/machinery/power/apc
 	name = "area power controller"
 	desc = "A control terminal for the area's electrical systems."
-	emag_desc = "Unlocks the interface."
+	auto_wiki_datum = /datum/wiki_data/apc
 	icon = 'icons/obj/machines/wallmounts.dmi'
 	icon_state = "apc0"
 	use_power = NO_POWER_USE
@@ -142,6 +142,10 @@
 	/// Used for apc helper called full_charge to make apc's charge at 100% meter.
 	var/full_charge = FALSE
 	armor_type = /datum/armor/power_apc
+
+/datum/wiki_data/apc
+	atom_template = /obj/machinery/power/apc
+	emag_description = "Emagging grants access."
 
 /datum/armor/power_apc
 	melee = 20

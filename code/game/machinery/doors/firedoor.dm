@@ -21,7 +21,7 @@
 	closingLayer = CLOSED_FIREDOOR_LAYER
 	armor_type = /datum/armor/door_firedoor
 	interaction_flags_machine = INTERACT_MACHINE_WIRES_IF_OPEN | INTERACT_MACHINE_ALLOW_SILICON | INTERACT_MACHINE_OPEN_SILICON | INTERACT_MACHINE_REQUIRES_SILICON | INTERACT_MACHINE_OPEN
-	emag_desc = "Opens the firelock"
+	auto_wiki_datum = /datum/wiki_data/firedoor
 	COOLDOWN_DECLARE(activation_cooldown)
 
 	///X offset for the overlay lights, so that they line up with the thin border firelocks
@@ -62,6 +62,9 @@
 	var/knock_sound = 'sound/effects/glass/glassknock.ogg'
 	var/bash_sound = 'sound/effects/glass/glassbash.ogg'
 
+/datum/wiki_data/firedoor
+	atom_template = /obj/machinery/door/firedoor
+	emag_description = "Emagging opens the firelock, like an electronic crowbar."
 
 /datum/armor/door_firedoor
 	melee = 10

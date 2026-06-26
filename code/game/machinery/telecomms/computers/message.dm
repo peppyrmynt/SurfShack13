@@ -16,7 +16,7 @@
 	icon_screen = "comm_logs"
 	circuit = /obj/item/circuitboard/computer/message_monitor
 	light_color = LIGHT_COLOR_GREEN
-	emag_desc = "Toggles the linked message server off for temporary amout of time based on how long the password is."
+	auto_wiki_datum = /datum/wiki_data/message_monitor
 	/// Server linked to.
 	var/obj/machinery/telecomms/message_server/linkedServer = null
 	/// Sparks effect - For emag
@@ -34,6 +34,10 @@
 	var/success_message = ""
 	/// Decrypt password
 	var/password = ""
+
+/datum/wiki_data/message_monitor
+	atom_template = /obj/machinery/computer/message_monitor
+	emag_description = "Emagging forces the connected server to re-decrypt the password, the server gets disrupted scaling with how long the password is."
 
 /obj/machinery/computer/message_monitor/screwdriver_act(mob/living/user, obj/item/I)
 	if(obj_flags & EMAGGED)

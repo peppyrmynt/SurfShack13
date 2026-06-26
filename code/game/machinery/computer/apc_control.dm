@@ -6,7 +6,7 @@
 	req_access = list(ACCESS_CE)
 	circuit = /obj/item/circuitboard/computer/apc_control
 	light_color = LIGHT_COLOR_DIM_YELLOW
-	emag_desc = "Shorts the access controller."
+	auto_wiki_datum = /datum/wiki_data/apc_control
 	///The APC we're remotely connected to right now
 	var/obj/machinery/power/apc/active_apc
 	///Whether actions are being logged to the console's logs or not
@@ -19,6 +19,10 @@
 	var/auth_id = "\[NULL\]:"
 	///Whether the computer is on a station-level; set in Initialize() for use in checking APCs
 	var/is_on_station = TRUE
+
+/datum/wiki_data/apc_control
+	atom_template = /obj/machinery/computer/apc_control
+	emag_description = "Emagging grants access to the maintance panel."
 
 /obj/machinery/computer/apc_control/Initialize(mapload, obj/item/circuitboard/C)
 	. = ..()

@@ -146,11 +146,16 @@
 	pressure_resistance = 2*ONE_ATMOSPHERE
 	req_access = list(ACCESS_ENGINEERING)
 	max_integrity = 100
-	emag_desc = "Shorts the access controller."
+	auto_wiki_datum = /datum/wiki_data/shieldgen
 	var/active = FALSE
 	var/list/deployed_shields
 	var/locked = FALSE
 	var/shield_range = 4
+
+/datum/wiki_data/shieldgen
+	atom_template = /obj/machinery/shieldgen
+	emag_description = "Emagging grants access to the maintance panel."
+
 
 /obj/machinery/shieldgen/Initialize(mapload)
 	. = ..()

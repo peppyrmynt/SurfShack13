@@ -6,12 +6,16 @@
 /obj/machinery/destructive_scanner
 	name = "Experimental Destructive Scanner"
 	desc = "A much larger version of the hand-held scanner, a charred label warns about its destructive capabilities."
-	emag_desc = "Removes the failsafes, allowing living mobs to be destroyed."
+	auto_wiki_datum = /datum/wiki_data/destructive_scanner
 	icon = 'icons/obj/machines/destructive_scanner.dmi'
 	icon_state = "tube_open"
 	circuit = /obj/item/circuitboard/machine/destructive_scanner
 	layer = MOB_LAYER
 	var/scanning = FALSE
+
+/datum/wiki_data/destructive_scanner
+	atom_template = /obj/machinery/destructive_scanner
+	emag_description = "Emagging shorts the vital sensor allowing for living mobs to be deconstructed."
 
 // Late load to ensure the component initialization occurs after the machines are initialized
 /obj/machinery/destructive_scanner/post_machine_initialize()

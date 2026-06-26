@@ -474,7 +474,7 @@
 	density = FALSE
 	max_integrity = 100
 	req_access = null
-	emag_desc = "Destorys the paylock on the case."
+	auto_wiki_datum = /datum/wiki_data/sale_case
 	alert = FALSE //No, we're not calling the fire department because someone stole your cookie.
 	glass_fix = FALSE //Fixable with tools instead.
 	pass_flags = PASSTABLE ///Can be placed and moved onto a table.
@@ -483,6 +483,10 @@
 	var/sale_price = 20
 	///The Account which will receive payment for purchases. Set by the first ID to swipe the tray.
 	var/datum/bank_account/payments_acc = null
+
+/datum/wiki_data/sale_case
+	atom_template = /obj/structure/displaycase/forsale
+	emag_description = "Emagging the case destroys the paylock, allowing you to steal the item."
 
 /obj/structure/displaycase/forsale/update_icon_state()
 	icon_state = "[initial(icon_state)][broken ? "_broken" : (open ? "_open" : (!showpiece ? "_empty" : null))]"

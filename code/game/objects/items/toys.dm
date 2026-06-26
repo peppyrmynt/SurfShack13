@@ -950,8 +950,12 @@
 	icon = 'icons/obj/toys/toy.dmi'
 	icon_state = "nuketoyidle"
 	w_class = WEIGHT_CLASS_SMALL
-	emag_desc = "Makes it explode on use."
+	auto_wiki_datum = /datum/wiki_data/toy_nuke
 	var/cooldown = 0
+
+/datum/wiki_data/toy_nuke
+	atom_template = /obj/item/toy/nuke
+	emag_description = "Emagging the toy nuke causes it to explode on wind up."
 
 /obj/item/toy/nuke/attack_self(mob/user)
 	if (obj_flags & EMAGGED && cooldown < world.time)
@@ -995,7 +999,11 @@
 	icon_state = "minimeteor"
 	inhand_icon_state = "minimeteor"
 	w_class = WEIGHT_CLASS_SMALL
-	emag_desc = "Causes it to explode on throw impact."
+	auto_wiki_datum = /datum/wiki_data/toy_meteor
+
+/datum/wiki_data/toy_meteor
+	atom_template = /obj/item/toy/minimeteor
+	emag_description = "Emagging causes the toy meteor to explode and violently shake the station when thrown."
 
 /obj/item/toy/minimeteor/emag_act(mob/user, obj/item/card/emag/emag_card)
 	if (obj_flags & EMAGGED)
@@ -1586,7 +1594,7 @@ GLOBAL_LIST_EMPTY(intento_players)
 	icon = 'icons/obj/toys/intents.dmi'
 	icon_state = "blank"
 	custom_price = PAYCHECK_COMMAND * 1.25
-	emag_desc = "Sticks itself to the users hand, and starts attacking them with different intents"
+	auto_wiki_datum = /datum/wiki_data/intento
 	/// Current sequence of intents
 	var/list/current_sequence = list()
 	/// Sequence player inputs
@@ -1609,6 +1617,10 @@ GLOBAL_LIST_EMPTY(intento_players)
 	COOLDOWN_DECLARE(next_process)
 	/// Time until we reset the icon of the Intento
 	COOLDOWN_DECLARE(next_icon_reset)
+
+/datum/wiki_data/intento
+	atom_template = /obj/item/toy/intento
+	emag_description = "Emagging the toy causes it latch onto the users hand and attack them with different intents, when activated."
 
 /obj/item/toy/intento/attack_self(mob/user, modifiers) //added params to attack_self, the alternative is registering a signal on clickon but i was advised not to
 	..()

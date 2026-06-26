@@ -7,7 +7,7 @@
 /obj/item/nanite_remote
 	name = "nanite remote control"
 	desc = "A device that can remotely control active nanites through wireless signals."
-	emag_desc = "Overides the ID lock."
+	auto_wiki_datum = /datum/wiki_data/nanite_remote
 	w_class = WEIGHT_CLASS_SMALL
 	req_access = list(ACCESS_RESEARCH)
 	icon = 'surfshack13/nanites/icons/nanite_device.dmi'
@@ -23,6 +23,10 @@
 	var/code = 0
 	var/relay_code = 0
 	var/current_program_name = "Program"
+
+/datum/wiki_data/nanite_remote
+	atom_template = /obj/item/nanite_remote
+	emag_description = "Emagging grants access."
 
 /obj/item/nanite_remote/examine(mob/user)
 	. = ..()

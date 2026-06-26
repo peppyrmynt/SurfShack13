@@ -266,7 +266,7 @@ GLOBAL_VAR_INIT(bsa_unlock, FALSE)
 
 /obj/machinery/computer/bsa_control
 	name = "bluespace artillery control"
-	emag_desc = "Rigs it to explode."
+	auto_wiki_datum = /datum/wiki_data/bsa
 	use_power = NO_POWER_USE
 	circuit = /obj/item/circuitboard/computer/bsa_control
 	icon = 'icons/obj/machines/particle_accelerator.dmi'
@@ -278,6 +278,10 @@ GLOBAL_VAR_INIT(bsa_unlock, FALSE)
 	var/notice
 	var/target
 	var/area_aim = FALSE //should also show areas for targeting
+
+/datum/wiki_data/bsa
+	atom_template = /obj/machinery/computer/bsa_control
+	emag_description = "Emagging the BSA rigs it to explode on firing."
 
 /obj/machinery/computer/bsa_control/ui_state(mob/user)
 	return GLOB.physical_state

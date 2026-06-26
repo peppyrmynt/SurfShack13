@@ -15,9 +15,13 @@
 
 	overlay_mic_idle = "intercom_m"
 	overlay_mic_active = null
-	emag_desc = "Unlocks different radio frequencies, if locked."
+	auto_wiki_datum = /datum/wiki_data/intercom
 	///The icon of intercom while its turned off
 	var/icon_off = "intercom-p"
+
+/datum/wiki_data/intercom
+	atom_template = /obj/item/radio/intercom
+	emag_description = "Emagging removes any radio frequency restrictions if any are in place."
 
 /obj/item/radio/intercom/unscrewed
 	unscrewed = TRUE

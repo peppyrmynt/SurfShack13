@@ -866,7 +866,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	w_class = WEIGHT_CLASS_TINY
 	slot_flags = ITEM_SLOT_MASK
 	flags_1 = IS_PLAYER_COLORABLE_1
-	emag_desc = "Causes it to explode randomly while on."
+	auto_wiki_datum = /datum/wiki_data/vape
 	/// The capacity of the vape.
 	var/chem_volume = 100
 	/// The amount of time between drags.
@@ -877,6 +877,10 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	var/screw = FALSE
 	/// Whether the vape has been overloaded to spread smoke.
 	var/super = FALSE
+
+/datum/wiki_data/vape
+	atom_template = /obj/item/vape
+	emag_description = "Emagging the vape causes it to explode randomly during use."
 
 /obj/item/vape/Initialize(mapload)
 	. = ..()

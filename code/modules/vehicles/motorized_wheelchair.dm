@@ -1,7 +1,7 @@
 /obj/vehicle/ridden/wheelchair/motorized
 	name = "motorized wheelchair"
 	desc = "A chair with big wheels. It seems to have a motor in it."
-	emag_desc  = "attatches a bomb which can be activated with a bell"
+	auto_wiki_datum = /datum/wiki_data/wheel_chair
 	icon_state = "motorized_wheelchair"
 	overlay_icon = "motorized_wheelchair_overlay"
 	foldabletype = null
@@ -25,6 +25,10 @@
 	var/obj/item/stock_parts/power_store/power_cell
 	///stock parts for this chair
 	var/list/component_parts = list()
+
+/datum/wiki_data/wheel_chair
+	atom_template = /obj/vehicle/ridden/wheelchair/motorized
+	emag_description = "Emagging the wheelcahir attatches a bomb which can be activated with a bell."
 
 /obj/vehicle/ridden/wheelchair/motorized/Initialize(mapload)
 	. = ..()

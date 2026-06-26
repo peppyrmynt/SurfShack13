@@ -2,9 +2,9 @@
 #define ANNOUNCE_COST 900
 
 /obj/machinery/computer/public_announcement
-	name = "Public Announcements console"
+	name = "Public Announcements Console"
 	desc = "A commerical announcement console, with built in transmitters."
-	emag_desc = "Disables the breaker circuit, causing the console to explode and shock the user when used."
+	auto_wiki_datum = /datum/wiki_data/public_announce
 	icon_screen = "civ_bounty"
 	icon_keyboard = "tech_key"
 	circuit = /obj/item/circuitboard/computer/public_announcement
@@ -15,6 +15,9 @@
 	/// If someone is actively using the console
 	var/in_use = FALSE
 
+/datum/wiki_data/public_announce
+	atom_template = /obj/machinery/computer/public_announcement
+	emag_description = "Emagging disables the breaker circuit, causing the console to explode and shock the user."
 
 /obj/machinery/computer/public_announcement/examine(mob/user)
 	. = ..()

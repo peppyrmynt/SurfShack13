@@ -334,7 +334,7 @@ GLOBAL_LIST_EMPTY(bodycontainers) //Let them act as spawnpoints for revenants an
 	base_icon_state = "morgue"
 	dir = EAST
 	interaction_flags_click = ALLOW_SILICON_REACH|ALLOW_RESTING
-	emag_desc = "Shorts the indicator light so it only displays brain dead or off."
+	auto_wiki_datum = /datum/wiki_data/morgue
 	connected = /obj/structure/tray/m_tray
 
 	/// Whether or not this morgue beeps to alert parameds of revivable corpses.
@@ -353,6 +353,10 @@ GLOBAL_LIST_EMPTY(bodycontainers) //Let them act as spawnpoints for revenants an
 	var/cooling_rate_per_second = 4
 	/// Minimum temperature of the internal air mixture
 	var/minimum_temperature = T0C - 60
+
+/datum/wiki_data/morgue
+	atom_template = /obj/structure/bodycontainer/morgue
+	emag_description = "Emagging the morgue shorts the indicator lights, so it only displays brain dead or off."
 
 /obj/structure/bodycontainer/morgue/Initialize(mapload)
 	..()

@@ -80,7 +80,7 @@
 /////////////////
 /obj/machinery/power/port_gen/pacman
 	name = "\improper P.A.C.M.A.N.-type portable generator"
-	emag_desc = "Increases the maximum power output and emp's the machine."
+	auto_wiki_datum = /datum/wiki_data/pacman
 	circuit = /obj/item/circuitboard/machine/pacman
 	power_gen = 10 KILO JOULES
 	var/sheets = 0
@@ -90,6 +90,10 @@
 	var/sheet_left = 0 // How much is left of the sheet
 	var/time_per_sheet = 180
 	var/current_heat = 0
+
+/datum/wiki_data/pacman
+	atom_template = /obj/machinery/power/port_gen/pacman
+	emag_description = "Emagging increases maximum power output and emp's the generator."
 
 /obj/machinery/power/port_gen/pacman/Initialize(mapload)
 	. = ..()

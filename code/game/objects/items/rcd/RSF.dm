@@ -174,9 +174,13 @@ RSF
 	discriptor = "cookie-units"
 	action_type = "Fabricates"
 	cooldowndelay = 10 SECONDS
-	emag_desc = "Toggles the creation of poisoned cookies (chloral hydrate)."
+	auto_wiki_datum = /datum/wiki_data/cookiesynth
 	///Tracks whether or not the cookiesynth is about to print a poisoned cookie
 	var/toxin = FALSE //This might be better suited to some initialize fuckery, but I don't have a good "poisoned" sprite
+
+/datum/wiki_data/cookiesynth
+	atom_template = /obj/item/rsf/cookiesynth
+	emag_description = "Emagging enables or disables the creation of poisoned cookies (chloral hydrate)."
 
 /obj/item/rsf/cookiesynth/emag_act(mob/user, obj/item/card/emag/emag_card)
 	obj_flags ^= EMAGGED

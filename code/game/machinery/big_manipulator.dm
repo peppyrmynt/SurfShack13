@@ -21,6 +21,12 @@
 #define WORKER_EMPTY_USE "empty"
 #define WORKER_NORMAL_USE "normal"
 
+//surfshack start
+/datum/wiki_data/big_manipulator
+	atom_template = /obj/machinery/big_manipulator
+	emag_description = "Emagging allows the big manipulator to pick up living mobs."
+//surfshack end
+
 /// The Big Manipulator's core. Main part of the mechanism that carries out the entire process.
 /obj/machinery/big_manipulator
 	name = "Big Manipulator"
@@ -31,9 +37,7 @@
 	circuit = /obj/item/circuitboard/machine/big_manipulator
 	greyscale_colors = "#d8ce13"
 	greyscale_config = /datum/greyscale_config/big_manipulator
-	//surfshack start
-	emag_desc = "Allows the manipulator to pick up living mobs."
-	//surfshack end
+	auto_wiki_datum = /datum/wiki_data/big_manipulator
 	/// Min time manipulator can have in delay. Changing on upgrade.
 	var/minimal_delay = MIN_DELAY_TIER_1
 	/// The time it takes for the manipulator to complete the action cycle.

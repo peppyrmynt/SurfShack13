@@ -264,7 +264,7 @@
 /obj/item/organ/cyberimp/arm/toolset
 	name = "integrated toolset implant"
 	desc = "A stripped-down version of the engineering cyborg toolset, designed to be installed on subject's arm. Contain advanced versions of every tool."
-	emag_desc  = "Adds a combat knife to the tools."
+	auto_wiki_datum = /datum/wiki_data/cyborg_tools
 	icon_state = "toolkit_engineering"
 	actions_types = list(/datum/action/item_action/organ_action/toggle/toolkit)
 	items_to_create = list(
@@ -276,6 +276,10 @@
 		/obj/item/multitool/cyborg,
 	)
 
+/datum/wiki_data/cyborg_tools
+	atom_template = /obj/item/organ/cyberimp/arm/toolset
+	emag_description = "Emagging adds a combat knife to the availible tools in the implant."
+
 /obj/item/organ/cyberimp/arm/toolset/l
 	zone = BODY_ZONE_L_ARM
 
@@ -283,7 +287,7 @@
 /obj/item/organ/cyberimp/arm/paperwork
 	name = "integrated paperwork implant"
 	desc = "A highly sought out implant among heads of personnel, and other high up command staff in Nanotrasen. This implant allows the user to always have the tools necesarry for paperwork handy"
-	emag_desc = "Adds chameleon stamp to tools."
+	auto_wiki_datum = /datum/wiki_data/paper_arm
 	icon_state = "toolkit_engineering"
 	actions_types = list(/datum/action/item_action/organ_action/toggle/toolkit)
 	items_to_create = list(
@@ -295,6 +299,10 @@
 		/obj/item/stamp,
 		/obj/item/stamp/denied,
 	)
+
+/datum/wiki_data/paper_arm
+	atom_template = /obj/item/organ/cyberimp/arm/paperwork
+	emag_description = "Emagging the paperwork implant, grants access to a chameleon stamp."
 
 /obj/item/organ/cyberimp/arm/paperwork/l
 	zone = BODY_ZONE_L_ARM

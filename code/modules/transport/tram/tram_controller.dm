@@ -754,7 +754,7 @@
 /obj/machinery/transport/tram_controller
 	name = "tram controller"
 	desc = "Makes the tram go, or something. Holds the tram's electronics, controls, and maintenance panel. A sticker above the card reader says 'Engineering access only.'"
-	emag_desc = "Grants access, and breaks the ID lock."
+	auto_wiki_datum = /datum/wiki_data/tram_controller
 	icon = 'icons/obj/tram/tram_controllers.dmi'
 	icon_state = "tram-controller"
 	base_icon_state = "tram"
@@ -777,6 +777,10 @@
 	/// If the cover is locked
 	var/cover_locked = TRUE
 	COOLDOWN_DECLARE(manual_command_cooldown)
+
+/datum/wiki_data/tram_controller
+	atom_template = /obj/machinery/transport/tram_controller
+	emag_description = "Emagging grants access."
 
 /obj/machinery/transport/tram_controller/hilbert
 	configured_transport_id = HILBERT_LINE_1

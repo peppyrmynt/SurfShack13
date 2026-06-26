@@ -58,7 +58,7 @@
 /obj/item/dragnet_beacon
 	name = "\improper DRAGnet beacon"
 	desc = "Can be synced with a DRAGnet to set it as a designated teleporting point."
-	emag_desc = "Unlocks the beacon and unsecures it from the floor."
+	auto_wiki_datum = /datum/wiki_data/dragnet_beacon
 	icon = 'icons/obj/devices/tracker.dmi'
 	icon_state = "dragnet_beacon"
 	inhand_icon_state = "beacon"
@@ -66,6 +66,10 @@
 	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	///Has a security ID been used to lock this in place?
 	var/locked = FALSE
+
+/datum/wiki_data/dragnet_beacon
+	atom_template = /obj/item/dragnet_beacon
+	emag_description = "Emagging unlocks the beacon and unanchored it from the floor."
 
 /obj/item/dragnet_beacon/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
 	if(istype(tool, /obj/item/gun/energy/e_gun/dragnet))

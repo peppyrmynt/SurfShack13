@@ -48,7 +48,7 @@
 /obj/item/clothing/suit/space
 	name = "space suit"
 	desc = "A suit that protects against low pressure environments. Has a big 13 on the back."
-	emag_desc = "Overrides thermal regulation temperatures to -20 and 120 C"
+	auto_wiki_datum = /datum/wiki_data/space_suit
 	icon_state = "spaceold"
 	icon = 'icons/obj/clothing/suits/spacesuit.dmi'
 	lefthand_file = 'icons/mob/inhands/clothing/suits_lefthand.dmi'
@@ -87,6 +87,11 @@
 	var/show_hud = TRUE
 	///How much this suit affects fishing difficulty
 	var/fishing_modifier = 5
+
+/datum/wiki_data/space_suit
+	atom_template = /obj/item/clothing/suit/space/eva
+	name = "Space Suit"
+	emag_description = "Emagging overides the thermal regulator thresholds, allowing the user to both cook and freeze the occupant."
 
 /datum/armor/suit_space
 	bio = 100

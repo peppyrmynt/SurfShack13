@@ -15,7 +15,7 @@
 	mob_size = MOB_SIZE_LARGE
 	radio = /obj/item/radio/headset/silicon/ai
 	can_buckle_to = FALSE
-	emag_desc = "Unlocks the cover, and if its open, emags the AI."
+	auto_wiki_datum = /datum/wiki_data/silicon/ai
 	var/battery = 200 //emergency power if the AI's APC is off
 	var/list/network = list(CAMERANET_NETWORK_SS13)
 	var/obj/machinery/camera/current
@@ -103,6 +103,10 @@
 	///whether AI is anchored or not, used for checks
 	var/is_anchored = TRUE
 
+/datum/wiki_data/silicon/ai
+	atom_template = /mob/living/silicon/ai
+	emag_description = "Emags the AI making it loyal to you."
+	desc = "A usually powerful and potent self contained ai that runs the station."
 /mob/living/silicon/ai/Initialize(mapload, datum/ai_laws/L, mob/target_ai)
 	. = ..()
 	if(!target_ai) //If there is no player/brain inside.

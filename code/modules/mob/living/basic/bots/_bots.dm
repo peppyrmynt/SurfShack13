@@ -15,7 +15,7 @@ GLOBAL_LIST_INIT(command_strings, list(
 	mob_biotypes = MOB_ROBOTIC
 	basic_mob_flags = DEL_ON_DEATH
 	density = FALSE
-	emag_desc = "Unlocks the cover, which can then be pried open and emagged again to change the behavior"
+	auto_wiki_datum = /datum/wiki_data/silicon
 	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 0, STAMINA = 0, OXY = 0)
 	habitable_atmos = null
 	hud_possible = list(DIAG_STAT_HUD, DIAG_BOT_HUD, DIAG_HUD, DIAG_BATT_HUD, DIAG_PATH_HUD = HUD_LIST_LIST)
@@ -103,6 +103,12 @@ GLOBAL_LIST_INIT(command_strings, list(
 	var/bot_ui = "SimpleBot"
 	/// If true we will offer this
 	COOLDOWN_DECLARE(offer_ghosts_cooldown)
+
+/datum/wiki_data/silicon
+	atom_template = /mob/living/basic/bot/cleanbot
+	name = "bot"
+	emag_description = "Emagging a silicon unlocks its cover, which can then be pried off and emagged again to change the behavior. \
+	See specific silicon entries for how the behaviors change."
 
 /mob/living/basic/bot/Initialize(mapload)
 	. = ..()

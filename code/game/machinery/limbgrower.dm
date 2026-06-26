@@ -7,9 +7,7 @@
 	icon_state = "limbgrower_idleoff"
 	density = TRUE
 	circuit = /obj/item/circuitboard/machine/limbgrower
-	//surfshack start
-	emag_desc = "Allows you to build synthetic armblades."
-	//surfshack end
+	auto_wiki_datum = /datum/wiki_data/limbgrower
 	/// The category of limbs we're browing in our UI.
 	var/selected_category = SPECIES_HUMAN
 	/// If we're currently printing something.
@@ -26,6 +24,10 @@
 	var/list/categories = list(SPECIES_HUMAN, SPECIES_LIZARD, SPECIES_MOTH, SPECIES_PLASMAMAN, SPECIES_ETHEREAL, RND_CATEGORY_LIMBS_OTHER, RND_CATEGORY_LIMBS_DIGITIGRADE)
 	///Designs imported from technology disks that we can print.
 	var/list/imported_designs = list()
+
+/datum/wiki_data/limbgrower
+	atom_template = /obj/machinery/limbgrower
+	emag_description = "Emagging unlocks dangerous limb designs, like synthetic arm blades."
 
 /obj/machinery/limbgrower/Initialize(mapload)
 	create_reagents(100, OPENCONTAINER)
