@@ -42,7 +42,7 @@
 	icon = 'icons/obj/machines/sleeper.dmi'
 	icon_state = "sleeper"
 	you_are_text = "You are a lover of fine dining."
-	flavour_text = "After realizing you could claim to be a health inspector, and recieve free meals, \
+	flavour_text = "After realizing you could claim to be a health inspector, and receive free meals, \
 	you began a journey across the Spinward sector, on a quest for free meals."
 	important_text = "Don't get yourself kicked out, you're stranded!"
 	spawner_job_path = /datum/job/ghostregular
