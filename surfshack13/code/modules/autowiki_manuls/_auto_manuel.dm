@@ -1,4 +1,9 @@
 #define GENERATED_WIKI_PATH "surfshack13/frogui/generated/"
+/proc/setup_other_autowiki()
+	Master.sleep_offline_after_initializations = FALSE
+	SSticker.OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(run_other_autowiki)))
+	SSticker.start_immediately = TRUE
+	CONFIG_SET(number/round_end_countdown, 0)
 
 /proc/run_other_autowiki()
 	var/list/autowikis = subtypesof(/datum/other_autowiki)
@@ -11,6 +16,7 @@
 			CRASH("autowiki [wiki.type] produced no output and appears broken.")
 		rustg_file_write(output, GENERATED_WIKI_PATH + wiki.file_name)
 		qdel(wiki)
+	qdel(world)
 
 /datum/other_autowiki
 	///the html template which info is inserted in

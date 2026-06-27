@@ -197,10 +197,9 @@ GLOBAL_PROTECT(tracy_init_reason)
 	setup_autowiki()
 	#endif
 
-	/// using juke to set defines at build time is really weird. World.params are used instead.
-	if(world.params["other_auto_wiki"])
-		run_other_autowiki()
-
+	#ifdef OTHER_AUTOWIKI
+	setup_other_autowiki()
+	#endif
 
 /world/proc/HandleTestRun()
 	//trigger things to run the whole process
