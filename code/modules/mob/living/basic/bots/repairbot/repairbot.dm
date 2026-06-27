@@ -6,6 +6,7 @@
 	icon_state = "repairbot_base"
 	base_icon_state = "repairbot_base"
 	pass_flags = parent_type::pass_flags | PASSTABLE
+	auto_wiki_datum = /datum/wiki_data/silicon/floorbot
 	layer = BELOW_MOB_LAYER
 	anchored = FALSE
 	health = 100
@@ -75,6 +76,12 @@
 	var/toolbox_color = "#445eb3"
 	///toolbox type we drop on death
 	var/toolbox = /obj/item/storage/toolbox/mechanical
+
+/datum/wiki_data/silicon/floorbot
+	name = null
+	desc = null
+	atom_template = /mob/living/basic/bot/repairbot
+	emag_description = "If Emagged the bot will deconstruct floors into open space."
 
 /mob/living/basic/bot/repairbot/Initialize(mapload)
 	. = ..()

@@ -107,6 +107,7 @@ GLOBAL_LIST_INIT(command_strings, list(
 /datum/wiki_data/silicon
 	atom_template = /mob/living/basic/bot/cleanbot
 	name = "bot"
+	desc = "A generic robot type"
 	emag_description = "Emagging a silicon unlocks its cover, which can then be pried off and emagged again to change the behavior. \
 	See specific silicon entries for how the behaviors change."
 

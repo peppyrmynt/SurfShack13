@@ -8,7 +8,7 @@
 	health = 25
 	maxHealth = 25
 	light_color = "#99ccff"
-
+	auto_wiki_datum = /datum/wiki_data/silicon/cleanbot
 	req_one_access = list(ACCESS_ROBOTICS, ACCESS_JANITOR)
 	radio_key = /obj/item/encryptionkey/headset_service
 	radio_channel = RADIO_CHANNEL_SERVICE
@@ -129,6 +129,12 @@
 		/datum/pet_command/free,
 		/datum/pet_command/point_targeting/clean,
 	)
+
+/datum/wiki_data/silicon/cleanbot
+	atom_template = /mob/living/basic/bot/cleanbot
+	name = ""
+	desc = ""
+	emag_description = "Emagging the cleanbot causes it to clean witgh slippery acid foam, and say some friendly things about dirt. It also makes any weapon attatched slightly stronger."
 
 /mob/living/basic/bot/cleanbot/Initialize(mapload)
 	. = ..()

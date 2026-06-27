@@ -15,5 +15,4 @@
 // 		var/datum/wiki_data/atom_data = A.auto_wiki_datum
 // 		// if object was emaggad but no emag description was set, then fail the test
 // 		if(!atom_data || !atom_data.emag_description)
-// 			TEST_FAIL("[type] appears to be emaggable but does not include a emag_description. ensure to attatch a /datum/wiki_data, and write an appropriate emag_description on that datum. \
-// 			See recycler.dm for an example, or _auto_manuel.dm for more info")
+// 			TEST_FAIL("[type] appears to be emaggable but does not include a emag_description. ensure to attatch a /datum/wiki_data, and write an appropriate emag_description on that datum. See recycler.dm for an example, or _auto_manuel.dm for more info")

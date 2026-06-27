@@ -20,7 +20,7 @@
 	additional_access = /datum/id_trim/job/janitor
 	hackables = "cleaning service protocols"
 	ai_controller = /datum/ai_controller/basic_controller/bot/hygienebot
-
+	auto_wiki_datum = /datum/wiki_data/silicon/hygienebot
 	///are we currently washing someone?
 	var/washing = FALSE
 	///Visual overlay of the bot spraying water.
@@ -47,6 +47,12 @@
 		HYGIENEBOT_VOICED_THANK_GOD = 'sound/mobs/non-humanoids/hygienebot/thankgod.ogg',
 		HYGIENEBOT_VOICED_DEGENERATE = 'sound/mobs/non-humanoids/hygienebot/degenerate.ogg',
 	)
+
+/datum/wiki_data/silicon/hygienebot
+	name = null
+	desc = null
+	atom_template = /mob/living/basic/bot/hygienebot
+	emag_description = "Emagging  the hygienebot causes it to disinfect with fire instead of soapy water."
 
 /mob/living/basic/bot/hygienebot/Initialize(mapload)
 	. = ..()

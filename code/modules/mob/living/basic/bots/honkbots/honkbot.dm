@@ -23,6 +23,13 @@
 	///Honkbot's flags
 	var/honkbot_flags = HONKBOT_CHECK_RECORDS | HONKBOT_HANDCUFF_TARGET | HONKBOT_MODE_SLIP
 
+/datum/wiki_data/silicon/honkbot
+	atom_template = /mob/living/basic/bot/honkbot
+	name = ""
+	desc = ""
+	emag_description = "Emagging causes it to play disturbing noises and HONK people. If attacked, it will HONK the offender into oblivion."
+
+
 /mob/living/basic/bot/honkbot/Initialize(mapload)
 	. = ..()
 	var/static/list/clown_friends = typecacheof(list(

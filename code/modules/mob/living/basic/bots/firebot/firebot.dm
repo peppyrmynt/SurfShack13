@@ -30,7 +30,7 @@
 /datum/wiki_data/bot/fire
 	name = "Firebot"
 	atom_template = /mob/living/basic/bot/firebot
-	emag_description = "Emagging the bot changes its behavior to fight fire with more fire."
+	emag_description = "Emagging the bot changes its behavior to extinguish fire and on-fire-people with more fire. It also gives controversial fire safety advice."
 
 /mob/living/basic/bot/firebot/generate_speak_list()
 	var/static/list/idle_lines = list(

@@ -14,7 +14,7 @@
 	pass_flags = PASSMOB | PASSFLAPS
 	status_flags = (CANPUSH | CANSTUN)
 	ai_controller = /datum/ai_controller/basic_controller/bot/medbot
-
+	auto_wiki_datum = /datum/wiki_data/silicon/medbot
 	req_one_access = list(ACCESS_ROBOTICS, ACCESS_MEDICAL)
 	radio_key = /obj/item/encryptionkey/headset_med
 	radio_channel = RADIO_CHANNEL_MEDICAL
@@ -111,6 +111,12 @@
 	var/datum/techweb/linked_techweb
 	///our tipper
 	var/datum/weakref/tipper
+
+/datum/wiki_data/silicon/medbot
+	name = null
+	desc = null
+	atom_template = /mob/living/basic/bot/medbot
+	emag_description = "Emagging the bot causes it to inject people with chloral hydrate and damage instead of heal."
 
 /mob/living/basic/bot/medbot/proc/set_speech_keys()
 	if(isnull(ai_controller))
