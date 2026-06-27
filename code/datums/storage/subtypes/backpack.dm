@@ -16,3 +16,17 @@
 	max_total_storage = 60
 	max_slots = 21
 	max_specific_storage = WEIGHT_CLASS_NORMAL
+
+/datum/storage/backpack/messenger
+	max_total_storage = 16
+	max_slots = 16
+
+/datum/storage/backpack/messenger/New(
+	atom/parent,
+	max_slots,
+	max_specific_storage,
+	max_total_storage,
+)
+	. = ..()
+	var/static/list/exception_cache = typecacheof(list(/obj/item/fish_tank))
+	exception_hold = exception_cache

@@ -121,10 +121,10 @@ Basically, we fill the time between now and 2s from now with hands based off the
 
 //libital
 //Inverse:
-//Simply reduces your alcohol tolerance, kinda simular to prohol
+//Reduces your toxin tolerance.
 /datum/reagent/inverse/libitoil
 	name = "Libitoil"
-	description = "Temporarilly interferes a patient's ability to process alcohol."
+	description = "Temporarilly interferes a patient's ability to process toxins."
 	chemical_flags = REAGENT_DONOTSPLIT
 	ph = 13.5
 	addiction_types = list(/datum/addiction/medicine = 4)
@@ -142,21 +142,21 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	RegisterSignal(consumer, COMSIG_CARBON_GAIN_ORGAN, PROC_REF(on_gained_organ))
 	RegisterSignal(consumer, COMSIG_CARBON_LOSE_ORGAN, PROC_REF(on_removed_organ))
 	var/obj/item/organ/liver/this_liver = consumer.get_organ_slot(ORGAN_SLOT_LIVER)
-	this_liver.alcohol_tolerance *= 2
+	this_liver.toxTolerance *= 0.5
 
 /datum/reagent/inverse/libitoil/proc/on_gained_organ(mob/prev_owner, obj/item/organ/organ)
 	SIGNAL_HANDLER
 	if(!istype(organ, /obj/item/organ/liver))
 		return
 	var/obj/item/organ/liver/this_liver = organ
-	this_liver.alcohol_tolerance *= 2
+	this_liver.toxTolerance *= 0.5
 
 /datum/reagent/inverse/libitoil/proc/on_removed_organ(mob/prev_owner, obj/item/organ/organ)
 	SIGNAL_HANDLER
 	if(!istype(organ, /obj/item/organ/liver))
 		return
 	var/obj/item/organ/liver/this_liver = organ
-	this_liver.alcohol_tolerance /= 2
+	this_liver.toxTolerance *= 2
 
 /datum/reagent/inverse/libitoil/on_mob_delete(mob/living/affected_mob)
 	. = ..()
@@ -166,7 +166,7 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	var/obj/item/organ/liver/this_liver = consumer.get_organ_slot(ORGAN_SLOT_LIVER)
 	if(!this_liver)
 		return
-	this_liver.alcohol_tolerance /= 2
+	this_liver.toxTolerance *= 2
 
 
 //probital
@@ -220,15 +220,35 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	description = "This reagent is known to interfere with the eyesight of a patient."
 	ph = 3.1
 	addiction_types = list(/datum/addiction/medicine = 1.5)
-	///The amount of blur applied per second. Given the average on_life interval is 2 seconds, that'd be 2.5s.
-	var/amount_of_blur_applied = 1.25 SECONDS
+	metabolization_rate = 2 * REM
 	tox_damage = 0
+	var/effect_applied = FALSE
 
-/datum/reagent/inverse/aiuri/on_mob_life(mob/living/carbon/owner, delta_time, times_fired)
-	owner.adjustOrganLoss(ORGAN_SLOT_EYES, 0.1 * REM * delta_time)
-	owner.adjust_eye_blur(amount_of_blur_applied * delta_time)
+///Give the victim the manual blinking component.
+/datum/reagent/inverse/aiuri/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	return TRUE
+
+	if(effect_applied)
+		return
+	if(current_cycle < 5)
+		return
+	effect_applied = TRUE
+	to_chat(affected_mob, span_notice("The walls suddenly disappear!"))
+
+	affected_mob.AddComponent(/datum/component/manual_blinking/overdrive)
+	ADD_TRAIT(affected_mob, TRAIT_XRAY_VISION, type)
+	affected_mob.update_sight()
+	if(effect_applied)
+		affected_mob.adjust_hallucinations(20 SECONDS * REM * seconds_per_tick)
+
+///We're done - remove the curse
+/datum/reagent/inverse/aiuri/on_mob_end_metabolize(mob/living/affected_mob)
+	qdel(affected_mob.GetComponent(/datum/component/manual_blinking/overdrive))
+
+	REMOVE_TRAIT(affected_mob, TRAIT_XRAY_VISION, type)
+	affected_mob.update_sight()
+
+	..()
 
 //Hercuri
 //inverse
@@ -296,14 +316,14 @@ Basically, we fill the time between now and 2s from now with hands based off the
 						continue
 					if(!istype(reagent, /datum/reagent/medicine))
 						continue
-					reagent.creation_purity *= 1.25
+					reagent.creation_purity *= 2
 					cached_reagent_list += reagent
 
 			else if(!affected_mob.IsSleeping() && length(cached_reagent_list))
 				for(var/datum/reagent/reagent as anything in cached_reagent_list)
 					if(!reagent)
 						continue
-					reagent.creation_purity *= 0.8
+					reagent.creation_purity *= 0.5
 				cached_reagent_list = list()
 
 /datum/reagent/inverse/healing/tirimol/on_mob_delete(mob/living/affected_mob)
@@ -313,7 +333,7 @@ Basically, we fill the time between now and 2s from now with hands based off the
 	for(var/datum/reagent/reagent as anything in cached_reagent_list)
 		if(!reagent)
 			continue
-		reagent.creation_purity *= 0.8
+		reagent.creation_purity *= 0.5
 	cached_reagent_list = list()
 
 //convermol

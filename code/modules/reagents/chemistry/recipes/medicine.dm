@@ -236,12 +236,13 @@
 	thermic_constant = 100
 	H_ion_release = 0
 	rate_up_lim = 10
-	purity_min = 0.4
+	purity_min = 0.3
 
 /datum/chemical_reaction/medicine/mannitol/overheated(datum/reagents/holder, datum/equilibrium/equilibrium, vol_added)
 	if(off_cooldown(holder, equilibrium, 10, "mannitol"))
-		explode_attack_chem(holder, equilibrium, /datum/reagent/impurity/mannitol, 5)
-		explode_invert_smoke(holder, equilibrium)
+		explode_invert_smoke(holder, equilibrium, clear_products = FALSE, clear_reactants = FALSE)
+		explode_attack_chem(holder, equilibrium, /datum/reagent/impurity/mannitol, 10)
+		clear_products(holder, 5)
 
 /datum/chemical_reaction/medicine/mannitol/overly_impure(datum/reagents/holder, datum/equilibrium/equilibrium, vol_added)
 	overheated(holder, equilibrium, vol_added)

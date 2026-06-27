@@ -121,17 +121,19 @@
 	thermic_constant = -400
 	H_ion_release = 3
 	rate_up_lim = 35
-	purity_min = 0.25
+	purity_min = 0.3
 	reaction_flags = REACTION_PH_VOL_CONSTANT
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_HEALING | REACTION_TAG_BURN
 
-/datum/chemical_reaction/medicine/aiuri/overheated(datum/reagents/holder, datum/equilibrium/equilibrium, step_volume_added)
-	. = ..()
-	for(var/mob/living/living_mob in orange(3, get_turf(holder.my_atom)))
-		if(living_mob.flash_act(1, length = 5))
-			living_mob.set_eye_blur(20 SECONDS)
-	holder.my_atom.audible_message(span_notice("[icon2html(holder.my_atom, viewers(DEFAULT_MESSAGE_RANGE, src))] The [holder.my_atom] lets out a loud bang!"))
-	playsound(holder.my_atom, 'sound/effects/explosion/explosion1.ogg', 50, 1)
+/datum/chemical_reaction/medicine/aiuri/overly_impure(datum/reagents/holder, datum/equilibrium/equilibrium, step_volume_added)
+
+	var/datum/reagent/aiuri = holder.has_reagent(/datum/reagent/medicine/c2/aiuri)
+	if(!aiuri)
+		return
+
+	if(aiuri.purity <= 0.2)
+		holder.remove_reagent(/datum/reagent/medicine/c2/aiuri, 1)
+		holder.my_atom?.audible_message(span_notice("[icon2html(holder.my_atom, viewers(DEFAULT_MESSAGE_RANGE, src))] The impurity of the reacting aiuri causes part of the product to evaporate!"))
 
 /datum/chemical_reaction/medicine/hercuri
 	results = list(/datum/reagent/medicine/c2/hercuri = 5)
@@ -221,7 +223,7 @@
 	thermic_constant = -20
 	H_ion_release = 3
 	rate_up_lim = 50
-	purity_min = 0.2
+	purity_min = 0.1
 	reaction_flags = REACTION_PH_VOL_CONSTANT
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_HEALING | REACTION_TAG_OXY
 

@@ -45,7 +45,7 @@
 	description = "When evolution isn't fast enough."
 	prereq_ids = list(TECHWEB_NODE_SURGERY_ADV)
 	design_ids = list(
-		"autosurgeon",
+		"self-surgery-skillchip",
 		"surgery_cortex_folding",
 		"surgery_cortex_folding_mechanic",
 		"surgery_cortex_imprint",
@@ -77,6 +77,7 @@
 	description = "Surgical instruments of dual purpose for quick operations."
 	prereq_ids = list(TECHWEB_NODE_SURGERY_EXP)
 	design_ids = list(
+		"autosurgeon",
 		"laserscalpel",
 		"searingtool",
 		"mechanicalpinches",

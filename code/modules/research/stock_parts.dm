@@ -33,6 +33,37 @@ If you create T5+ please take a pass at mech_fabricator.dm. The parts being good
 /obj/item/storage/part_replacer/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	if(part_replace_action(interacting_with, user))
 		return ITEM_INTERACT_SUCCESS
+
+	if(istype(interacting_with, /obj/machinery/power/apc))
+		var/obj/machinery/power/apc/apc = interacting_with
+
+		var/obj/item/stock_parts/power_store/battery/selected_battery
+
+		var/list/obj/item/battery_list = list()
+		//Assemble a list of current parts, then sort them by their rating!
+		for(var/obj/item/stock_parts/power_store/battery/possible_batteries in contents)
+			if(possible_batteries.get_part_rating() > apc.cell.get_part_rating())
+				battery_list += possible_batteries
+		if(!length(battery_list))
+			balloon_alert(user, "no superior batteries!")
+			return ITEM_INTERACT_FAILURE
+
+		selected_battery = pick(battery_list)
+
+		if(!user.transferItemToLoc(selected_battery, src))
+			balloon_alert(user, "blocked!")
+			return ITEM_INTERACT_BLOCKING
+
+		apc.cell.forceMove(src)
+		selected_battery.forceMove(apc)
+		apc.cell = selected_battery
+
+		src.contents -= selected_battery // Gotta manually remove to cuz forcemove doesn't do that for whatever reason.
+
+		user.visible_message(span_notice("[user.name] inserts the [selected_battery.name] into [apc.name]!"))
+		balloon_alert(user, "[selected_battery.name] inserted")
+		play_rped_sound()
+		return ITEM_INTERACT_SUCCESS
 	return NONE
 
 /obj/item/storage/part_replacer/ranged_interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)

@@ -609,6 +609,28 @@
 	)
 	departmental_flags = DEPARTMENT_BITFLAG_MEDICAL
 
+/datum/design/self_surgery_skillchip
+	name = "4U70-P3R4710N skillchip"
+	desc = "A skillchip containing old Nanotrasen medical training protocols, which one could use to perform surgical operations on themselves. \
+		This one doesn't look like it's in the best condition - bit rot has probably rendered it somewhat risky to use."
+	id = "self-surgery-skillchip"
+	build_type = PROTOLATHE | AWAY_LATHE | MECHFAB
+	construction_time = 6 SECONDS
+	materials = list(
+		/datum/material/iron = SMALL_MATERIAL_AMOUNT*6,
+		/datum/material/glass = SMALL_MATERIAL_AMOUNT*6,
+		/datum/material/titanium = SMALL_MATERIAL_AMOUNT*3,
+		/datum/material/silver = SMALL_MATERIAL_AMOUNT*6,
+		/datum/material/gold = SMALL_MATERIAL_AMOUNT*6,
+		/datum/material/plasma = HALF_SHEET_MATERIAL_AMOUNT,
+		/datum/material/uranium = HALF_SHEET_MATERIAL_AMOUNT,
+	)
+	build_path = /obj/item/skillchip/self_surgery
+	category = list(
+		RND_CATEGORY_CYBERNETICS + RND_SUBCATEGORY_CYBERNETICS_IMPLANTS_MISC
+	)
+	departmental_flags = DEPARTMENT_BITFLAG_MEDICAL
+
 /datum/design/cyberimp_nutriment
 	name = "Nutriment Pump Implant"
 	desc = "This implant will synthesize and pump into your bloodstream a small amount of nutriment when you are starving."

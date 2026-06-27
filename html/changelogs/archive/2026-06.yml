@@ -144,3 +144,73 @@
 2026-06-07:
   IndieanaJones:
   - bugfix: Fixes the Desired Role Bonus.
+2026-06-12:
+  pcpcrusader:
+  - rscadd: construction bags now hold materials
+2026-06-13:
+  forgman6:
+  - rscadd: auto surgeon has 30% malfunction chance after its been used 3 times
+  - rscadd: malfunctioning autosurgeon will remove arm of user
+  - balance: autosurgeon cant implant brains and debrain.
+  - rscadd: autosurgeons can be emagged to maim someones arm.
+  - qol: autolathe autosurgeons aren't single use
+  pcpcrusader:
+  - rscadd: messenger bags now go in belt slot
+  sylvia-from-fulp-station:
+  - rscadd: Adds a special brain damage line
+2026-06-21:
+  ZealousZeke:
+  - balance: Aivime now causes an accelerated case of manual blinking and gives X-Ray
+      vision. It's now harder to mix as well and has a faster metabolism.
+  - balance: Libitoil interferes with how the liver filters toxins, instead of how
+      the liver metabolizes alcohol.
+  - balance: Super Melatonin boosts purity scaling medicines by 2x while asleep. Improved
+      ease of mixing.
+  - balance: Methanol is now a clear inverse that has a 20% chance to cause eye blur,
+      headaches, funny emotes, and 2 toxin per tick. Also, it's flammable on splash.
+  - balance: Chloralax is now a miracle household cleaner and mildly toxic antibiotic.
+      Also, it mixes as a clear inverse.
+  - balance: Chloral Hydrate now mixes 5:2 instead of 5:1.
+  - bugfix: Mannitoil is now able to be mixed.
+  - bugfix: Syrinifergus is now able to be mixed.
+  - rscadd: Insolvent Medicinal Precipitate is now an inverse of Granibitaluri below
+      35% purity.
+  - balance: Nuclear Operatives can declare war at effectively any player amount.
+  - balance: War TC bonus scales with the amount of players below 20.
+  - bugfix: Fixed grab offsets not showing for anything but passive grab
+  - bugfix: Fix jank with mob offsets when riding things
+  - refactor: Refactored riding component, particularly how it selects layer and offsets.
+      Report any oddities
+  - refactor: Refactored pixel offsets of mobs. Report any oddities
+  - bugfix: Fixed broken layering on some vehicles
+  - bugfix: Fixes rideable mob layering
+  - rscadd: Adds self-surgery skillchip.
+  - balance: Replaces the autosurgeon in experimental surgery tech with the self-surgery
+      skillchip.
+  - balance: Moves autosurgeon to advanced surgery tools.
+  - balance: Exosuit fabricators can print autosurgeons.
+  - rscadd: exosuit fabricators can print self-surgery skillchips.
+  - rscadd: New Ballistic Tech Node for shotgun slugs and shells.
+  - rscadd: Shotgun slugs and shells are now orderable via cargo.
+  - balance: Increased Rubbershot shell's stamina damage from 11 to 12.
+  - bugfix: Fixed Rubbershot's pellet range. (Thanks, Anton.)
+  - balance: Decreased the material cost for rubber shells and .38 rubbershot.
+  - balance: Increased Dragon's Breath shell brute damage.
+  - balance: Added burn damage to Ion Scatter Shells.
+  - balance: Ion Scatter shells take 5u uranium, iron, and aluminium, instead of an
+      ansible crystal.
+  - balance: Lowered Exotic Ammo tech requirement from Explosives to Riot Suppression.
+  - balance: Pulse Slugs now take tier-3 capacitors, for consistency.
+  - balance: Security department ordered combat knives no longer require armory access.
+  cocothegogo:
+  - rscadd: 'MiniSurf: Extends chem lab 1 tile down making it have more room for choomists'
+  - rscadd: 'MiniSurf: Slightly enlarges gambling den'
+  - rscadd: MiniSurf:Extends bridge up 1 tile so it no longer has a 2x2 way reinforced
+      walls next to arrivals
+  - rscadd: 'MiniSurf: Adds a table for genetics'
+  - bugfix: 'MiniSurf: Adds more signs for departments'
+  - bugfix: 'MiniSurf: Moves some doors in central halls so its less clunky for combat/movement'
+  hyperjll:
+  - rscadd: RPED's can now exchange an APC's cell with a higher quality cell or a
+      cell with more charge.
+  - bugfix: Antag tokens now refund their proper amount of Doubloons.

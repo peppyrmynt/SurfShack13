@@ -170,8 +170,7 @@
 	manipulator_arm.vis_contents -= poor_monkey
 	if(interaction_mode == INTERACT_USE)
 		change_mode()
-	poor_monkey.pixel_x = poor_monkey.base_pixel_x + poor_monkey.body_position_pixel_x_offset
-	poor_monkey.pixel_y = poor_monkey.base_pixel_y + poor_monkey.body_position_pixel_y_offset
+	poor_monkey.remove_offsets(type)
 	monkey_worker = null
 
 /obj/machinery/big_manipulator/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change)

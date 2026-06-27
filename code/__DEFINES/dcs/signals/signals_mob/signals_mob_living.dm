@@ -315,3 +315,10 @@
 #define COMSIG_LIVING_ATTACK_ATOM "living_attack_atom"
 /// From /mob/living/proc/stop_leaning()
 #define COMSIG_LIVING_STOPPED_LEANING "living_stopped_leaning"
+/// From /datum/surgery_step/initiate() : (mob/living/user, mob/living/target, target_zone, obj/item/tool, datum/surgery/surgery, datum/surgery_step/step, list/modifiers)
+#define COMSIG_LIVING_INITIATE_SURGERY_STEP "living_initiate_surgery_step"
+#define COMSIG_LIVING_SURGERY_STEP_INITIATED_ON "living_surgery_step_initiated_on"
+	/// Index in modifiers containing the modifier to failure chance
+	#define FAIL_PROB_INDEX 1
+	/// Index in modifiers containing the modifer to surgery speed
+	#define SPEED_MOD_INDEX 2
