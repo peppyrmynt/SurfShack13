@@ -105,8 +105,8 @@
 	icon_state = "rshell"
 	projectile_type = /obj/projectile/bullet/pellet/shotgun_rubbershot
 	pellets = 6
-	variance = 20
-	custom_materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*2)
+	variance = 25
+	custom_materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*1)
 
 /obj/item/ammo_casing/shotgun/incapacitate
 	name = "custom incapacitating shot"

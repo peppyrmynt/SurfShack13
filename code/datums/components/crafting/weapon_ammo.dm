@@ -47,7 +47,7 @@
 	result = /obj/item/ammo_casing/shotgun/pulseslug
 	reqs = list(
 		/obj/item/ammo_casing/shotgun/techshell = 1,
-		/obj/item/stock_parts/capacitor/adv = 2,
+		/obj/item/stock_parts/capacitor/super = 2,
 		/obj/item/stock_parts/micro_laser/ultra = 1,
 	)
 	tool_behaviors = list(TOOL_SCREWDRIVER)
@@ -83,7 +83,9 @@
 	reqs = list(
 		/obj/item/ammo_casing/shotgun/techshell = 1,
 		/obj/item/stock_parts/micro_laser/ultra = 1,
-		/obj/item/stock_parts/subspace/crystal = 1,
+		/datum/reagent/iron = 5,
+		/datum/reagent/aluminium = 5,
+		/datum/reagent/uranium = 5,
 	)
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	time = 0.5 SECONDS

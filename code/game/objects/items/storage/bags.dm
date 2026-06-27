@@ -546,14 +546,19 @@
 	. = ..()
 	atom_storage.max_total_storage = 100
 	atom_storage.max_slots = 50
-	atom_storage.max_specific_storage = WEIGHT_CLASS_SMALL
+	atom_storage.max_specific_storage = WEIGHT_CLASS_NORMAL
 	atom_storage.set_holdable(list(
 		/obj/item/assembly,
 		/obj/item/circuitboard,
 		/obj/item/electronics,
+		/obj/item/rcd_ammo,
 		/obj/item/reagent_containers/cup/beaker,
 		/obj/item/stack/cable_coil,
+		/obj/item/stack/ducts,
 		/obj/item/stack/ore/bluespace_crystal,
+		/obj/item/stack/rods,
+		/obj/item/stack/sheet,
+		/obj/item/stack/tile,
 		/obj/item/stock_parts,
 		/obj/item/wallframe/camera,
 	))
