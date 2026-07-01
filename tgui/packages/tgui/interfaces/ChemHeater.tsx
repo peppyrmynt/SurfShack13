@@ -345,10 +345,8 @@ export const ChemHeater = (props) => {
               </Table.Cell>
             </Table.Row>
             <Table.Row>
-                <Table.Cell>
-                </Table.Cell>
-                <Table.Cell>
-                </Table.Cell>
+              <Table.Cell />
+              <Table.Cell />
               <Table.Cell collapsing color="label">
                 Stable:
               </Table.Cell>
