@@ -294,6 +294,7 @@
 	.["isFlashing"] = flashing
 	.["acidicBufferVol"] = reagents.get_reagent_amount(/datum/reagent/reaction_agent/acidic_buffer)
 	.["basicBufferVol"] = reagents.get_reagent_amount(/datum/reagent/reaction_agent/basic_buffer)
+	.["stabilizingAgentVol"] = reagents.get_reagent_amount(/datum/reagent/stabilizing_agent)
 	.["dispenseVolume"] = dispense_volume
 
 /obj/machinery/chem_heater/ui_act(action, params, datum/tgui/ui, datum/ui_state/state)
@@ -342,6 +343,16 @@
 				return FALSE
 
 			return move_buffer(/datum/reagent/reaction_agent/basic_buffer, target)
+		if("stabilizingAgent")
+			var/target = params["target"]
+			if(!target)
+				return FALSE
+
+			target = text2num(target)
+			if(isnull(target))
+				return FALSE
+
+			return move_buffer(/datum/reagent/stabilizing_agent, target)
 		if("disp_vol")
 			var/target = params["target"]
 			if(!target)
@@ -391,6 +402,7 @@
 	reagents.maximum_volume = 2000
 	reagents.add_reagent(/datum/reagent/reaction_agent/basic_buffer, 1000)
 	reagents.add_reagent(/datum/reagent/reaction_agent/acidic_buffer, 1000)
+	reagents.add_reagent(/datum/reagent/stabilizing_agent, 1000)
 	heater_coefficient = 0.4 //hack way to upgrade
 
 //map load types
@@ -401,3 +413,4 @@
 	. = ..()
 	reagents.add_reagent(/datum/reagent/reaction_agent/basic_buffer, 20)
 	reagents.add_reagent(/datum/reagent/reaction_agent/acidic_buffer, 20)
+	reagents.add_reagent(/datum/reagent/stabilizing_agent, 20)
