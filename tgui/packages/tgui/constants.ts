@@ -43,7 +43,7 @@ export const COLORS = {
   reagent: {
     acidicbuffer: '#fbc314',
     basicbuffer: '#3853a4',
-    stabilizingAgent: "#FFFF00",
+    stabilizingAgent: '#FFFF00',
   },
 } as const;
 
