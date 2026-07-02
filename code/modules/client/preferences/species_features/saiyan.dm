@@ -13,3 +13,12 @@
 
 /datum/preference/choiced/saiyan_tail/create_default_value()
 	return /datum/sprite_accessory/tails/saiyan/default::name
+
+/// Ensure species name generation doesn't fail during initialization
+/datum/preference/choiced/species/saiyan
+	abstract_type = null
+
+/datum/preference/choiced/species/saiyan/create_informed_default_value(datum/preferences/preferences)
+	if(GLOB.prototype_language_holders[/datum/language_holder/saiyan])
+		return /datum/species/saiyan
+	return /datum/species/human  // Fallback during early initialization
