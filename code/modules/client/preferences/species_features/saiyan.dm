@@ -12,4 +12,4 @@
 	target.dna.features["tail_saiyan"] = value
 
 /datum/preference/choiced/saiyan_tail/create_default_value()
-	return /datum/sprite_accessory/tails/saiyan/standard::name
+	return /datum/sprite_accessory/tails/saiyan/default::name
