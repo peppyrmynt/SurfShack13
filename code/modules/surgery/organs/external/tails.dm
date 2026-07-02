@@ -189,6 +189,7 @@
 
 /obj/item/organ/tail/monkey/saiyan
 	name = "saiyan tail"
+	preference = "feature_saiyan_tail"
 	desc = "The severed tail of a mighty Saiyan warrior, the ultimate humiliation."
 	bodypart_overlay = /datum/bodypart_overlay/mutant/tail/monkey/saiyan
 
