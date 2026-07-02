@@ -179,7 +179,7 @@
 /datum/reagent/drug/methamphetamine/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	var/high_message = pick("You feel hyper.", "You feel like you need to go faster.", "You feel like you can run the world.", "You understand now.")
-	if(SPT_PROB(2.5, seconds_per_tick))
+	if(SPT_PROB(4, seconds_per_tick))
 		to_chat(affected_mob, span_notice("[high_message]"))
 		//surfshack start
 		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
@@ -193,7 +193,7 @@
 	need_mob_update += affected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, rand(1, 4) * REM * seconds_per_tick, required_organ_flag = affected_organ_flags)
 	if(need_mob_update)
 		. = UPDATE_MOB_HEALTH
-	if(SPT_PROB(2.5, seconds_per_tick))
+	if(SPT_PROB(2, seconds_per_tick))
 		affected_mob.emote(pick("twitch", "shiver"))
 
 /datum/reagent/drug/methamphetamine/overdose_process(mob/living/affected_mob, seconds_per_tick, times_fired)
