@@ -1,7 +1,7 @@
 /obj/item/gun/ballistic/automatic/paintball
 	name = "\improper Paintball Gun"
 	desc = "A paintball gun which is designed to shoot plastic projectiles full of coloring which dyes the opponent."
-	icon = 'hypermods/icons/obj/weapons/guns/ballistic.dmi'
+	icon = 'surfshack13/icons/obj/weapons/guns/ballistic.dmi'
 	icon_state = "paintball"
 	accepted_magazine_type = /obj/item/ammo_box/magazine/paintball
 	actions_types = list()

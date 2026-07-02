@@ -1,6 +1,6 @@
 /obj/projectile/paintball
 	name = "empty paintball"
-	icon = 'hypermods/icons/obj/weapons/guns/projectiles.dmi'
+	icon = 'surfshack13/icons/obj/weapons/guns/projectiles.dmi'
 	icon_state = "paintball"
 	damage = 0
 	hitsound = 'sound/items/weapons/throwtap.ogg'

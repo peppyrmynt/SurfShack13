@@ -1,7 +1,7 @@
 /obj/item/ammo_box/magazine/paintball
 	name = "colorless paintballs magazine"
 	desc = "A magazine for paintball guns. This one containts colorless paintballs."
-	icon = 'hypermods/icons/obj/weapons/guns/ammo.dmi'
+	icon = 'surfshack13/icons/obj/weapons/guns/ammo.dmi'
 	icon_state = "paintball"
 	base_icon_state = "paintball"
 	ammo_type = /obj/item/ammo_casing/paintball

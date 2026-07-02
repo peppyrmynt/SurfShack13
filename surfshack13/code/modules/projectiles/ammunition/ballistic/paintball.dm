@@ -3,7 +3,7 @@
 	desc = "A paintball full of nothing."
 	caliber = CALIBER_PAINTBALL
 	projectile_type = /obj/projectile/paintball
-	icon = 'hypermods/icons/obj/weapons/guns/ammo.dmi'
+	icon = 'surfshack13/icons/obj/weapons/guns/ammo.dmi'
 	icon_state = "ball"
 	custom_materials = list(/datum/material/plastic = SMALL_MATERIAL_AMOUNT*5)
 	harmful = FALSE
