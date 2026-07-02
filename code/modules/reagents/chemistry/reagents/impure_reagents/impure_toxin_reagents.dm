@@ -119,10 +119,10 @@
 /datum/reagent/impurity/chloralax/on_mob_life(mob/living/carbon/M, seconds_per_tick, times_fired)
 	. = ..()
 
-	if(M.adjustToxLoss(2 * REM * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype))
+	if(M.adjustToxLoss(1 * REM * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype))
 		. = UPDATE_MOB_HEALTH
 
-	if((M.mob_biotypes & MOB_ORGANIC) && prob(0.3))
+	if((M.mob_biotypes & MOB_ORGANIC) && prob(0.5))
 		for(var/thing in M.diseases) // can clean viruses from organic lifeforms.
 			var/datum/disease/D = thing
 			D.cure()
