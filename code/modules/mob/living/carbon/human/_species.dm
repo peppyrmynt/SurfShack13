@@ -236,8 +236,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
  * Used by [/proc/generate_selectable_species_and_languages].
  */
 /datum/species/proc/check_roundstart_eligible()
-	if(id in (CONFIG_GET(keyed_list/roundstart_races)))
+	var/list/races = CONFIG_GET(keyed_list/roundstart_races)
+
+	if(races[id])
 		return TRUE
+
 	return FALSE
 
 /**
