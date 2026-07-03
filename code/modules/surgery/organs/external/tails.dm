@@ -187,27 +187,27 @@
 /datum/bodypart_overlay/mutant/tail/monkey/get_global_feature_list()
 	return SSaccessories.tails_list_monkey
 
-/obj/item/organ/external/tail/monkey/saiyan
+/obj/item/organ/tail/monkey/saiyan
 	name = "saiyan tail"
 	desc = "The severed tail of a mighty Saiyan warrior, the ultimate humiliation."
 	bodypart_overlay = /datum/bodypart_overlay/mutant/tail/monkey/saiyan
 
-/obj/item/organ/external/tail/monkey/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
+/obj/item/organ/tail/monkey/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_MOVABLE_MOVED = PROC_REF(on_moved),
 	)
 	AddComponent(/datum/component/connect_containers, src, loc_connections)
 
-/obj/item/organ/external/tail/monkey/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
+/obj/item/organ/tail/monkey/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
 	. = ..()
 	qdel(GetComponent(/datum/component/connect_containers))
 
-/obj/item/organ/external/tail/monkey/saiyan/get_butt_sprite()
+/obj/item/organ/tail/monkey/saiyan/get_butt_sprite()
 	return BUTT_SPRITE_CAT // how don't we have a monkey one...
 
 /// When we move check if we are exposed to space
-/obj/item/organ/external/tail/monkey/saiyan/proc/on_moved()
+/obj/item/organ/tail/monkey/saiyan/proc/on_moved()
 	SIGNAL_HANDLER
 	if (isnull(owner))
 		return
@@ -217,7 +217,7 @@
 		escape_ape(owner)
 
 /// Check if the passed turf can see space
-/obj/item/organ/external/tail/monkey/saiyan/proc/is_space_exposed_turf(turf/turf_to_check)
+/obj/item/organ/tail/monkey/saiyan/proc/is_space_exposed_turf(turf/turf_to_check)
 	if (isnull(turf_to_check))
 		return FALSE
 	var/area/area_to_check = get_area(turf_to_check)
@@ -233,7 +233,7 @@
 	return isnull(turf_to_check) || isspaceturf(turf_to_check)
 
 /// Start being an ape
-/obj/item/organ/external/tail/monkey/saiyan/proc/go_ape()
+/obj/item/organ/tail/monkey/saiyan/proc/go_ape()
 	if (HAS_TRAIT(owner, TRAIT_SHAPESHIFTED) || owner.stat == DEAD)
 		return
 	owner.visible_message(span_warning("[owner] transforms into a huge, ape-like creature!"))
@@ -246,12 +246,12 @@
 	monkie.saiyan_boost(owner.boost_movespeed / -0.1)
 	RegisterSignal(monkie, COMSIG_LIVING_DEATH, PROC_REF(ape_died))
 
-/obj/item/organ/external/tail/monkey/saiyan/proc/ape_died()
+/obj/item/organ/tail/monkey/saiyan/proc/ape_died()
 	SIGNAL_HANDLER
 	owner.death()
 
 /// Stop being an ape
-/obj/item/organ/external/tail/monkey/saiyan/proc/escape_ape()
+/obj/item/organ/tail/monkey/saiyan/proc/escape_ape()
 	if (!HAS_TRAIT(owner, TRAIT_SHAPESHIFTED))
 		return
 	var/mob/living/ape_form = owner.loc

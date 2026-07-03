@@ -824,11 +824,11 @@
 	name = "saiyan eyes"
 	desc = "The incisive eyes of a warrior. Special cells allow the detection of power levels."
 
-/obj/item/organ/internal/eyes/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
+/obj/item/organ/eyes/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
 	ADD_TRAIT(organ_owner, TRAIT_MARTIAL_VISION, ORGAN_TRAIT)
 
-/obj/item/organ/internal/eyes/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
+/obj/item/organ/eyes/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
 	. = ..()
 	REMOVE_TRAIT(organ_owner, TRAIT_MARTIAL_VISION, ORGAN_TRAIT)
 
