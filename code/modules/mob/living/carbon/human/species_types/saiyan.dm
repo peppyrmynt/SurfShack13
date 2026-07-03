@@ -3,10 +3,10 @@
 /datum/species/saiyan
 	name = "\improper Saiyan"
 	id = SPECIES_SAIYAN
-	mutanteyes = /obj/item/organ/internal/eyes/saiyan
-	mutantbrain = /obj/item/organ/internal/brain/saiyan
-	mutantheart = /obj/item/organ/internal/heart/saiyan
-	mutantstomach = /obj/item/organ/internal/stomach/saiyan
+	mutanteyes = /obj/item/organ/eyes/saiyan
+	mutantbrain = /obj/item/organ/brain/saiyan
+	mutantheart = /obj/item/organ/heart/saiyan
+	mutantstomach = /obj/item/organ/stomach/saiyan
 	payday_modifier = 2.0
 	inherent_traits = list(
 		TRAIT_CATLIKE_GRACE,

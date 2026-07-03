@@ -820,7 +820,7 @@
 	eye_icon_state = "motheyes"
 	icon_state = "eyeballs-cybermoth"
 
-/obj/item/organ/internal/eyes/saiyan
+/obj/item/organ/eyes/saiyan
 	name = "saiyan eyes"
 	desc = "The incisive eyes of a warrior. Special cells allow the detection of power levels."
 

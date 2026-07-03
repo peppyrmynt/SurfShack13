@@ -1,7 +1,7 @@
 #define GOKU_FILTER "goku_filter"
 
 /// The Saiyan brain contains knowledge of powerful martial arts
-/obj/item/organ/internal/brain/saiyan
+/obj/item/organ/brain/saiyan
 	name = "saiyan brain"
 	desc = "The brain of a mighty saiyan warrior. Guess they don't work out at the library..."
 	brain_size = 0.5
@@ -16,7 +16,7 @@
 		/datum/action/cooldown/mob_cooldown/ultra_instinct,
 	)
 
-/obj/item/organ/internal/brain/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
+/obj/item/organ/brain/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
 	var/datum/action/cooldown/mob_cooldown/ki_blast/blast = new(organ_owner)
 	blast.Grant(organ_owner)
@@ -31,7 +31,7 @@
 	random_skill.Grant(organ_owner)
 	granted_abilities += random_skill
 
-/obj/item/organ/internal/brain/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
+/obj/item/organ/brain/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
 	. = ..()
 	QDEL_LIST(granted_abilities)
 
