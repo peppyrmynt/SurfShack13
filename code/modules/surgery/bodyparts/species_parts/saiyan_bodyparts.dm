@@ -11,6 +11,10 @@
 
 /obj/item/bodypart/head/saiyan/update_hair_and_lips(dropping_limb, is_creating)
 	. = ..()
+
+	if(!owner)
+		return
+
 	if (HAS_TRAIT(owner, TRAIT_POWER_HAIR))
 		return
 	// Sorry, you are not legendary enough to dye your hair

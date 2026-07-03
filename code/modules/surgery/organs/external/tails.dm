@@ -264,7 +264,7 @@
 	feature_key = "tail_saiyan"
 
 /datum/bodypart_overlay/mutant/tail/monkey/saiyan/get_global_feature_list()
-	return GLOB.tails_list_saiyan
+	return SSaccessories.tails_list_saiyan
 
 /obj/item/organ/tail/lizard
 	name = "lizard tail"
