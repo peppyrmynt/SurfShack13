@@ -211,7 +211,7 @@
 	AddComponent(\
 		/datum/component/ranged_attacks,\
 		projectile_type = /obj/projectile/beam/emitter/hitscan,\
-		projectile_sound = 'sound/weapons/emitter.ogg',\
+		projectile_sound = 'sound/items/weapons/emitter.ogg',\
 		cooldown_time = 0.5 SECONDS, \
 	)
 	RegisterSignal(src, COMSIG_ATOM_AFTER_ATTACKEDBY, PROC_REF(check_tail_sever))
