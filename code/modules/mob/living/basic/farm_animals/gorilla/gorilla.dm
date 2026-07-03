@@ -204,6 +204,7 @@
 	unsuitable_atmos_damage = 0
 	unsuitable_cold_damage = 0
 	basic_mob_flags = DEL_ON_DEATH
+	ai_controller = null
 
 /mob/living/basic/gorilla/saiyan/Initialize(mapload)
 	. = ..()

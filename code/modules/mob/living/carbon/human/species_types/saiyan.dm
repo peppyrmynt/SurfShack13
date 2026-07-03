@@ -56,7 +56,7 @@
 		'sound/mobs/humanoids/human/scream/femalescream_5.ogg',
 	)
 
-/datum/species/saiyan/on_species_gain(mob/living/carbon/human/human_who_gained_species, datum/species/old_species, pref_load)
+/datum/species/saiyan/on_species_gain(mob/living/carbon/human/human_who_gained_species, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
 	RegisterSignal(human_who_gained_species, COMSIG_SAIYAN_SURVIVOR, PROC_REF(on_survived_boost))
 	RegisterSignal(human_who_gained_species, COMSIG_CARBON_GAIN_ORGAN, PROC_REF(on_tail_gained))
