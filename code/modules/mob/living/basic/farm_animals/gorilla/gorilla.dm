@@ -241,7 +241,7 @@
 
 	var/mob/living/carbon/saiyan = get_internal_saiyan()
 	if (istype(saiyan))
-		var/obj/item/organ/external/tail/saiyan_tail = saiyan.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
+		var/obj/item/organ/tail/saiyan_tail = saiyan.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
 		saiyan_tail.Remove(saiyan)
 		saiyan_tail.forceMove(saiyan.loc)
 
