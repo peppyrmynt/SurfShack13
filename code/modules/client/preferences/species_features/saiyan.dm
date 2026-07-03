@@ -1,5 +1,5 @@
 /datum/preference/choiced/saiyan_tail
-	savefile_key = "feature_saiyan_tail"
+	savefile_key = "feature_monkey_tail"
 	savefile_identifier = PREFERENCE_CHARACTER
 	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES
 	relevant_external_organ = /obj/item/organ/tail/monkey/saiyan
