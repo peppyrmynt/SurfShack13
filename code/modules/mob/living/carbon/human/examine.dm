@@ -1,3 +1,8 @@
+/mob/living/carbon/human/examine(mob/user)
+
+	if(HAS_TRAIT(user, TRAIT_MARTIAL_VISION))
+		. += report_power_level()
+
 /// Collects information displayed about src when examined by a user with a medical HUD.
 /mob/living/carbon/human/get_medhud_examine_info(mob/living/user, datum/record/crew/target_record)
 	. = ..()
