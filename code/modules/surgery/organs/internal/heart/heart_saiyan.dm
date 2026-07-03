@@ -1,17 +1,17 @@
 /// A warrior's heart which gains experience from fighting (and losing)
-/obj/item/organ/internal/heart/saiyan
+/obj/item/organ/heart/saiyan
 	maxHealth = STANDARD_ORGAN_THRESHOLD*0.5 // Vulnerable to heart disease
 
-/obj/item/organ/internal/heart/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
+/obj/item/organ/heart/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
 	RegisterSignal(organ_owner, COMSIG_MOB_STATCHANGE, PROC_REF(on_stat_changed))
 
-/obj/item/organ/internal/heart/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
+/obj/item/organ/heart/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
 	. = ..()
 	UnregisterSignal(organ_owner, COMSIG_MOB_STATCHANGE)
 
 /// When we enter crit, prepare for a zenkai boost
-/obj/item/organ/internal/heart/saiyan/proc/on_stat_changed(mob/living/source, new_stat)
+/obj/item/organ/heart/saiyan/proc/on_stat_changed(mob/living/source, new_stat)
 	SIGNAL_HANDLER
 	if (new_stat != HARD_CRIT)
 		return
