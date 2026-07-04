@@ -28,6 +28,10 @@
 		/obj/item/organ/tail/monkey/saiyan = "Saiyan",
 	)
 
+/datum/species/saiyan/prepare_human_for_preview(mob/living/carbon/human/human)
+	human.set_haircolor("#292929", update = FALSE)
+	human.set_hairstyle("Spiky 2", update = TRUE)
+
 /datum/species/saiyan/check_roundstart_eligible()
 	return TRUE
 
