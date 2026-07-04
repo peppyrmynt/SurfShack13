@@ -328,8 +328,16 @@
 /turf/open/floor/iron/dark,
 /area/station/command/bridge)
 "apK" = (
-/obj/effect/mapping_helpers/broken_floor,
-/turf/open/floor/plating,
+/obj/structure/safe/floor,
+/obj/effect/spawner/random/entertainment/money_large,
+/obj/effect/spawner/random/entertainment/money_large,
+/obj/effect/spawner/random/entertainment/money_large,
+/obj/item/reagent_containers/cup/glass/bottle/lizardwine,
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/tile/neutral/opposingcorners,
+/obj/effect/spawner/random/entertainment/gambling,
+/obj/effect/turf_decal/bot_white,
+/turf/open/floor/iron/dark,
 /area/station/maintenance/department/cargo)
 "apQ" = (
 /obj/machinery/portable_atmospherics/canister/plasma,
@@ -1480,10 +1488,11 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/tile/blue,
-/obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
-	dir = 8
-	},
 /obj/machinery/shower/directional/north,
+/obj/structure/fluff/shower_drain,
+/obj/effect/turf_decal/trimline/blue/end{
+	dir = 1
+	},
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/central)
 "bfU" = (
@@ -3246,6 +3255,9 @@
 "cto" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/trash/box,
+/obj/item/lead_pipe{
+	pixel_x = -5
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "cus" = (
@@ -5075,10 +5087,6 @@
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "dIX" = (
-/obj/effect/turf_decal/trimline/blue/end{
-	dir = 4;
-	icon_state = "trimline_end"
-	},
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
@@ -9704,7 +9712,12 @@
 	},
 /obj/effect/turf_decal/tile/yellow,
 /obj/item/storage/box/beakers,
-/obj/item/radio/intercom/directional/south,
+/obj/machinery/button/door/directional/north{
+	id = "chem_lockdown";
+	name = "chemistry lockdown control";
+	req_access = list("pharmacy");
+	pixel_y = -24
+	},
 /turf/open/floor/iron/white,
 /area/station/medical/chemistry)
 "gRZ" = (
@@ -13867,10 +13880,6 @@
 	},
 /obj/structure/window/reinforced/spawner/directional/south,
 /obj/structure/bed/medical/emergency,
-/obj/effect/turf_decal/trimline/blue/end{
-	dir = 4;
-	icon_state = "trimline_end"
-	},
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/central)
 "jIm" = (
@@ -14140,6 +14149,7 @@
 	},
 /obj/effect/turf_decal/trimline/blue/end,
 /obj/effect/turf_decal/trimline/purple/end,
+/obj/structure/fluff/shower_drain,
 /turf/open/floor/iron/white,
 /area/station/science/research)
 "jRC" = (
@@ -16469,6 +16479,7 @@
 	dir = 4
 	},
 /obj/machinery/chem_dispenser,
+/obj/item/radio/intercom/directional/south,
 /turf/open/floor/iron/white,
 /area/station/medical/chemistry)
 "lEv" = (
@@ -23284,6 +23295,10 @@
 /area/station/maintenance/port/lesser)
 "qea" = (
 /obj/effect/spawner/structure/window/reinforced,
+/obj/machinery/door/poddoor/shutters/preopen{
+	id = "chem_lockdown";
+	name = "Chemistry Shutters"
+	},
 /turf/open/floor/plating,
 /area/station/medical/chemistry)
 "qeI" = (
@@ -26224,9 +26239,6 @@
 /area/station/science/xenobiology)
 "rWo" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/turf_decal/stripes/corner{
-	dir = 8
-	},
 /obj/structure/closet/emcloset,
 /turf/open/floor/plating,
 /area/station/maintenance/department/cargo)
@@ -30158,7 +30170,7 @@
 	dir = 4
 	},
 /obj/machinery/light/directional/east,
-/obj/vehicle/ridden/wheelchair{
+/obj/vehicle/ridden/wheelchair/motorized{
 	dir = 8
 	},
 /turf/open/floor/iron/white,
@@ -31476,12 +31488,11 @@
 /turf/open/floor/iron/dark,
 /area/station/hallway/primary/fore)
 "vFl" = (
-/obj/structure/rack,
-/obj/effect/turf_decal/bot_white,
-/obj/effect/spawner/random/entertainment/gambling,
-/obj/effect/spawner/random/entertainment/money_large,
-/obj/effect/turf_decal/tile/neutral/opposingcorners,
-/turf/open/floor/iron/dark,
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/turf/open/floor/plating,
 /area/station/maintenance/department/cargo)
 "vFD" = (
 /obj/machinery/door/airlock/maintenance{
@@ -60921,7 +60932,7 @@ wuD
 wuD
 wuD
 epx
-bZJ
+apK
 dpN
 epx
 sHJ
@@ -61171,14 +61182,14 @@ wuD
 wuD
 wuD
 wuD
+wuD
 pdc
 tvW
 wuD
 wuD
-wuD
 apX
 epx
-nqV
+bZJ
 ylA
 epx
 cVm
@@ -61428,14 +61439,14 @@ wuD
 wuD
 wuD
 wuD
+wuD
 tvW
 fyD
 tvW
 wuD
 wuD
-wuD
 epx
-vFl
+nqV
 dpN
 epx
 hgx
@@ -61685,10 +61696,10 @@ wuD
 wuD
 wuD
 wuD
+wuD
 epx
 azh
 epx
-apX
 wuD
 apX
 epx
@@ -61942,9 +61953,9 @@ wuD
 wuD
 wuD
 apX
+wuD
 epx
 bke
-epx
 epx
 epx
 epx
@@ -62200,9 +62211,9 @@ wuD
 apX
 epx
 epx
+epx
 vDW
 jPm
-mFw
 eFl
 uhL
 epx
@@ -62457,9 +62468,9 @@ apX
 apX
 epx
 rWo
+vFl
 rej
 scJ
-apK
 bke
 bke
 pkz
@@ -74603,9 +74614,9 @@ ogj
 eZo
 cto
 dgr
-eZM
-wuD
-tvW
+hJb
+oCK
+fyD
 apX
 fyD
 wuD
@@ -74860,12 +74871,12 @@ xnu
 eZo
 kre
 dgr
+hJb
 oCK
-apX
 fyD
 apX
 fyD
-tvW
+fyD
 pdc
 wuD
 wuD
@@ -75117,8 +75128,8 @@ meJ
 eZo
 eZM
 dgr
+hJb
 oCK
-fyD
 fyD
 fyD
 fyD
@@ -75343,7 +75354,7 @@ vZz
 axt
 gpU
 kuz
-qpm
+pGM
 sRG
 cTM
 dIX
@@ -75374,8 +75385,8 @@ xnu
 qea
 gPT
 dgr
+hJb
 oCK
-apX
 fyD
 apX
 wuD
