@@ -564,11 +564,6 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 				if(use(CABLE_RESTRAINTS_COST))
 					var/obj/item/restraints/handcuffs/cable/restraints = new(null, cable_color)
 					user.put_in_hands(restraints)
-		//surfshack start
-		if("Noose")
-			if(amount >= NOOSE_CABLE_COST && use(NOOSE_CABLE_COST))
-				new /obj/structure/noose (get_turf(src))
-		//surfshack end
 	update_appearance()
 
 
