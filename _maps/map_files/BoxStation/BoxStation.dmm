@@ -14229,9 +14229,6 @@
 /obj/effect/turf_decal/tile/neutral/half{
 	dir = 8
 	},
-/obj/machinery/computer/public_announcement{
-	dir = 4
-	},
 /obj/effect/turf_decal/bot,
 /turf/open/floor/iron/edge{
 	dir = 8

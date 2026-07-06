@@ -126735,9 +126735,6 @@
 /obj/effect/turf_decal/trimline/dark/warning{
 	dir = 8
 	},
-/obj/machinery/computer/public_announcement{
-	dir = 4
-	},
 /turf/open/floor/iron/dark/side{
 	dir = 8
 	},

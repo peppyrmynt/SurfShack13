@@ -1382,7 +1382,6 @@
 	},
 /obj/machinery/status_display/evac/directional/north,
 /obj/machinery/light/small/directional/north,
-/obj/machinery/computer/public_announcement,
 /turf/open/floor/iron,
 /area/station/hallway/secondary/exit/departure_lounge)
 "aAT" = (
