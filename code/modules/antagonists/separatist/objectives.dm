@@ -3,9 +3,6 @@
 	explanation_text = "Make sure no member of the enemy nation escapes alive!"
 	team_explanation_text = "Make sure no member of the enemy nation escapes alive!"
 	var/datum/team/nation/target_team
-	//surfshack start
-	completion_credit_reward = 250
-	//surfshack end
 
 /datum/objective/destroy_nation/New(text, target_department)
 	. = ..()
@@ -37,7 +34,6 @@
 	return TRUE
 
 /datum/objective/separatist_fluff
-	reward_for_completion = FALSE
 
 /datum/objective/separatist_fluff/New(text, nation_name)
 	explanation_text = pick(list(

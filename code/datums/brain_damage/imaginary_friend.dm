@@ -69,7 +69,7 @@
 		qdel(src)
 		return
 
-	friend.PossessByPlayer(ghost.ckey)
+	friend.key = ghost.key
 	friend.attach_to_owner(owner)
 	friend.setup_appearance()
 	friend_initialized = TRUE

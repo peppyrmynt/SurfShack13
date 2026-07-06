@@ -29,8 +29,6 @@
 	else if(ckey)
 		stack_trace("Mob without client but with associated ckey, [ckey], has been deleted.")
 
-	persistent_client?.set_mob(null)
-
 	remove_from_mob_list()
 	remove_from_dead_mob_list()
 	remove_from_alive_mob_list()
@@ -108,17 +106,6 @@
 /mob/GenerateTag()
 	. = ..()
 	tag = "mob_[next_mob_id++]"
-
-/// Assigns a (c)key to this mob.
-/mob/proc/PossessByPlayer(ckey)
-	SHOULD_NOT_OVERRIDE(TRUE)
-	if(isnull(ckey))
-		return
-
-	if(!istext(ckey))
-		CRASH("Tried to assign a mob a non-text ckey, wtf?!")
-
-	src.ckey = ckey(ckey)
 
 /mob/serialize_list(list/options, list/semvers)
 	. = ..()
@@ -799,14 +786,14 @@
 		qdel(M)
 		return
 
-	M.PossessByPlayer(key)
+	M.key = key
 
 /// Checks if the mob can respawn yet according to the respawn delay
 /mob/proc/check_respawn_delay(override_delay = 0)
 	if(!override_delay && !CONFIG_GET(number/respawn_delay))
 		return TRUE
 
-	var/death_time = world.time - persistent_client.time_of_death
+	var/death_time = world.time - client.player_details.time_of_death
 
 	var/required_delay = override_delay || CONFIG_GET(number/respawn_delay)
 
@@ -1546,7 +1533,8 @@
 	if(!canon_client)
 		return
 
-	for(var/datum/callback/CB as anything in persistent_client.post_logout_callbacks)
+	for(var/foo in canon_client.player_details.post_logout_callbacks)
+		var/datum/callback/CB = foo
 		CB.Invoke()
 
 	if(canon_client?.movingmob)

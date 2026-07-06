@@ -86,9 +86,6 @@
 	var/summoned = FALSE
 	var/killed = FALSE
 	var/list/summon_spots = list()
-	//surfshack start
-	completion_credit_reward = 200
-	//surfshack end
 
 /datum/objective/eldergod/New()
 	..()

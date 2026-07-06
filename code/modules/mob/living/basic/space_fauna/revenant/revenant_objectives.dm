@@ -1,7 +1,4 @@
 /datum/objective/revenant
-	//surfshack start
-	completion_credit_reward = 50
-	//surfshack end
 
 /datum/objective/revenant/New()
 	target_amount = rand(350, 600)
@@ -18,9 +15,6 @@
 	return essence_stolen >= target_amount
 
 /datum/objective/revenant_fluff
-	//surfshack start
-	reward_for_completion = FALSE
-	//surfshack end
 
 /datum/objective/revenant_fluff/New()
 	var/list/explanation_texts = list(

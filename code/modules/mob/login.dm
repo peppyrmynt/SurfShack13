@@ -31,8 +31,6 @@
 		return FALSE
 
 	canon_client = client
-	client.persistent_client.set_mob(src)
-
 	add_to_player_list()
 	lastKnownIP = client.address
 	computer_id = client.computer_id
@@ -110,12 +108,13 @@
 		else
 			client.change_view(getScreenSize(client.prefs.read_preference(/datum/preference/toggle/widescreen)))
 
-		for(var/datum/action/A as anything in persistent_client.player_actions)
-			A.Grant(src)
+		if(client.player_details.player_actions.len)
+			for(var/datum/action/A in client.player_details.player_actions)
+				A.Grant(src)
 
-		for(var/datum/callback/CB as anything in persistent_client.post_login_callbacks)
+		for(var/foo in client.player_details.post_login_callbacks)
+			var/datum/callback/CB = foo
 			CB.Invoke()
-
 		log_played_names(
 			client.ckey,
 			list(

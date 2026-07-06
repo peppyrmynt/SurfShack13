@@ -796,7 +796,7 @@ GLOBAL_LIST_INIT(slime_extract_auto_activate_reactions, init_slime_auto_activate
 		being_used = FALSE
 		return
 
-	dumb_mob.PossessByPlayer(ghost.key)
+	dumb_mob.key = ghost.key
 	dumb_mob.mind.enslave_mind_to_creator(user)
 	SEND_SIGNAL(dumb_mob, COMSIG_SIMPLEMOB_SENTIENCEPOTION, user)
 

@@ -122,7 +122,7 @@
 			old_mind = player.mob.mind, \
 			old_body = player.mob.mind.current, \
 		)
-	body.PossessByPlayer(player.key)
+	body.key = player.key
 
 /**
  * Tests kill immunities, if nothing prevents the kill, kills this role.

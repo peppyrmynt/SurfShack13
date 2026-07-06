@@ -451,7 +451,7 @@
 		using = FALSE
 		return
 
-	soul.PossessByPlayer(ghost.ckey)
+	soul.ckey = ghost.ckey
 	soul.copy_languages(master, LANGUAGE_MASTER) //Make sure the sword can understand and communicate with the master.
 	soul.faction = list("[REF(master)]")
 	balloon_alert(master, "the scythe glows")

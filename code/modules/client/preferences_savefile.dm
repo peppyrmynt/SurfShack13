@@ -208,10 +208,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		if(ispath(path)) //whatever typepath fails this check probably doesn't exist anymore
 			parsed_favs += path
 	favorite_outfits = unique_list(parsed_favs)
-	//surfshack start
-	load_metacoins(parent.ckey)
-	load_inventory(parent.ckey)
-	//surfshack end
 
 	// Custom hotkeys
 	key_bindings = savefile.get_entry("key_bindings", key_bindings)
