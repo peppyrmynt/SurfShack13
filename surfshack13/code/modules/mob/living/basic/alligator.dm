@@ -29,7 +29,6 @@
 	faction = list(FACTION_LIZARD)
 	ai_controller = /datum/ai_controller/basic_controller/alligator
 	butcher_results = list(
-		/obj/item/clothing/head/costume/gator_cloak = 1,
 		/obj/item/food/meat/slab = 2,
 	)
 	/// Normal diet

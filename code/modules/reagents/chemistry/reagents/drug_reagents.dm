@@ -372,9 +372,6 @@
 	if(SPT_PROB(10, seconds_per_tick))
 		affected_mob.losebreath++
 		affected_mob.adjustStaminaLoss(4, updating_stamina = FALSE, required_biotype = affected_biotype)
-		//surfshack start
-		affected_mob.AddComponent(/datum/component/tweak, time=30 SECONDS)
-		//surfshack end
 		need_mob_update = TRUE
 	if(SPT_PROB(7.5, seconds_per_tick))
 		need_mob_update += affected_mob.adjustToxLoss(2, updating_health = FALSE, required_biotype = affected_biotype)

@@ -150,7 +150,6 @@
 			var/word = pick("dayum", "Im king ass ripper")
 			say(word)
 			playsound(src, sounds[word], 70, FALSE)
-			AddComponent(/datum/component/tweak, time = 8 SECONDS)
 			return
 #else
 		if(prob(10))
