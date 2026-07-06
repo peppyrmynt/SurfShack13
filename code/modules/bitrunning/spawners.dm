@@ -30,7 +30,6 @@
 	important_text = "You have no qualms with Bitrunning: in fact, you aren't even aware you're in a simulation."
 	outfit = /datum/outfit/beachbum
 	spawner_job_path = /datum/job/beach_bum
-	antag = FALSE
 	allow_custom_character = GHOSTROLE_TAKE_PREFS_APPEARANCE
 
 /obj/effect/mob_spawn/ghost_role/human/virtual_domain/beach/lifeguard
