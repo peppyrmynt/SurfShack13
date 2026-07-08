@@ -409,6 +409,34 @@
 /datum/tgui_window/vv_edit_var(var_name, var_value)
 	return var_name != NAMEOF(src, id) && ..()
 
+/datum/tgui_window/proc/set_mouse_macro()
+	if(mouse_event_macro_set)
+		return
+
+	for(var/mouseMacro in byondToTguiEventMap)
+		var/command_template = ".output CONTROL PAYLOAD"
+		var/event_message = TGUI_CREATE_MESSAGE(byondToTguiEventMap[mouseMacro], null)
+		var target_control = is_browser \
+			? "[id]:update" \
+			: "[id].browser:update"
+		var/with_id = replacetext(command_template, "CONTROL", target_control)
+		var/full_command = replacetext(with_id, "PAYLOAD", event_message)
+
+		var/list/params = list()
+		params["parent"] = "default" //Technically this is external to tgui but whatever
+		params["name"] = mouseMacro
+		params["command"] = full_command
+
+		winset(client, "[mouseMacro]Window[id]Macro", params)
+	mouse_event_macro_set = TRUE
+
+/datum/tgui_window/proc/remove_mouse_macro()
+	if(!mouse_event_macro_set)
+		stack_trace("Unsetting mouse macro on tgui window that has none")
+	for(var/mouseMacro in byondToTguiEventMap)
+		winset(client, null, "[mouseMacro]Window[id]Macro.parent=null")
+	mouse_event_macro_set = FALSE
+
 /datum/tgui_window/proc/create_oversized_payload(payload_id, message_type, chunk_count)
 	if(oversized_payloads[payload_id])
 		stack_trace("Attempted to create oversized tgui payload with duplicate ID.")
