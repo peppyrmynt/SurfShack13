@@ -3,6 +3,8 @@
 	var/static/list/possible_areas
 
 /datum/experiment/scanning/points/security_paperwork/New(datum/techweb/techweb)
+	. = ..()
+
 	if(!possible_areas)
 		possible_areas = typecacheof(list(\
 			/area/station/maintenance,\
@@ -16,6 +18,7 @@
 			/area/station/security/tram,\
 			/area/station/security/breakroom,\
 			/area/station/security/interrogation))
+
 	var/list/valid_areas = possible_areas.Copy()
 
 	for(var/area_type in valid_areas)
@@ -23,11 +26,10 @@
 			continue
 		valid_areas -= area_type
 
-	demanded_area = pick(valid_areas)
-	name = name + ": [initial(demanded_area.name)]"
-	description = initial(description) + " [initial(demanded_area.name)]"
-
-	. = ..()
+	if(length(valid_areas))
+		demanded_area = pick(valid_areas)
+		name += ": [initial(demanded_area.name)]"
+		description = initial(description) + " [initial(demanded_area.name)]"
 
 /datum/experiment/scanning/points/security_paperwork/final_contributing_index_checks(
 	datum/component/experiment_handler/experiment_handler,
