@@ -115,6 +115,7 @@
 		"mech_repair_droid",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
+	discount_experiments = list(/datum/experiment/scanning/random/mecha_equipped_scan = TECHWEB_TIER_2_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SCIENCE)
 
 /datum/techweb_node/mech_assault

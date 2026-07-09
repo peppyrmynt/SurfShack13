@@ -154,7 +154,7 @@
 	id = TECHWEB_NODE_CYBER_IMPLANTS
 	display_name = "Cybernetic Implants"
 	description = "Advanced technological enhancements integrated into the body, offering improved physical capabilities."
-	prereq_ids = list(TECHWEB_NODE_PASSIVE_IMPLANTS, TECHWEB_NODE_CYBERNETICS)
+	prereq_ids = list(TECHWEB_NODE_PASSIVE_IMPLANTS, TECHWEB_NODE_CYBER_ORGANS)
 	design_ids = list(
 		"ci-breather",
 		"ci-nutriment",
@@ -174,7 +174,7 @@
 	id = TECHWEB_NODE_COMBAT_IMPLANTS
 	display_name = "Combat Implants"
 	description = "To make sure that you can wake the f*** up, samurai."
-	prereq_ids = list(TECHWEB_NODE_CYBER_IMPLANTS)
+	prereq_ids = list(TECHWEB_NODE_RIOT_SUPRESSION, TECHWEB_NODE_CYBER_IMPLANTS)
 	design_ids = list(
 		"ci-reviver",
 		"ci-antidrop",
@@ -184,10 +184,10 @@
 	announce_channels = list(RADIO_CHANNEL_SCIENCE, RADIO_CHANNEL_MEDICAL)
 
 /datum/techweb_node/cyber/integrated_toolsets
-	id = TECHWEB_NODE_INTERGRATED_TOOLSETS
+	id = TECHWEB_NODE_INTEGRATED_TOOLSETS
 	display_name = "Integrated Toolsets"
 	description = "Decades of contraband smuggling by assistants have led to the development of a full toolbox that fits seamlessly into your arm."
-	prereq_ids = list(TECHWEB_NODE_COMBAT_IMPLANTS, TECHWEB_NODE_EXP_TOOLS)
+	prereq_ids = list(TECHWEB_NODE_EXP_TOOLS)
 	design_ids = list(
 		"ci-nutrimentplus",
 		"ci-toolset",
@@ -229,7 +229,8 @@
 		"cybernetic_liver_tier3",
 		"cybernetic_heart_tier3",
 	)
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
+	discount_experiments = list(/datum/experiment/scanning/people/augmented_organs = TECHWEB_TIER_4_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SCIENCE, RADIO_CHANNEL_MEDICAL)
 
 /datum/techweb_node/cyber/cyber_organs_adv

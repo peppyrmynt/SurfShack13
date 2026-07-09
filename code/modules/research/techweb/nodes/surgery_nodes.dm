@@ -28,6 +28,7 @@
 	description = "When simple medicine doesn't cut it."
 	prereq_ids = list(TECHWEB_NODE_SURGERY)
 	design_ids = list(
+		"self-surgery-skillchip",
 		"harvester",
 		"surgery_heal_brute_upgrade_femto",
 		"surgery_heal_burn_upgrade_femto",
@@ -36,7 +37,8 @@
 		"surgery_lobotomy_mechanic",
 		"surgery_wing_reconstruction",
 	)
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
+	discount_experiments = list(/datum/experiment/autopsy/human = TECHWEB_TIER_3_POINTS)
 	announce_channels = list(RADIO_CHANNEL_MEDICAL)
 
 /datum/techweb_node/surgery_exp
@@ -45,7 +47,6 @@
 	description = "When evolution isn't fast enough."
 	prereq_ids = list(TECHWEB_NODE_SURGERY_ADV)
 	design_ids = list(
-		"self-surgery-skillchip",
 		"surgery_cortex_folding",
 		"surgery_cortex_folding_mechanic",
 		"surgery_cortex_imprint",
