@@ -16,12 +16,14 @@
 			/area/station/security/tram,\
 			/area/station/security/breakroom,\
 			/area/station/security/interrogation))
-		for (var/area_type in possible_areas)
-			if(GLOB.areas_by_type[area_type])
-				continue
-			possible_areas -= area_type
+	var/list/valid_areas = possible_areas.Copy()
 
-	demanded_area = pick(possible_areas)
+	for(var/area_type in valid_areas)
+		if(GLOB.areas_by_type[area_type])
+			continue
+		valid_areas -= area_type
+
+	demanded_area = pick(valid_areas)
 	name = name + ": [initial(demanded_area.name)]"
 	description = initial(description) + " [initial(demanded_area.name)]"
 
