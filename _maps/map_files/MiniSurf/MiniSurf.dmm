@@ -3472,6 +3472,9 @@
 /obj/effect/mapping_helpers/airlock/access/any/engineering/maintenance,
 /turf/open/floor/plating,
 /area/station/maintenance/port/greater)
+"cyw" = (
+/turf/open/floor/iron/white,
+/area/station/medical/abandoned)
 "cyC" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/structure/disposalpipe/segment,
@@ -7675,6 +7678,9 @@
 "ftR" = (
 /obj/effect/mapping_helpers/broken_floor,
 /obj/effect/decal/cleanable/blood/gibs/old,
+/obj/structure/chair/wood{
+	dir = 1
+	},
 /turf/open/floor/wood,
 /area/station/maintenance/department/science/xenobiology)
 "ftT" = (
@@ -8396,6 +8402,8 @@
 	dir = 4
 	},
 /obj/structure/closet/secure_closet/personal/cabinet,
+/obj/item/toy/plush/shark,
+/obj/item/clothing/suit/hooded/shark_costume,
 /obj/item/clothing/suit/hooded/shork_costume,
 /turf/open/floor/iron/dark,
 /area/station/maintenance/department/science/xenobiology)
@@ -13530,6 +13538,15 @@
 /obj/machinery/airalarm/directional/south,
 /turf/open/floor/iron/dark,
 /area/station/science/ordnance/storage)
+"juz" = (
+/obj/structure/sign/departments/medbay/directional/north,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/cable,
+/obj/effect/landmark/blobstart,
+/obj/structure/showcase/machinery/tv/broken,
+/turf/open/floor/iron/white,
+/area/station/medical/abandoned)
 "juK" = (
 /obj/machinery/holopad,
 /obj/machinery/light/small/directional/south,
@@ -17431,7 +17448,17 @@
 "meW" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
-/obj/structure/showcase/machinery/tv/broken,
+/obj/structure/table/wood,
+/obj/item/lipstick/black,
+/obj/item/lipstick/jade{
+	pixel_x = 2;
+	pixel_y = 2
+	},
+/obj/item/lipstick/purple{
+	pixel_x = -2;
+	pixel_y = -2
+	},
+/obj/structure/mirror/directional/north,
 /turf/open/floor/iron/dark,
 /area/station/maintenance/department/science/xenobiology)
 "meY" = (
@@ -21472,16 +21499,11 @@
 /turf/open/floor/plating,
 /area/station/maintenance/aft/lesser)
 "oKx" = (
-/obj/structure/safe/floor,
-/obj/effect/spawner/random/entertainment/money_large,
-/obj/effect/spawner/random/entertainment/money_large,
-/obj/effect/spawner/random/entertainment/money_large,
-/obj/item/reagent_containers/cup/glass/bottle/lizardwine,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/turf_decal/tile/neutral/opposingcorners,
-/obj/effect/spawner/random/entertainment/gambling,
-/turf/open/floor/iron/dark,
-/area/station/maintenance/department/cargo)
+/obj/effect/decal/cleanable/blood/gibs/old,
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/turf/open/floor/iron/white,
+/area/station/medical/abandoned)
 "oKz" = (
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
@@ -29935,6 +29957,11 @@
 "urX" = (
 /turf/closed/wall,
 /area/station/science/server)
+"ush" = (
+/obj/effect/mapping_helpers/broken_floor,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/iron/white,
+/area/station/medical/abandoned)
 "usB" = (
 /obj/effect/turf_decal/trimline/purple/filled/line,
 /obj/machinery/disposal/bin,
@@ -30122,12 +30149,10 @@
 /turf/open/floor/engine,
 /area/station/engineering/supermatter)
 "uAd" = (
-/obj/structure/sign/departments/medbay/directional/north,
+/obj/effect/mapping_helpers/broken_floor,
+/obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/structure/cable,
-/obj/effect/decal/cleanable/blood/gibs/old,
-/obj/effect/landmark/blobstart,
 /turf/open/floor/iron/white,
 /area/station/medical/abandoned)
 "uAe" = (
@@ -30688,6 +30713,9 @@
 /obj/effect/spawner/random/food_or_drink/cups,
 /obj/effect/turf_decal/bot_white,
 /obj/effect/turf_decal/tile/neutral/opposingcorners,
+/obj/effect/spawner/random/entertainment/money_large,
+/obj/effect/spawner/random/entertainment/money_large,
+/obj/item/reagent_containers/cup/glass/bottle/lizardwine,
 /turf/open/floor/iron/dark,
 /area/station/maintenance/department/cargo)
 "uPp" = (
@@ -31650,7 +31678,6 @@
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
-/obj/structure/mirror/directional/north,
 /turf/open/floor/iron/dark,
 /area/station/maintenance/department/science/xenobiology)
 "vvi" = (
@@ -34104,7 +34131,6 @@
 /area/station/service/kitchen)
 "wXp" = (
 /obj/effect/decal/cleanable/blood/old,
-/obj/effect/decal/cleanable/blood/gibs/limb,
 /obj/effect/mapping_helpers/broken_floor,
 /turf/open/floor/wood,
 /area/station/maintenance/department/science/xenobiology)
@@ -61395,7 +61421,7 @@ wuD
 epx
 uPl
 apK
-oKx
+dpN
 epx
 sHJ
 epx
@@ -77817,11 +77843,11 @@ pdc
 pdc
 wuD
 wuD
-uOz
 fvp
 fvp
 fvp
 fvp
+juz
 uAd
 seu
 qsz
@@ -78074,12 +78100,12 @@ pdc
 pdc
 pdc
 pdc
-apX
 fvp
 vmH
 oFw
 pSw
 oQT
+oKx
 akq
 fvp
 yfW
@@ -78331,12 +78357,12 @@ pdc
 pdc
 pdc
 apX
-apX
 fvp
 emV
 mbw
 vdb
 iRw
+ush
 bwo
 fvp
 kAF
@@ -78588,12 +78614,12 @@ pdc
 pdc
 pdc
 pdc
-apX
 fvp
 sKb
 wwV
 vBf
 iRZ
+cyw
 lJS
 fvp
 kAF
@@ -78845,7 +78871,7 @@ pdc
 pdc
 pdc
 pdc
-pdc
+fvp
 fvp
 fvp
 fvp
