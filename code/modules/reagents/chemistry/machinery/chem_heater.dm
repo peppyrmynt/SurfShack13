@@ -22,7 +22,7 @@
 
 /obj/machinery/chem_heater/Initialize(mapload)
 	. = ..()
-	create_reagents(200, NO_REACT)
+	create_reagents(300, NO_REACT)
 	register_context()
 
 /obj/machinery/chem_heater/Destroy()

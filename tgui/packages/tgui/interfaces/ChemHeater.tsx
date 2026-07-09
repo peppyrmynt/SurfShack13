@@ -232,7 +232,7 @@ export const ChemHeater = (props) => {
                   stepPixelSize={3}
                   value={dispenseVolume}
                   minValue={1}
-                  maxValue={10}
+                  maxValue={99}
                   onDrag={(value) =>
                     act('disp_vol', {
                       target: value,
