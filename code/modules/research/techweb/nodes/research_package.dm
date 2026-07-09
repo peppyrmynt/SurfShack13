@@ -56,5 +56,6 @@
 		/datum/experiment/scanning/points/anomalies,
 		/datum/experiment/scanning/points/machinery_tiered_scan/tier2_any,
 		/datum/experiment/scanning/points/machinery_tiered_scan/tier3_any,
-		/datum/experiment/scanning/random/security/paperwork,
+		/datum/experiment/scanning/points/security_paperwork/one,
+		/datum/experiment/scanning/points/security_paperwork/two,
 		)

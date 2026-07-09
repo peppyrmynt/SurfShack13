@@ -562,9 +562,19 @@
 	required_tier = 3
 	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS )
 
-/datum/experiment/scanning/random/security/paperwork
+/datum/experiment/scanning/points/security_paperwork/one
 	name = "Routine Security Inspection"
-	description = "Help Nanotrasen monitor and analyze station security. Perform a routine security inspection using an N-spect scanner"
+	description = "Help Nanotrasen monitor and analyze station security. Perform a routine security inspection using an N-spect scanner on the following station areas:"
+	required_points = 1
+	required_atoms = list(
+		/obj/item/paper/report = 1
+	)
+	points_reward = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS )
+
+/datum/experiment/scanning/points/security_paperwork/two
+	name = "Routine Security Inspection"
+	description = "Help Nanotrasen monitor and analyze station security. Perform a routine security inspection using an N-spect scanner on the following station areas:"
+	required_points = 1
 	required_atoms = list(
 		/obj/item/paper/report = 1
 	)
