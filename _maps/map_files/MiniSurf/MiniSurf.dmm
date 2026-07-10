@@ -2186,9 +2186,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/iron/white/corner{
-	dir = 1
-	},
+/turf/open/floor/iron,
 /area/station/hallway/secondary/exit)
 "bFA" = (
 /obj/structure/table,
@@ -5097,7 +5095,7 @@
 	pixel_y = 0
 	},
 /obj/machinery/bookbinder,
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "dGd" = (
 /obj/item/radio/intercom/directional/east,
@@ -5537,7 +5535,7 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "dVS" = (
 /obj/effect/turf_decal/trimline/purple/filled/line{
@@ -6519,6 +6517,13 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard)
+"eFd" = (
+/obj/effect/decal/cleanable/dirt{
+	desc = "A thin layer of dust coating the floor.";
+	name = "dust"
+	},
+/turf/open/floor/iron,
+/area/station/hallway/secondary/entry)
 "eFg" = (
 /obj/structure/sign/departments/restroom,
 /turf/closed/wall,
@@ -12839,7 +12844,7 @@
 "iUU" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "iVh" = (
 /obj/structure/table/glass,
@@ -15673,9 +15678,6 @@
 	pixel_y = 3
 	},
 /obj/item/assembly/flash/handheld,
-/obj/effect/turf_decal/siding/dark{
-	dir = 1
-	},
 /obj/effect/turf_decal/siding/dark,
 /turf/open/floor/iron/dark,
 /area/station/command/bridge)
@@ -18445,6 +18447,7 @@
 /area/station/engineering/atmos/storage/gas)
 "mKH" = (
 /obj/effect/spawner/random/structure/grille,
+/obj/structure/lattice,
 /turf/open/space/basic,
 /area/space/nearstation)
 "mLg" = (
@@ -19073,7 +19076,7 @@
 /obj/structure/aquarium/donkfish{
 	name = "Library Aquarium"
 	},
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "nfk" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
@@ -19706,6 +19709,10 @@
 /obj/structure/closet/mini_fridge,
 /turf/open/floor/iron/white,
 /area/station/medical/abandoned)
+"nzQ" = (
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/iron,
+/area/station/engineering/atmos)
 "nzY" = (
 /obj/structure/sign/painting/library{
 	pixel_x = -32;
@@ -19714,7 +19721,7 @@
 /obj/machinery/libraryscanner,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "nAa" = (
 /obj/effect/turf_decal/box,
@@ -22075,6 +22082,16 @@
 "pbe" = (
 /turf/closed/wall,
 /area/station/maintenance/solars/port/fore)
+"pbt" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt{
+	desc = "A thin layer of dust coating the floor.";
+	name = "dust"
+	},
+/turf/open/floor/iron,
+/area/station/hallway/secondary/exit)
 "pcv" = (
 /obj/effect/spawner/random/structure/crate,
 /turf/open/floor/plating,
@@ -22197,7 +22214,7 @@
 /obj/structure/sign/painting/library{
 	pixel_y = 32
 	},
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "phr" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -23948,6 +23965,10 @@
 "qrf" = (
 /turf/closed/wall/mineral/plastitanium,
 /area/station/hallway/secondary/construction)
+"qrp" = (
+/obj/effect/spawner/random/structure/crate_abandoned,
+/turf/open/floor/plating,
+/area/station/maintenance/starboard/aft)
 "qrB" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/green/visible,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/cyan/visible/layer2,
@@ -27270,7 +27291,7 @@
 "suo" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "sus" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -28980,7 +29001,7 @@
 /obj/structure/sign/painting/library{
 	pixel_y = 32
 	},
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "tGs" = (
 /obj/effect/turf_decal/tile/yellow,
@@ -31086,7 +31107,7 @@
 /obj/effect/landmark/event_spawn,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/turf/open/floor/carpet/royalblack,
+/turf/open/floor/carpet/black,
 /area/station/commons/dorms)
 "vcC" = (
 /obj/structure/chair{
@@ -62729,7 +62750,7 @@ vvs
 wfl
 eLw
 xLw
-igm
+pbt
 myF
 eLw
 cVN
@@ -63985,7 +64006,7 @@ sus
 hSO
 rqm
 rqm
-rqm
+eFd
 dhP
 mJF
 rqm
@@ -70471,7 +70492,7 @@ vjo
 nSz
 uWj
 uWj
-uWj
+nzQ
 uWj
 uWj
 eKY
@@ -75873,7 +75894,7 @@ xnu
 qea
 gPT
 dgr
-hJb
+qrp
 oCK
 apX
 kAF
