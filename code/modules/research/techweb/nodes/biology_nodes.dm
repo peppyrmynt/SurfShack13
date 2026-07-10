@@ -90,7 +90,6 @@
 		"portaseeder",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
-	discount_experiments = list(/datum/experiment/scanning/random/plants/wild = TECHWEB_TIER_2_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SERVICE)
 
 /datum/techweb_node/selection

@@ -39,7 +39,6 @@
 		"electropack",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS)
-	discount_experiments = list(/datum/experiment/scanning/points/security_paperwork/one = TECHWEB_TIER_2_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SECURITY)
 
 
@@ -58,7 +57,6 @@
 		"bola_energy",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
-	discount_experiments = list(/datum/experiment/scanning/points/security_paperwork/two = TECHWEB_TIER_2_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SECURITY)
 
 /datum/techweb_node/explosives

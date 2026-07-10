@@ -48,7 +48,6 @@
 		"mesons",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS)
-	discount_experiments = list(/datum/experiment/scanning/random/material/easy = TECHWEB_TIER_1_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SUPPLY)
 
 /datum/techweb_node/low_pressure_excavation
@@ -80,7 +79,6 @@
 		"plasmacutter_adv",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
-	discount_experiments = list(/datum/experiment/scanning/random/material/medium = TECHWEB_TIER_3_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SUPPLY)
 
 /datum/techweb_node/bitrunning
