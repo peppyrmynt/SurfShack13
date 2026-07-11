@@ -85,6 +85,9 @@
 /obj/item/gun/energy/pulse/pistol/taserless
 	ammo_type = list(/obj/item/ammo_casing/energy/laser/pulse, /obj/item/ammo_casing/energy/laser)
 
+/obj/item/gun/energy/pulse/pistol/taserless/loyalpin
+	pin = /obj/item/firing_pin/implant/mindshield
+
 /obj/item/gun/energy/pulse/pistol/loyalpin
 	pin = /obj/item/firing_pin/implant/mindshield
 

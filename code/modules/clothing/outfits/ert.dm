@@ -54,7 +54,7 @@
 	name = "ERT Commander - High Alert"
 
 	backpack_contents = list(
-		/obj/item/gun/energy/pulse/pistol/loyalpin = 1,
+		/obj/item/gun/energy/pulse/pistol/taserless/loyalpin = 1,
 		/obj/item/melee/baton/security/loaded = 1,
 	)
 	glasses = /obj/item/clothing/glasses/thermal/eyepatch
@@ -110,7 +110,7 @@
 	name = "ERT Medic - High Alert"
 
 	backpack_contents = list(
-		/obj/item/gun/energy/pulse/pistol/loyalpin = 1,
+		/obj/item/gun/energy/pulse/pistol/taserless/loyalpin = 1,
 		/obj/item/gun/medbeam = 1,
 		/obj/item/melee/baton/security/loaded = 1,
 		/obj/item/reagent_containers/hypospray/combat/nanites = 1,
@@ -143,7 +143,7 @@
 
 	backpack_contents = list(
 		/obj/item/construction/rcd/combat = 1,
-		/obj/item/gun/energy/pulse/pistol/loyalpin = 1,
+		/obj/item/gun/energy/pulse/pistol/taserless/loyalpin = 1,
 		/obj/item/melee/baton/security/loaded = 1,
 		/obj/item/pipe_dispenser = 1,
 	)
@@ -586,7 +586,7 @@
 		/obj/item/storage/medkit/regular = 1,
 		/obj/item/storage/medkit/advanced = 1,
 		/obj/item/melee/baton/telescopic = 1,
-		/obj/item/gun/energy/pulse/pistol/loyalpin = 1,
+		/obj/item/gun/energy/pulse/pistol/taserless/loyalpin = 1,
 		/obj/item/stack/medical/poultice = 1, //These stacks contain 15 by default. Great for getting corpses to defib range without surgery.
 	)
 	belt = /obj/item/storage/belt/medical/ert
