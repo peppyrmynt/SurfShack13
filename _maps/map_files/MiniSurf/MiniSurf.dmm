@@ -550,10 +550,10 @@
 /turf/open/floor/iron,
 /area/station/engineering/storage_shared)
 "avZ" = (
-/obj/structure/closet/emcloset,
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
 	},
+/obj/structure/closet/secure_closet/engineering_electrical,
 /turf/open/floor/iron,
 /area/station/engineering/main)
 "awf" = (
@@ -3883,6 +3883,7 @@
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 8
 	},
+/obj/structure/flatpack_cart,
 /turf/open/floor/iron/dark,
 /area/station/science/research)
 "cMr" = (
@@ -6868,6 +6869,10 @@
 /obj/effect/turf_decal/stripes/corner,
 /turf/open/floor/iron,
 /area/station/hallway/secondary/exit)
+"eOH" = (
+/obj/structure/flatpack_cart,
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "eOP" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -8536,7 +8541,7 @@
 	dir = 1
 	},
 /obj/machinery/light/directional/north,
-/obj/structure/closet/secure_closet/engineering_electrical,
+/obj/machinery/flatpacker,
 /turf/open/floor/iron,
 /area/station/engineering/main)
 "fUt" = (
@@ -22093,7 +22098,7 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/exit)
 "pcv" = (
-/obj/effect/spawner/random/structure/crate,
+/obj/machinery/space_heater,
 /turf/open/floor/plating,
 /area/station/maintenance/fore/lesser)
 "pcK" = (
@@ -28769,6 +28774,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
 	},
+/obj/machinery/camera/autoname/directional/east,
 /turf/open/floor/iron,
 /area/station/engineering/main)
 "tze" = (
@@ -30031,6 +30037,7 @@
 	},
 /obj/structure/window/reinforced/spawner/directional/west,
 /obj/structure/window/reinforced/spawner/directional/east,
+/obj/effect/turf_decal/caution,
 /turf/open/floor/engine,
 /area/station/science/xenobiology)
 "uvp" = (
@@ -31545,7 +31552,6 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
 	},
-/obj/machinery/camera/autoname/directional/north,
 /obj/structure/sign/poster/contraband/missing_gloves/directional/north,
 /turf/open/floor/iron,
 /area/station/engineering/main)
@@ -64583,7 +64589,7 @@ dQm
 uhB
 hRD
 iFF
-hxl
+eOH
 sSe
 xRa
 tES
@@ -65350,7 +65356,7 @@ xNq
 uhB
 hRD
 fqp
-hRD
+hxl
 sEu
 sEu
 gSB
