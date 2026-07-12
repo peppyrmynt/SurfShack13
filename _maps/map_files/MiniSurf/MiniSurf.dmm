@@ -273,6 +273,7 @@
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 9
 	},
+/obj/machinery/newscaster/directional/north,
 /turf/open/floor/iron,
 /area/station/cargo/warehouse)
 "anW" = (
@@ -1434,11 +1435,11 @@
 /obj/machinery/door/airlock/mining{
 	name = "Mining Office"
 	},
-/obj/effect/mapping_helpers/airlock/access/all/supply/mining,
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/tile/brown/fourcorners,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/effect/mapping_helpers/airlock/access/all/supply/general,
 /turf/open/floor/iron,
 /area/station/cargo/miningoffice)
 "bba" = (
@@ -3175,7 +3176,6 @@
 "cpb" = (
 /obj/structure/table,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/maintenance,
 /obj/item/binoculars,
 /turf/open/floor/plating,
 /area/station/maintenance/port/greater)
@@ -4591,13 +4591,9 @@
 /turf/open/floor/plating,
 /area/station/maintenance/port/lesser)
 "dmu" = (
-/obj/machinery/door/airlock/maintenance{
-	name = "Cargo Bay Maintenance"
-	},
-/obj/effect/mapping_helpers/airlock/access/all/supply/general,
-/obj/structure/cable,
-/turf/open/floor/plating,
-/area/station/cargo/office)
+/obj/machinery/camera/autoname/directional/south,
+/turf/open/floor/iron,
+/area/station/cargo/storage)
 "dmv" = (
 /obj/structure/disposalpipe/segment{
 	dir = 5
@@ -7409,9 +7405,8 @@
 /turf/open/floor/iron/dark,
 /area/station/science/ordnance)
 "ffk" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/closet/crate/preopen,
-/turf/open/floor/iron,
+/obj/vehicle/sealed/mecha/ripley/cargo,
+/turf/open/floor/iron/recharge_floor,
 /area/station/cargo/warehouse)
 "ffO" = (
 /turf/open/floor/carpet,
@@ -11029,7 +11024,6 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/blood/splatter,
 /obj/effect/decal/cleanable/glass,
-/obj/machinery/light_switch/directional/west,
 /obj/effect/spawner/random/structure/furniture_parts,
 /turf/open/floor/iron,
 /area/station/cargo/warehouse)
@@ -11499,6 +11493,7 @@
 /obj/effect/turf_decal/siding/thinplating_new/dark{
 	dir = 1
 	},
+/obj/machinery/light_switch/directional/south,
 /turf/open/floor/catwalk_floor/iron_dark,
 /area/station/cargo/bitrunning/den)
 "iae" = (
@@ -12003,8 +11998,8 @@
 /obj/structure/table_frame,
 /obj/item/stack/sheet/iron,
 /obj/effect/decal/cleanable/blood/splatter,
-/obj/machinery/light/small/broken/directional/west,
 /obj/effect/landmark/generic_maintenance_landmark,
+/obj/machinery/light/small/directional/west,
 /turf/open/floor/iron,
 /area/station/cargo/warehouse)
 "ita" = (
@@ -12122,14 +12117,10 @@
 /turf/open/floor/wood,
 /area/station/service/abandoned_gambling_den)
 "iwg" = (
-/obj/effect/turf_decal/bot,
-/obj/structure/closet/crate{
-	icon_state = "crateopen"
-	},
+/obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/maintenance,
-/obj/machinery/camera/autoname/directional/south,
-/turf/open/floor/iron,
-/area/station/cargo/storage)
+/turf/open/floor/plating,
+/area/station/maintenance/port/greater)
 "iwz" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/cyan/visible,
 /obj/effect/turf_decal/stripes/line,
@@ -20935,6 +20926,14 @@
 /obj/structure/cable,
 /turf/open/floor/iron,
 /area/station/cargo/storage)
+"okd" = (
+/obj/effect/turf_decal/bot,
+/obj/structure/closet/crate{
+	icon_state = "crateopen"
+	},
+/obj/effect/spawner/random/maintenance,
+/turf/open/floor/iron,
+/area/station/cargo/storage)
 "okh" = (
 /obj/effect/spawner/random/maintenance,
 /obj/effect/spawner/random/structure/closet_maintenance,
@@ -21629,8 +21628,8 @@
 /area/station/maintenance/port/central)
 "oIo" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/item/flashlight/lamp,
-/obj/structure/table,
+/obj/machinery/mech_bay_recharge_port,
+/obj/effect/turf_decal/bot,
 /turf/open/floor/iron,
 /area/station/cargo/warehouse)
 "oIy" = (
@@ -22725,12 +22724,12 @@
 /turf/closed/mineral/random/low_chance,
 /area/lavaland/surface)
 "ptw" = (
-/obj/effect/turf_decal/bot,
-/obj/machinery/mech_bay_recharge_port{
-	dir = 2
+/obj/machinery/door/airlock/maintenance{
+	name = "Cargo Bay Maintenance"
 	},
-/turf/open/floor/iron,
-/area/station/cargo/storage)
+/obj/effect/mapping_helpers/airlock/access/all/supply/general,
+/turf/open/floor/plating,
+/area/station/maintenance/port/greater)
 "pty" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
@@ -28479,6 +28478,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/structure/cable,
 /obj/effect/turf_decal/siding/thinplating_new/dark,
+/obj/effect/decal/cleanable/robot_debris,
 /turf/open/floor/iron/dark/textured_half,
 /area/station/cargo/bitrunning/den)
 "tbE" = (
@@ -28487,6 +28487,10 @@
 /area/station/engineering/storage_shared)
 "tbV" = (
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light_switch/directional/east,
+/obj/item/stack/sheet/mineral/sandbags{
+	amount = 10
+	},
 /turf/open/floor/plating,
 /area/station/cargo/warehouse)
 "tdc" = (
@@ -28878,8 +28882,11 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/central/fore)
 "tsr" = (
-/obj/vehicle/sealed/mecha/ripley/cargo,
-/turf/open/floor/iron/recharge_floor,
+/obj/effect/turf_decal/bot,
+/obj/structure/closet/crate{
+	icon_state = "crateopen"
+	},
+/turf/open/floor/iron,
 /area/station/cargo/storage)
 "tsF" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -58916,7 +58923,7 @@ uGO
 obs
 iGC
 jJr
-obs
+iGC
 obs
 fzc
 ckW
@@ -59431,7 +59438,7 @@ wqx
 wqx
 oPz
 sfv
-sfv
+dmu
 fzc
 ckW
 oft
@@ -59685,11 +59692,11 @@ sfv
 pCa
 rYl
 kdK
-svE
+okd
 kKt
 svE
-iwg
-fzc
+sfv
+ptw
 ckW
 oft
 qRk
@@ -60200,7 +60207,7 @@ sfv
 rYl
 sfv
 wmr
-ptw
+svE
 tsr
 jvW
 fzc
@@ -60721,7 +60728,7 @@ fzc
 ckW
 oft
 fzc
-oft
+iwg
 knU
 fzc
 apX
@@ -62258,7 +62265,7 @@ drw
 fVl
 cmW
 jRC
-dmu
+kJC
 plh
 oft
 vlp
