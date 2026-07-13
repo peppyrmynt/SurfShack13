@@ -2089,18 +2089,16 @@
 /turf/open/floor/iron/dark,
 /area/station/hallway/secondary/construction)
 "bBO" = (
-/obj/structure/rack,
-/obj/machinery/light/small/directional/west,
-/obj/item/mail/junkmail,
-/obj/item/mail/junkmail{
-	pixel_x = 0;
-	pixel_y = 2
+/obj/effect/decal/cleanable/ash/large,
+/obj/effect/decal/cleanable/ash/large{
+	pixel_x = -5;
+	pixel_y = -5
 	},
-/obj/item/mail/junkmail{
-	pixel_x = 0;
-	pixel_y = 4
+/obj/effect/decal/cleanable/ash/large{
+	pixel_x = 2;
+	pixel_y = -7
 	},
-/obj/effect/decal/cleanable/dirt,
+/obj/machinery/light/small/directional/south,
 /turf/open/floor/iron/checker,
 /area/station/maintenance/port/greater)
 "bBT" = (
@@ -10326,8 +10324,7 @@
 /turf/open/floor/iron/dark/textured,
 /area/station/security/mechbay)
 "hhe" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/random/trash/grille_or_waste,
+/obj/effect/decal/cleanable/blood/gibs/old,
 /turf/open/floor/plating,
 /area/station/maintenance/port/greater)
 "hhf" = (
@@ -15684,15 +15681,17 @@
 /turf/open/floor/iron/white,
 /area/station/medical/surgery)
 "kNy" = (
-/obj/effect/decal/cleanable/ash/large,
-/obj/effect/decal/cleanable/ash/large{
-	pixel_x = -5;
-	pixel_y = -5
+/obj/structure/rack,
+/obj/item/mail/junkmail,
+/obj/item/mail/junkmail{
+	pixel_x = 0;
+	pixel_y = 2
 	},
-/obj/effect/decal/cleanable/ash/large{
-	pixel_x = 2;
-	pixel_y = -7
+/obj/item/mail/junkmail{
+	pixel_x = 0;
+	pixel_y = 4
 	},
+/obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron/checker,
 /area/station/maintenance/port/greater)
 "kNC" = (
@@ -33118,6 +33117,13 @@
 /obj/machinery/power/apc/auto_name/directional/south,
 /turf/open/floor/iron,
 /area/station/hallway/secondary/exit/departure_lounge)
+"wdB" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/floor/plating,
+/area/station/maintenance/port/greater)
 "wdT" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/blood/old{
@@ -52502,13 +52508,13 @@ wuD
 pdc
 pdc
 pdc
-pdc
-pdc
-pdc
-pdc
-pdc
 wuD
-wuD
+apX
+pdc
+pdc
+pdc
+pdc
+pdc
 wuD
 wuD
 wuD
@@ -52760,13 +52766,13 @@ wuD
 wuD
 wuD
 wuD
-apX
+fyD
 pdc
 pdc
 pdc
 pdc
 pdc
-wuD
+pdc
 wuD
 wuD
 wuD
@@ -53017,9 +53023,9 @@ mng
 wuD
 apX
 wuD
-fyD
+fLj
 pdc
-pdc
+apX
 pdc
 pdc
 pdc
@@ -53273,10 +53279,10 @@ wuD
 wuD
 mng
 wuD
-wuD
-fLj
-pdc
-apX
+rrZ
+cOR
+fgN
+fgN
 pdc
 pdc
 pdc
@@ -53530,8 +53536,8 @@ wuD
 mng
 mng
 xBO
-rrZ
-cOR
+fws
+lHR
 fgN
 fgN
 pdc
@@ -53787,13 +53793,13 @@ wuD
 mng
 mng
 fgN
-fws
-lHR
 fgN
-fgN
+kAF
+mng
 pdc
+apX
 pdc
-pdc
+apX
 pdc
 pdc
 pdc
@@ -54045,12 +54051,12 @@ iPl
 mng
 mng
 fgN
-kAF
-mng
+lHR
+axx
+fgN
 pdc
-apX
 pdc
-apX
+pdc
 pdc
 pdc
 pdc
@@ -54302,9 +54308,9 @@ mng
 mng
 mng
 fgN
-lHR
-axx
-fgN
+nnN
+nAa
+xdR
 pdc
 pdc
 pdc
@@ -54558,13 +54564,13 @@ wuD
 iPl
 iPl
 mng
-fgN
+apX
+tvI
 nnN
-nAa
-xdR
-pdc
-pdc
-pdc
+nnN
+wuD
+fgN
+wuD
 pdc
 pdc
 pdc
@@ -54815,12 +54821,12 @@ wuD
 wuD
 wuD
 nnN
-apX
-tvI
-nnN
-nnN
+mzJ
+vJF
+mzJ
+mzJ
 wuD
-fgN
+wuD
 wuD
 pdc
 pdc
@@ -55072,14 +55078,14 @@ apX
 wuD
 wuD
 nai
-mzJ
+wuD
 vJF
-mzJ
-mzJ
 wuD
 wuD
 wuD
-pdc
+wuD
+wuD
+wuD
 pdc
 pdc
 pdc
@@ -55329,9 +55335,9 @@ vqi
 vqi
 wuD
 wuD
-wuD
+apX
 vJF
-wuD
+apX
 wuD
 wuD
 wuD
@@ -55584,13 +55590,13 @@ isy
 cHA
 xGI
 vqi
-wuD
-wuD
 apX
-vJF
 apX
-wuD
-wuD
+knt
+jqG
+gZC
+knt
+apX
 wuD
 wuD
 wuD
@@ -55841,14 +55847,14 @@ fIH
 mxB
 gzv
 vqi
-apX
-apX
+rYU
+rYU
 knt
-jqG
-gZC
+wzg
+hWb
 knt
 apX
-wuD
+apX
 wuD
 wuD
 wuD
@@ -56098,14 +56104,14 @@ jiL
 jxF
 fdP
 vqi
-rYU
-rYU
+wdB
+vlp
 knt
-wzg
-hWb
+qnF
+ulr
 knt
-apX
-apX
+wuD
+wuD
 wuD
 wuD
 wuD
@@ -56356,13 +56362,13 @@ qrh
 suO
 kvL
 qeg
-vlp
+hhe
 knt
-qnF
-ulr
+lSE
 knt
-wuD
-wuD
+knt
+mMn
+mMn
 wuD
 wuD
 wuD
@@ -56614,13 +56620,13 @@ pFq
 btz
 qeg
 oft
+fzc
+flP
 knt
-lSE
-knt
-knt
+xaS
+mMG
 mMn
-mMn
-wuD
+apX
 wuD
 wuD
 wuD
@@ -56872,12 +56878,12 @@ kvL
 qeg
 vlp
 fzc
-flP
-knt
-xaS
-mMG
+tnv
+tlv
+qnF
+gGU
 mMn
-apX
+wuD
 wuD
 wuD
 wuD
@@ -57129,13 +57135,13 @@ vqi
 sBx
 bUH
 fzc
-tnv
-tlv
-qnF
-gGU
+vBo
 mMn
-wuD
-wuD
+fsW
+mCy
+mMn
+apX
+apX
 wuD
 wuD
 wuD
@@ -57385,14 +57391,14 @@ bQr
 uxY
 jzT
 tIR
-fzc
-vBo
+phr
+hnv
+oLt
+eJj
+qnF
 mMn
-fsW
-mCy
-mMn
-apX
-apX
+wuD
+wuD
 wuD
 wuD
 wuD
@@ -57642,13 +57648,13 @@ obs
 obs
 vlp
 uCA
-phr
-hnv
-oLt
-eJj
-qnF
+fzc
+jeB
+iyY
+uKj
+dNP
 mMn
-wuD
+apX
 wuD
 wuD
 wuD
@@ -57900,12 +57906,12 @@ obs
 rPV
 uCA
 fzc
-jeB
-iyY
-uKj
-dNP
-mMn
-apX
+fzc
+fzc
+fzc
+fzc
+fzc
+wuD
 wuD
 wuD
 wuD
@@ -58157,11 +58163,11 @@ obs
 eky
 uCA
 fzc
+hzs
+kNy
+mHa
 fzc
-fzc
-fzc
-fzc
-fzc
+wuD
 wuD
 wuD
 wuD
@@ -58412,13 +58418,13 @@ aiA
 hZU
 obs
 tNK
-uCA
-fzc
-hzs
+bsK
+anu
+lov
+dbl
 bBO
-bTf
 fzc
-wuD
+apX
 wuD
 wuD
 wuD
@@ -58669,11 +58675,11 @@ tbx
 bnq
 obs
 xbW
-bsK
-anu
-lov
-dbl
-kNy
+ckW
+fzc
+bTf
+fqs
+qtM
 fzc
 apX
 wuD
@@ -58928,11 +58934,11 @@ obs
 fzc
 ckW
 fzc
-mHa
-fqs
-qtM
 fzc
-apX
+fzc
+fzc
+fzc
+wuD
 wuD
 wuD
 wuD
@@ -59184,11 +59190,11 @@ svE
 ciW
 fzc
 ckW
+oft
+oft
 fzc
-fzc
-fzc
-fzc
-fzc
+wuD
+wuD
 wuD
 wuD
 wuD
@@ -59685,8 +59691,8 @@ qLj
 qLj
 hYL
 oks
-sfv
 pHL
+sfv
 sfv
 sfv
 pCa
@@ -59955,7 +59961,7 @@ sfv
 sfv
 fzc
 ckW
-hhe
+oft
 fzc
 fzc
 fzc
