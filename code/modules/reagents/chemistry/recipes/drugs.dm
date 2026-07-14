@@ -77,6 +77,38 @@
 	e.start(holder.my_atom)
 	holder.clear_reagents()
 
+///Amount of meth required to make a crystal
+#define METH_REQUIRED (10)
+
+/datum/chemical_reaction/meth_crystal //Since the meth is a cooled pharmaceutical solvent, this precipitates it into a solid.
+	results = list(/datum/reagent/consumable/ethanol = 1) //we don't care what this reagent is. We only need to record its purity
+	required_reagents = list(/datum/reagent/drug/methamphetamine = METH_REQUIRED, /datum/reagent/toxin/acid = 2)
+	mob_react = FALSE
+	reaction_flags = REACTION_INSTANT
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING
+
+/datum/chemical_reaction/meth_crystal/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/location = get_turf(holder.my_atom)
+
+	var/datum/reagent/consumable/ethanol/dummy_reagent = holder.has_reagent(/datum/reagent/consumable/ethanol)
+	for(var/i in 1 to round(created_volume, CHEMICAL_VOLUME_ROUNDING))
+		var/obj/item/food/drug/meth_crystal/new_crystal = new(location)
+		new_crystal.pixel_x = rand(-6, 6)
+		new_crystal.pixel_y = rand(-6, 6)
+		new_crystal.color = gradient("#FAFAFA", "#78C8FA", dummy_reagent.creation_purity)
+
+		var/datum/reagents/crystal_reagents = new_crystal.reagents
+		crystal_reagents.clear_reagents()
+		crystal_reagents.add_reagent(/datum/reagent/drug/methamphetamine, METH_REQUIRED)
+		var/imp_amt = METH_REQUIRED * (1 - dummy_reagent.creation_purity) * 0.25
+		if(imp_amt > 0)
+			crystal_reagents.add_reagent(/datum/reagent/consumable/failed_reaction, imp_amt)
+
+	dummy_reagent.volume = 0
+	holder.update_total()
+
+#undef METH_REQUIRED
+
 /datum/chemical_reaction/bath_salts
 	results = list(/datum/reagent/drug/bath_salts = 7)
 	required_reagents = list(/datum/reagent/toxin/bad_food = 1, /datum/reagent/saltpetre = 1, /datum/reagent/consumable/nutriment = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/consumable/enzyme = 1, /datum/reagent/consumable/tea = 1, /datum/reagent/mercury = 1)
@@ -125,7 +157,7 @@
 
 //These drug item reactions should probably be converted to fermichem in the future.
 /datum/chemical_reaction/moon_rock //botany is real easy so it requires a lot of kronkus_extract, make it cheaper if it doesnt get made.
-	required_reagents = list(/datum/reagent/kronkus_extract = 15, /datum/reagent/fuel = 10, /datum/reagent/ammonia = 5)
+	required_reagents = list(/datum/reagent/kronkus_extract = 15, /datum/reagent/fuel = 5, /datum/reagent/ammonia = 3)
 	mob_react = FALSE
 	reaction_flags = REACTION_INSTANT
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING
@@ -136,6 +168,9 @@
 		var/obj/item/food/drug/moon_rock/new_rock = new(location)
 		new_rock.pixel_x = rand(-6, 6)
 		new_rock.pixel_y = rand(-6, 6)
+
+/datum/chemical_reaction/moon_rock/draintek
+	required_reagents = list(/datum/reagent/kronkus_extract = 15, /datum/reagent/fuel = 5, /datum/reagent/lye = 3)
 
 /datum/chemical_reaction/blastoff_ampoule
 	required_reagents = list(/datum/reagent/silver = 10, /datum/reagent/toxin/cyanide = 10, /datum/reagent/lye = 5)
