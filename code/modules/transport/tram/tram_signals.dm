@@ -678,7 +678,7 @@
 	if(!istype(src) || !src.z)
 		return FALSE
 
-	if(!SStransport.nav_beacons[configured_transport_id])
+	if(!SStransport.nav_beacons)
 		return FALSE
 
 	var/list/obj/effect/landmark/transport/nav_beacon/tram/platform/inbound_candidates = list()
