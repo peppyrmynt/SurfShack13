@@ -2,7 +2,7 @@
 /obj/machinery/transport/crossing_signal
 	name = "crossing signal"
 	desc = "Indicates to pedestrians if it's safe to cross the tracks. Connects to sensors down the track."
-	auto_wiki_datum = /datum/wiki_data/crossing_signal
+	auto_wiki_datum = /datum/wiki_data/tram_signal
 	icon = 'icons/obj/tram/crossing_signal.dmi'
 	icon_state = "crossing-inbound"
 	base_icon_state = "crossing-inbound"
@@ -44,7 +44,7 @@
 	var/amber_distance_threshold = XING_THRESHOLD_AMBER
 	var/red_distance_threshold = XING_THRESHOLD_RED
 
-/datum/wiki_data/crossing_signal
+/datum/wiki_data/tram_signal
 	atom_template = /obj/machinery/transport/crossing_signal
 	emag_description = "Emagging disables the motion sensors, essentially turning off the signal."
 
