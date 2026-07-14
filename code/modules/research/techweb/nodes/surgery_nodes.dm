@@ -37,7 +37,7 @@
 		"surgery_lobotomy_mechanic",
 		"surgery_wing_reconstruction",
 	)
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
 	announce_channels = list(RADIO_CHANNEL_MEDICAL)
 
 /datum/techweb_node/surgery_exp
