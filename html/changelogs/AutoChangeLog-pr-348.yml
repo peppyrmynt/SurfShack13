@@ -1,0 +1,12 @@
+author: "ZealousZeke"
+delete-after: True
+changes:
+  - rscadd: "TGUI is now v6! No more internet explorer. All gloves are off, it's running edge under the hood now. Report any issues to the github."
+  - bugfix: "The character preferences menu has been greatly refactored, hopefully opening faster."
+  - qol: "Quirk menu now has a search bar"
+  - bugfix: "changes made in quirks menu will now reflect properly upon tabbing away and then back again to the quirks tab, without having to close the entire preferences menu"
+  - bugfix: "Fixed preferences layout for Byond 515 after fixing it for Byond 516"
+  - bugfix: "TG chat can no longer initialize before the settings loading was called"
+  - qol: "chat settings can be exported and imported"
+  - code_imp: "Any tgui message that would be too big to send to the server is now split into chunks and sent in sequence. This fixes several issues, such as..."
+  - bugfix: "It is once again possible to save large amounts of text on paper at once."
