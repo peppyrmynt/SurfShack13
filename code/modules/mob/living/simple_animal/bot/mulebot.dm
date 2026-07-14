@@ -58,7 +58,7 @@
 
 /datum/wiki_data/silicon/mulebot
 	atom_template = /mob/living/simple_animal/bot/mulebot
-	name = "Mule Bot"
+	entry_name = "Mule Bot"
 	emag_description = "Disables the crush sensors allowing the mule bot to run over living mobs."
 
 /mob/living/simple_animal/bot/mulebot/Initialize(mapload)

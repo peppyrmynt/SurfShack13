@@ -49,8 +49,8 @@
 	)
 
 /datum/wiki_data/silicon/hygienebot
-	name = null
-	desc = null
+	entry_name = null
+	entry_desc = null
 	atom_template = /mob/living/basic/bot/hygienebot
 	emag_description = "Emagging  the hygienebot causes it to disinfect with fire instead of soapy water."
 

@@ -26,7 +26,7 @@
 	var/silicon_access_disabled = FALSE
 
 /datum/wiki_data/button
-	name = "Wall Button"
+	entry_name = "Wall Button"
 	atom_template = /obj/machinery/button
 	emag_description = "Emagging removes any access restrictions on the button, and will also emag any device inside the button."
 

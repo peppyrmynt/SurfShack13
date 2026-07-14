@@ -106,7 +106,7 @@
 /datum/wiki_data/silicon/ai
 	atom_template = /mob/living/silicon/ai
 	emag_description = "Emags the AI making it loyal to you."
-	desc = "A usually powerful and potent self contained ai that runs the station."
+	entry_desc = "A powerful and potent self contained ai that runs the station."
 /mob/living/silicon/ai/Initialize(mapload, datum/ai_laws/L, mob/target_ai)
 	. = ..()
 	if(!target_ai) //If there is no player/brain inside.

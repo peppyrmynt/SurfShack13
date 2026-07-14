@@ -78,8 +78,8 @@
 	var/toolbox = /obj/item/storage/toolbox/mechanical
 
 /datum/wiki_data/silicon/floorbot
-	name = null
-	desc = null
+	entry_name = null
+	entry_desc = null
 	atom_template = /mob/living/basic/bot/repairbot
 	emag_description = "If Emagged the bot will deconstruct floors into open space."
 

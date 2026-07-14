@@ -113,8 +113,8 @@
 	var/datum/weakref/tipper
 
 /datum/wiki_data/silicon/medbot
-	name = null
-	desc = null
+	entry_name = null
+	entry_desc = null
 	atom_template = /mob/living/basic/bot/medbot
 	emag_description = "Emagging the bot causes it to inject people with chloral hydrate and damage instead of heal."
 

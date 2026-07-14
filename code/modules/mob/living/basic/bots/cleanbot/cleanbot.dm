@@ -132,8 +132,8 @@
 
 /datum/wiki_data/silicon/cleanbot
 	atom_template = /mob/living/basic/bot/cleanbot
-	name = ""
-	desc = ""
+	entry_name = ""
+	entry_desc = ""
 	emag_description = "Emagging the cleanbot causes it to clean witgh slippery acid foam, and say some friendly things about dirt. It also makes any weapon attatched slightly stronger."
 
 /mob/living/basic/bot/cleanbot/Initialize(mapload)

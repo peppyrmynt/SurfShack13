@@ -90,7 +90,7 @@
 
 /datum/wiki_data/space_suit
 	atom_template = /obj/item/clothing/suit/space/eva
-	name = "Space Suit"
+	entry_name = "Space Suit"
 	emag_description = "Emagging overides the thermal regulator thresholds, allowing the user to both cook and freeze the occupant."
 
 /datum/armor/suit_space

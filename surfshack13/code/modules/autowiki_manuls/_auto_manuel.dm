@@ -66,11 +66,11 @@
 		if(!wiki.emag_description || !wiki.atom_template)
 			continue
 		var/atom/A =  wiki.atom_template
-		var/name = wiki.name ? wiki.name : A.name
+		var/name = wiki.entry_name ? wiki.entry_name : A.name
 		name = capitalize(format_text(name))
 		if(!name)
 			CRASH("no name found for [wiki.type]")
-		var/desc = wiki.desc ? wiki.desc : A.desc
+		var/desc = wiki.entry_desc ? wiki.entry_desc : A.desc
 		desc = capitalize(desc)
 		if(!desc)
 			CRASH("no description found for [wiki.type]")
@@ -81,8 +81,8 @@
 	///the atom to get attributes from, like the image and name.
 	var/atom_template
 	/// the name in the auto wiki, if left blank pulled from atom_template
-	var/name
+	var/entry_name
 	/// the description of the atom, if left blank pulled from atom_template
-	var/desc
+	var/entry_desc
 	/// if the atom is emagable, what it does.
 	var/emag_description

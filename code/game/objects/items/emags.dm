@@ -122,7 +122,7 @@
 	var/exploding = FALSE
 
 /datum/wiki_data/emag/fake
-	name = "Fake " + /obj/item/card/emag::name
+	entry_name = "Fake " + /obj/item/card/emag::name
 	emag_description = "Emagging a fake emag causes it to explode on use."
 
 /obj/item/card/emagfake/attack_self(mob/user) //for assistants with balls of plasteel

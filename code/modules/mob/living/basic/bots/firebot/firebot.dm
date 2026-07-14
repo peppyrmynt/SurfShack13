@@ -28,7 +28,7 @@
 	COOLDOWN_DECLARE(foam_cooldown)
 
 /datum/wiki_data/bot/fire
-	name = "Firebot"
+	entry_name = "Firebot"
 	atom_template = /mob/living/basic/bot/firebot
 	emag_description = "Emagging the bot changes its behavior to extinguish fire and on-fire-people with more fire. It also gives controversial fire safety advice."
 

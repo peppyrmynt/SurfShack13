@@ -9,7 +9,7 @@
 //surfshack start
 /datum/wiki_data/airlock
 	atom_template = /obj/machinery/door
-	name = "Airlock"
+	entry_name = "Airlock"
 	emag_description = "Emagging forces the airlock open and fries the electronics so it will no longer close. Emagging an airlock requires a special emag varient called a doorjack."
 //surfshack end
 

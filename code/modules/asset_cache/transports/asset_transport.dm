@@ -85,7 +85,6 @@
 #if defined(UNIT_TESTS)
 	return
 #endif
-
 	if (!istype(client))
 		if (ismob(client))
 			var/mob/our_mob = client

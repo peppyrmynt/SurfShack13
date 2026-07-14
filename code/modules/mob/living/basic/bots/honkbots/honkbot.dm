@@ -25,8 +25,8 @@
 
 /datum/wiki_data/silicon/honkbot
 	atom_template = /mob/living/basic/bot/honkbot
-	name = ""
-	desc = ""
+	entry_name = ""
+	entry_desc = ""
 	emag_description = "Emagging causes it to play disturbing noises and HONK people. If attacked, it will HONK the offender into oblivion."
 
 

@@ -70,7 +70,7 @@
 
 /datum/wiki_data/silicon/secbot
 	atom_template = /mob/living/simple_animal/bot/secbot
-	name = "Securitron"
+	entry_name = "Securitron"
 	emag_description = "Emagging makes the secbot arrest anything that moves, a serious crime."
 
 /mob/living/simple_animal/bot/secbot/beepsky

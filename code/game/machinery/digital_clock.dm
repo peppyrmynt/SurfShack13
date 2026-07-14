@@ -14,7 +14,7 @@
 //surfshack start
 /datum/wiki_data/digital_clock
 	atom_template = /obj/machinery/digital_clock
-	name = "Clock"
+	entry_name = "Clock"
 	emag_description = "Emagging causes the clock to display random times."
 //surfshack end
 

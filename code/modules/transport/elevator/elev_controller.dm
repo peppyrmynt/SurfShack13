@@ -26,7 +26,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/button/elevator, 32)
 
 /datum/wiki_data/elevator
 	atom_template = /obj/machinery/elevator_control_panel
-	name = "Elevator"
+	entry_name = "Elevator"
 	emag_description = "Emagging removes shorts the speaker and motion sensors, allowing for very fast vertical travel, and silencing warning speakers."
 
 /obj/item/assembly/control/elevator/Initialize(mapload)
