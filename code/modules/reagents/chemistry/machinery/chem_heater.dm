@@ -385,7 +385,7 @@
 			var/name = initial(buffer_type.name)
 			say("Unable to find [name] in beaker to draw from! Please insert a beaker containing [name].")
 			return FALSE
-		beaker.reagents.trans_to(src, (reagents.maximum_volume / 2) - reagents.get_reagent_amount(buffer_type), target_id = buffer_type)
+		beaker.reagents.trans_to(src, (reagents.maximum_volume / 3) - reagents.get_reagent_amount(buffer_type), target_id = buffer_type)
 		return TRUE
 
 	//trying to inject buffer into currently inserted beaker
