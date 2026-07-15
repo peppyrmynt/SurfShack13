@@ -44,7 +44,7 @@
 	for(var/datum/reagent/target_reagent as anything in affected_mob.reagents.reagent_list)
 		if(istype(target_reagent, /datum/reagent/impurity/ipecacide))
 			continue
-		affected_mob.reagents.remove_reagent(target_reagent.type, 4 * target_reagent.purge_multiplier * REM * seconds_per_tick)
+		affected_mob.reagents.remove_reagent(target_reagent.type, 3 * target_reagent.purge_multiplier * REM * seconds_per_tick)
 
 	if(yuck_cycles % YUCK_PUKE_CYCLES == 0)
 
@@ -72,7 +72,7 @@
 /datum/reagent/impurity/ipecacide/overdose_process(mob/living/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 
-	affected_mob.reagents.remove_reagent(type, 6 * REM * seconds_per_tick)
+	affected_mob.reagents.remove_reagent(type, 5 * REM * seconds_per_tick)
 	affected_mob.adjustOrganLoss(ORGAN_SLOT_STOMACH, 2 * REM * seconds_per_tick, required_organ_flag = affected_organ_flags)
 	affected_mob.adjustOrganLoss(ORGAN_SLOT_HEART, 1.5 * REM * seconds_per_tick, required_organ_flag = affected_organ_flags)
 
