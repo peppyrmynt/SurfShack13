@@ -1,0 +1,46 @@
+2026-07-15:
+  ZealousZeke:
+  - rscadd: Added meth, opium, and their production! Also added to black market uplink.
+  - rscadd: Added a craftable glass pipe.
+  - rscadd: Added to contraband spawners.
+  - qol: Can now insert any drug item into a pipe.
+  - bugfix: Spacemen can now smoke meth without exploding!!
+  - balance: kronkaine now restores double stamina when smoked or injected.
+  - balance: kronkaine now restores stamina each cycle, the effect is dose dependant.
+  - balance: kronkaine now causes heart damage in a dose dependant manner, instead
+      of a flat value.
+  - balance: kronkus seed packs are now three times as common.
+  - balance: the kronkaine anti-purging disease now only triggers if you take stamina
+      damage while using purging chems.
+  - balance: the kronkaine reaction uses less ammonia and welding fuel.
+  - rscadd: added an alternative kronkaine reaction that uses lye instead of ammonia.
+  - balance: kronkus extract now lasts twice as long but deals a bit more heart damage(0.1->0.2)
+  - balance: 'the kronkus vine plant is now a lot hardier(endurance: 10 -> 40) and
+      matures a bit quicker.'
+  - bugfix: kronkus extract now inflicts heart damage correctly.
+  - rscadd: TGUI is now v6! No more internet explorer. All gloves are off, it's running
+      edge under the hood now. Report any issues to the github.
+  - bugfix: The character preferences menu has been greatly refactored, hopefully
+      opening faster.
+  - qol: Quirk menu now has a search bar
+  - bugfix: changes made in quirks menu will now reflect properly upon tabbing away
+      and then back again to the quirks tab, without having to close the entire preferences
+      menu
+  - bugfix: Fixed preferences layout for Byond 515 after fixing it for Byond 516
+  - bugfix: TG chat can no longer initialize before the settings loading was called
+  - qol: chat settings can be exported and imported
+  - code_imp: Any tgui message that would be too big to send to the server is now
+      split into chunks and sent in sequence. This fixes several issues, such as...
+  - bugfix: It is once again possible to save large amounts of text on paper at once.
+  cocothegogo:
+  - bugfix: brings back soul to the ert helmet modsuit sprites
+  hyperjll:
+  - balance: Duffelbags are no longer slow people to a crawl while they're open.
+  - balance: Makarovs and Toy Pistols come in weapon cases. Complete with spare ammo.
+  - balance: Basic ammo for either weapon comes in weapon cases of three extra magazines
+      at an affordable price.
+  - balance: Donksoft Toy Pistols from the uplink are much stronger than their standard
+      counterparts, but now priced at 6 TC.
+  - balance: Makarovs and Toy pistols have a magazine capacity of 12 rounds.
+  - balance: Gun/Ammo cases from the traitor uplink can be destroyed by activating
+      the disposal bomb. Press Alt-Right-Click on the case to start the timer.
