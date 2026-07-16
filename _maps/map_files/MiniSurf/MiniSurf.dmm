@@ -3308,12 +3308,13 @@
 /turf/open/floor/iron/white,
 /area/station/science/research)
 "crI" = (
-/obj/machinery/power/shieldwallgen/xenobiologyaccess,
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/dark/visible,
-/obj/effect/turf_decal/stripes/box,
-/obj/structure/sign/warning/secure_area/directional/north,
-/turf/open/floor/plating,
+/obj/machinery/portable_atmospherics/canister/bz,
+/obj/effect/turf_decal/box/red,
+/obj/machinery/atmospherics/components/unary/portables_connector/visible{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/purple/fourcorners,
+/turf/open/floor/iron/white,
 /area/station/science/xenobiology)
 "cth" = (
 /obj/effect/spawner/random/structure/closet_maintenance,
@@ -6670,12 +6671,8 @@
 /area/station/hallway/primary/central)
 "eIZ" = (
 /obj/structure/cable,
-/obj/effect/turf_decal/trimline/purple/filled/line{
-	dir = 6
-	},
-/obj/effect/turf_decal/trimline/purple/filled/corner{
-	dir = 1;
-	icon_state = "trimline_corner_fill"
+/obj/effect/turf_decal/trimline/purple/filled/end{
+	dir = 4
 	},
 /turf/open/floor/iron/white,
 /area/station/science/xenobiology)
@@ -7387,7 +7384,8 @@
 /obj/machinery/button/door/directional/north{
 	id = "secwarehouse";
 	req_access = list("shipping");
-	pixel_y = -24
+	pixel_y = -24;
+	name = "Warehouse Shutters"
 	},
 /turf/open/floor/iron,
 /area/station/cargo/warehouse)
@@ -8942,7 +8940,7 @@
 	dir = 6
 	},
 /obj/structure/reagent_dispensers/watertank,
-/obj/machinery/firealarm/directional/south,
+/obj/machinery/light/directional/south,
 /turf/open/floor/iron/dark,
 /area/station/science/xenobiology)
 "gga" = (
@@ -11000,7 +10998,7 @@
 /obj/structure/cable,
 /obj/effect/turf_decal/stripes/box,
 /obj/structure/sign/warning/secure_area/directional/north,
-/turf/open/floor/plating,
+/turf/open/floor/engine,
 /area/station/science/xenobiology)
 "hIu" = (
 /obj/machinery/door/airlock/research{
@@ -15047,7 +15045,6 @@
 	name = "Creature Pen";
 	req_access = list("research")
 	},
-/obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/turf_decal/delivery,
 /obj/structure/window/reinforced/spawner/directional/east,
 /obj/structure/window/reinforced/spawner/directional/west,
@@ -20537,10 +20534,6 @@
 /area/station/hallway/primary/central)
 "nZN" = (
 /obj/structure/table/reinforced,
-/obj/effect/turf_decal/trimline/purple/filled/line{
-	dir = 8;
-	icon_state = "trimline_fill"
-	},
 /obj/machinery/button/door{
 	id = "xenobio3";
 	name = "Xenobio Pen 3 Blast Doors";
@@ -20548,6 +20541,10 @@
 	req_access = list("xenobiology")
 	},
 /obj/structure/window/reinforced/spawner/directional/south,
+/obj/effect/turf_decal/trimline/purple/filled/line{
+	dir = 9;
+	icon_state = "trimline_fill"
+	},
 /turf/open/floor/iron/white,
 /area/station/science/xenobiology)
 "oab" = (
@@ -21434,14 +21431,10 @@
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "oCw" = (
-/obj/effect/turf_decal/trimline/purple/filled/line{
-	dir = 10
-	},
-/obj/effect/turf_decal/trimline/purple/filled/corner{
-	dir = 4;
-	icon_state = "trimline_corner_fill"
-	},
 /obj/structure/cable,
+/obj/effect/turf_decal/trimline/purple/filled/end{
+	dir = 8
+	},
 /turf/open/floor/iron/white,
 /area/station/science/xenobiology)
 "oCG" = (
@@ -21596,7 +21589,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
 	},
-/obj/machinery/light/directional/south,
+/obj/machinery/firealarm/directional/south,
 /turf/open/floor/iron/dark,
 /area/station/science/xenobiology)
 "oGo" = (
@@ -24128,7 +24121,6 @@
 /obj/machinery/door/airlock/maintenance{
 	name = "Xenobiology Maintenance"
 	},
-/obj/structure/cable,
 /obj/effect/mapping_helpers/airlock/access/all/science/xenobio,
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -25320,15 +25312,10 @@
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "qWB" = (
-/obj/structure/cable,
-/obj/machinery/portable_atmospherics/canister/bz,
-/obj/effect/turf_decal/box/red,
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 5
 	},
-/obj/machinery/atmospherics/components/unary/portables_connector/visible{
-	dir = 1
-	},
+/obj/machinery/atmospherics/pipe/smart/manifold4w,
 /turf/open/floor/iron/white,
 /area/station/science/xenobiology)
 "qWR" = (
@@ -27679,7 +27666,8 @@
 "sBx" = (
 /obj/machinery/button/door/directional/north{
 	id = "secwarehouse";
-	req_access = list("shipping")
+	req_access = list("shipping");
+	name = "Warehouse Shutters"
 	},
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
@@ -79234,7 +79222,7 @@ dWQ
 dWQ
 dWQ
 jcg
-crI
+hHY
 oCw
 jcg
 wDy
@@ -80778,7 +80766,7 @@ dWQ
 jcg
 sVq
 fQM
-jcg
+crI
 nZN
 dni
 wAI
