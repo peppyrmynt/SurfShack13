@@ -161,3 +161,105 @@
 	if(program.host_mob.resting)
 		return TRUE
 	return FALSE
+
+/datum/nanite_rule/fire
+	name = "On Fire"
+	desc = "Checks if the host is or isn't on fire."
+
+/datum/nanite_rule/fire/check_rule()
+	if(program.host_mob.on_fire)
+		return TRUE
+	return FALSE
+
+/datum/nanite_rule/fire/display()
+	return "[name]"
+
+/datum/nanite_rule/blood
+	name = "Blood Volume"
+	desc = "Checks if the host has more or less blood than is specified."
+	var/threshold = 560
+	var/above = TRUE
+
+/datum/nanite_rule/blood/check_rule()
+	if(above)
+		if(program.host_mob.get_blood_volume() >= threshold)
+			return TRUE
+	else
+		if(program.host_mob.get_blood_volume() < threshold)
+			return TRUE
+	return FALSE
+
+/datum/nanite_rule/blood/copy_to(datum/nanite_program/new_program)
+	var/datum/nanite_rule/blood/rule = new(new_program)
+	rule.above = above
+	rule.threshold = threshold
+
+/datum/nanite_rule/blood/display()
+	return "[name] [above ? ">" : "<"] [threshold]"
+
+/datum/nanite_rule/nutrition
+	name = "Nutrition"
+	desc = "Checks if the host has more or less nutrition than is specified."
+	var/threshold = 400
+	var/above = TRUE
+
+/datum/nanite_rule/nutrition/check_rule()
+	if(above)
+		if(program.host_mob.nutrition >= threshold)
+			return TRUE
+	else
+		if(program.host_mob.nutrition < threshold)
+			return TRUE
+	return FALSE
+
+/datum/nanite_rule/nutrition/copy_to(datum/nanite_program/new_program)
+	var/datum/nanite_rule/nutrition/rule = new(new_program)
+	rule.above = above
+	rule.threshold = threshold
+
+/datum/nanite_rule/nutrition/display()
+	return "[name] [above ? ">" : "<"] [threshold]"
+
+/datum/nanite_rule/soul_check
+	name = "Catatonic"
+	desc = "Checks if the host is a soulless being or not."
+	var/is_soulless = TRUE
+
+/datum/nanite_rule/soul_check/check_rule()
+	if(is_soulless)
+		if(isnull(program.host_mob.key))
+			return TRUE
+	else
+		if(!isnull(program.host_mob.key))
+			return TRUE
+	return FALSE
+
+/datum/nanite_rule/soul_check/copy_to(datum/nanite_program/new_program)
+	var/datum/nanite_rule/soul_check/rule = new(new_program)
+	rule.is_soulless = is_soulless
+
+/datum/nanite_rule/soul_check/display()
+	return "[is_soulless ? "Is" : "Is Not"] [name]"
+
+/datum/nanite_rule/temperature
+	name = "Temperature Sensor"
+	desc = "Checks if the host has a higher or lower temperature than is specified. 310.15 is the normal body temperature for a human."
+	var/threshold = 310
+	var/above = TRUE
+
+/datum/nanite_rule/temperature/check_rule()
+	if(above)
+		if(program.host_mob.bodytemperature >= threshold)
+			return TRUE
+	else
+		if(program.host_mob.bodytemperature < threshold)
+			return TRUE
+	return FALSE
+
+/datum/nanite_rule/temperature/copy_to(datum/nanite_program/new_program)
+	var/datum/nanite_rule/temperature/rule = new(new_program)
+	rule.above = above
+	rule.threshold = threshold
+
+/datum/nanite_rule/temperature/display()
+	return "[name]  [above ? ">" : "<"] [threshold]"
