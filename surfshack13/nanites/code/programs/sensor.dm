@@ -395,10 +395,10 @@
 	var/check_above =  direction.get_value()
 
 	if(check_above)
-		if(host_mob.get_blood_volume() >= value.get_value())
+		if(host_mob.blood_volume >= value.get_value())
 			return TRUE
 	else
-		if(host_mob.get_blood_volume() < value.get_value())
+		if(host_mob.blood_volume < value.get_value())
 			return TRUE
 	return FALSE
 

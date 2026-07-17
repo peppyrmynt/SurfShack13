@@ -182,10 +182,10 @@
 
 /datum/nanite_rule/blood/check_rule()
 	if(above)
-		if(program.host_mob.get_blood_volume() >= threshold)
+		if(program.host_mob.blood_volume >= threshold)
 			return TRUE
 	else
-		if(program.host_mob.get_blood_volume() < threshold)
+		if(program.host_mob.blood_volume < threshold)
 			return TRUE
 	return FALSE
 
