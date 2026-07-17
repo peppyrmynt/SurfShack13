@@ -12462,6 +12462,11 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
+"iFI" = (
+/obj/machinery/hydroponics/soil,
+/obj/machinery/light/small/directional/east,
+/turf/open/floor/plating,
+/area/station/maintenance/fore)
 "iFY" = (
 /obj/machinery/field/generator,
 /obj/machinery/light/small/directional/north,
@@ -67987,7 +67992,7 @@ xOL
 oPZ
 pEm
 xXt
-xXt
+iFI
 xXt
 oEd
 mMM
