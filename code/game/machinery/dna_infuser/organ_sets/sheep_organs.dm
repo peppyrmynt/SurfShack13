@@ -47,4 +47,4 @@
 	organs_needed = 2
 	bonus_activate_text = span_notice("Sheep DNA is deeply infused with you! You've become resistant to extremely cold temperatures!")
 	bonus_deactivate_text = span_notice("Your DNA is no longer majority sheep, and you're no longer resistant to extremely cold temperatures...")
-	bonus_traits = list(TRAIT_RESISTCOLD)
+	bonus_traits = list(TRAIT_RESISTCOLD, TRAIT_VEGETARIAN)
