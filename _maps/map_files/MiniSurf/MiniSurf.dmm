@@ -1893,6 +1893,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 1
 	},
+/obj/machinery/camera/autoname/directional/west,
 /turf/open/floor/iron,
 /area/station/hallway/primary/central/fore)
 "btM" = (
@@ -2008,7 +2009,13 @@
 /obj/effect/turf_decal/tile/neutral,
 /obj/machinery/power/apc/auto_name/directional/south,
 /obj/structure/cable,
-/turf/open/floor/iron,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 1
+	},
+/turf/open/floor/iron/dark,
 /area/station/commons/dorms)
 "byr" = (
 /obj/effect/landmark/event_spawn,
@@ -7316,6 +7323,9 @@
 "fbF" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/effect/turf_decal/tile/blue{
+	dir = 4
+	},
 /turf/open/floor/iron/white/corner,
 /area/station/hallway/secondary/entry)
 "fbG" = (
@@ -10418,7 +10428,7 @@
 /obj/structure/cable,
 /obj/machinery/door/firedoor,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/turf/open/floor/iron,
+/turf/open/floor/iron/white/corner,
 /area/station/hallway/secondary/entry)
 "hkc" = (
 /obj/structure/table/wood,
@@ -10675,6 +10685,13 @@
 /obj/effect/decal/cleanable/garbage,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
+"hus" = (
+/obj/effect/landmark/start/cargo_technician,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/floor/iron,
+/area/station/cargo/storage)
 "huI" = (
 /obj/structure/lattice/catwalk,
 /obj/structure/transit_tube/junction/flipped{
@@ -14107,6 +14124,13 @@
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central/fore)
+"jDg" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/turf/open/floor/iron,
+/area/station/cargo/storage)
 "jDt" = (
 /obj/effect/turf_decal/tile/yellow,
 /obj/structure/cable,
@@ -16548,7 +16572,10 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
-/turf/open/floor/iron,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/turf/open/floor/iron/dark,
 /area/station/commons/dorms)
 "lso" = (
 /obj/machinery/door/airlock/maintenance{
@@ -19114,6 +19141,10 @@
 "ncf" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 8
+	},
+/obj/effect/turf_decal/stripes{
+	dir = 1;
+	icon_state = "warningline"
 	},
 /turf/open/floor/iron,
 /area/station/cargo/storage)
@@ -23340,7 +23371,13 @@
 	dir = 8
 	},
 /obj/machinery/light/directional/south,
-/turf/open/floor/iron,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 1
+	},
+/turf/open/floor/iron/dark,
 /area/station/commons/dorms)
 "pQo" = (
 /obj/machinery/door/window/brigdoor/left/directional/west{
@@ -28850,17 +28887,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/pod,
 /area/station/commons/fitness/recreation/pool)
-"tpj" = (
-/obj/effect/turf_decal/tile/neutral{
-	dir = 1
-	},
-/obj/machinery/door/airlock/public/glass{
-	name = "Central Access"
-	},
-/obj/effect/turf_decal/tile/neutral/fourcorners,
-/obj/machinery/door/firedoor,
-/turf/open/floor/iron/dark,
-/area/station/hallway/primary/central)
 "tpu" = (
 /obj/effect/turf_decal/stripes/white/line{
 	dir = 4
@@ -31769,6 +31795,13 @@
 	},
 /turf/open/floor/iron,
 /area/station/cargo/office)
+"vmD" = (
+/obj/effect/turf_decal/stripes{
+	dir = 1;
+	icon_state = "warningline"
+	},
+/turf/open/floor/iron,
+/area/station/cargo/storage)
 "vmH" = (
 /obj/effect/spawner/random/trash/graffiti{
 	pixel_y = 32
@@ -59514,7 +59547,7 @@ iZT
 jHa
 pxH
 pxH
-kip
+jDg
 sfv
 kic
 rYl
@@ -60028,7 +60061,7 @@ iZT
 jHa
 aIa
 aIa
-akn
+hus
 akn
 akn
 rYl
@@ -60285,7 +60318,7 @@ lFH
 nXx
 rEc
 nXx
-sfv
+vmD
 sfv
 sfv
 rYl
@@ -68537,7 +68570,7 @@ eIx
 gUV
 ovu
 srJ
-tpj
+inf
 fQW
 tjd
 gOl
