@@ -33,7 +33,7 @@
 	human.set_hairstyle("Spiky 2", update = TRUE)
 
 /datum/species/human/saiyan/check_roundstart_eligible()
-	return TRUE
+	return FALSE
 
 /datum/species/human/saiyan/get_scream_sound(mob/living/carbon/human/human)
 	if(human.physique == MALE)
