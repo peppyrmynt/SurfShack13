@@ -154,7 +154,7 @@
 	id = TECHWEB_NODE_CYBER_IMPLANTS
 	display_name = "Cybernetic Implants"
 	description = "Advanced technological enhancements integrated into the body, offering improved physical capabilities."
-	prereq_ids = list(TECHWEB_NODE_PASSIVE_IMPLANTS, TECHWEB_NODE_CYBER_ORGANS)
+	prereq_ids = list(TECHWEB_NODE_PASSIVE_IMPLANTS, TECHWEB_NODE_CYBERNETICS)
 	design_ids = list(
 		"ci-breather",
 		"ci-nutriment",
