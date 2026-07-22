@@ -1,6 +1,6 @@
 #define SAIYAN_TAIL_MOOD "saiyan_humiliated"
 
-/datum/species/saiyan
+/datum/species/human/saiyan
 	name = "\improper Saiyan"
 	id = SPECIES_SAIYAN
 	mutanteyes = /obj/item/organ/eyes/saiyan
@@ -28,14 +28,14 @@
 		/obj/item/organ/tail/monkey/saiyan = "Saiyan",
 	)
 
-/datum/species/saiyan/prepare_human_for_preview(mob/living/carbon/human/human)
+/datum/species/human/saiyan/prepare_human_for_preview(mob/living/carbon/human/human)
 	human.set_haircolor("#292929", update = FALSE)
 	human.set_hairstyle("Spiky 2", update = TRUE)
 
-/datum/species/saiyan/check_roundstart_eligible()
-	return TRUE
+/datum/species/human/saiyan/check_roundstart_eligible()
+	return FALSE
 
-/datum/species/saiyan/get_scream_sound(mob/living/carbon/human/human)
+/datum/species/human/saiyan/get_scream_sound(mob/living/carbon/human/human)
 	if(human.physique == MALE)
 		if(prob(1))
 			return 'sound/mobs/humanoids/human/scream/wilhelm_scream.ogg'
@@ -56,14 +56,14 @@
 		'sound/mobs/humanoids/human/scream/femalescream_5.ogg',
 	)
 
-/datum/species/saiyan/on_species_gain(mob/living/carbon/human/human_who_gained_species, datum/species/old_species, pref_load, regenerate_icons)
+/datum/species/human/saiyan/on_species_gain(mob/living/carbon/human/human_who_gained_species, datum/species/old_species, pref_load, regenerate_icons)
 	. = ..()
 	RegisterSignal(human_who_gained_species, COMSIG_SAIYAN_SURVIVOR, PROC_REF(on_survived_boost))
 	RegisterSignal(human_who_gained_species, COMSIG_CARBON_GAIN_ORGAN, PROC_REF(on_tail_gained))
 	RegisterSignal(human_who_gained_species, COMSIG_CARBON_LOSE_ORGAN, PROC_REF(on_tail_removed))
 	RegisterSignal(human_who_gained_species, COMSIG_ATOM_AFTER_ATTACKEDBY, PROC_REF(check_tail_sever))
 
-/datum/species/saiyan/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
+/datum/species/human/saiyan/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
 	. = ..()
 	UnregisterSignal(C, list(
 		COMSIG_ATOM_AFTER_ATTACKEDBY,
@@ -73,7 +73,7 @@
 	))
 
 /// If you take sharp damage someone might sever your tail
-/datum/species/saiyan/proc/check_tail_sever(mob/living/carbon/target, obj/item/weapon, mob/attacker, proximity_flag, click_parameters)
+/datum/species/human/saiyan/proc/check_tail_sever(mob/living/carbon/target, obj/item/weapon, mob/attacker, proximity_flag, click_parameters)
 	SIGNAL_HANDLER
 	if (!proximity_flag || weapon.force < 5 || weapon.get_sharpness() != SHARP_EDGED)
 		return
@@ -88,13 +88,13 @@
 	saiyan_tail.forceMove(target.loc)
 
 /// Called when we survive near-death
-/datum/species/saiyan/proc/on_survived_boost(mob/living/saiyan)
+/datum/species/human/saiyan/proc/on_survived_boost(mob/living/saiyan)
 	SIGNAL_HANDLER
 	to_chat(saiyan, span_notice("Your near-death experience grants you more strength!"))
 	saiyan.saiyan_boost()
 
 /// When your tail is cut you get weaker
-/datum/species/saiyan/proc/on_tail_gained(mob/living/vegeta, obj/item/organ/tail)
+/datum/species/human/saiyan/proc/on_tail_gained(mob/living/vegeta, obj/item/organ/tail)
 	SIGNAL_HANDLER
 	if (!istype(tail, /obj/item/organ/tail/monkey/saiyan))
 		return
@@ -105,7 +105,7 @@
 	vegeta.clear_mood_event(SAIYAN_TAIL_MOOD)
 
 /// If your tail is restored you return to original strength
-/datum/species/saiyan/proc/on_tail_removed(mob/living/vegeta, obj/item/organ/tail)
+/datum/species/human/saiyan/proc/on_tail_removed(mob/living/vegeta, obj/item/organ/tail)
 	SIGNAL_HANDLER
 	if (!istype(tail, /obj/item/organ/tail/monkey/saiyan))
 		return
@@ -115,21 +115,21 @@
 	vegeta.Paralyze(10 SECONDS)
 	vegeta.adjust_confusion(1 MINUTES)
 
-/datum/species/saiyan/get_physical_attributes()
+/datum/species/human/saiyan/get_physical_attributes()
 	return "While they appear superficially similar to humans, Saiyans are universally specimens of toned and perfect health with \
 		the honed physique of warriors. They can be distinguished from inferior Human stock by their simian tails, and expressive haircuts."
 
-/datum/species/saiyan/get_species_description()
+/datum/species/human/saiyan/get_species_description()
 	return "Martially-inclined space warriors who live for battle and carnage. Have a tendency to lose it when exposed to moonlight."
 
-/datum/species/saiyan/get_species_lore()
+/datum/species/human/saiyan/get_species_lore()
 	return list(
 		"Saiyans were once native to the planet Vegeta, which they shared with another species that they annihilated utterly. \
 		Saiyans are natural warriors with an instinctive understanding of martial arts and love of violence, \
 		their predominant reputation in the galaxy is as conquerors who clear planets of life before selling them to the highest bidder.",
 	)
 
-/datum/species/saiyan/create_pref_unique_perks()
+/datum/species/human/saiyan/create_pref_unique_perks()
 	var/list/to_add = list()
 
 	to_add += list(

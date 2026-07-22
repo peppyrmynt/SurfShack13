@@ -1181,7 +1181,7 @@
 	race = /datum/species/pod
 
 /mob/living/carbon/human/species/saiyan
-	race = /datum/species/saiyan
+	race = /datum/species/human/saiyan
 
 /mob/living/carbon/human/species/shadow
 	race = /datum/species/shadow
