@@ -1811,6 +1811,8 @@
 	icon_state = "default"
 	color_src = FALSE
 
+/datum/sprite_accessory/tails/saiyan
+
 /datum/sprite_accessory/tails/saiyan/default
 	name = "Saiyan"
 	icon = 'icons/mob/human/species/monkey/monkey_tail.dmi'
