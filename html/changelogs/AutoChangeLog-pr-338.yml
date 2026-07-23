@@ -1,0 +1,4 @@
+author: "ZealousZeke"
+delete-after: True
+changes:
+  - bugfix: "Fixed scrolling the experiscanner UI"
