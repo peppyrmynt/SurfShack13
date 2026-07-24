@@ -44,3 +44,6 @@
   - balance: Makarovs and Toy pistols have a magazine capacity of 12 rounds.
   - balance: Gun/Ammo cases from the traitor uplink can be destroyed by activating
       the disposal bomb. Press Alt-Right-Click on the case to start the timer.
+2026-07-24:
+  ZealousZeke:
+  - bugfix: Fixed scrolling the experiscanner UI
