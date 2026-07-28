@@ -404,6 +404,10 @@
 
 /datum/nanite_program/sensor/blood/make_rule(datum/nanite_program/target)
 	var/datum/nanite_rule/blood/rule = new(target)
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	rule.threshold = value.get_value()
+	rule.above = direction.get_value()
 	return rule
 
 /datum/nanite_program/sensor/nutrition
@@ -431,6 +435,10 @@
 
 /datum/nanite_program/sensor/nutrition/make_rule(datum/nanite_program/target)
 	var/datum/nanite_rule/nutrition/rule = new(target)
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	rule.threshold = value.get_value()
+	rule.above = direction.get_value()
 	return rule
 
 /datum/nanite_program/sensor/soul_check
@@ -456,6 +464,8 @@
 
 /datum/nanite_program/sensor/soul_check/make_rule(datum/nanite_program/target)
 	var/datum/nanite_rule/soul_check/rule = new(target)
+	var/datum/nanite_extra_setting/soul_or_no = extra_settings[NES_DIRECTION]
+	rule.is_soulless = soul_or_no.get_value()
 	return rule
 
 /datum/nanite_program/sensor/temperature
@@ -483,4 +493,8 @@
 
 /datum/nanite_program/sensor/temperature/make_rule(datum/nanite_program/target)
 	var/datum/nanite_rule/temperature/rule = new(target)
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	rule.threshold = value.get_value()
+	rule.above = direction.get_value()
 	return rule
