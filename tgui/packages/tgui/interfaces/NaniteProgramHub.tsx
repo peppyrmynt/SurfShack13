@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
   Button,
   Flex,
@@ -33,7 +31,7 @@ type ProgramData = {
   id: string;
 };
 
-export const NaniteProgramHub = (props, context) => {
+export const NaniteProgramHub = (props) => {
   const { act, data } = useBackend<Data>();
   const {
     detail_view,
@@ -43,7 +41,7 @@ export const NaniteProgramHub = (props, context) => {
     programs = [],
     categories,
   } = data;
-  const [selectedCategory, setSelectedCategory] = useState(categories && categories[0],);
+  const [selectedCategory, setSelectedCategory] = useSharedState( 'category', categories?.[0]);
 
   const programsInCategory = (programs && selectedCategory && programs[selectedCategory]) || [];
 
