@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Button,
   Flex,
@@ -41,11 +43,9 @@ export const NaniteProgramHub = (props, context) => {
     programs = [],
     categories,
   } = data;
-  const [selectedCategory, setSelectedCategory] = useSharedState(
-    context,
-    'category',
-  );
-  const programsInCategory = (programs && programs[selectedCategory]) || [];
+  const [selectedCategory, setSelectedCategory] = useState(categories && categories[0],);
+
+  const programsInCategory = (programs && selectedCategory && programs[selectedCategory]) || [];
 
   return (
     <Window width={500} height={700}>
