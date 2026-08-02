@@ -56,6 +56,9 @@
 	if(HAS_TRAIT(owner, TRAIT_NEVER_WOUNDED) || HAS_TRAIT(owner, TRAIT_GODMODE))
 		return
 
+	if(GLOB.hyper_adrenaline_active)
+		damage *= HYPER_ADRENALINE_WOUND_MULTIPLIER
+
 	// note that these are fed into an exponent, so these are magnified
 	if(HAS_TRAIT(owner, TRAIT_EASILY_WOUNDED))
 		damage *= 1.5
