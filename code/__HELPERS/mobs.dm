@@ -196,6 +196,9 @@ GLOBAL_LIST_INIT(skin_tone_names, list(
 	if(!isnum(delay))
 		CRASH("do_after was passed a non-number delay: [delay || "null"].")
 
+	if(GLOB.hyper_adrenaline_active)
+		delay *= HYPER_ADRENALINE_ACTION_TIME_MULTIPLIER
+
 	if(!interaction_key && target)
 		interaction_key = target //Use the direct ref to the target
 	if(interaction_key) //Do we have a interaction_key now?
@@ -530,7 +533,7 @@ GLOBAL_LIST_INIT(skin_tone_names, list(
 	var/list/ais = active_ais(FALSE, z, skip_syndicate, only_syndicate)
 	if(ais.len)
 		if(user)
-			. = input(user,"AI signals detected:", "AI Selection", ais[1]) in sort_list(ais)
+			. = input(user,"AI signals detected:", "Cyborg Selection", ais[1]) in sort_list(ais)
 		else
 			. = pick(ais)
 	return .
@@ -800,11 +803,11 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	if(!ready_to_die)
 		stack_trace("ALRIGHT WHICH FUCKER TRIED TO DELETE *MY* DVIEW?")
 
-		if (!force)
-			return QDEL_HINT_LETMELIVE
+	if (!force)
+		return QDEL_HINT_LETMELIVE
 
-		log_world("EVACUATE THE SHITCODE IS TRYING TO STEAL MUH JOBS")
-		GLOB.dview_mob = new
+	log_world("EVACUATE THE SHITCODE IS TRYING TO STEAL MUH JOBS")
+	GLOB.dview_mob = new
 	return ..()
 
 
