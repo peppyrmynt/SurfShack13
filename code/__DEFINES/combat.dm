@@ -1,5 +1,17 @@
 /*ALL DEFINES RELATED TO COMBAT GO HERE*/
 
+/*
+ * HYPER ADRENALINE
+ *
+ * Central multipliers for the intentionally extreme high-intensity balance
+ * overhaul. Player max health and default movement speed are not modified.
+ */
+#define HYPER_ADRENALINE_ACTION_TIME_MULTIPLIER 0.5
+#define HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER 2
+#define HYPER_ADRENALINE_EXPLOSION_MULTIPLIER 2
+#define HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER 2
+#define HYPER_ADRENALINE_WOUND_MULTIPLIER 2
+
 //Damage and status effect defines
 
 //Damage defines //TODO: merge these down to reduce on defines
