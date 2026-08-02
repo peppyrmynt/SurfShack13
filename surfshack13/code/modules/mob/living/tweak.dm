@@ -11,3 +11,11 @@
 			return
 	user.AddComponent(/datum/component/tweak, time=8 SECONDS)
 	return ..()
+
+// HYPER ADRENALINE: force the global damage/healing multiplier to at least 2x.
+// This late-loaded modular definition overrides the upstream config entry defaults
+// and rejects a lower value from game_options.txt.
+/datum/config_entry/number/damage_multiplier
+	default = 2
+	min_val = 2
+	integer = FALSE
