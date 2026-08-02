@@ -193,3 +193,5 @@
 /obj/item/disk/data/examine(mob/user)
 	. = ..()
 	. += "The write-protect tab is set to [read_only ? "protected" : "unprotected"]."
+
+#include "code/game/machinery/cloning_restored.dm"
