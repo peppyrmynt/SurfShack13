@@ -251,7 +251,6 @@
 	var/datum/cloning_record/new_record = new(subject)
 	records += new_record
 	status_message = "[subject.real_name]'s cloning record was stored successfully."
-	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
 	return TRUE
 
 /obj/machinery/computer/cloning/proc/render_record(datum/cloning_record/record)
@@ -321,10 +320,8 @@
 			status_message = "Clone failed: the subject is still alive."
 		else if(pod.start_clone(record))
 			status_message = "Cloning cycle started for [record.record_name]."
-			playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
 		else
 			status_message = "Clone failed: the pod is unavailable."
-			playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, FALSE)
 
 	else if(href_list["delete"])
 		var/datum/cloning_record/record = locate(href_list["delete"])
@@ -336,7 +333,7 @@
 			status_message = "Delete failed: record not found."
 
 	add_fingerprint(usr)
-	updateUsrDialog()
+	ui_interact(usr)
 
 // Construction boards
 /obj/item/circuitboard/computer/cloning
