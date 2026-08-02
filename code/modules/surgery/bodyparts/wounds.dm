@@ -53,9 +53,6 @@
 	SHOULD_CALL_PARENT(TRUE)
 	RETURN_TYPE(/datum/wound)
 
-	// HYPER ADRENALINE: all eligible injuries have twice the normal wounding potential.
-	damage *= HYPER_ADRENALINE_WOUND_MULTIPLIER
-
 	if(HAS_TRAIT(owner, TRAIT_NEVER_WOUNDED) || HAS_TRAIT(owner, TRAIT_GODMODE))
 		return
 
@@ -197,7 +194,7 @@
 		type_list = list(type_list)
 
 	var/datum/wound/corresponding_typepath = get_corresponding_wound_type(type_list, limb, min_severity, max_severity, severity_pick_mode)
-	if (corresponding_typepath)
+	if(corresponding_typepath)
 		return limb.force_wound_upwards(corresponding_typepath, wound_source = wound_source)
 
 /// Limb is nullable, but picks a random one. Defers to limb.get_wound_threshold_of_wound_type, see it for documentation.
@@ -228,7 +225,7 @@
 		type_list = list(type_list)
 
 	var/datum/wound/wound_path = get_corresponding_wound_type(type_list, src, severity, duplicates_allowed = TRUE, care_about_existing_wounds = FALSE)
-	if (wound_path)
+	if(wound_path)
 		var/datum/wound_pregen_data/pregen_data = GLOB.all_wound_pregen_data[wound_path]
 		return pregen_data.get_threshold_for(src, damage_source = wound_source)
 
@@ -288,7 +285,6 @@
 
 	for (var/datum/wound/iterated_wound as anything in wounds)
 		var/datum/wound_pregen_data/pregen_data = GLOB.all_wound_pregen_data[iterated_wound.type]
-
 		series_mods[pregen_data.wound_series] += iterated_wound.series_threshold_penalty
 
 	return series_mods
