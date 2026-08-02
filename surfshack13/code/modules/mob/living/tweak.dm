@@ -18,6 +18,11 @@
 GLOBAL_VAR_INIT(hyper_adrenaline_active, FALSE)
 GLOBAL_VAR_INIT(hyper_adrenaline_base_damage_multiplier, null)
 
+#define HA_HAS_SILENT_TOXIN 0
+#define HA_HAS_NO_TOXIN 1
+#define HA_HAS_PAINFUL_TOXIN 2
+#define HA_MAX_TOXIN_LIVER_DAMAGE 2
+
 /obj/item/var/hyper_adrenaline_throwforce_scaled = FALSE
 
 /obj/item/proc/set_hyper_adrenaline_throwforce(enabled)
@@ -63,7 +68,7 @@ ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable
 
 	log_admin("[key_name(user)] [state_text] Hyper Adrenaline for the upcoming round.")
 	message_admins(span_adminnotice("[key_name_admin(user)] has [state_text] Hyper Adrenaline for the upcoming round."))
-	to_chat(world, span_boldnotice("Hyper Adrenaline has been [state_text] for the upcoming round."), confidential = TRUE)
+	to_chat(world, span_notice("<b>Hyper Adrenaline has been [state_text] for the upcoming round.</b>"), confidential = TRUE)
 	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Hyper Adrenaline", new_state ? "Enabled" : "Disabled"))
 
 // Preserve upstream item initialization while applying the selected lobby state
@@ -271,7 +276,7 @@ ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable
 	if(liver)
 		var/liver_health_percent = (liver.maxHealth - liver.damage) / liver.maxHealth
 		liver_tolerance = liver.toxTolerance * liver_health_percent
-		provide_pain_message = HAS_NO_TOXIN
+		provide_pain_message = HA_HAS_NO_TOXIN
 
 	for(var/datum/reagent/reagent as anything in cached_reagents)
 		var/datum/reagent/toxin/toxin
@@ -299,12 +304,12 @@ ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable
 			// a 15u syringe is a nice baseline to scale lethality by
 			liver_damage += ((amount/15) * toxin.toxpwr * toxin.liver_damage_multiplier) / liver.liver_resistance
 
-			if(provide_pain_message != HAS_PAINFUL_TOXIN)
-				provide_pain_message = toxin.silent_toxin ? HAS_SILENT_TOXIN : HAS_PAINFUL_TOXIN
+			if(provide_pain_message != HA_HAS_PAINFUL_TOXIN)
+				provide_pain_message = toxin.silent_toxin ? HA_HAS_SILENT_TOXIN : HA_HAS_PAINFUL_TOXIN
 
 	// if applicable, apply our liver damage and display the accompanying pain message
 	if(liver_damage)
-		liver.apply_organ_damage(min(liver_damage * seconds_per_tick , MAX_TOXIN_LIVER_DAMAGE * seconds_per_tick))
+		liver.apply_organ_damage(min(liver_damage * seconds_per_tick , HA_MAX_TOXIN_LIVER_DAMAGE * seconds_per_tick))
 
 	if(provide_pain_message && liver.damage > 10 && SPT_PROB(liver.damage/6, seconds_per_tick)) //the higher the damage the higher the probability
 		to_chat(owner, span_warning("You feel a dull pain in your abdomen."))
@@ -430,3 +435,8 @@ ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable
 			new_wound.apply_wound(src, attack_direction = attack_direction, wound_source = damage_source)
 		log_wound(owner, new_wound, damage, wound_bonus, bare_wound_bonus, base_roll) // dismembering wounds are logged in the apply_wound() for loss wounds since they delete themselves immediately, these will be immediately returned
 		return new_wound
+
+#undef HA_HAS_SILENT_TOXIN
+#undef HA_HAS_NO_TOXIN
+#undef HA_HAS_PAINFUL_TOXIN
+#undef HA_MAX_TOXIN_LIVER_DAMAGE
