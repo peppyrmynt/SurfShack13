@@ -53,6 +53,9 @@
 	SHOULD_CALL_PARENT(TRUE)
 	RETURN_TYPE(/datum/wound)
 
+	// HYPER ADRENALINE: all eligible injuries have twice the normal wounding potential.
+	damage *= HYPER_ADRENALINE_WOUND_MULTIPLIER
+
 	if(HAS_TRAIT(owner, TRAIT_NEVER_WOUNDED) || HAS_TRAIT(owner, TRAIT_GODMODE))
 		return
 
