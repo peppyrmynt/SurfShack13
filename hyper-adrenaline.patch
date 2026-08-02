@@ -1,0 +1,139 @@
+diff --git a/code/__DEFINES/combat.dm b/code/__DEFINES/combat.dm
+--- a/code/__DEFINES/combat.dm
++++ b/code/__DEFINES/combat.dm
+@@ -1,5 +1,18 @@
+ /*ALL DEFINES RELATED TO COMBAT GO HERE*/
+
++/*
++ * HYPER ADRENALINE
++ *
++ * Central multipliers for the intentionally extreme high-intensity balance
++ * overhaul. Player max health and default movement speed are not modified.
++ */
++#define HYPER_ADRENALINE_ACTION_TIME_MULTIPLIER 0.5
++#define HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER 2
++#define HYPER_ADRENALINE_EXPLOSION_MULTIPLIER 2
++#define HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER 2
++#define HYPER_ADRENALINE_WOUND_MULTIPLIER 2
++
+ //Damage and status effect defines
+
+ //Damage defines //TODO: merge these down to reduce on defines
+diff --git a/config/game_options.txt b/config/game_options.txt
+--- a/config/game_options.txt
++++ b/config/game_options.txt
+@@ -1,7 +1,9 @@
+ ## HEALTH ###
+
+-##Damage multiplier, effects both weapons and healing on all mobs. For example, 1.25 would result in 25% higher damage.
+-DAMAGE_MULTIPLIER 1
++## HYPER ADRENALINE
++## Damage multiplier affects both damage and healing on all mobs.
++## Max health remains unchanged.
++DAMAGE_MULTIPLIER 2
+
+ ## REVIVAL ###
+
+diff --git a/code/__HELPERS/mobs.dm b/code/__HELPERS/mobs.dm
+--- a/code/__HELPERS/mobs.dm
++++ b/code/__HELPERS/mobs.dm
+@@ -163,6 +163,9 @@
+ 	if(!isnum(delay))
+ 		CRASH("do_after was passed a non-number delay: [delay || "null"].")
+
++	// HYPER ADRENALINE: all shared progress/action-bar interactions take half as long.
++	delay *= HYPER_ADRENALINE_ACTION_TIME_MULTIPLIER
++
+ 	if(!interaction_key && target)
+ 		interaction_key = target //Use the direct ref to the target
+ 	if(interaction_key) //Do we have a interaction_key now?
+diff --git a/code/game/objects/items.dm b/code/game/objects/items.dm
+--- a/code/game/objects/items.dm
++++ b/code/game/objects/items.dm
+@@ -248,6 +248,9 @@
+ 	var/resist_cooldown = CLICK_CD_BREAKOUT
+
+ /obj/item/Initialize(mapload)
++	// HYPER ADRENALINE: thrown objects have twice their normal impact force.
++	throwforce *= 2
++
+ 	if(attack_verb_continuous)
+ 		attack_verb_continuous = string_list(attack_verb_continuous)
+ 	if(attack_verb_simple)
+diff --git a/code/datums/embedding.dm b/code/datums/embedding.dm
+--- a/code/datums/embedding.dm
++++ b/code/datums/embedding.dm
+@@ -159,14 +159,15 @@
+
+ /// Calculates the actual chance to embed based on armour penetration and throwing speed, then returns true if we pass that probability check
+ /datum/embedding/proc/roll_embed_chance(mob/living/carbon/victim, hit_zone, datum/thrownthing/throwingdatum)
+-	var/chance = embed_chance
++	// HYPER ADRENALINE: double base embed chance for thrown items and projectiles.
++	var/chance = min(embed_chance * HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER, 100)
+
+ 	// Something threw us really, really fast
+ 	if (throwingdatum?.speed > parent.throw_speed)
+ 		chance += (throwingdatum.speed - parent.throw_speed) * EMBED_CHANCE_SPEED_BONUS
+
+ 	if (is_harmless())
+-		return prob(embed_chance)
++		return prob(chance)
+
+ 	// We'll be nice and take the better of bullet and bomb armor, halved
+ 	var/armor = max(victim.run_armor_check(hit_zone, BULLET, armour_penetration = parent.armour_penetration, silent = TRUE), victim.run_armor_check(hit_zone, BOMB, armour_penetration = parent.armour_penetration,  silent = TRUE)) * 0.5
+diff --git a/code/modules/surgery/bodyparts/wounds.dm b/code/modules/surgery/bodyparts/wounds.dm
+--- a/code/modules/surgery/bodyparts/wounds.dm
++++ b/code/modules/surgery/bodyparts/wounds.dm
+@@ -61,6 +61,9 @@
+ /obj/item/bodypart/proc/check_wounding(woundtype, damage, wound_bonus, bare_wound_bonus, attack_direction, damage_source, wound_clothing)
+ 	SHOULD_CALL_PARENT(TRUE)
+ 	RETURN_TYPE(/datum/wound)
++
++	// HYPER ADRENALINE: all eligible injuries have twice the normal wounding potential.
++	damage *= HYPER_ADRENALINE_WOUND_MULTIPLIER
+
+ 	if(HAS_TRAIT(owner, TRAIT_NEVER_WOUNDED) || HAS_TRAIT(owner, TRAIT_GODMODE))
+ 		return
+
+diff --git a/code/modules/reagents/chemistry/holder/mob_life.dm b/code/modules/reagents/chemistry/holder/mob_life.dm
+--- a/code/modules/reagents/chemistry/holder/mob_life.dm
++++ b/code/modules/reagents/chemistry/holder/mob_life.dm
+@@ -17,6 +17,9 @@
+  * * dead - Allows dead-processing reagents to continue working
+  */
+ /datum/reagents/proc/metabolize(mob/living/carbon/owner, seconds_per_tick, times_fired, can_overdose = FALSE, liverless = FALSE, dead = FALSE)
++	// HYPER ADRENALINE: chem effects, overdose processing and metabolism run twice as fast.
++	seconds_per_tick *= HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER
++
+ 	var/list/cached_reagents = reagent_list
+ 	if(owner)
+ 		expose_temperature(owner.bodytemperature, 0.25)
+@@ -174,6 +177,9 @@
+  * * times_fired - number of times to metabolize this reagent
+  */
+ /datum/reagents/proc/handle_stasis_chems(mob/living/carbon/owner, seconds_per_tick, times_fired)
++	// HYPER ADRENALINE: keep stasis-ignoring chems on the same accelerated scale.
++	seconds_per_tick *= HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER
++
+ 	var/need_mob_update = FALSE
+ 	for(var/datum/reagent/reagent as anything in reagent_list)
+ 		if(!(reagent.chemical_flags & REAGENT_IGNORE_STASIS))
+diff --git a/code/controllers/subsystem/explosions.dm b/code/controllers/subsystem/explosions.dm
+--- a/code/controllers/subsystem/explosions.dm
++++ b/code/controllers/subsystem/explosions.dm
+@@ -225,6 +225,18 @@
+  * - explosion_arc: The angle of the arc covered by a directional explosion (if 360 the explosion is non-directional.)
+  */
+ /proc/explosion(atom/origin, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 0, flame_range = null, flash_range = null, adminlog = TRUE, ignorecap = FALSE, silent = FALSE, smoke = FALSE, protect_epicenter = FALSE, atom/explosion_cause = null, explosion_direction = 0, explosion_arc = 360)
++	// HYPER ADRENALINE: double explosion reach, including chemical explosions.
++	devastation_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
++	heavy_impact_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
++	light_impact_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
++
++	if(!isnull(flame_range))
++		flame_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
++
++	if(!isnull(flash_range))
++		flash_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
++
+ 	. = SSexplosions.explode(arglist(args))
