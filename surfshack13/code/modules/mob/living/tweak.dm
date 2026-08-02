@@ -49,17 +49,19 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 	CONFIG_SET(number/damage_multiplier, CONFIG_GET(number/damage_multiplier) * 2)
 
 	for(var/obj/item/item in world)
+		CHECK_TICK
+		if(!(item.flags_1 & INITIALIZED_1) || QDELETED(item))
+			continue
 		item.apply_hyper_adrenaline_throwforce()
 
 	to_chat(world, span_notice("<b>Hyper Adrenaline is active for this round.</b>"), confidential = TRUE)
 	message_admins(span_adminnotice("Hyper Adrenaline was enabled at round start."))
 
-/datum/hyper_adrenaline_controller/proc/on_atom_post_init(datum/source, atom/created_atom)
+/datum/hyper_adrenaline_controller/proc/on_atom_post_init(datum/source, obj/item/created_item)
 	SIGNAL_HANDLER
 
-	if(!GLOB.hyper_adrenaline_active || !isitem(created_atom))
+	if(!GLOB.hyper_adrenaline_active || !istype(created_item))
 		return
-	var/obj/item/created_item = created_atom
 	created_item.apply_hyper_adrenaline_throwforce()
 
 ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable or disable Hyper Adrenaline for the upcoming round.", ADMIN_CATEGORY_SERVER)
