@@ -59,12 +59,34 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 			continue
 		item.apply_hyper_adrenaline_throwforce()
 
-/datum/hyper_adrenaline_controller/proc/on_atom_post_init(datum/source, obj/item/created_item)
+/datum/hyper_adrenaline_controller/proc/on_atom_post_init(datum/source, atom/created_atom)
 	SIGNAL_HANDLER
 
-	if(!GLOB.hyper_adrenaline_active || !istype(created_item))
+	if(istype(created_atom, /area))
+		RegisterSignal(created_atom, COMSIG_AREA_INTERNAL_EXPLOSION, PROC_REF(on_area_internal_explosion))
 		return
+
+	if(!GLOB.hyper_adrenaline_active || !isitem(created_atom))
+		return
+
+	var/obj/item/created_item = created_atom
 	created_item.apply_hyper_adrenaline_throwforce()
+
+/datum/hyper_adrenaline_controller/proc/on_area_internal_explosion(datum/source, list/arguments)
+	SIGNAL_HANDLER
+
+	if(!GLOB.hyper_adrenaline_active)
+		return
+
+	arguments[EXARG_KEY_DEV_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+	arguments[EXARG_KEY_HEAVY_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+	arguments[EXARG_KEY_LIGHT_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+
+	if(!isnull(arguments[EXARG_KEY_FLAME_RANGE]))
+		arguments[EXARG_KEY_FLAME_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+
+	if(!isnull(arguments[EXARG_KEY_FLASH_RANGE]))
+		arguments[EXARG_KEY_FLASH_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
 
 ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable or disable Hyper Adrenaline for the upcoming round.", ADMIN_CATEGORY_SERVER)
 	if(SSticker.current_state > GAME_STATE_PREGAME)
@@ -78,34 +100,3 @@ ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable
 	message_admins(span_adminnotice("[key_name_admin(user)] has [state_text] Hyper Adrenaline for the upcoming round."))
 	to_chat(world, span_notice("<b>Hyper Adrenaline has been [state_text] for the upcoming round.</b>"), confidential = TRUE)
 	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Hyper Adrenaline", GLOB.hyper_adrenaline_next_round ? "Enabled" : "Disabled"))
-
-// Route every explosion through doubled ranges only while the mode is active,
-// while keeping upstream caps, logging, and signals.
-/proc/explosion(atom/origin, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 0, flame_range = null, flash_range = null, adminlog = TRUE, ignorecap = FALSE, silent = FALSE, smoke = FALSE, protect_epicenter = FALSE, atom/explosion_cause = null, explosion_direction = 0, explosion_arc = 360)
-	if(GLOB.hyper_adrenaline_active)
-		devastation_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
-		heavy_impact_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
-		light_impact_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
-
-		if(!isnull(flame_range))
-			flame_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
-
-		if(!isnull(flash_range))
-			flash_range *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
-
-	return SSexplosions.explode(
-		origin,
-		devastation_range,
-		heavy_impact_range,
-		light_impact_range,
-		flame_range,
-		flash_range,
-		adminlog,
-		ignorecap,
-		silent,
-		smoke,
-		protect_epicenter,
-		explosion_cause,
-		explosion_direction,
-		explosion_arc,
-	)
