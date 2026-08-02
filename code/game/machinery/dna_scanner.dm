@@ -293,11 +293,6 @@
 	active_record = null
 	return ..()
 
-/obj/machinery/clonepod/deconstruct(disassembled = TRUE)
-	if(clone)
-		eject_clone(FALSE)
-	return ..()
-
 /obj/machinery/clonepod/Exited(atom/movable/gone, direction)
 	. = ..()
 	if(gone == clone)
