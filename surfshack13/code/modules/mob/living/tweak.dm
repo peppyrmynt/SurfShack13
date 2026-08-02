@@ -13,10 +13,11 @@
 	return ..()
 
 // HYPER ADRENALINE
-// The mode defaults to off on every server boot. Admins may toggle it only
-// during startup or pregame; once the round begins, the state is locked.
+// Admins select the mode during startup or pregame. The selection is copied
+// into the active state at COMSIG_TICKER_ROUND_STARTING and is then immutable.
+GLOBAL_VAR_INIT(hyper_adrenaline_next_round, FALSE)
 GLOBAL_VAR_INIT(hyper_adrenaline_active, FALSE)
-GLOBAL_VAR_INIT(hyper_adrenaline_base_damage_multiplier, null)
+GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controller, new)
 
 #define HA_HAS_SILENT_TOXIN 0
 #define HA_HAS_NO_TOXIN 1
@@ -25,91 +26,51 @@ GLOBAL_VAR_INIT(hyper_adrenaline_base_damage_multiplier, null)
 
 /obj/item/var/hyper_adrenaline_throwforce_scaled = FALSE
 
-/obj/item/proc/set_hyper_adrenaline_throwforce(enabled)
-	if(enabled)
-		if(hyper_adrenaline_throwforce_scaled)
-			return
-		throwforce *= 2
-		hyper_adrenaline_throwforce_scaled = TRUE
+/obj/item/proc/apply_hyper_adrenaline_throwforce()
+	if(hyper_adrenaline_throwforce_scaled)
+		return
+	throwforce *= 2
+	hyper_adrenaline_throwforce_scaled = TRUE
+
+/datum/hyper_adrenaline_controller/New()
+	. = ..()
+	RegisterSignal(SSticker, COMSIG_TICKER_ROUND_STARTING, PROC_REF(on_round_start))
+	RegisterSignal(SSdcs, COMSIG_GLOB_NEW_ITEM, PROC_REF(on_new_item))
+
+/datum/hyper_adrenaline_controller/proc/on_round_start(datum/source, round_start_time)
+	SIGNAL_HANDLER
+
+	GLOB.hyper_adrenaline_active = GLOB.hyper_adrenaline_next_round
+	if(!GLOB.hyper_adrenaline_active)
 		return
 
-	if(!hyper_adrenaline_throwforce_scaled)
-		return
-	throwforce *= 0.5
-	hyper_adrenaline_throwforce_scaled = FALSE
+	CONFIG_SET(number/damage_multiplier, CONFIG_GET(number/damage_multiplier) * 2)
 
-/proc/set_hyper_adrenaline_enabled(enabled)
-	if(enabled == GLOB.hyper_adrenaline_active)
-		return
-
-	if(enabled)
-		GLOB.hyper_adrenaline_base_damage_multiplier = CONFIG_GET(number/damage_multiplier)
-		CONFIG_SET(number/damage_multiplier, GLOB.hyper_adrenaline_base_damage_multiplier * 2)
-	else
-		if(!isnull(GLOB.hyper_adrenaline_base_damage_multiplier))
-			CONFIG_SET(number/damage_multiplier, GLOB.hyper_adrenaline_base_damage_multiplier)
-		GLOB.hyper_adrenaline_base_damage_multiplier = null
-
-	GLOB.hyper_adrenaline_active = enabled
-
-	// Map-loaded items already exist by the time an admin makes the lobby choice.
-	// Scale or restore those items immediately; later-created items are handled by Initialize().
 	for(var/obj/item/item in world)
-		item.set_hyper_adrenaline_throwforce(enabled)
+		item.apply_hyper_adrenaline_throwforce()
 
-ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable or disable Hyper Adrenaline before the round starts.", ADMIN_CATEGORY_SERVER)
+	to_chat(world, span_notice("<b>Hyper Adrenaline is active for this round.</b>"), confidential = TRUE)
+	message_admins(span_adminnotice("Hyper Adrenaline was enabled at round start."))
+
+/datum/hyper_adrenaline_controller/proc/on_new_item(datum/source, obj/item/created_item)
+	SIGNAL_HANDLER
+
+	if(!GLOB.hyper_adrenaline_active)
+		return
+	created_item.apply_hyper_adrenaline_throwforce()
+
+ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable or disable Hyper Adrenaline for the upcoming round.", ADMIN_CATEGORY_SERVER)
 	if(SSticker.current_state > GAME_STATE_PREGAME)
-		to_chat(user, span_warning("Hyper Adrenaline is locked for the current round and can only be changed before round start."))
+		to_chat(user, span_warning("Hyper Adrenaline is locked for the current round and can only be selected before round start."))
 		return
 
-	var/new_state = !GLOB.hyper_adrenaline_active
-	set_hyper_adrenaline_enabled(new_state)
-	var/state_text = new_state ? "enabled" : "disabled"
+	GLOB.hyper_adrenaline_next_round = !GLOB.hyper_adrenaline_next_round
+	var/state_text = GLOB.hyper_adrenaline_next_round ? "enabled" : "disabled"
 
 	log_admin("[key_name(user)] [state_text] Hyper Adrenaline for the upcoming round.")
 	message_admins(span_adminnotice("[key_name_admin(user)] has [state_text] Hyper Adrenaline for the upcoming round."))
 	to_chat(world, span_notice("<b>Hyper Adrenaline has been [state_text] for the upcoming round.</b>"), confidential = TRUE)
-	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Hyper Adrenaline", new_state ? "Enabled" : "Disabled"))
-
-// Preserve upstream item initialization while applying the selected lobby state
-// to every item created after the toggle.
-/obj/item/Initialize(mapload)
-	set_hyper_adrenaline_throwforce(GLOB.hyper_adrenaline_active)
-
-	if(attack_verb_continuous)
-		attack_verb_continuous = string_list(attack_verb_continuous)
-	if(attack_verb_simple)
-		attack_verb_simple = string_list(attack_verb_simple)
-	if(species_exception)
-		species_exception = string_list(species_exception)
-
-	if(sharpness && force > 5) //give sharp objects butchering functionality, for consistency
-		AddComponent(/datum/component/butchering, speed = 8 SECONDS * toolspeed)
-
-	if(!greyscale_config && greyscale_colors && (greyscale_config_worn || greyscale_config_belt || greyscale_config_inhand_right || greyscale_config_inhand_left))
-		update_greyscale()
-
-	. = ..()
-
-	// Handle adding item associated actions
-	for(var/path in actions_types)
-		add_item_action(path)
-	actions_types = null
-
-	if(force_string)
-		item_flags |= FORCE_STRING_OVERRIDE
-
-	if(!hitsound)
-		if(damtype == BURN)
-			hitsound = 'sound/items/tools/welder.ogg'
-		if(damtype == BRUTE)
-			hitsound = SFX_SWING_HIT
-
-	add_weapon_description()
-
-	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_NEW_ITEM, src)
-
-	setup_reskinning()
+	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Hyper Adrenaline", GLOB.hyper_adrenaline_next_round ? "Enabled" : "Disabled"))
 
 // Preserve the complete shared timed-action behavior while conditionally
 // halving the requested duration before normal action-speed modifiers apply.
@@ -226,19 +187,20 @@ ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable
 		explosion_arc,
 	)
 
-// Conditional replacement for the upstream embedding roll. This supersedes the
-// earlier branch edit and restores normal probabilities while the mode is off.
+// Conditional replacement for the upstream embedding roll.
 /datum/embedding/proc/roll_embed_chance(mob/living/carbon/victim, hit_zone, datum/thrownthing/throwingdatum)
-	var/chance = embed_chance
+	var/base_chance = embed_chance
 	if(GLOB.hyper_adrenaline_active)
-		chance = min(chance * HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER, 100)
+		base_chance = min(base_chance * HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER, 100)
+	var/chance = base_chance
 
 	// Something threw us really, really fast
 	if (throwingdatum?.speed > parent.throw_speed)
 		chance += (throwingdatum.speed - parent.throw_speed) * EMBED_CHANCE_SPEED_BONUS
 
+	// Harmless sticky items intentionally ignore the speed bonus in the upstream implementation.
 	if (is_harmless())
-		return prob(chance)
+		return prob(base_chance)
 
 	// We'll be nice and take the better of bullet and bomb armor, halved
 	var/armor = max(victim.run_armor_check(hit_zone, BULLET, armour_penetration = parent.armour_penetration, silent = TRUE), victim.run_armor_check(hit_zone, BOMB, armour_penetration = parent.armour_penetration,  silent = TRUE)) * 0.5
