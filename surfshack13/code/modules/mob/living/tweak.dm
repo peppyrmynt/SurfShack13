@@ -27,13 +27,20 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 	throwforce *= 2
 	hyper_adrenaline_throwforce_scaled = TRUE
 
+/datum/hyper_adrenaline_controller
+	var/round_effects_applied = FALSE
+
 /datum/hyper_adrenaline_controller/New()
 	. = ..()
 	RegisterSignal(SSticker, COMSIG_TICKER_ROUND_STARTING, PROC_REF(on_round_start))
-	RegisterSignal(SSdcs, COMSIG_GLOB_NEW_ITEM, PROC_REF(on_new_item))
+	RegisterSignal(SSdcs, COMSIG_GLOB_ATOM_AFTER_POST_INIT, PROC_REF(on_atom_post_init))
 
 /datum/hyper_adrenaline_controller/proc/on_round_start(datum/source, round_start_time)
 	SIGNAL_HANDLER
+
+	if(round_effects_applied)
+		return
+	round_effects_applied = TRUE
 
 	GLOB.hyper_adrenaline_active = GLOB.hyper_adrenaline_next_round
 	if(!GLOB.hyper_adrenaline_active)
@@ -47,11 +54,12 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 	to_chat(world, span_notice("<b>Hyper Adrenaline is active for this round.</b>"), confidential = TRUE)
 	message_admins(span_adminnotice("Hyper Adrenaline was enabled at round start."))
 
-/datum/hyper_adrenaline_controller/proc/on_new_item(datum/source, obj/item/created_item)
+/datum/hyper_adrenaline_controller/proc/on_atom_post_init(datum/source, atom/created_atom)
 	SIGNAL_HANDLER
 
-	if(!GLOB.hyper_adrenaline_active)
+	if(!GLOB.hyper_adrenaline_active || !isitem(created_atom))
 		return
+	var/obj/item/created_item = created_atom
 	created_item.apply_hyper_adrenaline_throwforce()
 
 ADMIN_VERB(toggle_hyper_adrenaline, R_SERVER, "Toggle Hyper Adrenaline", "Enable or disable Hyper Adrenaline for the upcoming round.", ADMIN_CATEGORY_SERVER)
