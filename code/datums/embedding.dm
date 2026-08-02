@@ -167,15 +167,14 @@
 
 /// Calculates the actual chance to embed based on armour penetration and throwing speed, then returns true if we pass that probability check
 /datum/embedding/proc/roll_embed_chance(mob/living/carbon/victim, hit_zone, datum/thrownthing/throwingdatum)
-	// HYPER ADRENALINE: double base embed chance for thrown items and projectiles.
-	var/chance = min(embed_chance * HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER, 100)
+	var/chance = embed_chance
 
 	// Something threw us really, really fast
 	if (throwingdatum?.speed > parent.throw_speed)
 		chance += (throwingdatum.speed - parent.throw_speed) * EMBED_CHANCE_SPEED_BONUS
 
 	if (is_harmless())
-		return prob(chance)
+		return prob(embed_chance)
 
 	// We'll be nice and take the better of bullet and bomb armor, halved
 	var/armor = max(victim.run_armor_check(hit_zone, BULLET, armour_penetration = parent.armour_penetration, silent = TRUE), victim.run_armor_check(hit_zone, BOMB, armour_penetration = parent.armour_penetration,  silent = TRUE)) * 0.5
