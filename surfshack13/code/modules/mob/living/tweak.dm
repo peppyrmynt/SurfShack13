@@ -47,15 +47,17 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 		return
 
 	CONFIG_SET(number/damage_multiplier, CONFIG_GET(number/damage_multiplier) * 2)
+	INVOKE_ASYNC(src, PROC_REF(apply_current_item_throwforce))
 
+	to_chat(world, span_notice("<b>Hyper Adrenaline is active for this round.</b>"), confidential = TRUE)
+	message_admins(span_adminnotice("Hyper Adrenaline was enabled at round start."))
+
+/datum/hyper_adrenaline_controller/proc/apply_current_item_throwforce()
 	for(var/obj/item/item in world)
 		CHECK_TICK
 		if(!(item.flags_1 & INITIALIZED_1) || QDELETED(item))
 			continue
 		item.apply_hyper_adrenaline_throwforce()
-
-	to_chat(world, span_notice("<b>Hyper Adrenaline is active for this round.</b>"), confidential = TRUE)
-	message_admins(span_adminnotice("Hyper Adrenaline was enabled at round start."))
 
 /datum/hyper_adrenaline_controller/proc/on_atom_post_init(datum/source, obj/item/created_item)
 	SIGNAL_HANDLER
