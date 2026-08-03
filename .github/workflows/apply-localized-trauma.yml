@@ -1,0 +1,38 @@
+name: Apply localized trauma source patch
+
+on:
+  push:
+    branches:
+      - agent/feature-localized-catastrophic-trauma
+    paths:
+      - .github/workflows/apply-localized-trauma.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/feature-localized-catastrophic-trauma
+          fetch-depth: 0
+      - name: Apply reviewed source patch
+        shell: bash
+        run: |
+          git fetch origin master
+          git checkout origin/master -- \
+            code/__DEFINES/combat.dm \
+            code/modules/mob/living/carbon/carbon_defines.dm \
+            code/modules/surgery/bodyparts/_bodyparts.dm \
+            code/modules/surgery/bodyparts/wounds.dm \
+            code/modules/mob/living/carbon/human/_species.dm
+          git apply --check localized-catastrophic-trauma.patch
+          git apply localized-catastrophic-trauma.patch
+          rm -f localized-catastrophic-trauma.patch tmp_should_not_create .github/workflows/apply-localized-trauma.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Implement localized catastrophic trauma"
+          git push origin HEAD:agent/feature-localized-catastrophic-trauma
