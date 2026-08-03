@@ -1,0 +1,4 @@
+author: "Ixde969-hub"
+delete-after: True
+changes:
+  - rscadd: "Restored cloning records, cloning consoles, and clone pods as a medical revival option."
