@@ -267,6 +267,7 @@
 #include "security_officer_distribution.dm"
 #include "serving_tray.dm"
 #include "simple_animal_freeze.dm"
+#include "seventv_emotes.dm"
 #include "siunit.dm"
 #include "slime_mood.dm"
 #include "slips.dm"
