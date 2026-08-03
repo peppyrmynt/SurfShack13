@@ -247,3 +247,85 @@
 	key_third_person = "signs"
 	message_param = "signs the number %t."
 	hands_use_check = TRUE
+
+/// 7TV-inspired image emotes ported from tgstation commit d72fcf2177c44000b350ab4a519b3b937513ff8c.
+/datum/emote/living/carbon/human/seventv
+	var/emote_icon_state
+	cooldown = 60 SECONDS
+	emote_type = EMOTE_VISIBLE
+
+/datum/emote/living/carbon/human/seventv/run_emote(mob/living/carbon/human/user, params, type_override, intentional)
+	. = ..()
+	var/image/emote_image = image('icons/mob/human/aprilfools_emotes.dmi', user, emote_icon_state)
+	emote_image.pixel_y = 32
+	flick_overlay_global(emote_image, GLOB.clients, 3 SECONDS)
+
+/datum/emote/living/carbon/human/seventv/clueless
+	key = "clueless"
+	message = "looks clueless."
+	emote_icon_state = "clueless"
+
+/datum/emote/living/carbon/human/seventv/hmm
+	key = "hmm"
+	message = "squints their eyes."
+	emote_icon_state = "hmm"
+
+/datum/emote/living/carbon/human/seventv/lmao
+	key = "lmao"
+	message = "is laughing their ass off!"
+	emote_icon_state = "troll"
+
+/datum/emote/living/carbon/human/seventv/reallymad
+	key = "reallymad"
+	message = "looks really mad about something!"
+	emote_icon_state = "reallymad"
+	sound = 'sound/effects/aprilfools/angry.ogg'
+
+/datum/emote/living/carbon/human/seventv/zorp
+	key = "zorp"
+	message = "feels their impending doom approaching."
+	emote_icon_state = "zorp"
+	sound = 'sound/effects/aprilfools/bell.ogg'
+
+/datum/emote/living/carbon/human/seventv/uncanny
+	key = "uncanny"
+	message = "looks really uncanny."
+	emote_icon_state = "uncanny"
+	sound = 'sound/effects/aprilfools/bell.ogg'
+
+/datum/emote/living/carbon/human/seventv/xdd
+	key = "xdd"
+	message = "laughs."
+	emote_icon_state = "xdd"
+
+/datum/emote/living/carbon/human/seventv/xdd/get_sound(mob/living/carbon/human/user)
+	return prob(20) ? 'sound/effects/aprilfools/goofylaugh2.ogg' : 'sound/effects/aprilfools/goofylaugh.ogg'
+
+/datum/emote/living/carbon/human/seventv/taa
+	key = "taa"
+	message = "smokes an imaginary cigar."
+	emote_icon_state = "taa"
+	sound = 'sound/effects/aprilfools/rizz.ogg'
+
+/datum/emote/living/carbon/human/seventv/noway
+	key = "noway"
+	message = "looks shocked!"
+	emote_icon_state = "noway"
+	sound = 'sound/effects/aprilfools/rizz.ogg'
+
+/datum/emote/living/carbon/human/seventv/tuh
+	key = "tuh"
+	message = "gasps in shock!"
+	emote_icon_state = "tuh"
+	sound = 'sound/effects/aprilfools/vineboom.ogg'
+
+/datum/emote/living/carbon/human/seventv/jokerge
+	key = "jokerge"
+	message = "grins."
+	emote_icon_state = "jokerge"
+
+/datum/emote/living/carbon/human/seventv/fuckingdies
+	key = "fuckingdies"
+	message = "fucking dies."
+	emote_icon_state = "die"
+	sound = 'sound/effects/aprilfools/rpdeath.ogg'
