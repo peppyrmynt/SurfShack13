@@ -305,12 +305,12 @@
 
 /obj/machinery/clonepod/update_icon_state()
 	if(machine_stat & (NOPOWER | BROKEN))
-		icon_state = clone ? "pod_1" : "pod_0"
+		icon_state = clone ? "pod_g" : "pod_0"
 		return ..()
 	if(panel_open)
 		icon_state = "pod_0"
 		return ..()
-	icon_state = clone ? "pod_1" : "pod_0"
+	icon_state = clone ? "pod_g" : "pod_0"
 	return ..()
 
 /obj/machinery/clonepod/examine(mob/user)
