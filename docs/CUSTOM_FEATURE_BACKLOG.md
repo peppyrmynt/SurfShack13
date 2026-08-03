@@ -39,19 +39,27 @@ The evaluator is attached to finalized bodypart wound damage, so qualifying mele
 
 ### Current implementation state
 
-The complete reviewed source diff is stored in `localized-catastrophic-trauma.patch` and covers:
+Direct source implementation is present on `agent/feature-localized-catastrophic-trauma` for PR #12.
 
-- `code/__DEFINES/combat.dm`
 - `code/modules/mob/living/carbon/carbon_defines.dm`
-- `code/modules/surgery/bodyparts/_bodyparts.dm`
 - `code/modules/surgery/bodyparts/wounds.dm`
-- `code/modules/mob/living/carbon/human/_species.dm`
+- `code/_onclick/other_mobs.dm`
 
-A direct-source application was attempted through a temporary GitHub Actions workflow, but the workflow did not execute when created through the connected GitHub app. The temporary workflow and probe file were removed. The branch still requires the patch to be applied in a writable checkout before it is merge-ready.
+The stale `localized-catastrophic-trauma.patch` artifact was removed after reimplementation against the current branch source. The implementation reuses the existing `hyper_trauma_cd` cooldown declared in carbon mob state.
+
+The wound evaluator is called only after a new or replacement wound is actually applied and logged. It is gated to Hyper Adrenaline mode through `CONFIG_GET(number/damage_multiplier) >= 2`, requires a critical wound, uses final incoming wound damage for thresholds, and preserves existing full-body gib behavior.
+
+Curbstomp is integrated through the current unarmed attack chain after normal unarmed attack checks and right-click handling.
+
+### Validation results
+
+- Static whitespace check: passed with `git diff --check`.
+- Full build script: blocked because the local build bootstrap attempted to download Node and network access is unavailable in this Codex session.
+- Direct DreamMaker compile: attempted with local BYOND, but did not finish within the available command timeout and produced no compiler artifact or error output.
+- Runtime testing: not yet performed.
 
 ### Validation requirements
 
-- Apply the patch to the branch source files and remove the patch artifact.
 - Compile DreamMaker and run relevant tests/CI.
 - Verify normal rounds bypass the evaluator.
 - Verify thresholds, critical-wound gates, and the 40% cap.
