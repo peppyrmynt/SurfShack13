@@ -195,8 +195,7 @@
 					threshold = 40
 					base_chance = 15
 				if(WOUND_BLUNT)
-					threshold = 50
-					base_chance = 15
+					return FALSE
 				if(WOUND_PIERCE)
 					threshold = 50
 					base_chance = 15
