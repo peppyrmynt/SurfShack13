@@ -1,0 +1,6 @@
+author: "Ixde969-hub"
+delete-after: True
+changes:
+  - rscadd: "Added the optional Hyper Adrenaline high-intensity round mode."
+  - admin: "Added Server -> Toggle Hyper Adrenaline as a pre-round admin control."
+  - balance: "Hyper Adrenaline doubles global damage/healing, throwforce, wound generation, embedding chance, reagent processing, and explosion ranges while halving shared action timers."

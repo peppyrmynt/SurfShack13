@@ -58,6 +58,9 @@
 
 	var/hyper_trauma_damage = damage
 
+	if(GLOB.hyper_adrenaline_active)
+		damage *= HYPER_ADRENALINE_WOUND_MULTIPLIER
+
 	// note that these are fed into an exponent, so these are magnified
 	if(HAS_TRAIT(owner, TRAIT_EASILY_WOUNDED))
 		damage *= 1.5
@@ -155,7 +158,7 @@
 		return new_wound
 
 /mob/living/carbon/proc/try_hyper_catastrophic_trauma(obj/item/bodypart/affected_part, datum/wound/new_wound, final_damage, wound_type, attack_direction, damage_source)
-	if(CONFIG_GET(number/damage_multiplier) < 2)
+	if(!GLOB.hyper_adrenaline_active)
 		return FALSE
 	if(!affected_part || !(affected_part in bodyparts))
 		return FALSE

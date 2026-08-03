@@ -1,8 +1,59 @@
 # SurfShack13 Custom Feature Backlog
 
-## Localized Catastrophic Trauma
+## Hyper Adrenaline Mode
 
 - **Status:** in-progress
+- **Branch:** `agent/feature-hyper-adrenaline-mode`
+- **Source:** peppyrmynt/SurfShack13 PR #370
+- **Category:** Custom SurfShack13 feature
+
+### Intended gameplay behavior
+
+Hyper Adrenaline is an optional high-intensity round mode. Admins can enable or disable it before the round starts with **Server -> Toggle Hyper Adrenaline**. The selected next-round state is copied into the active round state at round start and cannot be changed during an active round.
+
+### Configurable values
+
+- Global damage and healing are doubled at round start by multiplying the configured `DAMAGE_MULTIPLIER`.
+- Shared `do_after` action durations use `HYPER_ADRENALINE_ACTION_TIME_MULTIPLIER` of `0.5`.
+- Reagent processing uses `HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER` of `2`.
+- Explosion devastation, heavy, light, flame, and flash ranges use `HYPER_ADRENALINE_EXPLOSION_MULTIPLIER` of `2`.
+- Base embedding chance uses `HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER` of `2`, capped at 100 before speed and armor modifiers.
+- Shared wound-generation damage uses `HYPER_ADRENALINE_WOUND_MULTIPLIER` of `2`.
+
+### Affected systems
+
+- Admin Server tab.
+- Round-start state setup.
+- Shared damage/healing multiplier.
+- Item throwforce.
+- Shared action timers.
+- Embedding rolls.
+- Reagent metabolism and stasis-ignoring reagent processing.
+- Wound generation.
+- Explosion range argument handling.
+- Localized catastrophic trauma activation.
+
+### Expected interactions and balance assumptions
+
+Hyper Adrenaline does not change maximum health, default movement speed, individual melee weapon damage values, or individual projectile damage values. Some effects are intentionally nonlinear: thrown-item hits may receive both doubled throwforce and doubled global damage; chemicals may process faster while also inheriting the global damage/healing multiplier; explosion ranges remain subject to normal caps; faster metabolism may shorten reagent duration.
+
+### Administrator controls
+
+Admins with Server permissions can select the mode before the round starts. Attempts to toggle it after pregame are rejected. The selected state is announced, logged, and recorded in blackbox admin-toggle feedback.
+
+### Testing requirements
+
+- Confirm **Toggle Hyper Adrenaline** appears in the Server tab.
+- Confirm it can be enabled and disabled before round start.
+- Confirm it cannot be changed after pregame.
+- Confirm round start activates the selected state once.
+- Confirm normal rounds retain default damage, action timing, throwforce, embedding, chemistry, wounds, explosions, and catastrophic-trauma gating.
+- Confirm Hyper Adrenaline rounds apply the intended multipliers without changing max health or movement speed.
+- Confirm existing localized catastrophic trauma only runs while Hyper Adrenaline is active.
+
+## Localized Catastrophic Trauma
+
+- **Status:** completed
 - **Branch:** `agent/feature-localized-catastrophic-trauma`
 - **Pull request:** #12
 - **Mode:** Hyper Adrenaline only
@@ -39,7 +90,7 @@ The evaluator is attached to finalized bodypart wound damage, so qualifying mele
 
 ### Current implementation state
 
-Direct source implementation is present on `agent/feature-localized-catastrophic-trauma` for PR #12.
+Direct source implementation was merged through PR #12.
 
 - `code/modules/mob/living/carbon/carbon_defines.dm`
 - `code/modules/surgery/bodyparts/wounds.dm`
@@ -47,7 +98,7 @@ Direct source implementation is present on `agent/feature-localized-catastrophic
 
 The stale `localized-catastrophic-trauma.patch` artifact was removed after reimplementation against the current branch source. The implementation reuses the existing `hyper_trauma_cd` cooldown declared in carbon mob state.
 
-The wound evaluator is called only after a new or replacement wound is actually applied and logged. It is gated to Hyper Adrenaline mode through `CONFIG_GET(number/damage_multiplier) >= 2`, requires a critical wound, uses final incoming wound damage for thresholds, and preserves existing full-body gib behavior.
+The wound evaluator is called only after a new or replacement wound is actually applied and logged. It is gated to active Hyper Adrenaline mode, requires a critical wound, uses final incoming wound damage for thresholds, and preserves existing full-body gib behavior.
 
 Curbstomp is integrated through the current unarmed attack chain after normal unarmed attack checks and right-click handling.
 
