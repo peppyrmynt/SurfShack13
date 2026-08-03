@@ -1,0 +1,67 @@
+--- code/__DEFINES/combat.dm
++++ code/__DEFINES/combat.dm
+@@ -1,5 +1,10 @@
+ /*ALL DEFINES RELATED TO COMBAT GO HERE*/
+ 
++// Hyper Adrenaline localized catastrophic trauma. Damage is final post-armor damage.
++#define HYPER_ADRENALINE_DISEMBOWEL_DAMAGE_THRESHOLD 55
++#define HYPER_ADRENALINE_DISEMBOWEL_BASE_CHANCE 15
++#define HYPER_ADRENALINE_CATASTROPHIC_TRAUMA_MAX_CHANCE 40
++
+ //Damage and status effect defines
+ 
+ //Damage defines //TODO: merge these down to reduce on defines
+--- code/modules/surgery/bodyparts/parts.dm
++++ code/modules/surgery/bodyparts/parts.dm
+@@ -48,7 +48,7 @@
+ 	old_owner.gib(DROP_ALL_REMAINS)
+ 
+ /obj/item/bodypart/chest/can_dismember(obj/item/item)
+-	if((!HAS_TRAIT(owner, TRAIT_CURSED) && owner.stat < HARD_CRIT) || !contents.len)
++	if(!contents.len)
+ 		return FALSE
+ 	return ..()
+ 
+--- code/modules/surgery/bodyparts/dismemberment.dm
++++ code/modules/surgery/bodyparts/dismemberment.dm
+@@ -166,6 +166,40 @@
+  * * wound_bonus: Not actually used right now, but maybe someday
+  * * bare_wound_bonus: ditto above
+  */
++/obj/item/bodypart/chest/try_dismember(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus)
++	if(!can_dismember())
++		return FALSE
++
++	// Preserve the old corpse/curse behavior. Living victims use the stricter
++	// Hyper Adrenaline catastrophic-trauma gate below.
++	if(owner.stat >= HARD_CRIT || HAS_TRAIT(owner, TRAIT_CURSED))
++		return ..()
++
++	if(CONFIG_GET(number/damage_multiplier) < 2)
++		return FALSE
++	if(!(wounding_type in list(WOUND_SLASH, WOUND_PIERCE)))
++		return FALSE
++	if(wounding_dmg < HYPER_ADRENALINE_DISEMBOWEL_DAMAGE_THRESHOLD)
++		return FALSE
++
++	var/has_critical_open_wound = FALSE
++	for(var/datum/wound/iterated_wound as anything in wounds)
++		if(iterated_wound.severity >= WOUND_SEVERITY_CRITICAL && (iterated_wound.wound_flags & MANGLES_EXTERIOR))
++			has_critical_open_wound = TRUE
++			break
++	if(!has_critical_open_wound)
++		return FALSE
++
++	var/disembowel_chance = min(
++		HYPER_ADRENALINE_DISEMBOWEL_BASE_CHANCE + (wounding_dmg - HYPER_ADRENALINE_DISEMBOWEL_DAMAGE_THRESHOLD),
++		HYPER_ADRENALINE_CATASTROPHIC_TRAUMA_MAX_CHANCE,
++	)
++	if(!prob(disembowel_chance))
++		return FALSE
++
++	var/datum/wound/loss/disemboweling = new
++	return disemboweling.apply_dismember(src, wounding_type)
++
+ /obj/item/bodypart/proc/try_dismember(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus)
+ 	if (!can_dismember())
+ 		return
