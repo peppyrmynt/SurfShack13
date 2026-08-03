@@ -21,6 +21,7 @@ jobs:
       - name: Apply reviewed source patch
         shell: bash
         run: |
+          set -euxo pipefail
           git fetch origin master
           git checkout origin/master -- \
             code/__DEFINES/combat.dm \
