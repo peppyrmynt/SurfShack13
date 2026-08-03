@@ -34,7 +34,7 @@
 			wounding_type = WOUND_BLUNT
 		if ((dismemberable_by_wound() || dismemberable_by_total_damage()) && try_dismember(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus))
 			return
-	return check_wounding(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus, wound_clothing)
+	return check_wounding(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus, wound_clothing = wound_clothing)
 
 /**
  * check_wounding() is where we handle rolling for, selecting, and applying a wound if we meet the criteria
@@ -83,6 +83,9 @@
 
 	if(injury_roll > WOUND_DISMEMBER_OUTRIGHT_THRESH && prob(get_damage() / max_damage * 100) && can_dismember())
 		var/datum/wound/loss/dismembering = new
+		if(owner?.try_hyper_catastrophic_trauma(src, dismembering, hyper_trauma_damage, woundtype, attack_direction, damage_source, force_destroy_head = TRUE))
+			qdel(dismembering)
+			return
 		dismembering.apply_dismember(src, woundtype, outright = TRUE, attack_direction = attack_direction)
 		return
 
@@ -157,7 +160,7 @@
 			owner.try_hyper_catastrophic_trauma(src, new_wound, hyper_trauma_damage, woundtype, attack_direction, damage_source)
 		return new_wound
 
-/mob/living/carbon/proc/try_hyper_catastrophic_trauma(obj/item/bodypart/affected_part, datum/wound/new_wound, final_damage, wound_type, attack_direction, damage_source)
+/mob/living/carbon/proc/try_hyper_catastrophic_trauma(obj/item/bodypart/affected_part, datum/wound/new_wound, final_damage, wound_type, attack_direction, damage_source, force_destroy_head = FALSE)
 	if(!hyper_adrenaline_is_active())
 		return FALSE
 	if(!affected_part || !(affected_part in bodyparts))
@@ -178,7 +181,7 @@
 	switch(affected_part.body_zone)
 		if(BODY_ZONE_HEAD)
 			threshold = 55
-			base_chance = 10
+			base_chance = 15
 			outcome = "brain"
 		if(BODY_ZONE_CHEST)
 			if(wound_type != WOUND_SLASH && wound_type != WOUND_PIERCE)
@@ -190,10 +193,10 @@
 			switch(wound_type)
 				if(WOUND_SLASH)
 					threshold = 40
-					base_chance = 10
+					base_chance = 15
 				if(WOUND_BLUNT)
 					threshold = 50
-					base_chance = 10
+					base_chance = 15
 				if(WOUND_PIERCE)
 					threshold = 50
 					base_chance = 15
@@ -206,14 +209,14 @@
 	if(final_damage < threshold)
 		return FALSE
 
-	var/chance = min(base_chance + max(0, round(final_damage - threshold)), 40)
+	var/chance = min(base_chance + max(0, round(final_damage - threshold)), 45)
 	if(!prob(chance))
 		return FALSE
 
 	var/success
 	switch(outcome)
 		if("brain")
-			success = catastrophic_brain_ejection(affected_part, attack_direction, damage_source)
+			success = catastrophic_brain_ejection(affected_part, attack_direction, damage_source, force_destroy_head = force_destroy_head)
 		if("chest")
 			success = catastrophic_disembowel(affected_part, attack_direction, damage_source)
 		if("limb")
@@ -249,11 +252,13 @@
 		brain.forceMove(drop_loc)
 		brain.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1, 3), 5)
 
+	visible_message(span_danger("<B>[src]'s skull ruptures open, ejecting [p_their()] brain!</B>"), span_userdanger("Your skull ruptures open as your brain is torn free!"))
 	catastrophic_blood_burst(3)
+	if(!HAS_TRAIT(src, TRAIT_NOBLOOD))
+		brain.add_mob_blood(src)
+		head_part.add_mob_blood(src)
 	if(force_destroy_head || prob(50))
 		head_part.dismember(BRUTE, silent = FALSE, wounding_type = WOUND_BLUNT)
-	else
-		visible_message(span_danger("<B>[src]'s skull ruptures open, ejecting [p_their()] brain!</B>"), span_userdanger("Your skull ruptures open as your brain is torn free!"))
 
 	if(ismob(damage_source))
 		var/mob/attacker = damage_source
