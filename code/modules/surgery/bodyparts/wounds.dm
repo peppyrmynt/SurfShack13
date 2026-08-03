@@ -215,7 +215,13 @@
 	var/success
 	switch(outcome)
 		if("brain")
-			success = catastrophic_brain_ejection(affected_part, attack_direction, damage_source, force_destroy_head = force_destroy_head)
+			success = catastrophic_brain_ejection(
+				affected_part,
+				attack_direction,
+				damage_source,
+				force_destroy_head = force_destroy_head || wound_type == WOUND_BLUNT,
+				crushed = wound_type == WOUND_BLUNT,
+			)
 		if("chest")
 			success = catastrophic_disembowel(affected_part, attack_direction, damage_source)
 		if("limb")
@@ -237,7 +243,7 @@
 	var/obj/effect/decal/cleanable/blood/gibs/gibs = new(location)
 	gibs.streak(GLOB.alldirs)
 
-/mob/living/carbon/proc/catastrophic_brain_ejection(obj/item/bodypart/head_part, attack_direction, damage_source, force_destroy_head = FALSE)
+/mob/living/carbon/proc/catastrophic_brain_ejection(obj/item/bodypart/head_part, attack_direction, damage_source, force_destroy_head = FALSE, crushed = FALSE)
 	if(!head_part || head_part.body_zone != BODY_ZONE_HEAD || head_part.owner != src)
 		return FALSE
 
@@ -245,16 +251,25 @@
 	if(!brain)
 		return FALSE
 
-	brain.Remove(src)
 	var/atom/drop_loc = drop_location()
-	if(drop_loc)
-		brain.forceMove(drop_loc)
-		brain.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1, 3), 5)
+	var/list/spilled_organs = list()
+	for(var/obj/item/organ/organ as anything in organs.Copy())
+		if(check_zone(organ.zone) != BODY_ZONE_HEAD)
+			continue
+		organ.Remove(src)
+		if(drop_loc)
+			organ.forceMove(drop_loc)
+			organ.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1, 3), 5)
+		spilled_organs += organ
 
-	visible_message(span_danger("<B>[src]'s skull ruptures open, ejecting [p_their()] brain!</B>"), span_userdanger("Your skull ruptures open as your brain is torn free!"))
+	if(crushed)
+		visible_message(span_danger("<B>[src]'s head is crushed open, spilling [p_their()] organs!</B>"), span_userdanger("Your head is crushed open!"))
+	else
+		visible_message(span_danger("<B>[src]'s skull ruptures open, ejecting [p_their()] brain!</B>"), span_userdanger("Your skull ruptures open as your brain is torn free!"))
 	catastrophic_blood_burst(3)
 	if(!HAS_TRAIT(src, TRAIT_NOBLOOD))
-		brain.add_mob_blood(src)
+		for(var/obj/item/organ/organ as anything in spilled_organs)
+			organ.add_mob_blood(src)
 		head_part.add_mob_blood(src)
 	if(force_destroy_head || prob(50))
 		head_part.dismember(BRUTE, silent = FALSE, wounding_type = WOUND_BLUNT)
