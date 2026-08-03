@@ -160,6 +160,16 @@
 			owner.try_hyper_catastrophic_trauma(src, new_wound, hyper_trauma_damage, woundtype, attack_direction, damage_source)
 		return new_wound
 
+	if(owner && hyper_adrenaline_is_active())
+		for(var/datum/wound/existing_wound as anything in wounds)
+			if(existing_wound.severity < WOUND_SEVERITY_CRITICAL)
+				continue
+			var/datum/wound_pregen_data/existing_pregen_data = existing_wound.get_pregen_data()
+			if(!existing_pregen_data.wounding_types_valid(list(woundtype)))
+				continue
+			if(owner.try_hyper_catastrophic_trauma(src, existing_wound, hyper_trauma_damage, woundtype, attack_direction, damage_source))
+				return existing_wound
+
 /mob/living/carbon/proc/try_hyper_catastrophic_trauma(obj/item/bodypart/affected_part, datum/wound/new_wound, final_damage, wound_type, attack_direction, damage_source, force_destroy_head = FALSE)
 	if(!hyper_adrenaline_is_active())
 		return FALSE
@@ -219,8 +229,9 @@
 				affected_part,
 				attack_direction,
 				damage_source,
-				force_destroy_head = force_destroy_head || wound_type == WOUND_BLUNT,
+				force_destroy_head = force_destroy_head || wound_type == WOUND_BLUNT || prob(50),
 				crushed = wound_type == WOUND_BLUNT,
+				delete_head = prob(50),
 			)
 		if("chest")
 			success = catastrophic_disembowel(affected_part, attack_direction, damage_source)
@@ -237,13 +248,23 @@
 		return
 
 	if(!HAS_TRAIT(src, TRAIT_NOBLOOD))
-		for(var/i in 1 to clamp(intensity, 1, 3))
+		for(var/i in 1 to clamp(intensity, 1, 5))
 			add_splatter_floor(location)
+			spray_blood(pick(GLOB.alldirs), clamp(intensity, 2, 5))
 		bleed(20 * intensity)
 	var/obj/effect/decal/cleanable/blood/gibs/gibs = new(location)
 	gibs.streak(GLOB.alldirs)
 
-/mob/living/carbon/proc/catastrophic_brain_ejection(obj/item/bodypart/head_part, attack_direction, damage_source, force_destroy_head = FALSE, crushed = FALSE)
+/mob/living/carbon/proc/get_hyper_trauma_attacker(atom/damage_source)
+	if(ismob(damage_source))
+		return damage_source
+	if(istype(damage_source, /obj/projectile))
+		var/obj/projectile/projectile_source = damage_source
+		if(ismob(projectile_source.firer))
+			return projectile_source.firer
+	return null
+
+/mob/living/carbon/proc/catastrophic_brain_ejection(obj/item/bodypart/head_part, attack_direction, damage_source, force_destroy_head = FALSE, crushed = FALSE, delete_head = FALSE)
 	if(!head_part || head_part.body_zone != BODY_ZONE_HEAD || head_part.owner != src)
 		return FALSE
 
@@ -262,20 +283,29 @@
 			organ.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1, 3), 5)
 		spilled_organs += organ
 
+	var/mob/attacker = get_hyper_trauma_attacker(damage_source)
+	var/head_destroyed = force_destroy_head
 	if(crushed)
-		visible_message(span_danger("<B>[src]'s head is crushed open, spilling [p_their()] organs!</B>"), span_userdanger("Your head is crushed open!"))
+		visible_message(span_danger("<B>[src]'s head [head_destroyed && delete_head ? "bursts apart" : "is crushed apart"], spraying blood and organs!</B>"), span_userdanger("Your head [head_destroyed && delete_head ? "bursts apart" : "is crushed apart"]!"), ignored_mobs = attacker)
+		if(attacker && attacker != src)
+			to_chat(attacker, span_danger("You [head_destroyed && delete_head ? "burst" : "crush"] [src]'s head apart, spraying blood and organs!"))
 	else
-		visible_message(span_danger("<B>[src]'s skull ruptures open, ejecting [p_their()] brain!</B>"), span_userdanger("Your skull ruptures open as your brain is torn free!"))
-	catastrophic_blood_burst(3)
+		visible_message(span_danger("<B>[src]'s head [head_destroyed && delete_head ? "bursts apart" : "bursts open"], ejecting [p_their()] organs!</B>"), span_userdanger("Your head [head_destroyed && delete_head ? "bursts apart" : "bursts open"] as your organs are torn free!"), ignored_mobs = attacker)
+		if(attacker && attacker != src)
+			to_chat(attacker, span_danger("You blow [src]'s head [head_destroyed && delete_head ? "apart" : "open"], ejecting [src.p_their()] organs!"))
+	catastrophic_blood_burst(5)
 	if(!HAS_TRAIT(src, TRAIT_NOBLOOD))
 		for(var/obj/item/organ/organ as anything in spilled_organs)
 			organ.add_mob_blood(src)
 		head_part.add_mob_blood(src)
-	if(force_destroy_head || prob(50))
-		head_part.dismember(BRUTE, silent = FALSE, wounding_type = WOUND_BLUNT)
+	if(head_destroyed)
+		if(delete_head)
+			head_part.drop_limb(dismembered = TRUE, move_to_floor = FALSE)
+			qdel(head_part)
+		else
+			head_part.dismember(BRUTE, silent = FALSE, wounding_type = WOUND_BLUNT)
 
-	if(ismob(damage_source))
-		var/mob/attacker = damage_source
+	if(attacker)
 		log_combat(attacker, src, "caused localized catastrophic brain trauma to")
 	return TRUE
 
@@ -305,10 +335,12 @@
 	if(!length(spilled_organs))
 		return FALSE
 
-	visible_message(span_danger("<B>[src]'s chest cavity bursts open, spilling [p_their()] organs!</B>"), span_userdanger("Your chest cavity bursts open!"))
-	catastrophic_blood_burst(2)
-	if(ismob(damage_source))
-		var/mob/attacker = damage_source
+	var/mob/attacker = get_hyper_trauma_attacker(damage_source)
+	visible_message(span_danger("<B>[src]'s chest cavity bursts open, spilling [p_their()] organs!</B>"), span_userdanger("Your chest cavity bursts open!"), ignored_mobs = attacker)
+	if(attacker && attacker != src)
+		to_chat(attacker, span_danger("You burst [src]'s chest cavity open, spilling [src.p_their()] organs!"))
+	catastrophic_blood_burst(3)
+	if(attacker)
 		log_combat(attacker, src, "caused localized catastrophic chest trauma to")
 	return TRUE
 
