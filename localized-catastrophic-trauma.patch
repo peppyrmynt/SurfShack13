@@ -1,196 +1,164 @@
-diff -ruN surf13-orig/SurfShack13-master/code/__DEFINES/combat.dm surf13/SurfShack13-master/code/__DEFINES/combat.dm
---- surf13-orig/SurfShack13-master/code/__DEFINES/combat.dm	2026-08-02 17:16:42.000000000 +0000
-+++ surf13/SurfShack13-master/code/__DEFINES/combat.dm	2026-08-03 12:48:09.770474065 +0000
-@@ -2,6 +2,22 @@
+--- a/code/__DEFINES/combat.dm
++++ b/code/__DEFINES/combat.dm
+@@ -1,4 +1,18 @@
+ /*ALL DEFINES RELATED TO COMBAT GO HERE*/
++
++// SurfShack13: Hyper Adrenaline localized catastrophic trauma.
++#define HYPER_ADRENALINE_TRAUMA_MULTIPLIER 2
++#define CATASTROPHIC_TRAUMA_COOLDOWN 1 // decisecond; deduplicates pellet clouds and same-impact damage chains
++#define CATASTROPHIC_TRAUMA_MAX_CHANCE 40
++#define CATASTROPHIC_HEAD_DAMAGE_THRESHOLD 55
++#define CATASTROPHIC_HEAD_BASE_CHANCE 10
++#define CATASTROPHIC_DISEMBOWEL_DAMAGE_THRESHOLD 55
++#define CATASTROPHIC_DISEMBOWEL_BASE_CHANCE 15
++#define CATASTROPHIC_SHARP_LIMB_THRESHOLD 40
++#define CATASTROPHIC_BLUNT_LIMB_THRESHOLD 50
++#define CATASTROPHIC_BALLISTIC_LIMB_THRESHOLD 50
++#define CATASTROPHIC_LIMB_BASE_CHANCE 10
++#define CATASTROPHIC_CURBSTOMP_CHANCE 25
  
  //Damage and status effect defines
  
-+// Hyper Adrenaline localized catastrophic trauma. All damage thresholds are final post-armor damage.
-+#define HYPER_TRAUMA_LIMB_SHARP_THRESHOLD 40
-+#define HYPER_TRAUMA_LIMB_BLUNT_THRESHOLD 50
-+#define HYPER_TRAUMA_LIMB_BALLISTIC_THRESHOLD 50
-+#define HYPER_TRAUMA_DISEMBOWEL_THRESHOLD 55
-+#define HYPER_TRAUMA_BRAIN_THRESHOLD 55
-+#define HYPER_TRAUMA_BASE_CHANCE_SHARP_LIMB 10
-+#define HYPER_TRAUMA_BASE_CHANCE_BLUNT_LIMB 10
-+#define HYPER_TRAUMA_BASE_CHANCE_BALLISTIC_LIMB 15
-+#define HYPER_TRAUMA_BASE_CHANCE_DISEMBOWEL 15
-+#define HYPER_TRAUMA_BASE_CHANCE_BRAIN 10
-+#define HYPER_TRAUMA_MAX_CHANCE 40
-+#define HYPER_TRAUMA_REPEAT_GUARD (1 SECONDS)
-+#define HYPER_TRAUMA_CURBSTOMP_CHANCE 25
-+
-+
- //Damage defines //TODO: merge these down to reduce on defines
- /// Physical fracturing and warping of the material.
- #define BRUTE "brute"
-diff -ruN surf13-orig/SurfShack13-master/code/modules/mob/living/carbon/carbon.dm surf13/SurfShack13-master/code/modules/mob/living/carbon/carbon.dm
---- surf13-orig/SurfShack13-master/code/modules/mob/living/carbon/carbon.dm	2026-08-02 17:16:42.000000000 +0000
-+++ surf13/SurfShack13-master/code/modules/mob/living/carbon/carbon.dm	2026-08-03 12:48:09.770474065 +0000
-@@ -29,6 +29,114 @@
- 	QDEL_NULL(breathing_loop)
- 	GLOB.carbon_list -= src
+--- a/code/modules/mob/living/carbon/carbon_defines.dm
++++ b/code/modules/mob/living/carbon/carbon_defines.dm
+@@ -99,6 +99,10 @@
+ 	/// Timer id of any transformation
+ 	var/transformation_timer
  
-+/// Whether this carbon uses the full bodypart anatomy required by Hyper Adrenaline trauma.
-+/mob/living/carbon/proc/can_receive_hyper_trauma(obj/item/bodypart/affected_part)
-+	if(CONFIG_GET(number/damage_multiplier) < 2 || !affected_part || affected_part.owner != src)
++	/// World time until another localized catastrophic trauma result may occur.
++	/// This is a same-attack deduplication guard, not a player-facing immunity period.
++	var/catastrophic_trauma_cooldown_until = 0
++
+ 	/// All of the wounds a carbon has afflicted throughout their limbs
+ 	var/list/all_wounds
+ 	/// All of the scars a carbon has afflicted throughout their limbs
+--- a/code/modules/surgery/bodyparts/_bodyparts.dm
++++ b/code/modules/surgery/bodyparts/_bodyparts.dm
+@@ -544,6 +544,7 @@
+ 		// now we have our wounding_type and are ready to carry on with wounds and dealing the actual damage
+ 		if(wounding_dmg >= WOUND_MINIMUM_DAMAGE && wound_bonus != CANT_WOUND)
+ 			check_wounding(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus, attack_direction, damage_source = damage_source, wound_clothing = wound_clothing)
++			try_catastrophic_trauma(wounding_type, wounding_dmg, attack_direction, damage_source)
+ 
+ 	for(var/datum/wound/iter_wound as anything in wounds)
+ 		iter_wound.receive_damage(wounding_type, wounding_dmg, wound_bonus, damage_source)
+--- a/code/modules/surgery/bodyparts/wounds.dm
++++ b/code/modules/surgery/bodyparts/wounds.dm
+@@ -325,3 +325,98 @@
+ 
+ 	wound_damage_multiplier = dam_mul
+ 	refresh_bleed_rate()
++
++
++/// Hyper Adrenaline-only localized trauma. Existing full-body gib paths are deliberately untouched.
++/obj/item/bodypart/proc/try_catastrophic_trauma(wounding_type, wounding_dmg, attack_direction, damage_source)
++	if(!owner || CONFIG_GET(number/damage_multiplier) < HYPER_ADRENALINE_TRAUMA_MULTIPLIER)
 +		return FALSE
-+	if(HAS_TRAIT(src, TRAIT_GODMODE) || HAS_TRAIT(src, TRAIT_NODISMEMBER))
++	if(owner.catastrophic_trauma_cooldown_until > world.time)
 +		return FALSE
-+	if(!COOLDOWN_FINISHED(src, hyper_trauma_cd))
-+		return FALSE
-+	return TRUE
-+
-+/// Produces a bounded, species-aware blood and tissue burst without gibbing the whole mob.
-+/mob/living/carbon/proc/hyper_trauma_blood_burst(intensity = 1)
-+	var/turf/blood_turf = get_turf(src)
-+	if(!blood_turf)
-+		return
-+	for(var/i in 1 to clamp(intensity, 1, 3))
-+		add_splatter_floor(blood_turf)
-+	new /obj/effect/gibspawner/generic(blood_turf, src)
-+	bleed(20 * intensity)
-+
-+/// Ejects the installed brain intact. The head may remain with a gunshot-style cavity or be destroyed entirely.
-+/mob/living/carbon/proc/hyper_trauma_eject_brain(destroy_head = FALSE, mob/living/attacker)
-+	var/obj/item/organ/brain/brain = get_organ_slot(ORGAN_SLOT_BRAIN)
-+	var/obj/item/bodypart/head/head_part = get_bodypart(BODY_ZONE_HEAD)
-+	if(!brain || !head_part)
++	if(wounding_type == WOUND_BURN)
 +		return FALSE
 +
-+	COOLDOWN_START(src, hyper_trauma_cd, HYPER_TRAUMA_REPEAT_GUARD)
-+	var/turf/drop_turf = get_turf(src)
-+	brain.Remove(src)
-+	brain.forceMove(drop_turf)
-+	var/turf/target_turf = get_ranged_target_turf(src, REVERSE_DIR(dir), 3)
-+	brain.throw_at(target_turf, 3, 1)
-+	hyper_trauma_blood_burst(3)
-+
-+	if(destroy_head && head_part.can_dismember())
-+		head_part.dismember(BRUTE, silent = TRUE, wounding_type = WOUND_BLUNT)
-+		if(!QDELETED(head_part))
-+			qdel(head_part)
-+		visible_message(span_bolddanger("[src]'s head bursts apart in a catastrophic spray of blood!"), span_userdanger("Your head bursts apart!"))
-+	else
-+		visible_message(span_bolddanger("[src]'s brains are blown out, leaving a horrific cavity in [src.p_their()] skull!"), span_userdanger("Your brains are violently blown out!"))
-+
-+	log_combat(attacker || src, src, destroy_head ? "destroyed head and ejected brain" : "ejected brain")
-+	return TRUE
-+
-+/// Applies one localized catastrophic outcome after a finalized critical wound.
-+/mob/living/carbon/proc/try_hyper_catastrophic_trauma(obj/item/bodypart/affected_part, datum/wound/new_wound, final_damage, wounding_type, attack_direction, damage_source)
-+	if(!can_receive_hyper_trauma(affected_part) || !new_wound || new_wound.severity < WOUND_SEVERITY_CRITICAL)
++	var/has_critical_wound = FALSE
++	for(var/datum/wound/iterated_wound as anything in wounds)
++		if(iterated_wound.severity >= WOUND_SEVERITY_CRITICAL)
++			has_critical_wound = TRUE
++			break
++	if(!has_critical_wound)
 +		return FALSE
 +
 +	var/threshold
 +	var/base_chance
-+	var/outcome
-+
-+	switch(affected_part.body_zone)
++	switch(body_zone)
 +		if(BODY_ZONE_HEAD)
-+			if(final_damage < HYPER_TRAUMA_BRAIN_THRESHOLD || !(wounding_type in list(WOUND_BLUNT, WOUND_PIERCE, WOUND_SLASH)))
-+				return FALSE
-+			threshold = HYPER_TRAUMA_BRAIN_THRESHOLD
-+			base_chance = HYPER_TRAUMA_BASE_CHANCE_BRAIN
-+			outcome = "brain"
++			threshold = CATASTROPHIC_HEAD_DAMAGE_THRESHOLD
++			base_chance = CATASTROPHIC_HEAD_BASE_CHANCE
 +		if(BODY_ZONE_CHEST)
-+			if(final_damage < HYPER_TRAUMA_DISEMBOWEL_THRESHOLD || !(wounding_type in list(WOUND_SLASH, WOUND_PIERCE)))
++			if(!(wounding_type in list(WOUND_SLASH, WOUND_PIERCE)))
 +				return FALSE
-+			threshold = HYPER_TRAUMA_DISEMBOWEL_THRESHOLD
-+			base_chance = HYPER_TRAUMA_BASE_CHANCE_DISEMBOWEL
-+			outcome = "chest"
++			threshold = CATASTROPHIC_DISEMBOWEL_DAMAGE_THRESHOLD
++			base_chance = CATASTROPHIC_DISEMBOWEL_BASE_CHANCE
 +		else
-+			if(!(affected_part.body_zone in GLOB.limb_zones))
++			if(!(body_zone in GLOB.limb_zones))
 +				return FALSE
 +			if(wounding_type == WOUND_SLASH)
-+				threshold = HYPER_TRAUMA_LIMB_SHARP_THRESHOLD
-+				base_chance = HYPER_TRAUMA_BASE_CHANCE_SHARP_LIMB
++				threshold = CATASTROPHIC_SHARP_LIMB_THRESHOLD
 +			else if(wounding_type == WOUND_BLUNT)
-+				threshold = HYPER_TRAUMA_LIMB_BLUNT_THRESHOLD
-+				base_chance = HYPER_TRAUMA_BASE_CHANCE_BLUNT_LIMB
++				threshold = CATASTROPHIC_BLUNT_LIMB_THRESHOLD
 +			else if(wounding_type == WOUND_PIERCE)
-+				threshold = HYPER_TRAUMA_LIMB_BALLISTIC_THRESHOLD
-+				base_chance = HYPER_TRAUMA_BASE_CHANCE_BALLISTIC_LIMB
++				threshold = CATASTROPHIC_BALLISTIC_LIMB_THRESHOLD
 +			else
 +				return FALSE
-+			if(final_damage < threshold)
-+				return FALSE
-+			outcome = "limb"
++			base_chance = CATASTROPHIC_LIMB_BASE_CHANCE
 +
-+	var/chance = min(base_chance + max(0, round(final_damage - threshold)), HYPER_TRAUMA_MAX_CHANCE)
-+	if(!prob(chance))
++	if(wounding_dmg < threshold)
++		return FALSE
++	var/trauma_chance = min(base_chance + (wounding_dmg - threshold), CATASTROPHIC_TRAUMA_MAX_CHANCE)
++	if(!prob(trauma_chance))
 +		return FALSE
 +
-+	COOLDOWN_START(src, hyper_trauma_cd, HYPER_TRAUMA_REPEAT_GUARD)
-+	switch(outcome)
-+		if("brain")
-+			return hyper_trauma_eject_brain(prob(50), get(damage_source, /mob/living))
-+		if("chest")
-+			var/list/spilled_organs = affected_part.dismember(BRUTE, silent = TRUE, wounding_type = wounding_type)
-+			if(!length(spilled_organs))
-+				return FALSE
-+			hyper_trauma_blood_burst(3)
-+			visible_message(span_bolddanger("[src]'s torso is torn open, spilling [src.p_their()] organs across the floor!"), span_userdanger("Your torso is ripped open and your organs spill out!"))
-+			return TRUE
-+		if("limb")
-+			if(!affected_part.can_dismember() || !affected_part.dismember(BRUTE, silent = FALSE, wounding_type = wounding_type))
-+				return FALSE
-+			hyper_trauma_blood_burst(2)
-+			return TRUE
-+	return FALSE
++	owner.catastrophic_trauma_cooldown_until = world.time + CATASTROPHIC_TRAUMA_COOLDOWN
++	if(body_zone == BODY_ZONE_HEAD)
++		return owner.catastrophic_brain_ejection(src, attack_direction, damage_source)
++	if(body_zone == BODY_ZONE_CHEST)
++		return owner.catastrophic_disembowel(src, wounding_type, damage_source)
++	return dismember(BRUTE, silent = FALSE, wounding_type = wounding_type)
 +
- /mob/living/carbon/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
- 	. = ..()
- 	if(. & ITEM_INTERACT_ANY_BLOCKER)
-diff -ruN surf13-orig/SurfShack13-master/code/modules/mob/living/carbon/carbon_defines.dm surf13/SurfShack13-master/code/modules/mob/living/carbon/carbon_defines.dm
---- surf13-orig/SurfShack13-master/code/modules/mob/living/carbon/carbon_defines.dm	2026-08-02 17:16:42.000000000 +0000
-+++ surf13/SurfShack13-master/code/modules/mob/living/carbon/carbon_defines.dm	2026-08-03 12:48:09.770474065 +0000
-@@ -126,3 +126,6 @@
- 	var/bodyshape = BODYSHAPE_HUMANOID
- 
- 	COOLDOWN_DECLARE(bleeding_message_cd)
++/// Ejects the installed brain intact. Half the time the head is also removed; otherwise the normal debrained overlay leaves a blown-out cavity.
++/mob/living/carbon/proc/catastrophic_brain_ejection(obj/item/bodypart/head/head_part, attack_direction, damage_source)
++	if(!head_part || head_part.owner != src)
++		return FALSE
++	var/obj/item/organ/brain/brain = get_organ_slot(ORGAN_SLOT_BRAIN)
++	if(!brain)
++		return FALSE
 +
-+	/// Prevents pellet clouds, explosions, and same-tick multi-hits from producing several catastrophic outcomes.
-+	COOLDOWN_DECLARE(hyper_trauma_cd)
-diff -ruN surf13-orig/SurfShack13-master/code/modules/mob/living/carbon/human/_species.dm surf13/SurfShack13-master/code/modules/mob/living/carbon/human/_species.dm
---- surf13-orig/SurfShack13-master/code/modules/mob/living/carbon/human/_species.dm	2026-08-02 17:16:42.000000000 +0000
-+++ surf13/SurfShack13-master/code/modules/mob/living/carbon/human/_species.dm	2026-08-03 12:48:09.770474065 +0000
-@@ -861,6 +861,18 @@
- 	var/atk_verb = pick(attacking_bodypart.unarmed_attack_verbs)
- 	var/atk_effect = attacking_bodypart.unarmed_attack_effect
++	var/turf/drop_turf = get_turf(src)
++	brain.Remove(src)
++	brain.forceMove(drop_turf)
++	var/throw_direction = attack_direction || dir
++	var/turf/throw_target = get_ranged_target_turf(src, throw_direction, 3)
++	var/datum/callback/gib_callback = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(spawn_atom_to_turf), /obj/effect/gibspawner/generic, brain, 1, FALSE, src)
++	brain.throw_at(throw_target, 3, 1, callback = gib_callback)
++
++	bleed(100)
++	for(var/i in 1 to 3)
++		add_splatter_floor(drop_turf)
++	playsound(drop_turf, 'sound/misc/splort.ogg', 90, TRUE)
++
++	if(prob(50) && head_part.can_dismember())
++		visible_message(span_bolddanger("[src]'s head bursts apart in a torrent of blood, ejecting [p_their()] brain!"))
++		head_part.dismember(BRUTE, silent = TRUE, wounding_type = WOUND_BLUNT)
++	else
++		visible_message(span_bolddanger("[src]'s brains erupt from a blasted cavity in [p_their()] skull!"))
++		update_body()
++	death()
++	return TRUE
++
++/// Reuses the existing chest dismember proc, which spills only currently installed chest-zone organs.
++/mob/living/carbon/proc/catastrophic_disembowel(obj/item/bodypart/chest/chest_part, wounding_type, damage_source)
++	if(!chest_part || chest_part.owner != src || !chest_part.contents.len)
++		return FALSE
++	visible_message(span_bolddanger("[src]'s torso is ripped open, spilling [p_their()] organs across the floor!"))
++	chest_part.dismember(BRUTE, silent = TRUE, wounding_type = wounding_type)
++	bleed(100)
++	log_combat(src, damage_source, "was catastrophically disemboweled by")
++	return TRUE
+--- a/code/modules/mob/living/carbon/human/_species.dm
++++ b/code/modules/mob/living/carbon/human/_species.dm
+@@ -852,6 +852,16 @@
+ 		to_chat(user, span_warning("You don't want to harm [target]!"))
+ 		return FALSE
  
-+	// HYPER ADRENALINE: shoe-wearing unarmed attackers can brutally execute critical or dead targets.
-+	if(CONFIG_GET(number/damage_multiplier) >= 2 && user.shoes && !user.get_active_held_item() && target.stat >= SOFT_CRIT && prob(HYPER_TRAUMA_CURBSTOMP_CHANCE))
-+		var/obj/item/bodypart/head/stomped_head = target.get_bodypart(BODY_ZONE_HEAD)
-+		if(stomped_head && target.get_organ_slot(ORGAN_SLOT_BRAIN))
-+			user.do_attack_animation(target, ATTACK_EFFECT_KICK)
-+			playsound(target, 'sound/effects/dismember.ogg', 90, TRUE)
-+			target.visible_message(span_bolddanger("[user] BRUTALLY CURBSTOMPS [target], bursting [target.p_their()] skull in an explosion of blood!"), span_userdanger("[user] brutally curbstomps you!"), span_hear("You hear a sickening, wet CRUNCH!"), COMBAT_MESSAGE_RANGE, user)
-+			to_chat(user, span_bolddanger("You BRUTALLY CURBSTOMP [target]!"))
-+			target.hyper_trauma_eject_brain(TRUE, user)
++	if(CONFIG_GET(number/damage_multiplier) >= HYPER_ADRENALINE_TRAUMA_MULTIPLIER && (target.stat >= SOFT_CRIT) && user.shoes && prob(CATASTROPHIC_CURBSTOMP_CHANCE))
++		var/obj/item/bodypart/head/target_head = target.get_bodypart(BODY_ZONE_HEAD)
++		if(target_head && target.get_organ_slot(ORGAN_SLOT_BRAIN))
++			target.visible_message(span_bolddanger("[user] BRUTALLY CURBSTOMPS [target], bursting [target.p_their()] skull in an explosion of blood!"), \
++				span_userdanger("[user] drives [user.p_their()] heel through your skull!"), null, COMBAT_MESSAGE_RANGE, user)
++			to_chat(user, span_bolddanger("You BRUTALLY CURBSTOMP [target], crushing [target.p_their()] skull beneath your heel!"))
++			target.catastrophic_brain_ejection(target_head, get_dir(user, target), user)
 +			log_combat(user, target, "curbstomped")
 +			return TRUE
 +
- 	if(atk_effect == ATTACK_EFFECT_BITE)
- 		if(user.is_mouth_covered(ITEM_SLOT_MASK))
- 			to_chat(user, span_warning("You can't [atk_verb] with your mouth covered!"))
-diff -ruN surf13-orig/SurfShack13-master/code/modules/surgery/bodyparts/wounds.dm surf13/SurfShack13-master/code/modules/surgery/bodyparts/wounds.dm
---- surf13-orig/SurfShack13-master/code/modules/surgery/bodyparts/wounds.dm	2026-08-02 17:16:42.000000000 +0000
-+++ surf13/SurfShack13-master/code/modules/surgery/bodyparts/wounds.dm	2026-08-03 12:48:09.770474065 +0000
-@@ -56,6 +56,8 @@
- 	if(HAS_TRAIT(owner, TRAIT_NEVER_WOUNDED) || HAS_TRAIT(owner, TRAIT_GODMODE))
- 		return
- 
-+	var/hyper_trauma_damage = damage
-+
- 	// note that these are fed into an exponent, so these are magnified
- 	if(HAS_TRAIT(owner, TRAIT_EASILY_WOUNDED))
- 		damage *= 1.5
-@@ -148,6 +150,7 @@
- 		else
- 			new_wound.apply_wound(src, attack_direction = attack_direction, wound_source = damage_source)
- 		log_wound(owner, new_wound, damage, wound_bonus, bare_wound_bonus, base_roll) // dismembering wounds are logged in the apply_wound() for loss wounds since they delete themselves immediately, these will be immediately returned
-+		owner?.try_hyper_catastrophic_trauma(src, new_wound, hyper_trauma_damage, woundtype, attack_direction, damage_source)
- 		return new_wound
- 
- // try forcing a specific wound, but only if there isn't already a wound of that severity or greater for that type on this bodypart
+ 	var/obj/item/organ/brain/brain = user.get_organ_slot(ORGAN_SLOT_BRAIN)
+ 	var/obj/item/bodypart/attacking_bodypart
+ 	if(brain)
