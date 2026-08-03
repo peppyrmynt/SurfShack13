@@ -7,24 +7,24 @@
 - **Pull request:** #12
 - **Mode:** Hyper Adrenaline only
 
-### Implemented source patch
+### Intended gameplay behavior
 
-The current implementation is recorded in `localized-catastrophic-trauma.patch`, built against the uploaded authoritative `master` archive.
-
-It adds a unified critical-wound evaluator for carbon mobs with full bodypart anatomy. Sentience, `mind`, and `client` are not requirements, so NPC monkeys and other non-sentient carbons are eligible. Simple/basic mobs are excluded naturally because they do not use the carbon bodypart framework.
+Hyper Adrenaline attacks may cause localized catastrophic injuries without adding any new full-body gib paths. Existing established gib mechanics remain unchanged.
 
 ### Outcomes
 
-- **Brain ejection:** 55 final post-armor damage plus a critical head wound. The installed brain is removed intact and thrown behind the victim. A 50/50 presentation either destroys the head entirely or leaves the head attached with a blown-out skull cavity. Both variants create a heavy bounded blood/giblet burst. Base chance 10%, scaling +1 percentage point per damage above threshold, capped at 40%.
-- **Disembowelment:** 55 final post-armor slash or pierce damage plus a critical chest wound. Reuses the existing chest dismemberment code to remove every currently installed chest-zone organ. No organs are spawned and no intestines organ is added. Base chance 15%, scaling to 40%.
+- **Brain ejection:** 55 final post-armor damage plus a critical non-burn head wound. The installed brain is removed intact and remains recoverable. A 50/50 presentation either removes the head or leaves it attached with the existing debrained cavity presentation. Both variants produce a heavy bounded blood/tissue burst. Base chance 10%, scaling by one percentage point per damage above threshold, capped at 40%.
+- **Disembowelment:** 55 final post-armor slash or pierce damage plus a critical chest wound. Reuses existing chest dismemberment to spill only currently installed chest-zone organs. No intestines organ or replacement anatomy is added. Base chance 15%, scaling to 40%.
 - **Sharp limb severing:** 40 final post-armor slash damage plus a critical wound. Base chance 10%, scaling to 40%.
 - **Blunt limb destruction:** 50 final post-armor blunt damage plus a critical wound. Base chance 10%, scaling to 40%.
-- **Ballistic/piercing limb destruction:** 50 final post-armor pierce damage plus a critical wound. Base chance 15%, scaling to 40%.
-- **Curbstomp:** A human attacker making an unarmed attack while wearing shoes has a 25% chance to brutally curbstomp a target already in soft critical, hard critical, or dead state. The target must still have an attached head and installed brain. The head is destroyed, the brain is ejected intact, and a bold combat message is shown.
+- **Ballistic/piercing limb destruction:** 50 final post-armor pierce damage plus a critical wound. Base chance 10%, scaling to 40%.
+- **Curbstomp:** An unarmed shoe-wearing humanoid attacker has a 25% chance to execute a critical or dead target that still has an attached head and installed brain. The event uses a bold combat message, heavy blood, and intact brain ejection.
 
-### Source coverage
+### Eligible targets and damage sources
 
-The evaluator runs from the common wound pipeline, so qualifying critical wounds caused by melee, projectiles, explosion damage, high-speed thrown debris, and collision/throw impacts use the same rules where those sources already generate wounds.
+Eligibility is based on carbon bodyparts and installed organs, not sentience, `mind`, `client`, or species-name checks. NPC monkeys and other non-sentient full-anatomy carbons are eligible; basic/simple mobs are excluded.
+
+The evaluator is attached to finalized bodypart wound damage, so qualifying melee, projectile, explosion, thrown-debris, and high-speed collision damage share the same rules where those sources produce wounds. Existing full-gib explosions and special mechanics are not intercepted.
 
 ### Invariants
 
@@ -34,12 +34,29 @@ The evaluator runs from the common wound pipeline, so qualifying critical wounds
 - The brain remains intact and recoverable.
 - No generic single-organ ejection.
 - Lungs remain one installed lungs object.
-- A one-second per-target guard prevents pellet clouds and same-tick multi-hits from producing multiple catastrophic outcomes.
-- Blood/giblet production is bounded.
+- A one-decisecond per-target guard deduplicates pellet clouds and immediate same-impact event chains; it is not player-facing immunity.
+- Blood/tissue production is bounded.
 
-### Validation
+### Current implementation state
 
-- Source paths and relevant existing APIs were verified against the uploaded authoritative repository archive.
-- Static source inspection completed.
-- DreamMaker compile and runtime tests are pending because BYOND tooling is unavailable in this environment.
-- The PR must remain draft until the patch is applied to the branch source files and compiled.
+The complete reviewed source diff is stored in `localized-catastrophic-trauma.patch` and covers:
+
+- `code/__DEFINES/combat.dm`
+- `code/modules/mob/living/carbon/carbon_defines.dm`
+- `code/modules/surgery/bodyparts/_bodyparts.dm`
+- `code/modules/surgery/bodyparts/wounds.dm`
+- `code/modules/mob/living/carbon/human/_species.dm`
+
+A direct-source application was attempted through a temporary GitHub Actions workflow, but the workflow did not execute when created through the connected GitHub app. The temporary workflow and probe file were removed. The branch still requires the patch to be applied in a writable checkout before it is merge-ready.
+
+### Validation requirements
+
+- Apply the patch to the branch source files and remove the patch artifact.
+- Compile DreamMaker and run relevant tests/CI.
+- Verify normal rounds bypass the evaluator.
+- Verify thresholds, critical-wound gates, and the 40% cap.
+- Verify no duplicate organs or repeated outcomes from pellet/explosion chains.
+- Verify humans, monkeys, lizards, and a non-blood humanoid species.
+- Verify brain reimplantation/revival.
+- Verify existing full-body gib behavior is unchanged.
+- Verify curbstomp on both critical and dead targets.
