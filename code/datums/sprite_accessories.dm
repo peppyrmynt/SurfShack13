@@ -1813,7 +1813,7 @@
 
 /datum/sprite_accessory/tails/saiyan
 
-/datum/sprite_accessory/tails/saiyan/default
+/datum/sprite_accessory/tails/saiyan/saiyan
 	name = "Saiyan"
 	icon = 'icons/mob/human/species/monkey/monkey_tail.dmi'
 	icon_state = "monkey"
