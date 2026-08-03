@@ -680,12 +680,17 @@
 	var/obj/machinery/clonepod/pod = allocate(/obj/machinery/clonepod)
 	pod.machine_stat = 0
 	pod.active_power_usage = 0
+	var/list/pod_icon_states = icon_states(pod.icon)
+	if(!("pod_0" in pod_icon_states) || !("pod_g" in pod_icon_states))
+		return Fail("The cloning pod sprite sheet is missing its empty or growth state.", __FILE__, __LINE__)
 	if(!pod.start_clone(record))
 		return Fail("The cloning pod refused a valid dead subject record.", __FILE__, __LINE__)
 
 	var/mob/living/carbon/human/new_clone = pod.clone
 	if(!new_clone)
 		return Fail("The cloning pod did not create a replacement body.", __FILE__, __LINE__)
+	if(pod.icon_state != "pod_g")
+		return Fail("The occupied cloning pod did not switch to the growth sprite state.", __FILE__, __LINE__)
 	if(new_clone.mind != record.mind)
 		return Fail("The subject's mind was not transferred into the clone.", __FILE__, __LINE__)
 	if(new_clone.real_name != record.record_name)
@@ -704,6 +709,8 @@
 
 	if(pod.clone)
 		return Fail("The cloning pod did not finish the maturation cycle.", __FILE__, __LINE__)
+	if(pod.icon_state != "pod_0")
+		return Fail("The cloning pod did not return to the empty sprite state after ejection.", __FILE__, __LINE__)
 	if(new_clone.loc == pod)
 		return Fail("The mature clone was not ejected from the pod.", __FILE__, __LINE__)
 	if(HAS_TRAIT(new_clone, TRAIT_NODEATH) || HAS_TRAIT(new_clone, TRAIT_NOBREATH))
