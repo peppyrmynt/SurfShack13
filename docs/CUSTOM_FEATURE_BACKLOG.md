@@ -13,7 +13,7 @@ Hyper Adrenaline is an optional high-intensity round mode. Admins can enable or 
 
 ### Configurable values
 
-- Global damage and healing are doubled at round start by multiplying the configured `DAMAGE_MULTIPLIER`.
+- Global damage and healing are doubled at round start by multiplying the configured `DAMAGE_MULTIPLIER`, unless the configured multiplier is already at the Hyper Adrenaline threshold of `2`.
 - Shared `do_after` action durations use `HYPER_ADRENALINE_ACTION_TIME_MULTIPLIER` of `0.5`.
 - Reagent processing uses `HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER` of `2`.
 - Explosion devastation, heavy, light, flame, and flash ranges use `HYPER_ADRENALINE_EXPLOSION_MULTIPLIER` of `2`.
@@ -35,7 +35,7 @@ Hyper Adrenaline is an optional high-intensity round mode. Admins can enable or 
 
 ### Expected interactions and balance assumptions
 
-Hyper Adrenaline does not change maximum health, default movement speed, individual melee weapon damage values, or individual projectile damage values. Some effects are intentionally nonlinear: thrown-item hits may receive both doubled throwforce and doubled global damage; chemicals may process faster while also inheriting the global damage/healing multiplier; explosion ranges remain subject to normal caps; faster metabolism may shorten reagent duration.
+Hyper Adrenaline does not change maximum health, default movement speed, individual melee weapon damage values, or individual projectile damage values. Some effects are intentionally nonlinear: thrown-item hits may receive both doubled throwforce and doubled global damage; chemicals may process faster while also inheriting the global damage/healing multiplier; explosion ranges remain subject to normal caps; faster metabolism may shorten reagent duration. A preconfigured `DAMAGE_MULTIPLIER` of `2` is treated as Hyper Adrenaline active for compatibility with earlier local testing and patch ordering.
 
 ### Administrator controls
 
@@ -65,7 +65,7 @@ Hyper Adrenaline attacks may cause localized catastrophic injuries without addin
 ### Outcomes
 
 - **Brain ejection:** 55 final post-armor damage plus a critical non-burn head wound. The installed brain is removed intact and remains recoverable. A 50/50 presentation either removes the head or leaves it attached with the existing debrained cavity presentation. Both variants produce a heavy bounded blood/tissue burst. Base chance 10%, scaling by one percentage point per damage above threshold, capped at 40%.
-- **Disembowelment:** 55 final post-armor slash or pierce damage plus a critical chest wound. Reuses existing chest dismemberment to spill only currently installed chest-zone organs. No intestines organ or replacement anatomy is added. Base chance 15%, scaling to 40%.
+- **Disembowelment:** 55 final post-armor slash or pierce damage plus a critical chest wound. Spills only currently installed chest-zone organs from the living target. No intestines organ or replacement anatomy is added. Base chance 15%, scaling to 40%.
 - **Sharp limb severing:** 40 final post-armor slash damage plus a critical wound. Base chance 10%, scaling to 40%.
 - **Blunt limb destruction:** 50 final post-armor blunt damage plus a critical wound. Base chance 10%, scaling to 40%.
 - **Ballistic/piercing limb destruction:** 50 final post-armor pierce damage plus a critical wound. Base chance 10%, scaling to 40%.
@@ -102,12 +102,16 @@ The wound evaluator is called only after a new or replacement wound is actually 
 
 Curbstomp is integrated through the current unarmed attack chain after normal unarmed attack checks and right-click handling.
 
+PR #13 follow-up fixes align Hyper Adrenaline checks across wound, curbstomp, thrown embedding, reagent, action-timer, and explosion paths. They also treat an already configured damage multiplier of `2` as active Hyper Adrenaline, without multiplying it to `4`, and replace the live disembowelment path with direct installed chest-organ spilling.
+
 ### Validation results
 
 - Static whitespace check: passed with `git diff --check`.
 - Full build script: blocked because the local build bootstrap attempted to download Node and network access is unavailable in this Codex session.
 - Direct DreamMaker compile: attempted with local BYOND, but did not finish within the available command timeout and produced no compiler artifact or error output.
 - Runtime testing: not yet performed.
+- PR #13 follow-up local whitespace check: passed with `git diff --check`.
+- PR #13 follow-up direct DreamMaker compile: attempted after stopping the local server and removing a stale BYOND lock file, but `dm.exe tgstation.dme` still did not return before the command timeout.
 
 ### Validation requirements
 

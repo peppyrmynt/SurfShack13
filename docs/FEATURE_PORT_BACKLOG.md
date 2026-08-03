@@ -15,6 +15,6 @@
   - the current global overlay helper is used for the three-second overhead image;
   - the current emote-help implementation automatically lists usable emotes and bolds those with playable audio.
 - **Dependencies:** current human emote registration, global overlay helpers, and the emote audio cooldown system.
-- **Validation:** pending CI compile, DMI/sound checks, invocation checks, help-list visibility, bold audio-emote display, three-second overlay lifetime, and cooldown behavior.
-- **Pull request:** pending.
-- **Limitations:** manual in-game audio and visual verification remains required after CI.
+- **Validation:** CI compile passed on PR #11. Runtime report on PR #13 branch says the emotes do not appear in `*help`; a follow-up unit test now verifies that all twelve keys are present in `GLOB.emote_list` and usable by humans.
+- **Pull request:** #11.
+- **Limitations:** manual in-game audio, visual overlay, and `*help` verification remains required after the follow-up test runs in CI.

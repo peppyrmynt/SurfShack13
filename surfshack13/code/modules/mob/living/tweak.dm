@@ -16,6 +16,9 @@ GLOBAL_VAR_INIT(hyper_adrenaline_next_round, FALSE)
 GLOBAL_VAR_INIT(hyper_adrenaline_active, FALSE)
 GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controller, new)
 
+/proc/hyper_adrenaline_is_active()
+	return GLOB.hyper_adrenaline_active || CONFIG_GET(number/damage_multiplier) >= HYPER_ADRENALINE_DAMAGE_MULTIPLIER_THRESHOLD
+
 /obj/item/var/hyper_adrenaline_throwforce_scaled = FALSE
 
 /obj/item/proc/apply_hyper_adrenaline_throwforce()
@@ -39,11 +42,13 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 		return
 	round_effects_applied = TRUE
 
-	GLOB.hyper_adrenaline_active = GLOB.hyper_adrenaline_next_round
+	var/damage_multiplier_already_hyper = CONFIG_GET(number/damage_multiplier) >= HYPER_ADRENALINE_DAMAGE_MULTIPLIER_THRESHOLD
+	GLOB.hyper_adrenaline_active = GLOB.hyper_adrenaline_next_round || damage_multiplier_already_hyper
 	if(!GLOB.hyper_adrenaline_active)
 		return
 
-	CONFIG_SET(number/damage_multiplier, CONFIG_GET(number/damage_multiplier) * 2)
+	if(!damage_multiplier_already_hyper)
+		CONFIG_SET(number/damage_multiplier, CONFIG_GET(number/damage_multiplier) * HYPER_ADRENALINE_DAMAGE_MULTIPLIER)
 	INVOKE_ASYNC(src, PROC_REF(apply_current_item_throwforce))
 
 	to_chat(world, span_notice("<b>Hyper Adrenaline is active for this round.</b>"), confidential = TRUE)
@@ -63,7 +68,7 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 		RegisterSignal(created_atom, COMSIG_AREA_INTERNAL_EXPLOSION, PROC_REF(on_area_internal_explosion))
 		return
 
-	if(!GLOB.hyper_adrenaline_active || !isitem(created_atom))
+	if(!hyper_adrenaline_is_active() || !isitem(created_atom))
 		return
 
 	var/obj/item/created_item = created_atom
@@ -72,7 +77,7 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 /datum/hyper_adrenaline_controller/proc/on_area_internal_explosion(datum/source, list/arguments)
 	SIGNAL_HANDLER
 
-	if(!GLOB.hyper_adrenaline_active)
+	if(!hyper_adrenaline_is_active())
 		return
 
 	arguments[EXARG_KEY_DEV_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER

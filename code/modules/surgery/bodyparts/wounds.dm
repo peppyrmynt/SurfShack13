@@ -58,7 +58,7 @@
 
 	var/hyper_trauma_damage = damage
 
-	if(GLOB.hyper_adrenaline_active)
+	if(hyper_adrenaline_is_active())
 		damage *= HYPER_ADRENALINE_WOUND_MULTIPLIER
 
 	// note that these are fed into an exponent, so these are magnified
@@ -158,7 +158,7 @@
 		return new_wound
 
 /mob/living/carbon/proc/try_hyper_catastrophic_trauma(obj/item/bodypart/affected_part, datum/wound/new_wound, final_damage, wound_type, attack_direction, damage_source)
-	if(!GLOB.hyper_adrenaline_active)
+	if(!hyper_adrenaline_is_active())
 		return FALSE
 	if(!affected_part || !(affected_part in bodyparts))
 		return FALSE
@@ -264,8 +264,25 @@
 	if(!istype(chest_part, /obj/item/bodypart/chest) || chest_part.owner != src)
 		return FALSE
 
+	var/list/spilled_organs = list()
+	var/atom/drop_loc = drop_location()
+
+	for(var/obj/item/organ/organ as anything in organs.Copy())
+		if(check_zone(organ.zone) != BODY_ZONE_CHEST)
+			continue
+		organ.Remove(src)
+		if(drop_loc)
+			organ.forceMove(drop_loc)
+			organ.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1, 3), 5)
+		spilled_organs += organ
+
 	var/obj/item/bodypart/chest/chest = chest_part
-	var/list/spilled_organs = chest.dismember(BRUTE, silent = FALSE, wounding_type = WOUND_SLASH)
+	if(chest.cavity_item)
+		if(drop_loc)
+			chest.cavity_item.forceMove(drop_loc)
+		spilled_organs += chest.cavity_item
+		chest.cavity_item = null
+
 	if(!length(spilled_organs))
 		return FALSE
 
