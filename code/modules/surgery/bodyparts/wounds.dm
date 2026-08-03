@@ -225,13 +225,14 @@
 	var/success
 	switch(outcome)
 		if("brain")
+			var/should_destroy_head = force_destroy_head || wound_type == WOUND_BLUNT || prob(50)
 			success = catastrophic_brain_ejection(
 				affected_part,
 				attack_direction,
 				damage_source,
-				force_destroy_head = force_destroy_head || wound_type == WOUND_BLUNT || prob(50),
+				force_destroy_head = should_destroy_head,
 				crushed = wound_type == WOUND_BLUNT,
-				delete_head = prob(50),
+				delete_head = should_destroy_head && prob(50),
 			)
 		if("chest")
 			success = catastrophic_disembowel(affected_part, attack_direction, damage_source)
@@ -256,12 +257,16 @@
 	gibs.streak(GLOB.alldirs)
 
 /mob/living/carbon/proc/get_hyper_trauma_attacker(atom/damage_source)
+	RETURN_TYPE(/mob)
+
 	if(ismob(damage_source))
-		return damage_source
+		var/mob/attacker = damage_source
+		return attacker
 	if(istype(damage_source, /obj/projectile))
 		var/obj/projectile/projectile_source = damage_source
 		if(ismob(projectile_source.firer))
-			return projectile_source.firer
+			var/mob/projectile_attacker = projectile_source.firer
+			return projectile_attacker
 	return null
 
 /mob/living/carbon/proc/catastrophic_brain_ejection(obj/item/bodypart/head_part, attack_direction, damage_source, force_destroy_head = FALSE, crushed = FALSE, delete_head = FALSE)
