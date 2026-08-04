@@ -322,6 +322,23 @@
 		. += span_notice("The pod is empty and ready to receive a cloning record.")
 	. += span_notice("Upgraded servos increase maturation speed.")
 
+/obj/machinery/clonepod/screwdriver_act(mob/living/user, obj/item/tool)
+	if(clone)
+		to_chat(user, span_warning("You cannot open the maintenance panel while [src] is growing a clone."))
+		return ITEM_INTERACT_BLOCKING
+	if(default_deconstruction_screwdriver(user, initial(icon_state), initial(icon_state), tool))
+		update_appearance()
+		return ITEM_INTERACT_SUCCESS
+	return ..()
+
+/obj/machinery/clonepod/crowbar_act(mob/living/user, obj/item/tool)
+	if(clone)
+		to_chat(user, span_warning("You cannot deconstruct [src] while it is growing a clone."))
+		return ITEM_INTERACT_BLOCKING
+	if(default_deconstruction_crowbar(tool))
+		return ITEM_INTERACT_SUCCESS
+	return ..()
+
 /obj/machinery/clonepod/interact(mob/user)
 	if(!clone)
 		to_chat(user, span_notice("The cloning pod is empty."))
