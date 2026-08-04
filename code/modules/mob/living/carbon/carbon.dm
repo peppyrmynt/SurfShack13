@@ -1503,6 +1503,9 @@
 		max_damage += part.unarmed_damage_high
 		part_count++
 
+	if(!part_count)
+		return ..()
+
 	var/damage = ((min_damage / part_count) + (max_damage / part_count)) / 2
 	return maxHealth * max(damage, 0.1)
 

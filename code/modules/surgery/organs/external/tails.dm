@@ -235,6 +235,8 @@
 
 /// Start being an ape
 /obj/item/organ/tail/monkey/saiyan/proc/go_ape()
+	if(!istype(owner) || QDELETED(owner))
+		return
 	if (HAS_TRAIT(owner, TRAIT_SHAPESHIFTED) || owner.stat == DEAD)
 		return
 	owner.visible_message(span_warning("[owner] transforms into a huge, ape-like creature!"))
@@ -249,10 +251,13 @@
 
 /obj/item/organ/tail/monkey/saiyan/proc/ape_died()
 	SIGNAL_HANDLER
-	owner.death()
+	if(istype(owner) && !QDELETED(owner))
+		owner.death()
 
 /// Stop being an ape
 /obj/item/organ/tail/monkey/saiyan/proc/escape_ape()
+	if(!istype(owner) || QDELETED(owner))
+		return
 	if (!HAS_TRAIT(owner, TRAIT_SHAPESHIFTED))
 		return
 	var/mob/living/ape_form = owner.loc
@@ -263,6 +268,11 @@
 
 /datum/bodypart_overlay/mutant/tail/monkey/saiyan
 	feature_key = "tail_saiyan"
+	imprint_on_next_insertion = FALSE
+
+/datum/bodypart_overlay/mutant/tail/monkey/saiyan/New()
+	. = ..()
+	set_appearance(/datum/sprite_accessory/tails/saiyan/saiyan)
 
 /datum/bodypart_overlay/mutant/tail/monkey/saiyan/get_global_feature_list()
 	return SSaccessories.tails_list_saiyan

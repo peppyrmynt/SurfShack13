@@ -75,7 +75,7 @@
 /// If you take sharp damage someone might sever your tail
 /datum/species/saiyan/proc/check_tail_sever(mob/living/carbon/target, obj/item/weapon, mob/attacker, proximity_flag, click_parameters)
 	SIGNAL_HANDLER
-	if (!proximity_flag || weapon.force < 5 || weapon.get_sharpness() != SHARP_EDGED)
+	if (!proximity_flag || isnull(weapon) || isnull(attacker) || weapon.force < 5 || weapon.get_sharpness() != SHARP_EDGED)
 		return
 	if (attacker.zone_selected != BODY_ZONE_PRECISE_GROIN && attacker.zone_selected != BODY_ZONE_CHEST)
 		return
@@ -98,7 +98,7 @@
 	SIGNAL_HANDLER
 	if (!istype(tail, /obj/item/organ/tail/monkey/saiyan))
 		return
-	if (!vegeta.mob_mood.has_mood_of_category(SAIYAN_TAIL_MOOD))
+	if (!vegeta.mob_mood?.has_mood_of_category(SAIYAN_TAIL_MOOD))
 		return
 	to_chat(vegeta, span_notice("As your tail returns, your strength returns too."))
 	vegeta.saiyan_boost(multiplier = 5)
@@ -111,7 +111,8 @@
 		return
 	to_chat(vegeta, span_boldwarning("No! Your tail!!"))
 	vegeta.saiyan_boost(multiplier = -5)
-	vegeta.add_mood_event(SAIYAN_TAIL_MOOD, /datum/mood_event/saiyan_humiliated)
+	if (vegeta.mob_mood)
+		vegeta.add_mood_event(SAIYAN_TAIL_MOOD, /datum/mood_event/saiyan_humiliated)
 	vegeta.Paralyze(10 SECONDS)
 	vegeta.adjust_confusion(1 MINUTES)
 

@@ -226,8 +226,9 @@
 
 /mob/living/basic/gorilla/saiyan/death(gibbed)
 	var/mob/living/corpse = get_internal_saiyan()
-	corpse.death()
-	corpse.setBruteLoss(corpse.maxHealth, TRUE, TRUE)
+	if(istype(corpse) && !QDELETED(corpse))
+		corpse.death()
+		corpse.setBruteLoss(corpse.maxHealth, TRUE, TRUE)
 	return ..()
 
 /// Cut off his tail! It's the only way!
@@ -243,8 +244,9 @@
 	var/mob/living/carbon/saiyan = get_internal_saiyan()
 	if (istype(saiyan))
 		var/obj/item/organ/tail/saiyan_tail = saiyan.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
-		saiyan_tail.Remove(saiyan)
-		saiyan_tail.forceMove(saiyan.loc)
+		if(!isnull(saiyan_tail))
+			saiyan_tail.Remove(saiyan)
+			saiyan_tail.forceMove(saiyan.loc)
 
 	remove_status_effect(/datum/status_effect/shapechange_mob)
 	qdel(src)
