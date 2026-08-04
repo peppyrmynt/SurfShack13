@@ -17,7 +17,7 @@ GLOBAL_VAR_INIT(hyper_adrenaline_active, FALSE)
 GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controller, new)
 
 /proc/hyper_adrenaline_is_active()
-	return GLOB.hyper_adrenaline_active || CONFIG_GET(number/damage_multiplier) >= HYPER_ADRENALINE_DAMAGE_MULTIPLIER_THRESHOLD
+	return GLOB.hyper_adrenaline_active
 
 /obj/item/var/hyper_adrenaline_throwforce_scaled = FALSE
 
