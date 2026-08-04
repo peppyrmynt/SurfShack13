@@ -42,13 +42,11 @@ GLOBAL_DATUM_INIT(hyper_adrenaline_controller, /datum/hyper_adrenaline_controlle
 		return
 	round_effects_applied = TRUE
 
-	var/damage_multiplier_already_hyper = CONFIG_GET(number/damage_multiplier) >= HYPER_ADRENALINE_DAMAGE_MULTIPLIER_THRESHOLD
-	GLOB.hyper_adrenaline_active = GLOB.hyper_adrenaline_next_round || damage_multiplier_already_hyper
+	GLOB.hyper_adrenaline_active = GLOB.hyper_adrenaline_next_round
 	if(!GLOB.hyper_adrenaline_active)
 		return
 
-	if(!damage_multiplier_already_hyper)
-		CONFIG_SET(number/damage_multiplier, CONFIG_GET(number/damage_multiplier) * HYPER_ADRENALINE_DAMAGE_MULTIPLIER)
+	CONFIG_SET(number/damage_multiplier, CONFIG_GET(number/damage_multiplier) * HYPER_ADRENALINE_DAMAGE_MULTIPLIER)
 	INVOKE_ASYNC(src, PROC_REF(apply_current_item_throwforce))
 
 	to_chat(world, span_notice("<b>Hyper Adrenaline is active for this round.</b>"), confidential = TRUE)
