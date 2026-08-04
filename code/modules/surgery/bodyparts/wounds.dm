@@ -306,7 +306,7 @@
 		head_part.add_mob_blood(src)
 	if(head_destroyed)
 		if(delete_head)
-			head_part.drop_limb(dismembered = TRUE, move_to_floor = FALSE)
+			head_part.drop_limb(null, TRUE)
 			qdel(head_part)
 		else
 			head_part.dismember(BRUTE, silent = FALSE, wounding_type = WOUND_BLUNT)
