@@ -165,7 +165,7 @@
 			if(existing_wound.severity < WOUND_SEVERITY_CRITICAL)
 				continue
 			var/datum/wound_pregen_data/existing_pregen_data = existing_wound.get_pregen_data()
-			if(!existing_pregen_data.wounding_types_valid(list(woundtype)))
+			if(!existing_pregen_data || !existing_pregen_data.wounding_types_valid(list(woundtype)))
 				continue
 			if(owner.try_hyper_catastrophic_trauma(src, existing_wound, hyper_trauma_damage, woundtype, attack_direction, damage_source))
 				return existing_wound
@@ -256,7 +256,7 @@
 	var/obj/effect/decal/cleanable/blood/gibs/gibs = new(location)
 	gibs.streak(GLOB.alldirs)
 
-/mob/living/carbon/proc/get_hyper_trauma_attacker(atom/damage_source)
+/mob/living/carbon/proc/get_hyper_trauma_attacker(damage_source)
 	RETURN_TYPE(/mob)
 
 	if(ismob(damage_source))
@@ -264,8 +264,9 @@
 		return attacker
 	if(istype(damage_source, /obj/projectile))
 		var/obj/projectile/projectile_source = damage_source
-		if(ismob(projectile_source.firer))
-			var/mob/projectile_attacker = projectile_source.firer
+		var/atom/movable/projectile_firer = projectile_source.firer
+		if(ismob(projectile_firer))
+			var/mob/projectile_attacker = projectile_firer
 			return projectile_attacker
 	return null
 
