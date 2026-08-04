@@ -277,6 +277,9 @@
 	var/datum/cloning_record/active_record
 	var/heal_rate = CLONER_BASE_HEAL_RATE
 
+/obj/machinery/cloning_pod
+	parent_type = /obj/machinery/clonepod
+
 /obj/machinery/clonepod/RefreshParts()
 	. = ..()
 	heal_rate = CLONER_BASE_HEAL_RATE
