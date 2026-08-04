@@ -69,9 +69,9 @@
 	return ..()
 
 /mob/living/carbon/human/try_hyper_curbstomp(atom/attack_target, proximity_flag)
-	if(!hyper_adrenaline_is_active())
-		return FALSE
 	if(!proximity_flag || src == attack_target || !shoes)
+		return FALSE
+	if(!GLOB.hyper_adrenaline_active)
 		return FALSE
 
 	if(!iscarbon(attack_target))

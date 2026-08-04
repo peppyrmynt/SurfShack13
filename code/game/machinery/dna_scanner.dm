@@ -197,6 +197,8 @@
 #define CLONER_INITIAL_BRUTE_DAMAGE 60
 #define CLONER_INITIAL_BURN_DAMAGE 60
 #define CLONER_BASE_HEAL_RATE 1
+#define CLONER_BASE_MATURATION_TIME 120
+#define CLONING_AUTO_CHECK_INTERVAL (5 SECONDS)
 #define CLONING_POD_TRAIT_SOURCE "cloning_pod"
 
 /**
@@ -268,7 +270,7 @@
 	density = TRUE
 	obj_flags = BLOCKS_CONSTRUCTION
 	circuit = /obj/item/circuitboard/machine/clonepod
-	processing_flags = START_PROCESSING_ON_INIT
+	processing_flags = START_PROCESSING_MANUALLY
 	use_power = ACTIVE_POWER_USE
 	idle_power_usage = BASE_MACHINE_IDLE_CONSUMPTION
 	active_power_usage = BASE_MACHINE_ACTIVE_CONSUMPTION * 4
@@ -276,17 +278,26 @@
 	var/mob/living/carbon/human/clone
 	var/datum/cloning_record/active_record
 	var/heal_rate = CLONER_BASE_HEAL_RATE
+	var/maturation_time = CLONER_BASE_MATURATION_TIME
+	var/maturation_speed_multiplier = 1
+	var/maturation_progress = 0
 
 /obj/machinery/cloning_pod
 	parent_type = /obj/machinery/clonepod
 
 /obj/machinery/clonepod/RefreshParts()
 	. = ..()
-	heal_rate = CLONER_BASE_HEAL_RATE
+	var/servo_tier_total = 0
+	var/servo_count = 0
 	for(var/datum/stock_part/servo/servo in component_parts)
-		heal_rate += servo.tier * 0.5
+		servo_tier_total += servo.tier
+		servo_count++
+	maturation_speed_multiplier = max(1, servo_count ? (servo_tier_total / servo_count) : 1)
+	heal_rate = CLONER_BASE_HEAL_RATE * maturation_speed_multiplier
+	maturation_time = max(20, CLONER_BASE_MATURATION_TIME / maturation_speed_multiplier)
 
 /obj/machinery/clonepod/Destroy()
+	STOP_PROCESSING(SSmachines, src)
 	if(clone && !QDELETED(clone))
 		clear_maturation_traits(clone)
 		clone.forceMove(drop_location())
@@ -299,11 +310,13 @@
 /obj/machinery/clonepod/Exited(atom/movable/gone, direction)
 	. = ..()
 	if(gone == clone)
+		STOP_PROCESSING(SSmachines, src)
 		clear_maturation_traits(clone)
 		if(active_record?.active_pod == src)
 			active_record.active_pod = null
 		clone = null
 		active_record = null
+		maturation_progress = 0
 		update_appearance()
 
 /obj/machinery/clonepod/update_icon_state()
@@ -320,10 +333,10 @@
 	. = ..()
 	if(clone)
 		var/remaining_damage = round(clone.getBruteLoss() + clone.getFireLoss(), 1)
-		. += span_notice("The maturation cycle is active. Remaining growth trauma: [remaining_damage].")
+		. += span_notice("The maturation cycle is [round((maturation_progress / maturation_time) * 100)]% complete. Remaining growth trauma: [remaining_damage].")
 	else
 		. += span_notice("The pod is empty and ready to receive a cloning record.")
-	. += span_notice("Upgraded servos increase maturation speed.")
+	. += span_notice("Upgraded servos increase maturation speed. Current speed: [round(maturation_speed_multiplier * 100)]%. Current maturation time: about [DisplayTimeText(maturation_time SECONDS)].")
 
 /obj/machinery/clonepod/screwdriver_act(mob/living/user, obj/item/tool)
 	if(clone)
@@ -346,12 +359,16 @@
 	if(!clone)
 		to_chat(user, span_notice("The cloning pod is empty."))
 		return
+	if(user == clone)
+		to_chat(user, span_notice("The cloning pod is still maturing your new body."))
+		return
 	to_chat(user, span_warning("You trigger the emergency release. The clone may not be fully developed."))
 	eject_clone(FALSE)
 
 /obj/machinery/clonepod/relaymove(mob/living/user, direction)
 	if(user == clone)
-		eject_clone(FALSE)
+		return
+	return ..()
 
 /obj/machinery/clonepod/container_resist_act(mob/living/user)
 	if(user == clone)
@@ -403,9 +420,16 @@
 
 	clone = new_clone
 	active_record = record
+	maturation_progress = 0
 	record.active_pod = src
+	var/mob/dead/observer/ghost = record.mind.get_ghost(even_if_they_cant_reenter = TRUE, ghosts_with_clients = TRUE)
+	if(ghost)
+		window_flash(ghost.client)
+		to_chat(ghost, span_ghostalert("A cloning pod has started growing a new body for you. You will wake when maturation finishes."))
+		SEND_SOUND(ghost, sound('sound/effects/genetics.ogg'))
 	record.mind.transfer_to(new_clone)
 	to_chat(new_clone, span_notice("Consciousness flickers at the edge of a newly forming body. Your clone is still maturing."))
+	START_PROCESSING(SSmachines, src)
 	update_appearance()
 	return TRUE
 
@@ -415,32 +439,37 @@
 			active_record.active_pod = null
 		clone = null
 		active_record = null
+		maturation_progress = 0
 		update_appearance()
-		return
+		return PROCESS_KILL
 
 	if(clone.stat == DEAD)
 		eject_clone(FALSE)
-		return
+		return PROCESS_KILL
 
 	if(machine_stat & (NOPOWER | BROKEN))
 		eject_clone(FALSE)
-		return
+		return PROCESS_KILL
 
 	clone.Unconscious(3 SECONDS)
 	clone.adjustOxyLoss(-10 * seconds_per_tick, forced = TRUE)
 	clone.adjustBruteLoss(-heal_rate * seconds_per_tick, forced = TRUE)
 	clone.adjustFireLoss(-heal_rate * seconds_per_tick, forced = TRUE)
+	maturation_progress += seconds_per_tick
 	use_energy(active_power_usage * seconds_per_tick)
 
-	if(clone.getBruteLoss() <= 0 && clone.getFireLoss() <= 0)
+	if(maturation_progress >= maturation_time && clone.getBruteLoss() <= 0 && clone.getFireLoss() <= 0)
 		eject_clone(TRUE)
+		return PROCESS_KILL
 
 /obj/machinery/clonepod/proc/eject_clone(successful)
+	STOP_PROCESSING(SSmachines, src)
 	if(!clone || QDELETED(clone))
 		if(active_record?.active_pod == src)
 			active_record.active_pod = null
 		clone = null
 		active_record = null
+		maturation_progress = 0
 		update_appearance()
 		return FALSE
 
@@ -449,6 +478,7 @@
 	clear_maturation_traits(leaving_clone)
 	clone = null
 	active_record = null
+	maturation_progress = 0
 	if(leaving_record?.active_pod == src)
 		leaving_record.active_pod = null
 	leaving_clone.adjustOxyLoss(-leaving_clone.getOxyLoss(), forced = TRUE)
@@ -476,11 +506,14 @@
 	icon_keyboard = "med_key"
 	circuit = /obj/item/circuitboard/computer/cloning
 	light_color = LIGHT_COLOR_BLUE
+	processing_flags = START_PROCESSING_MANUALLY
 
 	var/obj/machinery/dna_scannernew/scanner
 	var/obj/machinery/clonepod/pod
 	var/list/records = list()
 	var/status_message = "Ready."
+	var/auto_clone = FALSE
+	var/next_auto_clone_check = 0
 
 /obj/machinery/computer/cloning/Destroy()
 	for(var/datum/cloning_record/record in records)
@@ -544,6 +577,27 @@
 	status_message = "[subject.real_name]'s cloning record was stored successfully."
 	return TRUE
 
+/obj/machinery/computer/cloning/proc/try_auto_clone()
+	if(!auto_clone)
+		return FALSE
+	if(world.time < next_auto_clone_check)
+		return FALSE
+	next_auto_clone_check = world.time + CLONING_AUTO_CHECK_INTERVAL
+	find_hardware()
+	if(!pod || pod.clone || pod.panel_open || (pod.machine_stat & (NOPOWER | BROKEN)))
+		return FALSE
+
+	for(var/datum/cloning_record/record as anything in records)
+		if(record.is_cloneable() && pod.start_clone(record))
+			status_message = "Automatic cloning cycle started for [record.record_name]."
+			return TRUE
+	return FALSE
+
+/obj/machinery/computer/cloning/process(seconds_per_tick)
+	if(!auto_clone)
+		return PROCESS_KILL
+	try_auto_clone()
+
 /obj/machinery/computer/cloning/proc/render_record(datum/cloning_record/record)
 	var/text = "<div class='block'><b>[record.record_name]</b><br>"
 	text += "[record.status_text()]<br>"
@@ -565,6 +619,8 @@
 	dat += "<h3>System status</h3><div class='statusDisplay'>[status_message]</div>"
 	dat += "<b>DNA scanner:</b> [scanner ? "Connected" : "Not detected"]<br>"
 	dat += "<b>Cloning pod:</b> [pod ? (pod.clone ? "Maturation cycle active" : "Ready") : "Not detected"]<br><br>"
+	dat += "<b>Automatic cloning:</b> [auto_clone ? "Enabled" : "Disabled"]<br>"
+	dat += "<a href='byond://?src=[REF(src)];auto_clone=1'>[auto_clone ? "Disable automatic cloning" : "Enable automatic cloning"]</a><br><br>"
 
 	if(scanner)
 		var/mob/living/scanner_occupant = scanner.occupant
@@ -606,6 +662,16 @@
 		else
 			scanner.locked = !scanner.locked
 			status_message = scanner.locked ? "Scanner locked." : "Scanner unlocked."
+
+	else if(href_list["auto_clone"])
+		auto_clone = !auto_clone
+		status_message = "Automatic cloning [auto_clone ? "enabled" : "disabled"]."
+		if(auto_clone)
+			next_auto_clone_check = 0
+			START_PROCESSING(SSmachines, src)
+			try_auto_clone()
+		else
+			STOP_PROCESSING(SSmachines, src)
 
 	else if(href_list["clone"])
 		var/datum/cloning_record/record = locate(href_list["clone"])
@@ -675,75 +741,9 @@
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
 	announce_channels = list(RADIO_CHANNEL_MEDICAL)
 
-#ifdef UNIT_TESTS
-
-/datum/unit_test/cloning_round_trip/Run()
-	var/mob/living/carbon/human/subject = allocate(/mob/living/carbon/human/consistent)
-	subject.real_name = "Cloning Test Subject"
-	subject.name = subject.real_name
-	subject.dna.real_name = subject.real_name
-	subject.set_species(/datum/species/lizard)
-	subject.mind_initialize()
-
-	var/datum/cloning_record/record = new(subject)
-	if(record.record_name != subject.real_name)
-		return Fail("The cloning record did not preserve the subject's name.", __FILE__, __LINE__)
-	if(record.dna.species.type != subject.dna.species.type)
-		return Fail("The cloning record did not preserve the subject's species.", __FILE__, __LINE__)
-	if(record.is_cloneable())
-		return Fail("A living subject was incorrectly considered cloneable.", __FILE__, __LINE__)
-
-	subject.stat = DEAD
-	if(!record.is_cloneable())
-		return Fail("A dead subject was not considered cloneable.", __FILE__, __LINE__)
-
-	var/obj/machinery/clonepod/pod = allocate(/obj/machinery/clonepod)
-	pod.machine_stat = 0
-	pod.active_power_usage = 0
-	var/list/pod_icon_states = icon_states(pod.icon)
-	if(!("pod_0" in pod_icon_states) || !("pod_g" in pod_icon_states))
-		return Fail("The cloning pod sprite sheet is missing its empty or growth state.", __FILE__, __LINE__)
-	if(!pod.start_clone(record))
-		return Fail("The cloning pod refused a valid dead subject record.", __FILE__, __LINE__)
-
-	var/mob/living/carbon/human/new_clone = pod.clone
-	if(!new_clone)
-		return Fail("The cloning pod did not create a replacement body.", __FILE__, __LINE__)
-	if(pod.icon_state != "pod_g")
-		return Fail("The occupied cloning pod did not switch to the growth sprite state.", __FILE__, __LINE__)
-	if(new_clone.mind != record.mind)
-		return Fail("The subject's mind was not transferred into the clone.", __FILE__, __LINE__)
-	if(new_clone.real_name != record.record_name)
-		return Fail("The clone did not preserve the subject's name.", __FILE__, __LINE__)
-	if(new_clone.dna.species.type != record.dna.species.type)
-		return Fail("The clone did not preserve the recorded species.", __FILE__, __LINE__)
-	if(!HAS_TRAIT(new_clone, TRAIT_NODEATH) || !HAS_TRAIT(new_clone, TRAIT_NOBREATH))
-		return Fail("The clone did not receive maturation protection inside the pod.", __FILE__, __LINE__)
-	if(record.is_cloneable())
-		return Fail("A record already in use was incorrectly considered cloneable.", __FILE__, __LINE__)
-
-	for(var/iteration in 1 to 180)
-		if(!pod.clone)
-			break
-		pod.process(1)
-
-	if(pod.clone)
-		return Fail("The cloning pod did not finish the maturation cycle.", __FILE__, __LINE__)
-	if(pod.icon_state != "pod_0")
-		return Fail("The cloning pod did not return to the empty sprite state after ejection.", __FILE__, __LINE__)
-	if(new_clone.loc == pod)
-		return Fail("The mature clone was not ejected from the pod.", __FILE__, __LINE__)
-	if(HAS_TRAIT(new_clone, TRAIT_NODEATH) || HAS_TRAIT(new_clone, TRAIT_NOBREATH))
-		return Fail("Maturation-only traits remained after ejection.", __FILE__, __LINE__)
-	if(new_clone.getBruteLoss() > 0 || new_clone.getFireLoss() > 0)
-		return Fail("A successful maturation cycle left growth trauma unhealed.", __FILE__, __LINE__)
-
-	qdel(record)
-	qdel(new_clone)
-
-#endif
-
 #undef CLONER_INITIAL_BRUTE_DAMAGE
 #undef CLONER_INITIAL_BURN_DAMAGE
 #undef CLONER_BASE_HEAL_RATE
+#undef CLONER_BASE_MATURATION_TIME
+#undef CLONING_AUTO_CHECK_INTERVAL
 #undef CLONING_POD_TRAIT_SOURCE

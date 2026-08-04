@@ -27,7 +27,7 @@
 
 /datum/wound/pierce/bleed/wound_injury(datum/wound/old_wound = null, attack_direction = null)
 	set_blood_flow(initial_flow)
-	if(limb.can_bleed() && attack_direction && victim.blood_volume > BLOOD_VOLUME_OKAY)
+	if(victim && limb?.can_bleed() && attack_direction && victim.blood_volume > BLOOD_VOLUME_OKAY)
 		victim.spray_blood(attack_direction, severity)
 
 	return ..()
@@ -68,7 +68,7 @@
 
 /datum/wound/pierce/bleed/get_bleed_rate_of_change()
 	//basically if a species doesn't bleed, the wound is stagnant and will not heal on its own (nor get worse)
-	if(!limb.can_bleed())
+	if(!victim || !limb || !limb.can_bleed())
 		return BLOOD_FLOW_STEADY
 	if(HAS_TRAIT(victim, TRAIT_BLOODY_MESS))
 		return BLOOD_FLOW_INCREASING
@@ -77,7 +77,7 @@
 	return BLOOD_FLOW_STEADY
 
 /datum/wound/pierce/bleed/handle_process(seconds_per_tick, times_fired)
-	if (!victim || HAS_TRAIT(victim, TRAIT_STASIS))
+	if(!victim || !limb || HAS_TRAIT(victim, TRAIT_STASIS))
 		return
 
 	set_blood_flow(min(blood_flow, WOUND_SLASH_MAX_BLOODFLOW))

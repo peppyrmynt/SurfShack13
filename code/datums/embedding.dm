@@ -168,7 +168,7 @@
 /// Calculates the actual chance to embed based on armour penetration and throwing speed, then returns true if we pass that probability check
 /datum/embedding/proc/roll_embed_chance(mob/living/carbon/victim, hit_zone, datum/thrownthing/throwingdatum)
 	var/base_chance = embed_chance
-	if(hyper_adrenaline_is_active())
+	if(GLOB.hyper_adrenaline_active)
 		base_chance = min(base_chance * HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER, 100)
 	var/chance = base_chance
 

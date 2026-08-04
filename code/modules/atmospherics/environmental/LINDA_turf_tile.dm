@@ -204,11 +204,15 @@
 	var/last_share = our_air.last_share;\
 	max_share = max(last_share, max_share);\
 	if(last_share > MINIMUM_AIR_TO_SUSPEND){\
-		our_excited_group.reset_cooldowns();\
+		if(our_excited_group){\
+			our_excited_group.reset_cooldowns();\
+		}\
 		cached_ticker = 0;\
 		enemy_tile.significant_share_ticker = 0;\
 	} else if(last_share > MINIMUM_MOLES_DELTA_TO_MOVE) {\
-		our_excited_group.dismantle_cooldown = 0;\
+		if(our_excited_group){\
+			our_excited_group.dismantle_cooldown = 0;\
+		}\
 		cached_ticker = 0;\
 		enemy_tile.significant_share_ticker = 0;\
 	}
@@ -216,11 +220,15 @@
 #define LAST_SHARE_CHECK \
 	var/last_share = our_air.last_share;\
 	if(last_share > MINIMUM_AIR_TO_SUSPEND){\
-		our_excited_group.reset_cooldowns();\
+		if(our_excited_group){\
+			our_excited_group.reset_cooldowns();\
+		}\
 		cached_ticker = 0;\
 		enemy_tile.significant_share_ticker = 0;\
 	} else if(last_share > MINIMUM_MOLES_DELTA_TO_MOVE) {\
-		our_excited_group.dismantle_cooldown = 0;\
+		if(our_excited_group){\
+			our_excited_group.dismantle_cooldown = 0;\
+		}\
 		cached_ticker = 0;\
 		enemy_tile.significant_share_ticker = 0;\
 	}
@@ -230,20 +238,28 @@
 	var/last_share = our_air.last_share;\
 	max_share = max(last_share, max_share);\
 	if(last_share > MINIMUM_AIR_TO_SUSPEND){\
-		our_excited_group.reset_cooldowns();\
+		if(our_excited_group){\
+			our_excited_group.reset_cooldowns();\
+		}\
 		cached_ticker = 0;\
 	} else if(last_share > MINIMUM_MOLES_DELTA_TO_MOVE) {\
-		our_excited_group.dismantle_cooldown = 0;\
+		if(our_excited_group){\
+			our_excited_group.dismantle_cooldown = 0;\
+		}\
 		cached_ticker = 0;\
 	}
 #else
 #define PLANET_SHARE_CHECK \
 	var/last_share = our_air.last_share;\
 	if(last_share > MINIMUM_AIR_TO_SUSPEND){\
-		our_excited_group.reset_cooldowns();\
+		if(our_excited_group){\
+			our_excited_group.reset_cooldowns();\
+		}\
 		cached_ticker = 0;\
 	} else if(last_share > MINIMUM_MOLES_DELTA_TO_MOVE) {\
-		our_excited_group.dismantle_cooldown = 0;\
+		if(our_excited_group){\
+			our_excited_group.dismantle_cooldown = 0;\
+		}\
 		cached_ticker = 0;\
 	}
 #endif
