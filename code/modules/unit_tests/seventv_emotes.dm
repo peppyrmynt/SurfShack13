@@ -17,13 +17,13 @@
 	)
 
 	var/mob/living/carbon/human/dummy_human = allocate(/mob/living/carbon/human/consistent, run_loc_floor_bottom_left)
-	dummy_human.mind = new /datum/mind(null)
+	dummy_human.mind = allocate(/datum/mind, null)
 
 	var/mob/living/basic/pet/dog/corgi/dummy_basic = allocate(/mob/living/basic/pet/dog/corgi, run_loc_floor_bottom_left)
-	dummy_basic.mind = new /datum/mind(null)
+	dummy_basic.mind = allocate(/datum/mind, null)
 
 	var/mob/living/silicon/robot/dummy_borg = allocate(/mob/living/silicon/robot, run_loc_floor_bottom_left)
-	dummy_borg.mind = new /datum/mind(null)
+	dummy_borg.mind = allocate(/datum/mind, null)
 
 	var/list/sentient_mobs = list(
 		"human" = dummy_human,
