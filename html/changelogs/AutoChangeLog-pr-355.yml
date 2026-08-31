@@ -1,5 +1,0 @@
-author: "ZealousZeke"
-delete-after: True
-changes:
-  - rscadd: "Adds a golf cart to cargo imports"
-  - rscadd: "Adds golf carts which can transport crates, machines, fuel tanks, and people"
