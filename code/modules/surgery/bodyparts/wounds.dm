@@ -34,7 +34,7 @@
 			wounding_type = WOUND_BLUNT
 		if ((dismemberable_by_wound() || dismemberable_by_total_damage()) && try_dismember(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus))
 			return
-	return check_wounding(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus, wound_clothing)
+	return check_wounding(wounding_type, wounding_dmg, wound_bonus, bare_wound_bonus, wound_clothing = wound_clothing)
 
 /**
  * check_wounding() is where we handle rolling for, selecting, and applying a wound if we meet the criteria
@@ -55,6 +55,12 @@
 
 	if(HAS_TRAIT(owner, TRAIT_NEVER_WOUNDED) || HAS_TRAIT(owner, TRAIT_GODMODE))
 		return
+
+	var/hyper_active = GLOB.hyper_adrenaline_active
+	var/hyper_trauma_damage = damage
+
+	if(hyper_active)
+		damage *= HYPER_ADRENALINE_WOUND_MULTIPLIER
 
 	// note that these are fed into an exponent, so these are magnified
 	if(HAS_TRAIT(owner, TRAIT_EASILY_WOUNDED))
@@ -78,6 +84,9 @@
 
 	if(injury_roll > WOUND_DISMEMBER_OUTRIGHT_THRESH && prob(get_damage() / max_damage * 100) && can_dismember())
 		var/datum/wound/loss/dismembering = new
+		if(owner && hyper_active && owner.try_hyper_catastrophic_trauma(src, dismembering, hyper_trauma_damage, woundtype, attack_direction, damage_source, force_destroy_head = TRUE, hyper_checked = TRUE))
+			qdel(dismembering)
+			return
 		dismembering.apply_dismember(src, woundtype, outright = TRUE, attack_direction = attack_direction)
 		return
 
@@ -148,7 +157,237 @@
 		else
 			new_wound.apply_wound(src, attack_direction = attack_direction, wound_source = damage_source)
 		log_wound(owner, new_wound, damage, wound_bonus, bare_wound_bonus, base_roll) // dismembering wounds are logged in the apply_wound() for loss wounds since they delete themselves immediately, these will be immediately returned
+		if(owner && hyper_active)
+			owner.try_hyper_catastrophic_trauma(src, new_wound, hyper_trauma_damage, woundtype, attack_direction, damage_source, hyper_checked = TRUE)
 		return new_wound
+
+	if(owner && hyper_active && hyper_trauma_damage >= 40 && woundtype != WOUND_BURN)
+		var/list/valid_wound_types = list(woundtype)
+		for(var/datum/wound/existing_wound as anything in wounds)
+			if(existing_wound.severity < WOUND_SEVERITY_CRITICAL)
+				continue
+			var/datum/wound_pregen_data/existing_pregen_data = existing_wound.get_pregen_data()
+			if(!existing_pregen_data || !existing_pregen_data.wounding_types_valid(valid_wound_types))
+				continue
+			if(owner.try_hyper_catastrophic_trauma(src, existing_wound, hyper_trauma_damage, woundtype, attack_direction, damage_source, hyper_checked = TRUE))
+				return existing_wound
+
+/mob/living/carbon/proc/try_hyper_catastrophic_trauma(obj/item/bodypart/affected_part, datum/wound/new_wound, final_damage, wound_type, attack_direction, damage_source, force_destroy_head = FALSE, hyper_checked = FALSE)
+	if(!hyper_checked && !GLOB.hyper_adrenaline_active)
+		return FALSE
+	var/from_projectile = istype(damage_source, /obj/projectile)
+	if(final_damage < 40 || wound_type == WOUND_BURN)
+		return FALSE
+	if(!affected_part || !(affected_part in bodyparts))
+		return FALSE
+	if(!new_wound || new_wound.severity < WOUND_SEVERITY_CRITICAL)
+		return FALSE
+	if(HAS_TRAIT(src, TRAIT_GODMODE) || HAS_TRAIT(src, TRAIT_NODISMEMBER))
+		return FALSE
+	if(!COOLDOWN_FINISHED(src, hyper_trauma_cd))
+		return FALSE
+
+	var/threshold
+	var/base_chance
+	var/outcome
+
+	switch(affected_part.body_zone)
+		if(BODY_ZONE_HEAD)
+			threshold = from_projectile ? 40 : 55
+			base_chance = 15
+			outcome = "brain"
+		if(BODY_ZONE_CHEST)
+			if(wound_type != WOUND_SLASH && wound_type != WOUND_PIERCE)
+				return FALSE
+			threshold = 55
+			base_chance = 15
+			outcome = "chest"
+		if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+			switch(wound_type)
+				if(WOUND_SLASH)
+					threshold = 40
+					base_chance = 15
+				if(WOUND_BLUNT)
+					return FALSE
+				if(WOUND_PIERCE)
+					threshold = from_projectile ? 40 : 50
+					base_chance = 15
+				else
+					return FALSE
+			outcome = "limb"
+		else
+			return FALSE
+
+	if(final_damage < threshold)
+		return FALSE
+
+	var/chance = min(base_chance + max(0, round(final_damage - threshold)), 45)
+	if(!prob(chance))
+		return FALSE
+
+	var/success
+	switch(outcome)
+		if("brain")
+			var/should_destroy_head = force_destroy_head || wound_type == WOUND_BLUNT || from_projectile || prob(50)
+			success = catastrophic_brain_ejection(
+				affected_part,
+				attack_direction,
+				damage_source,
+				force_destroy_head = should_destroy_head,
+				crushed = wound_type == WOUND_BLUNT,
+				delete_head = should_destroy_head && (from_projectile ? prob(65) : prob(50)),
+			)
+		if("chest")
+			success = catastrophic_disembowel(affected_part, attack_direction, damage_source)
+		if("limb")
+			success = affected_part.dismember(BRUTE, silent = FALSE, wounding_type = wound_type)
+
+	if(success)
+		COOLDOWN_START(src, hyper_trauma_cd, 1)
+	return success
+
+/mob/living/carbon/proc/catastrophic_blood_burst(intensity = 1)
+	var/turf/location = get_turf(src)
+	if(!location)
+		return
+
+	if(!HAS_TRAIT(src, TRAIT_NOBLOOD))
+		var/spray_count = clamp(intensity, 1, 5)
+		var/spray_distance = clamp(intensity, 2, 5)
+		for(var/i in 1 to spray_count)
+			add_splatter_floor(location)
+			spray_blood(pick(GLOB.alldirs), spray_distance)
+		bleed(20 * intensity)
+	var/obj/effect/decal/cleanable/blood/gibs/gibs = new(location)
+	gibs.streak(GLOB.alldirs)
+
+/mob/living/carbon/proc/get_hyper_trauma_attacker(damage_source)
+	RETURN_TYPE(/mob)
+
+	if(ismob(damage_source))
+		var/mob/attacker = damage_source
+		return attacker
+	if(istype(damage_source, /obj/projectile))
+		var/obj/projectile/projectile_source = damage_source
+		var/atom/movable/projectile_firer = projectile_source.firer
+		if(ismob(projectile_firer))
+			var/mob/projectile_attacker = projectile_firer
+			return projectile_attacker
+	return null
+
+/mob/living/carbon/proc/catastrophic_brain_ejection(obj/item/bodypart/head_part, attack_direction, damage_source, force_destroy_head = FALSE, crushed = FALSE, delete_head = FALSE)
+	if(!head_part || head_part.body_zone != BODY_ZONE_HEAD || head_part.owner != src)
+		return FALSE
+
+	var/obj/item/organ/brain/brain = get_organ_slot(ORGAN_SLOT_BRAIN)
+	if(!brain && !force_destroy_head)
+		return FALSE
+
+	var/atom/drop_loc = drop_location()
+	var/list/spilled_organs = list()
+	for(var/obj/item/organ/organ as anything in organs)
+		if(check_zone(organ.zone) != BODY_ZONE_HEAD)
+			continue
+		spilled_organs += organ
+
+	for(var/obj/item/organ/organ as anything in spilled_organs)
+		organ.Remove(src)
+		if(drop_loc)
+			organ.forceMove(drop_loc)
+			organ.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1, 3), 5)
+
+	var/mob/attacker = get_hyper_trauma_attacker(damage_source)
+	var/head_destroyed = force_destroy_head
+	if(crushed)
+		visible_message(span_danger("<B>[src]'s head [head_destroyed && delete_head ? "bursts apart" : "is crushed apart"], spraying blood and organs!</B>"), span_userdanger("Your head [head_destroyed && delete_head ? "bursts apart" : "is crushed apart"]!"), ignored_mobs = attacker)
+		if(attacker && attacker != src)
+			to_chat(attacker, span_danger("You [head_destroyed && delete_head ? "burst" : "crush"] [src]'s head apart, spraying blood and organs!"))
+	else
+		visible_message(span_danger("<B>[src]'s head [head_destroyed && delete_head ? "bursts apart" : "bursts open"], ejecting [p_their()] organs!</B>"), span_userdanger("Your head [head_destroyed && delete_head ? "bursts apart" : "bursts open"] as your organs are torn free!"), ignored_mobs = attacker)
+		if(attacker && attacker != src)
+			to_chat(attacker, span_danger("You blow [src]'s head [head_destroyed && delete_head ? "apart" : "open"], ejecting [src.p_their()] organs!"))
+	catastrophic_blood_burst(5)
+	if(!HAS_TRAIT(src, TRAIT_NOBLOOD))
+		for(var/obj/item/organ/organ as anything in spilled_organs)
+			organ.add_mob_blood(src)
+		head_part.add_mob_blood(src)
+	if(head_destroyed)
+		if(delete_head)
+			head_part.drop_limb(null, TRUE)
+			qdel(head_part)
+		else
+			head_part.dismember(BRUTE, silent = FALSE, wounding_type = WOUND_BLUNT)
+
+	if(attacker)
+		log_combat(attacker, src, "caused localized catastrophic brain trauma to")
+	return TRUE
+
+/mob/living/carbon/proc/catastrophic_disembowel(obj/item/bodypart/chest_part, attack_direction, damage_source)
+	if(!istype(chest_part, /obj/item/bodypart/chest) || chest_part.owner != src)
+		return FALSE
+
+	var/list/spilled_organs = list()
+	var/atom/drop_loc = drop_location()
+
+	for(var/obj/item/organ/organ as anything in organs)
+		if(check_zone(organ.zone) != BODY_ZONE_CHEST)
+			continue
+		spilled_organs += organ
+
+	for(var/obj/item/organ/organ as anything in spilled_organs)
+		organ.Remove(src)
+		if(drop_loc)
+			organ.forceMove(drop_loc)
+			organ.throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1, 3), 5)
+
+	var/obj/item/bodypart/chest/chest = chest_part
+	if(chest.cavity_item)
+		if(drop_loc)
+			chest.cavity_item.forceMove(drop_loc)
+		spilled_organs += chest.cavity_item
+		chest.cavity_item = null
+
+	if(!length(spilled_organs))
+		return FALSE
+
+	var/mob/attacker = get_hyper_trauma_attacker(damage_source)
+	visible_message(span_danger("<B>[src]'s chest cavity bursts open, spilling [p_their()] organs!</B>"), span_userdanger("Your chest cavity bursts open!"), ignored_mobs = attacker)
+	if(attacker && attacker != src)
+		to_chat(attacker, span_danger("You burst [src]'s chest cavity open, spilling [src.p_their()] organs!"))
+	catastrophic_blood_burst(3)
+	if(attacker)
+		log_combat(attacker, src, "caused localized catastrophic chest trauma to")
+	return TRUE
+
+/mob/living/carbon/proc/try_hyper_explosion_catastrophic_trauma(severity, atom/source)
+	if(!GLOB.hyper_adrenaline_active)
+		return FALSE
+	if(severity < EXPLODE_LIGHT)
+		return FALSE
+	if(HAS_TRAIT(src, TRAIT_GODMODE) || HAS_TRAIT(src, TRAIT_NODISMEMBER))
+		return FALSE
+	if(!COOLDOWN_FINISHED(src, hyper_trauma_cd))
+		return FALSE
+
+	var/head_chance = 0
+	switch(severity)
+		if(EXPLODE_DEVASTATE)
+			head_chance = 35
+		if(EXPLODE_HEAVY)
+			head_chance = 22
+		if(EXPLODE_LIGHT)
+			head_chance = 10
+	if(!head_chance)
+		return FALSE
+
+	var/success = FALSE
+	var/obj/item/bodypart/head/head_part = get_bodypart(BODY_ZONE_HEAD)
+	if(head_part && prob(head_chance))
+		success = catastrophic_brain_ejection(head_part, null, source, force_destroy_head = TRUE, delete_head = TRUE)
+
+	if(success)
+		COOLDOWN_START(src, hyper_trauma_cd, 1)
+	return success
 
 // try forcing a specific wound, but only if there isn't already a wound of that severity or greater for that type on this bodypart
 /obj/item/bodypart/proc/force_wound_upwards(datum/wound/potential_wound, smited = FALSE, wound_source)

@@ -119,15 +119,24 @@
 		apply_projectile_effects(proj, def_zone, blocked)
 
 /mob/living/proc/apply_projectile_effects(obj/projectile/proj, def_zone, armor_check)
+	var/can_hyper_projectile_wound = proj.damage >= 40 && proj.damage_type == BRUTE && proj.wound_bonus != CANT_WOUND
+	var/hyper_active = (can_hyper_projectile_wound || proj.dismemberment) && GLOB.hyper_adrenaline_active
+	var/projectile_wound_bonus = proj.wound_bonus
+	var/projectile_bare_wound_bonus = proj.bare_wound_bonus
+	if(hyper_active && can_hyper_projectile_wound)
+		projectile_wound_bonus = max(projectile_wound_bonus, 35)
+		projectile_bare_wound_bonus = max(projectile_bare_wound_bonus, 55)
+
 	apply_damage(
 		damage = proj.damage,
 		damagetype = proj.damage_type,
 		def_zone = def_zone,
 		blocked = min(ARMOR_MAX_BLOCK, armor_check),  //cap damage reduction at 90%
-		wound_bonus = proj.wound_bonus,
-		bare_wound_bonus = proj.bare_wound_bonus,
+		wound_bonus = projectile_wound_bonus,
+		bare_wound_bonus = projectile_bare_wound_bonus,
 		sharpness = proj.sharpness,
 		attack_direction = get_dir(proj.starting, src),
+		attacking_item = proj,
 	)
 
 	apply_effects(
@@ -145,7 +154,7 @@
 		immobilize = proj.immobilize,
 	)
 
-	if(proj.dismemberment)
+	if(proj.dismemberment && !hyper_active)
 		check_projectile_dismemberment(proj, def_zone)
 
 	if (proj.damage && armor_check < 100)
@@ -216,7 +225,11 @@
 	if(thrown_item.thrownby == WEAKREF(src)) //No throwing stuff at yourself to trigger hit reactions
 		return ..()
 
-	if(check_block(AM, thrown_item.throwforce, "\the [thrown_item.name]", THROWN_PROJECTILE_ATTACK, 0, thrown_item.damtype))
+	var/thrown_force = thrown_item.throwforce
+	if(thrown_force && GLOB.hyper_adrenaline_active)
+		thrown_force *= HYPER_ADRENALINE_THROWFORCE_MULTIPLIER
+
+	if(check_block(AM, thrown_force, "\the [thrown_item.name]", THROWN_PROJECTILE_ATTACK, 0, thrown_item.damtype))
 		hitpush = FALSE
 		skipcatch = TRUE
 		blocked = TRUE
@@ -239,10 +252,10 @@
 		return ..()
 	visible_message(span_danger("[src] is hit by [thrown_item]!"), \
 					span_userdanger("You're hit by [thrown_item]!"))
-	if(!thrown_item.throwforce)
+	if(!thrown_force)
 		return
 	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour)
-	apply_damage(thrown_item.throwforce, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
+	apply_damage(thrown_force, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND), attacking_item = thrown_item)
 	if(QDELETED(src)) //Damage can delete the mob.
 		return
 	if(body_position == LYING_DOWN) // physics says it's significantly harder to push someone by constantly chucking random furniture at them if they are down on the floor.

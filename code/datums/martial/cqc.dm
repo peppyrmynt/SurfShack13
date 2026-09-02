@@ -105,7 +105,7 @@
 	)
 	to_chat(attacker, span_danger("You slam [defender] into the ground!"))
 	playsound(attacker, 'sound/items/weapons/slam.ogg', 50, TRUE, -1)
-	defender.apply_damage(10, BRUTE)
+	apply_hyper_martial_damage(attacker, defender, 10, BRUTE)
 	defender.Paralyze(12 SECONDS)
 	log_combat(attacker, defender, "slammed (CQC)")
 	return TRUE
@@ -144,7 +144,7 @@
 		playsound(attacker, 'sound/items/weapons/cqchit1.ogg', 50, TRUE, -1)
 		var/atom/throw_target = get_edge_target_turf(defender, attacker.dir)
 		defender.throw_at(throw_target, 1, 14, attacker)
-		defender.apply_damage(10, attacker.get_attack_type())
+		apply_hyper_martial_damage(attacker, defender, 10, attacker.get_attack_type())
 		if(defender.body_position == LYING_DOWN && !defender.IsUnconscious())
 			defender.adjustStaminaLoss(45)
 		log_combat(attacker, defender, "kicked (CQC)")
@@ -206,7 +206,7 @@
 	if(held_item && defender.temporarilyRemoveItemFromInventory(held_item))
 		attacker.put_in_hands(held_item)
 	defender.adjustStaminaLoss(50)
-	defender.apply_damage(25, attacker.get_attack_type())
+	apply_hyper_martial_damage(attacker, defender, 25, attacker.get_attack_type())
 	return TRUE
 
 /datum/martial_art/cqc/grab_act(mob/living/attacker, mob/living/defender)
@@ -254,7 +254,7 @@
 			)
 			to_chat(attacker, span_danger("In a swift motion, you snap the neck of [defender]!"))
 			log_combat(attacker, defender, "snapped neck")
-			defender.apply_damage(100, BRUTE, BODY_ZONE_HEAD, wound_bonus=CANT_WOUND)
+			apply_hyper_martial_damage(attacker, defender, 100, BRUTE, BODY_ZONE_HEAD, wound_bonus = CANT_WOUND)
 			if(!HAS_TRAIT(defender, TRAIT_NODEATH))
 				defender.death()
 				defender.investigate_log("has had [defender.p_their()] neck snapped by [attacker].", INVESTIGATE_DEATHS)
@@ -274,7 +274,7 @@
 		to_chat(attacker, span_danger("You leg sweep [defender]!"))
 		playsound(attacker, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
 		attacker.do_attack_animation(defender)
-		defender.apply_damage(10, BRUTE)
+		apply_hyper_martial_damage(attacker, defender, 10, BRUTE)
 		defender.Knockdown(5 SECONDS)
 		log_combat(attacker, defender, "sweeped (CQC)")
 		reset_streak()
@@ -289,7 +289,7 @@
 	if(defender.body_position == LYING_DOWN)
 		bonus_damage += 5
 		picked_hit_type = pick("kick", "stomp")
-	defender.apply_damage(bonus_damage, BRUTE)
+	apply_hyper_martial_damage(attacker, defender, bonus_damage, BRUTE)
 
 	playsound(defender, (picked_hit_type == "kick" || picked_hit_type == "stomp") ? 'sound/items/weapons/cqchit2.ogg' : 'sound/items/weapons/cqchit1.ogg', 50, TRUE, -1)
 
@@ -346,7 +346,7 @@
 		to_chat(attacker, span_danger("You strike [defender]'s jaw,[disarmed_item ? " disarming [defender.p_them()] of [disarmed_item] and" : ""] leaving [defender.p_them()] disoriented!"))
 		playsound(defender, 'sound/items/weapons/cqchit1.ogg', 50, TRUE, -1)
 		defender.set_jitter_if_lower(4 SECONDS)
-		defender.apply_damage(5, attacker.get_attack_type())
+		apply_hyper_martial_damage(attacker, defender, 5, attacker.get_attack_type())
 		log_combat(attacker, defender, "disarmed (CQC)", addition = disarmed_item ? "(disarmed of [disarmed_item])" : null)
 		return MARTIAL_ATTACK_SUCCESS
 

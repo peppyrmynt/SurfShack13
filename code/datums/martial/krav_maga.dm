@@ -113,7 +113,7 @@
 	)
 	to_chat(attacker, span_danger("You leg sweep [defender]!"))
 	playsound(attacker, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
-	defender.apply_damage(5, BRUTE, BODY_ZONE_CHEST)
+	apply_hyper_martial_damage(attacker, defender, 5, BRUTE, BODY_ZONE_CHEST)
 	defender.Knockdown(6 SECONDS)
 	log_combat(attacker, defender, "leg sweeped")
 	return MARTIAL_ATTACK_SUCCESS
@@ -148,7 +148,7 @@
 	)
 	to_chat(attacker, span_danger("You karate chop [defender]'s neck, rendering [defender.p_them()] unable to speak!"))
 	playsound(attacker, 'sound/effects/hit_punch.ogg', 50, TRUE, -1)
-	defender.apply_damage(10, attacker.get_attack_type(), BODY_ZONE_HEAD)
+	apply_hyper_martial_damage(attacker, defender, 10, attacker.get_attack_type(), BODY_ZONE_HEAD)
 	defender.adjust_silence_up_to(20 SECONDS, 20 SECONDS)
 	log_combat(attacker, defender, "neck chopped")
 	return MARTIAL_ATTACK_SUCCESS
@@ -167,7 +167,7 @@
 
 	log_combat(attacker, defender, "[picked_hit_type]ed")
 	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
-	defender.apply_damage(10 + bonus_damage, attacker.get_attack_type(), affecting)
+	apply_hyper_martial_damage(attacker, defender, 10 + bonus_damage, attacker.get_attack_type(), affecting)
 	if(picked_hit_type == "kick" || picked_hit_type == "stomp")
 		attacker.do_attack_animation(defender, ATTACK_EFFECT_KICK)
 		playsound(defender, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)

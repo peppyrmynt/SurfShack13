@@ -1,5 +1,19 @@
 /*ALL DEFINES RELATED TO COMBAT GO HERE*/
 
+/*
+ * Hyper Adrenaline central multipliers.
+ *
+ * Player max health, default movement speed, individual melee damage, and
+ * individual projectile damage are intentionally unchanged.
+ */
+#define HYPER_ADRENALINE_ACTION_TIME_MULTIPLIER 0.5
+#define HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER 2
+#define HYPER_ADRENALINE_DAMAGE_MULTIPLIER 2
+#define HYPER_ADRENALINE_EMBED_CHANCE_MULTIPLIER 2
+#define HYPER_ADRENALINE_EXPLOSION_MULTIPLIER 2
+#define HYPER_ADRENALINE_THROWFORCE_MULTIPLIER 2
+#define HYPER_ADRENALINE_WOUND_MULTIPLIER 2
+
 //Damage and status effect defines
 
 //Damage defines //TODO: merge these down to reduce on defines

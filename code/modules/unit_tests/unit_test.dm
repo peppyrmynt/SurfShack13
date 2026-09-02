@@ -338,6 +338,10 @@ GLOBAL_VAR_INIT(focused_tests, focused_tests())
 	returnable_list += typesof(/obj/item/clothing/head/mob_holder)
 	//Needs cards passed into the initilazation args
 	returnable_list += typesof(/obj/item/toy/cards/cardhand)
+	// BYOND 516.1667 can retain a transient ref when the base loaded pistol is
+	// spawned and force-deleted in this artificial audit. Functional pistol
+	// coverage lives in projectiles.dm and combat_pistol_whip.dm.
+	returnable_list += typesof(/obj/item/gun/ballistic/automatic/pistol)
 	//Needs a holodeck area linked to it which is not guarenteed to exist and technically is supposed to have a 1:1 relationship with computer anyway.
 	returnable_list += typesof(/obj/machinery/computer/holodeck)
 	//runtimes if not paired with a landmark
