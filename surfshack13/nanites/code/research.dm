@@ -83,6 +83,7 @@
 		"shock_nanites",
 		"emp_nanites",
 		"temperature_nanites",
+		"sensor_organ_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS,

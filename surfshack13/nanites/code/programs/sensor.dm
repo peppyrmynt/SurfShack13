@@ -260,10 +260,8 @@
 
 /datum/nanite_program/sensor/species
 	name = "Species Sensor"
-	desc = "When triggered, the nanites scan the host to determine their species and output a signal depending on the conditions set in the settings."
-	can_trigger = TRUE
-	trigger_cost = 0
-	trigger_cooldown = 5
+	desc = "The nanites scan the host to determine their species and output a signal depending on the conditions set in the settings."
+	can_rule = TRUE
 
 	///List of all species we can add special sensors for.
 	var/static/list/allowed_species = list(
@@ -286,7 +284,7 @@
 	extra_settings[NES_RACE] = new /datum/nanite_extra_setting/type("Human", species_types)
 	extra_settings[NES_MODE] = new /datum/nanite_extra_setting/boolean(TRUE, "Is", "Is Not")
 
-/datum/nanite_program/sensor/species/on_trigger(comm_message)
+/datum/nanite_program/sensor/species/check_event()
 	var/datum/nanite_extra_setting/species_type = extra_settings[NES_RACE]
 	var/species = allowed_species[species_type.get_value()]
 	var/species_match = FALSE
@@ -310,6 +308,13 @@
 		if(!species_match)
 			send_code()
 
+/datum/nanite_program/sensor/species/make_rule(datum/nanite_program/target)
+	var/datum/nanite_rule/species/rule = new(target)
+	var/datum/nanite_extra_setting/specie_input = extra_settings[NES_RACE]
+	var/datum/nanite_extra_setting/mymode = extra_settings[NES_MODE]
+	rule.rule_specie_input = allowed_species[specie_input.get_value()]
+	rule.mode = mymode.get_value()
+	return rule
 
 /datum/nanite_program/sensor/alive
 	name = "Vital Sensor"
@@ -325,17 +330,30 @@
 	var/datum/nanite_rule/alive/rule = new(target)
 	return rule
 
-
 /datum/nanite_program/sensor/assistant
 	name = "Assistant Sensor"
-	desc = "When triggered, the nanites scan the host's biodata and match it with Nanotrasen's private bio-records and output a signal if the host is an assistant."
-	can_trigger = TRUE
-	trigger_cost = 0
-	trigger_cooldown = 5
+	desc = "The nanites scan the host's biodata and match it with Nanotrasen's private bio-records and output a signal if the host is an assistant."
+	can_rule = TRUE
 
-/datum/nanite_program/sensor/job/on_trigger(comm_message)
-	if(host_mob.mind?.assigned_role.title == "Assistant")
-		send_code()
+/datum/nanite_program/sensor/assistant/register_extra_settings()
+	. = ..()
+	extra_settings[NES_MODE] = new /datum/nanite_extra_setting/boolean(TRUE, "Is", "Is Not")
+
+/datum/nanite_program/sensor/assistant/check_event()
+	var/datum/nanite_extra_setting/mode = extra_settings[NES_MODE]
+
+	if(mode)
+		if(host_mob.mind?.assigned_role.title == "Assistant")
+			return TRUE
+	else
+		if(host_mob.mind?.assigned_role.title == "Assistant")
+			return FALSE
+
+/datum/nanite_program/sensor/assistant/make_rule(datum/nanite_program/target)
+	var/datum/nanite_rule/assistant/rule = new(target)
+	var/datum/nanite_extra_setting/mymode = extra_settings[NES_MODE]
+	rule.mode = mymode.get_value()
+	return rule
 
 /datum/nanite_program/sensor/incapacitated
 	name = "Incapacitated Sensor"
@@ -363,4 +381,68 @@
 
 /datum/nanite_program/sensor/resting/make_rule(datum/nanite_program/target)
 	var/datum/nanite_rule/resting/rule = new(target)
+	return rule
+
+/datum/nanite_program/sensor/organ_damage
+	name = "Organ Damage Sensor"
+	desc = "The nanites receive a signal when a host's organ damage is above/below a target value."
+	can_rule = TRUE
+	var/spent = FALSE
+
+/datum/nanite_program/sensor/organ_damage/register_extra_settings()
+	. = ..()
+	extra_settings[NES_DAMAGE_TYPE] = new /datum/nanite_extra_setting/type("BRAIN", list("BRAIN", "HEART", "LUNGS", "LIVER", "STOMACH", "EYES", "EARS", "APPENDIX"))
+	extra_settings[NES_DAMAGE] = new /datum/nanite_extra_setting/number(0, 0, 500)
+	extra_settings[NES_DIRECTION] = new /datum/nanite_extra_setting/boolean(TRUE, "Above", "Below")
+
+/datum/nanite_program/sensor/organ_damage/check_event()
+	var/reached_threshold = FALSE
+	var/datum/nanite_extra_setting/type = extra_settings[NES_DAMAGE_TYPE]
+	var/datum/nanite_extra_setting/damage = extra_settings[NES_DAMAGE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	var/check_above =  direction.get_value()
+	var/damage_amt = 0
+	var/mob/living/carbon/human/our_fella = host_mob
+	switch(type.get_value())
+		if("BRAIN")
+			damage_amt = our_fella.get_organ_loss(ORGAN_SLOT_BRAIN)
+		if("HEART")
+			damage_amt = our_fella.get_organ_loss(ORGAN_SLOT_HEART)
+		if("LUNGS")
+			damage_amt = our_fella.get_organ_loss(ORGAN_SLOT_LUNGS)
+		if("LIVER")
+			damage_amt = our_fella.get_organ_loss(ORGAN_SLOT_LIVER)
+		if("STOMACH")
+			damage_amt = our_fella.get_organ_loss(ORGAN_SLOT_STOMACH)
+		if("EYES")
+			damage_amt = our_fella.get_organ_loss(ORGAN_SLOT_EYES)
+		if("EARS")
+			damage_amt = our_fella.get_organ_loss(ORGAN_SLOT_EARS)
+		if("APPENDIX")
+			damage_amt = our_fella.get_organ_loss(ORGAN_SLOT_APPENDIX)
+
+	if(check_above)
+		if(damage_amt >= damage.get_value())
+			reached_threshold = TRUE
+	else
+		if(damage_amt < damage.get_value())
+			reached_threshold = TRUE
+
+	if(reached_threshold)
+		if(!spent)
+			spent = TRUE
+			return TRUE
+		return FALSE
+	else
+		spent = FALSE
+		return FALSE
+
+/datum/nanite_program/sensor/organ_damage/make_rule(datum/nanite_program/target)
+	var/datum/nanite_rule/organ_damage/rule = new(target)
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	var/datum/nanite_extra_setting/damage_type = extra_settings[NES_DAMAGE_TYPE]
+	var/datum/nanite_extra_setting/damage = extra_settings[NES_DAMAGE]
+	rule.above = direction.get_value()
+	rule.threshold = damage.get_value()
+	rule.damage_type = damage_type.get_value()
 	return rule
