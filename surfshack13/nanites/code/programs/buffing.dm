@@ -90,10 +90,12 @@
 /datum/nanite_program/conductive/enable_passive_effect()
 	. = ..()
 	ADD_TRAIT(host_mob, TRAIT_SHOCKIMMUNE, TRAIT_NANITES)
+	nanites.conductive = TRUE
 
 /datum/nanite_program/conductive/disable_passive_effect()
 	. = ..()
 	REMOVE_TRAIT(host_mob, TRAIT_SHOCKIMMUNE, TRAIT_NANITES)
+	nanites.conductive = FALSE
 
 /datum/nanite_program/mindshield
 	name = "Mental Barrier"

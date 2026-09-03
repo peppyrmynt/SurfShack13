@@ -9,9 +9,13 @@
 		return ELEMENT_INCOMPATIBLE
 	flags = _flags
 	RegisterSignal(target, COMSIG_ATOM_PRE_EMP_ACT, PROC_REF(getEmpFlags))
+	if(isliving(target))
+		ADD_TRAIT(target, TRAIT_EMPIMMUNE, "emp-protection")
 
 /datum/element/empprotection/Detach(atom/target)
 	UnregisterSignal(target, COMSIG_ATOM_PRE_EMP_ACT)
+	if(isliving(target))
+		REMOVE_TRAIT(target, TRAIT_EMPIMMUNE, "emp-protection")
 	return ..()
 
 /datum/element/empprotection/proc/getEmpFlags(datum/source, severity)
