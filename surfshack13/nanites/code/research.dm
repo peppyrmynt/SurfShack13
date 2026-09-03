@@ -63,6 +63,8 @@
 		"research_nanites",
 		"sensor_assistant_nanites",
 		"sensor_incapacitated_nanites",
+		"sensor_soul_nanites",
+		"sensor_temperature_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS,
@@ -83,6 +85,7 @@
 		"shock_nanites",
 		"emp_nanites",
 		"temperature_nanites",
+		"sensor_fire_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS,
@@ -106,6 +109,8 @@
 		"sensor_damage_nanites",
 		"sensor_species_nanites",
 		"sensor_alive_nanites",
+		"sensor_blood_nanites",
+		"sensor_nutrition_nanites",
 	)
 	research_costs = list(
 		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS,
