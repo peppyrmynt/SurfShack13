@@ -227,20 +227,13 @@
 		return FALSE
 	return ..()
 
-/datum/nanite_program/corpsepreserve/active_effect()
-	if(host_mob.stat == DEAD)
-		var/datum/reagent/S = host_mob.reagents?.has_reagent(/datum/reagent/toxin/formaldehyde)
-		if(S)
-			return
-		if(!spent)
-			spent = TRUE
-			nanites.adjust_nanites(null, -10)
-			host_mob.reagents.add_reagent(/datum/reagent/toxin/formaldehyde, 5)
-			return
-		return
-	else
-		spent = FALSE
-		return
+/datum/nanite_program/corpsepreserve/enable_passive_effect()
+	. = ..()
+	host_mob.add_traits(list(TRAIT_ROTIMMUNE), TRAIT_NANITES)
+
+/datum/nanite_program/corpsepreserve/disable_passive_effect()
+	. = ..()
+	host_mob.remove_traits(list(TRAIT_ROTIMMUNE), TRAIT_NANITES)
 
 /datum/nanite_program/naniteresus
 	name = "Nanite Resurrection"
