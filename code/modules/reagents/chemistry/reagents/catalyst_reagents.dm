@@ -52,6 +52,6 @@
 	name = "Tempomyocin"
 	description = "This catalyst reagent will reduce the speed of reactions that it shares a beaker with by a dramatic amount."
 	target_reagent_type = /datum/reagent
-	modifier = 0.15
+	modifier = 0.2
 	ph = 7
 	color = "#e61f82"
