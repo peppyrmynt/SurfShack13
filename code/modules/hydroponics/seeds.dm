@@ -63,8 +63,6 @@
 	var/graft_gene
 	///Determines if the plant should be allowed to mutate early at 30+ instability.
 	var/seed_flags = MUTATE_EARLY
-	///Determines if the plant has been sliced with a hatchet to extract substances like saps.
-	var/extracted = 0
 
 /obj/item/seeds/Initialize(mapload, nogenes = FALSE)
 	. = ..()
@@ -187,6 +185,10 @@
 // Harvest procs
 /obj/item/seeds/proc/getYield()
 	var/return_yield = yield
+
+	for(var/datum/plant_gene/trait/trait in genes)
+		if(trait.trait_flags & TRAIT_NO_POLLINATION)
+			return return_yield
 
 	var/obj/machinery/hydroponics/parent = loc
 	if(istype(loc, /obj/machinery/hydroponics))
@@ -640,3 +642,25 @@
 		var/datum/plant_gene/reagent/selected_reagent = pick(valid_reagents)
 		genes += selected_reagent.Copy()
 		reagents_from_genes()
+
+/// Returns a mutable appearance to be used as an overlay for the plant in hydro trays.
+/obj/item/seeds/proc/get_tray_overlay(age, status)
+	var/mutable_appearance/plant_overlay = mutable_appearance(growing_icon, layer = OBJ_LAYER + 0.01)
+	switch(status)
+		if(HYDROTRAY_PLANT_DEAD)
+			plant_overlay.icon_state = icon_dead
+		if(HYDROTRAY_PLANT_HARVESTABLE)
+			plant_overlay.icon_state = icon_harvest || "[icon_grow][growthstages]"
+		else
+			var/t_growthstate = clamp(round((age / maturation) * growthstages), 1, growthstages)
+			plant_overlay.icon_state = "[icon_grow][t_growthstate]"
+	plant_overlay.pixel_z = plant_icon_offset
+	return plant_overlay
+
+/// Called when the seed is set in a tray
+/obj/item/seeds/proc/on_planted(obj/machinery/hydroponics/parent)
+	return
+
+/// Called when the seed is removed from a tray - possibly from being harvested, possibly from being uprooted
+/obj/item/seeds/proc/on_unplanted(obj/machinery/hydroponics/parent)
+	return
