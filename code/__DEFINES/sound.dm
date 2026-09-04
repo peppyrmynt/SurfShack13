@@ -214,6 +214,9 @@ GLOBAL_LIST_INIT(announcer_keys, list(
 #define SFX_MALE_SIGH "male_sigh"
 #define SFX_FEMALE_SIGH "female_sigh"
 #define SFX_WRITING_PEN "writing_pen"
+// Surf Shack 13 Edit
+#define SFX_SHEEP_BLEAT "sheep"
+// Surf Shack 13 End
 
 // Standard is 44.1khz
 #define MIN_EMOTE_PITCH 40000
