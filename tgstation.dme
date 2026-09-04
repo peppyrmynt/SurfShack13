@@ -6528,6 +6528,7 @@
 #include "surfshack13\code\__DEFINES\traits\bloodsucker_traits.dm"
 #include "surfshack13\code\__HELPERS\roundend.dm"
 #include "surfshack13\code\_SIGNALS\nanites.dm"
+#include "surfshack13\code\datums\sprite_accessories.dm"
 #include "surfshack13\code\datums\elements\tweak.dm"
 #include "surfshack13\code\game\machinery\computer\public_announce.dm"
 #include "surfshack13\code\game\objects\items\battering_ram.dm"
