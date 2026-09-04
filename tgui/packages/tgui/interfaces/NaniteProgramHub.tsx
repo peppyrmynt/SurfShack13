@@ -31,7 +31,7 @@ type ProgramData = {
   id: string;
 };
 
-export const NaniteProgramHub = (props, context) => {
+export const NaniteProgramHub = (props) => {
   const { act, data } = useBackend<Data>();
   const {
     detail_view,
@@ -42,10 +42,12 @@ export const NaniteProgramHub = (props, context) => {
     categories,
   } = data;
   const [selectedCategory, setSelectedCategory] = useSharedState(
-    context,
     'category',
+    categories?.[0],
   );
-  const programsInCategory = (programs && programs[selectedCategory]) || [];
+
+  const programsInCategory =
+    (programs && selectedCategory && programs[selectedCategory]) || [];
 
   return (
     <Window width={500} height={700}>

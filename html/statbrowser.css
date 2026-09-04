@@ -1,6 +1,7 @@
 .light:root {
-	--scrollbar-base: #f2f2f2;
-	--scrollbar-thumb: #a7a7a7;
+  --color-base: #ffffff;
+  --scrollbar-base: #f2f2f2;
+  --scrollbar-thumb: #a7a7a7;
 }
 
 html,
@@ -104,6 +105,11 @@ img {
 	background-color: #eeeeee;
 }
 
+#under-content {
+	height: calc(0.5em - 4px);
+	background-color: #eeeeee;
+}
+
 #statcontent {
 	flex: 1;
 	padding: 0.75em 0.5em;
@@ -192,20 +198,14 @@ img {
  * MARK: Dark theme colors
  */
 .dark:root {
-	--scrollbar-base: #151515;
-	--scrollbar-thumb: #363636;
+  --color-base: #151515;
+  --scrollbar-base: #151515;
+  --scrollbar-thumb: #363636;
 }
 
 body.dark {
-	background-color: #151515;
-	color: #b2c4dd;
-	scrollbar-base-color: #1c1c1c;
-	scrollbar-face-color: #3b3b3b;
-	scrollbar-3dlight-color: #252525;
-	scrollbar-highlight-color: #252525;
-	scrollbar-track-color: #1c1c1c;
-	scrollbar-arrow-color: #929292;
-	scrollbar-shadow-color: #3b3b3b;
+  background-color: #151515;
+  color: #b2c4dd;
 }
 
 .dark a {
@@ -240,7 +240,8 @@ body.dark {
 	border-bottom-color: #d4dfec;
 }
 
-.dark #under-menu {
+.dark #under-menu,
+.dark #under-content {
 	background-color: #202020;
 }
 

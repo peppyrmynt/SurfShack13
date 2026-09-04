@@ -16,7 +16,7 @@ import { BooleanLike } from 'tgui-core/react';
 import { useBackend } from '../../backend';
 
 type GenericUplinkProps = {
-  currency?: string | JSX.Element;
+  currency?: string | React.JSX.Element;
   categories: string[];
   items: Item[];
   handleBuy: (item: Item) => void;
@@ -46,7 +46,7 @@ export const GenericUplink = (props: GenericUplinkProps) => {
         <Stack vertical fill>
           <Stack.Item>
             <Stack>
-              <Stack.Item grow={1}>
+              <Stack.Item grow>
                 <Button
                   bold
                   fluid
@@ -83,7 +83,7 @@ export const GenericUplink = (props: GenericUplinkProps) => {
               fluid
             />
           </Stack.Item>
-          <Stack.Item grow={1}>
+          <Stack.Item grow>
             <Tabs vertical fill>
               {categories.map((category) => (
                 <Tabs.Tab
@@ -104,20 +104,21 @@ export const GenericUplink = (props: GenericUplinkProps) => {
           </Stack.Item>
         </Stack>
       </Stack.Item>
-      <Stack.Item grow={1}>
-        <Box height="100%" pr={1} mr={-1} style={{ overflowY: 'auto' }}>
-          {items.length === 0 && (
+      <Stack.Item grow>
+        <Box height="100%" pr={1} mr={-1}>
+          {items.length === 0 ? (
             <NoticeBox>
               {searchText.length === 0
                 ? 'No items in this category.'
                 : 'No results found.'}
             </NoticeBox>
+          ) : (
+            <ItemList
+              compactMode={searchText.length > 0 || compactMode}
+              items={items}
+              handleBuy={handleBuy}
+            />
           )}
-          <ItemList
-            compactMode={searchText.length > 0 || compactMode}
-            items={items}
-            handleBuy={handleBuy}
-          />
         </Box>
       </Stack.Item>
     </Stack>
@@ -130,8 +131,8 @@ export type Item = {
   icon: string;
   icon_state: string;
   category: string;
-  cost: JSX.Element | string;
-  desc: JSX.Element | string;
+  cost: React.JSX.Element | string;
+  desc: React.JSX.Element | string;
   disabled: BooleanLike;
 };
 
@@ -172,12 +173,12 @@ const ItemList = (props: ItemListProps) => {
                     />
                   </Box>
                 </Stack.Item>
-                <Stack.Item grow={1}>
+                <Stack.Item grow>
                   {compactMode ? (
                     <Stack>
                       <Stack.Item
                         bold
-                        grow={1}
+                        grow
                         lineHeight="36px"
                         style={{
                           overflow: 'hidden',
