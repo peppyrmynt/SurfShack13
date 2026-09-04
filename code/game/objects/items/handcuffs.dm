@@ -541,7 +541,7 @@
 	inhand_icon_state = "bola"
 	lefthand_file = 'icons/mob/inhands/weapons/thrown_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/thrown_righthand.dmi'
-	breakouttime = 3.5 SECONDS//easy to apply, easy to break out of
+	breakouttime = 6 SECONDS//easy to apply, easy to break out of
 	gender = NEUTER
 	///Amount of time to knock the target down for once it's hit in deciseconds.
 	var/knockdown = 0
@@ -608,7 +608,7 @@
 	inhand_icon_state = "ebola"
 	hitsound = 'sound/items/weapons/taserhit.ogg'
 	w_class = WEIGHT_CLASS_SMALL
-	breakouttime = 6 SECONDS
+	breakouttime = 4 SECONDS
 	custom_price = PAYCHECK_COMMAND * 0.35
 
 /obj/item/restraints/legcuffs/bola/energy/Initialize(mapload)
