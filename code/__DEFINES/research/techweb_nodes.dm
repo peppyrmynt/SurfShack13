@@ -55,7 +55,7 @@
 #define TECHWEB_NODE_HOLOGRAPHICS "holographics"
 #define TECHWEB_NODE_HUD "hud"
 #define TECHWEB_NODE_HYDROPONICS "hydroponics"
-#define TECHWEB_NODE_INTERGRATED_TOOLSETS "intergrated_toolsets"
+#define TECHWEB_NODE_INTEGRATED_TOOLSETS "integrated_toolsets"
 #define TECHWEB_NODE_INTERROGATION "interrogation"
 #define TECHWEB_NODE_LIGHT_APPS "light_apps"
 #define TECHWEB_NODE_LOW_PRESSURE_EXCAVATION "low_pressure_excavation"

@@ -28,6 +28,7 @@
 	description = "When simple medicine doesn't cut it."
 	prereq_ids = list(TECHWEB_NODE_SURGERY)
 	design_ids = list(
+		"self-surgery-skillchip",
 		"harvester",
 		"surgery_heal_brute_upgrade_femto",
 		"surgery_heal_burn_upgrade_femto",
@@ -45,7 +46,6 @@
 	description = "When evolution isn't fast enough."
 	prereq_ids = list(TECHWEB_NODE_SURGERY_ADV)
 	design_ids = list(
-		"self-surgery-skillchip",
 		"surgery_cortex_folding",
 		"surgery_cortex_folding_mechanic",
 		"surgery_cortex_imprint",
