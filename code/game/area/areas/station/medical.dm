@@ -110,6 +110,11 @@
 	name = "\improper Grand Surgery Theatre"
 	icon_state = "surgerytheatre"
 
+/area/station/medical/surgery/abandoned
+	name = "\improper Abandoned Operating Room"
+	icon_state = "surgery"
+	sound_environment = SOUND_AREA_SMALL_ENCLOSED
+
 /area/station/medical/cryo
 	name = "Cryogenics"
 	icon_state = "cryo"
@@ -120,6 +125,10 @@
 
 /area/station/medical/treatment_center
 	name = "\improper Medbay Treatment Center"
+	icon_state = "exam_room"
+
+/area/station/medical/treatment_center/abandoned
+	name = "\improper Abandoned Medbay Treatment Center"
 	icon_state = "exam_room"
 
 /area/station/medical/psychology

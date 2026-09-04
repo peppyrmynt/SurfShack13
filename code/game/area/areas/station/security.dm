@@ -96,6 +96,11 @@
 	name = "\improper Firing Range"
 	icon_state = "firingrange"
 
+/area/station/security/range/abandoned
+	name = "\improper Abandoned Firing Range"
+	icon_state = "firingrange"
+	sound_environment = SOUND_AREA_SMALL_ENCLOSED
+
 /area/station/security/eva
 	name = "\improper Security EVA"
 	icon_state = "sec_eva"

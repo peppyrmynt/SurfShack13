@@ -46,6 +46,10 @@
 	name = "\improper Atmospherics Mixing Room"
 	icon_state = "atmos_mix"
 
+/area/station/engineering/atmos/mix/abandoned
+	name = "\improper Abandoned Atmospherics Mixing Room"
+	icon_state = "atmos_mix"
+
 /area/station/engineering/atmos/storage
 	name = "\improper Atmospherics Storage Room"
 	icon_state = "atmos_storage"
@@ -92,7 +96,7 @@
 	sound_environment = SOUND_AREA_LARGE_ENCLOSED
 
 /area/station/engineering/break_room
-	name = "\improper Engineering Foyer"
+	name = "\improper Engineering Break Room"
 	icon_state = "engine_break"
 	sound_environment = SOUND_AREA_SMALL_ENCLOSED
 

@@ -37,6 +37,8 @@ All the important duct code:
 	var/list/neighbours = list()
 	///what stack to drop when disconnected. Must be /obj/item/stack/ducts or a subtype
 	var/drop_on_wrench = /obj/item/stack/ducts
+	///whether we delete when disconnected (e.g. unanchored)
+	var/delete_on_disconnect = TRUE
 
 /obj/machinery/duct/Initialize(mapload, no_anchor, color_of_duct = null, layer_of_duct = null, force_connects, force_ignore_colors)
 	. = ..()
@@ -89,6 +91,11 @@ All the important duct code:
 	var/opposite_dir = REVERSE_DIR(direction)
 	if(!active || !other.active)
 		return
+
+	if(istype(other, /obj/machinery/duct/multiz))
+		var/obj/machinery/duct/multiz/other_multiz = other
+		if(opposite_dir != other_multiz.dir && opposite_dir != UP && opposite_dir != DOWN)
+			return FALSE
 
 	if(!dumb && other.dumb && !(opposite_dir & other.connects))
 		return
@@ -154,6 +161,8 @@ All the important duct code:
 	lose_neighbours()
 	reset_connects(0)
 	update_appearance()
+	if(!delete_on_disconnect)
+		return
 	if(ispath(drop_on_wrench))
 		var/obj/item/stack/ducts/duct_stack = new drop_on_wrench(drop_location())
 		duct_stack.duct_color = GLOB.pipe_color_name[duct_color] || DUCT_COLOR_OMNI
@@ -383,3 +392,57 @@ All the important duct code:
 
 /obj/item/stack/ducts/fifty
 	amount = 50
+
+/obj/machinery/duct/multiz
+	name = "multi deck fluid duct adapter"
+	desc = "A fluid duct adapter which allows fluid ducts to connect to other ductnets on different decks."
+	icon_state = "adapter"
+	dir = SOUTH
+	delete_on_disconnect = FALSE
+
+	/// Our central icon for multiz connection
+	var/mutable_appearance/multiz_center = null
+
+/obj/machinery/duct/multiz/Initialize(mapload, no_anchor, color_of_duct = null, layer_of_duct = null, force_connects, force_ignore_colors)
+	multiz_center = mutable_appearance('icons/obj/pipes_n_cables/hydrochem/fluid_ducts.dmi', "adapter", layer = PLUMBING_PIPE_VISIBILE_LAYER + 0.1)
+	. = ..()
+	AddComponent(/datum/component/simple_rotation)
+
+/obj/machinery/duct/multiz/update_overlays()
+	. = ..()
+	if(multiz_center)
+		multiz_center.color = duct_color
+		. += multiz_center
+
+/obj/machinery/duct/multiz/attempt_connect()
+	// Only check our facing direction (dir) horizontally
+	if(dir in GLOB.cardinals)
+		for(var/atom/movable/duct_candidate in get_step(src, dir))
+			if(connect_network(duct_candidate, dir))
+				add_connects(dir)
+
+	// Check vertically
+	var/turf/local_turf = get_turf(src)
+	if(local_turf)
+		var/turf/above = GET_TURF_ABOVE(local_turf)
+		if(above)
+			for(var/obj/machinery/duct/multiz/other in above)
+				if(connect_network(other, UP))
+					add_connects(UP)
+		var/turf/below = GET_TURF_BELOW(local_turf)
+		if(below)
+			for(var/obj/machinery/duct/multiz/other in below)
+				if(connect_network(other, DOWN))
+					add_connects(DOWN)
+	update_appearance()
+
+/obj/machinery/duct/multiz/connect_duct(obj/machinery/duct/other, direction)
+	if(direction != dir && direction != UP && direction != DOWN)
+		return FALSE
+	return ..()
+
+/obj/machinery/duct/multiz/connect_plumber(datum/component/plumbing/plumbing, direction)
+	if(direction != dir && direction != UP && direction != DOWN)
+		return FALSE
+	return ..()
+
