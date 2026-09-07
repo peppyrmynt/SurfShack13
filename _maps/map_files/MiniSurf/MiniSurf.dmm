@@ -27370,9 +27370,6 @@
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
-"sem" = (
-/turf/closed/wall,
-/area/station/service/lawoffice)
 "seu" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -35871,7 +35868,6 @@
 /obj/effect/turf_decal/tile/brown/anticorner/contrasted{
 	dir = 1
 	},
-/obj/item/clothing/head/soft,
 /obj/machinery/light/directional/north,
 /obj/machinery/status_display/supply{
 	pixel_y = 32
@@ -35880,6 +35876,9 @@
 /obj/effect/turf_decal/stripes{
 	dir = 8
 	},
+/obj/item/clothing/gloves/cargo_gauntlet,
+/obj/item/clothing/gloves/cargo_gauntlet,
+/obj/item/clothing/gloves/cargo_gauntlet,
 /turf/open/floor/iron,
 /area/station/cargo/storage)
 "xHe" = (
@@ -72932,7 +72931,7 @@ pSY
 vxl
 azz
 rJS
-sem
+sOr
 sGi
 nJc
 obC
@@ -73189,7 +73188,7 @@ pSY
 moR
 fLE
 nfk
-sem
+sOr
 eqh
 iNx
 tGf
@@ -73446,7 +73445,7 @@ pSY
 vYR
 jqT
 sND
-sem
+sOr
 tAU
 nJc
 sGi
