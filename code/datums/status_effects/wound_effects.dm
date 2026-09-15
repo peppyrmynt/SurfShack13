@@ -17,12 +17,15 @@
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human_owner = owner
 		human_owner.physiology.bleed_mod *= WOUND_DETERMINATION_BLEED_MOD
+		if(HAS_TRAIT(human_owner, TRAIT_NOSOFTCRIT_DETERMINED))
+			ADD_TRAIT(human_owner, TRAIT_NOSOFTCRIT, "Determination")
 
 /datum/status_effect/determined/on_remove()
 	owner.visible_message(span_danger("[owner]'s body slackens noticeably!"), span_warning("<b>Your adrenaline rush dies off, and the pain from your wounds come aching back in...</b>"), vision_distance=COMBAT_MESSAGE_RANGE)
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human_owner = owner
 		human_owner.physiology.bleed_mod /= WOUND_DETERMINATION_BLEED_MOD
+		REMOVE_TRAIT(human_owner, TRAIT_NOSOFTCRIT, "Determination")
 	return ..()
 
 /datum/status_effect/limp
