@@ -47,6 +47,7 @@
 #define NES_SUPER_TOOL_CHOICE "Super Tool to Make"
 #define NES_BOT_CHOICE "Bot to Make"
 #define NES_AMMO_CHOICE "Ammo to Make"
+#define NES_VALUE "Value"
 
 #define NANITE_CATEGORY_UTILITIES "Utility Nanites"
 #define NANITE_CATEGORY_MEDICAL "Medical Nanites"
