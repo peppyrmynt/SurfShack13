@@ -246,13 +246,17 @@
 	json_data["config"] = list(
 		"title" = title,
 		"status" = status,
-		"interface" = interface,
+		"interface" = list(
+			"name" = interface,
+			"layout" = user.client.prefs.read_preference(src_object.layout_prefs_used),
+		),
 		"refreshing" = refreshing,
 		"window" = list(
 			"key" = window_key,
 			"size" = window_size,
 			"fancy" = user.client.prefs.read_preference(/datum/preference/toggle/tgui_fancy),
 			"locked" = user.client.prefs.read_preference(/datum/preference/toggle/tgui_lock),
+			"scale" = user.client.prefs.read_preference(/datum/preference/toggle/ui_scale),
 		),
 		"client" = list(
 			"ckey" = user.client.ckey,
