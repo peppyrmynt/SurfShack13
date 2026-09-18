@@ -1315,7 +1315,7 @@
 	id = "teledoor"
 	},
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "azO" = (
 /obj/effect/turf_decal/trimline/yellow/arrow_cw,
 /obj/effect/turf_decal/trimline/yellow/arrow_ccw{
@@ -1522,7 +1522,9 @@
 "aDd" = (
 /obj/effect/mapping_helpers/airlock/access/all/supply/mining,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 8
 	},
@@ -1551,7 +1553,7 @@
 	},
 /obj/machinery/light/small/red/directional/west,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "aDz" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 10
@@ -1911,7 +1913,7 @@
 	},
 /obj/machinery/light/red/directional/east,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "aKX" = (
 /obj/effect/mapping_helpers/iannewyear,
 /obj/structure/disposalpipe/segment{
@@ -1933,7 +1935,7 @@
 /obj/machinery/status_display/ai/directional/south,
 /obj/machinery/firealarm/directional/east,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "aLz" = (
 /obj/effect/turf_decal/trimline/neutral/filled/line,
 /turf/open/floor/iron,
@@ -2077,7 +2079,7 @@
 	dir = 8
 	},
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "aNG" = (
 /obj/machinery/light/directional/east,
 /obj/structure/cable,
@@ -4023,7 +4025,7 @@
 /obj/item/storage/toolbox/mechanical,
 /obj/item/multitool,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "bzv" = (
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 8
@@ -5768,7 +5770,7 @@
 /obj/effect/mapping_helpers/airlock/access/any/command/minisat,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "cgi" = (
 /obj/machinery/atmospherics/pipe/smart/simple/purple/visible,
 /turf/closed/wall/r_wall,
@@ -6243,7 +6245,7 @@
 /obj/effect/mapping_helpers/airlock/access/any/command/minisat,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "crC" = (
 /obj/structure/table,
 /obj/item/folder/white{
@@ -7197,9 +7199,11 @@
 /area/station/engineering/supermatter/room)
 "cJe" = (
 /obj/effect/mapping_helpers/airlock/access/all/engineering/general,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/structure/cable,
-/turf/open/floor/plating,
+/turf/open/floor/catwalk_floor,
 /area/station/engineering/gravity_generator)
 "cJg" = (
 /obj/effect/turf_decal/siding/thinplating/dark{
@@ -10907,7 +10911,9 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /turf/open/floor/catwalk_floor,
 /area/station/maintenance/department/cargo)
 "dUK" = (
@@ -11539,7 +11545,7 @@
 	},
 /obj/machinery/bluespace_beacon,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "efH" = (
 /obj/structure/sink/directional/west,
 /obj/structure/mirror/broken/directional/east,
@@ -11962,7 +11968,9 @@
 /area/station/security/prison/garden)
 "elS" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/structure/cable,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
@@ -12062,7 +12070,9 @@
 "enT" = (
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/unres,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/port/aft)
@@ -13100,7 +13110,7 @@
 "eFX" = (
 /obj/machinery/power/port_gen/pacman,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "eGi" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/atmospherics/components/unary/portables_connector/visible{
@@ -15092,7 +15102,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "fpU" = (
 /obj/machinery/atmospherics/pipe/smart/simple/dark/visible,
 /obj/machinery/meter,
@@ -15331,7 +15341,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/suit_storage_unit/standard_unit,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "fuA" = (
 /obj/machinery/holopad/secure,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -15426,7 +15436,9 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/structure/cable,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /turf/open/floor/catwalk_floor,
 /area/station/maintenance/department/cargo)
@@ -15533,7 +15545,9 @@
 /turf/open/floor/grass,
 /area/station/service/hydroponics/garden)
 "fxY" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 8
 	},
@@ -16956,7 +16970,9 @@
 /area/station/medical/storage)
 "fVz" = (
 /obj/effect/mapping_helpers/airlock/access/all/command/eva,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/department/eva)
 "fVI" = (
@@ -17934,7 +17950,9 @@
 /turf/open/floor/iron/dark,
 /area/station/medical/break_room)
 "gqd" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/structure/barricade/wooden/crude,
 /obj/effect/mapping_helpers/airlock/unres{
@@ -18365,7 +18383,9 @@
 /obj/machinery/door/firedoor,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/unres,
 /turf/open/floor/iron/smooth,
 /area/station/service/hydroponics/garden)
@@ -19082,7 +19102,7 @@
 	dir = 8
 	},
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "gKf" = (
 /obj/structure/grille,
 /turf/closed/wall/r_wall,
@@ -20452,7 +20472,7 @@
 	amount = 35
 	},
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "hjD" = (
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
@@ -21243,7 +21263,7 @@
 	dir = 1
 	},
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "hwD" = (
 /obj/machinery/door/airlock/grunge{
 	name = "Chapel"
@@ -22200,7 +22220,7 @@
 	},
 /obj/machinery/status_display/evac/directional/north,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "hOY" = (
 /obj/effect/turf_decal/siding/thinplating_new/light{
 	dir = 8
@@ -22600,7 +22620,9 @@
 /turf/open/floor/iron/dark,
 /area/station/service/library)
 "hYe" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -22929,7 +22951,9 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/disposalpipe/segment,
@@ -23250,7 +23274,9 @@
 /turf/open/floor/plating,
 /area/station/command/heads_quarters/hop)
 "ilo" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/access/all/service/kitchen,
 /turf/open/floor/catwalk_floor,
 /area/station/service/kitchen)
@@ -28117,7 +28143,7 @@
 /obj/structure/cable/multilayer/connected,
 /obj/effect/turf_decal/box/red,
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "jWx" = (
 /obj/structure/window/reinforced/spawner/directional/west,
 /obj/effect/turf_decal/trimline/blue/end{
@@ -29061,7 +29087,9 @@
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 4
 	},
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -29273,7 +29301,7 @@
 "kpS" = (
 /obj/machinery/teleport/hub,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "kpZ" = (
 /obj/machinery/firealarm/directional/east,
 /obj/effect/turf_decal/siding/wood{
@@ -29654,7 +29682,7 @@
 "kwy" = (
 /obj/structure/cable,
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "kwE" = (
 /obj/structure/table,
 /obj/machinery/microwave,
@@ -29750,7 +29778,9 @@
 /turf/open/floor/iron/dark,
 /area/station/maintenance/department/chapel/monastery)
 "kzl" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/machinery/duct,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/structure/cable,
@@ -29783,7 +29813,7 @@
 	dir = 4
 	},
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "kAn" = (
 /turf/closed/wall/r_wall,
 /area/station/maintenance/department/eva)
@@ -29834,6 +29864,13 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/catwalk_floor/iron_dark,
 /area/station/hallway/primary/tram/center)
+"kBv" = (
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
+/obj/effect/mapping_helpers/airlock/access/all/engineering/general,
+/turf/open/floor/catwalk_floor,
+/area/station/maintenance/port/aft)
 "kBF" = (
 /turf/open/floor/iron/dark/telecomms,
 /area/station/tcommsat/server)
@@ -30123,7 +30160,7 @@
 /area/station/engineering/supermatter/room)
 "kHo" = (
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "kHC" = (
 /obj/structure/cable,
 /obj/machinery/power/apc/auto_name/directional/south,
@@ -30828,7 +30865,7 @@
 	dir = 4
 	},
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "kXO" = (
 /obj/effect/turf_decal/tile/purple/fourcorners,
 /obj/machinery/component_printer,
@@ -30937,7 +30974,7 @@
 /obj/machinery/door/firedoor,
 /obj/effect/mapping_helpers/airlock/access/all/command/minisat,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "kZI" = (
 /turf/open/floor/wood,
 /area/station/service/theater)
@@ -30976,7 +31013,7 @@
 	dir = 4
 	},
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "laj" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/machinery/atmospherics/pipe/layer_manifold/scrubbers/visible{
@@ -31642,7 +31679,7 @@
 /obj/machinery/power/apc/auto_name/directional/north,
 /obj/structure/cable,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "lir" = (
 /obj/machinery/firealarm/directional/west,
 /obj/effect/turf_decal/trimline/red/filled/line{
@@ -34141,7 +34178,7 @@
 	uses = 10
 	},
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "mad" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
@@ -34373,7 +34410,9 @@
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
 "mee" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/structure/cable,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/effect/mapping_helpers/airlock/unres{
@@ -35513,7 +35552,9 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/command)
 "myS" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 8
@@ -36210,8 +36251,11 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/fore)
 "mMn" = (
-/turf/closed/wall/r_wall,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/cable,
+/obj/machinery/power/apc/auto_name/directional/east,
+/turf/open/floor/catwalk_floor,
+/area/station/maintenance/port/aft)
 "mML" = (
 /obj/machinery/portable_atmospherics/canister,
 /obj/effect/turf_decal/stripes/line{
@@ -36711,7 +36755,7 @@
 	},
 /obj/structure/cable,
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "mWp" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 5
@@ -38532,7 +38576,9 @@
 /turf/open/floor/iron/checker,
 /area/station/maintenance/starboard/aft)
 "nya" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 1
@@ -39881,7 +39927,7 @@
 /obj/machinery/teleport/station,
 /obj/machinery/light/red/directional/west,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "nVh" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -40111,7 +40157,9 @@
 "nZv" = (
 /obj/effect/mapping_helpers/airlock/access/all/engineering/general,
 /obj/structure/disposalpipe/segment,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
@@ -40585,7 +40633,9 @@
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 8
 	},
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/aft/greater)
 "okd" = (
@@ -42006,7 +42056,9 @@
 /turf/open/floor/carpet,
 /area/station/security/detectives_office)
 "oJy" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/structure/cable,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /turf/open/floor/catwalk_floor,
@@ -42438,7 +42490,7 @@
 /obj/machinery/recharge_station,
 /obj/machinery/light/red/directional/east,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "oRA" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/machinery/atmospherics/pipe/smart/simple/green/visible,
@@ -42689,7 +42741,9 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/exit/departure_lounge)
 "oWo" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 1
 	},
@@ -43552,7 +43606,7 @@
 "pjo" = (
 /obj/machinery/airalarm/directional/north,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "pjz" = (
 /turf/open/floor/plating,
 /area/station/maintenance/department/cargo)
@@ -46254,7 +46308,9 @@
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 4
 	},
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/aft/greater)
 "qfT" = (
@@ -46860,7 +46916,7 @@
 /obj/structure/fans/tiny,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/glass/reinforced,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "qqe" = (
 /obj/structure/closet/emcloset,
 /turf/open/floor/plating,
@@ -47779,7 +47835,9 @@
 "qHL" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 4
 	},
@@ -48407,7 +48465,9 @@
 /turf/open/floor/plating,
 /area/station/maintenance/disposal)
 "qUa" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/machinery/duct,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/effect/mapping_helpers/airlock/unres{
@@ -48536,7 +48596,9 @@
 /turf/open/floor/iron,
 /area/station/security/prison)
 "qXG" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
@@ -49050,7 +49112,7 @@
 "rfK" = (
 /obj/machinery/recharge_station,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "rfV" = (
 /obj/effect/turf_decal/trimline/yellow/filled/corner{
 	dir = 8
@@ -50489,7 +50551,9 @@
 "rFr" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 8
 	},
@@ -51528,7 +51592,7 @@
 	dir = 1
 	},
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "rXu" = (
 /obj/effect/turf_decal/trimline/neutral/filled/line{
 	dir = 1
@@ -51886,7 +51950,7 @@
 	dir = 4
 	},
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "sdF" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 8
@@ -52314,7 +52378,9 @@
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 1
 	},
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/aft/greater)
 "slO" = (
@@ -52400,7 +52466,9 @@
 /turf/open/floor/plating,
 /area/station/hallway/secondary/exit)
 "snL" = (
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/structure/cable,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/effect/mapping_helpers/airlock/unres{
@@ -53398,7 +53466,9 @@
 /area/station/security/checkpoint/escape)
 "sFD" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 1
@@ -53529,7 +53599,7 @@
 	pixel_y = -1
 	},
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "sIl" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 4
@@ -54438,7 +54508,7 @@
 /obj/structure/sign/warning/vacuum/directional/south,
 /obj/structure/cable/layer3,
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "sYT" = (
 /obj/effect/turf_decal/trimline/neutral/filled/line{
 	dir = 1
@@ -56464,7 +56534,7 @@
 "tKS" = (
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "tKT" = (
 /obj/machinery/camera/directional/south{
 	network = list("aicore");
@@ -57435,7 +57505,9 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /turf/open/floor/catwalk_floor,
 /area/station/commons/fitness/recreation/entertainment)
 "ucl" = (
@@ -57768,7 +57840,7 @@
 /obj/machinery/door/firedoor,
 /obj/effect/mapping_helpers/airlock/access/all/command/minisat,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "uhH" = (
 /obj/effect/turf_decal/trimline/brown/filled/line{
 	dir = 1
@@ -58609,7 +58681,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable,
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "uwJ" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -58674,7 +58746,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/cable/layer3,
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "uxO" = (
 /obj/docking_port/stationary/escape_pod{
 	dir = 2
@@ -60750,7 +60822,7 @@
 	c_tag = "Secure - AI Minisat Chargebay"
 	},
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "vnf" = (
 /obj/structure/closet/emcloset,
 /obj/effect/turf_decal/stripes/line{
@@ -61250,7 +61322,8 @@
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/hop)
 "vuV" = (
-/turf/open/space/basic,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/catwalk_floor,
 /area/station/maintenance/port/aft)
 "vvb" = (
 /obj/structure/table/wood/poker,
@@ -63703,7 +63776,9 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/structure/cable,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 1
 	},
@@ -63811,7 +63886,9 @@
 	dir = 8
 	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/structure/cable,
 /turf/open/floor/catwalk_floor,
 /area/station/maintenance/department/science)
@@ -66023,7 +66100,7 @@
 	control_area = "/area/station/ai_monitored/turret_protected/aisat_interior"
 	},
 /turf/open/floor/iron/grimy,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "xgL" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/machinery/door/poddoor/preopen{
@@ -66191,7 +66268,7 @@
 	req_one_access = list("teleporter","minisat")
 	},
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "xjV" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/turf_decal/trimline/brown/filled/line{
@@ -67995,7 +68072,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/plating,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "xRG" = (
 /obj/structure/chair{
 	dir = 1
@@ -68355,7 +68432,7 @@
 	},
 /obj/machinery/status_display/evac/directional/north,
 /turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/aisat/foyer)
+/area/station/ai_monitored/turret_protected/aisat_interior)
 "xXk" = (
 /obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/iron/smooth,
@@ -68405,7 +68482,9 @@
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/door/airlock/maintenance,
+/obj/machinery/door/airlock/maintenance{
+	name = "Engineering Maintenance"
+	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 8
@@ -80684,7 +80763,7 @@ lWb
 lEC
 fxS
 srE
-sxn
+xZl
 xZl
 xZl
 xZl
@@ -80942,7 +81021,7 @@ bVZ
 vvw
 eoC
 srE
-sxn
+xZl
 sxn
 sxn
 sxn
@@ -81200,7 +81279,7 @@ bmQ
 vvw
 hjR
 srE
-sxn
+xZl
 srE
 srE
 gqd
@@ -81458,7 +81537,7 @@ bmQ
 vvw
 fxS
 srE
-sxn
+xZl
 srE
 pBL
 dPj
@@ -81716,7 +81795,7 @@ aKc
 iMq
 uCv
 gyc
-sxn
+xZl
 srE
 dPj
 dPj
@@ -81974,7 +82053,7 @@ olW
 vvw
 fxS
 srE
-sxn
+xZl
 srE
 pBL
 dPj
@@ -82232,7 +82311,7 @@ wVg
 vvw
 hjR
 sJz
-vuV
+xZl
 srE
 srE
 srE
@@ -82490,11 +82569,11 @@ ekN
 vvw
 eoC
 sJz
-bSL
-bSL
-bSL
-bSL
-axG
+mMn
+vuV
+vuV
+vuV
+kBv
 vYx
 cWs
 yhW
@@ -116355,8 +116434,8 @@ cSz
 cSz
 haY
 cSz
-mMn
-mMn
+pqU
+pqU
 haY
 cSz
 cSz
@@ -116610,11 +116689,11 @@ cSz
 cSz
 cSz
 cSz
-mMn
-mMn
-mMn
-mMn
-mMn
+pqU
+pqU
+pqU
+pqU
+pqU
 haY
 cSz
 ofZ
@@ -116868,11 +116947,11 @@ cSz
 cSz
 cSz
 cSz
-mMn
+pqU
 kXI
 nVc
 kpS
-mMn
+pqU
 haY
 eyW
 ofZ
@@ -117126,11 +117205,11 @@ cSz
 cSz
 cSz
 cSz
-mMn
+pqU
 xXg
 efn
 xjQ
-mMn
+pqU
 haY
 ofZ
 ofZ
@@ -117382,14 +117461,14 @@ haY
 haY
 haY
 haY
-mMn
-mMn
-mMn
-mMn
+pqU
+pqU
+pqU
+pqU
 uhD
 azI
-mMn
-mMn
+pqU
+pqU
 ofZ
 ofZ
 eKF
@@ -117640,14 +117719,14 @@ cSz
 cSz
 cSz
 plp
-mMn
+pqU
 aDm
 fus
-mMn
+pqU
 pjo
 kHo
 sHQ
-mMn
+pqU
 ofZ
 ofZ
 haY
@@ -117905,7 +117984,7 @@ tKS
 kwy
 jWk
 sYQ
-mMn
+pqU
 pqU
 pqU
 lLS
@@ -118421,7 +118500,7 @@ tKS
 mWl
 kAj
 xgG
-mMn
+pqU
 pqU
 pqU
 eNO
@@ -118675,11 +118754,11 @@ mdM
 hwq
 rXm
 aND
-mMn
+pqU
 lhT
 aKV
 aLt
-mMn
+pqU
 ofZ
 ofZ
 haY
@@ -118930,14 +119009,14 @@ haY
 haY
 haY
 haY
-mMn
-mMn
-mMn
-mMn
+pqU
+pqU
+pqU
+pqU
 kZw
-mMn
-mMn
-mMn
+pqU
+pqU
+pqU
 ofZ
 ofZ
 cSz
@@ -119190,11 +119269,11 @@ cSz
 cSz
 cSz
 cSz
-mMn
+pqU
 bzt
 kHo
 eFX
-mMn
+pqU
 haY
 ofZ
 ofZ
@@ -119448,11 +119527,11 @@ cSz
 cSz
 cSz
 cSz
-mMn
+pqU
 hOP
 fpS
 vmK
-mMn
+pqU
 haY
 cSz
 ofZ
@@ -119706,11 +119785,11 @@ cSz
 cSz
 cSz
 cSz
-mMn
+pqU
 hjC
 oRz
 rfK
-mMn
+pqU
 haY
 cSz
 ofZ
@@ -119964,11 +120043,11 @@ cSz
 cSz
 cSz
 cSz
-mMn
-mMn
-mMn
-mMn
-mMn
+pqU
+pqU
+pqU
+pqU
+pqU
 haY
 cSz
 cSz
@@ -120225,8 +120304,8 @@ cSz
 cSz
 haY
 cSz
-mMn
-mMn
+pqU
+pqU
 haY
 cSz
 cSz
