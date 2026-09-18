@@ -37,7 +37,7 @@ map boxstation
 endmap
 
 map tramstation
-	minplayers 35
+	minplayers 10
 	votable
 endmap
 
