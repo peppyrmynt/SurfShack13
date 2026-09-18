@@ -330,4 +330,10 @@
 	hunger_modifier = 3
 	desc = "The Saiyan stomach can handle a wide range of foods, but burns it fast to power their energetic lifestyle."
 
+/obj/item/organ/stomach/pod
+	name = "pod chloroplast"
+	desc = "A green plant-like organ that functions similarly to a human stomach."
+	foodtype_flags = PODPERSON_ORGAN_FOODTYPES
+	color = COLOR_LIME
+
 #undef STOMACH_METABOLISM_CONSTANT
