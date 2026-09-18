@@ -198,7 +198,7 @@
 	var/resetting_probability = 0 //same with this? Old legacy vars that should be removed?
 	var/message_cd = 0
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	inverse_chem_val = 0.3
+	inverse_chem_val = 0.35
 	inverse_chem = /datum/reagent/inverse/aiuri
 
 /datum/reagent/medicine/c2/aiuri/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
