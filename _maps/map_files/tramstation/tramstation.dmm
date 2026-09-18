@@ -8857,11 +8857,6 @@
 /obj/structure/transit_tube/crossing,
 /turf/open/floor/plating/airless,
 /area/space/nearstation)
-"dnu" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/structure/falsewall,
-/turf/open/floor/iron/dark,
-/area/station/maintenance/department/science)
 "dnI" = (
 /obj/structure/table/wood,
 /obj/item/gavelblock,
@@ -9645,8 +9640,10 @@
 /turf/open/floor/iron/freezer,
 /area/station/medical/coldroom)
 "dyZ" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/structure/cable/layer3,
+/obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
+	dir = 8
+	},
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/turret_protected/ai)
 "dza" = (
@@ -13253,12 +13250,21 @@
 /turf/open/floor/catwalk_floor/iron_dark,
 /area/station/hallway/primary/tram/left)
 "eJu" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 10
+/obj/effect/turf_decal/trimline/purple/filled/line{
+	dir = 4
 	},
-/obj/structure/closet/emcloset,
+/obj/effect/turf_decal/trimline/purple/filled/line{
+	dir = 8
+	},
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/door/airlock/command{
+	name = "MiniSat Access"
+	},
+/obj/effect/mapping_helpers/airlock/access/any/command/minisat,
+/obj/effect/landmark/navigate_destination/minisat_access_ai,
 /turf/open/floor/iron,
-/area/station/hallway/secondary/entry)
+/area/station/science/lower)
 "eJK" = (
 /obj/item/reagent_containers/cup/bowl{
 	pixel_y = 3
@@ -21454,13 +21460,6 @@
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/iron/dark,
 /area/station/service/hydroponics)
-"hAe" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 1
-	},
-/obj/structure/sign/warning/pods/directional/west,
-/turf/open/floor/iron,
-/area/station/hallway/secondary/entry)
 "hAk" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/door_buttons/airlock_controller{
@@ -36255,6 +36254,13 @@
 /obj/structure/window/reinforced/spawner/directional/north,
 /turf/open/space/basic,
 /area/space/nearstation)
+"mOj" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/structure/sign/warning/pods/directional/west,
+/turf/open/floor/iron,
+/area/station/hallway/secondary/entry)
 "mOD" = (
 /obj/effect/spawner/structure/window,
 /turf/open/floor/plating,
@@ -36713,11 +36719,6 @@
 /obj/machinery/light/directional/north,
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
-"mWr" = (
-/obj/structure/cable/layer3,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/ai)
 "mWu" = (
 /obj/effect/turf_decal/siding/thinplating{
 	dir = 1
@@ -37143,6 +37144,12 @@
 /obj/machinery/light/cold/directional/south,
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/central)
+"ndG" = (
+/obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
+	dir = 1
+	},
+/turf/open/floor/iron/dark,
+/area/station/ai_monitored/turret_protected/ai)
 "ndR" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 8
@@ -39230,12 +39237,6 @@
 /obj/machinery/portable_atmospherics/scrubber,
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
-"nIv" = (
-/obj/structure/cable/layer3,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/turf/open/floor/iron/dark,
-/area/station/ai_monitored/turret_protected/ai)
 "nIL" = (
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/central)
@@ -40476,6 +40477,13 @@
 	},
 /turf/open/floor/iron/dark,
 /area/station/security/brig)
+"ohq" = (
+/obj/effect/spawner/random/structure/closet_maintenance,
+/obj/effect/turf_decal/sand/plating,
+/obj/effect/spawner/random/maintenance,
+/obj/effect/spawner/random/maintenance,
+/turf/open/floor/plating,
+/area/station/maintenance/aft/greater)
 "ohr" = (
 /obj/effect/spawner/random/vending/snackvend,
 /obj/effect/turf_decal/stripes/line{
@@ -40962,6 +40970,86 @@
 	},
 /turf/open/floor/carpet/stellar,
 /area/station/security/courtroom)
+"orG" = (
+/obj/item/clothing/suit/hazardvest{
+	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
+	name = "emergency lifejacket"
+	},
+/obj/item/clothing/suit/hazardvest{
+	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
+	name = "emergency lifejacket"
+	},
+/obj/item/clothing/suit/hazardvest{
+	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
+	name = "emergency lifejacket"
+	},
+/obj/item/clothing/suit/hazardvest{
+	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
+	name = "emergency lifejacket"
+	},
+/obj/item/clothing/suit/hazardvest{
+	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
+	name = "emergency lifejacket"
+	},
+/obj/item/tank/internals/emergency_oxygen{
+	pixel_x = 3
+	},
+/obj/item/tank/internals/emergency_oxygen{
+	pixel_x = 3
+	},
+/obj/item/tank/internals/emergency_oxygen{
+	pixel_x = 3
+	},
+/obj/item/tank/internals/emergency_oxygen{
+	pixel_x = 3
+	},
+/obj/item/tank/internals/emergency_oxygen{
+	pixel_x = 3
+	},
+/obj/item/clothing/mask/breath{
+	pixel_x = -3;
+	pixel_y = -3
+	},
+/obj/item/clothing/mask/breath{
+	pixel_x = -3;
+	pixel_y = -3
+	},
+/obj/item/clothing/mask/breath{
+	pixel_x = -3;
+	pixel_y = -3
+	},
+/obj/item/clothing/mask/breath{
+	pixel_x = -3;
+	pixel_y = -3
+	},
+/obj/item/clothing/mask/breath{
+	pixel_x = -3;
+	pixel_y = -3
+	},
+/obj/item/clothing/head/utility/hardhat/orange{
+	name = "protective hat";
+	pixel_y = 9
+	},
+/obj/item/clothing/head/utility/hardhat/orange{
+	name = "protective hat";
+	pixel_y = 9
+	},
+/obj/item/clothing/head/utility/hardhat/orange{
+	name = "protective hat";
+	pixel_y = 9
+	},
+/obj/item/clothing/head/utility/hardhat/orange{
+	name = "protective hat";
+	pixel_y = 9
+	},
+/obj/item/clothing/head/utility/hardhat/orange{
+	name = "protective hat";
+	pixel_y = 9
+	},
+/obj/structure/closet/crate/internals,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/iron,
+/area/station/hallway/secondary/entry)
 "orM" = (
 /obj/structure/table,
 /obj/machinery/airalarm/directional/east,
@@ -42009,6 +42097,11 @@
 /obj/item/lighter,
 /turf/open/floor/carpet,
 /area/station/security/detectives_office)
+"oJx" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/falsewall,
+/turf/open/floor/iron/dark,
+/area/station/maintenance/department/science)
 "oJy" = (
 /obj/machinery/door/airlock/maintenance,
 /obj/structure/cable,
@@ -46378,11 +46471,9 @@
 /turf/open/floor/iron,
 /area/station/engineering/engine_smes)
 "qhT" = (
-/obj/structure/cable/layer3,
-/obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
-	dir = 8
-	},
-/turf/open/floor/iron/dark,
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/structure/window/reinforced/spawner/directional/north,
+/turf/open/floor/circuit,
 /area/station/ai_monitored/turret_protected/ai)
 "qid" = (
 /obj/effect/decal/cleanable/dirt,
@@ -47719,6 +47810,13 @@
 	},
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/hop)
+"qGO" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
+/obj/structure/closet/emcloset,
+/turf/open/floor/iron,
+/area/station/hallway/secondary/entry)
 "qGW" = (
 /obj/effect/turf_decal/trimline/blue/filled/corner{
 	dir = 4
@@ -49761,13 +49859,6 @@
 /obj/structure/closet/emcloset,
 /turf/open/floor/iron/dark,
 /area/station/hallway/secondary/command)
-"ruM" = (
-/obj/effect/spawner/random/structure/closet_maintenance,
-/obj/effect/turf_decal/sand/plating,
-/obj/effect/spawner/random/maintenance,
-/obj/effect/spawner/random/maintenance,
-/turf/open/floor/plating,
-/area/station/maintenance/aft/greater)
 "ruS" = (
 /obj/structure/transit_tube,
 /obj/effect/turf_decal/sand/plating,
@@ -50541,11 +50632,6 @@
 	dir = 8
 	},
 /area/station/maintenance/starboard/aft)
-"rGf" = (
-/obj/structure/window/reinforced/spawner/directional/east,
-/obj/structure/window/reinforced/spawner/directional/north,
-/turf/open/floor/circuit,
-/area/station/ai_monitored/turret_protected/ai)
 "rGl" = (
 /obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/pod/dark,
@@ -51527,6 +51613,10 @@
 	},
 /turf/open/floor/iron,
 /area/station/science/robotics/lab)
+"rWO" = (
+/obj/structure/sign/warning/xeno_mining/directional/east,
+/turf/open/floor/plating,
+/area/station/maintenance/department/security)
 "rXk" = (
 /obj/effect/turf_decal/tile/brown/half/contrasted{
 	dir = 8
@@ -59410,21 +59500,10 @@
 /turf/open/space,
 /area/space/nearstation)
 "uLi" = (
-/obj/effect/turf_decal/trimline/purple/filled/line{
-	dir = 4
-	},
-/obj/effect/turf_decal/trimline/purple/filled/line{
-	dir = 8
-	},
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/obj/machinery/door/airlock/command{
-	name = "MiniSat Access"
-	},
-/obj/effect/mapping_helpers/airlock/access/any/command/minisat,
-/obj/effect/landmark/navigate_destination/minisat_access_ai,
-/turf/open/floor/iron,
-/area/station/science/lower)
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/turf/open/floor/iron/dark,
+/area/station/ai_monitored/turret_protected/ai)
 "uLk" = (
 /obj/effect/landmark/start/security_officer,
 /turf/open/floor/iron,
@@ -59471,9 +59550,9 @@
 /turf/open/floor/iron/dark,
 /area/station/science/robotics/lab)
 "uMp" = (
-/obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
-	dir = 1
-	},
+/obj/structure/cable/layer3,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/turret_protected/ai)
 "uMt" = (
@@ -60144,85 +60223,10 @@
 /turf/open/floor/iron,
 /area/station/engineering/engine_smes)
 "vbQ" = (
-/obj/item/clothing/suit/hazardvest{
-	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
-	name = "emergency lifejacket"
-	},
-/obj/item/clothing/suit/hazardvest{
-	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
-	name = "emergency lifejacket"
-	},
-/obj/item/clothing/suit/hazardvest{
-	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
-	name = "emergency lifejacket"
-	},
-/obj/item/clothing/suit/hazardvest{
-	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
-	name = "emergency lifejacket"
-	},
-/obj/item/clothing/suit/hazardvest{
-	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
-	name = "emergency lifejacket"
-	},
-/obj/item/tank/internals/emergency_oxygen{
-	pixel_x = 3
-	},
-/obj/item/tank/internals/emergency_oxygen{
-	pixel_x = 3
-	},
-/obj/item/tank/internals/emergency_oxygen{
-	pixel_x = 3
-	},
-/obj/item/tank/internals/emergency_oxygen{
-	pixel_x = 3
-	},
-/obj/item/tank/internals/emergency_oxygen{
-	pixel_x = 3
-	},
-/obj/item/clothing/mask/breath{
-	pixel_x = -3;
-	pixel_y = -3
-	},
-/obj/item/clothing/mask/breath{
-	pixel_x = -3;
-	pixel_y = -3
-	},
-/obj/item/clothing/mask/breath{
-	pixel_x = -3;
-	pixel_y = -3
-	},
-/obj/item/clothing/mask/breath{
-	pixel_x = -3;
-	pixel_y = -3
-	},
-/obj/item/clothing/mask/breath{
-	pixel_x = -3;
-	pixel_y = -3
-	},
-/obj/item/clothing/head/utility/hardhat/orange{
-	name = "protective hat";
-	pixel_y = 9
-	},
-/obj/item/clothing/head/utility/hardhat/orange{
-	name = "protective hat";
-	pixel_y = 9
-	},
-/obj/item/clothing/head/utility/hardhat/orange{
-	name = "protective hat";
-	pixel_y = 9
-	},
-/obj/item/clothing/head/utility/hardhat/orange{
-	name = "protective hat";
-	pixel_y = 9
-	},
-/obj/item/clothing/head/utility/hardhat/orange{
-	name = "protective hat";
-	pixel_y = 9
-	},
-/obj/structure/closet/crate/internals,
-/obj/effect/decal/cleanable/dirt,
-/turf/open/floor/iron,
-/area/station/hallway/secondary/entry)
+/obj/structure/cable/layer3,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/turf/open/floor/iron/dark,
+/area/station/ai_monitored/turret_protected/ai)
 "vbV" = (
 /obj/structure/disposalpipe/segment{
 	dir = 2
@@ -64060,10 +64064,6 @@
 	},
 /turf/open/floor/iron,
 /area/station/cargo/qm)
-"wrm" = (
-/obj/structure/sign/warning/xeno_mining/directional/east,
-/turf/open/floor/plating,
-/area/station/maintenance/department/security)
 "wrr" = (
 /obj/structure/lattice/catwalk,
 /obj/structure/railing/corner{
@@ -76788,7 +76788,7 @@ cSz
 mAD
 wNd
 mAD
-hAe
+mOj
 kdT
 guG
 mAD
@@ -79647,7 +79647,7 @@ rDC
 eku
 eku
 eku
-eJu
+qGO
 mAD
 lrX
 mAD
@@ -80421,7 +80421,7 @@ dEn
 jGP
 kYx
 nAd
-vbQ
+orG
 hip
 hip
 hip
@@ -84516,7 +84516,7 @@ pHW
 xRA
 rTe
 yhU
-rHw
+kAn
 whU
 tQO
 hWu
@@ -84774,7 +84774,7 @@ oZh
 lxn
 rTe
 yhU
-rHw
+kAn
 mKo
 mKo
 cCE
@@ -85032,9 +85032,9 @@ rSB
 ahc
 rTe
 fxY
-rHw
-rHw
-rHw
+kAn
+nPW
+nPW
 nPW
 nPW
 egm
@@ -92749,7 +92749,7 @@ ekD
 ldk
 vxm
 xfU
-wrm
+rWO
 weu
 weu
 uLB
@@ -93856,7 +93856,7 @@ ozb
 gPj
 vVu
 lgM
-ruM
+ohq
 vVu
 chv
 qTF
@@ -106764,7 +106764,7 @@ gfm
 pKm
 fwb
 sgm
-dnu
+oJx
 sgm
 pth
 cng
@@ -117658,13 +117658,13 @@ eKF
 tMg
 oJn
 xnQ
-dyZ
-dyZ
-dyZ
+uLi
+uLi
+uLi
 wuY
-dyZ
-dyZ
-uMp
+uLi
+uLi
+ndG
 oJn
 eES
 eKF
@@ -117916,7 +117916,7 @@ lLS
 tKT
 oJn
 kJd
-dyZ
+uLi
 eYD
 oJn
 oJn
@@ -118135,7 +118135,7 @@ hqH
 oMR
 mVG
 nwc
-uLi
+eJu
 tiQ
 oqE
 wud
@@ -118173,7 +118173,7 @@ ggg
 ggg
 ggg
 twY
-nIv
+uMp
 tyB
 dPV
 ipJ
@@ -118432,8 +118432,8 @@ eNO
 guW
 oJn
 tbV
-mWr
-rGf
+vbQ
+qhT
 oJn
 oJn
 oJn
@@ -118690,7 +118690,7 @@ eKF
 eQm
 oJn
 dmB
-qhT
+dyZ
 tpw
 tpw
 sAr
