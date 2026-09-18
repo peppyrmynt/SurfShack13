@@ -475,21 +475,26 @@
 /obj/structure/ore_vent/starter_resources/Initialize(mapload)
 	. = ..()
 	var/list/super_low_pop_mats = list(
+		/datum/material/iron = 20,
+		/datum/material/glass = 20,
 		/datum/material/plastic = 20,
-		/datum/material/plasma = 10,
 		/datum/material/titanium = 10,
+		/datum/material/plasma = 10,
 		/datum/material/silver = 5,
 		/datum/material/gold = 5,
+		/datum/material/uranium = 3,
 		/datum/material/diamond = 1,
-		/datum/material/uranium = 1,
 		/datum/material/bluespace = 1,
 	)
 	var/list/low_pop_mats = list(
+		/datum/material/iron = 20,
+		/datum/material/glass = 20,
 		/datum/material/plastic = 10,
+		/datum/material/titanium = 5,
 		/datum/material/plasma = 5,
-		/datum/material/titanium = 1,
-		/datum/material/silver = 1,
-		/datum/material/gold = 1,
+		/datum/material/silver = 2,
+		/datum/material/gold = 2,
+		/datum/material/uranium = 1,
 	)
 	var/player_count = length(GLOB.alive_player_list)
 	if(player_count <= 10)
