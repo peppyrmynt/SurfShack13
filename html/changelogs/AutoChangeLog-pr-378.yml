@@ -1,0 +1,5 @@
+author: "cocothegogo"
+delete-after: True
+changes:
+  - rscadd: "Tramstation: Redesigned the around 50% of the station"
+  - qol: "Tramstation: No more lower level to station"

@@ -165,3 +165,8 @@
 /// force_real_name will always return real_name and add (as face_name/id_name) if it doesn't match their appearance
 /atom/proc/get_visible_name(add_id_name, force_real_name)
 	return name
+
+/mob/living/examine(mob/user)
+	. = ..()
+	if(HAS_TRAIT(user, TRAIT_MARTIAL_VISION))
+		. += report_power_level()

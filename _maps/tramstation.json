@@ -9,16 +9,6 @@
 		"whiteship": "whiteship_tram",
 		"emergency": "emergency_tram"
 	},
-	"traits": [
-		{
-			"Baseturf": "/turf/open/misc/asteroid/airless",
-			"Linkage": "Cross"
-		},
-		{
-			"Baseturf": "/turf/open/openspace",
-			"Linkage": "Cross"
-		}
-	],
 	"job_changes": {
 		"Cook": {
 			"additional_cqc_areas": ["/area/station/commons/lounge"]

@@ -489,27 +489,11 @@
 /obj/machinery/hydroponics/update_overlays()
 	. = ..()
 	if(myseed)
-		. += update_plant_overlay()
+		. += myseed.get_tray_overlay(age, plant_status)
 		. += update_status_light_overlays()
 
 	if(self_sustaining && self_sustaining_overlay_icon_state)
 		. += mutable_appearance(icon, self_sustaining_overlay_icon_state)
-
-/obj/machinery/hydroponics/proc/update_plant_overlay()
-	var/mutable_appearance/plant_overlay = mutable_appearance(myseed.growing_icon, layer = OBJ_LAYER + 0.01)
-	switch(plant_status)
-		if(HYDROTRAY_PLANT_DEAD)
-			plant_overlay.icon_state = myseed.icon_dead
-		if(HYDROTRAY_PLANT_HARVESTABLE)
-			if(!myseed.icon_harvest)
-				plant_overlay.icon_state = "[myseed.icon_grow][myseed.growthstages]"
-			else
-				plant_overlay.icon_state = myseed.icon_harvest
-		else
-			var/t_growthstate = clamp(round((age / myseed.maturation) * myseed.growthstages), 1, myseed.growthstages)
-			plant_overlay.icon_state = "[myseed.icon_grow][t_growthstate]"
-	plant_overlay.pixel_y = myseed.plant_icon_offset
-	return plant_overlay
 
 /obj/machinery/hydroponics/proc/update_status_light_overlays()
 	. = list()
@@ -526,18 +510,23 @@
 
 ///Sets a new value for the myseed variable, which is the seed of the plant that's growing inside the tray.
 /obj/machinery/hydroponics/proc/set_seed(obj/item/seeds/new_seed, delete_old_seed = TRUE)
-	var/old_seed = myseed
+	var/obj/item/seeds/old_seed = myseed
 	myseed = new_seed
+	for(var/datum/plant_gene/trait/gene in old_seed?.genes)
+		gene.on_unplanted_from_tray(src, old_seed)
 	if(old_seed && delete_old_seed)
 		qdel(old_seed)
 	set_plant_status(new_seed ? HYDROTRAY_PLANT_GROWING : HYDROTRAY_NO_PLANT) //To make sure they can't just put in another seed and insta-harvest it
 	if(myseed && myseed.loc != src)
 		myseed.forceMove(src)
 	SEND_SIGNAL(src, COMSIG_HYDROTRAY_SET_SEED, new_seed)
+	for(var/datum/plant_gene/trait/gene in myseed?.genes)
+		gene.on_plant_in_tray(src, myseed)
 	age = 0
 	update_appearance()
 	if(isnull(myseed))
 		remove_shared_particles(/particles/pollen)
+
 
 /*
  * Setter proc to set a tray to a new self_sustaining state and update all values associated with it.
@@ -923,12 +912,6 @@
 		else
 			to_chat(user, span_warning("This plot is completely devoid of weeds! It doesn't need uprooting."))
 			return
-
-	else if(O.sharpness) // Allows for the extraction (for opium or sap) interaction if a seed has it.
-		if(myseed && !myseed.extracted)
-			myseed.interact_with_atom(O, user, src)
-		else
-			return ..()
 
 	else if(istype(O, /obj/item/secateurs))
 		if(!myseed)

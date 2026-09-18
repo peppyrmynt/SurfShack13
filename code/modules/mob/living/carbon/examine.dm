@@ -298,6 +298,9 @@
 		ADD_NEWLINE_IF_NECESSARY(.)
 		. += "<b>Quirks:</b> [get_quirk_string(FALSE, CAT_QUIRK_ALL)]"
 
+	if(HAS_TRAIT(user, TRAIT_MARTIAL_VISION))
+		. += "[t_His] power level is [report_power_level()]."
+
 	SEND_SIGNAL(src, COMSIG_ATOM_EXAMINE, user, .)
 	if(length(.))
 		.[1] = "<span class='info'>" + .[1]

@@ -763,4 +763,12 @@
 				'sound/effects/writing_pen/writing_pen6.ogg',
 				'sound/effects/writing_pen/writing_pen7.ogg',
 			)
+		// Surf Shack Edit
+		if(SFX_SHEEP_BLEAT)
+			soundin = pick(
+				'sound/mobs/non-humanoids/sheep/sheep1.ogg',
+				'sound/mobs/non-humanoids/sheep/sheep2.ogg',
+				'sound/mobs/non-humanoids/sheep/sheep3.ogg',
+			)
+		// Surf Shack End
 	return soundin

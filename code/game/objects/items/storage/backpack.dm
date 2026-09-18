@@ -809,18 +809,43 @@
 /*
  * Messenger Bag Types
  */
-
 /obj/item/storage/backpack/messenger
 	name = "messenger bag"
 	desc = "A trendy looking messenger bag; sometimes known as a courier bag. Fashionable and portable."
 	icon_state = "messenger"
 	inhand_icon_state = "messenger"
+	worn_icon_state = "messenger"
 	icon = 'icons/obj/storage/backpack.dmi'
 	worn_icon = 'icons/mob/clothing/back/backpack.dmi'
 	lefthand_file = 'icons/mob/inhands/equipment/backpack_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/backpack_righthand.dmi'
 	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_BELT
 	storage_type = /datum/storage/backpack/messenger
+	/// Tracks which slot the bag is currently equipped to
+	var/equipped_slot = null
+
+/obj/item/storage/backpack/messenger/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/update_icon_updates_onmob)
+
+/obj/item/storage/backpack/messenger/equipped(mob/user, slot, initial = FALSE)
+	equipped_slot = slot
+	update_appearance()
+	. = ..()
+
+/obj/item/storage/backpack/messenger/dropped(mob/user, silent)
+	equipped_slot = null
+	update_appearance()
+	. = ..()
+
+/obj/item/storage/backpack/messenger/update_icon_state()
+	if(equipped_slot == ITEM_SLOT_BELT)
+		icon_state = "[initial(icon_state)]"
+		worn_icon_state = "[initial(icon_state)]_belt"
+	else
+		icon_state = initial(icon_state)
+		worn_icon_state = initial(icon_state)
+	return ..()
 
 /obj/item/storage/backpack/messenger/eng
 	name = "industrial messenger bag"

@@ -1,0 +1,8 @@
+author: "ZealousZeke"
+delete-after: True
+changes:
+  - qol: "there's a new UI preference called UI scale which allows people that use windows scaling to have their UIs original size with the contents zoomed out, instead of the default, which is the UIs being larger with the contents \"normal\" size"
+  - bugfix: "various UIs did not respect windows scaling, they now do"
+  - qol: "Vending machines got new design with 2 layouts: List and Grid (List by default)"
+  - qol: "SmartFridge got another redesign, and you can dispense all amount of product in one click (RMB on product)"
+  - refactor: "All TGUI styles was migrated to CSS Variables, if you find something odd in styles, feel free to make an issue on Github."

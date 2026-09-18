@@ -89,6 +89,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// "Magic" trait that blocks the mob from moving or interacting with anything. Used for transient stuff like mob transformations or incorporality in special cases.
 /// Will block movement, `Life()` (!!!), and other stuff based on the mob.
 #define TRAIT_NO_TRANSFORM "block_transformations"
+/// I've been turned into something else
+#define TRAIT_SHAPESHIFTED "shapeshifted"
 /// Tracks whether we're gonna be a baby alien's mummy.
 #define TRAIT_XENO_HOST "xeno_host"
 /// This parrot is currently perched
@@ -860,6 +862,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_CONTRABAND_BLOCKER "contraband_blocker"
 /// For edible items that cannot be composted inside hydro trays
 #define TRAIT_UNCOMPOSTABLE "uncompostable"
+/// limbs with this trait can be empowered by a saiyan heart
+#define TRAIT_SAIYAN_STRENGTH "saiyan_strength"
+/// Allows you to detect power levels
+#define TRAIT_MARTIAL_VISION "martial_vision"
+/// Are you the legendary super saiyan? If so, you are allowed to become blonde.
+#define TRAIT_POWER_HAIR "thirty_dollar_haircut"
 
 //quirk traits
 #define TRAIT_ALCOHOL_TOLERANCE "alcohol_tolerance"

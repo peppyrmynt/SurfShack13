@@ -339,3 +339,9 @@
 	desc = "Contains one sharpened combat knive. Guaranteed to fit snugly inside any Nanotrasen-standard boot."
 	cost = PAYCHECK_COMMAND * 3.5
 	contains = list(/obj/item/knife/combat)
+
+/datum/supply_pack/goody/golfcart_key
+	name = "Spare Golf Cart Key"
+	desc = "If you in your carelessness lost the key to your golfcart you can purchase one. Unfortunately not covered by warranty."
+	cost = PAYCHECK_CREW * 5
+	contains = list(/obj/item/key/golfcart)
