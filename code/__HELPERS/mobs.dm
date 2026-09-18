@@ -196,6 +196,9 @@ GLOBAL_LIST_INIT(skin_tone_names, list(
 	if(!isnum(delay))
 		CRASH("do_after was passed a non-number delay: [delay || "null"].")
 
+	if(GLOB.hyper_adrenaline_active)
+		delay *= HYPER_ADRENALINE_ACTION_TIME_MULTIPLIER
+
 	if(!interaction_key && target)
 		interaction_key = target //Use the direct ref to the target
 	if(interaction_key) //Do we have a interaction_key now?

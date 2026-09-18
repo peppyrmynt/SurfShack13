@@ -151,7 +151,7 @@
 	// Determines the total amount of experience earned per punch
 	var/experience_earned = round(damage * 0.25, 0.1)
 
-	defender.apply_damage(damage, damage_type, affecting, armor_block)
+	apply_hyper_martial_damage(attacker, defender, damage, damage_type, affecting, armor_block)
 
 	log_combat(attacker, defender, "punched (boxing) ")
 
@@ -345,7 +345,7 @@
 		human_attacker.force_say()
 		human_attacker.say("[first_word_pick][second_word_pick]!!!", forced = "hunter boxing enthusiastic battlecry")
 	defender.apply_status_effect(/datum/status_effect/rebuked)
-	defender.apply_damage(damage * 2, default_damage_type, BODY_ZONE_CHEST, armor_block) //deals double our damage AGAIN
+	apply_hyper_martial_damage(attacker, defender, damage * 2, default_damage_type, BODY_ZONE_CHEST, armor_block) //deals double our damage AGAIN
 	attacker.reagents.add_reagent(/datum/reagent/medicine/omnizine/godblood, 3) //Get a little healing in return for a successful crit
 	log_combat(attacker, defender, "hunter crit punched (boxing)")
 
@@ -356,7 +356,7 @@
 		return // Does not apply to humans (who aren't megafauna)
 
 	attacker.changeNext_move(CLICK_CD_RAPID)
-	defender.apply_damage(rand(15,20), default_damage_type, BODY_ZONE_CHEST)
+	apply_hyper_martial_damage(attacker, defender, rand(15,20), default_damage_type, BODY_ZONE_CHEST)
 
 #undef LEFT_RIGHT_COMBO
 #undef RIGHT_LEFT_COMBO
