@@ -1248,9 +1248,13 @@
 	merge_type = /obj/item/stack/tile/catwalk_tile //Just to be cleaner, these all stack with each other
 	tile_reskin_types = list(
 		/obj/item/stack/tile/catwalk_tile,
+		/obj/item/stack/tile/catwalk_tile/glass,
 		/obj/item/stack/tile/catwalk_tile/iron,
+		/obj/item/stack/tile/catwalk_tile/iron/glass,
 		/obj/item/stack/tile/catwalk_tile/iron_white,
+		/obj/item/stack/tile/catwalk_tile/iron_white/glass,
 		/obj/item/stack/tile/catwalk_tile/iron_dark,
+		/obj/item/stack/tile/catwalk_tile/iron_dark/glass,
 		/obj/item/stack/tile/catwalk_tile/titanium,
 		/obj/item/stack/tile/catwalk_tile/iron_smooth //this is the original greenish one
 	)
@@ -1258,11 +1262,23 @@
 /obj/item/stack/tile/catwalk_tile/sixty
 	amount = 60
 
+/obj/item/stack/tile/catwalk_tile/glass
+	name = "glass catwalk plating"
+	singular_name = "glass catwalk plating tile"
+	icon_state = "maintglass_catwalk"
+	turf_type = /turf/open/floor/catwalk_floor/glass
+
 /obj/item/stack/tile/catwalk_tile/iron
 	name = "iron catwalk floor"
 	singular_name = "iron catwalk floor tile"
 	icon_state = "iron_catwalk"
 	turf_type = /turf/open/floor/catwalk_floor/iron
+
+/obj/item/stack/tile/catwalk_tile/iron/glass
+	name = "iron glass catwalk floor"
+	singular_name = "iron glass catwalk floor tile"
+	icon_state = "ironglass_catwalk"
+	turf_type = /turf/open/floor/catwalk_floor/iron/glass
 
 /obj/item/stack/tile/catwalk_tile/iron_white
 	name = "white catwalk floor"
@@ -1270,11 +1286,23 @@
 	icon_state = "whiteiron_catwalk"
 	turf_type = /turf/open/floor/catwalk_floor/iron_white
 
+/obj/item/stack/tile/catwalk_tile/iron_white/glass
+	name = "white glass catwalk floor"
+	singular_name = "white glass catwalk floor tile"
+	icon_state = "whiteironglass_catwalk"
+	turf_type = /turf/open/floor/catwalk_floor/iron_white/glass
+
 /obj/item/stack/tile/catwalk_tile/iron_dark
 	name = "dark catwalk floor"
 	singular_name = "dark catwalk floor tile"
 	icon_state = "darkiron_catwalk"
 	turf_type = /turf/open/floor/catwalk_floor/iron_dark
+
+/obj/item/stack/tile/catwalk_tile/iron_dark/glass
+	name = "dark glass catwalk floor"
+	singular_name = "dark glass catwalk floor tile"
+	icon_state = "darkironglass_catwalk"
+	turf_type = /turf/open/floor/catwalk_floor/iron_dark/glass
 
 /obj/item/stack/tile/catwalk_tile/titanium
 	name = "titanium catwalk floor"

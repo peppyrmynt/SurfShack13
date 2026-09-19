@@ -132,7 +132,7 @@
 		return FALSE
 	if(!SSmapping.level_trait(T.z,ZTRAIT_STATION))
 		return FALSE
-	if(!isfloorturf(T))
+	if(!istype(T, /turf/open))
 		return FALSE
 	return TRUE
 

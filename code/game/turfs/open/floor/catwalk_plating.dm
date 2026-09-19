@@ -58,11 +58,23 @@
 	. = ..()
 
 //Reskins! More fitting with most of our tiles, and appear as a radial on the base type
+/turf/open/floor/catwalk_floor/glass
+	name = "glass catwalk floor"
+	icon_state = "maintglass_above"
+	floor_tile = /obj/item/stack/tile/catwalk_tile/glass
+	catwalk_type = "maintglass"
+
 /turf/open/floor/catwalk_floor/iron
 	name = "iron plated catwalk floor"
 	icon_state = "iron_above"
 	floor_tile = /obj/item/stack/tile/catwalk_tile/iron
 	catwalk_type = "iron"
+
+/turf/open/floor/catwalk_floor/iron/glass
+	name = "iron plated glass catwalk floor"
+	icon_state = "ironglass_above"
+	floor_tile = /obj/item/stack/tile/catwalk_tile/iron/glass
+	catwalk_type = "ironglass"
 
 /turf/open/floor/catwalk_floor/iron_white
 	name = "white plated catwalk floor"
@@ -70,11 +82,23 @@
 	floor_tile = /obj/item/stack/tile/catwalk_tile/iron_white
 	catwalk_type = "whiteiron"
 
+/turf/open/floor/catwalk_floor/iron_white/glass
+	name = "white plated glass catwalk floor"
+	icon_state = "whiteironglass_above"
+	floor_tile = /obj/item/stack/tile/catwalk_tile/iron_white/glass
+	catwalk_type = "whiteironglass"
+
 /turf/open/floor/catwalk_floor/iron_dark
 	name = "dark plated catwalk floor"
 	icon_state = "darkiron_above"
 	floor_tile = /obj/item/stack/tile/catwalk_tile/iron_dark
 	catwalk_type = "darkiron"
+
+/turf/open/floor/catwalk_floor/iron_dark/glass
+	name = "dark plated glass catwalk floor"
+	icon_state = "darkironglass_above"
+	floor_tile = /obj/item/stack/tile/catwalk_tile/iron_dark/glass
+	catwalk_type = "darkironglass"
 
 /turf/open/floor/catwalk_floor/titanium
 	name = "titanium plated catwalk floor"

@@ -50,6 +50,7 @@
 		//category 2 distributors i.e devices which inject , move around , remove chemicals from the network
 		"Distributors" = list(
 			/obj/machinery/duct = 1,
+			/obj/machinery/duct/multiz = 5,
 			/obj/machinery/plumbing/layer_manifold = 5,
 			/obj/machinery/plumbing/input = 5,
 			/obj/machinery/plumbing/filter = 5,
@@ -218,7 +219,8 @@
 	playsound(loc, 'sound/machines/click.ogg', 50, TRUE)
 	if(ispath(blueprint, /obj/machinery/duct))
 		var/is_omni = current_color == DUCT_COLOR_OMNI
-		new blueprint(destination, FALSE, GLOB.pipe_paint_colors[current_color], GLOB.plumbing_layers[current_layer], null, is_omni)
+		var/no_anchor = ispath(blueprint, /obj/machinery/duct/multiz)
+		new blueprint(destination, no_anchor, GLOB.pipe_paint_colors[current_color], GLOB.plumbing_layers[current_layer], null, is_omni)
 	else
 		new blueprint(destination, FALSE, GLOB.plumbing_layers[current_layer])
 	return TRUE
@@ -327,6 +329,7 @@
 		//Category 2 distributors
 		"Distributors" = list(
 			/obj/machinery/duct = 1,
+			/obj/machinery/duct/multiz = 5,
 			/obj/machinery/plumbing/layer_manifold = 5,
 			/obj/machinery/plumbing/input = 5,
 			/obj/machinery/plumbing/filter = 5,
