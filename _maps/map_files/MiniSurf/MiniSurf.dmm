@@ -1896,10 +1896,9 @@
 "bsO" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/effect/mapping_helpers/airlock/access/any/command/eva,
 /obj/structure/cable,
-/obj/machinery/door/airlock/command/glass{
-	name = "EVA Storage"
+/obj/machinery/door/airlock/public{
+	name = "EVA Access"
 	},
 /turf/open/floor/iron,
 /area/station/ai_monitored/command/storage/eva)
@@ -5025,6 +5024,9 @@
 /obj/structure/sign/warning/no_smoking/directional,
 /turf/closed/wall,
 /area/station/engineering/main)
+"dzl" = (
+/turf/closed/wall,
+/area/station/ai_monitored/command/storage/eva)
 "dzo" = (
 /obj/effect/spawner/random/structure/crate_abandoned,
 /turf/open/floor/plating,
@@ -5813,7 +5815,6 @@
 /obj/machinery/button/door{
 	id = "stationawaygate";
 	name = "Gateway Access Shutter Control";
-	req_access = list("command");
 	pixel_x = 24
 	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
@@ -7945,18 +7946,12 @@
 /area/station/commons/dorms)
 "fud" = (
 /obj/effect/mapping_helpers/airlock/abandoned,
-/obj/effect/turf_decal/stripes/line,
-/obj/effect/turf_decal/stripes/line{
-	dir = 1
-	},
-/obj/machinery/door/airlock/maintenance_hatch{
-	name = "Science Maintenance"
-	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 8
 	},
-/turf/open/floor/iron,
+/obj/machinery/door/airlock/maintenance_hatch,
+/turf/open/floor/plating,
 /area/station/maintenance/department/cargo)
 "fuf" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -70037,12 +70032,12 @@ gpX
 iPW
 kYs
 pBb
-sEA
+dzl
 bld
 jmN
 eWe
-sEA
-sEA
+dzl
+dzl
 miV
 kFu
 kFu
@@ -70294,12 +70289,12 @@ pSY
 iPW
 ljC
 xcj
-sEA
+dzl
 gJL
 hbA
 hqy
 wVx
-sEA
+dzl
 twB
 scr
 dcw
@@ -70556,7 +70551,7 @@ cAh
 gUK
 bkJ
 liW
-sEA
+dzl
 twB
 ozF
 aiz
@@ -70808,12 +70803,12 @@ pSY
 aVz
 kYs
 plv
-sEA
+dzl
 vma
 wRH
 dKX
 cjc
-sEA
+dzl
 piJ
 qlT
 qlT
@@ -71070,7 +71065,7 @@ kxb
 koz
 hGq
 lQx
-sEA
+dzl
 twB
 qlT
 mXp
@@ -71327,7 +71322,7 @@ fBX
 fBX
 qQo
 xoz
-sEA
+dzl
 twB
 qlT
 ruc
@@ -71584,7 +71579,7 @@ pQV
 fJI
 jZw
 cfo
-sEA
+dzl
 rsg
 qlT
 mHG
