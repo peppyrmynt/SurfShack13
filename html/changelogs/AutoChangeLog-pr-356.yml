@@ -1,9 +1,0 @@
-author: "ZealousZeke"
-delete-after: True
-changes:
-  - rscadd: "Anti-cannabis mutation"
-  - rscadd: "Adds an organ tree as a mutation of shrubs (from the exotic seeds crate)! Spare organs have never been so green!"
-  - bugfix: "Spades work on trays again"
-  - qol: "Poppy seeds now give better feedback when unable to harvest"
-  - qol: "Poppy seeds now have an immutable gene indicating they can be sliced for sap"
-  - rscdel: "Lilys and Geraniums can no longer be tapped for sap"
