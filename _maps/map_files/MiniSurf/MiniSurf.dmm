@@ -1119,6 +1119,11 @@
 /mob/living/basic/mothroach,
 /turf/open/floor/plating,
 /area/station/medical/abandoned)
+"aNl" = (
+/obj/structure/cable,
+/obj/effect/spawner/random/trash/crushed_can,
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "aOe" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
@@ -1161,9 +1166,11 @@
 /turf/open/floor/iron/dark,
 /area/station/science/server)
 "aOY" = (
-/obj/machinery/door/airlock/external,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /obj/effect/mapping_helpers/airlock/access/all/engineering/external,
+/obj/machinery/door/airlock/external{
+	name = "Ferry Docking Port"
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "aPh" = (
@@ -1849,6 +1856,9 @@
 /obj/structure/light_construct/directional/east,
 /obj/effect/mapping_helpers/broken_floor,
 /obj/effect/landmark/generic_maintenance_landmark,
+/obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
+	dir = 8
+	},
 /turf/open/floor/wood,
 /area/station/commons/vacant_room/office)
 "bpz" = (
@@ -5326,6 +5336,7 @@
 /area/station/medical/chemistry)
 "dIo" = (
 /obj/effect/spawner/random/bureaucracy/pen,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/carpet,
 /area/station/commons/vacant_room/office)
 "dIC" = (
@@ -5579,7 +5590,6 @@
 /turf/open/floor/iron/grimy,
 /area/station/tcommsat/computer)
 "dSk" = (
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/disposalpipe/segment,
 /obj/effect/landmark/start/hangover,
 /turf/open/floor/carpet,
@@ -8177,9 +8187,6 @@
 /turf/open/floor/iron/freezer,
 /area/station/commons/toilet/restrooms)
 "fzU" = (
-/obj/machinery/door/airlock/external{
-	name = "External Airlock"
-	},
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
@@ -8188,6 +8195,9 @@
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 4
+	},
+/obj/machinery/door/airlock/external{
+	name = "Auxiliary Docking Port"
 	},
 /turf/open/floor/plating,
 /area/station/service/abandoned_gambling_den)
@@ -8778,6 +8788,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
 	},
+/obj/machinery/firealarm/directional/south,
 /turf/open/floor/carpet/black,
 /area/station/maintenance/department/chapel)
 "fSZ" = (
@@ -9904,11 +9915,13 @@
 /turf/open/floor/iron/dark,
 /area/station/science/explab)
 "gIA" = (
-/obj/machinery/door/airlock/external,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
 	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/external,
+/obj/machinery/door/airlock/external{
+	name = "Ferry Docking Port"
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
 "gIQ" = (
@@ -11702,10 +11715,9 @@
 /turf/open/floor/iron,
 /area/station/engineering/main)
 "hVW" = (
-/obj/item/stack/cable_coil{
-	pixel_x = -1;
-	pixel_y = -3
-	},
+/obj/structure/closet/crate,
+/obj/effect/spawner/random/maintenance,
+/obj/effect/spawner/random/exotic/languagebook,
 /turf/open/floor/plating,
 /area/station/maintenance/port/greater)
 "hWa" = (
@@ -12541,8 +12553,9 @@
 "izn" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/item/rubber_chicken,
+/obj/structure/table,
 /turf/open/floor/plating,
-/area/station/maintenance/port/central)
+/area/station/maintenance/port/greater)
 "izp" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
@@ -12823,6 +12836,9 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/mapping_helpers/broken_floor,
 /obj/effect/turf_decal/siding/wood,
+/obj/machinery/computer/pod/old/mass_driver_controller/chapelgun{
+	pixel_y = -30
+	},
 /turf/open/floor/wood,
 /area/station/maintenance/department/chapel/monastery)
 "iIB" = (
@@ -15720,13 +15736,13 @@
 /turf/open/floor/iron,
 /area/station/service/cafeteria)
 "kBN" = (
-/obj/machinery/door/airlock/maintenance{
-	name = "Medbay Maintenance"
-	},
-/obj/effect/mapping_helpers/airlock/access/any/medical/general,
 /obj/effect/mapping_helpers/airlock/unres{
 	dir = 8
 	},
+/obj/machinery/door/airlock/maintenance/external{
+	name = "Escape Pod Hallway"
+	},
+/obj/effect/mapping_helpers/airlock/access/any/medical/maintenance,
 /turf/open/floor/plating,
 /area/station/medical/medbay/central)
 "kBR" = (
@@ -19432,13 +19448,9 @@
 /turf/open/floor/iron/dark,
 /area/station/science/ordnance)
 "mZp" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/item/clothing/shoes/ducky_shoes,
-/obj/item/clothing/suit/costume/chickensuit,
-/obj/item/clothing/head/costume/chicken,
-/obj/machinery/light/small/directional/north,
+/obj/effect/spawner/random/trash/crushed_can,
 /turf/open/floor/plating,
-/area/station/maintenance/port/central)
+/area/station/maintenance/starboard/aft)
 "mZq" = (
 /obj/item/plunger{
 	pixel_x = 10;
@@ -20625,9 +20637,6 @@
 /turf/open/floor/iron/dark,
 /area/station/command/bridge)
 "nLt" = (
-/obj/machinery/door/airlock/external{
-	name = "External Airlock"
-	},
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
@@ -20636,6 +20645,9 @@
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 8
+	},
+/obj/machinery/door/airlock/external{
+	name = "Auxiliary Docking Port"
 	},
 /turf/open/floor/plating,
 /area/station/service/abandoned_gambling_den)
@@ -24343,11 +24355,9 @@
 /turf/open/floor/iron/dark/textured,
 /area/station/science/robotics/lab)
 "qdO" = (
-/obj/structure/closet/crate,
-/obj/effect/spawner/random/maintenance,
-/obj/effect/spawner/random/exotic/languagebook,
-/turf/open/floor/plating,
-/area/station/maintenance/port/lesser)
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/turf/open/floor/carpet,
+/area/station/commons/vacant_room/office)
 "qea" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/machinery/door/poddoor/shutters/preopen{
@@ -25249,7 +25259,11 @@
 /turf/open/floor/wood,
 /area/station/service/abandoned_gambling_den)
 "qEi" = (
-/obj/machinery/door/airlock/maintenance_hatch,
+/obj/machinery/door/airlock/maintenance,
+/obj/effect/mapping_helpers/airlock/access/any/engineering/maintenance,
+/obj/effect/mapping_helpers/airlock/unres{
+	dir = 1
+	},
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "qEl" = (
@@ -27727,7 +27741,6 @@
 /area/station/security/brig)
 "seX" = (
 /obj/structure/window/reinforced/spawner/directional/south,
-/obj/machinery/airalarm/directional/west,
 /obj/effect/landmark/generic_maintenance_landmark,
 /obj/effect/turf_decal/siding/wood,
 /obj/effect/turf_decal/siding/wood{
@@ -28568,6 +28581,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
 	},
+/obj/machinery/firealarm/directional/north,
 /turf/open/floor/wood,
 /area/station/maintenance/department/chapel/monastery)
 "sIh" = (
@@ -30063,8 +30077,7 @@
 /turf/open/floor/wood,
 /area/station/maintenance/department/science/xenobiology)
 "tKD" = (
-/obj/machinery/door/airlock/maintenance,
-/obj/effect/mapping_helpers/airlock/welded,
+/obj/machinery/door/airlock/maintenance_hatch,
 /turf/open/floor/plating,
 /area/station/maintenance/port/central)
 "tKL" = (
@@ -31542,9 +31555,6 @@
 /turf/open/floor/wood,
 /area/station/commons/vacant_room/office)
 "uIr" = (
-/obj/machinery/computer/pod/old/mass_driver_controller/chapelgun{
-	pixel_x = 30
-	},
 /obj/machinery/door/window/right/directional/south{
 	req_access = list("chapel_office")
 	},
@@ -33158,6 +33168,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 8
 	},
+/obj/machinery/airalarm/directional/north,
 /turf/open/floor/wood,
 /area/station/maintenance/department/chapel/monastery)
 "vHW" = (
@@ -34966,6 +34977,7 @@
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
 	},
+/obj/structure/sign/warning/docking/directional/east,
 /turf/open/floor/wood,
 /area/station/service/abandoned_gambling_den)
 "wKd" = (
@@ -35822,12 +35834,9 @@
 /turf/open/floor/iron,
 /area/station/service/hydroponics)
 "xnE" = (
-/obj/effect/mapping_helpers/broken_floor,
-/obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
-	dir = 4
-	},
-/turf/open/floor/wood,
-/area/station/commons/vacant_room/office)
+/obj/effect/spawner/random/trash/crushed_can,
+/turf/open/floor/iron,
+/area/station/hallway/secondary/exit)
 "xoe" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/ntnet_relay,
@@ -36439,10 +36448,9 @@
 /obj/docking_port/stationary{
 	dwidth = 2;
 	height = 13;
-	name = "port bay 2";
+	name = "Ferry Docking Bay";
 	shuttle_id = "ferry_home";
-	width = 5;
-	dir = 6
+	width = 5
 	},
 /turf/open/space,
 /area/space/nearstation)
@@ -37272,6 +37280,10 @@
 	},
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
+"yhk" = (
+/obj/structure/sign/warning/docking/directional/west,
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "yhn" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
@@ -60100,7 +60112,7 @@ ciW
 vqi
 ckW
 oft
-oft
+izn
 fzc
 apX
 wuD
@@ -62667,7 +62679,7 @@ vhQ
 jIV
 neE
 kJC
-vlp
+oft
 ckW
 oft
 fzc
@@ -64211,10 +64223,10 @@ vWk
 pmW
 btM
 kQV
-qdO
-tJA
-mZp
-izn
+kQV
+tKD
+iVU
+iVU
 tKD
 pmr
 mMj
@@ -64748,7 +64760,7 @@ tzD
 iUq
 xHQ
 lVt
-qKS
+xnE
 vtb
 rCu
 pxi
@@ -64771,7 +64783,7 @@ ear
 oCm
 iFF
 iFF
-iFF
+aNl
 iFF
 vLt
 iFF
@@ -65041,7 +65053,7 @@ hRD
 hRD
 hRD
 eHg
-hRD
+yhk
 aOY
 hRD
 gIA
@@ -66807,7 +66819,7 @@ aih
 fuS
 uHR
 gTT
-xnE
+cSU
 cSU
 ury
 kyl
@@ -67577,7 +67589,7 @@ tOW
 fvv
 kvk
 pCU
-ffO
+qdO
 frk
 nnq
 ury
@@ -79660,7 +79672,7 @@ mHk
 tRM
 hJb
 hJb
-hJb
+mZp
 fVF
 fVF
 kMp
