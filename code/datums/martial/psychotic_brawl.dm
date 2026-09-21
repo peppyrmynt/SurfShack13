@@ -118,10 +118,25 @@
 	set desc = "Remember the combat geometry currently screaming through your bloodstream."
 	set category = "Tweaker Fu"
 
-	to_chat(src, span_boldnotice("Tweaker Fu combos:"))
-	to_chat(src, span_notice("Machine-Gun Jabs: Harm, Harm - five frantic punches in rapid succession."))
-	to_chat(src, span_notice("Rocket Kick: Harm, Shove - a flying kick that sends the target backwards."))
-	to_chat(src, span_notice("Shakedown: Grab, Harm - rattle a grabbed target hard enough to floor them."))
+	var/brain_damage = 0
+	if(iscarbon(src))
+		var/mob/living/carbon/carbon_user = src
+		brain_damage = clamp(carbon_user.get_organ_loss(ORGAN_SLOT_BRAIN), 0, BRAIN_DAMAGE_DEATH)
+	var/brain_ratio = brain_damage / BRAIN_DAMAGE_DEATH
+	var/damage_bonus = round(brain_ratio * 20, 0.1)
+	var/damage_reduction = round(brain_ratio * 10, 0.1)
+	var/stamina_reduction = round(brain_ratio * 15, 0.1)
+
+	to_chat(src, span_boldnotice("Tweaker Fu"))
+	to_chat(src, span_notice("Meth overdose unlocked this temporary martial art. It remains usable while methamphetamine is still in your system."))
+	to_chat(src, span_notice("The more brain damage you have, the stronger your Tweaker Fu becomes: up to 20% more attack damage, 10% less incoming physical damage, and 15% less stamina damage at 200 brain damage."))
+	to_chat(src, span_notice("Current brain damage: [round(brain_damage, 0.1)] / [BRAIN_DAMAGE_DEATH]. Current bonuses: +[damage_bonus]% attack damage, -[damage_reduction]% incoming physical damage, -[stamina_reduction]% stamina damage."))
+	to_chat(src, span_notice("While Tweaker Fu is active, you slowly recover a little brain damage and stamina."))
+	to_chat(src, span_boldnotice("Combos:"))
+	to_chat(src, span_notice("Machine-Gun Jabs: Harm, Harm - five rapid punches, plus up to 5 brain damage if all five land."))
+	to_chat(src, span_notice("Rocket Kick: Harm, Shove - a flying kick that sends the target backwards and deals 6 brain damage."))
+	to_chat(src, span_notice("Shakedown: Grab, Harm - while pulling the target, rattle them hard enough to deal stamina damage and floor them."))
+	to_chat(src, span_notice("Every Tweaker Fu attack makes you scream."))
 
 /datum/martial_art/tweaker_fu
 	name = "Tweaker Fu"
@@ -136,13 +151,16 @@
 /datum/martial_art/tweaker_fu/on_teach(mob/living/new_holder)
 	. = ..()
 	tweaker_holder = WEAKREF(new_holder)
+	RegisterSignal(new_holder, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, PROC_REF(tweaker_damage_resistance))
 	to_chat(new_holder, span_userdanger("Your heart hammers. Every twitch suddenly looks like a combat technique. You have discovered Tweaker Fu!"))
+	to_chat(new_holder, span_notice("Use the 'Recall Tweaker Fu' button in the Tweaker Fu actions category to read your moves and current brain-damage bonuses."))
 	meth_check_timer = addtimer(CALLBACK(src, PROC_REF(check_meth)), 2 SECONDS, TIMER_STOPPABLE)
 
 /datum/martial_art/tweaker_fu/on_remove(mob/living/remove_from)
 	if(meth_check_timer)
 		deltimer(meth_check_timer)
 		meth_check_timer = null
+	UnregisterSignal(remove_from, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS)
 	tweaker_holder = null
 	to_chat(remove_from, span_notice("The impossible combat geometry finally stops making sense."))
 	return ..()
@@ -152,6 +170,28 @@
 		return FALSE
 	return ..()
 
+/datum/martial_art/tweaker_fu/proc/get_brain_damage(mob/living/user)
+	if(!iscarbon(user))
+		return 0
+	var/mob/living/carbon/carbon_user = user
+	return clamp(carbon_user.get_organ_loss(ORGAN_SLOT_BRAIN), 0, BRAIN_DAMAGE_DEATH)
+
+/datum/martial_art/tweaker_fu/proc/get_power_multiplier(mob/living/user)
+	return 1 + (0.2 * get_brain_damage(user) / BRAIN_DAMAGE_DEATH)
+
+/datum/martial_art/tweaker_fu/proc/tweaker_damage_resistance(datum/source, list/damage_mods, damage_amount, damagetype, def_zone, sharpness, attack_direction, obj/item/attacking_item)
+	SIGNAL_HANDLER
+
+	var/mob/living/current_holder = source
+	var/brain_ratio = get_brain_damage(current_holder) / BRAIN_DAMAGE_DEATH
+	if(brain_ratio <= 0)
+		return
+
+	if(damagetype == STAMINA)
+		damage_mods += 1 - (0.15 * brain_ratio)
+	else if(damagetype == BRUTE || damagetype == BURN || damagetype == TOX || damagetype == OXY)
+		damage_mods += 1 - (0.1 * brain_ratio)
+
 /datum/martial_art/tweaker_fu/proc/check_meth()
 	meth_check_timer = null
 	var/mob/living/current_holder = tweaker_holder?.resolve()
@@ -160,6 +200,12 @@
 	if(!current_holder.reagents?.has_reagent(/datum/reagent/drug/methamphetamine))
 		fully_remove(current_holder)
 		return
+
+	var/brain_damage = get_brain_damage(current_holder)
+	if(iscarbon(current_holder) && brain_damage > 0)
+		var/mob/living/carbon/carbon_holder = current_holder
+		carbon_holder.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.25)
+	current_holder.adjustStaminaLoss(-(0.25 + (0.5 * brain_damage / BRAIN_DAMAGE_DEATH)))
 	meth_check_timer = addtimer(CALLBACK(src, PROC_REF(check_meth)), 2 SECONDS, TIMER_STOPPABLE)
 
 /datum/martial_art/tweaker_fu/proc/combat_scream(mob/living/attacker)
@@ -178,7 +224,7 @@
 	return FALSE
 
 /datum/martial_art/tweaker_fu/harm_act(mob/living/attacker, mob/living/defender)
-	var/final_damage = 9
+	var/final_damage = 9 * get_power_multiplier(attacker)
 	if(defender.check_block(attacker, final_damage, "[attacker]'s frantic punch", UNARMED_ATTACK))
 		return MARTIAL_ATTACK_FAIL
 
@@ -211,7 +257,7 @@
 	if(check_streak(attacker, defender))
 		return MARTIAL_ATTACK_SUCCESS
 
-	defender.apply_damage(10, STAMINA)
+	defender.apply_damage(10 * get_power_multiplier(attacker), STAMINA)
 	return MARTIAL_ATTACK_INVALID
 
 /datum/martial_art/tweaker_fu/grab_act(mob/living/attacker, mob/living/defender)
@@ -224,6 +270,8 @@
 
 /datum/martial_art/tweaker_fu/proc/machinegun_jabs(mob/living/attacker, mob/living/defender)
 	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
+	var/power_multiplier = get_power_multiplier(attacker)
+	var/hits_landed = 0
 	defender.visible_message(
 		span_danger("[attacker]'s arms blur into a frantic barrage of jabs at [defender]!"),
 		span_userdanger("[attacker]'s arms blur into a frantic barrage of jabs at you!"),
@@ -237,16 +285,25 @@
 			break
 		attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
 		playsound(defender, 'sound/items/weapons/punch1.ogg', 35, TRUE, -1)
-		defender.apply_damage(4, attacker.get_attack_type(), affecting)
+		defender.apply_damage(4 * power_multiplier, attacker.get_attack_type(), affecting)
+		hits_landed++
 		sleep(0.1 SECONDS)
-	defender.apply_damage(10, STAMINA)
-	log_combat(attacker, defender, "machine-gun jabbed (Tweaker Fu)")
+	if(QDELETED(defender))
+		return TRUE
+	defender.apply_damage(10 * power_multiplier, STAMINA)
+	if(iscarbon(defender) && hits_landed)
+		var/mob/living/carbon/carbon_defender = defender
+		carbon_defender.adjustOrganLoss(ORGAN_SLOT_BRAIN, hits_landed)
+	log_combat(attacker, defender, "machine-gun jabbed (Tweaker Fu), [hits_landed] hits")
 	return TRUE
 
 /datum/martial_art/tweaker_fu/proc/rocket_kick(mob/living/attacker, mob/living/defender)
 	attacker.do_attack_animation(defender, ATTACK_EFFECT_KICK)
 	playsound(defender, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
-	defender.apply_damage(12, attacker.get_attack_type(), BODY_ZONE_CHEST)
+	defender.apply_damage(12 * get_power_multiplier(attacker), attacker.get_attack_type(), BODY_ZONE_CHEST)
+	if(iscarbon(defender))
+		var/mob/living/carbon/carbon_defender = defender
+		carbon_defender.adjustOrganLoss(ORGAN_SLOT_BRAIN, 6)
 	var/atom/throw_target = get_edge_target_turf(defender, get_dir(attacker, defender))
 	defender.throw_at(throw_target, 4, 2, attacker)
 	defender.visible_message(
@@ -266,7 +323,7 @@
 
 	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
 	playsound(defender, 'sound/items/weapons/thudswoosh.ogg', 40, TRUE, -1)
-	defender.apply_damage(25, STAMINA)
+	defender.apply_damage(25 * get_power_multiplier(attacker), STAMINA)
 	defender.Knockdown(3 SECONDS)
 	defender.visible_message(
 		span_danger("[attacker] violently rattles [defender] around before dumping [defender.p_them()] onto the floor!"),
