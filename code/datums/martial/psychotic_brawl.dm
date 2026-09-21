@@ -107,3 +107,174 @@
 		return MARTIAL_ATTACK_SUCCESS
 
 	return MARTIAL_ATTACK_FAIL
+
+// Surf Shack: methamphetamine overdose martial art.
+#define TWEAKER_FLURRY_COMBO "HH"
+#define TWEAKER_ROCKET_KICK_COMBO "HD"
+#define TWEAKER_SHAKEDOWN_COMBO "GH"
+
+/mob/living/proc/tweaker_fu_help()
+	set name = "Recall Tweaker Fu"
+	set desc = "Remember the combat geometry currently screaming through your bloodstream."
+	set category = "Tweaker Fu"
+
+	to_chat(src, span_boldnotice("Tweaker Fu combos:"))
+	to_chat(src, span_notice("Machine-Gun Jabs: Harm, Harm - a frantic burst of punches."))
+	to_chat(src, span_notice("Rocket Kick: Harm, Shove - a flying kick that sends the target backwards."))
+	to_chat(src, span_notice("Shakedown: Grab, Harm - rattle a grabbed target hard enough to floor them."))
+
+/datum/martial_art/tweaker_fu
+	name = "Tweaker Fu"
+	id = MARTIALART_TWEAKER_FU
+	help_verb = /mob/living/proc/tweaker_fu_help
+	display_combos = TRUE
+	combo_timer = 4 SECONDS
+	max_streak_length = 2
+	var/meth_check_timer
+	var/datum/weakref/tweaker_holder
+
+/datum/martial_art/tweaker_fu/on_teach(mob/living/new_holder)
+	. = ..()
+	tweaker_holder = WEAKREF(new_holder)
+	to_chat(new_holder, span_userdanger("Your heart hammers. Every twitch suddenly looks like a combat technique. You have discovered Tweaker Fu!"))
+	meth_check_timer = addtimer(CALLBACK(src, PROC_REF(check_meth)), 2 SECONDS, TIMER_STOPPABLE)
+
+/datum/martial_art/tweaker_fu/on_remove(mob/living/remove_from)
+	if(meth_check_timer)
+		deltimer(meth_check_timer)
+		meth_check_timer = null
+	tweaker_holder = null
+	to_chat(remove_from, span_notice("The impossible combat geometry finally stops making sense."))
+	return ..()
+
+/datum/martial_art/tweaker_fu/can_use(mob/living/martial_artist)
+	if(!martial_artist.reagents?.has_reagent(/datum/reagent/drug/methamphetamine))
+		return FALSE
+	return ..()
+
+/datum/martial_art/tweaker_fu/proc/check_meth()
+	meth_check_timer = null
+	var/mob/living/current_holder = tweaker_holder?.resolve()
+	if(isnull(current_holder))
+		return
+	if(!current_holder.reagents?.has_reagent(/datum/reagent/drug/methamphetamine))
+		fully_remove(current_holder)
+		return
+	meth_check_timer = addtimer(CALLBACK(src, PROC_REF(check_meth)), 2 SECONDS, TIMER_STOPPABLE)
+
+/datum/martial_art/tweaker_fu/proc/check_streak(mob/living/attacker, mob/living/defender)
+	if(findtext(streak, TWEAKER_FLURRY_COMBO))
+		reset_streak()
+		return machinegun_jabs(attacker, defender)
+	if(findtext(streak, TWEAKER_ROCKET_KICK_COMBO))
+		reset_streak()
+		return rocket_kick(attacker, defender)
+	if(findtext(streak, TWEAKER_SHAKEDOWN_COMBO))
+		reset_streak()
+		return shakedown(attacker, defender)
+	return FALSE
+
+/datum/martial_art/tweaker_fu/harm_act(mob/living/attacker, mob/living/defender)
+	var/final_damage = 7
+	if(defender.check_block(attacker, final_damage, "[attacker]'s frantic punch", UNARMED_ATTACK))
+		return MARTIAL_ATTACK_FAIL
+
+	add_to_streak("H", defender)
+	if(check_streak(attacker, defender))
+		return MARTIAL_ATTACK_SUCCESS
+
+	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
+	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
+	playsound(defender, 'sound/items/weapons/punch1.ogg', 30, TRUE, -1)
+	defender.apply_damage(final_damage, attacker.get_attack_type(), affecting)
+	defender.visible_message(
+		span_danger("[attacker] snaps a twitchy punch into [defender]!"),
+		span_userdanger("[attacker] snaps a twitchy punch into you!"),
+		span_hear("You hear a quick smack of flesh!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You twitch-punch [defender]!"))
+	log_combat(attacker, defender, "punched (Tweaker Fu)")
+	return MARTIAL_ATTACK_SUCCESS
+
+/datum/martial_art/tweaker_fu/disarm_act(mob/living/attacker, mob/living/defender)
+	if(defender.check_block(attacker, 0, "[attacker]'s twitchy shove", UNARMED_ATTACK))
+		return MARTIAL_ATTACK_FAIL
+
+	add_to_streak("D", defender)
+	if(check_streak(attacker, defender))
+		return MARTIAL_ATTACK_SUCCESS
+
+	defender.apply_damage(8, STAMINA)
+	return MARTIAL_ATTACK_INVALID
+
+/datum/martial_art/tweaker_fu/grab_act(mob/living/attacker, mob/living/defender)
+	if(defender.check_block(attacker, 0, "[attacker]'s twitchy grab", UNARMED_ATTACK))
+		return MARTIAL_ATTACK_FAIL
+
+	add_to_streak("G", defender)
+	return MARTIAL_ATTACK_INVALID
+
+/datum/martial_art/tweaker_fu/proc/machinegun_jabs(mob/living/attacker, mob/living/defender)
+	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
+	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
+	playsound(defender, 'sound/items/weapons/punch1.ogg', 45, TRUE, -1)
+	defender.apply_damage(15, attacker.get_attack_type(), affecting)
+	defender.apply_damage(10, STAMINA)
+	defender.visible_message(
+		span_danger("[attacker]'s arms blur into a frantic barrage of jabs at [defender]!"),
+		span_userdanger("[attacker]'s arms blur into a frantic barrage of jabs at you!"),
+		span_hear("You hear a rapid series of thuds!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You machine-gun jab [defender]!"))
+	log_combat(attacker, defender, "machine-gun jabbed (Tweaker Fu)")
+	return TRUE
+
+/datum/martial_art/tweaker_fu/proc/rocket_kick(mob/living/attacker, mob/living/defender)
+	attacker.do_attack_animation(defender, ATTACK_EFFECT_KICK)
+	playsound(defender, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
+	defender.apply_damage(10, attacker.get_attack_type(), BODY_ZONE_CHEST)
+	var/atom/throw_target = get_edge_target_turf(defender, get_dir(attacker, defender))
+	defender.throw_at(throw_target, 3, 2, attacker)
+	defender.visible_message(
+		span_danger("[attacker] launches a wildly overcommitted kick into [defender], sending [defender.p_them()] flying!"),
+		span_userdanger("[attacker] launches a wildly overcommitted kick into you, sending you flying!"),
+		span_hear("You hear a heavy kick connect!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You rocket-kick [defender]!"))
+	log_combat(attacker, defender, "rocket kicked (Tweaker Fu)")
+	return TRUE
+
+/datum/martial_art/tweaker_fu/proc/shakedown(mob/living/attacker, mob/living/defender)
+	if(attacker.pulling != defender)
+		return FALSE
+
+	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
+	playsound(defender, 'sound/items/weapons/thudswoosh.ogg', 40, TRUE, -1)
+	defender.apply_damage(20, STAMINA)
+	defender.Knockdown(2 SECONDS)
+	defender.visible_message(
+		span_danger("[attacker] violently rattles [defender] around before dumping [defender.p_them()] onto the floor!"),
+		span_userdanger("[attacker] violently rattles you around and dumps you onto the floor!"),
+		span_hear("You hear frantic shuffling and a thud!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You shake [defender] down!"))
+	log_combat(attacker, defender, "shook down (Tweaker Fu)")
+	return TRUE
+
+/datum/reagent/drug/methamphetamine/overdose_start(mob/living/affected_mob)
+	. = ..()
+	var/datum/martial_art/tweaker_fu/style = new()
+	if(!style.teach(affected_mob, make_temporary = TRUE))
+		qdel(style)
+
+#undef TWEAKER_FLURRY_COMBO
+#undef TWEAKER_ROCKET_KICK_COMBO
+#undef TWEAKER_SHAKEDOWN_COMBO
