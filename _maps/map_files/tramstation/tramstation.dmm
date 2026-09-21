@@ -3457,6 +3457,7 @@
 /area/station/command/heads_quarters/captain/private)
 "bne" = (
 /obj/structure/closet/secure_closet/personal/cabinet,
+/obj/machinery/firealarm/directional/south,
 /turf/open/floor/carpet,
 /area/station/commons/dorms/room4)
 "bnr" = (
@@ -10547,6 +10548,7 @@
 /area/station/ai_monitored/command/storage/eva)
 "dLO" = (
 /obj/structure/closet/secure_closet/personal/cabinet,
+/obj/machinery/firealarm/directional/west,
 /turf/open/floor/wood,
 /area/station/commons/dorms/room1)
 "dLT" = (
@@ -38803,8 +38805,8 @@
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 8
 	},
-/obj/machinery/jukebox/no_access,
 /obj/machinery/light/directional/west,
+/obj/machinery/vending/cigarette,
 /turf/open/floor/iron,
 /area/station/commons/lounge)
 "nrW" = (
@@ -41801,6 +41803,7 @@
 	},
 /obj/machinery/light/small/directional/west,
 /obj/machinery/light_switch/directional/south,
+/obj/machinery/firealarm/directional/west,
 /turf/open/floor/carpet,
 /area/station/commons/dorms/room2)
 "otl" = (
@@ -54747,6 +54750,7 @@
 	},
 /obj/machinery/light/small/directional/east,
 /obj/machinery/airalarm/directional/north,
+/obj/machinery/firealarm/directional/east,
 /turf/open/floor/wood,
 /area/station/commons/dorms/room3)
 "sMx" = (
@@ -60607,6 +60611,7 @@
 /obj/effect/turf_decal/tile/yellow/opposingcorners{
 	dir = 8
 	},
+/obj/machinery/jukebox/no_access,
 /turf/open/floor/iron,
 /area/station/commons/lounge)
 "uOR" = (
