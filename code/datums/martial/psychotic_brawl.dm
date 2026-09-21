@@ -131,10 +131,10 @@
 	to_chat(src, span_notice("Meth overdose unlocked this temporary martial art. It remains usable while methamphetamine is still in your system."))
 	to_chat(src, span_notice("The more brain damage you have, the stronger your Tweaker Fu becomes: up to 20% more attack damage, 10% less incoming physical damage, and 15% less stamina damage at 200 brain damage."))
 	to_chat(src, span_notice("Current brain damage: [round(brain_damage, 0.1)] / [BRAIN_DAMAGE_DEATH]. Current bonuses: +[damage_bonus]% attack damage, -[damage_reduction]% incoming physical damage, -[stamina_reduction]% stamina damage."))
-	to_chat(src, span_notice("While Tweaker Fu is active, you slowly recover a little brain damage and stamina."))
+	to_chat(src, span_notice("While Tweaker Fu is active, you slowly recover brain damage and stamina."))
 	to_chat(src, span_boldnotice("Combos:"))
-	to_chat(src, span_notice("Machine-Gun Jabs: Harm, Harm - five rapid punches, plus up to 5 brain damage if all five land."))
-	to_chat(src, span_notice("Rocket Kick: Harm, Shove - a flying kick that sends the target backwards and deals 6 brain damage."))
+	to_chat(src, span_notice("Machine-Gun Jabs: Harm, Harm - five rapid punches, plus up to 7.5 brain damage if all five land."))
+	to_chat(src, span_notice("Rocket Kick: Harm, Shove - a flying kick that sends the target backwards and deals 9 brain damage."))
 	to_chat(src, span_notice("Shakedown: Grab, Harm - while pulling the target, rattle them hard enough to deal stamina damage and floor them."))
 	to_chat(src, span_notice("Every Tweaker Fu attack makes you scream."))
 
@@ -204,7 +204,7 @@
 	var/brain_damage = get_brain_damage(current_holder)
 	if(iscarbon(current_holder) && brain_damage > 0)
 		var/mob/living/carbon/carbon_holder = current_holder
-		carbon_holder.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.25)
+		carbon_holder.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.625)
 	current_holder.adjustStaminaLoss(-(0.25 + (0.5 * brain_damage / BRAIN_DAMAGE_DEATH)))
 	meth_check_timer = addtimer(CALLBACK(src, PROC_REF(check_meth)), 2 SECONDS, TIMER_STOPPABLE)
 
@@ -293,7 +293,7 @@
 	defender.apply_damage(10 * power_multiplier, STAMINA)
 	if(iscarbon(defender) && hits_landed)
 		var/mob/living/carbon/carbon_defender = defender
-		carbon_defender.adjustOrganLoss(ORGAN_SLOT_BRAIN, hits_landed)
+		carbon_defender.adjustOrganLoss(ORGAN_SLOT_BRAIN, hits_landed * 1.5)
 	log_combat(attacker, defender, "machine-gun jabbed (Tweaker Fu), [hits_landed] hits")
 	return TRUE
 
@@ -303,7 +303,7 @@
 	defender.apply_damage(12 * get_power_multiplier(attacker), attacker.get_attack_type(), BODY_ZONE_CHEST)
 	if(iscarbon(defender))
 		var/mob/living/carbon/carbon_defender = defender
-		carbon_defender.adjustOrganLoss(ORGAN_SLOT_BRAIN, 6)
+		carbon_defender.adjustOrganLoss(ORGAN_SLOT_BRAIN, 9)
 	var/atom/throw_target = get_edge_target_turf(defender, get_dir(attacker, defender))
 	defender.throw_at(throw_target, 4, 2, attacker)
 	defender.visible_message(
