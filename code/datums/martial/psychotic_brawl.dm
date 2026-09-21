@@ -119,7 +119,7 @@
 	set category = "Tweaker Fu"
 
 	to_chat(src, span_boldnotice("Tweaker Fu combos:"))
-	to_chat(src, span_notice("Machine-Gun Jabs: Harm, Harm - a frantic burst of punches."))
+	to_chat(src, span_notice("Machine-Gun Jabs: Harm, Harm - five frantic punches in rapid succession."))
 	to_chat(src, span_notice("Rocket Kick: Harm, Shove - a flying kick that sends the target backwards."))
 	to_chat(src, span_notice("Shakedown: Grab, Harm - rattle a grabbed target hard enough to floor them."))
 
@@ -162,6 +162,9 @@
 		return
 	meth_check_timer = addtimer(CALLBACK(src, PROC_REF(check_meth)), 2 SECONDS, TIMER_STOPPABLE)
 
+/datum/martial_art/tweaker_fu/proc/combat_scream(mob/living/attacker)
+	attacker.emote("scream")
+
 /datum/martial_art/tweaker_fu/proc/check_streak(mob/living/attacker, mob/living/defender)
 	if(findtext(streak, TWEAKER_FLURRY_COMBO))
 		reset_streak()
@@ -175,10 +178,11 @@
 	return FALSE
 
 /datum/martial_art/tweaker_fu/harm_act(mob/living/attacker, mob/living/defender)
-	var/final_damage = 7
+	var/final_damage = 9
 	if(defender.check_block(attacker, final_damage, "[attacker]'s frantic punch", UNARMED_ATTACK))
 		return MARTIAL_ATTACK_FAIL
 
+	combat_scream(attacker)
 	add_to_streak("H", defender)
 	if(check_streak(attacker, defender))
 		return MARTIAL_ATTACK_SUCCESS
@@ -202,26 +206,24 @@
 	if(defender.check_block(attacker, 0, "[attacker]'s twitchy shove", UNARMED_ATTACK))
 		return MARTIAL_ATTACK_FAIL
 
+	combat_scream(attacker)
 	add_to_streak("D", defender)
 	if(check_streak(attacker, defender))
 		return MARTIAL_ATTACK_SUCCESS
 
-	defender.apply_damage(8, STAMINA)
+	defender.apply_damage(10, STAMINA)
 	return MARTIAL_ATTACK_INVALID
 
 /datum/martial_art/tweaker_fu/grab_act(mob/living/attacker, mob/living/defender)
 	if(defender.check_block(attacker, 0, "[attacker]'s twitchy grab", UNARMED_ATTACK))
 		return MARTIAL_ATTACK_FAIL
 
+	combat_scream(attacker)
 	add_to_streak("G", defender)
 	return MARTIAL_ATTACK_INVALID
 
 /datum/martial_art/tweaker_fu/proc/machinegun_jabs(mob/living/attacker, mob/living/defender)
 	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
-	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
-	playsound(defender, 'sound/items/weapons/punch1.ogg', 45, TRUE, -1)
-	defender.apply_damage(15, attacker.get_attack_type(), affecting)
-	defender.apply_damage(10, STAMINA)
 	defender.visible_message(
 		span_danger("[attacker]'s arms blur into a frantic barrage of jabs at [defender]!"),
 		span_userdanger("[attacker]'s arms blur into a frantic barrage of jabs at you!"),
@@ -230,15 +232,23 @@
 		attacker,
 	)
 	to_chat(attacker, span_danger("You machine-gun jab [defender]!"))
+	for(var/i in 1 to 5)
+		if(QDELETED(defender) || !attacker.Adjacent(defender))
+			break
+		attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
+		playsound(defender, 'sound/items/weapons/punch1.ogg', 35, TRUE, -1)
+		defender.apply_damage(4, attacker.get_attack_type(), affecting)
+		sleep(0.1 SECONDS)
+	defender.apply_damage(10, STAMINA)
 	log_combat(attacker, defender, "machine-gun jabbed (Tweaker Fu)")
 	return TRUE
 
 /datum/martial_art/tweaker_fu/proc/rocket_kick(mob/living/attacker, mob/living/defender)
 	attacker.do_attack_animation(defender, ATTACK_EFFECT_KICK)
 	playsound(defender, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
-	defender.apply_damage(10, attacker.get_attack_type(), BODY_ZONE_CHEST)
+	defender.apply_damage(12, attacker.get_attack_type(), BODY_ZONE_CHEST)
 	var/atom/throw_target = get_edge_target_turf(defender, get_dir(attacker, defender))
-	defender.throw_at(throw_target, 3, 2, attacker)
+	defender.throw_at(throw_target, 4, 2, attacker)
 	defender.visible_message(
 		span_danger("[attacker] launches a wildly overcommitted kick into [defender], sending [defender.p_them()] flying!"),
 		span_userdanger("[attacker] launches a wildly overcommitted kick into you, sending you flying!"),
@@ -256,8 +266,8 @@
 
 	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
 	playsound(defender, 'sound/items/weapons/thudswoosh.ogg', 40, TRUE, -1)
-	defender.apply_damage(20, STAMINA)
-	defender.Knockdown(2 SECONDS)
+	defender.apply_damage(25, STAMINA)
+	defender.Knockdown(3 SECONDS)
 	defender.visible_message(
 		span_danger("[attacker] violently rattles [defender] around before dumping [defender.p_them()] onto the floor!"),
 		span_userdanger("[attacker] violently rattles you around and dumps you onto the floor!"),
