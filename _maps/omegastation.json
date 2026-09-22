@@ -1,0 +1,28 @@
+{
+	"version": 1,
+	"map_name": "OmegaStation",
+	"map_path": "custom",
+	"map_file": "OmegaStation.dmm",
+	"shuttles": {
+		"emergency": "emergency_omega",
+		"ferry": "ferry_kilo",
+		"cargo": "cargo_kilo",
+		"whiteship": "whiteship_kilo"
+	},
+	"job_changes": {
+		"Cook": {
+			"additional_cqc_areas": ["/area/station/service/cafeteria"],
+			"spawn_positions": 2
+		},
+		"Captain": {
+			"special_charter": "asteroid"
+		},
+		"Shaft Miner": {
+			"total_positions": 3,
+			"spawn_positions": 3
+		},
+		"Bitrunner": {
+			"total_positions": 2,
+			"spawn_positions": 2
+	}
+}
