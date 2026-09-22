@@ -1,0 +1,5 @@
+author: "Ixde969-hub"
+delete-after: true
+changes:
+  - rscadd: "Added rare small and large shield potions, with timed drinking, a private shield counter, and hit-only shield effects."
+  - rscadd: "Bartenders can make shield concentrate from Singulo, blue curacao, bluespace dust and frost oil at 270-280 K, then bottle it with a shaker, glass and silver."

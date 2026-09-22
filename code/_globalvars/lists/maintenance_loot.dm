@@ -395,6 +395,9 @@ GLOBAL_LIST_INIT(oddity_loot, list(//oddity: strange or crazy items
 
 //Loot pool used by default maintenance loot spawners
 GLOBAL_LIST_INIT(maintenance_loot, list(
+	// Roughly 0.30% mini / 0.10% big per base loot roll, before map/holiday skew.
+	/obj/item/shield_potion/small = 30,
+	/obj/item/shield_potion = 10,
 	GLOB.trash_loot = maint_trash_weight,
 	GLOB.common_loot = maint_common_weight,
 	GLOB.uncommon_loot = maint_uncommon_weight,

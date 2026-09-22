@@ -32,6 +32,8 @@
 ///from /obj/item/bodypart/proc/receive_damage, sent from the limb owner (limb, brute, burn)
 #define COMSIG_CARBON_LIMB_DAMAGED "carbon_limb_damaged"
 	#define COMPONENT_PREVENT_LIMB_DAMAGE (1 << 0)
+/// After mitigation but before wounds: (list/damage_packet), mutable BRUTE/BURN values. Forced damage bypasses this.
+#define COMSIG_CARBON_PRE_WOUND_DAMAGE "carbon_pre_wound_damage"
 /// from /obj/item/bodypart/proc/apply_gauze(/obj/item/stack/gauze): (/obj/item/stack/medical/gauze/applied_gauze, /obj/item/stack/medical/gauze/stack_used)
 #define COMSIG_BODYPART_GAUZED "bodypart_gauzed"
 /// from /obj/item/stack/medical/gauze/Destroy(): (/obj/item/stack/medical/gauze/removed_gauze)

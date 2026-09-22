@@ -334,12 +334,15 @@
 		. += picked.get_damage()
 
 		// disabling wounds from these for now cuz your entire body snapping cause your heart stopped would suck
-		update |= picked.receive_damage(brute_per_part, burn_per_part, blocked = FALSE, updating_health = FALSE, forced = forced, required_bodytype = required_bodytype, wound_bonus = CANT_WOUND)
+		var/list/shield_absorption
+		if(!forced && get_potion_shield() > 0)
+			shield_absorption = list(BRUTE = 0, BURN = 0)
+		update |= picked.receive_damage(brute_per_part, burn_per_part, blocked = FALSE, updating_health = FALSE, forced = forced, required_bodytype = required_bodytype, wound_bonus = CANT_WOUND, shield_absorption = shield_absorption)
 
 		. -= picked.get_damage() // return the net amount of damage healed
 
-		brute = round(brute - (picked.brute_dam - brute_was), DAMAGE_PRECISION)
-		burn = round(burn - (picked.burn_dam - burn_was), DAMAGE_PRECISION)
+		brute = round(brute - (picked.brute_dam - brute_was) - (shield_absorption?[BRUTE] || 0), DAMAGE_PRECISION)
+		burn = round(burn - (picked.burn_dam - burn_was) - (shield_absorption?[BURN] || 0), DAMAGE_PRECISION)
 
 		parts -= picked
 

@@ -468,9 +468,13 @@
  * sharpness - Flag on whether the attack is edged or pointy
  * attack_direction - The direction the bodypart is attacked from, used to send blood flying in the opposite direction.
  * damage_source - The source of damage, typically a weapon.
+ * shield_absorption - Optional output list with shield-absorbed BRUTE/BURN in input damage units, for spread damage accounting.
  */
-/obj/item/bodypart/proc/receive_damage(brute = 0, burn = 0, blocked = 0, updating_health = TRUE, forced = FALSE, required_bodytype = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = NONE, attack_direction = null, damage_source, wound_clothing = TRUE)
+/obj/item/bodypart/proc/receive_damage(brute = 0, burn = 0, blocked = 0, updating_health = TRUE, forced = FALSE, required_bodytype = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = NONE, attack_direction = null, damage_source, wound_clothing = TRUE, list/shield_absorption)
 	SHOULD_CALL_PARENT(TRUE)
+	// Optional output in input-damage units, used by spread damage to avoid retrying absorbed damage on other limbs.
+	var/input_brute = brute
+	var/input_burn = burn
 
 	var/hit_percent = forced ? 1 : (100-blocked)/100
 	if((!brute && !burn) || hit_percent <= 0)
@@ -496,6 +500,18 @@
 
 	if(bodytype & (BODYTYPE_ALIEN|BODYTYPE_LARVA_PLACEHOLDER)) //aliens take double burn //nothing can burn with so much snowflake code around
 		burn *= 2
+
+	// Finite shields must absorb final damage before it can generate or worsen wounds.
+	if(owner && !forced)
+		var/list/damage_packet = list(BRUTE = brute, BURN = burn)
+		SEND_SIGNAL(owner, COMSIG_CARBON_PRE_WOUND_DAMAGE, damage_packet)
+		if(shield_absorption)
+			shield_absorption[BRUTE] = brute > 0 ? max(0, brute - damage_packet[BRUTE]) * input_brute / brute : 0
+			shield_absorption[BURN] = burn > 0 ? max(0, burn - damage_packet[BURN]) * input_burn / burn : 0
+		brute = max(0, damage_packet[BRUTE])
+		burn = max(0, damage_packet[BURN])
+		if(!brute && !burn)
+			return FALSE
 
 	/*
 	// START WOUND HANDLING
