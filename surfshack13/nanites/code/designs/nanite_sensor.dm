@@ -74,3 +74,38 @@
 	id = "sensor_resting_nanites"
 	category = list(NANITES_CATEGORY_SENSOR)
 	program_type = /datum/nanite_program/sensor/resting
+
+/datum/design/nanites/sensor_fire
+	name = "Fire Sensor"
+	desc = "The nanites receive a signal constantly while the host is on fire."
+	id = "sensor_fire_nanites"
+	category = list(NANITES_CATEGORY_SENSOR)
+	program_type = /datum/nanite_program/sensor/fire
+
+/datum/design/nanites/sensor_blood
+	name = "Blood Sensor"
+	desc = "The nanites receive a signal constantly while the host's blood volume is higher or lower than a target value."
+	id = "sensor_blood_nanites"
+	category = list(NANITES_CATEGORY_SENSOR)
+	program_type = /datum/nanite_program/sensor/blood
+
+/datum/design/nanites/sensor_nutrition
+	name = "Nutrition Sensor"
+	desc = "The nanites receive a signal constantly while the host's nutrition is higher or lower than a target value."
+	id = "sensor_nutrition_nanites"
+	category = list(NANITES_CATEGORY_SENSOR)
+	program_type = /datum/nanite_program/sensor/nutrition
+
+/datum/design/nanites/sensor_soul
+	name = "Catatonic Sensor"
+	desc = "The nanites receive a signal constantly while the host is or isn't in a catatonic-like state."
+	id = "sensor_soul_nanites"
+	category = list(NANITES_CATEGORY_SENSOR)
+	program_type = /datum/nanite_program/sensor/soul_check
+
+/datum/design/nanites/sensor_temperature
+	name = "Temperature Sensor"
+	desc = "The nanites receive a signal constantly while the host is above or below a certain temperature threshold. 310.15 is the normal body temperature for a human."
+	id = "sensor_temperature_nanites"
+	category = list(NANITES_CATEGORY_SENSOR)
+	program_type = /datum/nanite_program/sensor/temperature
