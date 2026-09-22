@@ -29,7 +29,14 @@
 	w_class = WEIGHT_CLASS_BULKY
 	slot_flags = ITEM_SLOT_BELT
 
-/obj/item/gun/energy/ionrifle/carbine/add_seclight_point()
+/obj/item/gun/energy/decloner
+	name = "biological demolecularisor"
+	desc = "A gun that discharges high amounts of controlled radiation to slowly break a target into component elements."
+	icon_state = "decloner"
+	ammo_type = list(/obj/item/ammo_casing/energy/declone)
+	ammo_x_offset = 1
+
+/obj/item/gun/energy/decloner/update_overlays()
 	. = ..()
 	// We use the same overlay as the parent, so we can just let the component inherit the correct offsets here
 	AddComponent(/datum/component/seclite_attachable, overlay_x = 18, overlay_y = 11)
@@ -78,8 +85,39 @@
 	ammo_type = list(/obj/item/ammo_casing/energy/mindflayer)
 	ammo_x_offset = 2
 
-/// amount of charge used up to start action (multiplied by amount) and per progress_flash_divisor ticks of welding
-#define PLASMA_CUTTER_CHARGE_WELD (0.025 * STANDARD_CELL_CHARGE)
+/obj/item/gun/energy/kinetic_accelerator/crossbow
+	name = "mini energy crossbow"
+	desc = "A weapon favored by syndicate stealth specialists."
+	icon_state = "crossbow"
+	inhand_icon_state = "crossbow"
+	w_class = WEIGHT_CLASS_SMALL
+	custom_materials = list(/datum/material/iron=2000)
+	suppressed = TRUE
+	ammo_type = list(/obj/item/ammo_casing/energy/bolt)
+	weapon_weight = WEAPON_LIGHT
+	obj_flags = 0
+	overheat_time = 20
+	holds_charge = TRUE
+	unique_frequency = TRUE
+	can_flashlight = FALSE
+	max_mod_capacity = 0
+
+/obj/item/gun/energy/kinetic_accelerator/crossbow/halloween
+	name = "candy corn crossbow"
+	desc = "A weapon favored by Syndicate trick-or-treaters."
+	icon_state = "crossbow_halloween"
+	inhand_icon_state = "crossbow"
+	ammo_type = list(/obj/item/ammo_casing/energy/bolt/halloween)
+
+/obj/item/gun/energy/kinetic_accelerator/crossbow/large
+	name = "energy crossbow"
+	desc = "A reverse engineered weapon using syndicate technology."
+	icon_state = "crossbowlarge"
+	w_class = WEIGHT_CLASS_BULKY
+	custom_materials = list(/datum/material/iron=4000)
+	suppressed = null
+	ammo_type = list(/obj/item/ammo_casing/energy/bolt/large)
+
 
 /obj/item/gun/energy/plasmacutter
 	name = "plasma cutter"
