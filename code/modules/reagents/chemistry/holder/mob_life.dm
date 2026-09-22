@@ -14,6 +14,9 @@
  * * liverless - Stops reagents that aren't set as [/datum/reagent/var/self_consuming] from metabolizing
  */
 /datum/reagents/proc/metabolize(mob/living/carbon/owner, seconds_per_tick, times_fired, can_overdose = FALSE, liverless = FALSE, dead = FALSE)
+	if(GLOB.hyper_adrenaline_active)
+		seconds_per_tick *= HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER
+
 	var/list/cached_reagents = reagent_list
 	if(owner)
 		expose_temperature(owner.bodytemperature, 0.25)
@@ -179,6 +182,9 @@
  * * times_fired - number of times to metabolize this reagent
  */
 /datum/reagents/proc/handle_stasis_chems(mob/living/carbon/owner, seconds_per_tick, times_fired)
+	if(GLOB.hyper_adrenaline_active)
+		seconds_per_tick *= HYPER_ADRENALINE_CHEM_EFFECT_MULTIPLIER
+
 	var/need_mob_update = FALSE
 	for(var/datum/reagent/reagent as anything in reagent_list)
 		if(!(reagent.chemical_flags & REAGENT_IGNORE_STASIS))

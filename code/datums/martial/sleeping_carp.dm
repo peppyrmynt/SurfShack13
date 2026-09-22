@@ -55,7 +55,7 @@
 	to_chat(attacker, span_danger("You [atk_verb] [defender]!"))
 	playsound(defender, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)
 	log_combat(attacker, defender, "strong punched (Sleeping Carp)")
-	defender.apply_damage(20, attacker.get_attack_type(), affecting)
+	apply_hyper_martial_damage(attacker, defender, 20, attacker.get_attack_type(), affecting)
 	return TRUE
 
 ///Crashing Wave Kick: Harm Disarm combo, throws people seven tiles backwards
@@ -71,7 +71,7 @@
 	playsound(attacker, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
 	var/atom/throw_target = get_edge_target_turf(defender, attacker.dir)
 	defender.throw_at(throw_target, 7, 4, attacker)
-	defender.apply_damage(15, attacker.get_attack_type(), BODY_ZONE_CHEST, wound_bonus = CANT_WOUND)
+	apply_hyper_martial_damage(attacker, defender, 15, attacker.get_attack_type(), BODY_ZONE_CHEST, wound_bonus = CANT_WOUND)
 	log_combat(attacker, defender, "launchkicked (Sleeping Carp)")
 	return TRUE
 
@@ -135,7 +135,7 @@
 			)
 			to_chat(attacker, span_danger("In a swift motion, you snap the neck of [defender]!"))
 			log_combat(attacker, defender, "snapped neck")
-			defender.apply_damage(100, BRUTE, BODY_ZONE_HEAD, wound_bonus=CANT_WOUND)
+			apply_hyper_martial_damage(attacker, defender, 100, BRUTE, BODY_ZONE_HEAD, wound_bonus = CANT_WOUND)
 			if(!HAS_TRAIT(defender, TRAIT_NODEATH))
 				defender.death()
 				defender.investigate_log("has had [defender.p_their()] neck snapped by [attacker].", INVESTIGATE_DEATHS)
@@ -160,7 +160,7 @@
 		attacker,
 	)
 	to_chat(attacker, span_danger("You [atk_verb] [defender]!"))
-	defender.apply_damage(final_damage, attacker.get_attack_type(), affecting, wound_bonus = CANT_WOUND)
+	apply_hyper_martial_damage(attacker, defender, final_damage, attacker.get_attack_type(), affecting, wound_bonus = CANT_WOUND)
 	playsound(defender, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)
 	log_combat(attacker, defender, "punched (Sleeping Carp)")
 	return MARTIAL_ATTACK_SUCCESS
