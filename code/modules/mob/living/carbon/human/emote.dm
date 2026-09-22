@@ -250,7 +250,10 @@
 
 /// 7TV-inspired image emotes ported from tgstation commit d72fcf2177c44000b350ab4a519b3b937513ff8c.
 /datum/emote/living/seventv
+	/// Asset and display time can be overridden by emotes with their own animation.
+	var/emote_icon = 'icons/mob/human/aprilfools_emotes.dmi'
 	var/emote_icon_state
+	var/emote_duration = 3 SECONDS
 	cooldown = 60 SECONDS
 	emote_type = EMOTE_VISIBLE
 
@@ -261,9 +264,19 @@
 
 /datum/emote/living/seventv/run_emote(mob/living/user, params, type_override, intentional)
 	. = ..()
-	var/image/emote_image = image('icons/mob/human/aprilfools_emotes.dmi', user, emote_icon_state)
+	var/image/emote_image = image(emote_icon, user, emote_icon_state)
 	emote_image.pixel_y = 32
-	flick_overlay_global(emote_image, GLOB.clients, 3 SECONDS)
+	flick_overlay_global(emote_image, GLOB.clients, emote_duration)
+
+/datum/emote/living/seventv/sigma
+	key = "sigma"
+	message = "gives a knowing smirk."
+	emote_icon = 'icons/mob/human/sigma_emote.dmi'
+	emote_icon_state = "sigma"
+	emote_duration = 5 SECONDS
+	sound = 'sound/effects/aprilfools/sigma.ogg'
+	affected_by_pitch = FALSE
+	general_emote_audio_cooldown = 5 SECONDS
 
 /datum/emote/living/seventv/clueless
 	key = "clueless"
