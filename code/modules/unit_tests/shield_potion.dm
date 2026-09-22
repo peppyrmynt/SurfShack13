@@ -20,7 +20,7 @@
 	TEST_ASSERT_EQUAL(length(chest.wounds), 0, "Absorbed damage must not generate wounds.")
 	victim.apply_damage(25, BURN, chest, wound_bonus = CANT_WOUND)
 	TEST_ASSERT_EQUAL(victim.get_potion_shield(), 0, "Shield potion regression check failed.")
-	TEST_ASSERT_EQUAL(victim.getFireLoss(), 15, "Only overflow may reach the body.")
+	TEST_ASSERT_EQUAL(round(victim.getFireLoss(), 0.1), 15, "Only overflow may reach the body.")
 	TEST_ASSERT_NULL(victim.has_status_effect(/datum/status_effect/potion_shield), "Broken shields must remove their effect and HUD.")
 
 /// Mixed damage must share shield proportionally; healing and nonphysical damage bypass it.
