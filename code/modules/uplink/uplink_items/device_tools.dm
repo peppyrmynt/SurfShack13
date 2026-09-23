@@ -231,9 +231,9 @@
 	cost = 7
 
 /datum/uplink_item/device_tools/hypnotic_grenade
-	name = "Hypnotic Grenade"
-	desc = "A modified flashbang grenade able to hypnotize targets. The sound portion of the flashbang causes hallucinations, and will allow the flash to induce a hypnotic trance to viewers."
-	item = /obj/item/grenade/hypnotic
+	name = "Hypnotic Grenade Kit"
+	desc = "A modified flashbang grenade able to induce an instant trance upon detonation. Comes in a deployment kit with a multitool for programming its cognitive payload and a subdermal telemetry implanter to monitor hypnotized assets."
+	item = /obj/item/storage/box/syndie_kit/hypnotic_grenade
 	cost = 12
 
 /datum/uplink_item/device_tools/singularity_beacon

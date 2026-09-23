@@ -14,6 +14,23 @@
 	/// Brain trauma associated with this antag datum
 	var/datum/brain_trauma/hypnosis/trauma
 
+/datum/antagonist/hypnotized/apply_innate_effects(mob/living/mob_override)
+	. = ..()
+	var/mob/living/hypnotized_mob = mob_override || owner.current
+	if(!hypnotized_mob)
+		return
+
+	for(var/obj/item/implant/hypno_tracker/tracker in GLOB.tracked_implants)
+		tracker.show_hypnotized(hypnotized_mob, src)
+
+/datum/antagonist/hypnotized/remove_innate_effects(mob/living/mob_override)
+	. = ..()
+	var/mob/living/hypnotized_mob = mob_override || owner.current
+	if(!hypnotized_mob)
+		return
+
+	for(var/obj/item/implant/hypno_tracker/tracker in GLOB.tracked_implants)
+		tracker.hide_hypnotized(hypnotized_mob)
 /datum/antagonist/hypnotized/Destroy()
 	QDEL_NULL(trauma)
 	return ..()
