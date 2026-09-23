@@ -237,10 +237,14 @@
 	icon_state = "great_ape"
 
 /mob/living/basic/gorilla/saiyan/death(gibbed)
-	var/mob/living/corpse = get_internal_saiyan()
-	if(istype(corpse) && !QDELETED(corpse))
-		corpse.death()
-		corpse.setBruteLoss(corpse.maxHealth, TRUE, TRUE)
+	var/datum/status_effect/shapechange_mob/shapechange_status = has_status_effect(/datum/status_effect/shapechange_mob)
+	if (!isnull(shapechange_status) && istype(shapechange_status.caster_mob) && !QDELETED(shapechange_status.caster_mob))
+		shapechange_status.restore_caster(kill_caster_after = TRUE)
+		return TRUE
+
+	// Never allow DEL_ON_DEATH to qdel the ape while the real player body may still be inside it.
+	stack_trace("Saiyan Great Ape died without a valid shapechange state; preserving the ape body instead of deleting a possible player body.")
+	basic_mob_flags &= ~DEL_ON_DEATH
 	return ..()
 
 /// Cut off his tail! It's the only way!
@@ -250,18 +254,23 @@
 		return
 	if (!prob(3))
 		return
+
+	var/datum/status_effect/shapechange_mob/shapechange_status = has_status_effect(/datum/status_effect/shapechange_mob)
+	var/mob/living/carbon/saiyan = get_internal_saiyan()
+	if (isnull(shapechange_status) || !istype(saiyan) || QDELETED(saiyan))
+		stack_trace("Saiyan Great Ape tail sever attempted without a valid original body; refusing to qdel the ape.")
+		return
+
 	target.visible_message(span_warning("[src]'s tail falls to the ground, severed completely!"))
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob, emote), "scream")
 
-	var/mob/living/carbon/saiyan = get_internal_saiyan()
-	if (istype(saiyan) && !QDELETED(saiyan))
-		var/obj/item/organ/tail/saiyan_tail = saiyan.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
-		if(!isnull(saiyan_tail))
-			saiyan_tail.Remove(saiyan)
-			saiyan_tail.forceMove(saiyan.loc)
+	var/obj/item/organ/tail/saiyan_tail = saiyan.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
+	if(!isnull(saiyan_tail))
+		saiyan_tail.Remove(saiyan)
+		saiyan_tail.forceMove(saiyan.loc)
 
-	remove_status_effect(/datum/status_effect/shapechange_mob)
-	qdel(src)
+	// restore_caster() safely moves the original body out, transfers the mind back, then deletes the ape.
+	shapechange_status.restore_caster()
 
 /// Find the original Saiyan body. Never create a replacement body if the shapechange state is missing.
 /mob/living/basic/gorilla/saiyan/proc/get_internal_saiyan()
