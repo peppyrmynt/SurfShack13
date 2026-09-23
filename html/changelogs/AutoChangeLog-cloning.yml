@@ -3,4 +3,4 @@ delete-after: True
 changes:
   - rscadd: "Restored cloning records, cloning consoles, and clone pods as a medical revival option."
   - bugfix: "Cloning scanners can store deceased crew records, bare brains, and severed heads containing brains; cloning revival notifications once again alert ghosts, and cloned crew retain the quirks stored in their scan record."
-  - qol: "Cloning gives local scan and completion announcements, announces completed clones over medical radio, chirps when a pod finishes, supports empty clones, and asks for confirmation before a bystander aborts an active cycle."
+  - qol: "Cloning announces completed scans and clones locally and over medical radio, chirps when a stored record becomes cloneable and when a pod finishes, supports empty clones, and asks for confirmation before a bystander aborts an active cycle."
