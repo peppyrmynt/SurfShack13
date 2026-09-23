@@ -91,7 +91,7 @@
 /datum/species/saiyan/proc/on_survived_boost(mob/living/saiyan)
 	SIGNAL_HANDLER
 	to_chat(saiyan, span_notice("Your near-death experience grants you more strength!"))
-	saiyan.saiyan_boost()
+	saiyan.saiyan_boost(multiplier = 2.5)
 
 /// When your tail is cut you get weaker
 /datum/species/saiyan/proc/on_tail_gained(mob/living/vegeta, obj/item/organ/tail)
