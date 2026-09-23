@@ -12,8 +12,6 @@
 		if(anim)
 			var/mob/living/carbon/human/human_user = user
 			human_user.start_animation(anim)
-			if(anim.emote_text)
-				return ..(user, anim.emote_text, type_override, intentional)
 	return ..()
 
 /datum/emote/living/taunt
@@ -94,20 +92,27 @@
 	key = "dance"
 	key_third_person = "dances"
 	message = "dances around happily."
+	// Params are the name of a dance, which select_param() turns into that dance's emote text
+	message_param = "%t"
 	hands_use_check = TRUE
 
 /datum/emote/living/dance/run_emote(mob/living/user, params, type_override, intentional)
-	if(ishuman(user))
-		var/mob/living/carbon/human/dancer = user
-		var/datum/humanoid_animation/the_dance = null
-		if(params)
-			the_dance = GLOB.all_dances_by_name[LOWER_TEXT(params)]
-		if(!the_dance)
-			the_dance = GLOB.random_dances_by_name[pick(GLOB.random_dances_by_name)]
-		if(the_dance)
-			dancer.start_animation(the_dance)
-			return ..(user, the_dance.emote_text, type_override, intentional)
-	return ..()
+	if(!ishuman(user))
+		return ..(user, null, type_override, intentional)
+	var/mob/living/carbon/human/dancer = user
+	var/datum/humanoid_animation/the_dance = null
+	if(params)
+		the_dance = GLOB.all_dances_by_name[LOWER_TEXT(params)]
+	if(!the_dance && length(GLOB.random_dances_by_name))
+		the_dance = GLOB.random_dances_by_name[pick(GLOB.random_dances_by_name)]
+	if(!the_dance)
+		return ..(user, null, type_override, intentional)
+	dancer.start_animation(the_dance)
+	return ..(user, the_dance.name, type_override, intentional)
+
+/datum/emote/living/dance/select_param(mob/user, params)
+	var/datum/humanoid_animation/the_dance = GLOB.all_dances_by_name[LOWER_TEXT(params)]
+	return the_dance?.emote_text || message
 
 /datum/emote/living/deathgasp
 	key = "deathgasp"
