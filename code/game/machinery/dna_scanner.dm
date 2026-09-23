@@ -521,11 +521,9 @@
 		to_chat(leaving_clone, span_notice("The pod opens. Your new body has finished maturing."))
 		leaving_clone.flash_act()
 		playsound(src, 'sound/mobs/non-humanoids/chicken/chick_peep.ogg', 50, TRUE, 10 - SOUND_RANGE)
+		audible_message(span_notice("[src] announces, \"Cloning process complete.\""), hearing_distance = 10)
 		if(radio)
-			if(leaving_clone_is_empty)
-				radio.talk_into(src, "[leaving_clone.real_name]'s empty clone has finished growing.", RADIO_CHANNEL_MEDICAL)
-			else
-				radio.talk_into(src, "[leaving_clone.real_name] has been revived.", RADIO_CHANNEL_MEDICAL)
+			radio.talk_into(src, "[leaving_clone.real_name] has been cloned.", RADIO_CHANNEL_MEDICAL)
 	else
 		to_chat(leaving_clone, span_warning("The pod opens before maturation is complete."))
 
@@ -558,21 +556,11 @@
 	var/status_message = "Ready."
 	var/auto_clone = FALSE
 	var/next_auto_clone_check = 0
-	var/obj/item/radio/radio
-
-/obj/machinery/computer/cloning/Initialize(mapload)
-	. = ..()
-	radio = new(src)
-	radio.keyslot = new /obj/item/encryptionkey/headset_med
-	radio.subspace_transmission = TRUE
-	radio.canhear_range = 0
-	radio.recalculateChannels()
 
 /obj/machinery/computer/cloning/Destroy()
 	for(var/datum/cloning_record/record in records)
 		qdel(record)
 	records.Cut()
-	QDEL_NULL(radio)
 	scanner = null
 	pod = null
 	return ..()
@@ -626,8 +614,7 @@
 	var/datum/cloning_record/new_record = new(subject)
 	records += new_record
 	status_message = "[subject.real_name]'s cloning record was stored successfully."
-	if(radio)
-		radio.talk_into(src, "[subject.real_name] has been scanned into the cloning database.", RADIO_CHANNEL_MEDICAL)
+	scanner.audible_message(span_notice("[scanner] announces, \"Scan complete. [subject.real_name]'s cloning record has been stored.\""))
 	return TRUE
 
 /obj/machinery/computer/cloning/proc/try_auto_clone()
@@ -821,7 +808,6 @@
 	prereq_ids = list(TECHWEB_NODE_CRYOSTASIS)
 	design_ids = list("clonecontrol", "clonepod", "dnascanner_cloning")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
-	announce_channels = list(RADIO_CHANNEL_MEDICAL)
 
 #undef CLONER_INITIAL_BRUTE_DAMAGE
 #undef CLONER_INITIAL_BURN_DAMAGE
