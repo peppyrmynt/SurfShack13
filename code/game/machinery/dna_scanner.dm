@@ -93,13 +93,13 @@
 			return C
 	return null
 
-/obj/machinery/dna_scannernew/close_machine(mob/living/carbon/user, density_to_set = TRUE)
+/obj/machinery/dna_scannernew/close_machine(atom/movable/target, density_to_set = TRUE)
 	if(!state_open)
 		return FALSE
 
-	..(user)
+	..(target)
 
-	// DNA manipulators cannot operate on severed heads or brains
+	// DNA manipulators only operate on full carbon occupants; cloning handles stored brains separately.
 	if(iscarbon(occupant))
 		if(linked_console)
 			linked_console.on_scanner_close()
@@ -142,8 +142,8 @@
 /obj/machinery/dna_scannernew/interact(mob/user)
 	toggle_open(user)
 
-/obj/machinery/dna_scannernew/mouse_drop_receive(atom/target, mob/user, params)
-	if(!iscarbon(target))
+/obj/machinery/dna_scannernew/mouse_drop_receive(atom/movable/target, mob/user, params)
+	if(!iscarbon(target) && !istype(target, /obj/item/bodypart/head) && !istype(target, /obj/item/organ/brain))
 		return
 	close_machine(target)
 
@@ -223,6 +223,8 @@
 
 /datum/cloning_record/New(mob/living/carbon/human/source)
 	. = ..()
+	if(!source)
+		return
 	record_name = source.real_name
 	mind = source.mind
 	scanned_at = world.time
@@ -235,6 +237,26 @@
 		quirk_types += source_quirk.type
 	dna = new
 	source.dna.copy_dna(dna)
+
+/datum/cloning_record/proc/capture_brain(obj/item/organ/brain/source_brain)
+	var/mob/living/brain/source_brainmob = source_brain?.brainmob
+	if(!source_brainmob?.mind || !source_brainmob.stored_dna)
+		return FALSE
+
+	record_name = source_brainmob.stored_dna.real_name
+	if(!record_name)
+		record_name = source_brainmob.real_name
+	if(!record_name)
+		record_name = "Unknown"
+	mind = source_brainmob.mind
+	scanned_at = world.time
+	factions = source_brainmob.faction ? source_brainmob.faction.Copy() : list()
+	quirk_types = list()
+	for(var/datum/quirk/source_quirk as anything in source_brainmob.quirks)
+		quirk_types += source_quirk.type
+	dna = new
+	source_brainmob.stored_dna.copy_dna(dna)
+	return TRUE
 
 /datum/cloning_record/Destroy()
 	if(active_pod?.active_record == src)
@@ -595,22 +617,51 @@
 	if(scanner.state_open)
 		status_message = "Scan failed: close the cloning DNA scanner first."
 		return FALSE
-	if(!ishuman(scanner.occupant))
-		status_message = "Scan failed: the scanner does not contain a human subject."
+
+	var/atom/movable/scan_target = scanner.occupant
+	var/mob/living/carbon/human/human_subject
+	var/obj/item/organ/brain/brain_subject
+	var/mob/living/identity_holder
+	var/datum/dna/subject_dna
+	var/datum/mind/subject_mind
+
+	if(ishuman(scan_target))
+		human_subject = scan_target
+		identity_holder = human_subject
+		subject_dna = human_subject.dna
+		subject_mind = human_subject.mind
+	else if(istype(scan_target, /obj/item/organ/brain))
+		brain_subject = scan_target
+	else if(istype(scan_target, /obj/item/bodypart/head))
+		var/obj/item/bodypart/head/head_subject = scan_target
+		brain_subject = locate(/obj/item/organ/brain) in head_subject
+		if(!brain_subject)
+			status_message = "Scan failed: the head does not contain a brain."
+			return FALSE
+	else
+		status_message = "Scan failed: the scanner does not contain a human, brain, or head with a brain."
 		return FALSE
 
-	var/mob/living/carbon/human/subject = scanner.occupant
-	if(!subject.mind || subject.mind.current != subject)
+	if(brain_subject)
+		var/mob/living/brain/brainmob = brain_subject.brainmob
+		if(!brainmob)
+			status_message = "Scan failed: no compatible mind detected in the brain."
+			return FALSE
+		identity_holder = brainmob
+		subject_dna = brainmob.stored_dna
+		subject_mind = brainmob.mind
+
+	if(!subject_mind || subject_mind.current != identity_holder)
 		status_message = "Scan failed: no compatible mind detected."
 		return FALSE
-	if(!subject.dna || subject.dna.scrambled || HAS_TRAIT(subject, TRAIT_BADDNA))
+	if(!subject_dna || subject_dna.scrambled || HAS_TRAIT(identity_holder, TRAIT_BADDNA))
 		status_message = "Scan failed: genetic data is unusable."
 		return FALSE
-	if(subject.dna.species?.inherent_biotypes & MOB_ROBOTIC)
+	if(subject_dna.species?.inherent_biotypes & MOB_ROBOTIC)
 		status_message = "Scan failed: the subject is not biologically cloneable."
 		return FALSE
 
-	var/datum/cloning_record/old_record = find_record_by_mind(subject.mind)
+	var/datum/cloning_record/old_record = find_record_by_mind(subject_mind)
 	if(old_record?.active_pod)
 		status_message = "Scan failed: this subject is currently being cloned."
 		return FALSE
@@ -618,10 +669,19 @@
 		records -= old_record
 		qdel(old_record)
 
-	var/datum/cloning_record/new_record = new(subject)
+	var/datum/cloning_record/new_record
+	if(human_subject)
+		new_record = new(human_subject)
+	else
+		new_record = new()
+		if(!new_record.capture_brain(brain_subject))
+			qdel(new_record)
+			status_message = "Scan failed: the brain's cloning data could not be stored."
+			return FALSE
+
 	records += new_record
-	status_message = "[subject.real_name]'s cloning record was stored successfully."
-	scanner.audible_message(span_notice("[scanner] announces, \"Scan complete. [subject.real_name]'s cloning record has been stored.\""))
+	status_message = "[new_record.record_name]'s cloning record was stored successfully."
+	scanner.audible_message(span_notice("[scanner] announces, \"Scan complete. [new_record.record_name]'s cloning record has been stored.\""))
 	return TRUE
 
 /obj/machinery/computer/cloning/proc/try_auto_clone()
@@ -674,7 +734,7 @@
 	dat += "<a href='byond://?src=[REF(src)];auto_clone=1'>[auto_clone ? "Disable automatic cloning" : "Enable automatic cloning"]</a><br><br>"
 
 	if(scanner)
-		var/mob/living/scanner_occupant = scanner.occupant
+		var/atom/movable/scanner_occupant = scanner.occupant
 		dat += "<b>Scanner door:</b> [scanner.state_open ? "Open" : "Closed"]<br>"
 		dat += "<b>Scanner occupant:</b> [scanner_occupant ? scanner_occupant : "None"]<br>"
 		if(scanner_occupant && !scanner.state_open)
