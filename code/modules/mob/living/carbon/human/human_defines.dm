@@ -90,6 +90,15 @@
 	/// When an braindead player has their equipment fiddled with, we log that info here for when they come back so they know who took their ID while they were DC'd for 30 seconds
 	var/list/afk_thefts
 
+	/// Data on the currently in-process dance
+	var/datum/active_animation/current_dance = null
+	/// The limb objects currently rendering our dance
+	var/datum/dance_sprites/current_dance_sprites = null
+	/// Cached limb overlays from the last dance sprite generation
+	var/list/last_dance_sprites = null
+	/// Cooldown on dance sprite generation so we don't kill the server with image operations
+	COOLDOWN_DECLARE(last_dance_sprite_gen)
+
 	/// Height of the mob
 	VAR_PROTECTED/mob_height = HUMAN_HEIGHT_MEDIUM
 	//surfshack start

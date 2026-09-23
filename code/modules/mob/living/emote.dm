@@ -3,6 +3,18 @@
 /datum/emote/living
 	mob_type_allowed_typecache = /mob/living
 	mob_type_blacklist_typecache = list(/mob/living/brain)
+	/// Key into GLOB.emote_animations for the animation humans play when using this emote
+	var/animation_key
+
+/datum/emote/living/run_emote(mob/living/user, params, type_override, intentional)
+	if(animation_key && ishuman(user))
+		var/datum/humanoid_animation/anim = GLOB.emote_animations[animation_key]
+		if(anim)
+			var/mob/living/carbon/human/human_user = user
+			human_user.start_animation(anim)
+			if(anim.emote_text)
+				return ..(user, anim.emote_text, type_override, intentional)
+	return ..()
 
 /datum/emote/living/taunt
 	key = "taunt"
@@ -37,6 +49,7 @@
 	message = "bows."
 	message_param = "bows to %t."
 	hands_use_check = TRUE
+	animation_key = "bow"
 
 /datum/emote/living/burp
 	key = "burp"
@@ -82,6 +95,19 @@
 	key_third_person = "dances"
 	message = "dances around happily."
 	hands_use_check = TRUE
+
+/datum/emote/living/dance/run_emote(mob/living/user, params, type_override, intentional)
+	if(ishuman(user))
+		var/mob/living/carbon/human/dancer = user
+		var/datum/humanoid_animation/the_dance = null
+		if(params)
+			the_dance = GLOB.all_dances_by_name[LOWER_TEXT(params)]
+		if(!the_dance)
+			the_dance = GLOB.random_dances_by_name[pick(GLOB.random_dances_by_name)]
+		if(the_dance)
+			dancer.start_animation(the_dance)
+			return ..(user, the_dance.emote_text, type_override, intentional)
+	return ..()
 
 /datum/emote/living/deathgasp
 	key = "deathgasp"
@@ -297,6 +323,7 @@
 	key_third_person = "nods"
 	message = "nods."
 	message_param = "nods at %t."
+	animation_key = "nod"
 
 /datum/emote/living/point
 	key = "point"
@@ -578,6 +605,7 @@
 	key = "wave"
 	key_third_person = "waves"
 	message = "waves."
+	animation_key = "wave"
 
 /datum/emote/living/whimper
 	key = "whimper"
