@@ -218,6 +218,7 @@
 	var/undershirt
 	var/socks
 	var/list/factions
+	var/list/quirk_types
 	var/obj/machinery/clonepod/active_pod
 
 /datum/cloning_record/New(mob/living/carbon/human/source)
@@ -229,6 +230,9 @@
 	undershirt = source.undershirt
 	socks = source.socks
 	factions = source.faction.Copy()
+	quirk_types = list()
+	for(var/datum/quirk/source_quirk as anything in source.quirks)
+		quirk_types += source_quirk.type
 	dna = new
 	source.dna.copy_dna(dna)
 
@@ -239,6 +243,7 @@
 	QDEL_NULL(dna)
 	mind = null
 	factions = null
+	quirk_types = null
 	return ..()
 
 /datum/cloning_record/proc/is_cloneable()
@@ -453,6 +458,8 @@
 			if(ghost)
 				ghost.send_revival_notification("A cloning pod has started growing a new body for you. You will wake when maturation finishes.", 'sound/effects/genetics.ogg', src, TRUE)
 		record.mind.transfer_to(new_clone)
+		for(var/quirk_type in record.quirk_types)
+			new quirk_type(new_clone)
 		to_chat(new_clone, span_notice("Consciousness flickers at the edge of a newly forming body. Your clone is still maturing."))
 
 	START_PROCESSING(SSmachines, src)
