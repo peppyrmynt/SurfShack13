@@ -1,6 +1,0 @@
-author: "cocothegogo"
-delete-after: True
-changes:
-  - rscadd: "Minisurf: Minor visual changes"
-  - rscadd: "Minisurf: More locations for heretic rifts to spawn"
-  - bugfix: "Minisurf: Fixes bitrunning issue"
