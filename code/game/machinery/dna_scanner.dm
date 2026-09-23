@@ -281,9 +281,19 @@
 	var/maturation_time = CLONER_BASE_MATURATION_TIME
 	var/maturation_speed_multiplier = 1
 	var/maturation_progress = 0
+	var/clone_is_empty = FALSE
+	var/obj/item/radio/radio
 
 /obj/machinery/cloning_pod
 	parent_type = /obj/machinery/clonepod
+
+/obj/machinery/clonepod/Initialize(mapload)
+	. = ..()
+	radio = new(src)
+	radio.keyslot = new /obj/item/encryptionkey/headset_med
+	radio.subspace_transmission = TRUE
+	radio.canhear_range = 0
+	radio.recalculateChannels()
 
 /obj/machinery/clonepod/RefreshParts()
 	. = ..()
@@ -303,8 +313,10 @@
 		clone.forceMove(drop_location())
 	if(active_record?.active_pod == src)
 		active_record.active_pod = null
+	QDEL_NULL(radio)
 	clone = null
 	active_record = null
+	clone_is_empty = FALSE
 	return ..()
 
 /obj/machinery/clonepod/Exited(atom/movable/gone, direction)
@@ -316,6 +328,7 @@
 			active_record.active_pod = null
 		clone = null
 		active_record = null
+		clone_is_empty = FALSE
 		maturation_progress = 0
 		update_appearance()
 
@@ -362,6 +375,11 @@
 	if(user == clone)
 		to_chat(user, span_notice("The cloning pod is still maturing your new body."))
 		return
+	if(user.stat == DEAD)
+		return
+	var/eject_choice = tgui_alert(user, "End the current cloning cycle and eject [clone.real_name] before maturation is complete?", "Emergency clone ejection", list("Eject clone", "Cancel"))
+	if(eject_choice != "Eject clone" || !clone || QDELETED(clone) || !in_range(user, src))
+		return
 	to_chat(user, span_warning("You trigger the emergency release. The clone may not be fully developed."))
 	eject_clone(FALSE)
 
@@ -392,12 +410,14 @@
 	REMOVE_TRAIT(leaving_clone, TRAIT_EMOTEMUTE, CLONING_POD_TRAIT_SOURCE)
 	REMOVE_TRAIT(leaving_clone, TRAIT_IMMOBILIZED, CLONING_POD_TRAIT_SOURCE)
 
-/obj/machinery/clonepod/proc/start_clone(datum/cloning_record/record)
-	if(!record || !record.dna || !record.mind)
+/obj/machinery/clonepod/proc/start_clone(datum/cloning_record/record, empty = FALSE)
+	if(!record || !record.dna)
 		return FALSE
 	if(clone || panel_open || (machine_stat & (NOPOWER | BROKEN)))
 		return FALSE
-	if(!record.is_cloneable())
+	if(record.active_pod && !QDELETED(record.active_pod))
+		return FALSE
+	if(!empty && (!record.mind || !record.is_cloneable()))
 		return FALSE
 
 	var/mob/living/carbon/human/new_clone = new(src)
@@ -420,15 +440,21 @@
 
 	clone = new_clone
 	active_record = record
+	clone_is_empty = empty
 	maturation_progress = 0
 	record.active_pod = src
-	var/mob/dead/observer/ghost = record.mind.get_ghost(even_if_they_cant_reenter = TRUE, ghosts_with_clients = TRUE)
-	if(ghost)
-		window_flash(ghost.client)
-		to_chat(ghost, span_ghostalert("A cloning pod has started growing a new body for you. You will wake when maturation finishes."))
-		SEND_SOUND(ghost, sound('sound/effects/genetics.ogg'))
-	record.mind.transfer_to(new_clone)
-	to_chat(new_clone, span_notice("Consciousness flickers at the edge of a newly forming body. Your clone is still maturing."))
+
+	if(!empty)
+		var/mob/current_body = record.mind.current
+		if(current_body && !QDELETED(current_body))
+			current_body.notify_revival("A cloning pod has started growing a new body for you. You will wake when maturation finishes.", source = src)
+		else
+			var/mob/dead/observer/ghost = record.mind.get_ghost(even_if_they_cant_reenter = TRUE, ghosts_with_clients = TRUE)
+			if(ghost)
+				ghost.send_revival_notification("A cloning pod has started growing a new body for you. You will wake when maturation finishes.", 'sound/effects/genetics.ogg', src, TRUE)
+		record.mind.transfer_to(new_clone)
+		to_chat(new_clone, span_notice("Consciousness flickers at the edge of a newly forming body. Your clone is still maturing."))
+
 	START_PROCESSING(SSmachines, src)
 	update_appearance()
 	return TRUE
@@ -439,6 +465,7 @@
 			active_record.active_pod = null
 		clone = null
 		active_record = null
+		clone_is_empty = FALSE
 		maturation_progress = 0
 		update_appearance()
 		return PROCESS_KILL
@@ -469,26 +496,36 @@
 			active_record.active_pod = null
 		clone = null
 		active_record = null
+		clone_is_empty = FALSE
 		maturation_progress = 0
 		update_appearance()
 		return FALSE
 
 	var/mob/living/carbon/human/leaving_clone = clone
 	var/datum/cloning_record/leaving_record = active_record
+	var/leaving_clone_is_empty = clone_is_empty
 	clear_maturation_traits(leaving_clone)
 	clone = null
 	active_record = null
+	clone_is_empty = FALSE
 	maturation_progress = 0
 	if(leaving_record?.active_pod == src)
 		leaving_record.active_pod = null
 	leaving_clone.adjustOxyLoss(-leaving_clone.getOxyLoss(), forced = TRUE)
 	leaving_clone.forceMove(drop_location())
-	leaving_clone.grab_ghost()
+	if(!leaving_clone_is_empty)
+		leaving_clone.grab_ghost()
 	update_appearance()
 
 	if(successful)
 		to_chat(leaving_clone, span_notice("The pod opens. Your new body has finished maturing."))
 		leaving_clone.flash_act()
+		playsound(src, 'sound/mobs/non-humanoids/chicken/chick_peep.ogg', 50, TRUE, 10 - SOUND_RANGE)
+		if(radio)
+			if(leaving_clone_is_empty)
+				radio.talk_into(src, "[leaving_clone.real_name]'s empty clone has finished growing.", RADIO_CHANNEL_MEDICAL)
+			else
+				radio.talk_into(src, "[leaving_clone.real_name] has been revived.", RADIO_CHANNEL_MEDICAL)
 	else
 		to_chat(leaving_clone, span_warning("The pod opens before maturation is complete."))
 
@@ -521,11 +558,21 @@
 	var/status_message = "Ready."
 	var/auto_clone = FALSE
 	var/next_auto_clone_check = 0
+	var/obj/item/radio/radio
+
+/obj/machinery/computer/cloning/Initialize(mapload)
+	. = ..()
+	radio = new(src)
+	radio.keyslot = new /obj/item/encryptionkey/headset_med
+	radio.subspace_transmission = TRUE
+	radio.canhear_range = 0
+	radio.recalculateChannels()
 
 /obj/machinery/computer/cloning/Destroy()
 	for(var/datum/cloning_record/record in records)
 		qdel(record)
 	records.Cut()
+	QDEL_NULL(radio)
 	scanner = null
 	pod = null
 	return ..()
@@ -558,9 +605,6 @@
 		return FALSE
 
 	var/mob/living/carbon/human/subject = scanner.occupant
-	if(subject.stat == DEAD)
-		status_message = "Scan failed: the subject is already dead."
-		return FALSE
 	if(!subject.mind || subject.mind.current != subject)
 		status_message = "Scan failed: no compatible mind detected."
 		return FALSE
@@ -582,6 +626,8 @@
 	var/datum/cloning_record/new_record = new(subject)
 	records += new_record
 	status_message = "[subject.real_name]'s cloning record was stored successfully."
+	if(radio)
+		radio.talk_into(src, "[subject.real_name] has been scanned into the cloning database.", RADIO_CHANNEL_MEDICAL)
 	return TRUE
 
 /obj/machinery/computer/cloning/proc/try_auto_clone()
@@ -612,6 +658,10 @@
 		text += "<a href='byond://?src=[REF(src)];clone=[REF(record)]'>Start cloning</a> | "
 	else
 		text += "<span class='linkOff'>Start cloning</span> | "
+	if(record.active_pod)
+		text += "<span class='linkOff'>Create empty clone</span> | "
+	else
+		text += "<a href='byond://?src=[REF(src)];empty_clone=[REF(record)]'>Create empty clone</a> | "
 	if(record.active_pod)
 		text += "<span class='linkOff'>Delete record</span></div><br>"
 	else
@@ -693,6 +743,19 @@
 		else
 			status_message = "Clone failed: the pod is unavailable."
 
+	else if(href_list["empty_clone"])
+		var/datum/cloning_record/record = locate(href_list["empty_clone"])
+		if(!(record in records))
+			status_message = "Empty clone failed: record not found."
+		else if(!pod)
+			status_message = "Empty clone failed: no adjacent cloning pod."
+		else if(record.active_pod)
+			status_message = "Empty clone failed: the record is already in use."
+		else if(pod.start_clone(record, TRUE))
+			status_message = "Empty cloning cycle started for [record.record_name]."
+		else
+			status_message = "Empty clone failed: the pod is unavailable."
+
 	else if(href_list["delete"])
 		var/datum/cloning_record/record = locate(href_list["delete"])
 		if(!(record in records))
@@ -758,11 +821,3 @@
 	prereq_ids = list(TECHWEB_NODE_CRYOSTASIS)
 	design_ids = list("clonecontrol", "clonepod", "dnascanner_cloning")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
-	announce_channels = list(RADIO_CHANNEL_MEDICAL)
-
-#undef CLONER_INITIAL_BRUTE_DAMAGE
-#undef CLONER_INITIAL_BURN_DAMAGE
-#undef CLONER_BASE_HEAL_RATE
-#undef CLONER_BASE_MATURATION_TIME
-#undef CLONING_AUTO_CHECK_INTERVAL
-#undef CLONING_POD_TRAIT_SOURCE
