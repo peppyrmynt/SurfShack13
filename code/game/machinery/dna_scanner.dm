@@ -821,3 +821,11 @@
 	prereq_ids = list(TECHWEB_NODE_CRYOSTASIS)
 	design_ids = list("clonecontrol", "clonepod", "dnascanner_cloning")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
+	announce_channels = list(RADIO_CHANNEL_MEDICAL)
+
+#undef CLONER_INITIAL_BRUTE_DAMAGE
+#undef CLONER_INITIAL_BURN_DAMAGE
+#undef CLONER_BASE_HEAL_RATE
+#undef CLONER_BASE_MATURATION_TIME
+#undef CLONING_AUTO_CHECK_INTERVAL
+#undef CLONING_POD_TRAIT_SOURCE
