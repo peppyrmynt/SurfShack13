@@ -550,7 +550,7 @@
 	if(successful)
 		to_chat(leaving_clone, span_notice("The pod opens. Your new body has finished maturing."))
 		leaving_clone.flash_act()
-		playsound(src, 'sound/mobs/non-humanoids/chicken/chick_peep.ogg', 50, TRUE, 10 - SOUND_RANGE)
+		playsound(src, 'sound/machines/cloning_complete.ogg', 50, TRUE, 10 - SOUND_RANGE)
 		say("Cloning process complete. [leaving_clone.real_name] has been cloned.")
 		if(radio)
 			radio.talk_into(src, "[leaving_clone.real_name] has been cloned.", RADIO_CHANNEL_MEDICAL)
