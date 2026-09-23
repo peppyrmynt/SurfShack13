@@ -219,6 +219,7 @@
 	var/socks
 	var/list/factions
 	var/list/quirk_types
+	var/was_cloneable = FALSE
 	var/obj/machinery/clonepod/active_pod
 
 /datum/cloning_record/New(mob/living/carbon/human/source)
@@ -550,7 +551,7 @@
 		to_chat(leaving_clone, span_notice("The pod opens. Your new body has finished maturing."))
 		leaving_clone.flash_act()
 		playsound(src, 'sound/mobs/non-humanoids/chicken/chick_peep.ogg', 50, TRUE, 10 - SOUND_RANGE)
-		audible_message(span_notice("[src] announces, \"Cloning process complete.\""), hearing_distance = 10)
+		say("Cloning process complete. [leaving_clone.real_name] has been cloned.")
 		if(radio)
 			radio.talk_into(src, "[leaving_clone.real_name] has been cloned.", RADIO_CHANNEL_MEDICAL)
 	else
@@ -577,19 +578,29 @@
 	icon_keyboard = "med_key"
 	circuit = /obj/item/circuitboard/computer/cloning
 	light_color = LIGHT_COLOR_BLUE
-	processing_flags = START_PROCESSING_MANUALLY
+	processing_flags = START_PROCESSING_ON_INIT
 
 	var/obj/machinery/dna_scannercloning/scanner
 	var/obj/machinery/clonepod/pod
+	var/obj/item/radio/radio
 	var/list/records = list()
 	var/status_message = "Ready."
 	var/auto_clone = FALSE
 	var/next_auto_clone_check = 0
 
+/obj/machinery/computer/cloning/Initialize(mapload)
+	. = ..()
+	radio = new(src)
+	radio.keyslot = new /obj/item/encryptionkey/headset_med
+	radio.subspace_transmission = TRUE
+	radio.canhear_range = 0
+	radio.recalculateChannels()
+
 /obj/machinery/computer/cloning/Destroy()
 	for(var/datum/cloning_record/record in records)
 		qdel(record)
 	records.Cut()
+	QDEL_NULL(radio)
 	scanner = null
 	pod = null
 	return ..()
@@ -608,6 +619,15 @@
 	for(var/datum/cloning_record/record in records)
 		if(record.mind == target_mind)
 			return record
+
+/obj/machinery/computer/cloning/proc/check_cloneable_records()
+	if(machine_stat & (NOPOWER | BROKEN))
+		return
+	for(var/datum/cloning_record/record as anything in records)
+		var/is_now_cloneable = record.is_cloneable()
+		if(is_now_cloneable && !record.was_cloneable)
+			playsound(src, 'sound/mobs/non-humanoids/chicken/chick_peep.ogg', 50, TRUE, 10 - SOUND_RANGE)
+		record.was_cloneable = is_now_cloneable
 
 /obj/machinery/computer/cloning/proc/scan_occupant()
 	find_hardware()
@@ -681,7 +701,10 @@
 
 	records += new_record
 	status_message = "[new_record.record_name]'s cloning record was stored successfully."
-	scanner.audible_message(span_notice("[scanner] announces, \"Scan complete. [new_record.record_name]'s cloning record has been stored.\""))
+	scanner.say("Scan complete. [new_record.record_name]'s cloning record has been stored.")
+	if(radio)
+		radio.talk_into(src, "[new_record.record_name] has been scanned into the cloning database.", RADIO_CHANNEL_MEDICAL)
+	check_cloneable_records()
 	return TRUE
 
 /obj/machinery/computer/cloning/proc/try_auto_clone()
@@ -701,9 +724,9 @@
 	return FALSE
 
 /obj/machinery/computer/cloning/process(seconds_per_tick)
-	if(!auto_clone)
-		return PROCESS_KILL
-	try_auto_clone()
+	check_cloneable_records()
+	if(auto_clone)
+		try_auto_clone()
 
 /obj/machinery/computer/cloning/proc/render_record(datum/cloning_record/record)
 	var/text = "<div class='block'><b>[record.record_name]</b><br>"
@@ -779,10 +802,7 @@
 		status_message = "Automatic cloning [auto_clone ? "enabled" : "disabled"]."
 		if(auto_clone)
 			next_auto_clone_check = 0
-			START_PROCESSING(SSmachines, src)
 			try_auto_clone()
-		else
-			STOP_PROCESSING(SSmachines, src)
 
 	else if(href_list["clone"])
 		var/datum/cloning_record/record = locate(href_list["clone"])
