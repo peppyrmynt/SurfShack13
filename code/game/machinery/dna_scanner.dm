@@ -494,8 +494,15 @@
 
 	return TRUE
 
+/// Dedicated scanner for storing cloning records.
+/obj/machinery/dna_scannercloning
+	parent_type = /obj/machinery/dna_scannernew
+	name = "\improper Cloning DNA scanner"
+	desc = "Scans a subject's DNA for storage in an adjacent cloning console."
+	circuit = /obj/item/circuitboard/machine/dnascanner/cloning
+
 /**
- * A cloning console automatically detects a DNA scanner and cloning pod on
+ * A cloning console automatically detects a cloning DNA scanner and cloning pod on
  * cardinally adjacent tiles. This preserves the classic compact genetics
  * layout and avoids a global machine-link registry.
  */
@@ -508,7 +515,7 @@
 	light_color = LIGHT_COLOR_BLUE
 	processing_flags = START_PROCESSING_MANUALLY
 
-	var/obj/machinery/dna_scannernew/scanner
+	var/obj/machinery/dna_scannercloning/scanner
 	var/obj/machinery/clonepod/pod
 	var/list/records = list()
 	var/status_message = "Ready."
@@ -529,7 +536,7 @@
 	for(var/direction in GLOB.cardinals)
 		var/turf/target = get_step(src, direction)
 		if(!scanner)
-			scanner = locate(/obj/machinery/dna_scannernew) in target
+			scanner = locate(/obj/machinery/dna_scannercloning) in target
 		if(!pod)
 			pod = locate(/obj/machinery/clonepod) in target
 
@@ -541,10 +548,10 @@
 /obj/machinery/computer/cloning/proc/scan_occupant()
 	find_hardware()
 	if(!scanner || (scanner.machine_stat & (NOPOWER | BROKEN)))
-		status_message = "Scan failed: no operational adjacent DNA scanner."
+		status_message = "Scan failed: no operational adjacent cloning DNA scanner."
 		return FALSE
 	if(scanner.state_open)
-		status_message = "Scan failed: close the DNA scanner first."
+		status_message = "Scan failed: close the cloning DNA scanner first."
 		return FALSE
 	if(!ishuman(scanner.occupant))
 		status_message = "Scan failed: the scanner does not contain a human subject."
@@ -617,7 +624,7 @@
 
 	var/dat = "<a href='byond://?src=[REF(src)];refresh=1'>Refresh</a><hr>"
 	dat += "<h3>System status</h3><div class='statusDisplay'>[status_message]</div>"
-	dat += "<b>DNA scanner:</b> [scanner ? "Connected" : "Not detected"]<br>"
+	dat += "<b>Cloning DNA scanner:</b> [scanner ? "Connected" : "Not detected"]<br>"
 	dat += "<b>Cloning pod:</b> [pod ? (pod.clone ? "Maturation cycle active" : "Ready") : "Not detected"]<br><br>"
 	dat += "<b>Automatic cloning:</b> [auto_clone ? "Enabled" : "Disabled"]<br>"
 	dat += "<a href='byond://?src=[REF(src)];auto_clone=1'>[auto_clone ? "Disable automatic cloning" : "Enable automatic cloning"]</a><br><br>"
@@ -701,6 +708,10 @@
 	ui_interact(usr)
 
 // Construction boards
+/obj/item/circuitboard/machine/dnascanner/cloning
+	name = "Cloning DNA Scanner"
+	build_path = /obj/machinery/dna_scannercloning
+
 /obj/item/circuitboard/computer/cloning
 	name = "Cloning Console"
 	build_path = /obj/machinery/computer/cloning
@@ -716,6 +727,14 @@
 	)
 
 // Research designs
+/datum/design/board/dnascanner_cloning
+	name = "Cloning DNA Scanner Board"
+	desc = "The circuit board for a cloning DNA scanner."
+	id = "dnascanner_cloning"
+	build_path = /obj/item/circuitboard/machine/dnascanner/cloning
+	category = list(RND_CATEGORY_MACHINE + RND_SUBCATEGORY_MACHINE_MEDICAL)
+	departmental_flags = DEPARTMENT_BITFLAG_ENGINEERING | DEPARTMENT_BITFLAG_MEDICAL
+
 /datum/design/board/clonecontrol
 	name = "Cloning Console Board"
 	desc = "The circuit board for a cloning records console."
@@ -737,7 +756,7 @@
 	display_name = "Cloning"
 	description = "Replacement-body growth and neural reintegration technology."
 	prereq_ids = list(TECHWEB_NODE_CRYOSTASIS)
-	design_ids = list("clonecontrol", "clonepod")
+	design_ids = list("clonecontrol", "clonepod", "dnascanner_cloning")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
 	announce_channels = list(RADIO_CHANNEL_MEDICAL)
 
