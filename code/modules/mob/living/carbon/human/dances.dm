@@ -38,7 +38,7 @@ GLOBAL_LIST_EMPTY(random_dances_by_name)
 			var/datum/animation_keyframe/keyframe = new
 			if(frame["time"])
 				keyframe.time = frame["time"]
-			if(frame["animate"])
+			if(!isnull(frame["animate"]))
 				keyframe.animate = frame["animate"]
 			if(frame["head_dir"])
 				keyframe.head_dir = text2dir(frame["head_dir"])
