@@ -2,3 +2,5 @@ author: "Ixde969-hub"
 delete-after: True
 changes:
   - rscadd: "Restored cloning records, cloning consoles, and clone pods as a medical revival option."
+  - bugfix: "Cloning scanners can store deceased crew records again, and cloning revival notifications once again alert ghosts."
+  - qol: "Cloning now announces scans and completed revivals over medical radio, chirps when a pod finishes, supports empty clones, and asks for confirmation before a bystander aborts an active cycle."
