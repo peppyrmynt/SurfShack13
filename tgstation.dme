@@ -6673,4 +6673,5 @@
 #include "surfshack13\store\store_items\_store_items.dm"
 #include "surfshack13\Z_edits\hud_edits.dm"
 #include "surfshack13\Z_edits\research_edits.dm"
+#include "code\game\objects\items\implants\implant_hypno_tracker.dm"
 // END_INCLUDE
