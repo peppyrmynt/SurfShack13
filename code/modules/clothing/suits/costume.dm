@@ -419,6 +419,35 @@
 	body_parts_covered = HEAD
 	flags_inv = HIDEHAIR|HIDEEARS
 
+/obj/item/clothing/suit/hooded/banana_suit
+	name = "banana suit"
+	desc = "A slippery yellow costume that makes you look (and act) like a giant banana peel. People who walk over you tend to slip. HONK!"
+	icon_state = "bee" // reuse bee sprites for now, or make proper banana ones
+	icon = 'icons/obj/clothing/suits/costume.dmi'
+	worn_icon = 'icons/mob/clothing/suits/costume.dmi'
+	inhand_icon_state = "banana_peel"
+	body_parts_covered = CHEST|GROIN|ARMS
+	clothing_flags = THICKMATERIAL
+	hoodtype = /obj/item/clothing/head/hooded/banana_hood
+
+/obj/item/clothing/suit/hooded/banana_suit/Initialize(mapload)
+	. = ..()
+	// Same slippery behaviour as the clown PDA
+	AddComponent(/datum/component/slippery, \
+		knockdown = 5 SECONDS, \
+		lube_flags = NO_SLIP_WHEN_WALKING, \
+		slot_whitelist = ITEM_SLOT_OCLOTHING)
+
+/obj/item/clothing/head/hooded/banana_hood
+	name = "banana hood"
+	desc = "A hood attached to a banana suit. Completes the look."
+	icon = 'icons/obj/clothing/head/costume.dmi'
+	worn_icon = 'icons/mob/clothing/head/costume.dmi'
+	icon_state = "bee" // reuse bee hood sprite for now
+	body_parts_covered = HEAD
+	clothing_flags = THICKMATERIAL
+	flags_inv = HIDEHAIR|HIDEEARS
+
 /obj/item/clothing/suit/hooded/shark_costume // Blahaj
 	name = "Shark costume"
 	desc = "Finally, a costume to match your favorite plush."
