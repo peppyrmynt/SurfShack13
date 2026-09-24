@@ -225,6 +225,6 @@ GLOBAL_LIST_INIT(guardian_radial_images, setup_guardian_radial())
 	. = ..()
 	AddComponent(/datum/component/anti_magic, TRUE, TRUE, FALSE, null, null, FALSE)
 
-// Stand Arrow is kept as nested include fragments so tgstation.dme remains identical to upstream.
-#include "stands/stand_arrow.inc"
-#include "stands/stand_stats.inc"
+// Stand Arrow source is nested here so tgstation.dme remains identical to upstream.
+#include "stands/stand_arrow.dme"
+#include "stands/stand_stats.dme"
