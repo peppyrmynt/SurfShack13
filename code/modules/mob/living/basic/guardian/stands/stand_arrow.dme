@@ -125,9 +125,16 @@
 		log_game("[key_name(target)] was killed by a Stand Arrow.")
 		message_admins("[ADMIN_LOOKUPFLW(target)] failed a Stand Arrow awakening and was dusted.")
 		reset_arrow()
-		target.visible_message(span_bolddanger("[target] collapses into ash!"))
+		target.visible_message(
+			span_bolddanger("[target] stares ahead, eyes wide with fear, as the Arrow rejects them. Their body was not strong enough to withstand its power!"),
+			span_bolddanger("The Arrow rejects you. You were not strong enough to withstand its power."),
+		)
 		target.dust(drop_items = TRUE)
 		return
+	target.visible_message(
+		span_holoparasite("The Arrow's glow intensifies around [target]. Something unseen begins to take shape..."),
+		span_holoparasite("The Arrow accepts you. Something powerful begins to awaken within your soul..."),
+	)
 	var/list/weighted_powers = list()
 	var/list/normal_power_types = subtypesof(/datum/stand_power) - typesof(/datum/stand_power/requiem)
 	for(var/datum/stand_power/power_type as anything in normal_power_types)
@@ -149,7 +156,16 @@
 	// The arrow, victim and ghost can all disappear while polling yields.
 	if(QDELETED(src))
 		return
-	if(!used || target_ref?.resolve() != target || !valid_target(target) || loc != target || QDELETED(candidate) || !candidate.client)
+	if(!used || target_ref?.resolve() != target || !valid_target(target) || loc != target)
+		reset_arrow()
+		return
+	if(QDELETED(candidate) || !candidate.client)
+		target.visible_message(
+			span_holoparasite("The strange presence around [target] fades before it can fully manifest, and the Arrow falls free."),
+			span_holoparasite("You were worthy, but no spirit answered the call to become your Stand. The Arrow falls free."),
+		)
+		if(target.client?.holder)
+			to_chat(target, span_notice("Stand Arrow testing note: a separate ghost player must volunteer to control the Stand."))
 		reset_arrow()
 		return
 	var/mob/living/basic/guardian/stand = spawn_guardian(target, candidate, pending_power.guardian_type)
