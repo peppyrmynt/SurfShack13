@@ -130,6 +130,33 @@
 	var/obj/effect/dancing_limb/leg_l
 	var/obj/effect/dancing_limb/leg_r
 	var/mob/living/carbon/human/my_human
+	/// Inhand overlays currently drawn on the left arm, kept so they can be swapped when held items change
+	var/list/arm_l_held_overlays
+	/// Inhand overlays currently drawn on the right arm, kept so they can be swapped when held items change
+	var/list/arm_r_held_overlays
+
+/**
+ * Redraws the held items on the dancing arms to match what the dancer is holding right now
+ *
+ * Held items aren't part of the cached dance sprites, so this is cheap enough to run on every held item change.
+ * Arguments:
+ * * dancer - The human whose held items we're drawing
+ */
+/datum/dance_sprites/proc/update_held_items(mob/living/carbon/human/dancer)
+	arm_l?.cut_overlay(arm_l_held_overlays)
+	arm_r?.cut_overlay(arm_r_held_overlays)
+	arm_l_held_overlays = list()
+	arm_r_held_overlays = list()
+	for(var/obj/item/held_item in dancer.held_items)
+		var/left_hand = IS_LEFT_INDEX(dancer.get_held_index_of_item(held_item))
+		if(!dancer.get_bodypart(left_hand ? BODY_ZONE_L_ARM : BODY_ZONE_R_ARM))
+			continue
+		if(left_hand)
+			arm_l_held_overlays += dancer.get_held_overlay(held_item)
+		else
+			arm_r_held_overlays += dancer.get_held_overlay(held_item)
+	arm_l?.add_overlay(arm_l_held_overlays)
+	arm_r?.add_overlay(arm_r_held_overlays)
 
 /datum/dance_sprites/proc/apply_to(mob/living/carbon/human/dancer)
 	my_human = dancer
@@ -170,6 +197,8 @@
 	QDEL_NULL(arm_r)
 	QDEL_NULL(leg_l)
 	QDEL_NULL(leg_r)
+	arm_l_held_overlays = null
+	arm_r_held_overlays = null
 	return ..()
 
 /// Flattens worn overlays into one icon so it can be cut up by limb, keeping each overlay's color
@@ -287,12 +316,6 @@
 				crop_img.Blend(icon('icons/mob/human/dance_masks.dmi', "r_arm_mask"), ICON_ADD)
 				r_arm += image(crop_img, layer = -SUIT_LAYER)
 
-		// Held items swing with the arm holding them
-		for(var/obj/item/held_item in dancer.held_items)
-			var/list/holding_arm = IS_LEFT_INDEX(dancer.get_held_index_of_item(held_item)) ? l_arm : r_arm
-			if(length(holding_arm))
-				holding_arm += dancer.get_held_overlay(held_item)
-
 		// Left Leg
 		var/list/l_leg = list()
 		if(dancer.get_bodypart(BODY_ZONE_L_LEG))
@@ -324,6 +347,8 @@
 	my_sprites.arm_r = create_dance_limb(my_sprites, imgList[4])
 	my_sprites.leg_l = create_dance_limb(my_sprites, imgList[5])
 	my_sprites.leg_r = create_dance_limb(my_sprites, imgList[6])
+	// Held items swing with the arm holding them, and are kept out of the cache so they're always current
+	my_sprites.update_held_items(dancer)
 
 	return my_sprites
 
@@ -341,6 +366,10 @@
 	current_dance.dancer = src
 	current_dance.apply_keyframe(1)
 	set_dance_layers_hidden(TRUE)
+
+/mob/living/carbon/human/update_held_items()
+	. = ..()
+	current_dance_sprites?.update_held_items(src)
 
 /mob/living/carbon/human/proc/stop_animation()
 	current_dance_sprites?.unapply_from(src)
