@@ -128,3 +128,17 @@
 	. += span_notice("It can awaken [uses] more Stand[uses == 1 ? "" : "s"].")
 	if(isobserver(user))
 		. += "Awakening has a [kill_chance]% chance of killing the victim."
+
+/// Extremely rare meteor from Hippie's original Stand meteor implementation.
+/// It intentionally drops the normal arrow so the later Requiem progression is not bypassed.
+/obj/effect/meteor/stand
+	name = "glowing meteor"
+	desc = "An oddly radiant meteor. Something inside it seems far more important than the rock around it."
+	icon_state = "glowing"
+	hits = 3
+	heavy = TRUE
+	meteorsound = 'sound/effects/bamf.ogg'
+	meteordrop = list(/obj/item/stand_arrow)
+	dropamt = 1
+	threat = 100
+	signature = "mysterious"
