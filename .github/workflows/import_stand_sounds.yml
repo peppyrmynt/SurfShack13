@@ -1,0 +1,42 @@
+name: Import Hippie Stand Sounds
+
+on:
+  push:
+    branches:
+      - port-hippie-stands
+
+permissions:
+  contents: write
+
+jobs:
+  import-stand-sounds:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: port-hippie-stands
+
+      - name: Download historical Hippie Stand sounds
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p sound/effects/stands
+          base="https://raw.githubusercontent.com/HippieStation/HippieStationdeprecated2020/22c0ba3bda0d5b3e3b432b744489b13afa16257f/hippiestation/sound/effects"
+          curl -fL "$base/zahando.ogg" -o sound/effects/stands/zahando.ogg
+          curl -fL "$base/vector_rush.ogg" -o sound/effects/stands/vector_rush.ogg
+          curl -fL "$base/kingcrimson_start.ogg" -o sound/effects/stands/kingcrimson_start.ogg
+          curl -fL "$base/kingcrimson_end.ogg" -o sound/effects/stands/kingcrimson_end.ogg
+
+      - name: Commit imported sounds
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sound/effects/stands
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Import Hippie Stand sound effects"
+          git push origin HEAD:port-hippie-stands
