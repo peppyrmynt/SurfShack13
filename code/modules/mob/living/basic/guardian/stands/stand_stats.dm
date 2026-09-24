@@ -203,16 +203,16 @@
 		return
 	if(istype(power, /datum/stand_power/healing))
 		var/healing_amount = stats.potential * 1.5
-		healing_touch = guardian.AddComponent(
-			/datum/component/healing_touch,
-			heal_brute = healing_amount,
-			heal_burn = healing_amount,
-			heal_tox = healing_amount,
-			heal_oxy = healing_amount,
-			heal_time = 0,
-			action_text = "",
-			complete_text = "",
-			required_modifier = RIGHT_CLICK,
+		healing_touch = guardian.AddComponent(\
+			/datum/component/healing_touch,\
+			heal_brute = healing_amount,\
+			heal_burn = healing_amount,\
+			heal_tox = healing_amount,\
+			heal_oxy = healing_amount,\
+			heal_time = 0,\
+			action_text = "",\
+			complete_text = "",\
+			required_modifier = RIGHT_CLICK,\
 		)
 		GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]?.show_to(guardian)
 		rebuild_playstyle("Right-click living targets to heal brute, burn, toxin, and oxygen damage by an amount scaled by Potential.")
