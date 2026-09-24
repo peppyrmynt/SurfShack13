@@ -151,7 +151,10 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 			guardian.balloon_alert(guardian, "realspace anchor lost!")
 			return FALSE
 		for(var/mob/living/member as anything in group)
-			if(QDELETED(member) || get_turf(member)?.z != stand_component.pocket_z)
+			if(QDELETED(member))
+				continue
+			var/turf/member_turf = get_turf(member)
+			if(!member_turf || member_turf.z != stand_component.pocket_z)
 				continue
 			member.forceMove(return_turf)
 			member.remove_status_effect(/datum/status_effect/stand_pocket_protection)
@@ -237,7 +240,8 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 
 /datum/status_effect/stand_pocket_protection/proc/check_dimension()
 	SIGNAL_HANDLER
-	if(get_turf(owner)?.z != pocket_z)
+	var/turf/owner_turf = get_turf(owner)
+	if(!owner_turf || owner_turf.z != pocket_z)
 		qdel(src)
 
 #undef STAND_ABSOLUTION_TRAIT
