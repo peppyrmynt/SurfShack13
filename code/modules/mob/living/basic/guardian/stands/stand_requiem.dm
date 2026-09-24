@@ -79,7 +79,7 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 	default_traits[ZTRAIT_BOMBCAP_MULTIPLIER] = 0
 	default_traits[ZTRAIT_GRAVITY] = STANDARD_GRAVITY
 	var/list/errors = list()
-	var/list/loaded_maps = SSmapping.LoadGroup(
+	SSmapping.LoadGroup(
 		errors,
 		pocket_trait,
 		"templates",
@@ -91,8 +91,6 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 		message_admins("A Requiem Stand pocket dimension failed to load: [english_list(errors)].")
 		log_game("A Requiem Stand pocket dimension failed to load: [english_list(errors)].")
 		return FALSE
-	for(var/datum/parsed_map/map as anything in loaded_maps)
-		map.initTemplateBounds()
 	var/list/levels = SSmapping.levels_by_trait(pocket_trait)
 	if(!length(levels))
 		message_admins("A Requiem Stand pocket dimension loaded without a matching z-trait.")
@@ -180,7 +178,6 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 	id = "stand_absolution"
 	status_type = STATUS_EFFECT_REPLACE
 	alert_type = null
-	var/had_godmode = FALSE
 	var/datum/weakref/guardian_ref
 
 /datum/status_effect/stand_absolution/on_creation(mob/living/new_owner, mob/living/basic/guardian/guardian)
@@ -188,8 +185,7 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 	return ..()
 
 /datum/status_effect/stand_absolution/on_apply()
-	had_godmode = (owner.status_flags & GODMODE) != 0
-	owner.status_flags |= GODMODE
+	ADD_TRAIT(owner, TRAIT_GODMODE, STAND_ABSOLUTION_TRAIT)
 	ADD_TRAIT(owner, TRAIT_NOBREATH, STAND_ABSOLUTION_TRAIT)
 	var/mob/living/basic/guardian/guardian = guardian_ref?.resolve()
 	if(guardian)
@@ -198,8 +194,7 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 	return TRUE
 
 /datum/status_effect/stand_absolution/on_remove()
-	if(!had_godmode)
-		owner.status_flags &= ~GODMODE
+	REMOVE_TRAIT(owner, TRAIT_GODMODE, STAND_ABSOLUTION_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_NOBREATH, STAND_ABSOLUTION_TRAIT)
 	var/mob/living/basic/guardian/guardian = guardian_ref?.resolve()
 	if(guardian)
@@ -215,15 +210,13 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 	status_type = STATUS_EFFECT_REPLACE
 	alert_type = null
 	var/pocket_z
-	var/had_godmode = FALSE
 
 /datum/status_effect/stand_pocket_protection/on_creation(mob/living/new_owner, pocket_z)
 	src.pocket_z = pocket_z
 	return ..()
 
 /datum/status_effect/stand_pocket_protection/on_apply()
-	had_godmode = (owner.status_flags & GODMODE) != 0
-	owner.status_flags |= GODMODE
+	ADD_TRAIT(owner, TRAIT_GODMODE, STAND_POCKET_TRAIT)
 	ADD_TRAIT(owner, TRAIT_NOHARDCRIT, STAND_POCKET_TRAIT)
 	ADD_TRAIT(owner, TRAIT_NOSOFTCRIT, STAND_POCKET_TRAIT)
 	ADD_TRAIT(owner, TRAIT_NODEATH, STAND_POCKET_TRAIT)
@@ -231,8 +224,7 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 	return TRUE
 
 /datum/status_effect/stand_pocket_protection/on_remove()
-	if(!had_godmode)
-		owner.status_flags &= ~GODMODE
+	REMOVE_TRAIT(owner, TRAIT_GODMODE, STAND_POCKET_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_NOHARDCRIT, STAND_POCKET_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_NOSOFTCRIT, STAND_POCKET_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_NODEATH, STAND_POCKET_TRAIT)
