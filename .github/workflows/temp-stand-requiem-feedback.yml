@@ -1,0 +1,43 @@
+name: TEMP Stand Requiem feedback
+on:
+  push:
+    branches:
+      - port-hippie-stands
+    paths:
+      - .github/workflows/temp-stand-requiem-feedback.yml
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: port-hippie-stands
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          verbs = Path('code/modules/mob/living/basic/guardian/guardian_verbs.dm')
+          s = verbs.read_text()
+          old = '''\tvar/list/guardians = living_owner.get_all_linked_holoparasites()\n\tfor(var/mob/living/basic/guardian/resetting_guardian as anything in guardians)\n\t\tif (!COOLDOWN_FINISHED(resetting_guardian, resetting_cooldown))\n\t\t\tguardians -= resetting_guardian //clear out guardians that are already reset\n\n\tif (!length(guardians))\n\t\tto_chat(owner, span_holoparasite("You cannot reset [length(guardians) > 1 ? \\"any of your guardians\\":\\"your guardian\\"] yet."))'''
+          new = '''\tvar/list/guardians = living_owner.get_all_linked_holoparasites()\n\tfor(var/mob/living/basic/guardian/resetting_guardian as anything in guardians)\n\t\t// Arrow-awakened Stands are permanent manifestations of their original soul.\n\t\tif(resetting_guardian.GetComponent(/datum/component/arrow_stand))\n\t\t\tguardians -= resetting_guardian\n\t\t\tcontinue\n\t\tif (!COOLDOWN_FINISHED(resetting_guardian, resetting_cooldown))\n\t\t\tguardians -= resetting_guardian //clear out guardians that are already reset\n\n\tif (!length(guardians))\n\t\tto_chat(owner, span_holoparasite("None of your linked guardians can have their consciousness reset. Arrow-awakened Stands are bound to their original spirit."))'''
+          if old not in s:
+              raise SystemExit('guardian reset block not found')
+          verbs.write_text(s.replace(old, new, 1))
+
+          arrow = Path('code/modules/mob/living/basic/guardian/stands/stand_arrow.dme')
+          s = arrow.read_text()
+          old = '''\tguardian.name = "[guardian.name] Requiem"\n\tguardian.real_name = "[guardian.real_name] Requiem"\n\tlog_game("[key_name(guardian)] became a Requiem Stand with [stand_component.power.name].")\n\tmessage_admins("[ADMIN_LOOKUPFLW(guardian)] completed a Requiem transformation and gained [stand_component.power.name].")\n\tguardian.visible_message(span_holoparasite("[src] is absorbed into [guardian] as [guardian] becomes Requiem!"))'''
+          new = '''\tguardian.name = "[guardian.name] Requiem"\n\tguardian.real_name = "[guardian.real_name] Requiem"\n\tlog_game("[key_name(guardian)] became a Requiem Stand with [stand_component.power.name].")\n\tmessage_admins("[ADMIN_LOOKUPFLW(guardian)] completed a Requiem transformation and gained [stand_component.power.name].")\n\tguardian.visible_message(span_holoparasite("[src] is absorbed into [guardian] as [guardian] becomes Requiem and awakens [stand_component.power.name]!"))\n\tto_chat(guardian, span_boldholoparasite("REQUIEM AWAKENED: [stand_component.power.name]. Your former major ability has evolved into this Requiem power. [stand_component.stats.describe()] You also gain Surveillance Snares and Teleportation Pad."))\n\tif(!QDELETED(guardian.summoner))\n\t\tto_chat(guardian.summoner, span_boldholoparasite("Your Stand has awakened Requiem: [stand_component.power.name]. Its stats have increased, and it has gained Surveillance Snares and Teleportation Pad."))'''
+          if old not in s:
+              raise SystemExit('requiem completion block not found')
+          arrow.write_text(s.replace(old, new, 1))
+          PY
+          git add code/modules/mob/living/basic/guardian/guardian_verbs.dm code/modules/mob/living/basic/guardian/stands/stand_arrow.dme
+          git rm .github/workflows/temp-stand-requiem-feedback.yml
+          git commit -m "Lock Stand controllers and clarify Requiem awakening"
+          git push origin port-hippie-stands
