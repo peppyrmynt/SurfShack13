@@ -303,4 +303,4 @@
 	for(var/atom/target as anything in gravity_targets.Copy())
 		remove_gravity_target(target)
 
-#include "stand_powers.inc"
+#include "stand_powers.dme"
