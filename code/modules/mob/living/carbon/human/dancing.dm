@@ -172,6 +172,16 @@
 	QDEL_NULL(leg_r)
 	return ..()
 
+/// Flattens worn overlays into one icon so it can be cut up by limb, keeping each overlay's color
+/proc/blend_dance_overlays(list/appearances)
+	var/icon/blended = icon('icons/mob/human/human.dmi', "blank")
+	for(var/mutable_appearance/appearance as anything in appearances)
+		var/icon/layer_icon = icon(appearance.icon, appearance.icon_state)
+		if(istext(appearance.color))
+			layer_icon.Blend(appearance.color, ICON_MULTIPLY)
+		blended.Blend(layer_icon, ICON_OVERLAY)
+	return blended
+
 // Create a single limb for the holder made up of the given overlays
 /proc/create_dance_limb(datum/dance_sprites/holder, list/overlays)
 	if(overlays)
@@ -203,30 +213,27 @@
 		var/list/all_crop_overlays = list()
 		// The order these overlays are added is important
 		// They should be added from highest to lowest layer number
+		all_crop_overlays += dancer.dna.species.get_underwear_overlays(dancer) // BODY_LAYER
 		all_crop_overlays += d_overlays[UNIFORM_LAYER]
 		all_crop_overlays += d_overlays[SHOES_LAYER]
 		all_crop_overlays += d_overlays[SUIT_LAYER]
 		list_clear_nulls(all_crop_overlays)
 		if(all_crop_overlays.len)
-			body_clothes = icon('icons/mob/human/human.dmi', "blank")
-			for(var/mutable_appearance/appearance as anything in all_crop_overlays)
-				var/icon/overlayIcon = icon(appearance.icon, appearance.icon_state)
-				body_clothes.Blend(overlayIcon, ICON_OVERLAY)
+			body_clothes = blend_dance_overlays(all_crop_overlays)
 
 		var/list/glove_overlays = list()
 		glove_overlays += d_overlays[GLOVES_LAYER]
 		list_clear_nulls(glove_overlays)
 		if(glove_overlays.len)
-			gloves_icon = icon('icons/mob/human/human.dmi', "blank")
-			for(var/mutable_appearance/appearance as anything in glove_overlays)
-				var/icon/overlayIcon = icon(appearance.icon, appearance.icon_state)
-				gloves_icon.Blend(overlayIcon, ICON_OVERLAY)
+			gloves_icon = blend_dance_overlays(glove_overlays)
 		// TODO: layer for arms behind body when facing EAST or WEST
 
 		// Head
 		var/list/head = list()
 		if(dancer.get_bodypart(BODY_ZONE_HEAD))
 			head += dancer.get_bodypart(BODY_ZONE_HEAD).get_limb_icon()
+			// Eyes live on BODY_LAYER with the underwear rather than on the head, so fetch them separately
+			head += dancer.dna.species.get_eye_overlays(dancer)
 			head += d_overlays[HEAD_LAYER]
 			head += d_overlays[EARS_LAYER]
 			head += d_overlays[FACEMASK_LAYER]
@@ -279,6 +286,12 @@
 				var/icon/crop_img = new /icon(gloves_icon)
 				crop_img.Blend(icon('icons/mob/human/dance_masks.dmi', "r_arm_mask"), ICON_ADD)
 				r_arm += image(crop_img, layer = -SUIT_LAYER)
+
+		// Held items swing with the arm holding them
+		for(var/obj/item/held_item in dancer.held_items)
+			var/list/holding_arm = IS_LEFT_INDEX(dancer.get_held_index_of_item(held_item)) ? l_arm : r_arm
+			if(length(holding_arm))
+				holding_arm += dancer.get_held_overlay(held_item)
 
 		// Left Leg
 		var/list/l_leg = list()
