@@ -404,18 +404,17 @@
 	name = "hotdog costume"
 	desc = "A delightfully questionable hotdog costume."
 	icon_state = "hotdog"
-	icon = "icons/obj/clothing/suits/hotdog.dmi"
-	worn_icon = "icons/mob/clothing/suits/hotdog.dmi"
+	icon = 'icons/obj/clothing/suits/hotdog.dmi'
+	worn_icon = 'icons/mob/clothing/suits/hotdog.dmi'
 	inhand_icon_state = "labcoat"
-	body_parts_covered = CHEST|GROIN|ARMS|LEGS|FEET
-	flags_inv = HIDEJUMPSUIT|HIDESHOES
+	body_parts_covered = CHEST|GROIN
 	hoodtype = /obj/item/clothing/head/hooded/hotdog_hood
 
 /obj/item/clothing/head/hooded/hotdog_hood
 	name = "hotdog hood"
 	desc = "A hotdog-shaped hood."
-	icon = "icons/obj/clothing/head/hotdog.dmi"
-	worn_icon = "icons/mob/clothing/head/hotdog.dmi"
+	icon = 'icons/obj/clothing/head/hotdog.dmi'
+	worn_icon = 'icons/mob/clothing/head/hotdog.dmi'
 	icon_state = "hotdog"
 	body_parts_covered = HEAD
 	flags_inv = HIDEHAIR|HIDEEARS
