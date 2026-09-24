@@ -407,8 +407,7 @@
 	icon = "icons/obj/clothing/suits/hotdog.dmi"
 	worn_icon = "icons/mob/clothing/suits/hotdog.dmi"
 	inhand_icon_state = "labcoat"
-	body_parts_covered = CHEST|GROIN|ARMS|LEGS|FEET
-	flags_inv = HIDEJUMPSUIT|HIDESHOES
+	body_parts_covered = CHEST|GROIN|LEGS
 	hoodtype = /obj/item/clothing/head/hooded/hotdog_hood
 
 /obj/item/clothing/head/hooded/hotdog_hood
