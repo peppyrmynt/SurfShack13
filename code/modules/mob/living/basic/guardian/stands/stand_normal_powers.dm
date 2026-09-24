@@ -1,0 +1,325 @@
+#define STAND_TIME_ERASURE_TRAIT "stand_time_erasure"
+
+/datum/movespeed_modifier/stand_frenzy
+	multiplicative_slowdown = -1
+
+/datum/movespeed_modifier/stand_frenzy_summoner
+	multiplicative_slowdown = -1.5
+
+/// Base action for arrow-only powers.
+/datum/action/cooldown/mob_cooldown/stand_power
+	button_icon = 'icons/hud/guardian.dmi'
+	button_icon_state = "standard"
+	background_icon = 'icons/hud/guardian.dmi'
+	background_icon_state = "base"
+	shared_cooldown = NONE
+	melee_cooldown_time = 0
+
+/datum/action/cooldown/mob_cooldown/stand_power/proc/get_stand_component()
+	if(!isguardian(owner))
+		return null
+	return owner.GetComponent(/datum/component/arrow_stand)
+
+/// Stand-specific Assassin stealth preserves randomized arrow stats instead of restoring subtype initial() values.
+/datum/action/cooldown/mob_cooldown/stand_assassin_stealth
+	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
+	name = "Toggle Stealth"
+	desc = "Become nearly invisible and empower your next strike. Attacking, taking damage, or recalling ends stealth."
+	cooldown_time = 7.5 SECONDS
+	click_to_activate = FALSE
+
+/datum/action/cooldown/mob_cooldown/stand_assassin_stealth/Activate()
+	var/mob/living/basic/guardian/guardian = owner
+	if(!get_stand_component())
+		return FALSE
+	if(guardian.has_status_effect(/datum/status_effect/stand_assassin_stealth))
+		guardian.remove_status_effect(/datum/status_effect/stand_assassin_stealth)
+		return TRUE
+	if(!guardian.is_deployed())
+		guardian.balloon_alert(guardian, "manifest first!")
+		return FALSE
+	guardian.apply_status_effect(/datum/status_effect/stand_assassin_stealth, src)
+	return TRUE
+
+/datum/status_effect/stand_assassin_stealth
+	id = "stand_assassin_stealth"
+	alert_type = /atom/movable/screen/alert/status_effect/instealth
+	var/datum/weakref/action_ref
+	var/old_melee_lower
+	var/old_melee_upper
+	var/old_armour_penetration
+	var/old_wound_bonus
+	var/old_obj_damage
+	var/old_environment_smash
+	var/old_alpha
+
+/datum/status_effect/stand_assassin_stealth/on_creation(mob/living/new_owner, datum/action/cooldown/mob_cooldown/stand_assassin_stealth/action)
+	action_ref = WEAKREF(action)
+	return ..()
+
+/datum/status_effect/stand_assassin_stealth/on_apply()
+	if(!isbasicmob(owner))
+		return FALSE
+	var/mob/living/basic/basic_owner = owner
+	old_melee_lower = basic_owner.melee_damage_lower
+	old_melee_upper = basic_owner.melee_damage_upper
+	old_armour_penetration = basic_owner.armour_penetration
+	old_wound_bonus = basic_owner.wound_bonus
+	old_obj_damage = basic_owner.obj_damage
+	old_environment_smash = basic_owner.environment_smash
+	old_alpha = basic_owner.alpha
+	basic_owner.melee_damage_lower = 50
+	basic_owner.melee_damage_upper = 50
+	basic_owner.armour_penetration = 100
+	basic_owner.wound_bonus = -20
+	basic_owner.obj_damage = 0
+	basic_owner.environment_smash = ENVIRONMENT_SMASH_NONE
+	new /obj/effect/temp_visual/guardian/phase/out(get_turf(owner))
+	animate(owner, alpha = 15, time = 0.5 SECONDS)
+	to_chat(owner, span_bolddanger("You enter stealth, empowering your next attack."))
+	RegisterSignals(owner, list(COMSIG_GUARDIAN_RECALLED, COMSIG_HOSTILE_POST_ATTACKINGTARGET), PROC_REF(forced_exit))
+	RegisterSignals(owner, COMSIG_LIVING_ADJUST_STANDARD_DAMAGE_TYPES, PROC_REF(on_health_changed))
+	return TRUE
+
+/datum/status_effect/stand_assassin_stealth/on_remove()
+	if(isbasicmob(owner))
+		var/mob/living/basic/basic_owner = owner
+		basic_owner.melee_damage_lower = old_melee_lower
+		basic_owner.melee_damage_upper = old_melee_upper
+		basic_owner.armour_penetration = old_armour_penetration
+		basic_owner.wound_bonus = old_wound_bonus
+		basic_owner.obj_damage = old_obj_damage
+		basic_owner.environment_smash = old_environment_smash
+		animate(owner, alpha = old_alpha, time = 0.5 SECONDS)
+		if(isguardian(owner))
+			var/mob/living/basic/guardian/guardian = owner
+			COOLDOWN_START(guardian, manifest_cooldown, 4 SECONDS)
+	UnregisterSignal(owner, list(COMSIG_GUARDIAN_RECALLED, COMSIG_HOSTILE_POST_ATTACKINGTARGET) + COMSIG_LIVING_ADJUST_STANDARD_DAMAGE_TYPES)
+	var/datum/action/cooldown/mob_cooldown/stand_assassin_stealth/action = action_ref?.resolve()
+	action?.StartCooldown()
+
+/datum/status_effect/stand_assassin_stealth/proc/on_health_changed(mob/living/source, type, amount)
+	SIGNAL_HANDLER
+	if(amount > 0)
+		forced_exit()
+
+/datum/status_effect/stand_assassin_stealth/proc/forced_exit()
+	SIGNAL_HANDLER
+	qdel(src)
+
+/// Reuses SurfShack's current trap implementation, but makes it directly targetable as an arrow power.
+/datum/action/cooldown/mob_cooldown/stand_explosive_trap
+	parent_type = /datum/action/cooldown/mob_cooldown/explosive_booby_trap
+	click_to_activate = TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_frenzy_rush
+	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
+	name = "Frenzy Rush"
+	desc = "Rush instantly into a living target, strike them, and knock them away."
+	cooldown_time = 3 SECONDS
+	click_to_activate = TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_frenzy_rush/Activate(atom/target)
+	var/datum/component/arrow_stand/stand_component = get_stand_component()
+	var/mob/living/basic/guardian/guardian = owner
+	if(!stand_component || !guardian.is_deployed() || !isliving(target))
+		return FALSE
+	var/mob/living/living_target = target
+	if(living_target == guardian || living_target == guardian.summoner || guardian.shares_summoner(living_target))
+		return FALSE
+	if(QDELETED(guardian.summoner) || get_dist_euclidean(guardian.summoner, living_target) > guardian.range)
+		guardian.balloon_alert(guardian, "target is out of range!")
+		return FALSE
+	var/turf/destination = get_step(get_turf(living_target), get_dir(living_target, guardian))
+	if(!destination)
+		return FALSE
+	guardian.forceMove(destination)
+	guardian.face_atom(living_target)
+	guardian.melee_attack(living_target, ignore_cooldown = TRUE)
+	living_target.safe_throw_at(get_edge_target_turf(living_target, get_dir(guardian, living_target)), 4, 2, guardian)
+	StartCooldown()
+	return TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_hand
+	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
+	name = "The Hand"
+	desc = "Erase the intervening space and drag everything loose on a distant tile toward you."
+	cooldown_time = 10 SECONDS
+	click_to_activate = TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_hand/Activate(atom/target)
+	var/datum/component/arrow_stand/stand_component = get_stand_component()
+	var/mob/living/basic/guardian/guardian = owner
+	if(!stand_component || !guardian.is_deployed() || !target || guardian.Adjacent(target) || !isturf(guardian.loc))
+		return FALSE
+	if(QDELETED(guardian.summoner) || get_dist_euclidean(guardian.summoner, target) > guardian.range)
+		guardian.balloon_alert(guardian, "target is out of range!")
+		return FALSE
+	var/turf/source_turf = get_turf(target)
+	var/turf/hand_turf = get_step(guardian, get_dir(guardian, source_turf))
+	if(!source_turf || !hand_turf)
+		return FALSE
+	for(var/atom/movable/movable in source_turf)
+		if(movable.anchored || movable == guardian)
+			continue
+		movable.forceMove(hand_turf)
+		if(isliving(movable))
+			var/mob/living/pulled = movable
+			pulled.Stun(1 SECONDS)
+	guardian.face_atom(hand_turf)
+	StartCooldown()
+	return TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_predator_analyze
+	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
+	name = "Predator: Analyze Evidence"
+	desc = "Analyze an adjacent atom for blood and fingerprints and learn any matching living identities."
+	cooldown_time = 1 SECONDS
+	click_to_activate = TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_predator_analyze/Activate(atom/target)
+	var/datum/component/arrow_stand/stand_component = get_stand_component()
+	if(!stand_component || !target || get_dist(owner, target) > 1)
+		return FALSE
+	var/list/prints = GET_ATOM_FINGERPRINTS(target)
+	var/list/blood = GET_ATOM_BLOOD_DNA(target)
+	var/found = FALSE
+	for(var/mob/living/carbon/human/human in GLOB.alive_mob_list)
+		if(QDELETED(human) || !human.dna)
+			continue
+		if((prints && prints[md5(human.dna.unique_identity)]) || (blood && blood[human.dna.unique_enzymes]))
+			if(!(human in stand_component.tracked_prey))
+				stand_component.tracked_prey += human
+				to_chat(owner, span_notice("You learn the identity of [human.real_name]."))
+			found = TRUE
+	if(!found)
+		owner.balloon_alert(owner, "no useful identity found")
+	StartCooldown()
+	return TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_predator_track
+	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
+	name = "All-Seeing Predator"
+	desc = "Track one of the identities learned from forensic evidence."
+	cooldown_time = 60 SECONDS
+	click_to_activate = FALSE
+
+/datum/action/cooldown/mob_cooldown/stand_predator_track/Activate()
+	var/datum/component/arrow_stand/stand_component = get_stand_component()
+	if(!stand_component)
+		return FALSE
+	for(var/mob/living/carbon/human/prey as anything in stand_component.tracked_prey.Copy())
+		if(QDELETED(prey) || prey.stat == DEAD)
+			stand_component.tracked_prey -= prey
+	if(!length(stand_component.tracked_prey))
+		owner.balloon_alert(owner, "no prey learned")
+		return FALSE
+	var/mob/living/carbon/human/prey = tgui_input_list(owner, "Select your prey.", "All-Seeing Predator", sort_names(stand_component.tracked_prey))
+	if(QDELETED(src) || QDELETED(owner) || QDELETED(prey))
+		return FALSE
+	var/turf/here = get_turf(owner)
+	var/turf/there = get_turf(prey)
+	if(!here || !there)
+		return FALSE
+	var/datum/component/arrow_stand/current_component = get_stand_component()
+	if(!current_component)
+		return FALSE
+	if(here.z != there.z)
+		if(current_component.stats.potential >= 4)
+			to_chat(owner, span_notice("[prey.real_name] is far away, on z-level [there.z]."))
+		else
+			to_chat(owner, span_notice("[prey.real_name] is far away from here."))
+	else
+		var/direction = dir2text(get_dir(here, there))
+		var/distance = round(get_dist_euclidean(here, there))
+		var/fuzz = max(0, (10 / current_component.stats.potential) - 1)
+		var/estimated_distance = max(0, distance + rand(-round(fuzz), round(fuzz)))
+		to_chat(owner, span_notice("You sense [prey.real_name] to the [direction], roughly [estimated_distance] tile[estimated_distance == 1 ? "" : "s"] away."))
+	owner.log_message("tracked [key_name(prey)] using Predator.", LOG_GAME)
+	StartCooldown()
+	return TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_scout_toggle
+	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
+	name = "Toggle Scout Mode"
+	desc = "Become nearly invisible and incorporeal with unlimited leash range, but unable to attack or interact."
+	cooldown_time = 1 SECONDS
+	click_to_activate = FALSE
+
+/datum/action/cooldown/mob_cooldown/stand_scout_toggle/Activate()
+	var/datum/component/arrow_stand/stand_component = get_stand_component()
+	var/mob/living/basic/guardian/guardian = owner
+	if(!stand_component)
+		return FALSE
+	if(guardian.has_status_effect(/datum/status_effect/guardian_scout_mode))
+		guardian.remove_status_effect(/datum/status_effect/guardian_scout_mode)
+	else
+		if(guardian.is_deployed())
+			guardian.balloon_alert(guardian, "recall before scouting!")
+			return FALSE
+		guardian.apply_status_effect(/datum/status_effect/guardian_scout_mode)
+	StartCooldown()
+	return TRUE
+
+/datum/action/cooldown/mob_cooldown/stand_time_erasure
+	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
+	name = "Erase Time"
+	desc = "Erase yourself, your summoner, and their linked Stands from normal interaction for a short period."
+	cooldown_time = 90 SECONDS
+	click_to_activate = FALSE
+
+/datum/action/cooldown/mob_cooldown/stand_time_erasure/Activate()
+	var/datum/component/arrow_stand/stand_component = get_stand_component()
+	var/mob/living/basic/guardian/guardian = owner
+	if(!stand_component || !guardian.is_deployed())
+		return FALSE
+	var/duration = stand_component.stats.potential * 2 SECONDS
+	var/list/mob/living/immune = list(guardian)
+	if(!QDELETED(guardian.summoner))
+		immune |= guardian.summoner
+		for(var/mob/living/basic/guardian/linked_stand as anything in guardian.summoner.get_all_linked_holoparasites())
+			immune |= linked_stand
+	for(var/mob/living/affected as anything in immune)
+		affected.apply_status_effect(/datum/status_effect/stand_time_erasure, duration)
+	guardian.visible_message(span_holoparasite("The world seems to skip around [guardian] as time is erased!"))
+	StartCooldown()
+	return TRUE
+
+/datum/status_effect/stand_time_erasure
+	id = "stand_time_erasure"
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = null
+	var/old_density
+	var/old_opacity
+	var/old_mouse_opacity
+	var/old_alpha
+	var/had_godmode = FALSE
+
+/datum/status_effect/stand_time_erasure/on_creation(mob/living/new_owner, duration = 2 SECONDS)
+	src.duration = duration
+	return ..()
+
+/datum/status_effect/stand_time_erasure/on_apply()
+	old_density = owner.density
+	old_opacity = owner.opacity
+	old_mouse_opacity = owner.mouse_opacity
+	old_alpha = owner.alpha
+	had_godmode = (owner.status_flags & GODMODE) != 0
+	owner.status_flags |= GODMODE
+	owner.density = FALSE
+	owner.opacity = FALSE
+	owner.mouse_opacity = FALSE
+	owner.alpha = 128
+	ADD_TRAIT(owner, TRAIT_PACIFISM, STAND_TIME_ERASURE_TRAIT)
+	return TRUE
+
+/datum/status_effect/stand_time_erasure/on_remove()
+	if(!had_godmode)
+		owner.status_flags &= ~GODMODE
+	owner.density = old_density
+	owner.opacity = old_opacity
+	owner.mouse_opacity = old_mouse_opacity
+	owner.alpha = old_alpha
+	REMOVE_TRAIT(owner, TRAIT_PACIFISM, STAND_TIME_ERASURE_TRAIT)
+
+#undef STAND_TIME_ERASURE_TRAIT

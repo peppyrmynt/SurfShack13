@@ -33,9 +33,20 @@
 /obj/item/stand_arrow/proc/valid_target(mob/living/target)
 	return !QDELETED(target) && iscarbon(target) && target.client && target.mind && target.stat != DEAD && !IS_CHANGELING(target) && !length(target.get_all_linked_holoparasites())
 
+/obj/item/stand_arrow/proc/valid_requiem_target(mob/living/basic/guardian/target)
+	if(QDELETED(target) || target.stat == DEAD || !target.client)
+		return FALSE
+	var/datum/component/arrow_stand/stand_component = target.GetComponent(/datum/component/arrow_stand)
+	return stand_component && !stand_component.requiem && !stand_component.transforming
+
 /obj/item/stand_arrow/attack(mob/living/target, mob/living/user)
 	if(used || uses <= 0)
 		return
+	if(isguardian(target))
+		var/mob/living/basic/guardian/guardian_target = target
+		if(valid_requiem_target(guardian_target))
+			begin_requiem(guardian_target, user)
+			return
 	if(!valid_target(target))
 		balloon_alert(user, "the arrow rejects them!")
 		return
@@ -55,6 +66,30 @@
 	target.visible_message(span_holoparasite("[src] embeds itself in [target] and begins to glow!"))
 	awakening_timer = addtimer(CALLBACK(src, PROC_REF(awaken)), 15 SECONDS, TIMER_STOPPABLE)
 
+/obj/item/stand_arrow/proc/begin_requiem(mob/living/basic/guardian/target, mob/living/user)
+	var/datum/component/arrow_stand/stand_component = target.GetComponent(/datum/component/arrow_stand)
+	if(!stand_component)
+		return
+	used = TRUE
+	user.visible_message(span_warning("[user] raises [src] toward [target]!"), span_notice("You prepare to pierce [target] with [src]."))
+	if(!do_after(user, 5 SECONDS, target) || QDELETED(src) || !valid_requiem_target(target) || !user.is_holding(src))
+		used = FALSE
+		return
+	if(!user.dropItemToGround(src))
+		used = FALSE
+		return
+	log_combat(user, target, "stabbed with a Stand Arrow to trigger Requiem")
+	message_admins("[ADMIN_LOOKUPFLW(user)] began a Requiem transformation on [ADMIN_LOOKUPFLW(target)] at [ADMIN_VERBOSEJMP(target)].")
+	target_ref = WEAKREF(target)
+	RegisterSignal(target, COMSIG_QDELETING, PROC_REF(target_deleted))
+	forceMove(target)
+	stand_component.transforming = TRUE
+	target.unleash()
+	target.range = 255
+	target.visible_message(span_holoparasite("[target] begins to distort and melt around [src]!"))
+	to_chat(target, span_holoparasite("This power... you can barely contain it. Endure the transformation!"))
+	awakening_timer = addtimer(CALLBACK(src, PROC_REF(finish_requiem)), 50 SECONDS, TIMER_STOPPABLE)
+
 /obj/item/stand_arrow/proc/target_deleted(mob/living/source)
 	SIGNAL_HANDLER
 	reset_arrow()
@@ -67,6 +102,12 @@
 	var/mob/living/target = target_ref?.resolve()
 	if(target)
 		UnregisterSignal(target, COMSIG_QDELETING)
+		if(isguardian(target))
+			var/mob/living/basic/guardian/guardian = target
+			var/datum/component/arrow_stand/stand_component = guardian.GetComponent(/datum/component/arrow_stand)
+			if(stand_component?.transforming)
+				stand_component.transforming = FALSE
+				stand_component.stats.apply(guardian)
 		if(loc == target)
 			forceMove(get_turf(target))
 	target_ref = null
@@ -88,7 +129,8 @@
 		target.dust(drop_items = TRUE)
 		return
 	var/list/weighted_powers = list()
-	for(var/datum/stand_power/power_type as anything in subtypesof(/datum/stand_power))
+	var/list/normal_power_types = subtypesof(/datum/stand_power) - typesof(/datum/stand_power/requiem)
+	for(var/datum/stand_power/power_type as anything in normal_power_types)
 		weighted_powers[power_type] = initial(power_type.weight)
 	var/power_type = pick_weight(weighted_powers)
 	pending_power = new power_type
@@ -123,11 +165,40 @@
 		visible_message(span_warning("[src] crumbles away!"))
 		qdel(src)
 
+/obj/item/stand_arrow/proc/finish_requiem()
+	awakening_timer = null
+	var/mob/living/basic/guardian/guardian = target_ref?.resolve()
+	if(!valid_requiem_target(guardian) || loc != guardian)
+		reset_arrow()
+		return
+	var/datum/component/arrow_stand/stand_component = guardian.GetComponent(/datum/component/arrow_stand)
+	stand_component.clear_major_power()
+	qdel(stand_component.power)
+	stand_component.power = null
+	stand_component.stats.requiem_upgrade()
+	stand_component.stats.apply(guardian)
+	stand_component.requiem = TRUE
+	var/special_type = pick(subtypesof(/datum/stand_power/requiem))
+	stand_component.power = new special_type
+	stand_component.setup_requiem_power()
+	stand_component.grant_requiem_minors()
+	stand_component.transforming = FALSE
+	guardian.name = "[guardian.name] Requiem"
+	guardian.real_name = "[guardian.real_name] Requiem"
+	log_game("[key_name(guardian)] became a Requiem Stand with [stand_component.power.name].")
+	message_admins("[ADMIN_LOOKUPFLW(guardian)] completed a Requiem transformation and gained [stand_component.power.name].")
+	guardian.visible_message(span_holoparasite("[src] is absorbed into [guardian] as [guardian] becomes Requiem!"))
+	guardian.recall(TRUE)
+	UnregisterSignal(guardian, COMSIG_QDELETING)
+	target_ref = null
+	used = FALSE
+	qdel(src)
+
 /obj/item/stand_arrow/examine(mob/user)
 	. = ..()
 	. += span_notice("It can awaken [uses] more Stand[uses == 1 ? "" : "s"].")
 	if(isobserver(user))
-		. += "Awakening has a [kill_chance]% chance of killing the victim."
+		. += "Awakening has a [kill_chance]% chance of killing the victim. It can also transform an eligible arrow-created Stand into Requiem."
 
 /// Extremely rare meteor from Hippie's original Stand meteor implementation.
 /// It intentionally drops the normal arrow so the later Requiem progression is not bypassed.
