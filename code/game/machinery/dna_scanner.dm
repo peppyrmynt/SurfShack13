@@ -547,10 +547,13 @@
 		leaving_clone.grab_ghost()
 	update_appearance()
 
+	var/turf/pod_turf = get_turf(src)
+	if(pod_turf)
+		playsound(pod_turf, 'sound/machines/cloning_complete.ogg', 50, FALSE, 10 - SOUND_RANGE)
+
 	if(successful)
 		to_chat(leaving_clone, span_notice("The pod opens. Your new body has finished maturing."))
 		leaving_clone.flash_act()
-		playsound(src, 'sound/machines/cloning_complete.ogg', 50, TRUE, 10 - SOUND_RANGE)
 		say("Cloning process complete. [leaving_clone.real_name] has been cloned.")
 		if(radio)
 			radio.talk_into(src, "[leaving_clone.real_name] has been cloned.", RADIO_CHANNEL_MEDICAL)
