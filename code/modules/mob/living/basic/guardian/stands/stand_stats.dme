@@ -54,13 +54,14 @@
 /datum/stand_power
 	var/name = "Stand"
 	var/cost = 0
-	var/weight = 1
+	/// pick_weight uses integer rolls. Normal powers total 1600; Time Erasure gets 80 (5%).
+	var/weight = 190
 	var/guardian_type = /mob/living/basic/guardian/arrow_stand
 
 /datum/stand_power/assassin
 	name = "Assassin"
 	cost = 4
-	weight = 0.9
+	weight = 171
 
 /datum/stand_power/explosive
 	name = "Explosive"
@@ -81,7 +82,7 @@
 /datum/stand_power/healing
 	name = "Healing"
 	cost = 4
-	weight = 1.1
+	weight = 209
 
 /datum/stand_power/predator
 	name = "Predator"
@@ -94,7 +95,7 @@
 /datum/stand_power/time_erasure
 	name = "Time Erasure"
 	cost = 6
-	weight = 0.2
+	weight = 80
 
 /// Arrow-only component which owns all temporary power state. Stock guardians remain untouched.
 /datum/component/arrow_stand

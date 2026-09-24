@@ -11,9 +11,9 @@ leash, HUD and summoner actions. Every arrow-created Stand uses a neutral modern
 Guardian shell; an arrow-only component owns its randomized stats and Stand powers.
 Existing guardian creators and stock guardian balance are unchanged.
 
-All nine normal majors were audited: Assassin (4 points, weight .9), Explosive (4),
-Frenzy (3), Gravity (3), The Hand (5), Healing (4, weight 1.1), Predator (2),
-Scout (1), Time Erasure (6, weight .2). Other weights are 1.
+All nine normal majors were audited: Assassin (4 points, weight 171), Explosive (4),
+Frenzy (3), Gravity (3), The Hand (5), Healing (4, weight 209), Predator (2),
+Scout (1), Time Erasure (6, weight 80). Other normal weights are 190. Integer weights total 1600, giving Time Erasure exactly 5% of normal power rolls while preserving the relative odds of the other powers.
 The two minors are Surveillance Snares and Teleportation Pad. The three Requiem
 specials are Time Stop, Dimensional Manifestation and Absolution.
 
