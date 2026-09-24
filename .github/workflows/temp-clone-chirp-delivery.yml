@@ -1,0 +1,34 @@
+name: TEMP fix clone chirp delivery
+on:
+  push:
+    branches:
+      - agent/split-373-cloning
+    paths:
+      - .github/workflows/temp-clone-chirp-delivery.yml
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/split-373-cloning
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('code/game/machinery/dna_scanner.dm')
+          s = p.read_text()
+          old = """\tvar/turf/pod_turf = get_turf(src)\n\tif(pod_turf)\n\t\tplaysound(pod_turf, 'sound/machines/cloning_complete.ogg', 100, FALSE, SHORT_RANGE_SOUND_EXTRARANGE, pressure_affected = FALSE)\n"""
+          new = """\tvar/turf/pod_turf = get_turf(src)\n\tif(pod_turf)\n\t\tfor(var/mob/living/listener in range(8, pod_turf))\n\t\t\tif(!listener.client)\n\t\t\t\tcontinue\n\t\t\tlistener.playsound_local(\n\t\t\t\tpod_turf,\n\t\t\t\t'sound/machines/cloning_complete.ogg',\n\t\t\t\t100,\n\t\t\t\tFALSE,\n\t\t\t\tpressure_affected = FALSE,\n\t\t\t\tmax_distance = 8,\n\t\t\t\tfalloff_distance = 1,\n\t\t\t\tuse_reverb = FALSE,\n\t\t\t)\n"""
+          if old not in s:
+              raise SystemExit('old clone chirp block not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+          git add code/game/machinery/dna_scanner.dm
+          git rm .github/workflows/temp-clone-chirp-delivery.yml
+          git commit -m "Deliver cloning chirp directly to nearby living players"
+          git push origin agent/split-373-cloning
