@@ -400,6 +400,26 @@
 	clothing_flags = THICKMATERIAL
 	flags_inv = HIDEHAIR|HIDEEARS
 
+/obj/item/clothing/suit/hooded/hotdog_costume
+	name = "hotdog costume"
+	desc = "A delightfully questionable hotdog costume."
+	icon_state = "hotdog"
+	icon = 'icons/obj/clothing/suits/costume_hotdog_temp.dmi'
+	worn_icon = 'icons/mob/clothing/suits/costume_hotdog_temp.dmi'
+	inhand_icon_state = "labcoat"
+	body_parts_covered = CHEST|GROIN|ARMS|LEGS|FEET
+	flags_inv = HIDEJUMPSUIT|HIDESHOES
+	hoodtype = /obj/item/clothing/head/hooded/hotdog_hood
+
+/obj/item/clothing/head/hooded/hotdog_hood
+	name = "hotdog hood"
+	desc = "A hotdog-shaped hood. Somehow, this seemed like a good idea."
+	icon = 'icons/obj/clothing/head/costume_hotdog_temp.dmi'
+	worn_icon = 'icons/mob/clothing/head/costume_hotdog_temp.dmi'
+	icon_state = "hotdog"
+	body_parts_covered = HEAD
+	flags_inv = HIDEHAIR|HIDEEARS|HIDEFACE|HIDEMASK|HIDESNOUT
+
 /obj/item/clothing/suit/hooded/shark_costume // Blahaj
 	name = "Shark costume"
 	desc = "Finally, a costume to match your favorite plush."
