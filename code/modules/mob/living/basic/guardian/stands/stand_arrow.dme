@@ -33,11 +33,11 @@
 /obj/item/stand_arrow/proc/valid_target(mob/living/target)
 	return !QDELETED(target) && iscarbon(target) && target.client && target.mind && target.stat != DEAD && !IS_CHANGELING(target) && !length(target.get_all_linked_holoparasites())
 
-/obj/item/stand_arrow/proc/valid_requiem_target(mob/living/basic/guardian/target)
-	if(QDELETED(target) || target.stat == DEAD || !target.client)
+/obj/item/stand_arrow/proc/valid_requiem_target(mob/living/basic/guardian/target, expected_transforming = FALSE)
+	if(QDELETED(target) || target.stat == DEAD || !target.canon_client)
 		return FALSE
 	var/datum/component/arrow_stand/stand_component = target.GetComponent(/datum/component/arrow_stand)
-	return stand_component && !stand_component.requiem && !stand_component.transforming
+	return stand_component && !stand_component.requiem && stand_component.transforming == expected_transforming
 
 /obj/item/stand_arrow/attack(mob/living/target, mob/living/user)
 	if(used || uses <= 0)
@@ -184,7 +184,8 @@
 /obj/item/stand_arrow/proc/finish_requiem()
 	awakening_timer = null
 	var/mob/living/basic/guardian/guardian = target_ref?.resolve()
-	if(!valid_requiem_target(guardian) || loc != guardian)
+	// Completion requires the transformation that start validation intentionally rejects.
+	if(!used || !valid_requiem_target(guardian, expected_transforming = TRUE) || loc != guardian)
 		reset_arrow()
 		return
 	var/datum/component/arrow_stand/stand_component = guardian.GetComponent(/datum/component/arrow_stand)
