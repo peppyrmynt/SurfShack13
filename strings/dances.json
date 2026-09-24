@@ -263,6 +263,71 @@
 					"time": 0
 				}
 			]
+		},
+		{
+			"name": "milly rock",
+			"emote_text": "hits the Milly Rock!",
+			"keyframes": [
+				{
+					"time": 0
+				},
+				{
+					"time": 3,
+					"head": { "rotation": -4 },
+					"body": { "rotation": 5, "offset_x": 2, "offset_y": -1 },
+					"arm_l": { "rotation": -20 },
+					"arm_r": { "rotation": -55, "scale_y": 0.9 },
+					"leg_l": { "rotation": -12, "offset_y": 1 },
+					"leg_r": { "scale_y": 0.9 }
+				},
+				{
+					"time": 3,
+					"head": { "rotation": -6, "offset_x": 1 },
+					"body": { "rotation": 6, "offset_x": 3 },
+					"arm_l": { "rotation": -10 },
+					"arm_r": { "rotation": -100, "offset_y": 1, "scale_y": 0.75 },
+					"leg_l": { "rotation": -8 }
+				},
+				{
+					"time": 3,
+					"body": { "offset_y": -1 },
+					"arm_l": { "rotation": 20 },
+					"arm_r": { "rotation": -40, "offset_x": 1, "scale_y": 0.9 },
+					"leg_l": { "scale_y": 0.9 },
+					"leg_r": { "scale_y": 0.9 }
+				},
+				{
+					"time": 3,
+					"head": { "rotation": 4 },
+					"body": { "rotation": -5, "offset_x": -2, "offset_y": -1 },
+					"arm_l": { "rotation": 55, "scale_y": 0.9 },
+					"arm_r": { "rotation": 20 },
+					"leg_l": { "scale_y": 0.9 },
+					"leg_r": { "rotation": 12, "offset_y": 1 }
+				},
+				{
+					"time": 3,
+					"head": { "rotation": 6, "offset_x": -1 },
+					"body": { "rotation": -6, "offset_x": -3 },
+					"arm_l": { "rotation": 100, "offset_y": 1, "scale_y": 0.75 },
+					"arm_r": { "rotation": 10 },
+					"leg_r": { "rotation": 8 }
+				},
+				{
+					"time": 3,
+					"body": { "offset_y": -1 },
+					"arm_l": { "rotation": 40, "offset_x": -1, "scale_y": 0.9 },
+					"arm_r": { "rotation": -20 },
+					"leg_l": { "scale_y": 0.9 },
+					"leg_r": { "scale_y": 0.9 }
+				},
+				{
+					"repeat_frames": [2, 3, 4, 5, 6, 7]
+				},
+				{
+					"time": 4
+				}
+			]
 		}
 	],
 	"secret_dances": [
