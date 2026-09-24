@@ -147,9 +147,6 @@
  * Grenades with other triggers like remote igniters probably skip this step and go straight to [/obj/item/grenade/proc/detonate]
  */
 /obj/item/grenade/proc/arm_grenade(mob/user, delayoverride, msg = TRUE, volume = 60)
-	if(user && HAS_TRAIT(user, TRAIT_PACIFISM))
-		to_chat(user, span_warning("You cannot arm [src] while pacified."))
-		return FALSE
 	log_grenade(user) //Inbuilt admin procs already handle null users
 	if(user)
 		add_fingerprint(user)
