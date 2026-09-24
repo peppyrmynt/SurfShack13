@@ -45,6 +45,12 @@ There are several things that need to be remembered:
 		update_body()				//Calls update_body_parts(), as well as updates mutant bodyparts, the old, not-actually-bodypart system.
 */
 
+// While dancing, layers drawn on the dancing limbs stay cached in overlays_standing but are kept off the mob itself
+/mob/living/carbon/human/apply_overlay(cache_index)
+	. = ..()
+	if(dance_layers_hidden && !(cache_index in GLOB.dance_visible_layers) && overlays_standing[cache_index])
+		cut_overlay(overlays_standing[cache_index])
+
 /* --------------------------------------- */
 //For legacy support.
 /mob/living/carbon/human/regenerate_icons()
