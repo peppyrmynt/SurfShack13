@@ -113,6 +113,12 @@
 	click_to_activate = TRUE
 	sound_extra_range = -10
 
+/datum/action/cooldown/mob_cooldown/stand_explosive_trap/Activate(atom/target)
+	if(HAS_TRAIT(owner, TRAIT_PACIFISM))
+		owner.balloon_alert(owner, "Absolution prevents attacks")
+		return FALSE
+	return ..()
+
 /datum/action/cooldown/mob_cooldown/stand_frenzy_rush
 	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
 	name = "Frenzy Rush"
@@ -123,6 +129,9 @@
 /datum/action/cooldown/mob_cooldown/stand_frenzy_rush/Activate(atom/target)
 	var/datum/component/arrow_stand/stand_component = get_stand_component()
 	var/mob/living/basic/guardian/guardian = owner
+	if(HAS_TRAIT(guardian, TRAIT_PACIFISM))
+		guardian.balloon_alert(guardian, "Absolution prevents attacks")
+		return FALSE
 	if(!stand_component || !guardian.is_deployed() || !isliving(target))
 		return FALSE
 	var/mob/living/living_target = target
@@ -152,6 +161,9 @@
 /datum/action/cooldown/mob_cooldown/stand_hand/Activate(atom/target)
 	var/datum/component/arrow_stand/stand_component = get_stand_component()
 	var/mob/living/basic/guardian/guardian = owner
+	if(HAS_TRAIT(guardian, TRAIT_PACIFISM))
+		guardian.balloon_alert(guardian, "Absolution prevents attacks")
+		return FALSE
 	if(!stand_component || !guardian.is_deployed() || !target || guardian.Adjacent(target) || !isturf(guardian.loc))
 		return FALSE
 	if(QDELETED(guardian.summoner) || get_dist_euclidean(guardian.summoner, target) > guardian.range)

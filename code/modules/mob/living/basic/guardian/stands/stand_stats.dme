@@ -43,6 +43,12 @@
 	creator_icon = "standard"
 	playstyle_string = span_holoparasite("You are a <b>Stand</b> awakened by a mysterious arrow.")
 
+/mob/living/basic/guardian/arrow_stand/melee_attack(atom/target, list/modifiers, ignore_cooldown)
+	if(HAS_TRAIT(src, TRAIT_PACIFISM) && isliving(target))
+		balloon_alert(src, "Absolution prevents attacks")
+		return FALSE
+	return ..()
+
 /// Metadata for Hippie's normal Stand-arrow major abilities.
 /datum/stand_power
 	var/name = "Stand"
@@ -243,6 +249,8 @@
 
 /datum/component/arrow_stand/proc/explosive_attack(mob/living/basic/guardian/source, atom/target, success)
 	SIGNAL_HANDLER
+	if(HAS_TRAIT(source, TRAIT_PACIFISM))
+		return
 	if(!success || !isliving(target) || !prob(40))
 		return
 	var/mob/living/victim = target
@@ -258,6 +266,8 @@
 
 /datum/component/arrow_stand/proc/gravity_attack(mob/living/basic/guardian/source, atom/target, success)
 	SIGNAL_HANDLER
+	if(HAS_TRAIT(source, TRAIT_PACIFISM))
+		return
 	if(!success || !isliving(target) || target == source || target == source.summoner || source.shares_summoner(target) || gravity_targets[target])
 		return
 	var/mob/living/victim = target
