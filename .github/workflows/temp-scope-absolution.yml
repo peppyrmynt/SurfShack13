@@ -14,11 +14,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: port-hippie-stands
+          fetch-depth: 0
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - run: |
-          # Restore files that should not carry Absolution-specific changes.
           git checkout 342e973576feb96710799ceb511799bef9667bf9 -- \
             code/game/objects/items/grenades/_grenade.dm \
             code/modules/mob/living/basic/guardian/stands/stand_normal_powers.dme
@@ -27,27 +27,16 @@ jobs:
           from pathlib import Path
           p = Path('code/modules/mob/living/basic/guardian/stands/stand_requiem.dme')
           s = p.read_text()
-
-          s = s.replace(
-              '\tADD_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n',
-              '\tADD_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\tADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)\n',
-              1,
-          )
-          s = s.replace(
-              '\t\tADD_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n',
-              '\t\tADD_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\t\tADD_TRAIT(guardian, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)\n',
-              1,
-          )
-          s = s.replace(
-              '\tREMOVE_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n',
-              '\tREMOVE_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\tREMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)\n',
-              1,
-          )
-          s = s.replace(
-              '\t\tREMOVE_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n',
-              '\t\tREMOVE_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\t\tREMOVE_TRAIT(guardian, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)\n',
-              1,
-          )
+          replacements = [
+              ('\tADD_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n', '\tADD_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\tADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)\n'),
+              ('\t\tADD_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n', '\t\tADD_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\t\tADD_TRAIT(guardian, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)\n'),
+              ('\tREMOVE_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n', '\tREMOVE_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\tREMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)\n'),
+              ('\t\tREMOVE_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n', '\t\tREMOVE_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\t\tREMOVE_TRAIT(guardian, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)\n'),
+          ]
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit(f'missing expected Absolution line: {old!r}')
+              s = s.replace(old, new, 1)
           p.write_text(s)
           PY
 
