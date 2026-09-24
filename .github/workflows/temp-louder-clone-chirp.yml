@@ -1,0 +1,34 @@
+name: TEMP strengthen cloning chirp playback
+on:
+  push:
+    branches:
+      - agent/split-373-cloning
+    paths:
+      - .github/workflows/temp-louder-clone-chirp.yml
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/split-373-cloning
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('code/game/machinery/dna_scanner.dm')
+          s = p.read_text()
+          old = "playsound(pod_turf, 'sound/machines/cloning_complete.ogg', 50, FALSE, 10 - SOUND_RANGE)"
+          new = "playsound(pod_turf, 'sound/machines/cloning_complete.ogg', 100, FALSE, SHORT_RANGE_SOUND_EXTRARANGE, pressure_affected = FALSE)"
+          if old not in s:
+              raise SystemExit('clone chirp call not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+          git add code/game/machinery/dna_scanner.dm
+          git rm .github/workflows/temp-louder-clone-chirp.yml
+          git commit -m "Make cloning pod chirp reliably audible"
+          git push origin agent/split-373-cloning
