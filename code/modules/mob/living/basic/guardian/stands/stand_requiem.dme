@@ -98,6 +98,11 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 	pocket_z = levels[1]
 	return TRUE
 
+/obj/effect/timestop/magic/stand_requiem
+	// Hippie used world.view (7 tiles) and -1 extra range on start.
+	start_sound_extra_range = -11
+	end_sound_extra_range = -10
+
 /datum/action/cooldown/mob_cooldown/stand_requiem_time_stop
 	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
 	name = "Time Stop"
@@ -115,7 +120,7 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 		immune_atoms |= guardian.summoner
 		for(var/mob/living/basic/guardian/linked as anything in guardian.summoner.get_all_linked_holoparasites())
 			immune_atoms |= linked
-	new /obj/effect/timestop/magic(get_turf(guardian), 2, 10 SECONDS, immune_atoms)
+	new /obj/effect/timestop/magic/stand_requiem(get_turf(guardian), 2, 10 SECONDS, immune_atoms)
 	guardian.visible_message(span_holoparasite("Time itself freezes around [guardian]!"))
 	StartCooldown()
 	return TRUE

@@ -21,6 +21,9 @@
 	var/channelled = FALSE
 	/// hides time icon effect and mutes sound
 	var/hidden = FALSE
+	/// Extra ranges for the start/end audio; defaults preserve modern behavior.
+	var/start_sound_extra_range = -1
+	var/end_sound_extra_range = 0
 
 /obj/effect/timestop/Initialize(mapload, radius, time, list/immune_atoms, start = TRUE, silent = FALSE) //Immune atoms assoc list atom = TRUE
 	. = ..()
@@ -45,13 +48,13 @@
 /obj/effect/timestop/Destroy()
 	QDEL_NULL(chronofield)
 	if(!hidden)
-		playsound(src, 'sound/effects/magic/timeparadox2.ogg', 75, TRUE, frequency = -1) //reverse!
+		playsound(src, 'sound/effects/magic/timeparadox2.ogg', 75, TRUE, end_sound_extra_range, frequency = -1) //reverse!
 	return ..()
 
 /obj/effect/timestop/proc/timestop()
 	target = get_turf(src)
 	if(!hidden)
-		playsound(src, 'sound/effects/magic/timeparadox2.ogg', 75, TRUE, -1)
+		playsound(src, 'sound/effects/magic/timeparadox2.ogg', 75, TRUE, start_sound_extra_range)
 	chronofield = new (src, freezerange, TRUE, immune, antimagic_flags, channelled)
 	if(!channelled)
 		QDEL_IN(src, duration)

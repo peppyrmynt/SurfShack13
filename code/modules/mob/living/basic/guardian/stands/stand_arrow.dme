@@ -209,6 +209,7 @@
 	hits = 3
 	heavy = TRUE
 	meteorsound = 'sound/effects/bamf.ogg'
+	meteor_sound_extra_range = -10
 	meteordrop = list(/obj/item/stand_arrow)
 	dropamt = 1
 	threat = 100

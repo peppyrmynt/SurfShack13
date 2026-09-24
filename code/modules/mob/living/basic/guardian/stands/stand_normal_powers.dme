@@ -111,6 +111,7 @@
 /datum/action/cooldown/mob_cooldown/stand_explosive_trap
 	parent_type = /datum/action/cooldown/mob_cooldown/explosive_booby_trap
 	click_to_activate = TRUE
+	sound_extra_range = -10
 
 /datum/action/cooldown/mob_cooldown/stand_frenzy_rush
 	parent_type = /datum/action/cooldown/mob_cooldown/stand_power
@@ -133,6 +134,7 @@
 	var/turf/destination = get_step(get_turf(living_target), get_dir(living_target, guardian))
 	if(!destination)
 		return FALSE
+	playsound(guardian, 'sound/effects/stands/vector_rush.ogg', 100, FALSE, -10)
 	guardian.forceMove(destination)
 	guardian.face_atom(living_target)
 	guardian.melee_attack(living_target, ignore_cooldown = TRUE)
@@ -159,6 +161,7 @@
 	var/turf/hand_turf = get_step(guardian, get_dir(guardian, source_turf))
 	if(!source_turf || !hand_turf)
 		return FALSE
+	playsound(guardian, 'sound/effects/stands/zahando.ogg', 100, TRUE, -10)
 	for(var/atom/movable/movable in source_turf)
 		if(movable.anchored || movable == guardian)
 			continue
@@ -279,8 +282,11 @@
 		immune |= guardian.summoner
 		for(var/mob/living/basic/guardian/linked_stand as anything in guardian.summoner.get_all_linked_holoparasites())
 			immune |= linked_stand
+	var/mob/living/spatial_end_source = pick(immune)
 	for(var/mob/living/affected as anything in immune)
-		affected.apply_status_effect(/datum/status_effect/stand_time_erasure, duration)
+		SEND_SOUND(affected, sound('sound/effects/stands/kingcrimson_start.ogg'))
+		var/turf/end_sound_origin = get_turf(affected)
+		affected.apply_status_effect(/datum/status_effect/stand_time_erasure, duration, affected == spatial_end_source, end_sound_origin)
 	guardian.visible_message(span_holoparasite("The world seems to skip around [guardian] as time is erased!"))
 	StartCooldown()
 	return TRUE
@@ -293,9 +299,13 @@
 	var/old_opacity
 	var/old_mouse_opacity
 	var/old_alpha
+	var/play_spatial_end_sound = FALSE
+	var/turf/spatial_end_sound_origin
 
-/datum/status_effect/stand_time_erasure/on_creation(mob/living/new_owner, duration = 2 SECONDS)
+/datum/status_effect/stand_time_erasure/on_creation(mob/living/new_owner, duration = 2 SECONDS, play_spatial_end_sound = FALSE, turf/spatial_end_sound_origin)
 	src.duration = duration
+	src.play_spatial_end_sound = play_spatial_end_sound
+	src.spatial_end_sound_origin = spatial_end_sound_origin
 	return ..()
 
 /datum/status_effect/stand_time_erasure/on_apply()
@@ -312,6 +322,9 @@
 	return TRUE
 
 /datum/status_effect/stand_time_erasure/on_remove()
+	SEND_SOUND(owner, sound('sound/effects/stands/kingcrimson_end.ogg'))
+	if(play_spatial_end_sound && spatial_end_sound_origin)
+		playsound(spatial_end_sound_origin, 'sound/effects/stands/kingcrimson_end.ogg', 100, FALSE, -10)
 	REMOVE_TRAIT(owner, TRAIT_GODMODE, STAND_TIME_ERASURE_TRAIT)
 	owner.density = old_density
 	owner.opacity = old_opacity

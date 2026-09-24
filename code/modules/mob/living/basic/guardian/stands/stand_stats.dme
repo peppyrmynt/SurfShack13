@@ -265,7 +265,7 @@
 	gravity_targets[victim] = 5
 	RegisterSignal(victim, COMSIG_MOVABLE_MOVED, PROC_REF(gravity_target_moved))
 	RegisterSignal(victim, COMSIG_QDELETING, PROC_REF(gravity_target_deleted))
-	playsound(source, 'sound/effects/gravhit.ogg', 100, TRUE)
+	playsound(source, 'sound/effects/gravhit.ogg', 100, TRUE, -10)
 	to_chat(source, span_bolddanger("Your punch applies crushing gravity to [victim]!"))
 	to_chat(victim, span_userdanger("Everything feels incredibly heavy!"))
 
