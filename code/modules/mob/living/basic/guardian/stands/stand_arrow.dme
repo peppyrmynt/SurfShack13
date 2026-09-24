@@ -34,7 +34,7 @@
 	return !QDELETED(target) && iscarbon(target) && target.client && target.mind && target.stat != DEAD && !IS_CHANGELING(target) && !length(target.get_all_linked_holoparasites())
 
 /obj/item/stand_arrow/proc/valid_requiem_target(mob/living/basic/guardian/target, expected_transforming = FALSE)
-	if(QDELETED(target) || target.stat == DEAD || !target.canon_client)
+	if(QDELETED(target) || target.stat == DEAD || !GET_CLIENT(target))
 		return FALSE
 	var/datum/component/arrow_stand/stand_component = target.GetComponent(/datum/component/arrow_stand)
 	return stand_component && !stand_component.requiem && stand_component.transforming == expected_transforming
