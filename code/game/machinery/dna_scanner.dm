@@ -549,7 +549,19 @@
 
 	var/turf/pod_turf = get_turf(src)
 	if(pod_turf)
-		playsound(pod_turf, 'sound/machines/cloning_complete.ogg', 100, FALSE, SHORT_RANGE_SOUND_EXTRARANGE, pressure_affected = FALSE)
+		for(var/mob/living/listener in range(8, pod_turf))
+			if(!listener.client)
+				continue
+			listener.playsound_local(
+				pod_turf,
+				'sound/machines/cloning_complete.ogg',
+				100,
+				FALSE,
+				pressure_affected = FALSE,
+				max_distance = 8,
+				falloff_distance = 1,
+				use_reverb = FALSE,
+			)
 
 	if(successful)
 		to_chat(leaving_clone, span_notice("The pod opens. Your new body has finished maturing."))
