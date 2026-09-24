@@ -328,6 +328,93 @@
 					"time": 4
 				}
 			]
+		}
+	],
+	"secret_dances": [
+		{
+			"name": "headspin",
+			"emote_text": "spins on their head!",
+			"keyframes": [
+				{
+					"time": 0,
+					"head_dir": "WEST",
+					"body_dir": "WEST",
+					"legs_dir": "WEST"
+				},
+				{
+					"time": 8,
+					"head_dir": "WEST",
+					"body_dir": "WEST",
+					"legs_dir": "WEST",
+					"body": { "rotation": -90, "offset_x": 15 },
+					"arm_l": { "rotation": 110 },
+					"leg_l": { "rotation": 90, "offset_y": 3 },
+					"leg_r": { "rotation": 90, "offset_y": 3 }
+				},
+				{
+					"time": 8,
+					"head_dir": "WEST",
+					"body_dir": "WEST",
+					"legs_dir": "WEST",
+					"body": { "rotation": -180, "offset_y": 15 },
+					"arm_l": { "rotation": 110 },
+					"leg_l": { "rotation": 0, "offset_y": 0 },
+					"leg_r": { "rotation": 0, "offset_y": 0 }
+				},
+				{
+					"time": 1,
+					"head_dir": "NORTH",
+					"body_dir": "NORTH",
+					"legs_dir": "NORTH",
+					"arm_l": { "scale_y": -0.6, "rotation": -20 },
+					"arm_r": { "scale_y": -0.6, "rotation": 20 },
+					"body": { "rotation": -180, "offset_y": 15 }
+				},
+				{
+					"time": 1,
+					"head_dir": "EAST",
+					"body_dir": "EAST",
+					"legs_dir": "EAST",
+					"arm_r": { "rotation": -110 },
+					"body": { "rotation": -180, "offset_y": 15 }
+				},
+				{
+					"time": 1,
+					"head_dir": "SOUTH",
+					"body_dir": "SOUTH",
+					"legs_dir": "SOUTH",
+					"arm_l": { "scale_y": -0.6, "rotation": 20 },
+					"arm_r": { "scale_y": -0.6, "rotation": -20 },
+					"body": { "rotation": -180, "offset_y": 15 }
+				},
+				{
+					"time": 1,
+					"head_dir": "WEST",
+					"body_dir": "WEST",
+					"legs_dir": "WEST",
+					"arm_l": { "rotation": 110 },
+					"body": { "rotation": -180, "offset_y": 15 }
+				},
+				{
+					"repeat_frames": [4, 5, 6, 7, 4, 5, 6, 7, 4, 5]
+				},
+				{
+					"time": 6,
+					"head_dir": "EAST",
+					"body_dir": "EAST",
+					"legs_dir": "EAST",
+					"body": { "rotation": 90, "offset_y": 8, "offset_x": -15 },
+					"arm_l": { "rotation": -110 },
+					"leg_l": { "rotation": -90, "offset_y": 3 },
+					"leg_r": { "rotation": -90, "offset_y": 3 }
+				},
+				{
+					"time": 8,
+					"head_dir": "EAST",
+					"body_dir": "EAST",
+					"legs_dir": "EAST"
+				}
+			]
 		},
 		{
 			"name": "vogue",
@@ -592,93 +679,6 @@
 				},
 				{
 					"time": 2
-				}
-			]
-		}
-	],
-	"secret_dances": [
-		{
-			"name": "headspin",
-			"emote_text": "spins on their head!",
-			"keyframes": [
-				{
-					"time": 0,
-					"head_dir": "WEST",
-					"body_dir": "WEST",
-					"legs_dir": "WEST"
-				},
-				{
-					"time": 8,
-					"head_dir": "WEST",
-					"body_dir": "WEST",
-					"legs_dir": "WEST",
-					"body": { "rotation": -90, "offset_x": 15 },
-					"arm_l": { "rotation": 110 },
-					"leg_l": { "rotation": 90, "offset_y": 3 },
-					"leg_r": { "rotation": 90, "offset_y": 3 }
-				},
-				{
-					"time": 8,
-					"head_dir": "WEST",
-					"body_dir": "WEST",
-					"legs_dir": "WEST",
-					"body": { "rotation": -180, "offset_y": 15 },
-					"arm_l": { "rotation": 110 },
-					"leg_l": { "rotation": 0, "offset_y": 0 },
-					"leg_r": { "rotation": 0, "offset_y": 0 }
-				},
-				{
-					"time": 1,
-					"head_dir": "NORTH",
-					"body_dir": "NORTH",
-					"legs_dir": "NORTH",
-					"arm_l": { "scale_y": -0.6, "rotation": -20 },
-					"arm_r": { "scale_y": -0.6, "rotation": 20 },
-					"body": { "rotation": -180, "offset_y": 15 }
-				},
-				{
-					"time": 1,
-					"head_dir": "EAST",
-					"body_dir": "EAST",
-					"legs_dir": "EAST",
-					"arm_r": { "rotation": -110 },
-					"body": { "rotation": -180, "offset_y": 15 }
-				},
-				{
-					"time": 1,
-					"head_dir": "SOUTH",
-					"body_dir": "SOUTH",
-					"legs_dir": "SOUTH",
-					"arm_l": { "scale_y": -0.6, "rotation": 20 },
-					"arm_r": { "scale_y": -0.6, "rotation": -20 },
-					"body": { "rotation": -180, "offset_y": 15 }
-				},
-				{
-					"time": 1,
-					"head_dir": "WEST",
-					"body_dir": "WEST",
-					"legs_dir": "WEST",
-					"arm_l": { "rotation": 110 },
-					"body": { "rotation": -180, "offset_y": 15 }
-				},
-				{
-					"repeat_frames": [4, 5, 6, 7, 4, 5, 6, 7, 4, 5]
-				},
-				{
-					"time": 6,
-					"head_dir": "EAST",
-					"body_dir": "EAST",
-					"legs_dir": "EAST",
-					"body": { "rotation": 90, "offset_y": 8, "offset_x": -15 },
-					"arm_l": { "rotation": -110 },
-					"leg_l": { "rotation": -90, "offset_y": 3 },
-					"leg_r": { "rotation": -90, "offset_y": 3 }
-				},
-				{
-					"time": 8,
-					"head_dir": "EAST",
-					"body_dir": "EAST",
-					"legs_dir": "EAST"
 				}
 			]
 		}
