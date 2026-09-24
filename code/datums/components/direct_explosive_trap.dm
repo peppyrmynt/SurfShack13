@@ -7,6 +7,8 @@
 	var/mob/living/saboteur
 	/// Amount of force to apply
 	var/explosive_force
+	/// Extra range passed to the explosion sound.
+	var/sound_extra_range = 0
 	/// Colour for examine notification
 	var/glow_colour
 	/// Optional additional target checks before we go off
@@ -17,6 +19,7 @@
 /datum/component/direct_explosive_trap/Initialize(
 	mob/living/saboteur,
 	explosive_force = EXPLODE_HEAVY,
+	sound_extra_range = 0,
 	expire_time = 1 MINUTES,
 	glow_colour = COLOR_RED,
 	datum/callback/explosive_checks,
@@ -27,6 +30,7 @@
 		return COMPONENT_INCOMPATIBLE
 	src.saboteur = saboteur
 	src.explosive_force = explosive_force
+	src.sound_extra_range = sound_extra_range
 	src.glow_colour = glow_colour
 	src.explosive_checks = explosive_checks
 	src.triggering_signals = triggering_signals
@@ -74,7 +78,7 @@
 	to_chat(victim, span_bolddanger("[source] was boobytrapped!"))
 	if (!isnull(saboteur))
 		to_chat(saboteur, span_bolddanger("Success! Your trap on [source] caught [victim.name]!"))
-	playsound(source, 'sound/effects/explosion/explosion2.ogg', 200, TRUE)
+	playsound(source, 'sound/effects/explosion/explosion2.ogg', 200, TRUE, sound_extra_range)
 	new /obj/effect/temp_visual/explosion(get_turf(source))
 	EX_ACT(victim, explosive_force)
 	qdel(src)

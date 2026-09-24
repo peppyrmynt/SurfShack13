@@ -17,6 +17,8 @@
 	var/heavy = FALSE
 	///Sound to play when you hit something
 	var/meteorsound = 'sound/effects/meteorimpact.ogg'
+	/// Extra range for the collision sound. Defaults preserve modern meteor behavior.
+	var/meteor_sound_extra_range = 0
 	///Our starting z level, prevents infinite meteors
 	var/z_original
 	///Used for determining which meteors are most interesting
@@ -72,7 +74,7 @@
 	. = ..() //What could go wrong
 	if(A)
 		ram_turf(get_turf(A))
-		playsound(src.loc, meteorsound, 40, TRUE)
+		playsound(src.loc, meteorsound, 40, TRUE, meteor_sound_extra_range)
 		get_hit()
 
 /obj/effect/meteor/proc/chase_target(atom/chasing, delay, home)
