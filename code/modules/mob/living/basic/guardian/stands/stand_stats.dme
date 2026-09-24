@@ -44,7 +44,8 @@
 	playstyle_string = span_holoparasite("You are a <b>Stand</b> awakened by a mysterious arrow.")
 
 /mob/living/basic/guardian/arrow_stand/melee_attack(atom/target, list/modifiers, ignore_cooldown)
-	if(HAS_TRAIT(src, TRAIT_PACIFISM) && isliving(target))
+	var/datum/component/arrow_stand/stand_component = GetComponent(/datum/component/arrow_stand)
+	if(stand_component?.absolution_effect?.resolve())
 		balloon_alert(src, "Absolution prevents attacks")
 		return FALSE
 	return ..()
@@ -150,6 +151,7 @@
 
 /// Remove everything belonging to the current major power. Requiem relies on this being complete.
 /datum/component/arrow_stand/proc/clear_major_power()
+	clear_absolution()
 	var/mob/living/basic/guardian/guardian = parent
 	if(QDELETED(guardian))
 		return
@@ -157,7 +159,9 @@
 	guardian.remove_movespeed_modifier(/datum/movespeed_modifier/stand_frenzy)
 	guardian.summoner?.remove_movespeed_modifier(/datum/movespeed_modifier/stand_frenzy_summoner)
 	guardian.remove_status_effect(/datum/status_effect/stand_assassin_stealth)
-	guardian.remove_status_effect(/datum/status_effect/guardian_scout_mode)
+	if(guardian.remove_status_effect(/datum/status_effect/guardian_scout_mode))
+		// Scout removal restores its leash but does not clear manifested incorporeal movement.
+		guardian.incorporeal_move = FALSE
 	guardian.remove_status_effect(/datum/status_effect/stand_time_erasure)
 	if(!QDELETED(guardian.summoner))
 		guardian.summoner.remove_status_effect(/datum/status_effect/stand_time_erasure)

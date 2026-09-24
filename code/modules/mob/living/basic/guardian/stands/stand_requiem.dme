@@ -29,6 +29,8 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 	var/pocket_trait
 	var/pocket_z
 	var/datum/weakref/pocket_return
+	/// The shield created by this Stand only; other Stands may protect the same summoner.
+	var/datum/weakref/absolution_effect
 
 /// Called after the normal major has been removed and a Requiem power selected.
 /datum/component/arrow_stand/proc/setup_requiem_power()
@@ -61,14 +63,20 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 
 /datum/component/arrow_stand/proc/absolution_recalled()
 	SIGNAL_HANDLER
-	var/mob/living/basic/guardian/guardian = parent
-	guardian.summoner?.remove_status_effect(/datum/status_effect/stand_absolution)
+	clear_absolution()
+
+/datum/component/arrow_stand/proc/clear_absolution()
+	var/datum/status_effect/stand_absolution/effect = absolution_effect?.resolve()
+	absolution_effect = null
+	qdel(effect)
 
 /datum/component/arrow_stand/proc/apply_absolution()
 	var/mob/living/basic/guardian/guardian = parent
-	if(QDELETED(guardian.summoner))
+	if(QDELETED(guardian.summoner) || !guardian.is_deployed() || absolution_effect?.resolve())
 		return
-	guardian.summoner.apply_status_effect(/datum/status_effect/stand_absolution, guardian)
+	var/datum/status_effect/stand_absolution/effect = guardian.summoner.apply_status_effect(/datum/status_effect/stand_absolution, guardian)
+	if(effect)
+		absolution_effect = WEAKREF(effect)
 
 /datum/component/arrow_stand/proc/ensure_pocket_dimension()
 	if(pocket_z)
@@ -181,56 +189,73 @@ GLOBAL_VAR_INIT(stand_pocket_counter, 1)
 
 /datum/status_effect/stand_absolution
 	id = "stand_absolution"
-	status_type = STATUS_EFFECT_REPLACE
+	status_type = STATUS_EFFECT_MULTIPLE
+	on_remove_on_mob_delete = TRUE
 	alert_type = null
 	var/datum/weakref/guardian_ref
+	/// Each shield must remove only its own traits when several Stands share a summoner.
+	var/trait_source
 
 /datum/status_effect/stand_absolution/on_creation(mob/living/new_owner, mob/living/basic/guardian/guardian)
 	guardian_ref = WEAKREF(guardian)
+	trait_source = "[STAND_ABSOLUTION_TRAIT]_[REF(src)]"
 	return ..()
 
 /datum/status_effect/stand_absolution/on_apply()
-	ADD_TRAIT(owner, TRAIT_GODMODE, STAND_ABSOLUTION_TRAIT)
-	ADD_TRAIT(owner, TRAIT_NOBREATH, STAND_ABSOLUTION_TRAIT)
-	ADD_TRAIT(owner, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)
-	ADD_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)
-	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)
-	RegisterSignals(owner, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY), PROC_REF(block_attack))
 	var/mob/living/basic/guardian/guardian = guardian_ref?.resolve()
-	if(guardian)
-		ADD_TRAIT(guardian, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)
-		ADD_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)
-		ADD_TRAIT(guardian, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)
-		RegisterSignals(guardian, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY), PROC_REF(block_attack))
-		RegisterSignal(guardian, COMSIG_QDELETING, PROC_REF(guardian_deleted))
-		to_chat(guardian, span_holoparasite("Absolution is active. You cannot attack while protecting your user."))
+	if(QDELETED(guardian) || guardian.summoner != owner || !guardian.is_deployed())
+		return FALSE
+	ADD_TRAIT(owner, TRAIT_GODMODE, trait_source)
+	ADD_TRAIT(owner, TRAIT_NOBREATH, trait_source)
+	ADD_TRAIT(owner, TRAIT_PACIFISM, trait_source)
+	ADD_TRAIT(owner, TRAIT_NO_THROWING, trait_source)
+	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, trait_source)
+	RegisterSignals(owner, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY), PROC_REF(block_attack))
+	// Block damage before the life-link can forward it with forced = TRUE.
+	ADD_TRAIT(guardian, TRAIT_GODMODE, trait_source)
+	ADD_TRAIT(guardian, TRAIT_NOBREATH, trait_source)
+	ADD_TRAIT(guardian, TRAIT_PACIFISM, trait_source)
+	ADD_TRAIT(guardian, TRAIT_NO_THROWING, trait_source)
+	ADD_TRAIT(guardian, TRAIT_HANDS_BLOCKED, trait_source)
+	RegisterSignals(guardian, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY), PROC_REF(block_attack))
+	RegisterSignal(guardian, COMSIG_QDELETING, PROC_REF(guardian_deleted))
+	to_chat(guardian, span_holoparasite("Absolution is active. You cannot attack while protecting your user."))
 	to_chat(owner, span_holoparasite("Absolution is active. You cannot attack while the barrier is maintained."))
 	return TRUE
 
 /datum/status_effect/stand_absolution/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_GODMODE, STAND_ABSOLUTION_TRAIT)
-	REMOVE_TRAIT(owner, TRAIT_NOBREATH, STAND_ABSOLUTION_TRAIT)
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)
-	REMOVE_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)
-	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_GODMODE, trait_source)
+	REMOVE_TRAIT(owner, TRAIT_NOBREATH, trait_source)
+	REMOVE_TRAIT(owner, TRAIT_PACIFISM, trait_source)
+	REMOVE_TRAIT(owner, TRAIT_NO_THROWING, trait_source)
+	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, trait_source)
 	UnregisterSignal(owner, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY))
 	var/mob/living/basic/guardian/guardian = guardian_ref?.resolve()
 	if(guardian)
-		REMOVE_TRAIT(guardian, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)
-		REMOVE_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)
-		REMOVE_TRAIT(guardian, TRAIT_HANDS_BLOCKED, STAND_ABSOLUTION_TRAIT)
+		REMOVE_TRAIT(guardian, TRAIT_GODMODE, trait_source)
+		REMOVE_TRAIT(guardian, TRAIT_NOBREATH, trait_source)
+		REMOVE_TRAIT(guardian, TRAIT_PACIFISM, trait_source)
+		REMOVE_TRAIT(guardian, TRAIT_NO_THROWING, trait_source)
+		REMOVE_TRAIT(guardian, TRAIT_HANDS_BLOCKED, trait_source)
 		UnregisterSignal(guardian, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY, COMSIG_QDELETING))
 		to_chat(guardian, span_holoparasite("Absolution is no longer active."))
-	to_chat(owner, span_holoparasite("Absolution is no longer active."))
+	if(!owner.has_status_effect(/datum/status_effect/stand_absolution))
+		to_chat(owner, span_holoparasite("Absolution is no longer active."))
 
-/datum/status_effect/stand_absolution/proc/block_attack()
+/datum/status_effect/stand_absolution/proc/block_attack(mob/living/source)
 	SIGNAL_HANDLER
-	owner.balloon_alert(owner, "Absolution prevents attacks")
+	source.balloon_alert(source, "Absolution prevents attacks")
 	return COMPONENT_CANCEL_ATTACK_CHAIN
 
 /datum/status_effect/stand_absolution/proc/guardian_deleted()
 	SIGNAL_HANDLER
 	qdel(src)
+
+/// Also recover from forced relocation or a removed/changed summoner link.
+/datum/status_effect/stand_absolution/tick(seconds_between_ticks)
+	var/mob/living/basic/guardian/guardian = guardian_ref?.resolve()
+	if(QDELETED(guardian) || guardian.stat == DEAD || guardian.summoner != owner || !guardian.is_deployed())
+		qdel(src)
 
 /datum/status_effect/stand_pocket_protection
 	id = "stand_pocket_protection"
