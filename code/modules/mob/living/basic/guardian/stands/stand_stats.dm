@@ -161,7 +161,8 @@
 		qdel(action)
 	granted_actions.Cut()
 	QDEL_NULL(healing_touch)
-	GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]?.hide_from(guardian)
+	var/datum/atom_hud/medsensor = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+	medsensor?.hide_from(guardian)
 	clear_gravity_targets()
 	tracked_prey.Cut()
 
@@ -214,7 +215,8 @@
 			complete_text = "",\
 			required_modifier = RIGHT_CLICK,\
 		)
-		GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]?.show_to(guardian)
+		var/datum/atom_hud/medsensor = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+		medsensor?.show_to(guardian)
 		rebuild_playstyle("Right-click living targets to heal brute, burn, toxin, and oxygen damage by an amount scaled by Potential.")
 		return
 	if(istype(power, /datum/stand_power/predator))
@@ -301,4 +303,4 @@
 	for(var/atom/target as anything in gravity_targets.Copy())
 		remove_gravity_target(target)
 
-#include "stand_powers.dm"
+#include "stand_powers.inc"
