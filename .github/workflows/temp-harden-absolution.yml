@@ -1,0 +1,81 @@
+name: TEMP harden Absolution pacifism
+on:
+  push:
+    branches:
+      - port-hippie-stands
+    paths:
+      - .github/workflows/temp-harden-absolution.yml
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: port-hippie-stands
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          # Requiem: add layered attack cancellation and plain feedback.
+          p = Path('code/modules/mob/living/basic/guardian/stands/stand_requiem.dme')
+          s = p.read_text()
+          s = s.replace(
+              'rebuild_playstyle("While manifested, form an absolute shield around your summoner, preventing damage and suffocation until you recall. The absolute barrier also prevents both you and your summoner from committing violence while it is active.")',
+              'rebuild_playstyle("While manifested, your summoner is completely protected from damage and suffocation. While Absolution is active, neither you nor your summoner can attack.")'
+          )
+          old = '''/datum/status_effect/stand_absolution/on_apply()\n\tADD_TRAIT(owner, TRAIT_GODMODE, STAND_ABSOLUTION_TRAIT)\n\tADD_TRAIT(owner, TRAIT_NOBREATH, STAND_ABSOLUTION_TRAIT)\n\tADD_TRAIT(owner, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)\n\tvar/mob/living/basic/guardian/guardian = guardian_ref?.resolve()\n\tif(guardian)\n\t\tADD_TRAIT(guardian, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)\n\t\tRegisterSignal(guardian, COMSIG_QDELETING, PROC_REF(guardian_deleted))\n\t\tto_chat(guardian, span_holoparasite("Your absolute barrier forbids violence while it protects your summoner."))\n\tto_chat(owner, span_holoparasite("An absolute barrier surrounds you. While it holds, neither you nor your Stand can commit violence."))\n\treturn TRUE\n\n/datum/status_effect/stand_absolution/on_remove()\n\tREMOVE_TRAIT(owner, TRAIT_GODMODE, STAND_ABSOLUTION_TRAIT)\n\tREMOVE_TRAIT(owner, TRAIT_NOBREATH, STAND_ABSOLUTION_TRAIT)\n\tREMOVE_TRAIT(owner, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)\n\tvar/mob/living/basic/guardian/guardian = guardian_ref?.resolve()\n\tif(guardian)\n\t\tREMOVE_TRAIT(guardian, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)\n\t\tUnregisterSignal(guardian, COMSIG_QDELETING)\n\t\tto_chat(guardian, span_holoparasite("The absolute barrier fades. You can fight again."))\n\tto_chat(owner, span_holoparasite("The absolute barrier fades. You can fight again."))\n'''
+          new = '''/datum/status_effect/stand_absolution/on_apply()\n\tADD_TRAIT(owner, TRAIT_GODMODE, STAND_ABSOLUTION_TRAIT)\n\tADD_TRAIT(owner, TRAIT_NOBREATH, STAND_ABSOLUTION_TRAIT)\n\tADD_TRAIT(owner, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)\n\tADD_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\tRegisterSignals(owner, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY), PROC_REF(block_attack))\n\tvar/mob/living/basic/guardian/guardian = guardian_ref?.resolve()\n\tif(guardian)\n\t\tADD_TRAIT(guardian, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)\n\t\tADD_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\t\tRegisterSignals(guardian, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY), PROC_REF(block_attack))\n\t\tRegisterSignal(guardian, COMSIG_QDELETING, PROC_REF(guardian_deleted))\n\t\tto_chat(guardian, span_holoparasite("Absolution is active. You cannot attack while protecting your user."))\n\tto_chat(owner, span_holoparasite("Absolution is active. You cannot attack while the barrier is maintained."))\n\treturn TRUE\n\n/datum/status_effect/stand_absolution/on_remove()\n\tREMOVE_TRAIT(owner, TRAIT_GODMODE, STAND_ABSOLUTION_TRAIT)\n\tREMOVE_TRAIT(owner, TRAIT_NOBREATH, STAND_ABSOLUTION_TRAIT)\n\tREMOVE_TRAIT(owner, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)\n\tREMOVE_TRAIT(owner, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\tUnregisterSignal(owner, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY))\n\tvar/mob/living/basic/guardian/guardian = guardian_ref?.resolve()\n\tif(guardian)\n\t\tREMOVE_TRAIT(guardian, TRAIT_PACIFISM, STAND_ABSOLUTION_TRAIT)\n\t\tREMOVE_TRAIT(guardian, TRAIT_NO_THROWING, STAND_ABSOLUTION_TRAIT)\n\t\tUnregisterSignal(guardian, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_ATTACK_RANGED, COMSIG_MOB_ATTACK_RANGED_SECONDARY, COMSIG_QDELETING))\n\t\tto_chat(guardian, span_holoparasite("Absolution is no longer active."))\n\tto_chat(owner, span_holoparasite("Absolution is no longer active."))\n\n/datum/status_effect/stand_absolution/proc/block_attack()\n\tSIGNAL_HANDLER\n\towner.balloon_alert(owner, "Absolution prevents attacks")\n\treturn COMPONENT_CANCEL_ATTACK_CHAIN\n'''
+          if old not in s:
+              raise SystemExit('requiem status block not found')
+          p.write_text(s.replace(old, new, 1))
+
+          # Arrow Stand itself: hard-stop melee while pacified, independent of generic basic-mob handling.
+          p = Path('code/modules/mob/living/basic/guardian/stands/stand_stats.dme')
+          s = p.read_text()
+          marker = '''/mob/living/basic/guardian/arrow_stand\n\tguardian_type = GUARDIAN_STANDARD\n\tcreator_name = "Stand"\n\tcreator_desc = "A Stand awakened by a mysterious arrow. Its abilities and statistics are unpredictable."\n\tcreator_icon = "standard"\n\tplaystyle_string = span_holoparasite("You are a <b>Stand</b> awakened by a mysterious arrow.")\n'''
+          replacement = marker + '''\n/mob/living/basic/guardian/arrow_stand/melee_attack(atom/target, list/modifiers, ignore_cooldown)\n\tif(HAS_TRAIT(src, TRAIT_PACIFISM) && isliving(target))\n\t\tballoon_alert(src, "Absolution prevents attacks")\n\t\treturn FALSE\n\treturn ..()\n'''
+          if marker not in s:
+              raise SystemExit('arrow stand marker not found')
+          s = s.replace(marker, replacement, 1)
+          # Signal-driven damaging passives must not trigger under Absolution.
+          s = s.replace('''/datum/component/arrow_stand/proc/explosive_attack(mob/living/basic/guardian/source, atom/target, success)\n\tSIGNAL_HANDLER\n\tif(!success || !isliving(target) || !prob(40))''', '''/datum/component/arrow_stand/proc/explosive_attack(mob/living/basic/guardian/source, atom/target, success)\n\tSIGNAL_HANDLER\n\tif(HAS_TRAIT(source, TRAIT_PACIFISM))\n\t\treturn\n\tif(!success || !isliving(target) || !prob(40))''')
+          s = s.replace('''/datum/component/arrow_stand/proc/gravity_attack(mob/living/basic/guardian/source, atom/target, success)\n\tSIGNAL_HANDLER\n\tif(!success || !isliving(target)''', '''/datum/component/arrow_stand/proc/gravity_attack(mob/living/basic/guardian/source, atom/target, success)\n\tSIGNAL_HANDLER\n\tif(HAS_TRAIT(source, TRAIT_PACIFISM))\n\t\treturn\n\tif(!success || !isliving(target)''')
+          p.write_text(s)
+
+          # Harmful custom Stand actions get explicit guards.
+          p = Path('code/modules/mob/living/basic/guardian/stands/stand_normal_powers.dme')
+          s = p.read_text()
+          explosive_marker = '''/datum/action/cooldown/mob_cooldown/stand_explosive_trap\n\tparent_type = /datum/action/cooldown/mob_cooldown/explosive_booby_trap\n\tclick_to_activate = TRUE\n\tsound_extra_range = -10\n'''
+          explosive_new = explosive_marker + '''\n/datum/action/cooldown/mob_cooldown/stand_explosive_trap/Activate(atom/target)\n\tif(HAS_TRAIT(owner, TRAIT_PACIFISM))\n\t\towner.balloon_alert(owner, "Absolution prevents attacks")\n\t\treturn FALSE\n\treturn ..()\n'''
+          if explosive_marker not in s:
+              raise SystemExit('explosive action marker not found')
+          s = s.replace(explosive_marker, explosive_new, 1)
+          s = s.replace('''\tvar/datum/component/arrow_stand/stand_component = get_stand_component()\n\tvar/mob/living/basic/guardian/guardian = owner\n\tif(!stand_component || !guardian.is_deployed() || !isliving(target))''', '''\tvar/datum/component/arrow_stand/stand_component = get_stand_component()\n\tvar/mob/living/basic/guardian/guardian = owner\n\tif(HAS_TRAIT(guardian, TRAIT_PACIFISM))\n\t\tguardian.balloon_alert(guardian, "Absolution prevents attacks")\n\t\treturn FALSE\n\tif(!stand_component || !guardian.is_deployed() || !isliving(target))''', 1)
+          hand_old = '''\tvar/datum/component/arrow_stand/stand_component = get_stand_component()\n\tvar/mob/living/basic/guardian/guardian = owner\n\tif(!stand_component || !guardian.is_deployed() || !target || guardian.Adjacent(target) || !isturf(guardian.loc))'''
+          hand_new = '''\tvar/datum/component/arrow_stand/stand_component = get_stand_component()\n\tvar/mob/living/basic/guardian/guardian = owner\n\tif(HAS_TRAIT(guardian, TRAIT_PACIFISM))\n\t\tguardian.balloon_alert(guardian, "Absolution prevents attacks")\n\t\treturn FALSE\n\tif(!stand_component || !guardian.is_deployed() || !target || guardian.Adjacent(target) || !isturf(guardian.loc))'''
+          if hand_old not in s:
+              raise SystemExit('hand action block not found')
+          s = s.replace(hand_old, hand_new, 1)
+          p.write_text(s)
+
+          # Close a generic pacifism loophole: pacifists cannot arm grenade-family explosives.
+          p = Path('code/game/objects/items/grenades/_grenade.dm')
+          s = p.read_text()
+          arm = '''/obj/item/grenade/proc/arm_grenade(mob/user, delayoverride, msg = TRUE, volume = 60)\n\tlog_grenade(user) //Inbuilt admin procs already handle null users\n'''
+          arm_new = '''/obj/item/grenade/proc/arm_grenade(mob/user, delayoverride, msg = TRUE, volume = 60)\n\tif(user && HAS_TRAIT(user, TRAIT_PACIFISM))\n\t\tto_chat(user, span_warning("You cannot arm [src] while pacified."))\n\t\treturn FALSE\n\tlog_grenade(user) //Inbuilt admin procs already handle null users\n'''
+          if arm not in s:
+              raise SystemExit('arm_grenade marker not found')
+          p.write_text(s.replace(arm, arm_new, 1))
+          PY
+          git add code/modules/mob/living/basic/guardian/stands/stand_requiem.dme \
+                  code/modules/mob/living/basic/guardian/stands/stand_stats.dme \
+                  code/modules/mob/living/basic/guardian/stands/stand_normal_powers.dme \
+                  code/game/objects/items/grenades/_grenade.dm
+          git rm .github/workflows/temp-harden-absolution.yml
+          git commit -m "Harden Absolution nonviolence"
+          git push origin port-hippie-stands
