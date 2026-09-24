@@ -340,13 +340,35 @@
 	current_dance.my_dance = dance_to_do
 	current_dance.dancer = src
 	current_dance.apply_keyframe(1)
-	regenerate_icons()
+	set_dance_layers_hidden(TRUE)
 
 /mob/living/carbon/human/proc/stop_animation()
 	current_dance_sprites?.unapply_from(src)
 	QDEL_NULL(current_dance)
 	QDEL_NULL(current_dance_sprites)
-	regenerate_icons()
+	set_dance_layers_hidden(FALSE)
+
+/**
+ * Hides or restores the standing overlays that the dancing limbs draw in our place
+ *
+ * Layers in GLOB.dance_visible_layers, and overlays not tracked in overlays_standing (like fire), are left alone.
+ * Arguments:
+ * * hidden - TRUE to hide the layers, FALSE to put them back
+ */
+/mob/living/carbon/human/proc/set_dance_layers_hidden(hidden)
+	if(dance_layers_hidden == hidden)
+		return
+	dance_layers_hidden = hidden
+	for(var/layer_index in 1 to TOTAL_LAYERS)
+		if(layer_index in GLOB.dance_visible_layers)
+			continue
+		var/layer_overlays = overlays_standing[layer_index]
+		if(!layer_overlays)
+			continue
+		if(hidden)
+			cut_overlay(layer_overlays)
+		else
+			add_overlay(layer_overlays)
 
 // Return the location of the anchoring joint for a limb
 // i.e., the shoulder for an arm, the hip for a leg, the neck for a head

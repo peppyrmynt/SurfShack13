@@ -98,6 +98,8 @@
 	var/list/last_dance_sprites = null
 	/// Cooldown on dance sprite generation so we don't kill the server with image operations
 	COOLDOWN_DECLARE(last_dance_sprite_gen)
+	/// Whether our standing overlays are currently hidden because the dancing limbs are drawing them
+	var/dance_layers_hidden = FALSE
 
 	/// Height of the mob
 	VAR_PROTECTED/mob_height = HUMAN_HEIGHT_MEDIUM

@@ -14,6 +14,9 @@ GLOBAL_LIST_EMPTY(all_dances_by_name)
 // Dances that can be picked by the random dance routine or by the *dance emote
 GLOBAL_LIST_EMPTY(random_dances_by_name)
 
+/// Mob overlay layers that stay on the dancer instead of being hidden while dancing. They don't move with the limbs.
+GLOBAL_LIST_INIT(dance_visible_layers, list(MUTATIONS_LAYER, FRONT_MUTATIONS_LAYER))
+
 /proc/json_pose_to_pose(list/json_pose)
 	var/datum/animation_pose/pose = new
 	if(json_pose["rotation"])
