@@ -425,7 +425,7 @@
 	icon_state = "bee" // reuse bee sprites for now, or make proper banana ones
 	icon = 'icons/obj/clothing/suits/costume.dmi'
 	worn_icon = 'icons/mob/clothing/suits/costume.dmi'
-	inhand_icon_state = "banana_peel"
+	inhand_icon_state = "labcoat"
 	body_parts_covered = CHEST|GROIN|ARMS
 	clothing_flags = THICKMATERIAL
 	hoodtype = /obj/item/clothing/head/hooded/banana_hood
