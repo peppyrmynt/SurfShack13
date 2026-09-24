@@ -203,7 +203,10 @@
 	guardian.real_name = "[guardian.real_name] Requiem"
 	log_game("[key_name(guardian)] became a Requiem Stand with [stand_component.power.name].")
 	message_admins("[ADMIN_LOOKUPFLW(guardian)] completed a Requiem transformation and gained [stand_component.power.name].")
-	guardian.visible_message(span_holoparasite("[src] is absorbed into [guardian] as [guardian] becomes Requiem!"))
+	guardian.visible_message(span_holoparasite("[src] is absorbed into [guardian] as [guardian] becomes Requiem and awakens [stand_component.power.name]!"))
+	to_chat(guardian, span_boldholoparasite("REQUIEM AWAKENED: [stand_component.power.name]. Your former major ability has evolved into this Requiem power. [stand_component.stats.describe()] You also gain Surveillance Snares and Teleportation Pad."))
+	if(!QDELETED(guardian.summoner))
+		to_chat(guardian.summoner, span_boldholoparasite("Your Stand has awakened Requiem: [stand_component.power.name]. Its stats have increased, and it has gained Surveillance Snares and Teleportation Pad."))
 	guardian.recall(TRUE)
 	UnregisterSignal(guardian, COMSIG_QDELETING)
 	target_ref = null
