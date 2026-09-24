@@ -293,7 +293,6 @@
 	var/old_opacity
 	var/old_mouse_opacity
 	var/old_alpha
-	var/had_godmode = FALSE
 
 /datum/status_effect/stand_time_erasure/on_creation(mob/living/new_owner, duration = 2 SECONDS)
 	src.duration = duration
@@ -304,8 +303,7 @@
 	old_opacity = owner.opacity
 	old_mouse_opacity = owner.mouse_opacity
 	old_alpha = owner.alpha
-	had_godmode = (owner.status_flags & GODMODE) != 0
-	owner.status_flags |= GODMODE
+	ADD_TRAIT(owner, TRAIT_GODMODE, STAND_TIME_ERASURE_TRAIT)
 	owner.density = FALSE
 	owner.opacity = FALSE
 	owner.mouse_opacity = FALSE
@@ -314,8 +312,7 @@
 	return TRUE
 
 /datum/status_effect/stand_time_erasure/on_remove()
-	if(!had_godmode)
-		owner.status_flags &= ~GODMODE
+	REMOVE_TRAIT(owner, TRAIT_GODMODE, STAND_TIME_ERASURE_TRAIT)
 	owner.density = old_density
 	owner.opacity = old_opacity
 	owner.mouse_opacity = old_mouse_opacity
