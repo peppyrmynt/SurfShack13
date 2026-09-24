@@ -547,21 +547,17 @@
 		leaving_clone.grab_ghost()
 	update_appearance()
 
-	var/turf/pod_turf = get_turf(src)
-	if(pod_turf)
-		for(var/mob/living/listener in range(8, pod_turf))
-			if(!listener.client)
-				continue
-			listener.playsound_local(
-				pod_turf,
-				'sound/machines/cloning_complete.ogg',
-				100,
-				FALSE,
-				pressure_affected = FALSE,
-				max_distance = 8,
-				falloff_distance = 1,
-				use_reverb = FALSE,
-			)
+	// Use the standard positional sound path so nearby players and observers hear the pod.
+	playsound(
+		src,
+		'sound/machines/cloning_complete.ogg',
+		100,
+		FALSE,
+		extrarange = 5 - SOUND_RANGE,
+		pressure_affected = FALSE,
+		falloff_distance = 1,
+		use_reverb = FALSE,
+	)
 
 	if(successful)
 		to_chat(leaving_clone, span_notice("The pod opens. Your new body has finished maturing."))
