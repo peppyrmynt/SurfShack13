@@ -1555,7 +1555,7 @@
 "aex" = (
 /obj/structure/sign/warning/secure_area/directional/east,
 /turf/open/space/basic,
-/area/space)
+/area/space/nearstation)
 "aey" = (
 /obj/machinery/light/directional/east,
 /obj/machinery/airalarm/directional/east,
@@ -9945,7 +9945,6 @@
 /obj/machinery/door/airlock/security/glass{
 	name = "Gen-Pop Access"
 	},
-/obj/structure/cable,
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -10088,13 +10087,6 @@
 	},
 /turf/open/floor/iron,
 /area/station/commons/dorms)
-"aBN" = (
-/obj/structure/disposalpipe/segment{
-	dir = 6
-	},
-/obj/structure/cable,
-/turf/closed/wall/r_wall,
-/area/station/medical/virology)
 "aBR" = (
 /obj/machinery/light/directional/south,
 /obj/machinery/navbeacon{
@@ -13420,6 +13412,7 @@
 	chamber_id = "engine"
 	},
 /obj/effect/mapping_helpers/airalarm/tlv_no_checks,
+/obj/effect/mapping_helpers/airalarm/unlocked,
 /turf/open/floor/iron/dark,
 /area/station/engineering/supermatter)
 "aKB" = (
@@ -14774,7 +14767,6 @@
 /turf/open/floor/iron/dark,
 /area/station/tcommsat/server)
 "aNY" = (
-/obj/effect/mapping_helpers/airalarm/unlocked,
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
@@ -20333,7 +20325,7 @@
 	pixel_y = -32
 	},
 /turf/open/space/basic,
-/area/space)
+/area/space/nearstation)
 "bcT" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -27420,13 +27412,6 @@
 	},
 /turf/open/space,
 /area/station/asteroid)
-"hlA" = (
-/obj/machinery/power/solar{
-	id = "aftport";
-	name = "Aft-Port Solar Array"
-	},
-/turf/open/space/basic,
-/area/space)
 "hnC" = (
 /obj/machinery/door/airlock/security{
 	name = "Detective's Office"
@@ -28245,8 +28230,10 @@
 /obj/machinery/camera/directional/east{
 	c_tag = "Departures Lounge - Airlocks"
 	},
-/obj/item/kirbyplants/random,
 /obj/effect/turf_decal/bot,
+/obj/machinery/computer/public_announcement{
+	dir = 8
+	},
 /turf/open/floor/iron,
 /area/station/hallway/secondary/exit/departure_lounge)
 "itb" = (
@@ -29733,7 +29720,7 @@
 	dir = 6
 	},
 /turf/open/space/basic,
-/area/space)
+/area/space/nearstation)
 "kJh" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/structure/disposalpipe/segment,
@@ -31332,9 +31319,6 @@
 /obj/effect/turf_decal/tile/brown,
 /turf/open/floor/iron,
 /area/station/hallway/primary/starboard)
-"nhh" = (
-/turf/closed/wall,
-/area/space)
 "nhB" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
@@ -32921,7 +32905,7 @@
 	pixel_x = 32
 	},
 /turf/open/space/basic,
-/area/space)
+/area/space/nearstation)
 "pJc" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /turf/open/floor/iron,
@@ -38879,7 +38863,6 @@
 /obj/machinery/atmospherics/pipe/heat_exchanging/junction/layer2{
 	dir = 4
 	},
-/obj/effect/mapping_helpers/airlock/access/all/science/ordnance,
 /obj/effect/mapping_helpers/airlock/autoname,
 /obj/effect/mapping_helpers/airlock/locked,
 /obj/effect/mapping_helpers/airlock/access/any/science/ordnance,
@@ -50853,7 +50836,7 @@ aaa
 aaa
 aaa
 aaa
-hlA
+aaa
 aaa
 aaa
 aaa
@@ -63773,7 +63756,7 @@ aLn
 aRA
 aSp
 aKV
-aBN
+cLO
 hvC
 aaa
 aaa
@@ -75000,12 +74983,12 @@ aHq
 adQ
 adQ
 adQ
-aHq
-aaa
+adQ
+wPo
 kHE
-aaa
+wPo
 aex
-aaa
+wPo
 aae
 aaa
 aao
@@ -83775,7 +83758,7 @@ aaa
 aaa
 aaf
 aae
-nhh
+aKh
 sDP
 azb
 azb
