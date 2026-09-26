@@ -4298,6 +4298,7 @@
 /obj/item/clothing/head/helmet/press,
 /obj/structure/rack/skeletal,
 /obj/item/radio/intercom/directional/south,
+/obj/item/broadcast_camera,
 /turf/open/floor/wood,
 /area/station/service/library)
 "bCs" = (
@@ -17301,6 +17302,13 @@
 	},
 /turf/open/floor/plating,
 /area/station/medical/storage)
+"fVr" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/machinery/vending/cytopro,
+/turf/open/floor/iron/white,
+/area/station/science/xenobiology)
 "fVz" = (
 /obj/effect/mapping_helpers/airlock/access/all/command/teleporter,
 /obj/machinery/door/airlock/maintenance{
@@ -59289,6 +59297,13 @@
 /obj/structure/filingcabinet,
 /turf/open/floor/iron/grimy,
 /area/station/security/detectives_office)
+"uoN" = (
+/obj/effect/turf_decal/tile/neutral/fourcorners,
+/obj/machinery/computer/warrant{
+	dir = 8
+	},
+/turf/open/floor/iron/dark,
+/area/station/security/courtroom)
 "uoR" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 10
@@ -67075,9 +67090,6 @@
 "xcu" = (
 /obj/effect/turf_decal/trimline/neutral/filled/line{
 	dir = 10
-	},
-/obj/machinery/computer/warrant{
-	dir = 4
 	},
 /turf/open/floor/iron,
 /area/station/hallway/secondary/command)
@@ -95589,7 +95601,7 @@ mdJ
 eUF
 jpQ
 jkM
-jkM
+uoN
 hNB
 skZ
 hHS
@@ -116571,7 +116583,7 @@ qXh
 iWS
 dqN
 eBU
-mMY
+fVr
 wrI
 iPb
 cfi

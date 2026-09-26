@@ -62,6 +62,13 @@ map minisurf
 	votable
 endmap
 
+map omegastation
+	minplayers 0
+	maxplayers 25
+	votable
+endmap
+
+
 # Debug-only maps.
 
 map gateway_test
