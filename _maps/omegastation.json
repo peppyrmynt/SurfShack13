@@ -2,7 +2,7 @@
 	"version": 1,
 	"map_name": "OmegaStation",
 	"map_path": "map_files/omegastation",
-	"map_file": "omegastation.dmm",
+	"map_file": "OmegaStation.dmm",
 	"shuttles": {
 		"cargo": "cargo_kilo",
 		"ferry": "ferry_kilo",
