@@ -2,7 +2,7 @@
 	"version": 1,
 	"map_name": "OmegaStation",
 	"map_path": "custom",
-	"map_file": "OmegaStation.dmm",
+	"map_file": "omegastation.dmm",
 	"shuttles": {
 		"emergency": "emergency_omega",
 		"ferry": "ferry_kilo",
