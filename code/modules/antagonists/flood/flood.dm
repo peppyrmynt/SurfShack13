@@ -330,6 +330,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	attack_verb_continuous = "leaps at"
 	attack_verb_simple = "leap at"
 	attack_sound = 'sound/flood/leap.leap1.ogg'
+	var/next_reanimate_check = 0
 
 /mob/living/simple_animal/hostile/flood/infestor/CanAttack(atom/the_target)
 	if(ishuman(the_target))
@@ -359,13 +360,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		release_swarm()
 	return ..()
 
-/mob/living/simple_animal/hostile/flood/infestor/verb/reanimate_flood()
-	set name = "Reanimate Flood Corpse"
-	set category = "Flood"
-
-	if(stat == DEAD)
-		return
-
+/mob/living/simple_animal/hostile/flood/infestor/proc/reanimate_nearby_flood(show_failure = FALSE)
 	var/mob/living/simple_animal/hostile/flood/corpse
 	for(var/mob/living/simple_animal/hostile/flood/candidate in range(1, src))
 		if(candidate == src || candidate.stat != DEAD || istype(candidate, /mob/living/simple_animal/hostile/flood/infestor))
@@ -374,8 +369,9 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		break
 
 	if(!corpse)
-		to_chat(src, span_warning("There is no viable Flood corpse nearby."))
-		return
+		if(show_failure)
+			to_chat(src, span_warning("There is no viable Flood corpse nearby."))
+		return FALSE
 
 	var/mob/living/simple_animal/hostile/flood/new_form = new corpse.type(corpse.loc)
 	new_form.name = corpse.name
@@ -389,6 +385,22 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	visible_message(span_danger("[src] burrows into [corpse], and the corpse lurches back to life!"))
 	qdel(corpse)
 	qdel(src)
+	return TRUE
+
+/mob/living/simple_animal/hostile/flood/infestor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
+	. = ..()
+	if(!. || stat == DEAD || client || world.time < next_reanimate_check)
+		return
+	next_reanimate_check = world.time + 2 SECONDS
+	reanimate_nearby_flood()
+
+/mob/living/simple_animal/hostile/flood/infestor/verb/reanimate_flood()
+	set name = "Reanimate Flood Corpse"
+	set category = "Flood"
+
+	if(stat == DEAD)
+		return
+	reanimate_nearby_flood(TRUE)
 
 /mob/living/simple_animal/hostile/flood/pure
 	name = "Flood pure form"
