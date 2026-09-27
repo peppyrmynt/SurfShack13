@@ -458,6 +458,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	var/next_reanimate_check = 0
 	var/next_airlock_infest = 0
 	var/mob/living/carbon/human/latched_host
+	var/swarm_size = 1
+	var/max_swarm_size = 6
 
 /mob/living/basic/flood/infestor/Initialize(mapload)
 	. = ..()
@@ -469,6 +471,37 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		UnregisterSignal(latched_host, COMSIG_LIVING_RESIST)
 	latched_host = null
 	return ..()
+
+/mob/living/basic/flood/infestor/examine(mob/user)
+	. = ..()
+	if(swarm_size > 1)
+		. += span_warning("[swarm_size] infection forms are moving together in this swarm.")
+
+/mob/living/basic/flood/infestor/update_overlays()
+	. = ..()
+	if(stat == DEAD)
+		return
+	for(var/i in 2 to min(swarm_size, 4))
+		var/image/extra_form = image(icon = icon, icon_state = "static")
+		extra_form.pixel_x = (i % 2) ? -8 : 8
+		extra_form.pixel_y = (i > 3) ? 6 : -6
+		. += extra_form
+
+/mob/living/basic/flood/infestor/proc/merge_nearby_infestors()
+	if(client || mind || latched_host || swarm_size >= max_swarm_size)
+		return
+	for(var/mob/living/basic/flood/infestor/other in range(1, src))
+		if(other == src || other.stat == DEAD || other.client || other.mind || other.latched_host || swarm_size + other.swarm_size > max_swarm_size)
+			continue
+		var/added_forms = other.swarm_size
+		maxHealth += other.maxHealth
+		health += other.health
+		melee_damage_upper += added_forms
+		swarm_size += added_forms
+		name = "Flood infection form swarm"
+		qdel(other)
+		update_appearance(UPDATE_OVERLAYS)
+		return
 
 /mob/living/basic/flood/infestor/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	if(stat == DEAD || latched_host || !ishuman(attacked_target))
@@ -593,6 +626,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(!. || stat == DEAD || client || latched_host || world.time < next_reanimate_check)
 		return
 	next_reanimate_check = world.time + 2 SECONDS
+	merge_nearby_infestors()
 	if(reanimate_nearby_flood())
 		return
 	infest_nearby_airlock()
