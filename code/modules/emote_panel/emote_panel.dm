@@ -84,7 +84,7 @@
 		custom_check = CALLBACK(src, PROC_REF(emote_wheel_available), opening_client),
 		tooltips = TRUE,
 		autopick_single_option = FALSE,
-		entry_animation = FALSE,
+		entry_animation = TRUE,
 		menu_type = /datum/radial_menu/emote_wheel,
 	)
 	if(selection && emote_wheel_available(opening_client) && (selection in options))
@@ -107,6 +107,7 @@
 	element.maptext = "<div style='text-align:center;font-size:7px;color:white;background-color:#202020'>[html_encode(label)]</div>"
 
 /// Explicit shortcuts also work while the chat input is focused (classic/non-hotkey mode).
+/client/var/next_emote_wheel_press = 0
 /client/var/list/emote_wheel_macros
 
 /client/proc/update_emote_wheel_macros(datum/preferences/current_preferences)
@@ -125,9 +126,9 @@
 	set name = "open-emote-wheel"
 	set hidden = TRUE
 	set instant = TRUE
-	var/datum/keybinding/binding = GLOB.keybindings_by_name["emote_wheel"]
+	var/datum/keybinding/living/emote_wheel/binding = GLOB.keybindings_by_name["emote_wheel"]
 	if(binding?.can_use(src))
-		binding.down(src)
+		binding.down(src, from_macro = TRUE)
 
 GLOBAL_LIST_EMPTY(emote_wheel_choices)
 GLOBAL_LIST_EMPTY(emote_wheel_emotes)

@@ -186,6 +186,11 @@
 
 	// Approximate text height
 	var/complete_text = "<span style='color: [tgt_color]'><span class='center [extra_classes.Join(" ")]'>[owner.say_emphasis(text)]</span></span>"
+	if("emote" in extra_classes)
+		// Emote captions must remain readable regardless of the speaker's generated colour.
+		// Put the style inside the classes so italics/emote CSS cannot override it.
+		complete_text = "<span class='center [extra_classes.Join(" ")]'><span style='color:#000000;-dm-text-outline:1px #FFFFFF'>[owner.say_emphasis(text)]</span></span>"
+
 
 	var/mheight
 	WXH_TO_HEIGHT(owned_by.MeasureText(complete_text, null, CHAT_MESSAGE_WIDTH), mheight)

@@ -56,10 +56,14 @@ bubble/audio, immediate repeat selection respecting the 60-second cooldown,
 non-human eligibility, and cancellation when changing controlled mob.
 
 The wheel thumbnails are generated during startup and reused on each opening.
-Opening scans only the cached wheel entries, with no icon scaling/cropping or
-staggered entry animations. Wheel HUD objects are deleted when the menu closes.
+Opening scans only the cached wheel entries, with no icon scaling/cropping. The original staggered opening animation is retained. Wheel HUD objects are deleted when the menu closes.
 Explicit macros are refreshed on login and keybinding changes, so the configured
 wheel shortcut also works when chat input is focused, without toggling hotkeys.
 
 Check first-open and repeated-open game stutter in-game, and test Alt+E directly
 after login in both input modes, plus remapping/unbinding the shortcut.
+
+The explicit macro owns the wheel shortcut so the generic Any-key handler cannot
+immediately toggle it closed. A short debounce also ignores duplicate events.
+Emote runechat captions use black text with a white outline instead of the
+speaker's generated colour; normal spoken dialogue keeps its existing colours.
