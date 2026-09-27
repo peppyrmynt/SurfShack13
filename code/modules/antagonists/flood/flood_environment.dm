@@ -12,10 +12,42 @@
 	density = FALSE
 	max_integrity = 400
 	resistance_flags = ACID_PROOF
+	var/next_spawn = 0
+	var/spawn_delay = 60 SECONDS
+	var/max_nearby_flood = 6
 
 /obj/structure/flood_biomass/Initialize(mapload)
 	. = ..()
 	icon_state = "spore[rand(1, 8)]"
+	START_PROCESSING(SSobj, src)
+
+/obj/structure/flood_biomass/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	return ..()
+
+/obj/structure/flood_biomass/process()
+	if(world.time < next_spawn)
+		return
+	next_spawn = world.time + spawn_delay
+
+	var/nearby_flood = 0
+	for(var/mob/living/simple_animal/hostile/flood/flood_form in range(7, src))
+		if(flood_form.stat != DEAD)
+			nearby_flood++
+			if(nearby_flood >= max_nearby_flood)
+				return
+
+	var/turf/spawn_turf = get_turf(src)
+	if(!spawn_turf)
+		return
+
+	var/spawn_type = pick(
+		/mob/living/simple_animal/hostile/flood/infestor,
+		/mob/living/simple_animal/hostile/flood/combat_form/human,
+		/mob/living/simple_animal/hostile/flood/carrier,
+	)
+	var/mob/living/simple_animal/hostile/flood/new_flood = new spawn_type(spawn_turf)
+	visible_message(span_warning("[src] writhes and produces [new_flood]."))
 
 /obj/structure/flood_biomass/examine(mob/user)
 	. = ..()
@@ -32,6 +64,8 @@
 	icon = 'icons/mob/flood/flood_bio_med.dmi'
 	icon_state = "1"
 	max_integrity = 600
+	spawn_delay = 50 SECONDS
+	max_nearby_flood = 10
 
 /obj/structure/flood_biomass/medium/Initialize(mapload)
 	. = ..()
@@ -42,6 +76,8 @@
 	icon = 'icons/mob/flood/flood_bio_large.dmi'
 	icon_state = "1"
 	max_integrity = 1500
+	spawn_delay = 40 SECONDS
+	max_nearby_flood = 15
 
 /obj/structure/flood_biomass/large/Initialize(mapload)
 	. = ..()
@@ -52,6 +88,8 @@
 	icon = 'icons/mob/flood/flood_bio.dmi'
 	icon_state = "pulsating"
 	max_integrity = 250
+	spawn_delay = 90 SECONDS
+	max_nearby_flood = 3
 
 /obj/structure/flood_growth
 	name = "Flood growth"
