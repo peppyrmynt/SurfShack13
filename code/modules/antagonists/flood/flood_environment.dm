@@ -244,6 +244,26 @@
 		new /mob/living/basic/flood/infestor(spawn_turf)
 	qdel(src)
 
+/// A map-placed ghost entry point for a human Flood combat form.
+/obj/effect/mob_spawn/ghost_role/flood
+	name = "Flood biomass cocoon"
+	desc = "A humanoid shape twists within this pulsating mass."
+	icon = 'icons/mob/flood/flood_bio.dmi'
+	icon_state = "pulsating"
+	density = FALSE
+	mob_type = /mob/living/basic/flood/combat_form/human
+	role_ban = ROLE_FLOOD
+	prompt_name = "Flood combat form"
+	you_are_text = "You are a Flood combat form."
+	flavour_text = "Spread the infestation with infection forms. Your human hands can use ordinary station equipment and weapons."
+	important_text = "Only infection forms that remain latched to a vulnerable host can convert them."
+
+/obj/effect/mob_spawn/ghost_role/flood/special(mob/living/spawned_mob, mob/mob_possessor)
+	. = ..()
+	if(spawned_mob.mind)
+		spawned_mob.mind.add_antag_datum(/datum/antagonist/flood)
+		spawned_mob.mind.special_role = ROLE_FLOOD
+
 /obj/structure/flood_wall_growth
 	name = "Flood wall growth"
 	desc = "Thick Flood biomass clings to the surrounding structure."
