@@ -50,7 +50,7 @@
 				shake_camera(victim, 20, 1)
 				gibbed = TRUE
 				continue
-			visible_message(span_danger("[src] crushes [victim] like an emagged recycler!"))
+			visible_message(span_danger("[src] crushes [victim] like a garden shredder!"))
 			playsound(loc, hit_sound, 50, TRUE)
 			if(iscarbon(victim) && victim.stat < UNCONSCIOUS)
 				victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
