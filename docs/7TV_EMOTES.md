@@ -3,7 +3,7 @@
 All `/datum/emote/living/seventv` subtypes inherit a side speech bubble inspired by
 `laugh_k`: a click-through image attached to the speaker, a short pop-in, and a
 shrink-out followed by removal from the original viewers and deletion.
-The frame is drawn once and cached. Each emote composites its artwork over that
+The frame is extracted from the existing `laugh_king.dmi` sprite and cached. Each emote composites its artwork over that
 frame once, preserving DMI animation frames and timing in a single cached icon. It fits within 32 by 32 pixels without changing
 its aspect ratio. Nearby sighted viewers, including the speaker, receive it.
 
@@ -54,3 +54,12 @@ it works.
 Test Alt+E opening/closing, all picture/command labels, selection and its normal
 bubble/audio, immediate repeat selection respecting the 60-second cooldown,
 non-human eligibility, and cancellation when changing controlled mob.
+
+The wheel thumbnails are generated during startup and reused on each opening.
+Opening scans only the cached wheel entries, with no icon scaling/cropping or
+staggered entry animations. Wheel HUD objects are deleted when the menu closes.
+Explicit macros are refreshed on login and keybinding changes, so the configured
+wheel shortcut also works when chat input is focused, without toggling hotkeys.
+
+Check first-open and repeated-open game stutter in-game, and test Alt+E directly
+after login in both input modes, plus remapping/unbinding the shortcut.

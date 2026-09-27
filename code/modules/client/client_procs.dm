@@ -1012,6 +1012,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 						winset(src, "default-[REF(key)]", "parent=default;name=[key];command=[asay]")
 					else
 						winset(src, "default-[REF(key)]", "parent=default;name=[key];command=")
+	update_emote_wheel_macros(D)
 	calculate_move_dir()
 
 /client/proc/change_view(new_size)

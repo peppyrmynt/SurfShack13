@@ -300,27 +300,21 @@
 		bubble_artwork.Blend(get_bubble_icon(), ICON_UNDERLAY)
 	return bubble_artwork
 
-/// Cached rounded speech frame inspired by laugh_k, with a thin border and light-grey fill.
+/// Reuse the original king-laugh frame, replacing only its character-filled center.
 /datum/emote/living/seventv/proc/get_bubble_icon()
 	var/static/icon/bubble_icon
 	if(!bubble_icon)
-		bubble_icon = icon('icons/mob/human/aprilfools_emotes.dmi', "clueless")
-		bubble_icon.DrawBox(null, 1, 1, 32, 32)
-		bubble_icon.Crop(1, 1, 56, 36)
-		// Rounded 44-by-36 body. Row insets keep the outline one pixel thick.
-		var/list/corner_insets = list(5, 3, 2, 1, 1)
-		for(var/row in 1 to 36)
-			var/edge_distance = min(row, 37 - row)
-			var/inset = edge_distance <= length(corner_insets) ? corner_insets[edge_distance] : 0
-			bubble_icon.DrawBox("#303030", 13 + inset, row, 56 - inset, row)
-			if(row > 1 && row < 36)
-				bubble_icon.DrawBox("#EEEEEE", 14 + inset, row, 55 - inset, row)
-		// A longer, shallow pointer, like the king's bubble.
-		for(var/column in 1 to 13)
-			var/lower_edge = 24 - round((column - 1) * 0.7)
-			bubble_icon.DrawBox("#303030", column, lower_edge, column, 24)
-			if(lower_edge < 23)
-				bubble_icon.DrawBox("#EEEEEE", column, lower_edge + 1, column, 23)
+		bubble_icon = icon('icons/hud/laugh_king.dmi', frame = 1)
+		// Crop off the crown and transparent margins; retain the original pointer and corners.
+		bubble_icon.Crop(30, 13, 135, 79)
+		// This clean column contains the original top border, white fill and bottom border.
+		// Stretch it across the king, preserving the existing sprite's outline and shading.
+		var/icon/empty_center = icon('icons/hud/laugh_king.dmi', frame = 1)
+		empty_center.Crop(121, 13, 121, 79)
+		empty_center.Scale(60, 67)
+		bubble_icon.DrawBox(null, 32, 1, 91, 67)
+		bubble_icon.Blend(empty_center, ICON_OVERLAY, 32, 1)
+		bubble_icon.Scale(56, 36)
 	return bubble_icon
 
 /datum/emote/living/seventv/proc/fade_bubble(image/bubble, list/recipients)

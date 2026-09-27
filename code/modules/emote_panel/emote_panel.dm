@@ -72,29 +72,10 @@
 		return
 	var/client/opening_client = client
 	var/list/options = list()
-	var/static/list/thumbnail_cache = list()
-	for(var/key in GLOB.emote_list)
-		for(var/datum/emote/emote as anything in GLOB.emote_list[key])
-			if(!istype(emote, /datum/emote/living/seventv) && !istype(emote, /datum/emote/living/carbon/human/laugh_king))
-				continue
-			if(options[emote.key] || !emote.can_run_emote(src, status_check = FALSE, intentional = TRUE))
-				continue
-			if(!thumbnail_cache[emote.type])
-				var/icon/thumbnail
-				if(istype(emote, /datum/emote/living/seventv))
-					var/datum/emote/living/seventv/image_emote = emote
-					thumbnail = icon(image_emote.emote_icon, image_emote.emote_icon_state, frame = 1)
-				else
-					thumbnail = icon('icons/hud/laugh_king.dmi', frame = 1)
-				var/scale = min(32 / thumbnail.Width(), 32 / thumbnail.Height())
-				var/width = max(1, round(thumbnail.Width() * scale))
-				var/height = max(1, round(thumbnail.Height() * scale))
-				thumbnail.Scale(width, height)
-				var/offset_x = round((32 - width) / 2)
-				var/offset_y = round((32 - height) / 2)
-				thumbnail.Crop(1 - offset_x, 1 - offset_y, 32 - offset_x, 32 - offset_y)
-				thumbnail_cache[emote.type] = thumbnail
-			options[emote.key] = image(thumbnail_cache[emote.type])
+	for(var/key in GLOB.emote_wheel_choices)
+		var/datum/emote/emote = GLOB.emote_wheel_emotes[key]
+		if(emote.can_run_emote(src, status_check = FALSE, intentional = TRUE))
+			options[key] = GLOB.emote_wheel_choices[key]
 
 	var/selection = show_radial_menu(
 		src, src, options,
@@ -103,10 +84,9 @@
 		custom_check = CALLBACK(src, PROC_REF(emote_wheel_available), opening_client),
 		tooltips = TRUE,
 		autopick_single_option = FALSE,
+		entry_animation = FALSE,
 		menu_type = /datum/radial_menu/emote_wheel,
 	)
-	for(var/key in options)
-		qdel(options[key])
 	if(selection && emote_wheel_available(opening_client) && (selection in options))
 		emote(selection, intentional = TRUE)
 
@@ -125,3 +105,60 @@
 	element.maptext_y = -14
 	var/label = element.next_page ? "Next page" : "*[element.name]"
 	element.maptext = "<div style='text-align:center;font-size:7px;color:white;background-color:#202020'>[html_encode(label)]</div>"
+
+/// Explicit shortcuts also work while the chat input is focused (classic/non-hotkey mode).
+/client/var/list/emote_wheel_macros
+
+/client/proc/update_emote_wheel_macros(datum/preferences/current_preferences)
+	for(var/macro_id in emote_wheel_macros)
+		winset(src, macro_id, "parent=null")
+	emote_wheel_macros = list()
+	for(var/key in current_preferences.key_bindings["emote_wheel"])
+		if(key == "Unbound")
+			continue
+		var/macro_key = replacetext(replacetext(replacetext(key, "Alt", "Alt+"), "Ctrl", "Ctrl+"), "Shift", "Shift+")
+		var/macro_id = "emote-wheel-[length(emote_wheel_macros) + 1]"
+		winset(src, macro_id, "parent=default;name=[macro_key];command=open-emote-wheel")
+		emote_wheel_macros += macro_id
+
+/client/verb/open_emote_wheel()
+	set name = "open-emote-wheel"
+	set hidden = TRUE
+	set instant = TRUE
+	var/datum/keybinding/binding = GLOB.keybindings_by_name["emote_wheel"]
+	if(binding?.can_use(src))
+		binding.down(src)
+
+GLOBAL_LIST_EMPTY(emote_wheel_choices)
+GLOBAL_LIST_EMPTY(emote_wheel_emotes)
+
+/// Generate and cache the small static thumbnails before players open the wheel.
+/proc/init_emote_wheel_choices()
+	for(var/key in GLOB.emote_list)
+		for(var/datum/emote/emote as anything in GLOB.emote_list[key])
+			if(!istype(emote, /datum/emote/living/seventv) && !istype(emote, /datum/emote/living/carbon/human/laugh_king))
+				continue
+			if(GLOB.emote_wheel_choices[emote.key])
+				continue
+			var/icon/thumbnail
+			if(istype(emote, /datum/emote/living/seventv))
+				var/datum/emote/living/seventv/image_emote = emote
+				thumbnail = icon(image_emote.emote_icon, image_emote.emote_icon_state, frame = 1)
+			else
+				thumbnail = icon('icons/hud/laugh_king.dmi', frame = 1)
+			var/scale = min(32 / thumbnail.Width(), 32 / thumbnail.Height())
+			var/width = max(1, round(thumbnail.Width() * scale))
+			var/height = max(1, round(thumbnail.Height() * scale))
+			thumbnail.Scale(width, height)
+			var/offset_x = round((32 - width) / 2)
+			var/offset_y = round((32 - height) / 2)
+			thumbnail.Crop(1 - offset_x, 1 - offset_y, 32 - offset_x, 32 - offset_y)
+			GLOB.emote_wheel_choices[emote.key] = image(thumbnail)
+			GLOB.emote_wheel_emotes[emote.key] = emote
+
+/datum/radial_menu/emote_wheel/Destroy()
+	hide()
+	QDEL_LIST(elements)
+	QDEL_NULL(close_button)
+	QDEL_NULL(menu_holder)
+	return ..()
