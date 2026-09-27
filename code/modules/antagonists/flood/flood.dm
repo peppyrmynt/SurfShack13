@@ -121,7 +121,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	melee_damage_lower = 25
 	melee_damage_upper = 35
 
-/mob/living/simple_animal/hostile/flood/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/flood/combat_form/AttackingTarget(atom/attacked_target)
 	. = ..()
 	if(!. || !ishuman(attacked_target))
 		return
@@ -163,7 +163,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	next_infection = world.time + FLOOD_INFECTION_COOLDOWN
 	return convert_human(victim, "[src] tears into [victim], Flood biomass spreading through their body!")
 
-/mob/living/simple_animal/hostile/flood/verb/create_infestor()
+/mob/living/simple_animal/hostile/flood/combat_form/verb/create_infestor()
 	set name = "Create Infection Form"
 	set category = "Flood"
 
@@ -177,7 +177,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	new /mob/living/simple_animal/hostile/flood/infestor(loc)
 	visible_message(span_warning("[src]'s flesh tears open and produces a Flood infection form."))
 
-/mob/living/simple_animal/hostile/flood/verb/evolve()
+/mob/living/simple_animal/hostile/flood/combat_form/verb/evolve()
 	set name = "Evolve Flood Form"
 	set category = "Flood"
 
