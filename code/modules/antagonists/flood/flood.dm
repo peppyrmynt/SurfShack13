@@ -102,12 +102,22 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 /// original implementation and gives infection/evolution code a stable target.
 /mob/living/simple_animal/hostile/flood/death(gibbed)
 	if(!gibbed)
-		playsound(loc, pick(
-			'sound/flood/death.death2.ogg',
-			'sound/flood/death.death3.ogg',
-			'sound/flood/death.death4.ogg',
-			'sound/flood/death.death5.ogg',
-		), 50, TRUE)
+		var/death_sound
+		if(istype(src, /mob/living/simple_animal/hostile/flood/infestor))
+			death_sound = pick(
+				'sound/flood/infector_die1.ogg',
+				'sound/flood/infector_die2.ogg',
+				'sound/flood/infector_die3.ogg',
+			)
+		else if(!istype(src, /mob/living/simple_animal/hostile/flood/carrier))
+			death_sound = pick(
+				'sound/flood/death.death2.ogg',
+				'sound/flood/death.death3.ogg',
+				'sound/flood/death.death4.ogg',
+				'sound/flood/death.death5.ogg',
+			)
+		if(death_sound)
+			playsound(loc, death_sound, 50, TRUE)
 	return ..()
 
 /mob/living/simple_animal/hostile/flood/combat_form
@@ -250,6 +260,13 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		new /mob/living/simple_animal/hostile/flood/infestor(spawn_turf)
 	visible_message(span_warning("[src] ruptures, releasing a swarm of Flood infection forms!"))
 
+/mob/living/simple_animal/hostile/flood/carrier/AttackingTarget(atom/attacked_target)
+	if(!attacked_target || !Adjacent(attacked_target))
+		return FALSE
+	release_swarm()
+	qdel(src)
+	return TRUE
+
 /mob/living/simple_animal/hostile/flood/carrier/verb/release_infection_forms()
 	set name = "Release Infection Forms"
 	set category = "Flood"
@@ -272,6 +289,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	atmos_requirements = null
 	maxHealth = 5
 	health = 5
+	move_to_delay = 5
 	melee_damage_lower = 1
 	melee_damage_upper = 5
 	pass_flags = PASSMOB
