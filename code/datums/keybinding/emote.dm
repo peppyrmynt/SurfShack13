@@ -31,5 +31,5 @@
 	if(.)
 		return
 	var/mob/living/living_user = user.mob
-	INVOKE_ASYNC(living_user, TYPE_PROC_REF(/mob/living, emote_wheel))
+	INVOKE_ASYNC(living_user, TYPE_VERB_REF(/mob/living, emote_wheel))
 	return TRUE
