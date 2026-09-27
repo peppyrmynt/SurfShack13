@@ -126,6 +126,26 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	damage_coeff = list(BRUTE = 1, BURN = 1.5, TOX = 1, STAMINA = 0, OXY = 1)
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
 	var/next_evolution = 0
+	var/next_idle_sound = 0
+
+/mob/living/basic/flood/Initialize(mapload)
+	. = ..()
+	attacked_sound = pick(
+		'sound/flood/pain.pain1.ogg',
+		'sound/flood/pain.pain2.ogg',
+		'sound/flood/pain.pain5.ogg',
+	)
+	next_idle_sound = world.time + rand(300, 600)
+
+/mob/living/basic/flood/melee_attack(atom/target, list/modifiers, ignore_cooldown)
+	if(!istype(src, /mob/living/basic/flood/infestor))
+		attack_sound = pick(
+			'sound/flood/melee.melee1.ogg',
+			'sound/flood/melee.melee2.ogg',
+			'sound/flood/melee.melee5.ogg',
+			'sound/flood/melee.melee7.ogg',
+		)
+	return ..()
 
 /mob/living/basic/flood/verb/flood_chorus()
 	set name = "Flood Chorus"
@@ -211,6 +231,14 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	. = ..()
 	if(stat != DEAD && health < maxHealth)
 		adjust_health(-seconds_per_tick)
+	if(stat != DEAD && world.time >= next_idle_sound)
+		next_idle_sound = world.time + rand(450, 750)
+		if(prob(40))
+			playsound(loc, pick(
+				'sound/flood/flood_idle_noncombat.idle1.ogg',
+				'sound/flood/flood_idle_noncombat.idle2.ogg',
+				'sound/flood/flood_idle_noncombat.idle3.ogg',
+			), 25, TRUE)
 
 /mob/living/basic/flood/combat_form
 	name = "Flood combat form"
