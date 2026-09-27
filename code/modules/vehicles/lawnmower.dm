@@ -43,11 +43,11 @@
 			if(iszombie(victim))
 				visible_message(span_danger("[src] crushes [victim] like an emagged recycler!"))
 				playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
-				if(iscarbon(victim) && !IS_UNCONSCIOUS_OR_CRIT(victim))
+				if(iscarbon(victim) && victim.stat < UNCONSCIOUS)
 					victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
 				add_mob_blood(victim)
 				victim.Unconscious(100)
-				victim.adjust_brute_loss(1000)
+				victim.adjustBruteLoss(1000)
 				gibbed = TRUE
 				continue
 			visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
