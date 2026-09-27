@@ -26,6 +26,14 @@
 	if(isliving(bumped_thing))
 		var/mob/living/victim = bumped_thing
 		victim.adjustBruteLoss(25)
+		add_mob_blood(victim)
+		var/turf/below_us = get_turf(src)
+		below_us.add_mob_blood(victim)
+		AddComponent(/datum/component/blood_walk, \\
+			blood_type = /obj/effect/decal/cleanable/blood/tracks, \\
+			target_dir_change = TRUE, \\
+			transfer_blood_dna = TRUE, \\
+			max_blood = 4)
 		var/atom/new_loc = get_edge_target_turf(victim, get_dir(src, get_step_away(victim, src)))
 		victim.throw_at(new_loc, 4, 1)
 	return ..()
@@ -47,12 +55,28 @@
 			if(iszombie(victim) || is_species(victim, /datum/species/human/krokodil_addict))
 				visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
 				playsound(loc, hit_sound, 50, TRUE)
+				add_mob_blood(victim)
+				var/turf/below_us = get_turf(src)
+				below_us.add_mob_blood(victim)
+				AddComponent(/datum/component/blood_walk, \\
+					blood_type = /obj/effect/decal/cleanable/blood/tracks, \\
+					target_dir_change = TRUE, \\
+					transfer_blood_dna = TRUE, \\
+					max_blood = 4)
 				victim.gib()
 				shake_camera(victim, 20, 1)
 				gibbed = TRUE
 				continue
 			visible_message(span_danger("[src] crushes [victim] like a garden shredder!"))
 			playsound(loc, hit_sound, 50, TRUE)
+			add_mob_blood(victim)
+			var/turf/below_us = get_turf(src)
+			below_us.add_mob_blood(victim)
+			AddComponent(/datum/component/blood_walk, \\
+				blood_type = /obj/effect/decal/cleanable/blood/tracks, \\
+				target_dir_change = TRUE, \\
+				transfer_blood_dna = TRUE, \\
+				max_blood = 4)
 			if(iscarbon(victim) && victim.stat < UNCONSCIOUS)
 				victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
 			add_mob_blood(victim)
