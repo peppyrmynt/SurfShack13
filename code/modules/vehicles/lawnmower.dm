@@ -6,6 +6,7 @@
 	var/emagged = FALSE
 	var/list/drive_sounds = list('sound/vehicles/mowermove1.ogg', 'sound/vehicles/mowermove2.ogg')
 	var/list/gib_sounds = list('sound/vehicles/mowermovesquish.ogg')
+	var/hit_sound = 'sound/weapons/chainsaw.ogg'
 
 /obj/vehicle/ridden/lawnmower/Initialize(mapload)
 	. = ..()
@@ -47,7 +48,7 @@
 				gibbed = TRUE
 				continue
 			visible_message(span_danger("[src] crushes [victim] like an emagged recycler!"))
-			playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
+			playsound(loc, hit_sound, 50, TRUE)
 			if(iscarbon(victim) && victim.stat < UNCONSCIOUS)
 				victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
 			add_mob_blood(victim)
