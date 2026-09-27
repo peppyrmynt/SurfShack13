@@ -274,21 +274,18 @@
 
 /obj/structure/flood_window
 	name = "Flood biomass membrane"
-	desc = "A translucent sheet of hardened Flood tissue."
+	desc = "A translucent mesh of Flood tissue stretched across the passage."
 	icon = 'icons/mob/flood/flood_window.dmi'
 	icon_state = "flood_window"
 	anchored = TRUE
 	density = TRUE
-	max_integrity = 200
-	can_atmos_pass = ATMOS_PASS_DENSITY
+	max_integrity = 80
+	can_atmos_pass = ATMOS_PASS_YES
 
-/obj/structure/flood_window/Initialize(mapload)
+/obj/structure/flood_window/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()
-	air_update_turf(TRUE, TRUE)
-
-/obj/structure/flood_window/Destroy()
-	air_update_turf(TRUE, FALSE)
-	return ..()
+	if(!. && isprojectile(mover))
+		return prob(30)
 
 /mob/living/basic/flood/constructor
 	name = "Flood constructor form"
