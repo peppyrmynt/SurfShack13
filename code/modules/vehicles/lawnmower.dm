@@ -1,4 +1,3 @@
-
 /obj/vehicle/ridden/lawnmower
 	name = "lawn mower"
 	desc = "Equipped with reliable safeties to prevent <i>accidents</i> in the workplace."
@@ -23,7 +22,7 @@
 	emagged = TRUE
 
 /obj/vehicle/ridden/lawnmower/Bump(atom/bumped_thing)
-	if(emagged && isliving(bumped_thing))
+	if(isliving(bumped_thing))
 		var/mob/living/victim = bumped_thing
 		victim.adjustBruteLoss(25)
 		var/atom/new_loc = get_edge_target_turf(victim, get_dir(src, get_step_away(victim, src)))
@@ -37,25 +36,24 @@
 		rider = buckled_mobs[1]
 
 	var/gibbed = FALSE
-	if(emagged)
-		for(var/mob/living/carbon/human/victim in loc)
-			if(victim == rider)
-				continue
-			if(victim.body_position == LYING_DOWN)
-				if(iszombie(victim))
-					visible_message(span_danger("[src] crushes [victim] like an emagged recycler!"))
-					playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
-					if(iscarbon(victim) && !IS_UNCONSCIOUS_OR_CRIT(victim))
-						victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
-					add_mob_blood(victim)
-					victim.Unconscious(100)
-					victim.adjust_brute_loss(1000)
-					gibbed = TRUE
-					continue
-				visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
-				victim.gib()
-				shake_camera(victim, 20, 1)
+	for(var/mob/living/carbon/human/victim in loc)
+		if(victim == rider)
+			continue
+		if(victim.body_position == LYING_DOWN)
+			if(iszombie(victim))
+				visible_message(span_danger("[src] crushes [victim] like an emagged recycler!"))
+				playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
+				if(iscarbon(victim) && !IS_UNCONSCIOUS_OR_CRIT(victim))
+					victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
+				add_mob_blood(victim)
+				victim.Unconscious(100)
+				victim.adjust_brute_loss(1000)
 				gibbed = TRUE
+				continue
+			visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
+			victim.gib()
+			shake_camera(victim, 20, 1)
+			gibbed = TRUE
 
 	if(gibbed)
 		if(rider)
