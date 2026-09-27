@@ -36,7 +36,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	return ..()
 
 /datum/antagonist/flood/greet()
-	to_chat(owner.current, span_bigdanger("You are part of the Flood."))
+	to_chat(owner.current, span_danger("You are part of the Flood."))
 	to_chat(owner.current, span_notice("Spread the infestation by weakening and converting human hosts."))
 	to_chat(owner.current, span_notice("Combat forms can create infection forms, tear apart welded airlocks, and evolve into specialized Flood forms."))
 	to_chat(owner.current, span_notice("Infection forms can convert vulnerable humans and reanimate fallen Flood forms."))
