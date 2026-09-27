@@ -228,7 +228,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 	var/mob/living/simple_animal/hostile/flood/new_form
 	if(prob(50))
-		new_form = new /mob/living/simple_animal/hostile/flood/pure(loc)
+		new_form = new /mob/living/simple_animal/hostile/flood/combat_form/juggernaut(loc)
 	else
 		new_form = new /mob/living/simple_animal/hostile/flood/carrier(loc)
 
@@ -361,9 +361,9 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	return ..()
 
 /mob/living/simple_animal/hostile/flood/infestor/proc/reanimate_nearby_flood(show_failure = FALSE)
-	var/mob/living/simple_animal/hostile/flood/corpse
-	for(var/mob/living/simple_animal/hostile/flood/candidate in range(1, src))
-		if(candidate == src || candidate.stat != DEAD || istype(candidate, /mob/living/simple_animal/hostile/flood/infestor))
+	var/mob/living/simple_animal/hostile/flood/combat_form/corpse
+	for(var/mob/living/simple_animal/hostile/flood/combat_form/candidate in range(2, src))
+		if(candidate.stat != DEAD)
 			continue
 		corpse = candidate
 		break
@@ -401,18 +401,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(stat == DEAD)
 		return
 	reanimate_nearby_flood(TRUE)
-
-/mob/living/simple_animal/hostile/flood/pure
-	name = "Flood pure form"
-	desc = "A heavily mutated Flood form built for direct combat."
-	icon = 'icons/mob/flood/floodjuggernaut.dmi'
-	icon_state = "movement state"
-	icon_dead = "death state"
-	maxHealth = 350
-	health = 350
-	melee_damage_lower = 35
-	melee_damage_upper = 55
-	obj_damage = 100
 
 /datum/dynamic_ruleset/midround/from_ghosts/flood
 	name = "Flood Outbreak"
