@@ -15,6 +15,7 @@
 	var/next_spawn = 0
 	var/spawn_delay = 60 SECONDS
 	var/max_nearby_flood = 6
+	var/max_nearby_growth = 12
 	var/next_spread = 0
 	var/spread_delay = 30 SECONDS
 
@@ -56,6 +57,12 @@
 	visible_message(span_warning("[src] writhes and produces [new_flood]."))
 
 /obj/structure/flood_biomass/proc/spread_growth()
+	var/nearby_growth = 0
+	for(var/obj/structure/flood_growth/existing_growth in range(4, src))
+		nearby_growth++
+		if(nearby_growth >= max_nearby_growth)
+			return
+
 	var/list/valid_turfs = list()
 	for(var/turf/open/candidate in range(1, src))
 		if(candidate == loc)
@@ -87,6 +94,7 @@
 	max_integrity = 600
 	spawn_delay = 50 SECONDS
 	max_nearby_flood = 10
+	max_nearby_growth = 20
 	spread_delay = 20 SECONDS
 
 /obj/structure/flood_biomass/medium/Initialize(mapload)
@@ -100,6 +108,7 @@
 	max_integrity = 1500
 	spawn_delay = 40 SECONDS
 	max_nearby_flood = 15
+	max_nearby_growth = 32
 	spread_delay = 10 SECONDS
 
 /obj/structure/flood_biomass/large/Initialize(mapload)
