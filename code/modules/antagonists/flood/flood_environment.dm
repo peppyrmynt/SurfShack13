@@ -264,6 +264,8 @@
 	health = 150
 	melee_damage_lower = 5
 	melee_damage_upper = 10
+	var/next_constructor = 0
+	var/next_direct_growth = 0
 
 /mob/living/simple_animal/hostile/flood/overseer/verb/create_constructor()
 	set name = "Create Constructor Form"
@@ -271,5 +273,34 @@
 
 	if(stat == DEAD)
 		return
+	if(world.time < next_constructor)
+		to_chat(src, span_warning("Your biomass is not ready to form another constructor."))
+		return
+	next_constructor = world.time + 30 SECONDS
 	new /mob/living/simple_animal/hostile/flood/constructor(loc)
 	visible_message(span_warning("[src] buds off a new Flood constructor form."))
+
+/mob/living/simple_animal/hostile/flood/overseer/verb/direct_growth()
+	set name = "Direct Infestation Growth"
+	set category = "Flood"
+
+	if(stat == DEAD)
+		return
+	if(world.time < next_direct_growth)
+		to_chat(src, span_warning("The nearby biomass has not recovered yet."))
+		return
+
+	next_direct_growth = world.time + 20 SECONDS
+	var/created = 0
+	for(var/turf/open/target_turf in range(1, src))
+		if(locate(/obj/structure/flood_growth) in target_turf)
+			continue
+		new /obj/structure/flood_growth(target_turf)
+		created++
+		if(created >= 3)
+			break
+
+	if(created)
+		visible_message(span_warning("Flood growth surges outward under [src]'s direction."))
+	else
+		to_chat(src, span_warning("There is nowhere nearby for the infestation to spread."))
