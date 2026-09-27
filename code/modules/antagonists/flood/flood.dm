@@ -39,7 +39,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	to_chat(owner.current, span_danger("You are part of the Flood."))
 	to_chat(owner.current, span_notice("Spread the infestation by weakening and converting human hosts."))
 	to_chat(owner.current, span_notice("Combat forms can create infection forms, tear apart welded airlocks, and evolve into specialized Flood forms."))
-	to_chat(owner.current, span_notice("Infection forms can convert vulnerable humans and reanimate fallen Flood forms."))
+	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
+	to_chat(owner.current, span_notice("Infection forms can convert vulnerable or dead humans and reanimate fallen Flood forms."))
 
 /datum/antagonist/flood/create_team(datum/team/flood/new_team)
 	if(!new_team)
@@ -115,14 +116,14 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
 	blackboard = list(
 		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic/flood_infestor,
-		BB_TARGET_MINIMUM_STAT = HARD_CRIT,
+		BB_TARGET_MINIMUM_STAT = DEAD,
 	)
 
 /datum/targeting_strategy/basic/flood_infestor/can_attack(mob/living/living_mob, atom/the_target, vision_range)
 	if(!ishuman(the_target))
 		return FALSE
 	var/mob/living/carbon/human/host = the_target
-	if(host.stat == DEAD || IS_FLOOD(host))
+	if(IS_FLOOD(host))
 		return FALSE
 	var/damage_taken = host.getBruteLoss() + host.getFireLoss()
 	if(host.stat == CONSCIOUS && damage_taken <= host.maxHealth * 0.25)
@@ -151,6 +152,11 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 			playsound(loc, death_sound, 50, TRUE)
 	return ..()
 
+/mob/living/basic/flood/Life(seconds_per_tick = SSMOBS_DT, times_fired)
+	. = ..()
+	if(stat != DEAD && health < maxHealth)
+		adjust_health(-seconds_per_tick)
+
 /mob/living/basic/flood/combat_form
 	name = "Flood combat form"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
@@ -175,7 +181,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		infect_host(victim)
 
 /mob/living/basic/flood/proc/convert_human(mob/living/carbon/human/victim, infection_message)
-	if(!victim || QDELETED(victim) || victim.stat == DEAD || IS_FLOOD(victim))
+	if(!victim || QDELETED(victim) || IS_FLOOD(victim))
 		return FALSE
 
 	var/turf/conversion_turf = get_turf(victim)
@@ -191,6 +197,10 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		if(!victim_mind.has_antag_datum(/datum/antagonist/flood))
 			victim_mind.add_antag_datum(/datum/antagonist/flood)
 		victim_mind.special_role = ROLE_FLOOD
+
+	// Leave their station equipment on the floor instead of deleting it with the old body.
+	for(var/obj/item/equipped_item in victim.get_equipped_items(INCLUDE_POCKETS | INCLUDE_HELD | INCLUDE_ACCESSORIES))
+		victim.dropItemToGround(equipped_item, TRUE)
 
 	GLOB.flood_infections++
 	if(infection_message)
@@ -270,6 +280,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		if(!flood_mind.has_antag_datum(/datum/antagonist/flood))
 			flood_mind.add_antag_datum(/datum/antagonist/flood)
 		flood_mind.special_role = ROLE_FLOOD
+	drop_all_held_items()
 	qdel(src)
 
 /mob/living/basic/flood/combat_form/human
@@ -282,6 +293,12 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	health = 100
 	melee_damage_lower = 25
 	melee_damage_upper = 35
+
+/mob/living/basic/flood/combat_form/human/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/dextrous)
+	AddComponent(/datum/component/basic_inhands)
+	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
 
 /mob/living/basic/flood/combat_form/juggernaut
 	name = "Flood Juggernaut"
@@ -373,7 +390,12 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(!ishuman(attacked_target))
 		return FALSE
 	var/mob/living/carbon/human/potential_host = attacked_target
-	if(potential_host.stat == DEAD || IS_FLOOD(potential_host))
+	if(IS_FLOOD(potential_host))
+		return FALSE
+	if(potential_host.stat == DEAD)
+		if(convert_human(potential_host, "[src] burrows into [potential_host]'s corpse, raising it as a Flood combat form!"))
+			qdel(src)
+			return TRUE
 		return FALSE
 	var/host_damage = potential_host.getBruteLoss() + potential_host.getFireLoss()
 	if(potential_host.stat == CONSCIOUS && host_damage <= potential_host.maxHealth * 0.25)
