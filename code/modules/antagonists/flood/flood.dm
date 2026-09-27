@@ -5,7 +5,7 @@
 
 GLOBAL_VAR_INIT(flood_infections, 0)
 
-#define IS_FLOOD(mob) (mob?.mind?.has_antag_datum(/datum/antagonist/flood) || istype(mob, /mob/living/simple_animal/hostile/flood))
+#define IS_FLOOD(target_mob) (target_mob?.mind?.has_antag_datum(/datum/antagonist/flood) || istype(target_mob, /mob/living/simple_animal/hostile/flood))
 #define FLOOD_INFECTION_COOLDOWN (20 SECONDS)
 #define FLOOD_INFESTOR_COOLDOWN (30 SECONDS)
 #define FLOOD_EVOLUTION_COOLDOWN (60 SECONDS)
