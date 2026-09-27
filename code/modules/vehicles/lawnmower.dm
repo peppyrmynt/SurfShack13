@@ -46,6 +46,7 @@
 		if(victim.body_position == LYING_DOWN)
 			if(iszombie(victim) || is_species(victim, /datum/species/human/krokodil_addict))
 				visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
+				playsound(loc, hit_sound, 50, TRUE)
 				victim.gib()
 				shake_camera(victim, 20, 1)
 				gibbed = TRUE
