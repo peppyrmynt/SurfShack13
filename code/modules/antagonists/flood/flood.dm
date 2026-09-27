@@ -337,6 +337,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	attack_verb_simple = "leap at"
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
+	var/next_airlock_infest = 0
 
 /mob/living/simple_animal/hostile/flood/infestor/CanAttack(atom/the_target)
 	if(ishuman(the_target))
@@ -393,12 +394,46 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	qdel(src)
 	return TRUE
 
+/mob/living/simple_animal/hostile/flood/infestor/proc/infest_nearby_airlock(show_failure = FALSE)
+	if(world.time < next_airlock_infest)
+		return FALSE
+
+	var/obj/machinery/door/airlock/target_airlock
+	for(var/obj/machinery/door/airlock/candidate in view(2, src))
+		if(candidate.welded || candidate.seal || (candidate.machine_stat & BROKEN))
+			continue
+		target_airlock = candidate
+		break
+
+	if(!target_airlock)
+		if(show_failure)
+			to_chat(src, span_warning("There is no vulnerable airlock nearby."))
+		return FALSE
+
+	next_airlock_infest = world.time + 10 SECONDS
+	visible_message(span_danger("[src] leaps onto [target_airlock] and burrows into its control mechanisms!"))
+	target_airlock.locked = FALSE
+	target_airlock.set_machine_stat(target_airlock.machine_stat | BROKEN)
+	INVOKE_ASYNC(target_airlock, TYPE_PROC_REF(/obj/machinery/door/airlock, open), BYPASS_DOOR_CHECKS)
+	qdel(src)
+	return TRUE
+
 /mob/living/simple_animal/hostile/flood/infestor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
 	if(!. || stat == DEAD || client || world.time < next_reanimate_check)
 		return
 	next_reanimate_check = world.time + 2 SECONDS
-	reanimate_nearby_flood()
+	if(reanimate_nearby_flood())
+		return
+	infest_nearby_airlock()
+
+/mob/living/simple_animal/hostile/flood/infestor/verb/infest_airlock()
+	set name = "Infest Airlock"
+	set category = "Flood"
+
+	if(stat == DEAD)
+		return
+	infest_nearby_airlock(TRUE)
 
 /mob/living/simple_animal/hostile/flood/infestor/verb/reanimate_flood()
 	set name = "Reanimate Flood Corpse"
