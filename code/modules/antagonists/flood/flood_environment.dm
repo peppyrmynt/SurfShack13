@@ -81,7 +81,7 @@
 	. = ..()
 	var/health_ratio = get_integrity() / max_integrity
 	if(health_ratio > 0.66)
-		. += span_info("It looks very healthy.")
+		. += span_notice("It looks very healthy.")
 	else if(health_ratio > 0.33)
 		. += span_notice("It looks damaged.")
 	else
