@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"map_name": "OmegaStation",
+	"map_path": "map_files/omegastation",
+	"map_file": "OmegaStation.dmm",
+	"shuttles": {
+		"cargo": "cargo_kilo",
+		"ferry": "ferry_kilo",
+		"whiteship": "whiteship_kilo",
+		"emergency": "emergency_omega"
+	},
+	"job_changes": {
+		"Cook": {
+			"additional_cqc_areas": ["/area/station/service/cafeteria", "/area/station/service/bar"]
+		}
+	}
+}
