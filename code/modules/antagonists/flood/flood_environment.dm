@@ -302,6 +302,7 @@
 	melee_damage_lower = 5
 	melee_damage_upper = 10
 	var/next_build = 0
+	var/next_biomass_upgrade = 0
 
 /mob/living/basic/flood/constructor/proc/can_build(turf/target_turf, structure_type, solid = FALSE, on_wall = FALSE)
 	if(stat == DEAD)
@@ -345,6 +346,35 @@
 		return
 	new /obj/structure/flood_biomass/tiny(target_turf)
 	visible_message(span_warning("Flood biomass spreads outward beneath [src]."))
+
+/mob/living/basic/flood/constructor/verb/expand_biomass()
+	set name = "Expand Biomass"
+	set category = "Flood"
+
+	if(stat == DEAD || world.time < next_biomass_upgrade)
+		return
+	var/turf/target_turf = get_build_turf()
+	if(!isopenturf(target_turf) || isspaceturf(target_turf))
+		return
+	var/obj/structure/flood_biomass/existing = locate(/obj/structure/flood_biomass) in target_turf
+	if(!existing)
+		to_chat(src, span_warning("Face an existing biomass growth to expand it."))
+		return
+	var/new_type
+	if(istype(existing, /obj/structure/flood_biomass/tiny))
+		new_type = /obj/structure/flood_biomass/medium
+	else if(istype(existing, /obj/structure/flood_biomass/medium))
+		new_type = /obj/structure/flood_biomass/large
+	else
+		to_chat(src, span_warning("That biomass cannot grow any larger."))
+		return
+	if(existing.get_integrity() < existing.max_integrity / 2)
+		to_chat(src, span_warning("That biomass is too damaged to expand."))
+		return
+	next_biomass_upgrade = world.time + 60 SECONDS
+	qdel(existing)
+	new new_type(target_turf)
+	visible_message(span_warning("Flood biomass surges and expands into a larger growth."))
 
 /mob/living/basic/flood/constructor/verb/infest_floor()
 	set name = "Infest Floor"
