@@ -15,6 +15,8 @@
 	var/next_spawn = 0
 	var/spawn_delay = 60 SECONDS
 	var/max_nearby_flood = 6
+	var/next_spread = 0
+	var/spread_delay = 30 SECONDS
 
 /obj/structure/flood_biomass/Initialize(mapload)
 	. = ..()
@@ -29,6 +31,10 @@
 	if(world.time < next_spawn)
 		return
 	next_spawn = world.time + spawn_delay
+
+	if(world.time >= next_spread)
+		next_spread = world.time + spread_delay
+		spread_growth()
 
 	var/nearby_flood = 0
 	for(var/mob/living/simple_animal/hostile/flood/flood_form in range(7, src))
@@ -49,6 +55,21 @@
 	var/mob/living/simple_animal/hostile/flood/new_flood = new spawn_type(spawn_turf)
 	visible_message(span_warning("[src] writhes and produces [new_flood]."))
 
+/obj/structure/flood_biomass/proc/spread_growth()
+	var/list/valid_turfs = list()
+	for(var/turf/open/candidate in range(1, src))
+		if(candidate == loc)
+			continue
+		if(locate(/obj/structure/flood_growth) in candidate)
+			continue
+		valid_turfs += candidate
+
+	if(!length(valid_turfs))
+		return
+
+	var/turf/open/target = pick(valid_turfs)
+	new /obj/structure/flood_growth(target)
+
 /obj/structure/flood_biomass/examine(mob/user)
 	. = ..()
 	var/health_ratio = get_integrity() / max_integrity
@@ -66,6 +87,7 @@
 	max_integrity = 600
 	spawn_delay = 50 SECONDS
 	max_nearby_flood = 10
+	spread_delay = 20 SECONDS
 
 /obj/structure/flood_biomass/medium/Initialize(mapload)
 	. = ..()
@@ -78,6 +100,7 @@
 	max_integrity = 1500
 	spawn_delay = 40 SECONDS
 	max_nearby_flood = 15
+	spread_delay = 10 SECONDS
 
 /obj/structure/flood_biomass/large/Initialize(mapload)
 	. = ..()
