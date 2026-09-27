@@ -186,6 +186,28 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	new /mob/living/simple_animal/hostile/flood/infestor(loc)
 	visible_message(span_warning("[src]'s flesh tears open and produces a Flood infection form."))
 
+/mob/living/simple_animal/hostile/flood/combat_form/verb/destroy_weld()
+	set name = "Destroy Weld"
+	set category = "Flood"
+
+	if(stat == DEAD)
+		return
+
+	var/obj/machinery/door/airlock/target_airlock
+	for(var/obj/machinery/door/airlock/candidate in view(1, src))
+		if(candidate.welded)
+			target_airlock = candidate
+			break
+
+	if(!target_airlock)
+		to_chat(src, span_warning("There is no welded airlock close enough to tear open."))
+		return
+
+	visible_message(span_danger("[src] rakes its mutated limb across [target_airlock], tearing through the weld!"))
+	target_airlock.welded = FALSE
+	target_airlock.update_appearance()
+	playsound(target_airlock, 'sound/effects/grillehit.ogg', 80, TRUE)
+
 /mob/living/simple_animal/hostile/flood/combat_form/verb/evolve()
 	set name = "Evolve Flood Form"
 	set category = "Flood"
