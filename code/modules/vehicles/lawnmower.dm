@@ -41,18 +41,18 @@
 			continue
 		if(victim.body_position == LYING_DOWN)
 			if(iszombie(victim))
-				visible_message(span_danger("[src] crushes [victim] like an emagged recycler!"))
-				playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
-				if(iscarbon(victim) && victim.stat < UNCONSCIOUS)
-					victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
-				add_mob_blood(victim)
-				victim.Unconscious(100)
-				victim.adjustBruteLoss(1000)
+				visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
+				victim.gib()
+				shake_camera(victim, 20, 1)
 				gibbed = TRUE
 				continue
-			visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
-			victim.gib()
-			shake_camera(victim, 20, 1)
+			visible_message(span_danger("[src] crushes [victim] like an emagged recycler!"))
+			playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
+			if(iscarbon(victim) && victim.stat < UNCONSCIOUS)
+				victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
+			add_mob_blood(victim)
+			victim.Unconscious(100)
+			victim.adjustBruteLoss(1000)
 			gibbed = TRUE
 
 	if(gibbed)
