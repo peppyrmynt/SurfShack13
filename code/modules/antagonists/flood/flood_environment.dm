@@ -97,6 +97,19 @@
 
 	var/turf/open/target = pick(valid_turfs)
 	new /obj/structure/flood_growth(target)
+	if(!prob(35))
+		return
+	var/list/nearby_walls = list()
+	var/wall_growth_count = 0
+	for(var/obj/structure/flood_wall_growth/existing_wall_growth in range(4, src))
+		wall_growth_count++
+	if(wall_growth_count >= 6)
+		return
+	for(var/turf/closed/nearby_wall in range(1, target))
+		if(!locate(/obj/structure/flood_wall_growth) in nearby_wall)
+			nearby_walls += nearby_wall
+	if(length(nearby_walls))
+		new /obj/structure/flood_wall_growth(pick(nearby_walls))
 
 /obj/structure/flood_biomass/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
 	if(damage_type == BURN)
@@ -159,6 +172,14 @@
 	max_integrity = 100
 	layer = ABOVE_OPEN_TURF_LAYER
 
+/obj/structure/flood_growth/Initialize(mapload)
+	. = ..()
+	if(prob(35))
+		var/image/spore = image(icon = 'icons/mob/flood/flood_bio.dmi', icon_state = "animated[rand(1, 6)]")
+		spore.pixel_x = rand(-8, 8)
+		spore.pixel_y = rand(-8, 8)
+		add_overlay(spore)
+
 /// A visible patch of spores that releases infection forms when a human walks through it.
 /obj/structure/flood_spore_trap
 	name = "Flood spore cluster"
@@ -191,6 +212,38 @@
 		new /mob/living/basic/flood/infestor(spawn_turf)
 	qdel(src)
 
+/// Map-placed counterpart to the original Flood proximity spawner.
+/// Mappers can set spawn_spot_x/y to release the swarm somewhere else on this z-level.
+/obj/effect/landmark/flood_ambush
+	name = "Flood ambush marker"
+	var/spawn_spot_x = 0
+	var/spawn_spot_y = 0
+	var/triggered = FALSE
+
+/obj/effect/landmark/flood_ambush/Crossed(atom/movable/crossed_atom, oldloc)
+	. = ..()
+	if(triggered || !ishuman(crossed_atom))
+		return
+	var/mob/living/carbon/human/host = crossed_atom
+	if(host.mind?.has_antag_datum(/datum/antagonist/flood))
+		return
+	triggered = TRUE
+	addtimer(CALLBACK(src, PROC_REF(release_ambush)), rand(10, 30))
+
+/obj/effect/landmark/flood_ambush/proc/release_ambush()
+	var/turf/spawn_turf = get_turf(src)
+	if(spawn_spot_x && spawn_spot_y)
+		var/turf/marked_turf = locate(spawn_spot_x, spawn_spot_y, z)
+		if(isopenturf(marked_turf) && !isspaceturf(marked_turf))
+			spawn_turf = marked_turf
+	if(!isopenturf(spawn_turf) || isspaceturf(spawn_turf))
+		qdel(src)
+		return
+	spawn_turf.visible_message(span_danger("Flood infection forms erupt from the surrounding biomass!"))
+	for(var/i in 1 to 8)
+		new /mob/living/basic/flood/infestor(spawn_turf)
+	qdel(src)
+
 /obj/structure/flood_wall_growth
 	name = "Flood wall growth"
 	desc = "Thick Flood biomass clings to the surrounding structure."
@@ -199,6 +252,33 @@
 	anchored = TRUE
 	density = FALSE
 	max_integrity = 250
+	layer = WALL_OBJ_LAYER
+
+/// A destructible wall grown on an open floor, rather than a coating on an existing wall.
+/obj/structure/flood_wall
+	name = "Flood biomass wall"
+	desc = "A solid barrier of hardened, pulsating Flood tissue."
+	icon = 'icons/mob/flood/Flood_Spore.dmi'
+	icon_state = "flood wall gif"
+	anchored = TRUE
+	density = TRUE
+	opacity = TRUE
+	layer = WALL_OBJ_LAYER
+	max_integrity = 300
+	can_atmos_pass = ATMOS_PASS_DENSITY
+
+/obj/structure/flood_wall/Initialize(mapload)
+	. = ..()
+	air_update_turf(TRUE, TRUE)
+
+/obj/structure/flood_wall/Destroy()
+	air_update_turf(TRUE, FALSE)
+	return ..()
+
+/obj/structure/flood_wall/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+	if(damage_type == BURN)
+		damage_amount *= 2
+	return ..(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
 
 /obj/structure/flood_door
 	name = "Flood biomass door"
@@ -300,6 +380,7 @@
 	melee_damage_upper = 10
 	var/next_build = 0
 	var/next_biomass_upgrade = 0
+	var/next_wall_build = 0
 
 /mob/living/basic/flood/constructor/proc/can_build(turf/target_turf, structure_type, solid = FALSE, on_wall = FALSE)
 	if(stat == DEAD)
@@ -318,12 +399,12 @@
 				to_chat(src, span_warning("This area has enough biomass already."))
 				return FALSE
 	if(solid)
-		if(locate(/obj/structure/flood_door) in target_turf || locate(/obj/structure/flood_window) in target_turf)
-			to_chat(src, span_warning("A Flood membrane already occupies that tile."))
+		if(locate(/obj/structure/flood_door) in target_turf || locate(/obj/structure/flood_window) in target_turf || locate(/obj/structure/flood_wall) in target_turf)
+			to_chat(src, span_warning("A Flood structure already occupies that tile."))
 			return FALSE
 		for(var/atom/movable/obstacle in target_turf)
 			if(obstacle.density)
-				to_chat(src, span_warning("Something blocks the new membrane."))
+				to_chat(src, span_warning("Something blocks the new Flood structure."))
 				return FALSE
 	if(world.time < next_build)
 		to_chat(src, span_warning("Your biomass is still reshaping itself."))
@@ -384,7 +465,7 @@
 	visible_message(span_warning("Pulsating Flood tissue creeps across the floor."))
 
 /mob/living/basic/flood/constructor/verb/grow_wall()
-	set name = "Grow Wall Biomass"
+	set name = "Coat Existing Wall"
 	set category = "Flood"
 
 	var/turf/target_turf = get_build_turf()
@@ -392,6 +473,20 @@
 		return
 	new /obj/structure/flood_wall_growth(target_turf)
 	visible_message(span_warning("Thick Flood biomass climbs across the wall."))
+
+/mob/living/basic/flood/constructor/verb/grow_barrier()
+	set name = "Grow Biomass Wall"
+	set category = "Flood"
+
+	if(world.time < next_wall_build)
+		to_chat(src, span_warning("Your biomass is still recovering from growing a wall."))
+		return
+	var/turf/target_turf = get_build_turf()
+	if(!can_build(target_turf, /obj/structure/flood_wall, TRUE))
+		return
+	next_wall_build = world.time + 15 SECONDS
+	new /obj/structure/flood_wall(target_turf)
+	visible_message(span_warning("[src] raises a solid wall of Flood biomass."))
 
 /mob/living/basic/flood/constructor/verb/grow_door()
 	set name = "Grow Biomass Door"
