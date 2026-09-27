@@ -512,7 +512,12 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	clear_latch()
 
 /mob/living/basic/flood/infestor/proc/finish_latch(mob/living/carbon/human/host)
-	if(!do_after(src, 6 SECONDS, host, extra_checks = CALLBACK(src, PROC_REF(latch_still_valid), host)) || !latch_still_valid(host))
+	if(QDELETED(host))
+		if(latched_host == host)
+			clear_latch()
+		return
+	var/latch_time = host.stat == DEAD ? 6 SECONDS : 10 SECONDS
+	if(!do_after(src, latch_time, host, extra_checks = CALLBACK(src, PROC_REF(latch_still_valid), host)) || !latch_still_valid(host))
 		if(latched_host == host)
 			clear_latch()
 		return
