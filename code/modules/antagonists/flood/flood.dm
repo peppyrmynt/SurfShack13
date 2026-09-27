@@ -224,13 +224,19 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		to_chat(src, span_warning("Your biomass is still recovering."))
 		return
 
-	next_evolution = world.time + FLOOD_EVOLUTION_COOLDOWN
+	var/list/evolution_choices = list(
+		"Carrier" = /mob/living/simple_animal/hostile/flood/carrier,
+		"Juggernaut" = /mob/living/simple_animal/hostile/flood/combat_form/juggernaut,
+		"Constructor" = /mob/living/simple_animal/hostile/flood/constructor,
+		"Overseer" = /mob/living/simple_animal/hostile/flood/overseer,
+	)
+	var/chosen_form = input(src, "Choose a Flood specialization.", "Flood Evolution") as null|anything in evolution_choices
+	if(!chosen_form || stat == DEAD)
+		return
 
-	var/mob/living/simple_animal/hostile/flood/new_form
-	if(prob(50))
-		new_form = new /mob/living/simple_animal/hostile/flood/combat_form/juggernaut(loc)
-	else
-		new_form = new /mob/living/simple_animal/hostile/flood/carrier(loc)
+	next_evolution = world.time + FLOOD_EVOLUTION_COOLDOWN
+	var/form_type = evolution_choices[chosen_form]
+	var/mob/living/simple_animal/hostile/flood/new_form = new form_type(loc)
 
 	if(mind)
 		var/datum/mind/flood_mind = mind
