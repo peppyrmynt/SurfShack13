@@ -18025,13 +18025,13 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
 "mfY" = (
-/obj/structure/disposaloutlet{
-	dir = 4
-	},
 /obj/structure/disposalpipe/trunk{
 	dir = 8
 	},
 /obj/structure/lattice/catwalk,
+/obj/machinery/disposal/delivery_chute{
+	dir = 4
+	},
 /turf/open/space/basic,
 /area/space/nearstation)
 "mgc" = (
@@ -36450,7 +36450,8 @@
 	height = 13;
 	name = "Ferry Docking Bay";
 	shuttle_id = "ferry_home";
-	width = 5
+	width = 5;
+	dir = 6
 	},
 /turf/open/space,
 /area/space/nearstation)
