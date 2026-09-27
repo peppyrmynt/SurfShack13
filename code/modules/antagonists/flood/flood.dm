@@ -167,6 +167,15 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	health = 150
 	melee_damage_lower = 25
 	melee_damage_upper = 35
+	/// A reanimated combat form cannot be raised again after its next death.
+	var/reanimated = FALSE
+	var/next_weld_break = 0
+
+/mob/living/basic/flood/combat_form/Life(seconds_per_tick = SSMOBS_DT, times_fired)
+	. = ..()
+	if(!. || stat == DEAD || client || world.time < next_weld_break)
+		return
+	break_nearby_weld()
 
 /mob/living/basic/flood/combat_form/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	. = ..()
@@ -234,6 +243,12 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 	if(stat == DEAD)
 		return
+	if(world.time < next_weld_break)
+		return
+	if(!break_nearby_weld())
+		to_chat(src, span_warning("There is no welded airlock close enough to tear open."))
+
+/mob/living/basic/flood/combat_form/proc/break_nearby_weld()
 
 	var/obj/machinery/door/airlock/target_airlock
 	for(var/obj/machinery/door/airlock/candidate in view(1, src))
@@ -242,13 +257,14 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 			break
 
 	if(!target_airlock)
-		to_chat(src, span_warning("There is no welded airlock close enough to tear open."))
-		return
+		return FALSE
 
+	next_weld_break = world.time + 5 SECONDS
 	visible_message(span_danger("[src] rakes its mutated limb across [target_airlock], tearing through the weld!"))
 	target_airlock.welded = FALSE
 	target_airlock.update_appearance()
 	playsound(target_airlock, 'sound/effects/grillehit.ogg', 80, TRUE)
+	return TRUE
 
 /mob/living/basic/flood/combat_form/verb/evolve()
 	set name = "Evolve Flood Form"
@@ -386,6 +402,11 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	var/next_reanimate_check = 0
 	var/next_airlock_infest = 0
 
+/mob/living/basic/flood/infestor/Initialize(mapload)
+	. = ..()
+	pixel_x = rand(-8, 8)
+	pixel_y = rand(0, 24)
+
 /mob/living/basic/flood/infestor/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	if(!ishuman(attacked_target))
 		return FALSE
@@ -418,7 +439,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 /mob/living/basic/flood/infestor/proc/reanimate_nearby_flood(show_failure = FALSE)
 	var/mob/living/basic/flood/combat_form/corpse
 	for(var/mob/living/basic/flood/combat_form/candidate in range(2, src))
-		if(candidate.stat != DEAD)
+		if(candidate.stat != DEAD || candidate.reanimated)
 			continue
 		corpse = candidate
 		break
@@ -430,6 +451,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 	var/mob/living/basic/flood/new_form = new corpse.type(corpse.loc)
 	new_form.name = corpse.name
+	var/mob/living/basic/flood/combat_form/reanimated_form = new_form
+	reanimated_form.reanimated = TRUE
 	if(corpse.mind)
 		var/datum/mind/corpse_mind = corpse.mind
 		corpse_mind.transfer_to(new_form)

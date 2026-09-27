@@ -177,6 +177,63 @@
 	density = TRUE
 	opacity = TRUE
 	max_integrity = 350
+	layer = CLOSED_DOOR_LAYER
+	can_atmos_pass = ATMOS_PASS_DENSITY
+	var/door_opened = FALSE
+	var/close_delay = 5 SECONDS
+
+/obj/structure/flood_door/Initialize(mapload)
+	. = ..()
+	air_update_turf(TRUE, TRUE)
+
+/obj/structure/flood_door/Destroy()
+	if(!door_opened)
+		air_update_turf(TRUE, FALSE)
+	return ..()
+
+/obj/structure/flood_door/attack_hand(mob/user, list/modifiers)
+	. = ..()
+	if(.)
+		return
+	if(door_opened)
+		close_door()
+	else
+		open_door()
+	return TRUE
+
+/obj/structure/flood_door/attack_paw(mob/user, list/modifiers)
+	return attack_hand(user, modifiers)
+
+/obj/structure/flood_door/Bumped(atom/movable/mover)
+	. = ..()
+	if(istype(mover, /mob/living/basic/flood) && !door_opened)
+		open_door()
+
+/obj/structure/flood_door/proc/open_door()
+	if(door_opened)
+		return
+	door_opened = TRUE
+	flick("floodopening", src)
+	icon_state = "floodopen"
+	set_opacity(FALSE)
+	set_density(FALSE)
+	layer = OPEN_DOOR_LAYER
+	air_update_turf(TRUE, FALSE)
+	addtimer(CALLBACK(src, PROC_REF(close_door)), close_delay)
+
+/obj/structure/flood_door/proc/close_door()
+	if(!door_opened)
+		return
+	for(var/mob/living/occupant in get_turf(src))
+		addtimer(CALLBACK(src, PROC_REF(close_door)), close_delay)
+		return
+	flick("floodclosing", src)
+	icon_state = "flood"
+	set_density(TRUE)
+	set_opacity(TRUE)
+	layer = CLOSED_DOOR_LAYER
+	door_opened = FALSE
+	air_update_turf(TRUE, TRUE)
 
 /obj/structure/flood_door/CanAllowThrough(atom/movable/mover, border_dir)
 	if(istype(mover, /mob/living/basic/flood))
@@ -191,6 +248,15 @@
 	anchored = TRUE
 	density = TRUE
 	max_integrity = 200
+	can_atmos_pass = ATMOS_PASS_DENSITY
+
+/obj/structure/flood_window/Initialize(mapload)
+	. = ..()
+	air_update_turf(TRUE, TRUE)
+
+/obj/structure/flood_window/Destroy()
+	air_update_turf(TRUE, FALSE)
+	return ..()
 
 /mob/living/basic/flood/constructor
 	name = "Flood constructor form"
@@ -205,11 +271,11 @@
 	melee_damage_upper = 10
 	var/next_build = 0
 
-/mob/living/basic/flood/constructor/proc/can_build(turf/open/target_turf, structure_type, solid = FALSE)
+/mob/living/basic/flood/constructor/proc/can_build(turf/target_turf, structure_type, solid = FALSE, on_wall = FALSE)
 	if(stat == DEAD)
 		return FALSE
-	if(!target_turf || isspaceturf(target_turf))
-		to_chat(src, span_warning("You need an adjacent floor to grow Flood tissue."))
+	if(!target_turf || get_dist(src, target_turf) != 1 || (on_wall ? !isclosedturf(target_turf) : !isopenturf(target_turf) || isspaceturf(target_turf)))
+		to_chat(src, span_warning(on_wall ? "You need an adjacent wall to grow Flood tissue." : "You need an adjacent floor to grow Flood tissue."))
 		return FALSE
 	if(locate(structure_type) in target_turf)
 		to_chat(src, span_warning("That tile already has this kind of Flood growth."))
@@ -222,6 +288,9 @@
 				to_chat(src, span_warning("This area has enough biomass already."))
 				return FALSE
 	if(solid)
+		if(locate(/obj/structure/flood_door) in target_turf || locate(/obj/structure/flood_window) in target_turf)
+			to_chat(src, span_warning("A Flood membrane already occupies that tile."))
+			return FALSE
 		for(var/atom/movable/obstacle in target_turf)
 			if(obstacle.density)
 				to_chat(src, span_warning("Something blocks the new membrane."))
@@ -260,10 +329,10 @@
 	set category = "Flood"
 
 	var/turf/target_turf = get_build_turf()
-	if(!can_build(target_turf, /obj/structure/flood_wall_growth))
+	if(!can_build(target_turf, /obj/structure/flood_wall_growth, on_wall = TRUE))
 		return
 	new /obj/structure/flood_wall_growth(target_turf)
-	visible_message(span_warning("Thick Flood biomass climbs across the nearby structure."))
+	visible_message(span_warning("Thick Flood biomass climbs across the wall."))
 
 /mob/living/basic/flood/constructor/verb/grow_door()
 	set name = "Grow Biomass Door"
