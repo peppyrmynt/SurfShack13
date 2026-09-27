@@ -35,6 +35,12 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	forge_objectives()
 	return ..()
 
+/datum/antagonist/flood/greet()
+	to_chat(owner.current, span_bigdanger("You are part of the Flood."))
+	to_chat(owner.current, span_notice("Spread the infestation by weakening and converting human hosts."))
+	to_chat(owner.current, span_notice("Combat forms can create infection forms, tear apart welded airlocks, and evolve into specialized Flood forms."))
+	to_chat(owner.current, span_notice("Infection forms can convert vulnerable humans and reanimate fallen Flood forms."))
+
 /datum/antagonist/flood/create_team(datum/team/flood/new_team)
 	if(!new_team)
 		for(var/datum/antagonist/flood/other_flood in GLOB.antagonists)
@@ -238,6 +244,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	name = "Flood infested human"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
 	icon_state = "marine_infested"
+	move_to_delay = 6
 	maxHealth = 100
 	health = 100
 	melee_damage_lower = 25
@@ -248,6 +255,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	desc = "A towering mass of hardened Flood biomass."
 	icon = 'icons/mob/flood/floodjuggernaut.dmi'
 	icon_state = "movement state"
+	icon_dead = "death state"
+	move_to_delay = 15
 	maxHealth = 500
 	health = 500
 	melee_damage_lower = 40
@@ -260,6 +269,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	desc = "A bloated Flood form packed with infection forms."
 	icon = 'icons/mob/flood/flood_carrier.dmi'
 	icon_state = "static"
+	move_to_delay = 7
 	maxHealth = 100
 	health = 100
 	melee_damage_lower = 10
