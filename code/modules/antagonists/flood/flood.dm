@@ -178,6 +178,75 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		new_form.mind.special_role = ROLE_FLOOD
 	qdel(src)
 
+/mob/living/simple_animal/hostile/flood/combat_form/human
+	name = "Flood infested human"
+	icon = 'icons/mob/flood/flood_combat_human.dmi'
+	icon_state = "marine_infested"
+	maxHealth = 100
+	health = 100
+	melee_damage_lower = 25
+	melee_damage_upper = 35
+
+/mob/living/simple_animal/hostile/flood/combat_form/odst
+	name = "Flood infested ODST"
+	icon = 'icons/mob/flood/flood_combat_odst.dmi'
+	icon_state = "odst_infested"
+	maxHealth = 125
+	health = 125
+	melee_damage_lower = 30
+	melee_damage_upper = 35
+
+/mob/living/simple_animal/hostile/flood/combat_form/guard
+	name = "Flood infested guard"
+	icon = 'icons/mob/flood/flood_combat_depotguard.dmi'
+	icon_state = "guard_infested"
+	maxHealth = 100
+	health = 100
+	melee_damage_lower = 25
+	melee_damage_upper = 30
+
+/mob/living/simple_animal/hostile/flood/combat_form/oni
+	name = "Flood infested ONI operative"
+	icon = 'icons/mob/flood/flood_combat_oni.dmi'
+	icon_state = "oni_infested"
+	maxHealth = 100
+	health = 100
+	melee_damage_lower = 30
+	melee_damage_upper = 35
+
+/mob/living/simple_animal/hostile/flood/combat_form/elite
+	name = "Flood infested Sangheili"
+	icon = 'icons/mob/flood/sangheili_flood_uf.dmi'
+	icon_state = "Minor 1"
+	maxHealth = 125
+	health = 125
+	melee_damage_lower = 35
+	melee_damage_upper = 40
+
+/mob/living/simple_animal/hostile/flood/combat_form/elite/major
+	name = "Flood infested Major"
+	icon_state = "Major 1"
+	maxHealth = 150
+	health = 150
+
+/mob/living/simple_animal/hostile/flood/combat_form/elite/zealot
+	name = "Flood infested Zealot"
+	icon_state = "Zealot 1"
+	maxHealth = 165
+	health = 165
+
+/mob/living/simple_animal/hostile/flood/combat_form/juggernaut
+	name = "Flood Juggernaut"
+	desc = "A towering mass of hardened Flood biomass."
+	icon = 'icons/mob/flood/floodjuggernaut.dmi'
+	icon_state = "movement state"
+	maxHealth = 500
+	health = 500
+	melee_damage_lower = 40
+	melee_damage_upper = 55
+	obj_damage = 120
+	mob_size = MOB_SIZE_LARGE
+
 /mob/living/simple_animal/hostile/flood/carrier
 	name = "Flood carrier form"
 	desc = "A bloated Flood form packed with infection forms."
