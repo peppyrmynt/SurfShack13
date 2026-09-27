@@ -32,3 +32,25 @@ optionally `sound` and `emote_duration` (default three seconds). No custom
 - Disconnect a viewer or delete the speaker while visible: check for runtimes
   and ensure the image is removed after its duration.
 - Compare `*laugh_k`, which keeps its original artwork and behavior.
+
+## Emote wheel (testing phase)
+
+Press **Alt+E** or use **IC → Emote Wheel**. The hotkey can be changed under the
+Emote keybindings category. If an existing binding occupies Alt+E, assign the new
+Emote Wheel binding manually in preferences.
+
+The wheel displays a thumbnail and a visible command label (for example,
+`*sigma`) for 7TV emotes and `laugh_k` that the current mob is eligible to use.
+All fourteen fit on one page for humans; future 7TV children are discovered from
+the emote registry and additional pages are automatic. Click a picture to perform
+it, click the center to cancel, or press the hotkey again to close the wheel.
+Selection goes through the normal intentional-emote handler, including cooldowns
+and current-state checks. Changing controlled mob or disconnecting cancels it.
+
+Typed commands, `*help`, and the existing Emote Panel remain available. Moving
+these emotes exclusively to the wheel is deferred until in-game testing confirms
+it works.
+
+Test Alt+E opening/closing, all picture/command labels, selection and its normal
+bubble/audio, immediate repeat selection respecting the 60-second cooldown,
+non-human eligibility, and cancellation when changing controlled mob.

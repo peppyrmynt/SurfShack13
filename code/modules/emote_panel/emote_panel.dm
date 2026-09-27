@@ -62,3 +62,66 @@
 	if(isnull(emote_panel))
 		emote_panel = new
 	emote_panel.ui_interact(src)
+
+/// Image emotes remain in help and accept typed commands while the wheel is tested.
+/mob/living/verb/emote_wheel()
+	set name = "Emote Wheel"
+	set category = "IC"
+
+	if(!client)
+		return
+	var/client/opening_client = client
+	var/list/options = list()
+	var/static/list/thumbnail_cache = list()
+	for(var/key in GLOB.emote_list)
+		for(var/datum/emote/emote as anything in GLOB.emote_list[key])
+			if(!istype(emote, /datum/emote/living/seventv) && !istype(emote, /datum/emote/living/carbon/human/laugh_king))
+				continue
+			if(options[emote.key] || !emote.can_run_emote(src, status_check = FALSE, intentional = TRUE))
+				continue
+			if(!thumbnail_cache[emote.type])
+				var/icon/thumbnail
+				if(istype(emote, /datum/emote/living/seventv))
+					var/datum/emote/living/seventv/image_emote = emote
+					thumbnail = icon(image_emote.emote_icon, image_emote.emote_icon_state, frame = 1)
+				else
+					thumbnail = icon('icons/hud/laugh_king.dmi', frame = 1)
+				var/scale = min(32 / thumbnail.Width(), 32 / thumbnail.Height())
+				var/width = max(1, round(thumbnail.Width() * scale))
+				var/height = max(1, round(thumbnail.Height() * scale))
+				thumbnail.Scale(width, height)
+				var/offset_x = round((32 - width) / 2)
+				var/offset_y = round((32 - height) / 2)
+				thumbnail.Crop(1 - offset_x, 1 - offset_y, 32 - offset_x, 32 - offset_y)
+				thumbnail_cache[emote.type] = thumbnail
+			options[emote.key] = image(thumbnail_cache[emote.type])
+
+	var/selection = show_radial_menu(
+		src, src, options,
+		uniqueid = "emote_wheel_[REF(opening_client)]",
+		radius = 160,
+		custom_check = CALLBACK(src, PROC_REF(emote_wheel_available), opening_client),
+		tooltips = TRUE,
+		autopick_single_option = FALSE,
+		menu_type = /datum/radial_menu/emote_wheel,
+	)
+	for(var/key in options)
+		qdel(options[key])
+	if(selection && emote_wheel_available(opening_client) && (selection in options))
+		emote(selection, intentional = TRUE)
+
+/mob/living/proc/emote_wheel_available(client/opening_client)
+	return !QDELETED(src) && client == opening_client && opening_client?.mob == src
+
+/// All fourteen current emotes fit on one page; additional emotes can paginate normally.
+/datum/radial_menu/emote_wheel
+	min_angle = 22.5
+
+/datum/radial_menu/emote_wheel/SetElement(atom/movable/screen/radial/slice/element, choice_id, angle, anim, anim_order)
+	. = ..()
+	element.maptext_width = 80
+	element.maptext_height = 14
+	element.maptext_x = -24
+	element.maptext_y = -14
+	var/label = element.next_page ? "Next page" : "*[element.name]"
+	element.maptext = "<div style='text-align:center;font-size:7px;color:white;background-color:#202020'>[html_encode(label)]</div>"

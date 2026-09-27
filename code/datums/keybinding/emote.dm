@@ -16,3 +16,20 @@
 	if(.)
 		return
 	return user.mob.emote(emote_key, intentional=TRUE)
+
+/datum/keybinding/living/emote_wheel
+	hotkey_keys = list("AltE")
+	classic_keys = list("AltE")
+	name = "emote_wheel"
+	full_name = "Emote Wheel"
+	description = "Open the image emote wheel (7TV emotes and laugh_k). Press again to close."
+	category = CATEGORY_EMOTE
+	keybind_signal = COMSIG_KB_EMOTE_WHEEL
+
+/datum/keybinding/living/emote_wheel/down(client/user)
+	. = ..()
+	if(.)
+		return
+	var/mob/living/living_user = user.mob
+	INVOKE_ASYNC(living_user, TYPE_PROC_REF(/mob/living, emote_wheel))
+	return TRUE
