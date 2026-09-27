@@ -90,6 +90,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/flood/melee.melee1.ogg'
+	attacked_sound = 'sound/flood/pain.pain1.ogg'
 	del_on_death = FALSE
 	icon_dead = "dead"
 	death_message = "collapses into a twitching mass of biomass."
@@ -99,10 +100,21 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 /// The baseline humanoid Flood form. Keeping this subtype explicit mirrors the
 /// original implementation and gives infection/evolution code a stable target.
+/mob/living/simple_animal/hostile/flood/death(gibbed)
+	if(!gibbed)
+		playsound(loc, pick(
+			'sound/flood/death.death2.ogg',
+			'sound/flood/death.death3.ogg',
+			'sound/flood/death.death4.ogg',
+			'sound/flood/death.death5.ogg',
+		), 50, TRUE)
+	return ..()
+
 /mob/living/simple_animal/hostile/flood/combat_form
 	name = "Flood combat form"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
-	icon_state = "static"
+	icon_state = "marine_infested"
+	icon_dead = "marine_dead"
 	maxHealth = 150
 	health = 150
 	melee_damage_lower = 25
@@ -229,6 +241,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	desc = "A small Flood organism seeking a host."
 	icon = 'icons/mob/flood/flood_infection.dmi'
 	icon_state = "static"
+	icon_dead = "dead"
 	mob_biotypes = MOB_ORGANIC
 	sentience_type = SENTIENCE_HUMANOID
 	faction = list("Flood")
