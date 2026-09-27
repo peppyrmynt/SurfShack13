@@ -159,6 +159,38 @@
 	max_integrity = 100
 	layer = ABOVE_OPEN_TURF_LAYER
 
+/// A visible patch of spores that releases infection forms when a human walks through it.
+/obj/structure/flood_spore_trap
+	name = "Flood spore cluster"
+	desc = "A tense knot of spores woven into the floor growth."
+	icon = 'icons/mob/flood/flood_bio.dmi'
+	icon_state = "pulsating"
+	anchored = TRUE
+	density = FALSE
+	max_integrity = 80
+	layer = ABOVE_OPEN_TURF_LAYER
+	var/triggered = FALSE
+
+/obj/structure/flood_spore_trap/Crossed(atom/movable/crossed_atom, oldloc)
+	. = ..()
+	if(triggered || !ishuman(crossed_atom))
+		return
+	var/mob/living/carbon/human/host = crossed_atom
+	if(host.mind?.has_antag_datum(/datum/antagonist/flood))
+		return
+	triggered = TRUE
+	visible_message(span_danger("[src] swells as [host] steps into it!"))
+	addtimer(CALLBACK(src, PROC_REF(release_spores)), 2 SECONDS)
+
+/obj/structure/flood_spore_trap/proc/release_spores()
+	var/turf/spawn_turf = get_turf(src)
+	if(!spawn_turf)
+		return
+	visible_message(span_warning("[src] bursts, releasing Flood infection forms!"))
+	for(var/i in 1 to 4)
+		new /mob/living/basic/flood/infestor(spawn_turf)
+	qdel(src)
+
 /obj/structure/flood_wall_growth
 	name = "Flood wall growth"
 	desc = "Thick Flood biomass clings to the surrounding structure."
@@ -353,6 +385,22 @@
 		return
 	new /obj/structure/flood_window(target_turf)
 	visible_message(span_warning("A translucent Flood membrane hardens into place."))
+
+/mob/living/basic/flood/constructor/verb/grow_spores()
+	set name = "Grow Spore Cluster"
+	set category = "Flood"
+
+	var/turf/target_turf = get_build_turf()
+	if(!can_build(target_turf, /obj/structure/flood_spore_trap))
+		return
+	var/nearby_traps = 0
+	for(var/obj/structure/flood_spore_trap/trap in range(3, target_turf))
+		nearby_traps++
+		if(nearby_traps >= 2)
+			to_chat(src, span_warning("This area already has enough spore clusters."))
+			return
+	new /obj/structure/flood_spore_trap(target_turf)
+	visible_message(span_warning("[src] weaves a cluster of Flood spores across the floor."))
 
 /mob/living/basic/flood/overseer
 	name = "Flood overseer form"
