@@ -10,6 +10,26 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 #define FLOOD_INFESTOR_COOLDOWN (30 SECONDS)
 #define FLOOD_EVOLUTION_COOLDOWN (60 SECONDS)
 
+/// Spoken Flood language is local; the chorus verb below reaches every active Flood player.
+/datum/language/flood
+	name = "Floodmind"
+	desc = "The low, unsettling speech shared by Flood forms."
+	key = "f"
+	flags = TONGUELESS_SPEECH | NO_STUTTER
+	default_priority = -1
+	icon_state = "narsie"
+	syllables = list("gra", "vrak", "krr", "shaa", "thrum", "rukh", "hss", "vorr")
+
+/datum/language_holder/flood
+	understood_languages = list(
+		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/flood = list(LANGUAGE_ATOM),
+	)
+	spoken_languages = list(
+		/datum/language/common = list(LANGUAGE_ATOM),
+		/datum/language/flood = list(LANGUAGE_ATOM),
+	)
+
 /datum/team/flood
 	name = "\improper Flood"
 
@@ -41,6 +61,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	to_chat(owner.current, span_notice("Combat forms can create infection forms, tear apart welded airlocks, and evolve into specialized Flood forms."))
 	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
 	to_chat(owner.current, span_notice("Infection forms can convert vulnerable or dead humans and reanimate fallen Flood forms."))
+	to_chat(owner.current, span_notice("Use Flood Chorus to speak to every active Flood player, or :f to speak Floodmind nearby."))
 
 /datum/antagonist/flood/create_team(datum/team/flood/new_team)
 	if(!new_team)
@@ -85,6 +106,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	icon_living = "marine_infested"
 	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
 	sentience_type = SENTIENCE_HUMANOID
+	initial_language_holder = /datum/language_holder/flood
 	faction = list("Flood")
 	combat_mode = TRUE
 	habitable_atmos = null
@@ -106,6 +128,41 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
 	var/next_infection = 0
 	var/next_evolution = 0
+
+/mob/living/basic/flood/verb/flood_chorus()
+	set name = "Flood Chorus"
+	set category = "Flood"
+
+	if(stat == DEAD || !mind?.has_antag_datum(/datum/antagonist/flood))
+		return
+	var/message = tgui_input_text(src, "Speak to the Flood chorus.", "Flood Chorus", max_length = MAX_MESSAGE_LEN)
+	if(!message || stat == DEAD || !mind?.has_antag_datum(/datum/antagonist/flood))
+		return
+	if(client?.prefs.muted & MUTE_IC)
+		to_chat(src, span_warning("You cannot send IC messages while muted."))
+		return
+	if(client?.handle_spam_prevention(message, MUTE_IC))
+		return
+	var/list/filter_result = CAN_BYPASS_FILTER(src) ? null : is_ic_filtered(message)
+	if(filter_result)
+		REPORT_CHAT_FILTER_TO_USER(src, filter_result)
+		return
+	var/list/soft_filter_result = CAN_BYPASS_FILTER(src) ? null : is_soft_ic_filtered(message)
+	if(soft_filter_result)
+		if(tgui_alert(src, "Your message contains \"[soft_filter_result[CHAT_FILTER_INDEX_WORD]]\". [soft_filter_result[CHAT_FILTER_INDEX_REASON]]", "Soft Blocked Word", list("Yes", "No")) != "Yes")
+			return
+		message_admins("[ADMIN_LOOKUPFLW(src)] passed the soft filter for Flood Chorus: [html_encode(message)]")
+	if(stat == DEAD || !mind?.has_antag_datum(/datum/antagonist/flood))
+		return
+	message = trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN))
+	if(!message)
+		return
+	var/rendered_message = span_notice("<b>Flood Chorus — [name]:</b> [message]")
+	for(var/datum/antagonist/flood/other_flood in GLOB.antagonists)
+		var/mob/living/basic/flood/recipient = other_flood.owner?.current
+		if(istype(recipient) && recipient.stat != DEAD)
+			to_chat(recipient, rendered_message)
+	log_talk(message, LOG_SAY, tag = "Flood Chorus")
 
 /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
 	blackboard = list(
@@ -177,6 +234,11 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		return
 	break_nearby_weld()
 
+/mob/living/basic/flood/combat_form/examine(mob/user)
+	. = ..()
+	if(stat == DEAD && reanimated)
+		. += span_warning("Its biomass has already been reanimated and cannot be raised again.")
+
 /mob/living/basic/flood/combat_form/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	. = ..()
 	if(!. || !ishuman(attacked_target))
@@ -214,6 +276,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	GLOB.flood_infections++
 	if(infection_message)
 		visible_message(span_danger(infection_message))
+	new /obj/effect/decal/cleanable/blood/splatter(conversion_turf)
+	playsound(conversion_turf, 'sound/flood/leap.leap1.ogg', 50, TRUE)
 	qdel(victim)
 	return TRUE
 
@@ -356,8 +420,20 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(!spawn_turf)
 		return
 
+	var/list/spawn_turfs = list(spawn_turf)
+	for(var/turf/open/candidate in range(2, src))
+		if(candidate.density || isspaceturf(candidate))
+			continue
+		var/blocked = FALSE
+		for(var/atom/movable/obstacle in candidate)
+			if(obstacle.density)
+				blocked = TRUE
+				break
+		if(!blocked)
+			spawn_turfs += candidate
+
 	for(var/i in 1 to rand(6, 12))
-		new /mob/living/basic/flood/infestor(spawn_turf)
+		new /mob/living/basic/flood/infestor(pick(spawn_turfs))
 	visible_message(span_warning("[src] ruptures, releasing a swarm of Flood infection forms!"))
 
 /mob/living/basic/flood/carrier/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
