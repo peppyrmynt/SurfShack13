@@ -531,11 +531,10 @@
 /datum/component/riding/vehicle/lawnmower
 	keytype = null
 
-/datum/component/riding/vehicle/lawnmower/handle_specials()
-	. = ..()
-	set_riding_offsets(RIDING_OFFSET_ALL, list(
+/datum/component/riding/vehicle/lawnmower/get_rider_offsets_and_layers(pass_index, mob/offsetter)
+	return list(
 		TEXT_NORTH = list(0, 4),
 		TEXT_SOUTH = list(0, 7),
 		TEXT_EAST = list(-5, 2),
 		TEXT_WEST = list(5, 2),
-	))
+	)
