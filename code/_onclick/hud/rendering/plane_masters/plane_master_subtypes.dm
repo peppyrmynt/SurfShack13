@@ -14,58 +14,37 @@
 
 /atom/movable/screen/plane_master/field_of_vision_blocker/show_to(mob/mymob)
 	. = ..()
-	if(!. || !mymob)
-		return .
-	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled), override = TRUE)
-	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled), override = TRUE)
-	if(HAS_TRAIT(mymob, TRAIT_FOV_APPLIED))
-		fov_enabled(mymob)
-	else
-		fov_disabled(mymob)
+	add_relay_to(GET_NEW_PLANE(RENDER_PLANE_EMISSIVE, offset), relay_layer = EMISSIVE_SPACE_LAYER)
 
-/atom/movable/screen/plane_master/field_of_vision_blocker/proc/fov_enabled(mob/source)
+/atom/movable/screen/plane_master/parallax_white/set_home(datum/plane_master_group/home)
+	. = ..()
+	if(home)
+		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
+		hud_changed(null, null, home.our_hud)
+
+/atom/movable/screen/plane_master/parallax_white/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
 	SIGNAL_HANDLER
-	if(force_hidden == FALSE)
+	if(old_hud)
+		UnregisterSignal(old_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
+	if(new_hud)
+		RegisterSignals(new_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
+		parallax_updated(new_hud)
+
+/atom/movable/screen/plane_master/parallax_white/proc/parallax_updated(datum/source)
+	SIGNAL_HANDLER
+	if(isnull(home.our_hud?.mymob))
 		return
-	unhide_plane(source)
-
-/atom/movable/screen/plane_master/field_of_vision_blocker/proc/fov_disabled(mob/source)
-	SIGNAL_HANDLER
-	hide_plane(source)
-
-/atom/movable/screen/plane_master/clickcatcher
-	name = "Click Catcher"
-	documentation = "Contains the screen object we use as a backdrop to catch clicks on portions of the screen that would otherwise contain nothing else. \
-		<br>Will always be below almost everything else"
-	plane = CLICKCATCHER_PLANE
-	appearance_flags = PLANE_MASTER|NO_CLIENT_COLOR
-	multiz_scaled = FALSE
-	critical = PLANE_CRITICAL_DISPLAY
-
-/atom/movable/screen/plane_master/clickcatcher/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
-	. = ..()
-	RegisterSignal(SSmapping, COMSIG_PLANE_OFFSET_INCREASE, PROC_REF(offset_increased))
-	offset_increased(SSmapping, 0, SSmapping.max_plane_offset)
-
-/atom/movable/screen/plane_master/clickcatcher/proc/offset_increased(datum/source, old_off, new_off)
-	SIGNAL_HANDLER
-	// We only want need the lowest level
-	// If my system better supported changing PM plane values mid op I'd do that, but I do NOT so
-	if(new_off > offset)
-		hide_plane(home?.our_hud?.mymob)
-
-/atom/movable/screen/plane_master/parallax_white
-	name = "Parallax whitifier"
-	documentation = "Essentially a backdrop for the parallax plane. We're rendered just below it, so we'll be multiplied by its well, parallax.\
-		<br>If you want something to look as if it has parallax on it, draw it to this plane."
-	plane = PLANE_SPACE
-	appearance_flags = PLANE_MASTER|NO_CLIENT_COLOR
-	render_relay_planes = list(RENDER_PLANE_GAME, LIGHT_MASK_PLANE)
-	critical = PLANE_CRITICAL_FUCKO_PARALLAX // goes funny when touched. no idea why I don't trust byond
-
-/atom/movable/screen/plane_master/parallax_white/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
-	. = ..()
-	add_relay_to(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset), relay_layer = EMISSIVE_SPACE_LAYER)
+	if(HAS_TRAIT(home.our_hud, TRAIT_PARALLAX_DISPLAYED))
+		// Gives parallax a fullwhite backdrop to multiply against
+		color = list(
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			1, 1, 1, 1,
+			0, 0, 0, 0
+			)
+	else
+		color = initial(color)
 
 ///Contains space parallax
 /atom/movable/screen/plane_master/parallax
@@ -90,6 +69,29 @@
 	if(GLOB.narsie_summon_count >= 1)
 		narsie_start_midway(GLOB.narsie_effect_last_modified) // We assume we're on the start, so we can use this number
 	offset_increase(0, SSmapping.max_plane_offset)
+
+/atom/movable/screen/plane_master/parallax/set_home(datum/plane_master_group/home)
+	. = ..()
+	if(home)
+		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
+		hud_changed(null, null, home.our_hud)
+
+/atom/movable/screen/plane_master/parallax/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
+	SIGNAL_HANDLER
+	if(old_hud)
+		UnregisterSignal(old_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
+	if(new_hud)
+		RegisterSignals(new_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
+		parallax_updated(new_hud)
+
+/atom/movable/screen/plane_master/parallax/proc/parallax_updated(datum/source)
+	SIGNAL_HANDLER
+	if(isnull(home.our_hud?.mymob))
+		return
+	if(HAS_TRAIT(home.our_hud, TRAIT_PARALLAX_DISPLAYED))
+		show_to(home.our_hud.mymob)
+	else
+		hide_from(home.our_hud.mymob)
 
 /atom/movable/screen/plane_master/parallax/proc/on_offset_increase(datum/source, old_offset, new_offset)
 	SIGNAL_HANDLER
@@ -344,20 +346,21 @@
 	documentation = "Holds camera static images. Usually only visible to people who can well, see static.\
 		<br>We use images rather then vis contents because they're lighter on maptick, and maptick sucks butt."
 	plane = CAMERA_STATIC_PLANE
+	render_relay_planes = list(RENDER_PLANE_GAME)
 
-/atom/movable/screen/plane_master/camera_static/show_to(mob/mymob)
+/atom/movable/screen/plane_master/camera_static/set_home(datum/plane_master_group/home)
 	. = ..()
-	if(!.)
-		return
-	var/datum/hud/our_hud = home.our_hud
-	if(isnull(our_hud))
-		return
+	if(home)
+		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
+		hud_changed(null, null, home.our_hud)
 
-	// We'll hide the slate if we're not seeing through a camera eye
-	// This can call on a cycle cause we don't clear in hide_from
-	// Yes this is the best way of hooking into the hud, I hate myself too
-	RegisterSignal(our_hud, COMSIG_HUD_EYE_CHANGED, PROC_REF(eye_changed), override = TRUE)
-	eye_changed(our_hud, null, our_hud.mymob?.canon_client?.eye)
+/atom/movable/screen/plane_master/camera_static/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
+	SIGNAL_HANDLER
+	if(old_hud)
+		UnregisterSignal(old_hud, COMSIG_HUD_EYE_CHANGED, PROC_REF(eye_changed))
+	if(new_hud)
+		RegisterSignal(new_hud, COMSIG_HUD_EYE_CHANGED, PROC_REF(eye_changed))
+		eye_changed(new_hud, null, new_hud.mymob?.canon_client?.eye)
 
 /atom/movable/screen/plane_master/camera_static/proc/eye_changed(datum/hud/source, atom/old_eye, atom/new_eye)
 	SIGNAL_HANDLER

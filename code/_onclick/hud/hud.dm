@@ -395,8 +395,11 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	// Handles alerts - the things on the right side of the screen
 	reorganize_alerts(screenmob)
 	screenmob.reload_fullscreen()
-	update_parallax_pref(screenmob)
-	update_reuse(screenmob)
+
+	if(screenmob == mymob)
+		update_parallax_pref()
+	else
+		viewmob.hud_used.update_parallax_pref()
 
 	// ensure observers get an accurate and up-to-date view
 	if (!viewmob)

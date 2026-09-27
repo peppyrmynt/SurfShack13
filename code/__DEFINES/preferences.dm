@@ -42,6 +42,7 @@
 #define PARALLAX_HIGH "High"
 #define PARALLAX_MED "Medium"
 #define PARALLAX_LOW "Low"
+#define PARALLAX_BOOMER "Old"
 #define PARALLAX_DISABLE "Disabled"
 
 #define SCALING_METHOD_NORMAL "normal"
