@@ -26,6 +26,7 @@
 	if(isliving(bumped_thing))
 		var/mob/living/victim = bumped_thing
 		victim.adjustBruteLoss(25)
+		playsound(victim, 'sound/effects/hit_kick.ogg', 50, TRUE)
 		var/atom/new_loc = get_edge_target_turf(victim, get_dir(src, get_step_away(victim, src)))
 		victim.throw_at(new_loc, 4, 1)
 	return ..()
@@ -50,10 +51,10 @@
 				add_mob_blood(victim)
 				var/turf/below_us = get_turf(src)
 				below_us.add_mob_blood(victim)
-				AddComponent(/datum/component/blood_walk, \\
-					blood_type = /obj/effect/decal/cleanable/blood/tracks, \\
-					target_dir_change = TRUE, \\
-					transfer_blood_dna = TRUE, \\
+				AddComponent(/datum/component/blood_walk, \
+					blood_type = /obj/effect/decal/cleanable/blood/tracks, \
+					target_dir_change = TRUE, \
+					transfer_blood_dna = TRUE, \
 					max_blood = 4)
 				victim.gib()
 				shake_camera(victim, 20, 1)
@@ -64,10 +65,10 @@
 			add_mob_blood(victim)
 			var/turf/below_us = get_turf(src)
 			below_us.add_mob_blood(victim)
-			AddComponent(/datum/component/blood_walk, \\
-				blood_type = /obj/effect/decal/cleanable/blood/tracks, \\
-				target_dir_change = TRUE, \\
-				transfer_blood_dna = TRUE, \\
+			AddComponent(/datum/component/blood_walk, \
+				blood_type = /obj/effect/decal/cleanable/blood/tracks, \
+				target_dir_change = TRUE, \
+				transfer_blood_dna = TRUE, \
 				max_blood = 4)
 			if(iscarbon(victim) && victim.stat < UNCONSCIOUS)
 				victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
