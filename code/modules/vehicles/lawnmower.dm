@@ -42,6 +42,14 @@
 			if(victim == rider)
 				continue
 			if(victim.body_position == LYING_DOWN)
+				if(iszombie(victim))
+					var/obj/item/bodypart/head = victim.get_bodypart(BODY_ZONE_HEAD)
+					if(head)
+						visible_message(span_danger("[src] runs over [victim], decapitating them!"))
+						head.dismember()
+						shake_camera(victim, 20, 1)
+						gibbed = TRUE
+					continue
 				visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
 				victim.gib()
 				shake_camera(victim, 20, 1)
