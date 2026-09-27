@@ -90,7 +90,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/flood/melee.melee1.ogg'
-	del_on_death = TRUE
+	del_on_death = FALSE
+	icon_dead = "dead"
 	death_message = "collapses into a twitching mass of biomass."
 	obj_damage = 60
 	var/next_infection = 0
@@ -133,9 +134,11 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	new_form.name = victim.real_name
 
 	if(victim.mind)
-		victim.mind.transfer_to(new_form)
-		new_form.mind.add_antag_datum(/datum/antagonist/flood)
-		new_form.mind.special_role = ROLE_FLOOD
+		var/datum/mind/victim_mind = victim.mind
+		victim_mind.transfer_to(new_form)
+		if(!victim_mind.has_antag_datum(/datum/antagonist/flood))
+			victim_mind.add_antag_datum(/datum/antagonist/flood)
+		victim_mind.special_role = ROLE_FLOOD
 
 	qdel(victim)
 	return TRUE
@@ -257,9 +260,11 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		new_form.name = victim.real_name
 		GLOB.flood_infections++
 		if(victim.mind)
-			victim.mind.transfer_to(new_form)
-			new_form.mind.add_antag_datum(/datum/antagonist/flood)
-			new_form.mind.special_role = ROLE_FLOOD
+			var/datum/mind/victim_mind = victim.mind
+			victim_mind.transfer_to(new_form)
+			if(!victim_mind.has_antag_datum(/datum/antagonist/flood))
+				victim_mind.add_antag_datum(/datum/antagonist/flood)
+			victim_mind.special_role = ROLE_FLOOD
 		visible_message(span_danger("[src] burrows into [victim], converting them into a Flood combat form!"))
 		qdel(victim)
 		qdel(src)
@@ -273,6 +278,37 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 			for(var/i in 1 to rand(6, 12))
 				new /mob/living/simple_animal/hostile/flood/infestor(spawn_turf)
 	return ..()
+
+/mob/living/simple_animal/hostile/flood/infestor/verb/reanimate_flood()
+	set name = "Reanimate Flood Corpse"
+	set category = "Flood"
+
+	if(stat == DEAD)
+		return
+
+	var/mob/living/simple_animal/hostile/flood/corpse
+	for(var/mob/living/simple_animal/hostile/flood/candidate in range(1, src))
+		if(candidate == src || candidate.stat != DEAD || istype(candidate, /mob/living/simple_animal/hostile/flood/infestor))
+			continue
+		corpse = candidate
+		break
+
+	if(!corpse)
+		to_chat(src, span_warning("There is no viable Flood corpse nearby."))
+		return
+
+	var/mob/living/simple_animal/hostile/flood/new_form = new corpse.type(corpse.loc)
+	new_form.name = corpse.name
+	if(corpse.mind)
+		var/datum/mind/corpse_mind = corpse.mind
+		corpse_mind.transfer_to(new_form)
+		if(!corpse_mind.has_antag_datum(/datum/antagonist/flood))
+			corpse_mind.add_antag_datum(/datum/antagonist/flood)
+		corpse_mind.special_role = ROLE_FLOOD
+
+	visible_message(span_danger("[src] burrows into [corpse], and the corpse lurches back to life!"))
+	qdel(corpse)
+	qdel(src)
 
 /mob/living/simple_animal/hostile/flood/pure
 	name = "Flood pure form"
