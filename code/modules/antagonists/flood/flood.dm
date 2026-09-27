@@ -24,7 +24,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	name = "\improper Flood"
 	roundend_category = "flood"
 	antagpanel_category = "Flood"
-	antag_hud_name = "flood"
 	job_rank = ROLE_FLOOD
 	show_to_ghosts = TRUE
 	show_in_antagpanel = TRUE
@@ -358,8 +357,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	midround_ruleset_style = MIDROUND_RULESET_STYLE_HEAVY
 	antag_datum = /datum/antagonist/flood
 	antag_flag = ROLE_FLOOD
-	antag_preference = ROLE_ALIEN
-	antag_flag_override = ROLE_ALIEN
+	antag_preference = ROLE_FLOOD
+	antag_flag_override = ROLE_FLOOD
 	required_type = /mob/dead/observer
 	required_applicants = 1
 	required_candidates = 1
