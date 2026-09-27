@@ -29,13 +29,13 @@
 	return ..()
 
 /obj/structure/flood_biomass/process()
-	if(world.time < next_spawn)
-		return
-	next_spawn = world.time + spawn_delay
-
 	if(world.time >= next_spread)
 		next_spread = world.time + spread_delay
 		spread_growth()
+
+	if(world.time < next_spawn)
+		return
+	next_spawn = world.time + spawn_delay
 
 	var/nearby_flood = 0
 	for(var/mob/living/simple_animal/hostile/flood/flood_form in range(7, src))
