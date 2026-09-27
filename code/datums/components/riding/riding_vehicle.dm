@@ -527,3 +527,15 @@
 		TEXT_EAST =  list(0, 0, VEHICLE_LAYER),
 		TEXT_WEST =  list(0, 0, VEHICLE_LAYER),
 	)
+
+/datum/component/riding/vehicle/lawnmower
+	keytype = null
+
+/datum/component/riding/vehicle/lawnmower/handle_specials()
+	. = ..()
+	set_riding_offsets(RIDING_OFFSET_ALL, list(
+		TEXT_NORTH = list(0, 4),
+		TEXT_SOUTH = list(0, 7),
+		TEXT_EAST = list(-5, 2),
+		TEXT_WEST = list(5, 2),
+	))
