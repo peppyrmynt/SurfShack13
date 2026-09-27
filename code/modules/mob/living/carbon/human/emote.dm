@@ -270,7 +270,8 @@
 		return
 
 	// Like laugh_k, use one complete animated icon so the frame cannot cover the art.
-	var/image/bubble = image(get_emote_bubble_icon(), loc = user, pixel_x = 28, pixel_y = -4)
+	// Keep its top at pixel 28, below the overhead runechat text.
+	var/image/bubble = image(get_emote_bubble_icon(), loc = user, pixel_x = 24, pixel_y = -8)
 	bubble.plane = ABOVE_HUD_PLANE
 	bubble.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	bubble.alpha = 255
@@ -293,28 +294,33 @@
 		var/artwork_width = max(1, round(bubble_artwork.Width() * artwork_scale))
 		var/artwork_height = max(1, round(bubble_artwork.Height() * artwork_scale))
 		bubble_artwork.Scale(artwork_width, artwork_height)
-		var/offset_x = 12 + round((32 - artwork_width) / 2)
-		var/offset_y = 4 + round((32 - artwork_height) / 2)
-		bubble_artwork.Crop(1 - offset_x, 1 - offset_y, 48 - offset_x, 40 - offset_y)
+		var/offset_x = 18 + round((32 - artwork_width) / 2)
+		var/offset_y = 2 + round((32 - artwork_height) / 2)
+		bubble_artwork.Crop(1 - offset_x, 1 - offset_y, 56 - offset_x, 36 - offset_y)
 		bubble_artwork.Blend(get_bubble_icon(), ICON_UNDERLAY)
 	return bubble_artwork
 
-/// A shared pixel-art speech frame, drawn once; the animated emote remains a separate overlay.
+/// Cached rounded speech frame inspired by laugh_k, with a thin border and light-grey fill.
 /datum/emote/living/seventv/proc/get_bubble_icon()
 	var/static/icon/bubble_icon
 	if(!bubble_icon)
 		bubble_icon = icon('icons/mob/human/aprilfools_emotes.dmi', "clueless")
 		bubble_icon.DrawBox(null, 1, 1, 32, 32)
-		bubble_icon.Crop(1, 1, 48, 40)
-		bubble_icon.DrawBox("#404040", 11, 1, 46, 40)
-		bubble_icon.DrawBox("#404040", 9, 3, 48, 38)
-		// One-pixel outline, including the stepped corners and speech tail.
-		bubble_icon.DrawBox("#FFFFFF", 10, 3, 47, 38)
-		bubble_icon.DrawBox("#FFFFFF", 11, 2, 46, 39)
-		for(var/column in 1 to 9)
-			bubble_icon.DrawBox("#404040", column, 27 - column, column, 26)
-			if(column > 2)
-				bubble_icon.DrawBox("#FFFFFF", column, 28 - column, column, 25)
+		bubble_icon.Crop(1, 1, 56, 36)
+		// Rounded 44-by-36 body. Row insets keep the outline one pixel thick.
+		var/list/corner_insets = list(5, 3, 2, 1, 1)
+		for(var/row in 1 to 36)
+			var/edge_distance = min(row, 37 - row)
+			var/inset = edge_distance <= length(corner_insets) ? corner_insets[edge_distance] : 0
+			bubble_icon.DrawBox("#303030", 13 + inset, row, 56 - inset, row)
+			if(row > 1 && row < 36)
+				bubble_icon.DrawBox("#EEEEEE", 14 + inset, row, 55 - inset, row)
+		// A longer, shallow pointer, like the king's bubble.
+		for(var/column in 1 to 13)
+			var/lower_edge = 24 - round((column - 1) * 0.7)
+			bubble_icon.DrawBox("#303030", column, lower_edge, column, 24)
+			if(lower_edge < 23)
+				bubble_icon.DrawBox("#EEEEEE", column, lower_edge + 1, column, 23)
 	return bubble_icon
 
 /datum/emote/living/seventv/proc/fade_bubble(image/bubble, list/recipients)
