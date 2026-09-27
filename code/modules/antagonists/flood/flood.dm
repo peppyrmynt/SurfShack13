@@ -6,7 +6,6 @@
 GLOBAL_VAR_INIT(flood_infections, 0)
 
 #define IS_FLOOD(target_mob) (target_mob?.mind?.has_antag_datum(/datum/antagonist/flood) || istype(target_mob, /mob/living/basic/flood))
-#define FLOOD_INFECTION_COOLDOWN (20 SECONDS)
 #define FLOOD_INFESTOR_COOLDOWN (30 SECONDS)
 #define FLOOD_EVOLUTION_COOLDOWN (60 SECONDS)
 
@@ -57,10 +56,10 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 /datum/antagonist/flood/greet()
 	to_chat(owner.current, span_danger("You are part of the Flood."))
-	to_chat(owner.current, span_notice("Spread the infestation by weakening and converting human hosts."))
+	to_chat(owner.current, span_notice("Weaken human hosts so infection forms can latch on and convert them."))
 	to_chat(owner.current, span_notice("Combat forms can create infection forms, tear apart welded airlocks, and evolve into specialized Flood forms."))
 	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
-	to_chat(owner.current, span_notice("Infection forms can convert vulnerable or dead humans and reanimate fallen Flood forms."))
+	to_chat(owner.current, span_notice("Infection forms must remain latched onto vulnerable or dead humans to convert them. Living hosts can resist or escape."))
 	to_chat(owner.current, span_notice("Use Flood Chorus to speak to every active Flood player, or :f to speak Floodmind nearby."))
 
 /datum/antagonist/flood/create_team(datum/team/flood/new_team)
@@ -126,7 +125,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	obj_damage = 60
 	damage_coeff = list(BRUTE = 1, BURN = 1.5, TOX = 1, STAMINA = 0, OXY = 1)
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
-	var/next_infection = 0
 	var/next_evolution = 0
 
 /mob/living/basic/flood/verb/flood_chorus()
@@ -239,18 +237,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(stat == DEAD && reanimated)
 		. += span_warning("Its biomass has already been reanimated and cannot be raised again.")
 
-/mob/living/basic/flood/combat_form/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
-	. = ..()
-	if(!. || !ishuman(attacked_target))
-		return
-	if(world.time < next_infection)
-		return
-	var/mob/living/carbon/human/victim = attacked_target
-	if(victim.stat == DEAD || IS_FLOOD(victim))
-		return
-	if(prob(35))
-		infect_host(victim)
-
 /mob/living/basic/flood/proc/convert_human(mob/living/carbon/human/victim, infection_message)
 	if(!victim || QDELETED(victim) || IS_FLOOD(victim))
 		return FALSE
@@ -280,12 +266,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	playsound(conversion_turf, 'sound/flood/leap.leap1.ogg', 50, TRUE)
 	qdel(victim)
 	return TRUE
-
-/mob/living/basic/flood/proc/infect_host(mob/living/carbon/human/victim)
-	if(world.time < next_infection)
-		return FALSE
-	next_infection = world.time + FLOOD_INFECTION_COOLDOWN
-	return convert_human(victim, "[src] tears into [victim], Flood biomass spreading through their body!")
 
 /mob/living/basic/flood/combat_form/verb/create_infestor()
 	set name = "Create Infection Form"
@@ -477,33 +457,67 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
 	var/next_airlock_infest = 0
+	var/mob/living/carbon/human/latched_host
 
 /mob/living/basic/flood/infestor/Initialize(mapload)
 	. = ..()
 	pixel_x = rand(-8, 8)
 	pixel_y = rand(0, 24)
 
+/mob/living/basic/flood/infestor/Destroy()
+	if(latched_host)
+		UnregisterSignal(latched_host, COMSIG_LIVING_RESIST)
+	latched_host = null
+	return ..()
+
 /mob/living/basic/flood/infestor/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
-	if(!ishuman(attacked_target))
+	if(stat == DEAD || latched_host || !ishuman(attacked_target))
 		return FALSE
-	var/mob/living/carbon/human/potential_host = attacked_target
-	if(IS_FLOOD(potential_host))
+	var/mob/living/carbon/human/host = attacked_target
+	if(IS_FLOOD(host) || !Adjacent(host))
 		return FALSE
-	if(potential_host.stat == DEAD)
-		if(convert_human(potential_host, "[src] burrows into [potential_host]'s corpse, raising it as a Flood combat form!"))
-			qdel(src)
-			return TRUE
+	if(host.stat == CONSCIOUS && host.getBruteLoss() + host.getFireLoss() <= host.maxHealth * 0.25)
 		return FALSE
-	var/host_damage = potential_host.getBruteLoss() + potential_host.getFireLoss()
-	if(potential_host.stat == CONSCIOUS && host_damage <= potential_host.maxHealth * 0.25)
+	for(var/mob/living/basic/flood/infestor/other in range(1, host))
+		if(other != src && other.latched_host == host)
+			return FALSE
+	if(host.stat != DEAD && !..())
 		return FALSE
-	. = ..()
-	if(!.)
+	latched_host = host
+	forceMove(get_turf(host))
+	anchored = TRUE
+	RegisterSignal(host, COMSIG_LIVING_RESIST, PROC_REF(on_host_resist))
+	host.visible_message(span_danger("[src] latches onto [host]!"), span_userdanger("[src] latches onto you! Resist or move away to break its grip!"))
+	INVOKE_ASYNC(src, PROC_REF(finish_latch), host)
+	return TRUE
+
+/mob/living/basic/flood/infestor/proc/latch_still_valid(mob/living/carbon/human/host)
+	if(stat == DEAD || QDELETED(host) || latched_host != host || IS_FLOOD(host) || !Adjacent(host))
+		return FALSE
+	if(host.stat == CONSCIOUS && host.getBruteLoss() + host.getFireLoss() <= host.maxHealth * 0.25)
+		return FALSE
+	return TRUE
+
+/mob/living/basic/flood/infestor/proc/clear_latch()
+	if(latched_host)
+		UnregisterSignal(latched_host, COMSIG_LIVING_RESIST)
+	latched_host = null
+	anchored = FALSE
+
+/mob/living/basic/flood/infestor/proc/on_host_resist(mob/living/carbon/human/host)
+	SIGNAL_HANDLER
+	if(latched_host != host)
 		return
-	var/mob/living/carbon/human/victim = attacked_target
-	if(victim.stat == DEAD || IS_FLOOD(victim))
+	host.visible_message(span_notice("[host] shakes [src] loose!"), span_notice("You shake [src] loose!"))
+	clear_latch()
+
+/mob/living/basic/flood/infestor/proc/finish_latch(mob/living/carbon/human/host)
+	if(!do_after(src, 6 SECONDS, host, extra_checks = CALLBACK(src, PROC_REF(latch_still_valid), host)) || !latch_still_valid(host))
+		if(latched_host == host)
+			clear_latch()
 		return
-	if(prob(70) && convert_human(victim, "[src] burrows into [victim], converting them into a Flood combat form!"))
+	clear_latch()
+	if(convert_human(host, "[src] burrows into [host], converting them into a Flood combat form!"))
 		qdel(src)
 
 /mob/living/basic/flood/carrier/death(gibbed)
@@ -513,6 +527,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	return ..()
 
 /mob/living/basic/flood/infestor/proc/reanimate_nearby_flood(show_failure = FALSE)
+	if(latched_host)
+		return FALSE
 	var/mob/living/basic/flood/combat_form/corpse
 	for(var/mob/living/basic/flood/combat_form/candidate in range(2, src))
 		if(candidate.stat != DEAD || candidate.reanimated)
@@ -542,6 +558,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	return TRUE
 
 /mob/living/basic/flood/infestor/proc/infest_nearby_airlock(show_failure = FALSE)
+	if(latched_host)
+		return FALSE
 	if(world.time < next_airlock_infest)
 		return FALSE
 
@@ -567,7 +585,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 /mob/living/basic/flood/infestor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
-	if(!. || stat == DEAD || client || world.time < next_reanimate_check)
+	if(!. || stat == DEAD || client || latched_host || world.time < next_reanimate_check)
 		return
 	next_reanimate_check = world.time + 2 SECONDS
 	if(reanimate_nearby_flood())
@@ -622,6 +640,5 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	return new_flood
 
 #undef IS_FLOOD
-#undef FLOOD_INFECTION_COOLDOWN
 #undef FLOOD_INFESTOR_COOLDOWN
 #undef FLOOD_EVOLUTION_COOLDOWN
