@@ -37,6 +37,9 @@
 		rider = buckled_mobs[1]
 
 	var/gibbed = FALSE
+	for(var/obj/structure/flora/grass/grass in loc)
+		qdel(grass)
+
 	for(var/mob/living/carbon/human/victim in loc)
 		if(victim == rider)
 			continue
