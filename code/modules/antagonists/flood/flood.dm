@@ -231,15 +231,16 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	faction = list("Flood")
 	combat_mode = TRUE
 	atmos_requirements = null
-	maxHealth = 15
-	health = 15
-	melee_damage_lower = 5
-	melee_damage_upper = 10
+	maxHealth = 5
+	health = 5
+	melee_damage_lower = 1
+	melee_damage_upper = 5
 	pass_flags = PASSMOB
 	del_on_death = TRUE
+	mob_size = MOB_SIZE_TINY
 	attack_verb_continuous = "leaps at"
 	attack_verb_simple = "leap at"
-	attack_sound = 'sound/flood/melee.melee5.ogg'
+	attack_sound = 'sound/flood/leap.leap1.ogg'
 
 /mob/living/simple_animal/hostile/flood/infestor/AttackingTarget(atom/attacked_target)
 	. = ..()
@@ -247,6 +248,9 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		return
 	var/mob/living/carbon/human/victim = attacked_target
 	if(victim.stat == DEAD || IS_FLOOD(victim))
+		return
+	var/damage_taken = victim.getBruteLoss() + victim.getFireLoss()
+	if(victim.stat == CONSCIOUS && damage_taken <= victim.maxHealth * 0.25)
 		return
 	if(prob(70))
 		var/mob/living/simple_animal/hostile/flood/combat_form/new_form = new(victim.loc)
@@ -259,6 +263,16 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		visible_message(span_danger("[src] burrows into [victim], converting them into a Flood combat form!"))
 		qdel(victim)
 		qdel(src)
+
+/mob/living/simple_animal/hostile/flood/carrier/death(gibbed)
+	if(!QDELETED(src))
+		visible_message(span_danger("[src] bursts, propelling Flood infection forms in all directions!"))
+		playsound(loc, 'sound/effects/explosion/explosion1.ogg', 50, TRUE)
+		var/turf/spawn_turf = get_turf(src)
+		if(spawn_turf)
+			for(var/i in 1 to rand(6, 12))
+				new /mob/living/simple_animal/hostile/flood/infestor(spawn_turf)
+	return ..()
 
 /mob/living/simple_animal/hostile/flood/pure
 	name = "Flood pure form"
