@@ -233,16 +233,29 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	melee_damage_lower = 10
 	melee_damage_upper = 18
 
+/mob/living/simple_animal/hostile/flood/carrier
+	var/has_released_infection_forms = FALSE
+
+/mob/living/simple_animal/hostile/flood/carrier/proc/release_swarm()
+	if(has_released_infection_forms)
+		return
+	has_released_infection_forms = TRUE
+
+	var/turf/spawn_turf = get_turf(src)
+	if(!spawn_turf)
+		return
+
+	for(var/i in 1 to rand(6, 12))
+		new /mob/living/simple_animal/hostile/flood/infestor(spawn_turf)
+	visible_message(span_warning("[src] ruptures, releasing a swarm of Flood infection forms!"))
+
 /mob/living/simple_animal/hostile/flood/carrier/verb/release_infection_forms()
 	set name = "Release Infection Forms"
 	set category = "Flood"
 
 	if(stat == DEAD)
 		return
-	var/count = rand(6, 12)
-	for(var/i in 1 to count)
-		new /mob/living/simple_animal/hostile/flood/infestor(loc)
-	visible_message(span_warning("[src] ruptures, releasing a swarm of Flood infection forms!"))
+	release_swarm()
 	qdel(src)
 
 /mob/living/simple_animal/hostile/flood/infestor
@@ -281,13 +294,9 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		qdel(src)
 
 /mob/living/simple_animal/hostile/flood/carrier/death(gibbed)
-	if(!QDELETED(src))
-		visible_message(span_danger("[src] bursts, propelling Flood infection forms in all directions!"))
+	if(!has_released_infection_forms)
 		playsound(loc, 'sound/effects/explosion/explosion1.ogg', 50, TRUE)
-		var/turf/spawn_turf = get_turf(src)
-		if(spawn_turf)
-			for(var/i in 1 to rand(6, 12))
-				new /mob/living/simple_animal/hostile/flood/infestor(spawn_turf)
+		release_swarm()
 	return ..()
 
 /mob/living/simple_animal/hostile/flood/infestor/verb/reanimate_flood()
