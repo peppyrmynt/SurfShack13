@@ -3,8 +3,8 @@
 All `/datum/emote/living/seventv` subtypes inherit a side speech bubble inspired by
 `laugh_k`: a click-through image attached to the speaker, a short pop-in, and a
 shrink-out followed by removal from the original viewers and deletion.
-The frame is drawn once and cached. Artwork stays a separate overlay, preserving
-DMI animation frames and timing. It fits within 32 by 32 pixels without changing
+The frame is drawn once and cached. Each emote composites its artwork over that
+frame once, preserving DMI animation frames and timing in a single cached icon. It fits within 32 by 32 pixels without changing
 its aspect ratio. Nearby sighted viewers, including the speaker, receive it.
 
 To add an emote, define a child of `/datum/emote/living/seventv` with `key`,
