@@ -40,7 +40,7 @@
 	next_spawn = world.time + spawn_delay
 
 	var/nearby_flood = 0
-	for(var/mob/living/simple_animal/hostile/flood/flood_form in range(7, src))
+	for(var/mob/living/basic/flood/flood_form in range(7, src))
 		if(flood_form.stat != DEAD)
 			nearby_flood++
 			if(nearby_flood >= max_nearby_flood)
@@ -51,11 +51,11 @@
 		return
 
 	var/spawn_type = pick(
-		/mob/living/simple_animal/hostile/flood/infestor,
-		/mob/living/simple_animal/hostile/flood/combat_form/human,
-		/mob/living/simple_animal/hostile/flood/carrier,
+		/mob/living/basic/flood/infestor,
+		/mob/living/basic/flood/combat_form/human,
+		/mob/living/basic/flood/carrier,
 	)
-	var/mob/living/simple_animal/hostile/flood/new_flood = new spawn_type(spawn_turf)
+	var/mob/living/basic/flood/new_flood = new spawn_type(spawn_turf)
 	visible_message(span_warning("[src] writhes and produces [new_flood]."))
 
 /obj/structure/flood_biomass/proc/spread_growth()
@@ -162,7 +162,7 @@
 	max_integrity = 350
 
 /obj/structure/flood_door/CanAllowThrough(atom/movable/mover, border_dir)
-	if(istype(mover, /mob/living/simple_animal/hostile/flood))
+	if(istype(mover, /mob/living/basic/flood))
 		return TRUE
 	return ..()
 
@@ -175,11 +175,12 @@
 	density = TRUE
 	max_integrity = 200
 
-/mob/living/simple_animal/hostile/flood/constructor
+/mob/living/basic/flood/constructor
 	name = "Flood constructor form"
 	desc = "A specialized Flood form that converts its surroundings into infestation."
 	icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	icon_state = "constructor"
+	icon_living = "constructor"
 	icon_dead = "constructor_dead"
 	maxHealth = 175
 	health = 175
@@ -187,7 +188,7 @@
 	melee_damage_upper = 10
 	var/next_build = 0
 
-/mob/living/simple_animal/hostile/flood/constructor/proc/can_build(turf/open/target_turf, structure_type, solid = FALSE)
+/mob/living/basic/flood/constructor/proc/can_build(turf/open/target_turf, structure_type, solid = FALSE)
 	if(stat == DEAD)
 		return FALSE
 	if(!target_turf || isspaceturf(target_turf))
@@ -214,10 +215,10 @@
 	next_build = world.time + 2 SECONDS
 	return TRUE
 
-/mob/living/simple_animal/hostile/flood/constructor/proc/get_build_turf()
+/mob/living/basic/flood/constructor/proc/get_build_turf()
 	return get_step(src, dir)
 
-/mob/living/simple_animal/hostile/flood/constructor/verb/grow_biomass()
+/mob/living/basic/flood/constructor/verb/grow_biomass()
 	set name = "Grow Biomass"
 	set category = "Flood"
 
@@ -227,7 +228,7 @@
 	new /obj/structure/flood_biomass/tiny(target_turf)
 	visible_message(span_warning("Flood biomass spreads outward beneath [src]."))
 
-/mob/living/simple_animal/hostile/flood/constructor/verb/infest_floor()
+/mob/living/basic/flood/constructor/verb/infest_floor()
 	set name = "Infest Floor"
 	set category = "Flood"
 
@@ -237,7 +238,7 @@
 	new /obj/structure/flood_growth(target_turf)
 	visible_message(span_warning("Pulsating Flood tissue creeps across the floor."))
 
-/mob/living/simple_animal/hostile/flood/constructor/verb/grow_wall()
+/mob/living/basic/flood/constructor/verb/grow_wall()
 	set name = "Grow Wall Biomass"
 	set category = "Flood"
 
@@ -247,7 +248,7 @@
 	new /obj/structure/flood_wall_growth(target_turf)
 	visible_message(span_warning("Thick Flood biomass climbs across the nearby structure."))
 
-/mob/living/simple_animal/hostile/flood/constructor/verb/grow_door()
+/mob/living/basic/flood/constructor/verb/grow_door()
 	set name = "Grow Biomass Door"
 	set category = "Flood"
 
@@ -257,7 +258,7 @@
 	new /obj/structure/flood_door(target_turf)
 	visible_message(span_warning("Flood tissue swells into a thick membrane."))
 
-/mob/living/simple_animal/hostile/flood/constructor/verb/grow_membrane()
+/mob/living/basic/flood/constructor/verb/grow_membrane()
 	set name = "Grow Biomass Membrane"
 	set category = "Flood"
 
@@ -267,11 +268,12 @@
 	new /obj/structure/flood_window(target_turf)
 	visible_message(span_warning("A translucent Flood membrane hardens into place."))
 
-/mob/living/simple_animal/hostile/flood/overseer
+/mob/living/basic/flood/overseer
 	name = "Flood overseer form"
 	desc = "A specialized Flood form directing the spread of infestation."
 	icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	icon_state = "designator"
+	icon_living = "designator"
 	icon_dead = "designator_dead"
 	maxHealth = 150
 	health = 150
@@ -280,7 +282,7 @@
 	var/next_constructor = 0
 	var/next_direct_growth = 0
 
-/mob/living/simple_animal/hostile/flood/overseer/verb/create_constructor()
+/mob/living/basic/flood/overseer/verb/create_constructor()
 	set name = "Create Constructor Form"
 	set category = "Flood"
 
@@ -290,10 +292,10 @@
 		to_chat(src, span_warning("Your biomass is not ready to form another constructor."))
 		return
 	next_constructor = world.time + 30 SECONDS
-	new /mob/living/simple_animal/hostile/flood/constructor(loc)
+	new /mob/living/basic/flood/constructor(loc)
 	visible_message(span_warning("[src] buds off a new Flood constructor form."))
 
-/mob/living/simple_animal/hostile/flood/overseer/verb/direct_growth()
+/mob/living/basic/flood/overseer/verb/direct_growth()
 	set name = "Direct Infestation Growth"
 	set category = "Flood"
 

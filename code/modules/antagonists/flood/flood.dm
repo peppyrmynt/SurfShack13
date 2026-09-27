@@ -5,7 +5,7 @@
 
 GLOBAL_VAR_INIT(flood_infections, 0)
 
-#define IS_FLOOD(target_mob) (target_mob?.mind?.has_antag_datum(/datum/antagonist/flood) || istype(target_mob, /mob/living/simple_animal/hostile/flood))
+#define IS_FLOOD(target_mob) (target_mob?.mind?.has_antag_datum(/datum/antagonist/flood) || istype(target_mob, /mob/living/basic/flood))
 #define FLOOD_INFECTION_COOLDOWN (20 SECONDS)
 #define FLOOD_INFESTOR_COOLDOWN (30 SECONDS)
 #define FLOOD_EVOLUTION_COOLDOWN (60 SECONDS)
@@ -76,46 +76,71 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	report += span_notice("Hosts infected by the Flood: [GLOB.flood_infections]")
 	return "<div class='panel redborder'>[report.Join("<br>")]</div>"
 
-/mob/living/simple_animal/hostile/flood
+/mob/living/basic/flood
 	name = "Flood combat form"
 	desc = "A biomass-driven combat form belonging to a parasitic hive mind."
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
 	icon_state = "marine_infested"
+	icon_living = "marine_infested"
 	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
 	sentience_type = SENTIENCE_HUMANOID
 	faction = list("Flood")
 	combat_mode = TRUE
-	atmos_requirements = null
-	minbodytemp = 0
+	habitable_atmos = null
+	unsuitable_atmos_damage = 0
+	minimum_survivable_temperature = 0
+	maximum_survivable_temperature = INFINITY
 	maxHealth = 125
 	health = 125
-	harm_intent_damage = 10
 	melee_damage_lower = 20
 	melee_damage_upper = 30
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/flood/melee.melee1.ogg'
 	attacked_sound = 'sound/flood/pain.pain1.ogg'
-	del_on_death = FALSE
 	icon_dead = "marine_dead"
 	death_message = "collapses into a twitching mass of biomass."
 	obj_damage = 60
 	damage_coeff = list(BRUTE = 1, BURN = 1.5, TOX = 1, STAMINA = 0, OXY = 1)
+	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
 	var/next_infection = 0
 	var/next_evolution = 0
 
+/datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
+	blackboard = list(
+		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic,
+		BB_TARGET_MINIMUM_STAT = HARD_CRIT,
+	)
+
+/datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
+	blackboard = list(
+		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic/flood_infestor,
+		BB_TARGET_MINIMUM_STAT = HARD_CRIT,
+	)
+
+/datum/targeting_strategy/basic/flood_infestor/can_attack(mob/living/living_mob, atom/the_target, vision_range)
+	if(!ishuman(the_target))
+		return FALSE
+	var/mob/living/carbon/human/host = the_target
+	if(host.stat == DEAD || IS_FLOOD(host))
+		return FALSE
+	var/damage_taken = host.getBruteLoss() + host.getFireLoss()
+	if(host.stat == CONSCIOUS && damage_taken <= host.maxHealth * 0.25)
+		return FALSE
+	return ..()
+
 /// The baseline humanoid Flood form. Keeping this subtype explicit mirrors the
 /// original implementation and gives infection/evolution code a stable target.
-/mob/living/simple_animal/hostile/flood/death(gibbed)
+/mob/living/basic/flood/death(gibbed)
 	if(!gibbed)
 		var/death_sound
-		if(istype(src, /mob/living/simple_animal/hostile/flood/infestor))
+		if(istype(src, /mob/living/basic/flood/infestor))
 			death_sound = pick(
 				'sound/flood/infector_die1.ogg',
 				'sound/flood/infector_die2.ogg',
 				'sound/flood/infector_die3.ogg',
 			)
-		else if(!istype(src, /mob/living/simple_animal/hostile/flood/carrier))
+		else if(!istype(src, /mob/living/basic/flood/carrier))
 			death_sound = pick(
 				'sound/flood/death.death2.ogg',
 				'sound/flood/death.death3.ogg',
@@ -126,17 +151,18 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 			playsound(loc, death_sound, 50, TRUE)
 	return ..()
 
-/mob/living/simple_animal/hostile/flood/combat_form
+/mob/living/basic/flood/combat_form
 	name = "Flood combat form"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
 	icon_state = "marine_infested"
+	icon_living = "marine_infested"
 	icon_dead = "marine_dead"
 	maxHealth = 150
 	health = 150
 	melee_damage_lower = 25
 	melee_damage_upper = 35
 
-/mob/living/simple_animal/hostile/flood/combat_form/AttackingTarget(atom/attacked_target)
+/mob/living/basic/flood/combat_form/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	. = ..()
 	if(!. || !ishuman(attacked_target))
 		return
@@ -148,7 +174,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(prob(35))
 		infect_host(victim)
 
-/mob/living/simple_animal/hostile/flood/proc/convert_human(mob/living/carbon/human/victim, infection_message)
+/mob/living/basic/flood/proc/convert_human(mob/living/carbon/human/victim, infection_message)
 	if(!victim || QDELETED(victim) || victim.stat == DEAD || IS_FLOOD(victim))
 		return FALSE
 
@@ -156,7 +182,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(!conversion_turf)
 		return FALSE
 
-	var/mob/living/simple_animal/hostile/flood/combat_form/human/new_form = new(conversion_turf)
+	var/mob/living/basic/flood/combat_form/human/new_form = new(conversion_turf)
 	new_form.name = victim.real_name
 
 	if(victim.mind)
@@ -172,13 +198,13 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	qdel(victim)
 	return TRUE
 
-/mob/living/simple_animal/hostile/flood/proc/infect_host(mob/living/carbon/human/victim)
+/mob/living/basic/flood/proc/infect_host(mob/living/carbon/human/victim)
 	if(world.time < next_infection)
 		return FALSE
 	next_infection = world.time + FLOOD_INFECTION_COOLDOWN
 	return convert_human(victim, "[src] tears into [victim], Flood biomass spreading through their body!")
 
-/mob/living/simple_animal/hostile/flood/combat_form/verb/create_infestor()
+/mob/living/basic/flood/combat_form/verb/create_infestor()
 	set name = "Create Infection Form"
 	set category = "Flood"
 
@@ -189,10 +215,10 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		return
 
 	next_evolution = world.time + FLOOD_INFESTOR_COOLDOWN
-	new /mob/living/simple_animal/hostile/flood/infestor(loc)
+	new /mob/living/basic/flood/infestor(loc)
 	visible_message(span_warning("[src]'s flesh tears open and produces a Flood infection form."))
 
-/mob/living/simple_animal/hostile/flood/combat_form/verb/destroy_weld()
+/mob/living/basic/flood/combat_form/verb/destroy_weld()
 	set name = "Destroy Weld"
 	set category = "Flood"
 
@@ -214,7 +240,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	target_airlock.update_appearance()
 	playsound(target_airlock, 'sound/effects/grillehit.ogg', 80, TRUE)
 
-/mob/living/simple_animal/hostile/flood/combat_form/verb/evolve()
+/mob/living/basic/flood/combat_form/verb/evolve()
 	set name = "Evolve Flood Form"
 	set category = "Flood"
 
@@ -225,10 +251,10 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		return
 
 	var/list/evolution_choices = list(
-		"Carrier" = /mob/living/simple_animal/hostile/flood/carrier,
-		"Juggernaut" = /mob/living/simple_animal/hostile/flood/combat_form/juggernaut,
-		"Constructor" = /mob/living/simple_animal/hostile/flood/constructor,
-		"Overseer" = /mob/living/simple_animal/hostile/flood/overseer,
+		"Carrier" = /mob/living/basic/flood/carrier,
+		"Juggernaut" = /mob/living/basic/flood/combat_form/juggernaut,
+		"Constructor" = /mob/living/basic/flood/constructor,
+		"Overseer" = /mob/living/basic/flood/overseer,
 	)
 	var/chosen_form = input(src, "Choose a Flood specialization.", "Flood Evolution") as null|anything in evolution_choices
 	if(!chosen_form || stat == DEAD)
@@ -236,7 +262,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 	next_evolution = world.time + FLOOD_EVOLUTION_COOLDOWN
 	var/form_type = evolution_choices[chosen_form]
-	var/mob/living/simple_animal/hostile/flood/new_form = new form_type(loc)
+	var/mob/living/basic/flood/new_form = new form_type(loc)
 
 	if(mind)
 		var/datum/mind/flood_mind = mind
@@ -246,23 +272,25 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		flood_mind.special_role = ROLE_FLOOD
 	qdel(src)
 
-/mob/living/simple_animal/hostile/flood/combat_form/human
+/mob/living/basic/flood/combat_form/human
 	name = "Flood infested human"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
 	icon_state = "marine_infested"
-	move_to_delay = 6
+	icon_living = "marine_infested"
+	speed = 0.5
 	maxHealth = 100
 	health = 100
 	melee_damage_lower = 25
 	melee_damage_upper = 35
 
-/mob/living/simple_animal/hostile/flood/combat_form/juggernaut
+/mob/living/basic/flood/combat_form/juggernaut
 	name = "Flood Juggernaut"
 	desc = "A towering mass of hardened Flood biomass."
 	icon = 'icons/mob/flood/floodjuggernaut.dmi'
 	icon_state = "movement state"
+	icon_living = "movement state"
 	icon_dead = "death state"
-	move_to_delay = 15
+	speed = 2
 	maxHealth = 500
 	health = 500
 	melee_damage_lower = 40
@@ -270,22 +298,23 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	obj_damage = 120
 	mob_size = MOB_SIZE_LARGE
 
-/mob/living/simple_animal/hostile/flood/carrier
+/mob/living/basic/flood/carrier
 	name = "Flood carrier form"
 	desc = "A bloated Flood form packed with infection forms."
 	icon = 'icons/mob/flood/flood_carrier.dmi'
 	icon_state = "static"
-	move_to_delay = 7
+	icon_living = "static"
+	speed = 1
 	maxHealth = 100
 	health = 100
 	melee_damage_lower = 10
 	melee_damage_upper = 18
-	del_on_death = TRUE
-	icon_dead = ""
+	basic_mob_flags = DEL_ON_DEATH
+	icon_dead = "static"
 
 	var/has_released_infection_forms = FALSE
 
-/mob/living/simple_animal/hostile/flood/carrier/proc/release_swarm()
+/mob/living/basic/flood/carrier/proc/release_swarm()
 	if(has_released_infection_forms)
 		return
 	has_released_infection_forms = TRUE
@@ -295,17 +324,17 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		return
 
 	for(var/i in 1 to rand(6, 12))
-		new /mob/living/simple_animal/hostile/flood/infestor(spawn_turf)
+		new /mob/living/basic/flood/infestor(spawn_turf)
 	visible_message(span_warning("[src] ruptures, releasing a swarm of Flood infection forms!"))
 
-/mob/living/simple_animal/hostile/flood/carrier/AttackingTarget(atom/attacked_target)
+/mob/living/basic/flood/carrier/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	if(!attacked_target || !Adjacent(attacked_target))
 		return FALSE
 	release_swarm()
 	qdel(src)
 	return TRUE
 
-/mob/living/simple_animal/hostile/flood/carrier/verb/release_infection_forms()
+/mob/living/basic/flood/carrier/verb/release_infection_forms()
 	set name = "Release Infection Forms"
 	set category = "Flood"
 
@@ -314,24 +343,25 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	release_swarm()
 	qdel(src)
 
-/mob/living/simple_animal/hostile/flood/infestor
+/mob/living/basic/flood/infestor
 	name = "Flood infection form"
 	desc = "A small Flood organism seeking a host."
 	icon = 'icons/mob/flood/flood_infection.dmi'
 	icon_state = "static"
+	icon_living = "static"
 	icon_dead = "dead"
 	mob_biotypes = MOB_ORGANIC
 	sentience_type = SENTIENCE_HUMANOID
 	faction = list("Flood")
 	combat_mode = TRUE
-	atmos_requirements = null
 	maxHealth = 5
+	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
 	health = 5
-	move_to_delay = 5
+	speed = -0.5
 	melee_damage_lower = 1
 	melee_damage_upper = 5
 	pass_flags = PASSMOB
-	del_on_death = TRUE
+	basic_mob_flags = DEL_ON_DEATH
 	mob_size = MOB_SIZE_TINY
 	attack_verb_continuous = "leaps at"
 	attack_verb_simple = "leap at"
@@ -339,37 +369,33 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	var/next_reanimate_check = 0
 	var/next_airlock_infest = 0
 
-/mob/living/simple_animal/hostile/flood/infestor/CanAttack(atom/the_target)
-	if(ishuman(the_target))
-		var/mob/living/carbon/human/potential_host = the_target
-		if(QDELETED(potential_host) || potential_host.stat == DEAD || IS_FLOOD(potential_host))
-			return FALSE
-		var/damage_taken = potential_host.getBruteLoss() + potential_host.getFireLoss()
-		return potential_host.stat != CONSCIOUS || damage_taken > potential_host.maxHealth * 0.25
-	return ..()
-
-/mob/living/simple_animal/hostile/flood/infestor/AttackingTarget(atom/attacked_target)
+/mob/living/basic/flood/infestor/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
+	if(!ishuman(attacked_target))
+		return FALSE
+	var/mob/living/carbon/human/potential_host = attacked_target
+	if(potential_host.stat == DEAD || IS_FLOOD(potential_host))
+		return FALSE
+	var/host_damage = potential_host.getBruteLoss() + potential_host.getFireLoss()
+	if(potential_host.stat == CONSCIOUS && host_damage <= potential_host.maxHealth * 0.25)
+		return FALSE
 	. = ..()
-	if(!. || !ishuman(attacked_target))
+	if(!.)
 		return
 	var/mob/living/carbon/human/victim = attacked_target
 	if(victim.stat == DEAD || IS_FLOOD(victim))
 		return
-	var/damage_taken = victim.getBruteLoss() + victim.getFireLoss()
-	if(victim.stat == CONSCIOUS && damage_taken <= victim.maxHealth * 0.25)
-		return
 	if(prob(70) && convert_human(victim, "[src] burrows into [victim], converting them into a Flood combat form!"))
 		qdel(src)
 
-/mob/living/simple_animal/hostile/flood/carrier/death(gibbed)
+/mob/living/basic/flood/carrier/death(gibbed)
 	if(!has_released_infection_forms)
 		playsound(loc, 'sound/effects/explosion/explosion1.ogg', 50, TRUE)
 		release_swarm()
 	return ..()
 
-/mob/living/simple_animal/hostile/flood/infestor/proc/reanimate_nearby_flood(show_failure = FALSE)
-	var/mob/living/simple_animal/hostile/flood/combat_form/corpse
-	for(var/mob/living/simple_animal/hostile/flood/combat_form/candidate in range(2, src))
+/mob/living/basic/flood/infestor/proc/reanimate_nearby_flood(show_failure = FALSE)
+	var/mob/living/basic/flood/combat_form/corpse
+	for(var/mob/living/basic/flood/combat_form/candidate in range(2, src))
 		if(candidate.stat != DEAD)
 			continue
 		corpse = candidate
@@ -380,7 +406,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 			to_chat(src, span_warning("There is no viable Flood corpse nearby."))
 		return FALSE
 
-	var/mob/living/simple_animal/hostile/flood/new_form = new corpse.type(corpse.loc)
+	var/mob/living/basic/flood/new_form = new corpse.type(corpse.loc)
 	new_form.name = corpse.name
 	if(corpse.mind)
 		var/datum/mind/corpse_mind = corpse.mind
@@ -394,7 +420,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	qdel(src)
 	return TRUE
 
-/mob/living/simple_animal/hostile/flood/infestor/proc/infest_nearby_airlock(show_failure = FALSE)
+/mob/living/basic/flood/infestor/proc/infest_nearby_airlock(show_failure = FALSE)
 	if(world.time < next_airlock_infest)
 		return FALSE
 
@@ -418,7 +444,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	qdel(src)
 	return TRUE
 
-/mob/living/simple_animal/hostile/flood/infestor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
+/mob/living/basic/flood/infestor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
 	if(!. || stat == DEAD || client || world.time < next_reanimate_check)
 		return
@@ -427,7 +453,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		return
 	infest_nearby_airlock()
 
-/mob/living/simple_animal/hostile/flood/infestor/verb/infest_airlock()
+/mob/living/basic/flood/infestor/verb/infest_airlock()
 	set name = "Infest Airlock"
 	set category = "Flood"
 
@@ -435,7 +461,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		return
 	infest_nearby_airlock(TRUE)
 
-/mob/living/simple_animal/hostile/flood/infestor/verb/reanimate_flood()
+/mob/living/basic/flood/infestor/verb/reanimate_flood()
 	set name = "Reanimate Flood Corpse"
 	set category = "Flood"
 
@@ -469,7 +495,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	return ..()
 
 /datum/dynamic_ruleset/midround/from_ghosts/flood/generate_ruleset_body(mob/applicant)
-	var/mob/living/simple_animal/hostile/flood/combat_form/human/new_flood = new(spawn_turf)
+	var/mob/living/basic/flood/combat_form/human/new_flood = new(spawn_turf)
 	if(applicant.mind)
 		applicant.mind.transfer_to(new_flood)
 	return new_flood
