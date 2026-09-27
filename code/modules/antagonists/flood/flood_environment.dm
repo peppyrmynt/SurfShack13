@@ -18,6 +18,8 @@
 	var/max_nearby_growth = 12
 	var/next_spread = 0
 	var/spread_delay = 30 SECONDS
+	/// Tracks this biomass's living offspring even after they leave the area.
+	var/list/spawned_flood = list()
 
 /obj/structure/flood_biomass/Initialize(mapload)
 	. = ..()
@@ -28,6 +30,9 @@
 
 /obj/structure/flood_biomass/Destroy()
 	STOP_PROCESSING(SSobj, src)
+	for(var/mob/living/basic/flood/offspring as anything in spawned_flood)
+		UnregisterSignal(offspring, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING))
+	spawned_flood = null
 	return ..()
 
 /obj/structure/flood_biomass/process()
@@ -38,6 +43,8 @@
 	if(world.time < next_spawn)
 		return
 	next_spawn = world.time + spawn_delay
+	if(length(spawned_flood) >= max_nearby_flood)
+		return
 
 	var/nearby_flood = 0
 	for(var/mob/living/basic/flood/flood_form in range(7, src))
@@ -56,7 +63,17 @@
 		/mob/living/basic/flood/carrier,
 	)
 	var/mob/living/basic/flood/new_flood = new spawn_type(spawn_turf)
+	spawned_flood += new_flood
+	RegisterSignals(new_flood, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING), PROC_REF(on_spawned_flood_lost))
 	visible_message(span_warning("[src] writhes and produces [new_flood]."))
+
+/obj/structure/flood_biomass/proc/on_spawned_flood_lost(mob/living/basic/flood/offspring)
+	SIGNAL_HANDLER
+	if(!(offspring in spawned_flood))
+		return
+	spawned_flood -= offspring
+	UnregisterSignal(offspring, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING))
+	next_spawn = world.time + spawn_delay
 
 /obj/structure/flood_biomass/proc/spread_growth()
 	var/nearby_growth = 0
