@@ -188,9 +188,11 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		new_form = new /mob/living/simple_animal/hostile/flood/carrier(loc)
 
 	if(mind)
-		mind.transfer_to(new_form)
-		new_form.mind.add_antag_datum(/datum/antagonist/flood)
-		new_form.mind.special_role = ROLE_FLOOD
+		var/datum/mind/flood_mind = mind
+		flood_mind.transfer_to(new_form)
+		if(!flood_mind.has_antag_datum(/datum/antagonist/flood))
+			flood_mind.add_antag_datum(/datum/antagonist/flood)
+		flood_mind.special_role = ROLE_FLOOD
 	qdel(src)
 
 /mob/living/simple_animal/hostile/flood/combat_form/human
@@ -360,7 +362,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	return ..()
 
 /datum/dynamic_ruleset/midround/from_ghosts/flood/generate_ruleset_body(mob/applicant)
-	var/mob/living/simple_animal/hostile/flood/combat_form/new_flood = new(spawn_turf)
+	var/mob/living/simple_animal/hostile/flood/combat_form/human/new_flood = new(spawn_turf)
 	if(applicant.mind)
 		applicant.mind.transfer_to(new_flood)
 	return new_flood
