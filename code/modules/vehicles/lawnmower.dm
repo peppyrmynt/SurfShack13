@@ -43,12 +43,14 @@
 				continue
 			if(victim.body_position == LYING_DOWN)
 				if(iszombie(victim))
-					var/obj/item/bodypart/head = victim.get_bodypart(BODY_ZONE_HEAD)
-					if(head)
-						visible_message(span_danger("[src] runs over [victim], decapitating them!"))
-						head.dismember()
-						shake_camera(victim, 20, 1)
-						gibbed = TRUE
+					visible_message(span_danger("[src] crushes [victim] like an emagged recycler!"))
+					playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
+					if(iscarbon(victim) && !IS_UNCONSCIOUS_OR_CRIT(victim))
+						victim.say("ARRRRRRRRRRRGH!!!", forced = "lawn mower grinding")
+					add_mob_blood(victim)
+					victim.Unconscious(100)
+					victim.adjust_brute_loss(1000)
+					gibbed = TRUE
 					continue
 				visible_message(span_danger("[src] grinds [victim] into a fine paste!"))
 				victim.gib()
