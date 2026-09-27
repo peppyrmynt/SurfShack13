@@ -18,3 +18,10 @@
 	..()
 	if(HAS_TRAIT(SSstation, STATION_TRAIT_CYBERNETIC_REVOLUTION))
 		purchasable_from |= UPLINK_TRAITORS
+
+/datum/uplink_item/special/lawnmower
+	name = "Syndicate Lawn Mower"
+	desc = "A heavily modified lawn mower designed to make short work of anyone who gets in its way."
+	item = /obj/vehicle/ridden/lawnmower
+	cost = 16
+	purchasable_from = UPLINK_TRAITORS
