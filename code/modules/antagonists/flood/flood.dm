@@ -132,17 +132,15 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(prob(35))
 		infect_host(victim)
 
-/mob/living/simple_animal/hostile/flood/proc/infect_host(mob/living/carbon/human/victim)
+/mob/living/simple_animal/hostile/flood/proc/convert_human(mob/living/carbon/human/victim, infection_message)
 	if(!victim || QDELETED(victim) || victim.stat == DEAD || IS_FLOOD(victim))
 		return FALSE
-	if(world.time < next_infection)
+
+	var/turf/conversion_turf = get_turf(victim)
+	if(!conversion_turf)
 		return FALSE
 
-	next_infection = world.time + FLOOD_INFECTION_COOLDOWN
-	GLOB.flood_infections++
-	visible_message(span_danger("[src] tears into [victim], Flood biomass spreading through their body!"))
-
-	var/mob/living/simple_animal/hostile/flood/combat_form/new_form = new(victim.loc)
+	var/mob/living/simple_animal/hostile/flood/combat_form/human/new_form = new(conversion_turf)
 	new_form.name = victim.real_name
 
 	if(victim.mind)
@@ -152,8 +150,17 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 			victim_mind.add_antag_datum(/datum/antagonist/flood)
 		victim_mind.special_role = ROLE_FLOOD
 
+	GLOB.flood_infections++
+	if(infection_message)
+		visible_message(span_danger(infection_message))
 	qdel(victim)
 	return TRUE
+
+/mob/living/simple_animal/hostile/flood/proc/infect_host(mob/living/carbon/human/victim)
+	if(world.time < next_infection)
+		return FALSE
+	next_infection = world.time + FLOOD_INFECTION_COOLDOWN
+	return convert_human(victim, "[src] tears into [victim], Flood biomass spreading through their body!")
 
 /mob/living/simple_animal/hostile/flood/verb/create_infestor()
 	set name = "Create Infection Form"
@@ -270,18 +277,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	var/damage_taken = victim.getBruteLoss() + victim.getFireLoss()
 	if(victim.stat == CONSCIOUS && damage_taken <= victim.maxHealth * 0.25)
 		return
-	if(prob(70))
-		var/mob/living/simple_animal/hostile/flood/combat_form/new_form = new(victim.loc)
-		new_form.name = victim.real_name
-		GLOB.flood_infections++
-		if(victim.mind)
-			var/datum/mind/victim_mind = victim.mind
-			victim_mind.transfer_to(new_form)
-			if(!victim_mind.has_antag_datum(/datum/antagonist/flood))
-				victim_mind.add_antag_datum(/datum/antagonist/flood)
-			victim_mind.special_role = ROLE_FLOOD
-		visible_message(span_danger("[src] burrows into [victim], converting them into a Flood combat form!"))
-		qdel(victim)
+	if(prob(70) && convert_human(victim, "[src] burrows into [victim], converting them into a Flood combat form!"))
 		qdel(src)
 
 /mob/living/simple_animal/hostile/flood/carrier/death(gibbed)
