@@ -65,5 +65,5 @@ after login in both input modes, plus remapping/unbinding the shortcut.
 
 The explicit macro owns the wheel shortcut so the generic Any-key handler cannot
 immediately toggle it closed. A short debounce also ignores duplicate events.
-Emote runechat captions use black text with a white outline instead of the
-speaker's generated colour; normal spoken dialogue keeps its existing colours.
+Emote captions use the default runechat colour scheme, including the speaker's
+generated colour and the existing emote styling.
