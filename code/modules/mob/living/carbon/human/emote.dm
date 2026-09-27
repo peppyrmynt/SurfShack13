@@ -254,6 +254,8 @@
 	var/emote_icon = 'icons/mob/human/aprilfools_emotes.dmi'
 	var/emote_icon_state
 	var/emote_duration = 3 SECONDS
+	/// Composited once per emote; retains every animation frame and its timing.
+	var/icon/bubble_artwork
 	cooldown = 60 SECONDS
 	emote_type = EMOTE_VISIBLE
 
@@ -267,20 +269,11 @@
 	if(!emote_icon || !emote_icon_state)
 		return
 
-	// Like laugh_k: attach a click-through image to the speaker and animate it in/out.
-	// Keep the frame separate from the artwork so new emotes need only an icon/state.
-	var/image/bubble = image(get_bubble_icon(), loc = user, pixel_x = 28, pixel_y = -4)
+	// Like laugh_k, use one complete animated icon so the frame cannot cover the art.
+	var/image/bubble = image(get_emote_bubble_icon(), loc = user, pixel_x = 28, pixel_y = -4)
 	bubble.plane = ABOVE_HUD_PLANE
 	bubble.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	bubble.alpha = 255
-	// Float with the bubble on its HUD plane, above the opaque white background.
-	var/mutable_appearance/artwork = mutable_appearance(emote_icon, emote_icon_state)
-	var/list/dimensions = get_icon_dimensions(emote_icon)
-	var/artwork_scale = min(32 / dimensions["width"], 32 / dimensions["height"])
-	artwork.transform = matrix() * artwork_scale
-	artwork.pixel_x = 28 - dimensions["width"] / 2
-	artwork.pixel_y = 20 - dimensions["height"] / 2
-	bubble.overlays += artwork
 
 	var/list/recipients = list()
 	for(var/mob/viewer in viewers(world.view, user))
@@ -291,6 +284,20 @@
 		recipient.images += bubble
 	animate(bubble, transform = matrix(), time = 0.15 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(fade_bubble), bubble, recipients), emote_duration)
+
+/// Compose all DMI frames over the background instead of relying on overlay plane ordering.
+/datum/emote/living/seventv/proc/get_emote_bubble_icon()
+	if(!bubble_artwork)
+		bubble_artwork = icon(emote_icon, emote_icon_state)
+		var/artwork_scale = min(32 / bubble_artwork.Width(), 32 / bubble_artwork.Height())
+		var/artwork_width = max(1, round(bubble_artwork.Width() * artwork_scale))
+		var/artwork_height = max(1, round(bubble_artwork.Height() * artwork_scale))
+		bubble_artwork.Scale(artwork_width, artwork_height)
+		var/offset_x = 12 + round((32 - artwork_width) / 2)
+		var/offset_y = 4 + round((32 - artwork_height) / 2)
+		bubble_artwork.Crop(1 - offset_x, 1 - offset_y, 48 - offset_x, 40 - offset_y)
+		bubble_artwork.Blend(get_bubble_icon(), ICON_UNDERLAY)
+	return bubble_artwork
 
 /// A shared pixel-art speech frame, drawn once; the animated emote remains a separate overlay.
 /datum/emote/living/seventv/proc/get_bubble_icon()
