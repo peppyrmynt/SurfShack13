@@ -264,9 +264,59 @@
 
 /datum/emote/living/seventv/run_emote(mob/living/user, params, type_override, intentional)
 	. = ..()
-	var/image/emote_image = image(emote_icon, user, emote_icon_state)
-	emote_image.pixel_y = 32
-	flick_overlay_global(emote_image, GLOB.clients, emote_duration)
+	if(!emote_icon || !emote_icon_state)
+		return
+
+	// Like laugh_k: attach a click-through image to the speaker and animate it in/out.
+	// Keep the frame separate from the artwork so new emotes need only an icon/state.
+	var/image/bubble = image(get_bubble_icon(), loc = user, pixel_x = 28, pixel_y = -4)
+	bubble.plane = ABOVE_HUD_PLANE
+	bubble.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	bubble.alpha = 210
+	var/image/artwork = image(emote_icon, icon_state = emote_icon_state)
+	var/list/dimensions = get_icon_dimensions(emote_icon)
+	var/artwork_scale = min(32 / dimensions["width"], 32 / dimensions["height"])
+	artwork.transform = matrix() * artwork_scale
+	artwork.pixel_x = 28 - dimensions["width"] / 2
+	artwork.pixel_y = 20 - dimensions["height"] / 2
+	bubble.overlays += artwork
+
+	var/list/recipients = list()
+	for(var/mob/viewer in viewers(world.view, user))
+		if(viewer.client && !viewer.is_blind())
+			recipients |= viewer.client
+	bubble.transform = matrix() * 0
+	for(var/client/recipient as anything in recipients)
+		recipient.images += bubble
+	animate(bubble, transform = matrix(), time = 0.15 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(fade_bubble), bubble, recipients), emote_duration)
+
+/// A shared pixel-art speech frame, drawn once; the animated emote remains a separate overlay.
+/datum/emote/living/seventv/proc/get_bubble_icon()
+	var/static/icon/bubble_icon
+	if(!bubble_icon)
+		bubble_icon = icon('icons/mob/human/aprilfools_emotes.dmi', "clueless")
+		bubble_icon.DrawBox(null, 1, 1, 32, 32)
+		bubble_icon.Crop(1, 1, 48, 40)
+		bubble_icon.DrawBox("#202020", 11, 1, 46, 40)
+		bubble_icon.DrawBox("#202020", 9, 3, 48, 38)
+		bubble_icon.DrawBox("#FFFFFF", 11, 4, 46, 37)
+		bubble_icon.DrawBox("#FFFFFF", 12, 3, 45, 38)
+		for(var/column in 1 to 10)
+			bubble_icon.DrawBox("#202020", column, 26 - column, column, 26)
+			if(column > 2)
+				bubble_icon.DrawBox("#FFFFFF", column, 28 - column, column, 24)
+	return bubble_icon
+
+/datum/emote/living/seventv/proc/fade_bubble(image/bubble, list/recipients)
+	if(QDELETED(bubble))
+		return
+	animate(bubble, transform = matrix() * 0, time = 0.15 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(remove_bubble), bubble, recipients), 0.2 SECONDS)
+
+/datum/emote/living/seventv/proc/remove_bubble(image/bubble, list/recipients)
+	remove_image_from_clients(bubble, recipients)
+	qdel(bubble)
 
 /datum/emote/living/seventv/sigma
 	key = "sigma"
