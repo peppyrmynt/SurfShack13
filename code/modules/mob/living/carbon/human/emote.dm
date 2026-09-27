@@ -272,8 +272,9 @@
 	var/image/bubble = image(get_bubble_icon(), loc = user, pixel_x = 28, pixel_y = -4)
 	bubble.plane = ABOVE_HUD_PLANE
 	bubble.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	bubble.alpha = 210
-	var/image/artwork = image(emote_icon, icon_state = emote_icon_state)
+	bubble.alpha = 255
+	// Float with the bubble on its HUD plane, above the opaque white background.
+	var/mutable_appearance/artwork = mutable_appearance(emote_icon, emote_icon_state)
 	var/list/dimensions = get_icon_dimensions(emote_icon)
 	var/artwork_scale = min(32 / dimensions["width"], 32 / dimensions["height"])
 	artwork.transform = matrix() * artwork_scale
@@ -298,14 +299,15 @@
 		bubble_icon = icon('icons/mob/human/aprilfools_emotes.dmi', "clueless")
 		bubble_icon.DrawBox(null, 1, 1, 32, 32)
 		bubble_icon.Crop(1, 1, 48, 40)
-		bubble_icon.DrawBox("#202020", 11, 1, 46, 40)
-		bubble_icon.DrawBox("#202020", 9, 3, 48, 38)
-		bubble_icon.DrawBox("#FFFFFF", 11, 4, 46, 37)
-		bubble_icon.DrawBox("#FFFFFF", 12, 3, 45, 38)
-		for(var/column in 1 to 10)
-			bubble_icon.DrawBox("#202020", column, 26 - column, column, 26)
+		bubble_icon.DrawBox("#404040", 11, 1, 46, 40)
+		bubble_icon.DrawBox("#404040", 9, 3, 48, 38)
+		// One-pixel outline, including the stepped corners and speech tail.
+		bubble_icon.DrawBox("#FFFFFF", 10, 3, 47, 38)
+		bubble_icon.DrawBox("#FFFFFF", 11, 2, 46, 39)
+		for(var/column in 1 to 9)
+			bubble_icon.DrawBox("#404040", column, 27 - column, column, 26)
 			if(column > 2)
-				bubble_icon.DrawBox("#FFFFFF", column, 28 - column, column, 24)
+				bubble_icon.DrawBox("#FFFFFF", column, 28 - column, column, 25)
 	return bubble_icon
 
 /datum/emote/living/seventv/proc/fade_bubble(image/bubble, list/recipients)
