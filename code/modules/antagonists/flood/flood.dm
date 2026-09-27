@@ -95,6 +95,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	icon_dead = "dead"
 	death_message = "collapses into a twitching mass of biomass."
 	obj_damage = 60
+	damage_coeff = list(BRUTE = 1, BURN = 1.5, TOX = 1, STAMINA = 0, OXY = 1)
 	var/next_infection = 0
 	var/next_evolution = 0
 
@@ -232,8 +233,9 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	health = 100
 	melee_damage_lower = 10
 	melee_damage_upper = 18
+	del_on_death = TRUE
+	icon_dead = ""
 
-/mob/living/simple_animal/hostile/flood/carrier
 	var/has_released_infection_forms = FALSE
 
 /mob/living/simple_animal/hostile/flood/carrier/proc/release_swarm()
@@ -279,6 +281,15 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	attack_verb_continuous = "leaps at"
 	attack_verb_simple = "leap at"
 	attack_sound = 'sound/flood/leap.leap1.ogg'
+
+/mob/living/simple_animal/hostile/flood/infestor/CanAttack(atom/the_target)
+	if(ishuman(the_target))
+		var/mob/living/carbon/human/potential_host = the_target
+		if(QDELETED(potential_host) || potential_host.stat == DEAD || IS_FLOOD(potential_host))
+			return FALSE
+		var/damage_taken = potential_host.getBruteLoss() + potential_host.getFireLoss()
+		return potential_host.stat != CONSCIOUS || damage_taken > potential_host.maxHealth * 0.25
+	return ..()
 
 /mob/living/simple_animal/hostile/flood/infestor/AttackingTarget(atom/attacked_target)
 	. = ..()
@@ -334,7 +345,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	name = "Flood pure form"
 	desc = "A heavily mutated Flood form built for direct combat."
 	icon = 'icons/mob/flood/floodjuggernaut.dmi'
-	icon_state = "juggernaut"
+	icon_state = "movement state"
+	icon_dead = "death state"
 	maxHealth = 350
 	health = 350
 	melee_damage_lower = 35
