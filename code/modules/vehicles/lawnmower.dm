@@ -5,7 +5,7 @@
 	icon_state = "lawnmower"
 	var/emagged = FALSE
 	var/list/drive_sounds = list('sound/vehicles/mowermove1.ogg', 'sound/vehicles/mowermove2.ogg')
-	var/list/gib_sounds = list('sound/vehicles/mowermovesquish.ogg')
+	var/list/gib_sounds = list('sound/items/weapons/chainsawhit.ogg')
 	var/hit_sound = 'sound/items/weapons/chainsawhit.ogg'
 
 /obj/vehicle/ridden/lawnmower/Initialize(mapload)
