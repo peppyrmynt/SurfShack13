@@ -3429,6 +3429,7 @@
 #include "code\modules\antagonists\wizard\grand_ritual\finales\midas.dm"
 #include "code\modules\antagonists\xeno\xeno.dm"
 #include "code\modules\antagonists\flood\flood.dm"
+#include "code\modules\antagonists\flood\flood_environment.dm"
 #include "code\modules\art\paintings.dm"
 #include "code\modules\art\statues.dm"
 #include "code\modules\assembly\assembly.dm"
