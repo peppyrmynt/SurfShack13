@@ -80,7 +80,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	name = "Flood combat form"
 	desc = "A biomass-driven combat form belonging to a parasitic hive mind."
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
-	icon_state = "static"
+	icon_state = "marine_infested"
 	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
 	sentience_type = SENTIENCE_HUMANOID
 	faction = list("Flood")
@@ -97,7 +97,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	attack_sound = 'sound/flood/melee.melee1.ogg'
 	attacked_sound = 'sound/flood/pain.pain1.ogg'
 	del_on_death = FALSE
-	icon_dead = "dead"
+	icon_dead = "marine_dead"
 	death_message = "collapses into a twitching mass of biomass."
 	obj_damage = 60
 	damage_coeff = list(BRUTE = 1, BURN = 1.5, TOX = 1, STAMINA = 0, OXY = 1)
