@@ -77,6 +77,11 @@
 	var/turf/open/target = pick(valid_turfs)
 	new /obj/structure/flood_growth(target)
 
+/obj/structure/flood_biomass/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+	if(damage_type == BURN)
+		damage_amount *= 2
+	return ..(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
+
 /obj/structure/flood_biomass/examine(mob/user)
 	. = ..()
 	var/health_ratio = get_integrity() / max_integrity
@@ -171,14 +176,30 @@
 	health = 175
 	melee_damage_lower = 5
 	melee_damage_upper = 10
+	var/next_build = 0
+
+/mob/living/simple_animal/hostile/flood/constructor/proc/can_build()
+	if(stat == DEAD)
+		return FALSE
+	if(world.time < next_build)
+		to_chat(src, span_warning("Your biomass is still reshaping itself."))
+		return FALSE
+	next_build = world.time + 2 SECONDS
+	return TRUE
+
+/mob/living/simple_animal/hostile/flood/constructor/proc/get_build_turf()
+	var/turf/target_turf = get_step(src, dir)
+	if(!target_turf)
+		target_turf = get_turf(src)
+	return target_turf
 
 /mob/living/simple_animal/hostile/flood/constructor/verb/grow_biomass()
 	set name = "Grow Biomass"
 	set category = "Flood"
 
-	if(stat == DEAD)
+	if(!can_build())
 		return
-	var/turf/target_turf = get_turf(src)
+	var/turf/target_turf = get_build_turf()
 	if(locate(/obj/structure/flood_biomass) in target_turf)
 		to_chat(src, span_warning("There is already substantial biomass here."))
 		return
@@ -189,13 +210,49 @@
 	set name = "Infest Floor"
 	set category = "Flood"
 
-	if(stat == DEAD)
+	if(!can_build())
 		return
-	var/turf/target_turf = get_turf(src)
+	var/turf/target_turf = get_build_turf()
 	if(locate(/obj/structure/flood_growth) in target_turf)
 		return
 	new /obj/structure/flood_growth(target_turf)
 	visible_message(span_warning("Pulsating Flood tissue creeps across the floor."))
+
+/mob/living/simple_animal/hostile/flood/constructor/verb/grow_wall()
+	set name = "Grow Wall Biomass"
+	set category = "Flood"
+
+	if(!can_build())
+		return
+	var/turf/target_turf = get_build_turf()
+	if(locate(/obj/structure/flood_wall_growth) in target_turf)
+		return
+	new /obj/structure/flood_wall_growth(target_turf)
+	visible_message(span_warning("Thick Flood biomass climbs across the nearby structure."))
+
+/mob/living/simple_animal/hostile/flood/constructor/verb/grow_door()
+	set name = "Grow Biomass Door"
+	set category = "Flood"
+
+	if(!can_build())
+		return
+	var/turf/target_turf = get_build_turf()
+	if(locate(/obj/structure/flood_door) in target_turf)
+		return
+	new /obj/structure/flood_door(target_turf)
+	visible_message(span_warning("Flood tissue swells into a thick membrane."))
+
+/mob/living/simple_animal/hostile/flood/constructor/verb/grow_membrane()
+	set name = "Grow Biomass Membrane"
+	set category = "Flood"
+
+	if(!can_build())
+		return
+	var/turf/target_turf = get_build_turf()
+	if(locate(/obj/structure/flood_window) in target_turf)
+		return
+	new /obj/structure/flood_window(target_turf)
+	visible_message(span_warning("A translucent Flood membrane hardens into place."))
 
 /mob/living/simple_animal/hostile/flood/overseer
 	name = "Flood overseer form"
