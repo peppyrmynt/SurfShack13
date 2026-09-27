@@ -166,6 +166,7 @@
 	desc = "A specialized Flood form that converts its surroundings into infestation."
 	icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	icon_state = "constructor"
+	icon_dead = "constructor_dead"
 	maxHealth = 175
 	health = 175
 	melee_damage_lower = 5
@@ -201,6 +202,7 @@
 	desc = "A specialized Flood form directing the spread of infestation."
 	icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	icon_state = "designator"
+	icon_dead = "designator_dead"
 	maxHealth = 150
 	health = 150
 	melee_damage_lower = 5
