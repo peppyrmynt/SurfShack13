@@ -255,6 +255,7 @@
 		begin_corpse_infection(host)
 		return
 	host.visible_message(span_danger("[src] tears into [host]!"), span_userdanger("[src] tears into you!"))
+	playsound(host, attack_sound, 50, TRUE, TRUE)
 	host.apply_damage(10, BRUTE, BODY_ZONE_CHEST)
 	if(expected_generation == latch_generation && latch_still_valid(host))
 		if(host.stat == DEAD)
