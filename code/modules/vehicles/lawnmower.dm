@@ -9,9 +9,9 @@
 	var/hit_sound = 'sound/items/weapons/chainsawhit.ogg'
 
 // Blood tracks from the mower should stay wheel tracks instead of bloodying the rider's shoes.
-/obj/effect/decal/cleanable/blood/tracks/lawnmower/on_entered(datum/source, atom/movable/entered_atom)
-	SIGNAL_HANDLER
-	return
+/obj/effect/decal/cleanable/blood/tracks/lawnmower
+	bloodiness = 0
+	should_dry = FALSE
 
 /obj/vehicle/ridden/lawnmower/Initialize(mapload)
 	. = ..()
