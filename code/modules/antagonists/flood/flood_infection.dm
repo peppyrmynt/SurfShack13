@@ -193,7 +193,7 @@
 		return FALSE
 
 	var/form_type = /mob/living/basic/flood/combat_form/human
-	if(ismonkey(victim))
+	if(!ishuman(victim) || ismonkey(victim))
 		form_type = /mob/living/basic/flood/carrier
 	else if(islizard(victim))
 		form_type = /mob/living/basic/flood/combat_form/human/sangheili
@@ -334,8 +334,7 @@
 		latch_generation++
 		addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
 		return
-	var/form_name = ismonkey(host) ? "carrier" : "combat"
-	var/infected = convert_host(host, "[src] burrows into [host], converting them into a Flood [form_name] form!")
+	var/infected = convert_host(host, "[src] burrows into [host], converting them into a Flood form!")
 	clear_latch()
 	if(infected)
 		qdel(src)

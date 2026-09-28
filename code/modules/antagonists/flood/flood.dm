@@ -80,7 +80,7 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 	to_chat(owner.current, span_notice("Infection forms latch onto living people and animals before dealing damage."))
 	to_chat(owner.current, span_notice("Combat forms can evolve into carrier or constructor forms. Constructors can become the next overseer when the hive is ready."))
 	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
-	to_chat(owner.current, span_notice("While latched to living hosts, infection forms deal 10 brute every two seconds. Only dead hosts can be converted, after five seconds attached to the corpse. Infected monkeys become carriers. Living hosts can resist or escape."))
+	to_chat(owner.current, span_notice("While latched to living hosts, infection forms deal 10 brute every two seconds. Only dead hosts can be converted, after five seconds attached to the corpse. Infected monkeys and other animals become carriers. Living hosts can resist or escape."))
 	to_chat(owner.current, span_notice("Standing on Flood-covered floors slowly heals your biomass."))
 	to_chat(owner.current, span_notice("Use Flood Chorus to speak to every active Flood player, or :f to speak Floodmind nearby."))
 

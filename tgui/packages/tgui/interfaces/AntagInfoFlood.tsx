@@ -43,7 +43,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Infected hosts',
-        text: 'A converted human keeps their original name and becomes an empty-handed combat form. Infected lizards use the Sangheili Flood appearance with the same combat abilities. Animals can also be infected; monkeys become carrier forms, while other animals become combat forms. Their gear drops on the floor, and a player-controlled converted form has extra health.',
+        text: 'A converted human keeps their original name and becomes an empty-handed combat form. Infected lizards use the Sangheili Flood appearance with the same combat abilities. Infected monkeys and other animals become carrier forms. Their gear drops on the floor, and a player-controlled converted form has extra health.',
       },
       {
         label: 'Attacks',
