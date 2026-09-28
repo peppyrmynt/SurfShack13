@@ -41,6 +41,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 /datum/antagonist/flood
 	name = "\improper Flood"
+	ui_name = "AntagInfoFlood"
 	roundend_category = "flood"
 	antagpanel_category = "Flood"
 	job_rank = ROLE_FLOOD
@@ -58,11 +59,24 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 /datum/antagonist/flood/greet()
 	to_chat(owner.current, span_danger("You are part of the Flood."))
 	to_chat(owner.current, span_notice("Infection forms latch onto living humans before dealing damage."))
-	to_chat(owner.current, span_notice("Combat forms can create infection forms and evolve into specialized Flood forms."))
+	to_chat(owner.current, span_notice("Combat forms can evolve into carrier, constructor, or overseer forms. Constructors produce infection forms."))
 	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
 	to_chat(owner.current, span_notice("While latched to living humans, infection forms deal 10 brute every two seconds. Only dead hosts can be converted, after five seconds attached to the corpse. Living hosts can resist or escape."))
 	to_chat(owner.current, span_notice("Standing on Flood-covered floors slowly heals your biomass."))
 	to_chat(owner.current, span_notice("Use Flood Chorus to speak to every active Flood player, or :f to speak Floodmind nearby."))
+
+/datum/antagonist/flood/ui_data(mob/user)
+	var/list/data = list()
+	var/mob/living/basic/flood/current_form = owner?.current
+	if(istype(current_form, /mob/living/basic/flood/overseer))
+		data["current_form"] = "Overseer"
+	else if(istype(current_form, /mob/living/basic/flood/constructor))
+		data["current_form"] = "Constructor"
+	else if(istype(current_form, /mob/living/basic/flood/carrier))
+		data["current_form"] = "Carrier"
+	else
+		data["current_form"] = "Combat"
+	return data
 
 /datum/antagonist/flood/create_team(datum/team/flood/new_team)
 	if(!new_team)
