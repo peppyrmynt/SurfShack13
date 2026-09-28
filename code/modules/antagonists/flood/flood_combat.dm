@@ -76,45 +76,6 @@
 	if(stat == DEAD && reanimated)
 		. += span_warning("Its biomass has already been reanimated and cannot be raised again.")
 
-/mob/living/basic/flood/proc/convert_human(mob/living/carbon/human/victim, infection_message)
-	if(!victim || QDELETED(victim) || is_flood_target(victim))
-		return FALSE
-
-	var/turf/conversion_turf = get_turf(victim)
-	if(!conversion_turf)
-		return FALSE
-
-	var/mob/living/basic/flood/combat_form/human/new_form = new(conversion_turf)
-	new_form.name = victim.real_name
-	if(locate(/obj/item/clothing/under/color/orange) in victim)
-		new_form.icon_state = "prisoner_infected2"
-		new_form.icon_living = "prisoner_infected2"
-		new_form.icon_dead = "prisoner_infected2_dead"
-	SEND_SOUND(victim, sound('sound/flood/flood_infect_gravemind.ogg', volume = 60))
-
-	if(victim.mind)
-		// The source gives player-infected forms more staying power than NPC forms.
-		new_form.maxHealth = round(new_form.maxHealth * 1.5)
-		new_form.health = new_form.maxHealth
-		var/datum/mind/victim_mind = victim.mind
-		victim_mind.transfer_to(new_form)
-		if(!victim_mind.has_antag_datum(/datum/antagonist/flood))
-			victim_mind.add_antag_datum(/datum/antagonist/flood)
-		victim_mind.special_role = ROLE_FLOOD
-
-	// Leave their station equipment on the floor instead of deleting it with the old body.
-	for(var/obj/item/equipped_item in victim.get_equipped_items(INCLUDE_POCKETS | INCLUDE_HELD | INCLUDE_ACCESSORIES))
-		victim.dropItemToGround(equipped_item, TRUE)
-
-	GLOB.flood_infections++
-	if(infection_message)
-		visible_message(span_danger(infection_message))
-	new /obj/effect/decal/cleanable/blood/splatter(conversion_turf)
-	if(prob(50))
-		playsound(conversion_turf, 'sound/flood/flood_join_chorus.ogg', 70, TRUE)
-	qdel(victim)
-	return TRUE
-
 /mob/living/basic/flood/combat_form/verb/create_infestor()
 	set name = "Create Infection Form"
 	set category = "Flood"

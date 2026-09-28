@@ -17,12 +17,15 @@
 	melee_damage_upper = 5
 	pass_flags = PASSMOB
 	basic_mob_flags = DEL_ON_DEATH
+	// Only a forced unbuckle (resist, death, or cleanup) can remove a latched form.
+	can_buckle_to = FALSE
 	mob_size = MOB_SIZE_TINY
 	attack_verb_continuous = "leaps at"
 	attack_verb_simple = "leap at"
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
 	var/mob/living/carbon/human/latched_host
+	var/latch_generation = 0
 	var/swarm_size = 1
 	var/max_swarm_size = 6
 	var/next_swarm_merge = 0
@@ -47,6 +50,7 @@
 	pixel_y = rand(0, 24)
 
 /mob/living/basic/flood/infestor/death(gibbed)
+	clear_latch()
 	if(!gibbed)
 		drop_infestor_remains(swarm_size)
 	return ..()
@@ -81,9 +85,7 @@
 	update_appearance(UPDATE_OVERLAYS)
 
 /mob/living/basic/flood/infestor/Destroy()
-	if(latched_host)
-		UnregisterSignal(latched_host, COMSIG_LIVING_RESIST)
-	latched_host = null
+	clear_latch()
 	return ..()
 
 /mob/living/basic/flood/infestor/examine(mob/user)
@@ -120,7 +122,7 @@
 		return
 
 /mob/living/basic/flood/infestor/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
-	if(stat == DEAD || latched_host || !ishuman(attacked_target))
+	if(stat == DEAD || buckled || latched_host || !ishuman(attacked_target))
 		return FALSE
 	var/mob/living/carbon/human/host = attacked_target
 	if(is_flood_target(host) || !Adjacent(host))
@@ -132,26 +134,85 @@
 			return FALSE
 	if(host.stat != DEAD && !..())
 		return FALSE
-	latched_host = host
+	if(stat == DEAD || QDELETED(host) || !Adjacent(host))
+		return FALSE
+	// An existing rider must not make its host immune to infection.
+	for(var/mob/living/rider as anything in host.buckled_mobs)
+		if(istype(rider, /mob/living/basic/flood/infestor))
+			return FALSE
+		host.unbuckle_mob(rider, force = TRUE)
 	forceMove(get_turf(host))
-	anchored = TRUE
+	if(!host.buckle_mob(src, force = TRUE))
+		return FALSE
+	latched_host = host
+	latch_generation++
+	var/current_latch = latch_generation
 	RegisterSignal(host, COMSIG_LIVING_RESIST, PROC_REF(on_host_resist))
-	host.visible_message(span_danger("[src] latches onto [host]!"), span_userdanger("[src] latches onto you! Resist or move away to break its grip!"))
-	INVOKE_ASYNC(src, PROC_REF(finish_latch), host)
+	RegisterSignal(src, COMSIG_MOB_UNBUCKLED, PROC_REF(on_unbuckled))
+	host.visible_message(span_danger("[src] latches onto [host]!"), span_userdanger("[src] latches onto you! Resist or kill it to break its grip!"))
+	var/latch_time = host.stat == DEAD ? 6 SECONDS : 10 SECONDS
+	if(host.stat != DEAD)
+		addtimer(CALLBACK(src, PROC_REF(latch_warning), host, 1, current_latch), 3 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(latch_warning), host, 2, current_latch), 7 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, current_latch), latch_time)
 	return TRUE
 
 /mob/living/basic/flood/infestor/proc/latch_still_valid(mob/living/carbon/human/host)
-	if(stat == DEAD || QDELETED(host) || latched_host != host || is_flood_target(host) || !Adjacent(host))
+	return stat != DEAD && !QDELETED(host) && latched_host == host && buckled == host && !is_flood_target(host)
+
+/mob/living/basic/flood/infestor/proc/convert_human(mob/living/carbon/human/victim, infection_message)
+	if(!latch_still_valid(victim))
 		return FALSE
-	if(host.stat == CONSCIOUS && host.getBruteLoss() + host.getFireLoss() <= host.maxHealth * 0.25)
+
+	var/turf/conversion_turf = get_turf(victim)
+	if(!conversion_turf)
 		return FALSE
+
+	var/mob/living/basic/flood/combat_form/human/new_form = new(conversion_turf)
+	new_form.name = victim.real_name
+	if(locate(/obj/item/clothing/under/color/orange) in victim)
+		new_form.icon_state = "prisoner_infected2"
+		new_form.icon_living = "prisoner_infected2"
+		new_form.icon_dead = "prisoner_infected2_dead"
+	SEND_SOUND(victim, sound('sound/flood/flood_infect_gravemind.ogg', volume = 60))
+
+	if(victim.mind)
+		// The source gives player-infected forms more staying power than NPC forms.
+		new_form.maxHealth = round(new_form.maxHealth * 1.5)
+		new_form.health = new_form.maxHealth
+		var/datum/mind/victim_mind = victim.mind
+		victim_mind.transfer_to(new_form)
+		if(!victim_mind.has_antag_datum(/datum/antagonist/flood))
+			victim_mind.add_antag_datum(/datum/antagonist/flood)
+		victim_mind.special_role = ROLE_FLOOD
+
+	// Leave their station equipment on the floor instead of deleting it with the old body.
+	for(var/obj/item/equipped_item in victim.get_equipped_items(INCLUDE_POCKETS | INCLUDE_HELD | INCLUDE_ACCESSORIES))
+		victim.dropItemToGround(equipped_item, TRUE)
+
+	GLOB.flood_infections++
+	if(infection_message)
+		visible_message(span_danger(infection_message))
+	new /obj/effect/decal/cleanable/blood/splatter(conversion_turf)
+	if(prob(50))
+		playsound(conversion_turf, 'sound/flood/flood_join_chorus.ogg', 70, TRUE)
+	qdel(victim)
 	return TRUE
 
 /mob/living/basic/flood/infestor/proc/clear_latch()
-	if(latched_host)
-		UnregisterSignal(latched_host, COMSIG_LIVING_RESIST)
+	var/mob/living/carbon/human/old_host = latched_host
 	latched_host = null
-	anchored = FALSE
+	latch_generation++
+	if(old_host)
+		UnregisterSignal(old_host, COMSIG_LIVING_RESIST)
+	UnregisterSignal(src, COMSIG_MOB_UNBUCKLED)
+	if(old_host && buckled == old_host)
+		old_host.unbuckle_mob(src, force = TRUE)
+
+/mob/living/basic/flood/infestor/proc/on_unbuckled(mob/living/source, atom/movable/old_buckle)
+	SIGNAL_HANDLER
+	if(old_buckle == latched_host)
+		clear_latch()
 
 /mob/living/basic/flood/infestor/proc/on_host_resist(mob/living/carbon/human/host)
 	SIGNAL_HANDLER
@@ -162,8 +223,8 @@
 
 /// The source's infection sensations now describe an active latch rather than
 /// a chemical infection. They never convert a host by themselves.
-/mob/living/basic/flood/infestor/proc/latch_warning(mob/living/carbon/human/host, stage)
-	if(QDELETED(host) || host.stat == DEAD || !latch_still_valid(host))
+/mob/living/basic/flood/infestor/proc/latch_warning(mob/living/carbon/human/host, stage, expected_generation)
+	if(expected_generation != latch_generation || QDELETED(host) || host.stat == DEAD || !latch_still_valid(host))
 		return
 	if(stage == 1)
 		to_chat(host, span_warning(pick(
@@ -178,21 +239,15 @@
 			"You feel your mind slipping...",
 		)))
 
-/mob/living/basic/flood/infestor/proc/finish_latch(mob/living/carbon/human/host)
-	if(QDELETED(host))
-		if(latched_host == host)
-			clear_latch()
+/mob/living/basic/flood/infestor/proc/finish_latch(mob/living/carbon/human/host, expected_generation)
+	if(expected_generation != latch_generation)
 		return
-	var/latch_time = host.stat == DEAD ? 6 SECONDS : 10 SECONDS
-	if(host.stat != DEAD)
-		addtimer(CALLBACK(src, PROC_REF(latch_warning), host, 1), 3 SECONDS)
-		addtimer(CALLBACK(src, PROC_REF(latch_warning), host, 2), 7 SECONDS)
-	if(!do_after(src, latch_time, host, extra_checks = CALLBACK(src, PROC_REF(latch_still_valid), host)) || !latch_still_valid(host))
-		if(latched_host == host)
-			clear_latch()
+	if(!latch_still_valid(host))
+		clear_latch()
 		return
+	var/infected = convert_human(host, "[src] burrows into [host], converting them into a Flood combat form!")
 	clear_latch()
-	if(convert_human(host, "[src] burrows into [host], converting them into a Flood combat form!"))
+	if(infected)
 		qdel(src)
 
 /mob/living/basic/flood/infestor/proc/reanimate_nearby_flood(show_failure = FALSE)
