@@ -23,6 +23,17 @@
 	. = ..()
 	. += /datum/action/cooldown/flood/release_infection_forms
 
+/mob/living/basic/flood/carrier/Life(seconds_per_tick = SSMOBS_DT, times_fired)
+	. = ..()
+	if(!. || stat == DEAD || client || has_released_infection_forms || !ai_controller)
+		return
+	var/mob/living/target = ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	if(!istype(target) || QDELETED(target) || target.stat == DEAD || is_flood_target(target) || target.z != z)
+		return
+	// Burst as the AI approaches its target, before it has to make melee contact.
+	if(get_dist(src, target) <= 3 && can_see(src, target, 3))
+		release_infection_forms()
+
 /mob/living/basic/flood/carrier/proc/release_swarm()
 	if(has_released_infection_forms)
 		return
