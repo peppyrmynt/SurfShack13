@@ -466,10 +466,15 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
 	// Source human forms occasionally arrive armed. Use ordinary station guns.
 	if(prob(25))
-		var/gun_type = pick(/obj/item/gun/ballistic/automatic/pistol, /obj/item/gun/energy/laser)
-		var/obj/item/gun/starter_gun = new gun_type(src)
-		if(!put_in_hands(starter_gun))
-			starter_gun.forceMove(drop_location())
+		INVOKE_ASYNC(src, PROC_REF(equip_spawn_gun))
+
+/mob/living/basic/flood/combat_form/human/proc/equip_spawn_gun()
+	if(stat == DEAD)
+		return
+	var/gun_type = pick(/obj/item/gun/ballistic/automatic/pistol, /obj/item/gun/energy/laser)
+	var/obj/item/gun/starter_gun = new gun_type(src)
+	if(!put_in_hands(starter_gun))
+		starter_gun.forceMove(drop_location())
 
 /mob/living/basic/flood/combat_form/human/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
