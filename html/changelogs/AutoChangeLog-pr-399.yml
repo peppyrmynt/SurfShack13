@@ -1,4 +1,0 @@
-author: "cocothegogo"
-delete-after: True
-changes:
-  - bugfix: "Minisurf: Fixes Centcom Ferry crashing into station"

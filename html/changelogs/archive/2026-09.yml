@@ -37,3 +37,7 @@
   - bugfix: 'Minisurf: Fixes bitrunning issue'
   hyperjll:
   - rscadd: Added the hairstyle 'Weave' inspired by the game 'Don't Starve'.
+2026-09-28:
+  cocothegogo:
+  - bugfix: 'Minisurf: Fixes Centcom Ferry crashing into station'
+  - rscadd: Adds Omegastation to the map rotation
