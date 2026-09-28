@@ -92,5 +92,6 @@ GLOBAL_LIST_EMPTY(flood_assault_targets)
 /obj/effect/mob_spawn/ghost_role/flood/special(mob/living/spawned_mob, mob/mob_possessor)
 	. = ..()
 	if(spawned_mob.mind)
-		spawned_mob.mind.add_antag_datum(/datum/antagonist/flood)
+		if(!spawned_mob.mind.has_antag_datum(/datum/antagonist/flood))
+			spawned_mob.mind.add_antag_datum(/datum/antagonist/flood)
 		spawned_mob.mind.special_role = ROLE_FLOOD

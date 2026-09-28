@@ -28,3 +28,10 @@
 	if(applicant.mind)
 		applicant.mind.transfer_to(new_flood)
 	return new_flood
+
+/datum/dynamic_ruleset/midround/from_ghosts/flood/finish_setup(mob/new_character, index)
+	// Transferring the mind into a Flood body may already have granted the datum.
+	if(new_character.mind?.has_antag_datum(/datum/antagonist/flood))
+		new_character.mind.special_role = ROLE_FLOOD
+		return
+	return ..()

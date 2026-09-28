@@ -32,6 +32,7 @@
 
 /mob/living/basic/flood/Initialize(mapload)
 	. = ..()
+	RegisterSignal(src, COMSIG_MOB_MIND_TRANSFERRED_INTO, PROC_REF(on_flood_mind_transfer))
 	grant_actions_by_list(get_flood_actions())
 	attacked_sound = pick(
 		'sound/flood/pain.pain1.ogg',
@@ -42,6 +43,22 @@
 		'sound/flood/pain.pain15.ogg',
 	)
 	next_idle_sound = world.time + rand(300, 600)
+
+/mob/living/basic/flood/mind_initialize()
+	. = ..()
+	grant_flood_antag()
+
+/mob/living/basic/flood/proc/on_flood_mind_transfer(mob/living/basic/flood/source, mob/living/old_body)
+	SIGNAL_HANDLER
+	grant_flood_antag()
+
+/// Any mind taking control of a Flood body joins the Flood, including manual possession.
+/mob/living/basic/flood/proc/grant_flood_antag()
+	var/datum/mind/flood_mind = mind
+	if(!flood_mind || flood_mind.has_antag_datum(/datum/antagonist/flood))
+		return
+	if(flood_mind.add_antag_datum(/datum/antagonist/flood))
+		flood_mind.special_role = ROLE_FLOOD
 
 /mob/living/basic/flood/proc/get_flood_actions()
 	return list(/datum/action/cooldown/flood/chorus)

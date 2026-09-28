@@ -32,6 +32,8 @@
 
 /mob/living/basic/flood/infestor/Initialize(mapload)
 	. = ..()
+	// Human buckling requires a mount trait even when forced. Latching is not riding.
+	add_traits(list(TRAIT_CAN_MOUNT_HUMANS, TRAIT_CANT_RIDE), INNATE_TRAIT)
 	pixel_x = rand(-8, 8)
 	pixel_y = rand(0, 24)
 	// Newly released infection forms spread out before they coalesce into swarms.
