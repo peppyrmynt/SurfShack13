@@ -201,9 +201,7 @@ export const AntagInfoFlood = () => {
                   <Stack.Item>
                     <Section title="Biomass and fire">
                       Flood units heal slowly only while standing on
-                      Flood-covered floor. Walking across it slows movement by
-                      20%. It spreads through nearby connected floors. Enough
-                      fire damage gibs Flood bodies.
+                      Flood-covered floor. Enough fire damage gibs Flood bodies.
                       Fire can destroy biomass; crew can also clear floor growth
                       with a welder or by removing the floor.
                     </Section>
