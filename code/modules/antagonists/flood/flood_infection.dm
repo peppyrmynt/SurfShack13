@@ -270,7 +270,18 @@
 		return
 	// A new generation prevents an earlier damage hit or corpse timer from firing.
 	latch_generation++
+	shake_infected_corpse(host, latch_generation)
 	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, latch_generation), 5 SECONDS)
+
+/mob/living/basic/flood/infestor/proc/shake_infected_corpse(mob/living/carbon/human/host, expected_generation)
+	if(expected_generation != latch_generation || !latch_still_valid(host) || host.stat != DEAD)
+		return
+	// A short, gentle tremble returns the corpse to its original position each time.
+	animate(host, pixel_w = 1, time = 0.1 SECONDS, flags = ANIMATION_PARALLEL | ANIMATION_RELATIVE)
+	animate(pixel_w = -2, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
+	animate(pixel_w = 2, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
+	animate(pixel_w = -1, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
+	addtimer(CALLBACK(src, PROC_REF(shake_infected_corpse), host, expected_generation), 0.5 SECONDS)
 
 /mob/living/basic/flood/infestor/proc/finish_latch(mob/living/carbon/human/host, expected_generation)
 	if(expected_generation != latch_generation)
