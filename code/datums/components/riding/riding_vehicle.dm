@@ -531,6 +531,14 @@
 /datum/component/riding/vehicle/lawnmower
 	keytype = null
 
+/datum/component/riding/vehicle/lawnmower/driver_move(atom/movable/movable_parent, mob/living/user, direction)
+	vehicle_move_delay = initial(vehicle_move_delay)
+	if(ishuman(user))
+		var/mob/living/carbon/human/human_driver = user
+		if(istype(human_driver.w_uniform, /obj/item/clothing/under/rank/civilian/cookjorts))
+			vehicle_move_delay /= 1.05
+	return ..()
+
 /datum/component/riding/vehicle/lawnmower/get_rider_offsets_and_layers(pass_index, mob/offsetter)
 	return list(
 		TEXT_NORTH = list(0, 4),
