@@ -347,6 +347,12 @@
 		air_update_turf(TRUE, FALSE)
 	return ..()
 
+/obj/structure/flood_door/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
+	if(damage_type == BRUTE && damage_amount)
+		playsound(src, 'sound/flood/flood_hit_sfx.ogg', 50, TRUE)
+	else
+		return ..()
+
 /obj/structure/flood_door/attack_hand(mob/user, list/modifiers)
 	. = ..()
 	if(.)
@@ -369,6 +375,7 @@
 	if(door_opened)
 		return
 	door_opened = TRUE
+	playsound(src, 'sound/flood/flood_open.ogg', 60, TRUE)
 	flick("floodopening", src)
 	icon_state = "floodopen"
 	set_opacity(FALSE)
@@ -410,6 +417,12 @@
 	. = ..()
 	if(!. && isprojectile(mover))
 		return prob(30)
+
+/obj/structure/flood_window/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
+	if(damage_type == BRUTE && damage_amount)
+		playsound(src, 'sound/flood/flood_hit_sfx.ogg', 50, TRUE)
+	else
+		return ..()
 
 /mob/living/basic/flood/constructor
 	name = "Flood constructor form"

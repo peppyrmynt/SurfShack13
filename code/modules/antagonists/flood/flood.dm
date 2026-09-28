@@ -275,6 +275,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 	var/mob/living/basic/flood/combat_form/human/new_form = new(conversion_turf)
 	new_form.name = victim.real_name
+	SEND_SOUND(victim, sound('sound/flood/flood_infect_gravemind.ogg', volume = 60))
 
 	if(victim.mind)
 		var/datum/mind/victim_mind = victim.mind
@@ -291,7 +292,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(infection_message)
 		visible_message(span_danger(infection_message))
 	new /obj/effect/decal/cleanable/blood/splatter(conversion_turf)
-	playsound(conversion_turf, 'sound/flood/leap.leap1.ogg', 50, TRUE)
+	if(prob(50))
+		playsound(conversion_turf, 'sound/flood/flood_join_chorus.ogg', 70, TRUE)
 	qdel(victim)
 	return TRUE
 
