@@ -19,6 +19,10 @@
 
 	var/has_released_infection_forms = FALSE
 
+/mob/living/basic/flood/carrier/get_flood_actions()
+	. = ..()
+	. += /datum/action/cooldown/flood/release_infection_forms
+
 /mob/living/basic/flood/carrier/proc/release_swarm()
 	if(has_released_infection_forms)
 		return
@@ -53,10 +57,7 @@
 	qdel(src)
 	return TRUE
 
-/mob/living/basic/flood/carrier/verb/release_infection_forms()
-	set name = "Release Infection Forms"
-	set category = "Flood"
-
+/mob/living/basic/flood/carrier/proc/release_infection_forms()
 	if(stat == DEAD)
 		return
 	release_swarm()
@@ -66,4 +67,3 @@
 	if(!has_released_infection_forms)
 		release_swarm()
 	return ..()
-

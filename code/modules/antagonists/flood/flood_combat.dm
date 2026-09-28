@@ -71,15 +71,17 @@
 	/// A reanimated combat form cannot be raised again after its next death.
 	var/reanimated = FALSE
 
+/mob/living/basic/flood/combat_form/get_flood_actions()
+	. = ..()
+	. += /datum/action/cooldown/flood/create_infestor
+	. += /datum/action/cooldown/flood/evolve
+
 /mob/living/basic/flood/combat_form/examine(mob/user)
 	. = ..()
 	if(stat == DEAD && reanimated)
 		. += span_warning("Its biomass has already been reanimated and cannot be raised again.")
 
-/mob/living/basic/flood/combat_form/verb/create_infestor()
-	set name = "Create Infection Form"
-	set category = "Flood"
-
+/mob/living/basic/flood/combat_form/proc/create_infestor()
 	if(stat == DEAD)
 		return
 	if(world.time < next_evolution)
@@ -90,10 +92,7 @@
 	new /mob/living/basic/flood/infestor(loc)
 	visible_message(span_warning("[src]'s flesh tears open and produces a Flood infection form."))
 
-/mob/living/basic/flood/combat_form/verb/evolve()
-	set name = "Evolve Flood Form"
-	set category = "Flood"
-
+/mob/living/basic/flood/combat_form/proc/evolve()
 	if(stat == DEAD)
 		return
 	if(world.time < next_evolution)

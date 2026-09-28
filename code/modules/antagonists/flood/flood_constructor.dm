@@ -19,6 +19,17 @@
 	next_auto_growth = world.time + rand(10, 20) SECONDS
 	next_auto_biomass = world.time + 45 SECONDS
 
+/mob/living/basic/flood/constructor/get_flood_actions()
+	. = ..()
+	. += list(
+		/datum/action/cooldown/flood/grow_biomass,
+		/datum/action/cooldown/flood/infest_floor,
+		/datum/action/cooldown/flood/grow_barrier,
+		/datum/action/cooldown/flood/grow_door,
+		/datum/action/cooldown/flood/grow_membrane,
+		/datum/action/cooldown/flood/grow_spores,
+	)
+
 /mob/living/basic/flood/constructor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
 	if(!. || stat == DEAD || client || world.time < next_auto_growth)
@@ -90,30 +101,21 @@
 /mob/living/basic/flood/constructor/proc/get_build_turf()
 	return get_step(src, dir)
 
-/mob/living/basic/flood/constructor/verb/grow_biomass()
-	set name = "Grow Biomass"
-	set category = "Flood"
-
+/mob/living/basic/flood/constructor/proc/grow_biomass()
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_biomass))
 		return
 	new /obj/structure/flood_biomass/tiny(target_turf)
 	visible_message(span_warning("Flood biomass spreads outward beneath [src]."))
 
-/mob/living/basic/flood/constructor/verb/infest_floor()
-	set name = "Infest Floor"
-	set category = "Flood"
-
+/mob/living/basic/flood/constructor/proc/infest_floor()
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /turf/open/floor/flood_biomass))
 		return
 	grow_flood_floor(target_turf)
 	visible_message(span_warning("Pulsating Flood tissue creeps across the floor."))
 
-/mob/living/basic/flood/constructor/verb/grow_barrier()
-	set name = "Grow Biomass Wall"
-	set category = "Flood"
-
+/mob/living/basic/flood/constructor/proc/grow_barrier()
 	if(world.time < next_wall_build)
 		to_chat(src, span_warning("Your biomass is still recovering from growing a wall."))
 		return
@@ -124,30 +126,21 @@
 	new /obj/structure/flood_wall(target_turf)
 	visible_message(span_warning("[src] raises a solid wall of Flood biomass."))
 
-/mob/living/basic/flood/constructor/verb/grow_door()
-	set name = "Grow Biomass Door"
-	set category = "Flood"
-
+/mob/living/basic/flood/constructor/proc/grow_door()
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_door, TRUE))
 		return
 	new /obj/structure/flood_door(target_turf)
 	visible_message(span_warning("Flood tissue swells into a thick membrane."))
 
-/mob/living/basic/flood/constructor/verb/grow_membrane()
-	set name = "Grow Biomass Membrane"
-	set category = "Flood"
-
+/mob/living/basic/flood/constructor/proc/grow_membrane()
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_window, TRUE))
 		return
 	new /obj/structure/flood_window(target_turf)
 	visible_message(span_warning("A translucent Flood membrane hardens into place."))
 
-/mob/living/basic/flood/constructor/verb/grow_spores()
-	set name = "Grow Spore Cluster"
-	set category = "Flood"
-
+/mob/living/basic/flood/constructor/proc/grow_spores()
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_spore_trap))
 		return
@@ -180,6 +173,14 @@
 	. = ..()
 	next_auto_direct = world.time + rand(15, 25) SECONDS
 
+/mob/living/basic/flood/overseer/get_flood_actions()
+	. = ..()
+	. += list(
+		/datum/action/cooldown/flood/direct_assault,
+		/datum/action/cooldown/flood/create_constructor,
+		/datum/action/cooldown/flood/direct_growth,
+	)
+
 /mob/living/basic/flood/overseer/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
 	if(!. || stat == DEAD || client || world.time < next_auto_direct)
@@ -195,10 +196,7 @@
 	if(nearby_constructors < 2)
 		create_constructor()
 
-/mob/living/basic/flood/overseer/verb/direct_assault()
-	set name = "Direct Flood Assault"
-	set category = "Flood"
-
+/mob/living/basic/flood/overseer/proc/direct_assault()
 	if(stat == DEAD || world.time < next_assault)
 		return
 	var/list/possible_targets = list()
@@ -225,10 +223,7 @@
 	next_assault = world.time + 30 SECONDS
 	visible_message(span_warning("[src] emits a commanding howl, directing the Flood toward [target]!"))
 
-/mob/living/basic/flood/overseer/verb/create_constructor()
-	set name = "Create Constructor Form"
-	set category = "Flood"
-
+/mob/living/basic/flood/overseer/proc/create_constructor()
 	if(stat == DEAD)
 		return
 	if(world.time < next_constructor)
@@ -238,10 +233,7 @@
 	new /mob/living/basic/flood/constructor(loc)
 	visible_message(span_warning("[src] buds off a new Flood constructor form."))
 
-/mob/living/basic/flood/overseer/verb/direct_growth()
-	set name = "Direct Infestation Growth"
-	set category = "Flood"
-
+/mob/living/basic/flood/overseer/proc/direct_growth()
 	if(stat == DEAD)
 		return
 	if(world.time < next_direct_growth)

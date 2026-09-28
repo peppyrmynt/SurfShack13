@@ -37,6 +37,10 @@
 	// Newly released infection forms spread out before they coalesce into swarms.
 	next_swarm_merge = world.time + 3 SECONDS
 
+/mob/living/basic/flood/infestor/get_flood_actions()
+	. = ..()
+	. += /datum/action/cooldown/flood/reanimate
+
 /// Infection forms leave small, cleanable remains, as in the original infestation.
 /obj/effect/decal/cleanable/flood_infestor
 	name = "dead Flood infection form"
@@ -324,11 +328,3 @@
 	next_reanimate_check = world.time + 2 SECONDS
 	merge_nearby_infestors()
 	reanimate_nearby_flood()
-
-/mob/living/basic/flood/infestor/verb/reanimate_flood()
-	set name = "Reanimate Flood Corpse"
-	set category = "Flood"
-
-	if(stat == DEAD)
-		return
-	reanimate_nearby_flood(TRUE)

@@ -3178,6 +3178,7 @@
 #include "code\modules\antagonists\cult\datums\shade.dm"
 #include "code\modules\antagonists\ert\ert.dm"
 #include "code\modules\antagonists\flood\flood.dm"
+#include "code\modules\antagonists\flood\flood_actions.dm"
 #include "code\modules\antagonists\flood\flood_ai.dm"
 #include "code\modules\antagonists\flood\flood_biomass.dm"
 #include "code\modules\antagonists\flood\flood_carrier.dm"

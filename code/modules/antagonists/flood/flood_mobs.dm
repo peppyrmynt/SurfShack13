@@ -32,6 +32,7 @@
 
 /mob/living/basic/flood/Initialize(mapload)
 	. = ..()
+	grant_actions_by_list(get_flood_actions())
 	attacked_sound = pick(
 		'sound/flood/pain.pain1.ogg',
 		'sound/flood/pain.pain2.ogg',
@@ -41,6 +42,9 @@
 		'sound/flood/pain.pain15.ogg',
 	)
 	next_idle_sound = world.time + rand(300, 600)
+
+/mob/living/basic/flood/proc/get_flood_actions()
+	return list(/datum/action/cooldown/flood/chorus)
 
 /mob/living/basic/flood/melee_attack(atom/target, list/modifiers, ignore_cooldown)
 	if(istype(src, /mob/living/basic/flood/infestor))
@@ -66,10 +70,7 @@
 		)
 	return ..()
 
-/mob/living/basic/flood/verb/flood_chorus()
-	set name = "Flood Chorus"
-	set category = "Flood"
-
+/mob/living/basic/flood/proc/flood_chorus()
 	if(stat == DEAD || !mind?.has_antag_datum(/datum/antagonist/flood))
 		return
 	var/message = tgui_input_text(src, "Speak to the Flood chorus.", "Flood Chorus", max_length = MAX_MESSAGE_LEN)
@@ -100,4 +101,3 @@
 		if(istype(recipient) && recipient.stat != DEAD)
 			to_chat(recipient, rendered_message)
 	log_talk(message, LOG_SAY, tag = "Flood Chorus")
-
