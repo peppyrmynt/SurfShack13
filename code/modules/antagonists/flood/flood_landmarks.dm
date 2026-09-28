@@ -87,7 +87,7 @@ GLOBAL_LIST_EMPTY(flood_assault_targets)
 	prompt_name = "Flood combat form"
 	you_are_text = "You are a Flood combat form."
 	flavour_text = "Spread the infestation with infection forms. Your human hands can use ordinary station equipment and weapons."
-	important_text = "Only infection forms that remain latched to a vulnerable host can convert them."
+	important_text = "Infection forms hurt living hosts. Only forms latched to dead humans for five seconds can convert them."
 
 /obj/effect/mob_spawn/ghost_role/flood/special(mob/living/spawned_mob, mob/mob_possessor)
 	. = ..()

@@ -13,8 +13,8 @@
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
 	health = 5
 	speed = -0.5
-	melee_damage_lower = 1
-	melee_damage_upper = 5
+	melee_damage_lower = 10
+	melee_damage_upper = 10
 	pass_flags = PASSMOB
 	basic_mob_flags = DEL_ON_DEATH
 	// Only a forced unbuckle (resist, death, or cleanup) can remove a latched form.
@@ -80,7 +80,6 @@
 	maxHealth -= lost_forms * initial(maxHealth)
 	bruteloss = max(0, maxHealth - current_health)
 	updatehealth()
-	melee_damage_upper = initial(melee_damage_upper) + swarm_size - 1
 	drop_infestor_remains(lost_forms)
 	update_appearance(UPDATE_OVERLAYS)
 
@@ -114,7 +113,6 @@
 		maxHealth += other.maxHealth
 		bruteloss = max(0, maxHealth - combined_health)
 		updatehealth()
-		melee_damage_upper += added_forms
 		swarm_size += added_forms
 		name = "Flood infection form swarm"
 		qdel(other)
@@ -146,22 +144,23 @@
 		return FALSE
 	latched_host = host
 	latch_generation++
-	var/current_latch = latch_generation
 	RegisterSignal(host, COMSIG_LIVING_RESIST, PROC_REF(on_host_resist))
+	RegisterSignal(host, COMSIG_LIVING_DEATH, PROC_REF(on_host_death))
+	RegisterSignal(host, COMSIG_LIVING_REVIVE, PROC_REF(on_host_revive))
+	RegisterSignal(host, COMSIG_QDELETING, PROC_REF(on_host_deleted))
 	RegisterSignal(src, COMSIG_MOB_UNBUCKLED, PROC_REF(on_unbuckled))
 	host.visible_message(span_danger("[src] latches onto [host]!"), span_userdanger("[src] latches onto you! Resist or kill it to break its grip!"))
-	var/latch_time = host.stat == DEAD ? 6 SECONDS : 10 SECONDS
-	if(host.stat != DEAD)
-		addtimer(CALLBACK(src, PROC_REF(latch_warning), host, 1, current_latch), 3 SECONDS)
-		addtimer(CALLBACK(src, PROC_REF(latch_warning), host, 2, current_latch), 7 SECONDS)
-	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, current_latch), latch_time)
+	if(host.stat == DEAD)
+		begin_corpse_infection(host)
+	else
+		addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
 	return TRUE
 
 /mob/living/basic/flood/infestor/proc/latch_still_valid(mob/living/carbon/human/host)
 	return stat != DEAD && !QDELETED(host) && latched_host == host && buckled == host && !is_flood_target(host)
 
 /mob/living/basic/flood/infestor/proc/convert_human(mob/living/carbon/human/victim, infection_message)
-	if(!latch_still_valid(victim))
+	if(!latch_still_valid(victim) || victim.stat != DEAD)
 		return FALSE
 
 	var/turf/conversion_turf = get_turf(victim)
@@ -204,7 +203,7 @@
 	latched_host = null
 	latch_generation++
 	if(old_host)
-		UnregisterSignal(old_host, COMSIG_LIVING_RESIST)
+		UnregisterSignal(old_host, list(COMSIG_LIVING_RESIST, COMSIG_LIVING_DEATH, COMSIG_LIVING_REVIVE, COMSIG_QDELETING))
 	UnregisterSignal(src, COMSIG_MOB_UNBUCKLED)
 	if(old_host && buckled == old_host)
 		old_host.unbuckle_mob(src, force = TRUE)
@@ -221,29 +220,62 @@
 	host.visible_message(span_notice("[host] shakes [src] loose!"), span_notice("You shake [src] loose!"))
 	clear_latch()
 
-/// The source's infection sensations now describe an active latch rather than
-/// a chemical infection. They never convert a host by themselves.
-/mob/living/basic/flood/infestor/proc/latch_warning(mob/living/carbon/human/host, stage, expected_generation)
-	if(expected_generation != latch_generation || QDELETED(host) || host.stat == DEAD || !latch_still_valid(host))
+/mob/living/basic/flood/infestor/proc/on_host_death(mob/living/carbon/human/host, gibbed)
+	SIGNAL_HANDLER
+	if(host != latched_host)
 		return
-	if(stage == 1)
-		to_chat(host, span_warning(pick(
-			"Your skin becomes cold to the touch...",
-			"A spasm runs through your body...",
-			"Something wriggles underneath your skin...",
-		)))
-	else
-		to_chat(host, span_userdanger(pick(
-			"A chorus of voices speaks in riddles...",
-			"You feel something digging into your spinal column...",
-			"You feel your mind slipping...",
-		)))
+	if(gibbed)
+		clear_latch()
+		return
+	begin_corpse_infection(host)
+
+/mob/living/basic/flood/infestor/proc/on_host_revive(mob/living/carbon/human/host)
+	SIGNAL_HANDLER
+	if(host != latched_host || host.stat == DEAD)
+		return
+	// Invalidate the old corpse timer before resuming damage.
+	latch_generation++
+	addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
+
+/mob/living/basic/flood/infestor/proc/on_host_deleted(mob/living/carbon/human/host)
+	SIGNAL_HANDLER
+	if(host == latched_host)
+		clear_latch()
+
+/mob/living/basic/flood/infestor/proc/latch_hit(mob/living/carbon/human/host, expected_generation)
+	if(expected_generation != latch_generation)
+		return
+	if(!latch_still_valid(host))
+		clear_latch()
+		return
+	if(host.stat == DEAD)
+		begin_corpse_infection(host)
+		return
+	host.visible_message(span_danger("[src] tears into [host]!"), span_userdanger("[src] tears into you!"))
+	host.apply_damage(10, BRUTE, BODY_ZONE_CHEST)
+	if(expected_generation == latch_generation && latch_still_valid(host))
+		if(host.stat == DEAD)
+			begin_corpse_infection(host)
+		else
+			addtimer(CALLBACK(src, PROC_REF(latch_hit), host, expected_generation), 2 SECONDS)
+
+/mob/living/basic/flood/infestor/proc/begin_corpse_infection(mob/living/carbon/human/host)
+	if(!latch_still_valid(host) || host.stat != DEAD)
+		return
+	// A new generation prevents an earlier damage hit or corpse timer from firing.
+	latch_generation++
+	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, latch_generation), 5 SECONDS)
 
 /mob/living/basic/flood/infestor/proc/finish_latch(mob/living/carbon/human/host, expected_generation)
 	if(expected_generation != latch_generation)
 		return
 	if(!latch_still_valid(host))
 		clear_latch()
+		return
+	if(host.stat != DEAD)
+		// A revived host cannot be infected; resume damage while attached.
+		latch_generation++
+		addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
 		return
 	var/infected = convert_human(host, "[src] burrows into [host], converting them into a Flood combat form!")
 	clear_latch()
