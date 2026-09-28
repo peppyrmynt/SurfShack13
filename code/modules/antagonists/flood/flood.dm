@@ -57,7 +57,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 /datum/antagonist/flood/greet()
 	to_chat(owner.current, span_danger("You are part of the Flood."))
 	to_chat(owner.current, span_notice("Weaken human hosts so infection forms can latch on and convert them."))
-	to_chat(owner.current, span_notice("Combat forms can create infection forms, tear apart welded airlocks, and evolve into specialized Flood forms."))
+	to_chat(owner.current, span_notice("Combat forms can create infection forms and evolve into specialized Flood forms."))
 	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
 	to_chat(owner.current, span_notice("Infection forms must remain latched onto vulnerable or dead humans to convert them. Living hosts can resist or escape."))
 	to_chat(owner.current, span_notice("Use Flood Chorus to speak to every active Flood player, or :f to speak Floodmind nearby."))
@@ -351,13 +351,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	melee_damage_upper = 35
 	/// A reanimated combat form cannot be raised again after its next death.
 	var/reanimated = FALSE
-	var/next_weld_break = 0
-
-/mob/living/basic/flood/combat_form/Life(seconds_per_tick = SSMOBS_DT, times_fired)
-	. = ..()
-	if(!. || stat == DEAD || client || world.time < next_weld_break)
-		return
-	break_nearby_weld()
 
 /mob/living/basic/flood/combat_form/examine(mob/user)
 	. = ..()
@@ -416,35 +409,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	next_evolution = world.time + FLOOD_INFESTOR_COOLDOWN
 	new /mob/living/basic/flood/infestor(loc)
 	visible_message(span_warning("[src]'s flesh tears open and produces a Flood infection form."))
-
-/mob/living/basic/flood/combat_form/verb/destroy_weld()
-	set name = "Destroy Weld"
-	set category = "Flood"
-
-	if(stat == DEAD)
-		return
-	if(world.time < next_weld_break)
-		return
-	if(!break_nearby_weld())
-		to_chat(src, span_warning("There is no welded airlock close enough to tear open."))
-
-/mob/living/basic/flood/combat_form/proc/break_nearby_weld()
-
-	var/obj/machinery/door/airlock/target_airlock
-	for(var/obj/machinery/door/airlock/candidate in view(1, src))
-		if(candidate.welded)
-			target_airlock = candidate
-			break
-
-	if(!target_airlock)
-		return FALSE
-
-	next_weld_break = world.time + 5 SECONDS
-	visible_message(span_danger("[src] rakes its mutated limb across [target_airlock], tearing through the weld!"))
-	target_airlock.welded = FALSE
-	target_airlock.update_appearance()
-	playsound(target_airlock, 'sound/effects/grillehit.ogg', 80, TRUE)
-	return TRUE
 
 /mob/living/basic/flood/combat_form/verb/evolve()
 	set name = "Evolve Flood Form"
@@ -694,7 +658,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	attack_verb_simple = "leap at"
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
-	var/next_airlock_infest = 0
 	var/mob/living/carbon/human/latched_host
 	var/swarm_size = 1
 	var/max_swarm_size = 6
@@ -908,58 +871,13 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	qdel(src)
 	return TRUE
 
-/mob/living/basic/flood/infestor/proc/infest_nearby_airlock(show_failure = FALSE)
-	if(latched_host)
-		return FALSE
-	if(world.time < next_airlock_infest)
-		return FALSE
-
-	var/obj/machinery/door/airlock/target_airlock
-	for(var/obj/machinery/door/airlock/candidate in view(2, src))
-		if(candidate.welded || candidate.seal || (candidate.machine_stat & BROKEN))
-			continue
-		target_airlock = candidate
-		break
-
-	if(!target_airlock)
-		if(show_failure)
-			to_chat(src, span_warning("There is no vulnerable airlock nearby."))
-		return FALSE
-
-	next_airlock_infest = world.time + 10 SECONDS
-	visible_message(span_danger("[src] leaps onto [target_airlock] and burrows into its control mechanisms!"))
-	target_airlock.set_machine_stat(target_airlock.machine_stat | BROKEN)
-	addtimer(CALLBACK(target_airlock, TYPE_PROC_REF(/obj/machinery/door/airlock, finish_flood_infestation)), 15 SECONDS)
-	qdel(src)
-	return TRUE
-
-/// Give the crew time to weld or repair an infested airlock before it opens.
-/obj/machinery/door/airlock/proc/finish_flood_infestation()
-	if(QDELETED(src) || !(machine_stat & BROKEN) || welded || seal)
-		return
-	visible_message(span_danger("Flood tendrils burst from [src]'s control panel as it forces itself open!"))
-	if(locked)
-		unbolt()
-	if(open(BYPASS_DOOR_CHECKS))
-		bolt()
-
 /mob/living/basic/flood/infestor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
 	if(!. || stat == DEAD || client || latched_host || world.time < next_reanimate_check)
 		return
 	next_reanimate_check = world.time + 2 SECONDS
 	merge_nearby_infestors()
-	if(reanimate_nearby_flood())
-		return
-	infest_nearby_airlock()
-
-/mob/living/basic/flood/infestor/verb/infest_airlock()
-	set name = "Infest Airlock"
-	set category = "Flood"
-
-	if(stat == DEAD)
-		return
-	infest_nearby_airlock(TRUE)
+	reanimate_nearby_flood()
 
 /mob/living/basic/flood/infestor/verb/reanimate_flood()
 	set name = "Reanimate Flood Corpse"
