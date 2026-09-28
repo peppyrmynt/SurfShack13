@@ -192,6 +192,7 @@
 	melee_damage_lower = 5
 	melee_damage_upper = 10
 	var/next_constructor = 0
+	var/next_carrier = 0
 	var/next_direct_growth = 0
 	var/next_auto_direct = 0
 	var/mob/eye/flood_overseer/overseer_eye
@@ -204,6 +205,7 @@
 	. = ..()
 	. += list(
 		/datum/action/cooldown/flood/create_constructor,
+		/datum/action/cooldown/flood/create_carrier,
 		/datum/action/cooldown/flood/direct_growth,
 		/datum/action/cooldown/flood/toggle_overseer_mode,
 	)
@@ -232,6 +234,17 @@
 	next_constructor = world.time + 30 SECONDS
 	new /mob/living/basic/flood/constructor(loc)
 	visible_message(span_warning("[src] buds off a new Flood constructor form."))
+
+/mob/living/basic/flood/overseer/proc/create_carrier()
+	if(stat == DEAD || world.time < next_carrier)
+		return FALSE
+	var/turf/spawn_turf = get_turf(src)
+	if(!spawn_turf)
+		return FALSE
+	next_carrier = world.time + 120 SECONDS
+	new /mob/living/basic/flood/carrier(spawn_turf)
+	visible_message(span_warning("[src] buds off a Flood carrier form."))
+	return TRUE
 
 /mob/living/basic/flood/overseer/proc/direct_growth()
 	if(stat == DEAD)

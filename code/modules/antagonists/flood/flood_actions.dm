@@ -21,24 +21,6 @@
 	flood_form.flood_chorus()
 	return TRUE
 
-/datum/action/cooldown/flood/create_infestor
-	name = "Create Infection Form"
-	desc = "Bud off an infection form. Shares a recovery period with evolution."
-	button_icon = 'icons/mob/flood/flood_infection.dmi'
-	button_icon_state = "static"
-	cooldown_time = 30 SECONDS
-
-/datum/action/cooldown/flood/create_infestor/Activate(atom/target)
-	var/mob/living/basic/flood/combat_form/combat_form = owner
-	var/previous_cooldown = combat_form.next_evolution
-	combat_form.create_infestor()
-	if(combat_form.next_evolution <= previous_cooldown)
-		return FALSE
-	StartCooldownSelf()
-	for(var/datum/action/cooldown/flood/evolve/evolution_action in combat_form.actions)
-		evolution_action.StartCooldownSelf(cooldown_time)
-	return TRUE
-
 /datum/action/cooldown/flood/evolve
 	name = "Evolve Flood Form"
 	desc = "Choose a specialized Flood form."
@@ -164,6 +146,20 @@
 	var/previous_cooldown = overseer.next_constructor
 	overseer.create_constructor()
 	if(overseer.next_constructor <= previous_cooldown)
+		return FALSE
+	StartCooldownSelf()
+	return TRUE
+
+/datum/action/cooldown/flood/create_carrier
+	name = "Create Carrier Form"
+	desc = "Bud off a Flood carrier form every 120 seconds."
+	button_icon = 'icons/mob/flood/flood_carrier.dmi'
+	button_icon_state = "static"
+	cooldown_time = 120 SECONDS
+
+/datum/action/cooldown/flood/create_carrier/Activate(atom/target)
+	var/mob/living/basic/flood/overseer/overseer = owner
+	if(!overseer.create_carrier())
 		return FALSE
 	StartCooldownSelf()
 	return TRUE
