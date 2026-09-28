@@ -1,10 +1,25 @@
 /// The overseer's body remains vulnerable while its viewpoint moves across the infestation.
+GLOBAL_LIST_EMPTY(flood_overseer_eyes)
+
 /mob/eye/flood_overseer
 	name = "Flood overseer view"
 	icon = 'icons/mob/eyemob.dmi'
 	icon_state = "marker"
 	invisibility = INVISIBILITY_ABSTRACT
 	var/mob/living/basic/flood/overseer/controller
+	/// A client-side marker seen only by Flood players, including the overseer.
+	var/image/flood_marker
+
+/mob/eye/flood_overseer/Initialize(mapload)
+	. = ..()
+	flood_marker = image(icon = 'icons/mob/eyemob.dmi', loc = get_turf(src), icon_state = "marker", layer = ABOVE_ALL_MOB_LAYER)
+	flood_marker.plane = ABOVE_GAME_PLANE
+	flood_marker.color = "#C99974"
+	flood_marker.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	GLOB.flood_overseer_eyes += src
+	for(var/mob/living/basic/flood/ally in GLOB.mob_living_list)
+		if(ally.client)
+			ally.client.images += flood_marker
 
 /mob/eye/flood_overseer/relaymove(mob/living/user, direction)
 	if(user != controller || controller.stat == DEAD)
@@ -13,9 +28,14 @@
 	if(!istype(next_tile, /turf/open/floor/flood_biomass))
 		return FALSE
 	forceMove(next_tile)
+	flood_marker.loc = next_tile
 	return TRUE
 
 /mob/eye/flood_overseer/Destroy()
+	GLOB.flood_overseer_eyes -= src
+	for(var/client/viewer as anything in GLOB.clients)
+		viewer.images -= flood_marker
+	QDEL_NULL(flood_marker)
 	if(controller?.overseer_eye == src)
 		controller.overseer_eye = null
 		controller.remote_control = null

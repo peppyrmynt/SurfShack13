@@ -152,24 +152,6 @@
 	var/mob/living/basic/flood/constructor/constructor = owner
 	return constructor.grow_spores()
 
-/datum/action/cooldown/flood/direct_assault
-	name = "Direct Flood Assault"
-	desc = "Command nearby Flood forms to pursue a human in sight."
-	button_icon = 'icons/mob/flood/flood_combat_human.dmi'
-	button_icon_state = "nudist"
-	cooldown_time = 30 SECONDS
-
-/datum/action/cooldown/flood/direct_assault/Activate(atom/target)
-	var/mob/living/basic/flood/overseer/overseer = owner
-	var/previous_cooldown = overseer.next_assault
-	overseer.direct_assault()
-	if(QDELETED(src) || QDELETED(overseer))
-		return FALSE
-	if(overseer.next_assault <= previous_cooldown)
-		return FALSE
-	StartCooldownSelf()
-	return TRUE
-
 /datum/action/cooldown/flood/create_constructor
 	name = "Create Constructor Form"
 	desc = "Bud off a new Flood constructor."

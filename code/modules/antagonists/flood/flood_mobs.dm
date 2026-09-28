@@ -51,6 +51,18 @@
 	. = ..()
 	grant_flood_antag()
 
+/mob/living/basic/flood/Login()
+	. = ..()
+	for(var/mob/eye/flood_overseer/eye as anything in GLOB.flood_overseer_eyes)
+		if(eye.flood_marker)
+			client?.images += eye.flood_marker
+
+/mob/living/basic/flood/Logout()
+	for(var/mob/eye/flood_overseer/eye as anything in GLOB.flood_overseer_eyes)
+		if(eye.flood_marker)
+			client?.images -= eye.flood_marker
+	return ..()
+
 /mob/living/basic/flood/proc/on_flood_mind_transfer(mob/living/basic/flood/source, mob/living/old_body)
 	SIGNAL_HANDLER
 	grant_flood_antag()
