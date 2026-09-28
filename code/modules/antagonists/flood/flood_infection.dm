@@ -176,6 +176,15 @@
 		return FALSE
 
 	var/mob/living/basic/flood/combat_form/human/new_form = new(conversion_turf)
+	// Ordinary spawns keep their numbered names; a converted host keeps theirs.
+	var/victim_name = victim.real_name
+	if(!victim_name || victim_name == initial(victim.real_name))
+		victim_name = victim.name
+	if(victim_name && victim_name != initial(victim.name))
+		new_form.name = victim_name
+		new_form.real_name = victim_name
+		new_form.identifier = 0
+		new_form.unique_name = FALSE
 
 	if(victim.mind)
 		// The source gives player-infected forms more staying power than NPC forms.
@@ -315,6 +324,7 @@
 	new_form.name = corpse.name
 	new_form.real_name = corpse.real_name
 	new_form.identifier = corpse.identifier
+	new_form.unique_name = corpse.unique_name
 	var/mob/living/basic/flood/combat_form/reanimated_form = new_form
 	reanimated_form.icon = corpse.icon
 	reanimated_form.icon_living = corpse.icon_living
