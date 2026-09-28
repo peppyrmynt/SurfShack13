@@ -557,6 +557,37 @@
 	melee_damage_upper = 10
 	var/next_constructor = 0
 	var/next_direct_growth = 0
+	var/next_assault = 0
+
+/mob/living/basic/flood/overseer/verb/direct_assault()
+	set name = "Direct Flood Assault"
+	set category = "Flood"
+
+	if(stat == DEAD || world.time < next_assault)
+		return
+	var/list/possible_targets = list()
+	for(var/mob/living/carbon/human/candidate in view(7, src))
+		if(candidate.stat != DEAD && !candidate.mind?.has_antag_datum(/datum/antagonist/flood))
+			possible_targets += candidate
+	if(!length(possible_targets))
+		to_chat(src, span_warning("There is no human in sight to direct an assault against."))
+		return
+	var/mob/living/carbon/human/target = input(src, "Choose a human for the Flood to pursue.", "Flood Assault") as null|anything in possible_targets
+	if(!target || stat == DEAD || target.stat == DEAD || target.mind?.has_antag_datum(/datum/antagonist/flood) || !(target in view(7, src)))
+		return
+	var/directed = 0
+	for(var/mob/living/basic/flood/ally in range(7, src))
+		if(ally == src || ally.client || ally.stat == DEAD || istype(ally, /mob/living/basic/flood/infestor) || !ally.ai_controller)
+			continue
+		if(!can_see(ally, target, 9))
+			continue
+		ally.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
+		directed++
+	if(!directed)
+		to_chat(src, span_warning("No nearby Flood forms can see that target."))
+		return
+	next_assault = world.time + 30 SECONDS
+	visible_message(span_warning("[src] emits a commanding howl, directing the Flood toward [target]!"))
 
 /mob/living/basic/flood/overseer/verb/create_constructor()
 	set name = "Create Constructor Form"
