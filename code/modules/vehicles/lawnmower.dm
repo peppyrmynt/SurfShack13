@@ -8,10 +8,10 @@
 	var/list/gib_sounds = list('sound/vehicles/mowermovesquish.ogg')
 	var/hit_sound = 'sound/items/weapons/chainsawhit.ogg'
 
-// Blood tracks from the mower should not bloody the rider's shoes and turn into footprints.
-/obj/effect/decal/cleanable/blood/tracks/lawnmower
-	bloodiness = 0
-	should_dry = FALSE
+// Blood tracks from the mower should stay wheel tracks instead of bloodying the rider's shoes.
+/obj/effect/decal/cleanable/blood/tracks/lawnmower/on_entered(datum/source, atom/movable/entered_atom)
+	SIGNAL_HANDLER
+	return
 
 /obj/vehicle/ridden/lawnmower/Initialize(mapload)
 	. = ..()
