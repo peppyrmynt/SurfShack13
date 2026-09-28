@@ -181,7 +181,6 @@
 		new_form.icon_state = "prisoner_infected2"
 		new_form.icon_living = "prisoner_infected2"
 		new_form.icon_dead = "prisoner_infected2_dead"
-	SEND_SOUND(victim, sound('sound/flood/flood_infect_gravemind.ogg', volume = 60))
 
 	if(victim.mind)
 		// The source gives player-infected forms more staying power than NPC forms.

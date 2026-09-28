@@ -102,7 +102,6 @@
 
 	var/list/evolution_choices = list(
 		"Carrier" = /mob/living/basic/flood/carrier,
-		"Juggernaut" = /mob/living/basic/flood/combat_form/juggernaut,
 		"Constructor" = /mob/living/basic/flood/constructor,
 		"Overseer" = /mob/living/basic/flood/overseer,
 	)

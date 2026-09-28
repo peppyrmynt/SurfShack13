@@ -52,7 +52,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 /datum/antagonist/flood/on_gain()
 	forge_objectives()
-	return ..()
+	. = ..()
+	SEND_SOUND(owner.current, sound('sound/flood/flood_infect_gravemind.ogg', volume = 60))
 
 /datum/antagonist/flood/greet()
 	to_chat(owner.current, span_danger("You are part of the Flood."))
