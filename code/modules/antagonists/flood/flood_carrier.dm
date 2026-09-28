@@ -66,4 +66,7 @@
 /mob/living/basic/flood/carrier/death(gibbed)
 	if(!has_released_infection_forms)
 		release_swarm()
+	var/turf/death_turf = get_turf(src)
+	if(death_turf)
+		do_chem_smoke(range = 1, holder = src, location = death_turf, reagent_type = /datum/reagent/blob/reactive_spines)
 	return ..()

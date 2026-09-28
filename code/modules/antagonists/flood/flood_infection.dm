@@ -59,6 +59,9 @@
 	clear_latch()
 	if(!gibbed)
 		drop_infestor_remains(swarm_size)
+	var/turf/death_turf = get_turf(src)
+	if(death_turf)
+		do_chem_smoke(range = 1, holder = src, location = death_turf, reagent_type = /datum/reagent/blob/reactive_spines)
 	return ..()
 
 /mob/living/basic/flood/infestor/proc/drop_infestor_remains(amount)
