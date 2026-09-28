@@ -8,6 +8,11 @@
 	var/list/gib_sounds = list('sound/vehicles/mowermovesquish.ogg')
 	var/hit_sound = 'sound/items/weapons/chainsawhit.ogg'
 
+// Blood tracks from the mower should not bloody the rider's shoes and turn into footprints.
+/obj/effect/decal/cleanable/blood/tracks/lawnmower
+	bloodiness = 0
+	should_dry = FALSE
+
 /obj/vehicle/ridden/lawnmower/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/lawnmower)
@@ -41,6 +46,12 @@
 	for(var/obj/structure/flora/grass/grass in loc)
 		qdel(grass)
 
+	for(var/mob/living/simple_animal/bot/secbot/secbot in loc)
+		visible_message(span_danger("[src] shreds [secbot] into scrap!"))
+		playsound(loc, hit_sound, 50, TRUE)
+		secbot.gib()
+		gibbed = TRUE
+
 	for(var/mob/living/carbon/human/victim in loc)
 		if(victim == rider)
 			continue
@@ -52,7 +63,7 @@
 				var/turf/below_us = get_turf(src)
 				below_us.add_mob_blood(victim)
 				AddComponent(/datum/component/blood_walk, \
-					blood_type = /obj/effect/decal/cleanable/blood/tracks, \
+					blood_type = /obj/effect/decal/cleanable/blood/tracks/lawnmower, \
 					target_dir_change = TRUE, \
 					transfer_blood_dna = TRUE, \
 					max_blood = 4)
@@ -66,7 +77,7 @@
 			var/turf/below_us = get_turf(src)
 			below_us.add_mob_blood(victim)
 			AddComponent(/datum/component/blood_walk, \
-				blood_type = /obj/effect/decal/cleanable/blood/tracks, \
+				blood_type = /obj/effect/decal/cleanable/blood/tracks/lawnmower, \
 				target_dir_change = TRUE, \
 				transfer_blood_dna = TRUE, \
 				max_blood = 4)
