@@ -34,6 +34,8 @@
 
 /mob/living/basic/flood/Initialize(mapload)
 	. = ..()
+	if(stat != DEAD && world.time < GLOB.flood_overseer_replacement_at)
+		apply_status_effect(/datum/status_effect/flood_overseer_loss, GLOB.flood_overseer_replacement_at - world.time)
 	RegisterSignal(src, COMSIG_MOB_MIND_TRANSFERRED_INTO, PROC_REF(on_flood_mind_transfer))
 	// Infection forms remain AI-controlled; other AI forms can join the ghost spawners menu.
 	if(!istype(src, /mob/living/basic/flood/infestor))
@@ -81,7 +83,7 @@
 	return list(/datum/action/cooldown/flood/chorus)
 
 /mob/living/basic/flood/get_fire_overlay(stacks, on_fire)
-	var/fire_icon = "human_[stacks > MOB_BIG_FIRE_STACK_THRESHOLD ? "big_fire" : "small_fire"]"
+	var/fire_icon = "human_[(stat == DEAD || stacks <= MOB_BIG_FIRE_STACK_THRESHOLD) ? "small_fire" : "big_fire"]"
 	if(!GLOB.fire_appearances[fire_icon])
 		GLOB.fire_appearances[fire_icon] = mutable_appearance(
 			'icons/mob/effects/onfire.dmi',
@@ -123,8 +125,11 @@
 /mob/living/basic/flood/proc/flood_chorus()
 	if(stat == DEAD || !mind?.has_antag_datum(/datum/antagonist/flood))
 		return
+	if(world.time < GLOB.flood_overseer_replacement_at)
+		to_chat(src, span_warning("The hive is in shock. Flood Chorus returns when the overseer death penalty ends."))
+		return
 	var/message = tgui_input_text(src, "Speak to the Flood chorus.", "Flood Chorus", max_length = MAX_MESSAGE_LEN)
-	if(!message || stat == DEAD || !mind?.has_antag_datum(/datum/antagonist/flood))
+	if(!message || stat == DEAD || world.time < GLOB.flood_overseer_replacement_at || !mind?.has_antag_datum(/datum/antagonist/flood))
 		return
 	if(client?.prefs.muted & MUTE_IC)
 		to_chat(src, span_warning("You cannot send IC messages while muted."))
@@ -140,7 +145,7 @@
 		if(tgui_alert(src, "Your message contains \"[soft_filter_result[CHAT_FILTER_INDEX_WORD]]\". [soft_filter_result[CHAT_FILTER_INDEX_REASON]]", "Soft Blocked Word", list("Yes", "No")) != "Yes")
 			return
 		message_admins("[ADMIN_LOOKUPFLW(src)] passed the soft filter for Flood Chorus: [html_encode(message)]")
-	if(stat == DEAD || !mind?.has_antag_datum(/datum/antagonist/flood))
+	if(stat == DEAD || world.time < GLOB.flood_overseer_replacement_at || !mind?.has_antag_datum(/datum/antagonist/flood))
 		return
 	message = trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN))
 	if(!message)

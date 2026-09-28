@@ -4,6 +4,17 @@
 /// antagonist, simple-animal, and dynamic-ruleset architecture.
 
 GLOBAL_VAR_INIT(flood_infections, 0)
+/// Time when the hive can appoint a new overseer after its leader dies.
+GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
+
+/proc/flood_has_living_overseer()
+	for(var/mob/living/basic/flood/overseer/leader in GLOB.mob_living_list)
+		if(!QDELETED(leader) && leader.stat != DEAD)
+			return TRUE
+	return FALSE
+
+/proc/can_form_flood_overseer()
+	return world.time >= GLOB.flood_overseer_replacement_at && !flood_has_living_overseer()
 
 /// Check both infected minds and Flood forms when selecting potential hosts.
 /proc/is_flood_target(mob/target_mob)
@@ -59,7 +70,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 /datum/antagonist/flood/greet()
 	to_chat(owner.current, span_danger("You are part of the Flood."))
 	to_chat(owner.current, span_notice("Infection forms latch onto living humans before dealing damage."))
-	to_chat(owner.current, span_notice("Combat forms can evolve into carrier, constructor, or overseer forms. Constructors produce infection forms."))
+	to_chat(owner.current, span_notice("Combat forms can evolve into carrier or constructor forms. Constructors can become the next overseer when the hive is ready."))
 	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
 	to_chat(owner.current, span_notice("While latched to living humans, infection forms deal 10 brute every two seconds. Only dead hosts can be converted, after five seconds attached to the corpse. Living hosts can resist or escape."))
 	to_chat(owner.current, span_notice("Standing on Flood-covered floors slowly heals your biomass."))

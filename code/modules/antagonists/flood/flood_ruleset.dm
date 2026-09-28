@@ -18,13 +18,24 @@
 	var/turf/spawn_turf
 
 /datum/dynamic_ruleset/midround/from_ghosts/flood/execute()
+	if(!can_form_flood_overseer())
+		return FALSE
 	spawn_turf = find_maintenance_spawn(atmos_sensitive = TRUE, require_darkness = FALSE)
 	if(!spawn_turf)
 		return FALSE
 	return ..()
 
+/datum/dynamic_ruleset/midround/from_ghosts/flood/finish_applications()
+	// The poll lasts 30 seconds; a constructor may have become overseer meanwhile.
+	if(!can_form_flood_overseer())
+		SSdynamic.executed_rules -= src
+		return
+	return ..()
+
 /datum/dynamic_ruleset/midround/from_ghosts/flood/generate_ruleset_body(mob/applicant)
-	var/mob/living/basic/flood/combat_form/human/new_flood = new(spawn_turf)
+	var/mob/living/basic/flood/overseer/new_flood = new(spawn_turf)
+	// The new leader can enter overseer mode immediately from its spawn tile.
+	grow_flood_floor(spawn_turf)
 	if(applicant.mind)
 		applicant.mind.transfer_to(new_flood)
 	return new_flood

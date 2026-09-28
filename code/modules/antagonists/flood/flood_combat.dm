@@ -23,11 +23,14 @@
 			)
 		if(death_sound)
 			playsound(loc, death_sound, 50, TRUE)
-	return ..()
+	. = ..()
+	if(. && on_fire && !QDELETED(src))
+		// The corpse uses small human flames even if its living body burned brightly.
+		update_appearance(UPDATE_OVERLAYS)
 
 /mob/living/basic/flood/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
-	if(stat != DEAD && health < maxHealth && istype(loc, /turf/open/floor/flood_biomass))
+	if(stat != DEAD && body_position == STANDING_UP && !buckled && health < maxHealth && istype(loc, /turf/open/floor/flood_biomass))
 		adjust_health(-0.5 * seconds_per_tick)
 	if(stat != DEAD && world.time >= next_idle_sound)
 		next_idle_sound = world.time + rand(450, 750)
@@ -92,7 +95,6 @@
 	var/list/evolution_choices = list(
 		"Carrier" = /mob/living/basic/flood/carrier,
 		"Constructor" = /mob/living/basic/flood/constructor,
-		"Overseer" = /mob/living/basic/flood/overseer,
 	)
 	var/chosen_form = input(src, "Choose a Flood specialization.", "Flood Evolution") as null|anything in evolution_choices
 	if(!chosen_form || stat == DEAD)

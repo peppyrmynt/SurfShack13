@@ -80,11 +80,11 @@
 	desc = "Cover the floor under you with Flood biomass."
 	button_icon = 'icons/turf/floors/flood_floor.dmi'
 	button_icon_state = "floor"
+	cooldown_time = 2 SECONDS
 
 /datum/action/cooldown/flood/infest_floor/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner
-	constructor.infest_floor()
-	return TRUE
+	return constructor.infest_floor()
 
 /datum/action/cooldown/flood/grow_barrier
 	name = "Grow Biomass Wall"
@@ -95,34 +95,39 @@
 
 /datum/action/cooldown/flood/grow_barrier/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner
-	var/previous_cooldown = constructor.next_wall_build
-	constructor.grow_barrier()
-	if(constructor.next_wall_build <= previous_cooldown)
-		return FALSE
-	StartCooldownSelf()
-	return TRUE
+	return constructor.grow_barrier()
 
 /datum/action/cooldown/flood/grow_door
 	name = "Grow Biomass Door"
 	desc = "Build a Flood door on your tile."
 	button_icon = 'icons/obj/flood/flood_door.dmi'
 	button_icon_state = "flood"
+	cooldown_time = 2 SECONDS
 
 /datum/action/cooldown/flood/grow_door/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner
-	constructor.grow_door()
-	return TRUE
+	return constructor.grow_door()
 
 /datum/action/cooldown/flood/grow_membrane
 	name = "Grow Biomass Membrane"
 	desc = "Build a translucent Flood membrane on your tile."
 	button_icon = 'icons/obj/flood/flood_window.dmi'
 	button_icon_state = "flood_window"
+	cooldown_time = 2 SECONDS
 
 /datum/action/cooldown/flood/grow_membrane/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner
-	constructor.grow_membrane()
-	return TRUE
+	return constructor.grow_membrane()
+
+/datum/action/cooldown/flood/become_overseer
+	name = "Become Overseer"
+	desc = "Replace a fallen overseer after the hive recovers. Only one living overseer can exist."
+	button_icon = 'icons/mob/flood/flood_constructor_builder.dmi'
+	button_icon_state = "designator"
+
+/datum/action/cooldown/flood/become_overseer/Activate(atom/target)
+	var/mob/living/basic/flood/constructor/constructor = owner
+	return constructor.become_overseer()
 
 /datum/action/cooldown/flood/grow_spores
 	name = "Grow Spore Cluster"

@@ -39,7 +39,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Evolution',
-        text: 'Use Evolve Flood Form to become a carrier, constructor, or overseer. Combat forms cannot produce infection forms directly.',
+        text: 'Use Evolve Flood Form to become a carrier or constructor. Constructors can become overseers when the hive has no living overseer and the death penalty has ended. Combat forms cannot produce infection forms directly.',
       },
       {
         label: 'Infected hosts',
@@ -95,6 +95,10 @@ const guides: Record<Form, Guide> = {
         label: 'Grow Spore Cluster',
         text: 'Place a cluster on your tile every 180 seconds. When a human passes through it, the cluster bursts after two seconds and releases four infection forms. Too many nearby clusters block placement.',
       },
+      {
+        label: 'Become Overseer',
+        text: 'Only one living overseer can exist at a time. After one dies, the hive must recover for four minutes before any constructor can become the new overseer.',
+      },
     ],
   },
   Overseer: {
@@ -115,6 +119,10 @@ const guides: Record<Form, Guide> = {
       {
         label: 'Middle-click orders',
         text: 'In Overseer Mode, middle-click a living human within 15 tiles of your view to direct nearby AI Flood forms, including infection forms, to attack them. Middle-click a floor tile to rally those forms there. Player-controlled forms are unaffected.',
+      },
+      {
+        label: 'Death',
+        text: 'Your death shocks the hive for four minutes. Surviving Flood briefly stop, move more slowly, and lose Flood Chorus until a new overseer can emerge.',
       },
     ],
   },
@@ -171,9 +179,10 @@ export const AntagInfoFlood = () => {
                   </Stack.Item>
                   <Stack.Item>
                     <Section title="Biomass and fire">
-                      Flood forms heal slowly on Flood-covered floor. Fire burns
-                      Flood bodies and can destroy biomass; crew can also clear
-                      floor growth with a welder or by removing the floor.
+                      Flood forms heal slowly only while standing on
+                      Flood-covered floor. Fire burns Flood bodies and can
+                      destroy biomass; crew can also clear floor growth with a
+                      welder or by removing the floor.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>

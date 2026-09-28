@@ -58,8 +58,16 @@ GLOBAL_LIST_EMPTY(flood_overseer_eyes)
 	to_chat(src, span_notice("Move across Flood biomass; middle-click a human to attack or a tile to rally nearby Flood AI."))
 
 /mob/living/basic/flood/overseer/death(gibbed)
+	if(stat == DEAD)
+		return ..()
 	QDEL_NULL(overseer_eye)
-	return ..()
+	. = ..()
+	if(stat != DEAD)
+		return
+	GLOB.flood_overseer_replacement_at = world.time + 4 MINUTES
+	for(var/mob/living/basic/flood/ally in GLOB.mob_living_list)
+		if(ally != src && ally.stat != DEAD)
+			ally.apply_status_effect(/datum/status_effect/flood_overseer_loss, 4 MINUTES)
 
 /mob/living/basic/flood/overseer/Destroy()
 	QDEL_NULL(overseer_eye)

@@ -33,6 +33,7 @@
 		/datum/action/cooldown/flood/grow_membrane,
 		/datum/action/cooldown/flood/grow_spores,
 		/datum/action/cooldown/flood/produce_infestor,
+		/datum/action/cooldown/flood/become_overseer,
 	)
 
 /mob/living/basic/flood/constructor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
@@ -96,7 +97,16 @@
 		to_chat(src, span_warning("Your biomass is still reshaping itself."))
 		return FALSE
 	next_build = world.time + 2 SECONDS
+	start_build_recovery()
 	return TRUE
+
+/// Keep the HUD timers in sync with the shared construction recovery.
+/mob/living/basic/flood/constructor/proc/start_build_recovery()
+	for(var/datum/action/cooldown/flood/build_action in actions)
+		if(!istype(build_action, /datum/action/cooldown/flood/infest_floor) && !istype(build_action, /datum/action/cooldown/flood/grow_barrier) && !istype(build_action, /datum/action/cooldown/flood/grow_door) && !istype(build_action, /datum/action/cooldown/flood/grow_membrane))
+			continue
+		if(build_action.next_use_time < next_build)
+			build_action.StartCooldownSelf(next_build - world.time)
 
 /mob/living/basic/flood/constructor/proc/get_build_turf()
 	return get_turf(src)
@@ -131,34 +141,60 @@
 /mob/living/basic/flood/constructor/proc/infest_floor()
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /turf/open/floor/flood_biomass))
-		return
-	grow_flood_floor(target_turf)
+		return FALSE
+	if(!grow_flood_floor(target_turf))
+		return FALSE
 	visible_message(span_warning("Pulsating Flood tissue creeps across the floor."))
+	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_barrier()
 	if(world.time < next_wall_build)
 		to_chat(src, span_warning("Your biomass is still recovering from growing a wall."))
-		return
+		return FALSE
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_wall, TRUE))
-		return
+		return FALSE
 	next_wall_build = world.time + 15 SECONDS
 	new /obj/structure/flood_wall(target_turf)
 	visible_message(span_warning("[src] raises a solid wall of Flood biomass."))
+	for(var/datum/action/cooldown/flood/grow_barrier/wall_action in actions)
+		wall_action.StartCooldownSelf()
+	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_door()
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_door, TRUE))
-		return
+		return FALSE
 	new /obj/structure/flood_door(target_turf)
 	visible_message(span_warning("Flood tissue swells into a thick membrane."))
+	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_membrane()
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_window, TRUE))
-		return
+		return FALSE
 	new /obj/structure/flood_window(target_turf)
 	visible_message(span_warning("A translucent Flood membrane hardens into place."))
+	return TRUE
+
+/mob/living/basic/flood/constructor/proc/become_overseer()
+	if(stat == DEAD || !mind)
+		return FALSE
+	if(flood_has_living_overseer())
+		to_chat(src, span_warning("The hive already has a living overseer."))
+		return FALSE
+	if(world.time < GLOB.flood_overseer_replacement_at)
+		to_chat(src, span_warning("The hive is still grieving. You can become the overseer in [round((GLOB.flood_overseer_replacement_at - world.time) / 10)] seconds."))
+		return FALSE
+	var/turf/evolution_turf = get_turf(src)
+	if(!evolution_turf)
+		return FALSE
+	var/mob/living/basic/flood/overseer/new_overseer = new(evolution_turf)
+	var/datum/mind/flood_mind = mind
+	flood_mind.transfer_to(new_overseer)
+	visible_message(span_warning("[src] reshapes into the new Flood overseer!"))
+	qdel(src)
+	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_spores()
 	if(world.time < next_spore_build)
