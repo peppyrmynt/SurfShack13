@@ -194,6 +194,34 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		BB_TARGET_MINIMUM_STAT = DEAD,
 	)
 
+/// Human combat forms can use guns they find on the station. Other Flood forms
+/// retain the normal melee controller.
+/datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
+	planning_subtrees = list(
+		/datum/ai_planning_subtree/simple_find_target,
+		/datum/ai_planning_subtree/flood_use_gun,
+		/datum/ai_planning_subtree/attack_obstacle_in_path,
+		/datum/ai_planning_subtree/basic_melee_attack_subtree,
+	)
+
+/datum/ai_planning_subtree/flood_use_gun/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
+	if(!istype(armed_form) || armed_form.client)
+		return
+	var/obj/item/gun/held_gun = armed_form.get_active_held_item()
+	if(!istype(held_gun) || !held_gun.can_shoot())
+		return
+	var/atom/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	if(QDELETED(target) || armed_form.Adjacent(target))
+		return
+	controller.queue_behavior(/datum/ai_behavior/basic_ranged_attack/flood_gun, BB_BASIC_MOB_CURRENT_TARGET, BB_TARGETING_STRATEGY, BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
+	return SUBTREE_RETURN_FINISH_PLANNING
+
+/datum/ai_behavior/basic_ranged_attack/flood_gun
+	action_cooldown = 1.5 SECONDS
+	required_distance = 5
+	avoid_friendly_fire = TRUE
+
 /datum/targeting_strategy/basic/flood_infestor/can_attack(mob/living/living_mob, atom/the_target, vision_range)
 	if(!ishuman(the_target))
 		return FALSE
@@ -383,12 +411,44 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	health = 100
 	melee_damage_lower = 25
 	melee_damage_upper = 35
+	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
+	var/next_gun_check = 0
 
 /mob/living/basic/flood/combat_form/human/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/dextrous)
 	AddComponent(/datum/component/basic_inhands)
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
+
+/mob/living/basic/flood/combat_form/human/Life(seconds_per_tick = SSMOBS_DT, times_fired)
+	. = ..()
+	if(!. || stat == DEAD || client || world.time < next_gun_check)
+		return
+	next_gun_check = world.time + 2 SECONDS
+	var/obj/item/held = get_active_held_item()
+	if(istype(held, /obj/item/gun))
+		var/obj/item/gun/held_gun = held
+		if(held_gun.can_shoot())
+			return
+		dropItemToGround(held_gun, TRUE)
+	else if(held)
+		return
+	for(var/obj/item/gun/candidate in range(1, src))
+		if(candidate.loc != get_turf(candidate) || !Adjacent(candidate) || candidate.weapon_weight >= WEAPON_HEAVY || !candidate.can_shoot())
+			continue
+		if(!istype(candidate, /obj/item/gun/ballistic) && !istype(candidate, /obj/item/gun/energy))
+			continue
+		if(put_in_hands(candidate))
+			visible_message(span_warning("[src] picks up [candidate]."))
+			return
+
+/mob/living/basic/flood/combat_form/human/RangedAttack(atom/target, modifiers)
+	if(client)
+		return ..()
+	var/obj/item/gun/held_gun = get_active_held_item()
+	if(!istype(held_gun) || !held_gun.can_shoot() || !target || Adjacent(target))
+		return FALSE
+	return held_gun.try_fire_gun(target, src, null)
 
 /mob/living/basic/flood/combat_form/juggernaut
 	name = "Flood Juggernaut"
