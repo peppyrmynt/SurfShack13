@@ -657,12 +657,33 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	host.visible_message(span_notice("[host] shakes [src] loose!"), span_notice("You shake [src] loose!"))
 	clear_latch()
 
+/// The source's infection sensations now describe an active latch rather than
+/// a chemical infection. They never convert a host by themselves.
+/mob/living/basic/flood/infestor/proc/latch_warning(mob/living/carbon/human/host, stage)
+	if(QDELETED(host) || host.stat == DEAD || !latch_still_valid(host))
+		return
+	if(stage == 1)
+		to_chat(host, span_warning(pick(
+			"Your skin becomes cold to the touch...",
+			"A spasm runs through your body...",
+			"Something wriggles underneath your skin...",
+		)))
+	else
+		to_chat(host, span_userdanger(pick(
+			"A chorus of voices speaks in riddles...",
+			"You feel something digging into your spinal column...",
+			"You feel your mind slipping...",
+		)))
+
 /mob/living/basic/flood/infestor/proc/finish_latch(mob/living/carbon/human/host)
 	if(QDELETED(host))
 		if(latched_host == host)
 			clear_latch()
 		return
 	var/latch_time = host.stat == DEAD ? 6 SECONDS : 10 SECONDS
+	if(host.stat != DEAD)
+		addtimer(CALLBACK(src, PROC_REF(latch_warning), host, 1), 3 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(latch_warning), host, 2), 7 SECONDS)
 	if(!do_after(src, latch_time, host, extra_checks = CALLBACK(src, PROC_REF(latch_still_valid), host)) || !latch_still_valid(host))
 		if(latched_host == host)
 			clear_latch()

@@ -3,6 +3,42 @@
 /// These are SurfShack-native structures using the visual assets from the
 /// original HaloSpaceStation13 implementation.
 
+/// Map-placed counterpart to the original Flood biomass flooring. Runtime
+/// growth uses the removable structure below to preserve the underlying floor.
+/turf/open/floor/flood_biomass
+	name = "Flood biomass"
+	desc = "Pulsating biomass writhes beneath your feet."
+	icon = 'icons/mob/flood/flood_floor.dmi'
+	icon_state = "floor"
+	base_icon_state = "floor"
+	resistance_flags = ACID_PROOF
+
+/turf/open/floor/flood_biomass/broken_states()
+	return list()
+
+/// Source spore props for decorating map-placed Flood terrain.
+/obj/effect/flood_spore
+	name = "Flood spores"
+	desc = "Patches of alien spores cling to the ground."
+	icon = 'icons/mob/flood/flood_bio.dmi'
+	icon_state = "spore1"
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	var/spore_prefix = "spore"
+	var/spore_variants = 8
+
+/obj/effect/flood_spore/Initialize(mapload)
+	. = ..()
+	icon_state = "[spore_prefix][rand(1, spore_variants)]"
+	pixel_x = rand(-8, 8)
+	pixel_y = rand(-8, 8)
+
+/obj/effect/flood_spore/growing
+	name = "growing Flood spores"
+	icon_state = "animated1"
+	spore_prefix = "animated"
+	spore_variants = 6
+
 /obj/structure/flood_biomass
 	name = "Flood biomass"
 	desc = "A pulsating mass of alien flesh."
