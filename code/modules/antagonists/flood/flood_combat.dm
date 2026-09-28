@@ -1,6 +1,7 @@
 /// The baseline humanoid Flood form. Keeping this subtype explicit mirrors the
 /// original implementation and gives infection/evolution code a stable target.
 /mob/living/basic/flood/death(gibbed)
+	qdel(GetComponent(/datum/component/ghost_direct_control))
 	if(!gibbed)
 		var/death_sound
 		if(istype(src, /mob/living/basic/flood/infestor))

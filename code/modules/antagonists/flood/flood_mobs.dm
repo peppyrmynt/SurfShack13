@@ -13,7 +13,7 @@
 	habitable_atmos = null
 	unsuitable_atmos_damage = 0
 	minimum_survivable_temperature = 0
-	maximum_survivable_temperature = INFINITY
+	maximum_survivable_temperature = NPC_DEFAULT_MAX_TEMP
 	maxHealth = 125
 	health = 125
 	melee_damage_lower = 20
@@ -33,6 +33,8 @@
 /mob/living/basic/flood/Initialize(mapload)
 	. = ..()
 	RegisterSignal(src, COMSIG_MOB_MIND_TRANSFERRED_INTO, PROC_REF(on_flood_mind_transfer))
+	// Offer existing AI forms through the ghost spawners menu without polling every spawn.
+	AddComponent(/datum/component/ghost_direct_control, ban_type = ROLE_FLOOD, poll_candidates = FALSE)
 	grant_actions_by_list(get_flood_actions())
 	attacked_sound = pick(
 		'sound/flood/pain.pain1.ogg',
@@ -62,6 +64,17 @@
 
 /mob/living/basic/flood/proc/get_flood_actions()
 	return list(/datum/action/cooldown/flood/chorus)
+
+/mob/living/basic/flood/get_fire_overlay(stacks, on_fire)
+	var/fire_icon = "human_[stacks > MOB_BIG_FIRE_STACK_THRESHOLD ? "big_fire" : "small_fire"]"
+	if(!GLOB.fire_appearances[fire_icon])
+		GLOB.fire_appearances[fire_icon] = mutable_appearance(
+			'icons/mob/effects/onfire.dmi',
+			fire_icon,
+			-HIGHEST_LAYER,
+			appearance_flags = RESET_COLOR,
+		)
+	return GLOB.fire_appearances[fire_icon]
 
 /mob/living/basic/flood/melee_attack(atom/target, list/modifiers, ignore_cooldown)
 	if(istype(src, /mob/living/basic/flood/infestor))

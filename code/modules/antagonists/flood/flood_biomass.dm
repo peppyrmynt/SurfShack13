@@ -14,6 +14,8 @@
 	icon = 'icons/mob/flood/flood_bio.dmi'
 	icon_state = "spore1"
 	anchored = TRUE
+	layer = MID_TURF_LAYER
+	plane = FLOOR_PLANE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/spore_prefix = "spore"
 	var/spore_variants = 8
@@ -202,6 +204,7 @@
 	density = FALSE
 	max_integrity = 80
 	layer = ABOVE_OPEN_TURF_LAYER
+	plane = FLOOR_PLANE
 	var/triggered = FALSE
 
 /obj/structure/flood_spore_trap/Initialize(mapload)
