@@ -3187,6 +3187,7 @@
 #include "code\modules\antagonists\flood\flood_infection.dm"
 #include "code\modules\antagonists\flood\flood_landmarks.dm"
 #include "code\modules\antagonists\flood\flood_mobs.dm"
+#include "code\modules\antagonists\flood\flood_overseer_mode.dm"
 #include "code\modules\antagonists\flood\flood_ruleset.dm"
 #include "code\modules\antagonists\flood\flood_structures.dm"
 #include "code\modules\antagonists\flood\flood_turfs.dm"

@@ -4,6 +4,7 @@
 		BB_TARGET_MINIMUM_STAT = HARD_CRIT,
 	)
 	planning_subtrees = list(
+		/datum/ai_planning_subtree/flood_rally,
 		/datum/ai_planning_subtree/simple_find_target,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree,
@@ -20,12 +21,28 @@
 /// retain the normal melee controller.
 /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
 	planning_subtrees = list(
+		/datum/ai_planning_subtree/flood_rally,
 		/datum/ai_planning_subtree/simple_find_target,
 		/datum/ai_planning_subtree/flood_use_gun,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree,
 		/datum/ai_planning_subtree/flood_patrol,
 	)
+
+/// Overseer orders temporarily take priority over ordinary target acquisition and patrols.
+/datum/ai_planning_subtree/flood_rally
+	var/rally_key = "flood_rally_destination"
+
+/datum/ai_planning_subtree/flood_rally/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/turf/destination = controller.blackboard[rally_key]
+	if(QDELETED(destination))
+		return
+	var/mob/living/basic/flood/pawn = controller.pawn
+	if(get_dist(pawn, destination) <= 1)
+		controller.clear_blackboard_key(rally_key)
+		return
+	controller.queue_behavior(/datum/ai_behavior/travel_towards/stop_on_arrival, rally_key)
+	return SUBTREE_RETURN_FINISH_PLANNING
 
 /// Map assault and patrol points are used only while an NPC has no target.
 /datum/ai_planning_subtree/flood_patrol/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)

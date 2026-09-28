@@ -61,6 +61,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	to_chat(owner.current, span_notice("Combat forms can create infection forms and evolve into specialized Flood forms."))
 	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
 	to_chat(owner.current, span_notice("While latched to living humans, infection forms deal 10 brute every two seconds. Only dead hosts can be converted, after five seconds attached to the corpse. Living hosts can resist or escape."))
+	to_chat(owner.current, span_notice("Standing on Flood-covered floors slowly heals your biomass."))
 	to_chat(owner.current, span_notice("Use Flood Chorus to speak to every active Flood player, or :f to speak Floodmind nearby."))
 
 /datum/antagonist/flood/create_team(datum/team/flood/new_team)

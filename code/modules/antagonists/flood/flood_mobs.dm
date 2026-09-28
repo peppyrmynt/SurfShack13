@@ -15,6 +15,7 @@
 	unsuitable_atmos_damage = 0
 	minimum_survivable_temperature = 0
 	maximum_survivable_temperature = NPC_DEFAULT_MAX_TEMP
+	fire_stack_decay_rate = -0.5
 	maxHealth = 125
 	health = 125
 	melee_damage_lower = 20
@@ -75,6 +76,11 @@
 			appearance_flags = RESET_COLOR,
 		)
 	return GLOB.fire_appearances[fire_icon]
+
+/mob/living/basic/flood/fire_act()
+	. = ..()
+	if(stat != DEAD)
+		adjustFireLoss(2)
 
 /mob/living/basic/flood/melee_attack(atom/target, list/modifiers, ignore_cooldown)
 	if(istype(src, /mob/living/basic/flood/infestor))

@@ -27,8 +27,8 @@
 
 /mob/living/basic/flood/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
-	if(stat != DEAD && health < maxHealth)
-		adjust_health(-seconds_per_tick)
+	if(stat != DEAD && health < maxHealth && istype(loc, /turf/open/floor/flood_biomass))
+		adjust_health(-0.5 * seconds_per_tick)
 	if(stat != DEAD && world.time >= next_idle_sound)
 		next_idle_sound = world.time + rand(450, 750)
 		if(prob(40))

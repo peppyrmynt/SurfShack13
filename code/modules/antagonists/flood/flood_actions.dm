@@ -74,17 +74,28 @@
 
 /datum/action/cooldown/flood/grow_biomass
 	name = "Grow Biomass"
-	desc = "Grow a small biomass spawner on the floor ahead."
+	desc = "Grow a small biomass spawner on your tile."
 	button_icon_state = "biomass1"
+	cooldown_time = 60 SECONDS
 
 /datum/action/cooldown/flood/grow_biomass/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner
-	constructor.grow_biomass()
-	return TRUE
+	return constructor.grow_biomass()
+
+/datum/action/cooldown/flood/produce_infestor
+	name = "Produce Infection Form"
+	desc = "Produce a single Flood infection form every 45 seconds."
+	button_icon = 'icons/mob/flood/flood_infection.dmi'
+	button_icon_state = "static"
+	cooldown_time = 45 SECONDS
+
+/datum/action/cooldown/flood/produce_infestor/Activate(atom/target)
+	var/mob/living/basic/flood/constructor/constructor = owner
+	return constructor.produce_infestor()
 
 /datum/action/cooldown/flood/infest_floor
 	name = "Infest Floor"
-	desc = "Cover the floor ahead with Flood biomass."
+	desc = "Cover the floor under you with Flood biomass."
 	button_icon = 'icons/turf/floors/flood_floor.dmi'
 	button_icon_state = "floor"
 
@@ -95,7 +106,7 @@
 
 /datum/action/cooldown/flood/grow_barrier
 	name = "Grow Biomass Wall"
-	desc = "Build a solid biomass wall on the floor ahead."
+	desc = "Build a solid biomass wall on your tile."
 	button_icon = 'icons/obj/flood/Flood_Spore.dmi'
 	button_icon_state = "flood wall gif"
 	cooldown_time = 15 SECONDS
@@ -111,7 +122,7 @@
 
 /datum/action/cooldown/flood/grow_door
 	name = "Grow Biomass Door"
-	desc = "Build a Flood door on the floor ahead."
+	desc = "Build a Flood door on your tile."
 	button_icon = 'icons/obj/flood/flood_door.dmi'
 	button_icon_state = "flood"
 
@@ -122,7 +133,7 @@
 
 /datum/action/cooldown/flood/grow_membrane
 	name = "Grow Biomass Membrane"
-	desc = "Build a translucent Flood membrane on the floor ahead."
+	desc = "Build a translucent Flood membrane on your tile."
 	button_icon = 'icons/obj/flood/flood_window.dmi'
 	button_icon_state = "flood_window"
 
@@ -133,13 +144,13 @@
 
 /datum/action/cooldown/flood/grow_spores
 	name = "Grow Spore Cluster"
-	desc = "Place a spore cluster on the floor ahead."
+	desc = "Place a spore cluster on your tile every 180 seconds."
 	button_icon_state = "spore1"
+	cooldown_time = 180 SECONDS
 
 /datum/action/cooldown/flood/grow_spores/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner
-	constructor.grow_spores()
-	return TRUE
+	return constructor.grow_spores()
 
 /datum/action/cooldown/flood/direct_assault
 	name = "Direct Flood Assault"
@@ -179,7 +190,7 @@
 	name = "Direct Infestation Growth"
 	desc = "Spread Flood biomass across nearby floor tiles."
 	button_icon_state = "biomass2"
-	cooldown_time = 20 SECONDS
+	cooldown_time = 30 SECONDS
 
 /datum/action/cooldown/flood/direct_growth/Activate(atom/target)
 	var/mob/living/basic/flood/overseer/overseer = owner
@@ -188,4 +199,15 @@
 	if(overseer.next_direct_growth <= previous_cooldown)
 		return FALSE
 	StartCooldownSelf()
+	return TRUE
+
+/datum/action/cooldown/flood/toggle_overseer_mode
+	name = "Toggle Overseer Mode"
+	desc = "Survey connected Flood growth and middle-click to direct nearby AI forms."
+	button_icon = 'icons/mob/flood/flood_constructor_builder.dmi'
+	button_icon_state = "designator"
+
+/datum/action/cooldown/flood/toggle_overseer_mode/Activate(atom/target)
+	var/mob/living/basic/flood/overseer/overseer = owner
+	overseer.toggle_overseer_mode()
 	return TRUE

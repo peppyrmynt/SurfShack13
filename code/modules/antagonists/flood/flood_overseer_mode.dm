@@ -1,0 +1,77 @@
+/// The overseer's body remains vulnerable while its viewpoint moves across the infestation.
+/mob/eye/flood_overseer
+	name = "Flood overseer view"
+	icon = 'icons/mob/eyemob.dmi'
+	icon_state = "marker"
+	invisibility = INVISIBILITY_ABSTRACT
+	var/mob/living/basic/flood/overseer/controller
+
+/mob/eye/flood_overseer/relaymove(mob/living/user, direction)
+	if(user != controller || controller.stat == DEAD)
+		return FALSE
+	var/turf/next_tile = get_step(src, direction)
+	if(!istype(next_tile, /turf/open/floor/flood_biomass))
+		return FALSE
+	forceMove(next_tile)
+	return TRUE
+
+/mob/eye/flood_overseer/Destroy()
+	if(controller?.overseer_eye == src)
+		controller.overseer_eye = null
+		controller.remote_control = null
+		controller.reset_perspective(null)
+	controller = null
+	return ..()
+
+/mob/living/basic/flood/overseer/proc/toggle_overseer_mode()
+	if(overseer_eye)
+		QDEL_NULL(overseer_eye)
+		to_chat(src, span_notice("You return your awareness to your body."))
+		return
+	if(stat == DEAD || !client || !istype(get_turf(src), /turf/open/floor/flood_biomass))
+		to_chat(src, span_warning("Stand on Flood biomass to enter overseer mode."))
+		return
+	overseer_eye = new(get_turf(src))
+	overseer_eye.controller = src
+	remote_control = overseer_eye
+	reset_perspective(overseer_eye)
+	to_chat(src, span_notice("Move across Flood biomass; middle-click a human to attack or a tile to rally nearby Flood AI."))
+
+/mob/living/basic/flood/overseer/death(gibbed)
+	QDEL_NULL(overseer_eye)
+	return ..()
+
+/mob/living/basic/flood/overseer/Destroy()
+	QDEL_NULL(overseer_eye)
+	return ..()
+
+/mob/living/basic/flood/overseer/Logout()
+	QDEL_NULL(overseer_eye)
+	return ..()
+
+/mob/living/basic/flood/overseer/MiddleClickOn(atom/clicked, params)
+	if(!overseer_eye || stat == DEAD)
+		return ..()
+	var/turf/order_location = get_turf(clicked)
+	if(!order_location || order_location.z != overseer_eye.z || get_dist(overseer_eye, order_location) > 15)
+		return
+	var/mob/living/carbon/human/target
+	if(ishuman(clicked))
+		var/mob/living/carbon/human/candidate = clicked
+		if(candidate.stat != DEAD && !is_flood_target(candidate))
+			target = candidate
+	if(!target && !isfloorturf(order_location))
+		return
+	var/directed = 0
+	for(var/mob/living/basic/flood/ally in range(35, overseer_eye))
+		if(ally == src || ally.client || ally.stat == DEAD || ally.buckled || !ally.ai_controller || ally.z != order_location.z)
+			continue
+		if(target)
+			ally.ai_controller.clear_blackboard_key("flood_rally_destination")
+			ally.ai_controller.clear_blackboard_key(BB_TRAVEL_DESTINATION)
+			ally.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
+		else
+			ally.ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
+			ally.ai_controller.set_blackboard_key("flood_rally_destination", order_location)
+		directed++
+	to_chat(src, span_notice("You [target ? "direct" : "rally"] [directed] Flood forms [target ? "against [target]" : "toward [order_location]"]."))
