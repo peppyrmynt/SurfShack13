@@ -9,9 +9,9 @@
 	sentience_type = SENTIENCE_HUMANOID
 	faction = list("Flood")
 	combat_mode = TRUE
-	maxHealth = 5
+	maxHealth = 3
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
-	health = 5
+	health = 3
 	speed = -0.5
 	melee_damage_lower = 0
 	melee_damage_upper = 0
