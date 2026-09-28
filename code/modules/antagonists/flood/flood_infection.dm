@@ -193,7 +193,7 @@
 		return FALSE
 
 	var/form_type = /mob/living/basic/flood/combat_form/human
-	if(!ishuman(victim) || ismonkey(victim))
+	if(!ishuman(victim) && !ismonkey(victim))
 		form_type = /mob/living/basic/flood/carrier
 	var/mob/living/basic/flood/new_form = new form_type(conversion_turf)
 	// Ordinary spawns keep their numbered names; a converted host keeps theirs.

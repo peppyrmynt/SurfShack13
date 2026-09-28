@@ -19,8 +19,6 @@ type HiveStatus = {
   living_units: number;
   ai_units: number;
   ai_cap: number;
-  infections: number;
-  infection_target: number;
 };
 
 type Data = {
@@ -53,7 +51,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Infected hosts',
-        text: 'A converted human, including a lizard, keeps their original name and becomes an empty-handed Flood Combat. Infected monkeys and other animals become Flood Carriers. Their gear drops on the floor, and a player-controlled converted unit has extra health.',
+        text: 'A converted human, lizard, or monkey becomes an empty-handed Flood Combat and keeps their original name. Other infected animals become Flood Carriers. Any gear drops on the floor, and a player-controlled converted unit has extra health.',
       },
       {
         label: 'Attacks',
@@ -87,7 +85,7 @@ const guides: Record<Form, Guide> = {
     entries: [
       {
         label: 'Infest Floor',
-        text: 'Cover the floor you stand on with Flood growth every five seconds. It does not replace ordinary station walls or airlocks. Flood units slowly heal while standing on this floor.',
+        text: 'Cover the floor you stand on with Flood growth every five seconds. Like xeno weeds, it spreads over nearby connected floors but cannot cross ordinary station walls or closed boundaries. Walking over the growth slows movement by 20%; Flood units slowly heal while standing on it.',
       },
       {
         label: 'Structures',
@@ -120,11 +118,11 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Hive population',
-        text: 'New AI Flood pause at the hive-wide cap of 60. Infected players and units changing form can still join. The status panel tracks growths, living units, AI units, and infected hosts.',
+        text: 'New AI Flood pause at the hive-wide cap of 60. Infected players and units changing form can still join. The status panel tracks growths, living units, and AI units.',
       },
       {
         label: 'Create Flood units',
-        text: 'Create a Flood Constructor every 30 seconds or a Flood Carrier every 120 seconds. Both appear on your tile as separate AI units.',
+        text: 'Create a Flood Constructor every 180 seconds or a Flood Carrier every 120 seconds. Both appear on your tile as separate AI units.',
       },
       {
         label: 'Direct Infestation Growth',
@@ -203,7 +201,9 @@ export const AntagInfoFlood = () => {
                   <Stack.Item>
                     <Section title="Biomass and fire">
                       Flood units heal slowly only while standing on
-                      Flood-covered floor. Enough fire damage gibs Flood bodies.
+                      Flood-covered floor. Walking across it slows movement by
+                      20%. It spreads through nearby connected floors. Enough
+                      fire damage gibs Flood bodies.
                       Fire can destroy biomass; crew can also clear floor growth
                       with a welder or by removing the floor.
                     </Section>
@@ -238,10 +238,6 @@ export const AntagInfoFlood = () => {
                             </LabeledList.Item>
                             <LabeledList.Item label="AI Flood">
                               {hive_status.ai_units} / {hive_status.ai_cap}
-                            </LabeledList.Item>
-                            <LabeledList.Item label="Infected hosts">
-                              {hive_status.infections} /{' '}
-                              {hive_status.infection_target}
                             </LabeledList.Item>
                           </LabeledList>
                         </Section>

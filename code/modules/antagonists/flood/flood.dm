@@ -111,8 +111,6 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 			"living_units" = flood_living_population(),
 			"ai_units" = flood_ai_population(),
 			"ai_cap" = FLOOD_AI_POPULATION_CAP,
-			"infections" = GLOB.flood_infections,
-			"infection_target" = FLOOD_SPREAD_TARGET,
 		)
 	if(istype(current_form, /mob/living/basic/flood/overseer))
 		data["current_form"] = "Overseer"

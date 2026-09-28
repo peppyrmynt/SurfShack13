@@ -307,7 +307,7 @@
 		if(client)
 			to_chat(src, span_warning("The hive cannot support more AI Flood right now."))
 		return FALSE
-	next_constructor = world.time + 30 SECONDS
+	next_constructor = world.time + 180 SECONDS
 	visible_message(span_warning("[src] buds off a new Flood Constructor."))
 	return TRUE
 

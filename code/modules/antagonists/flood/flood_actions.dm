@@ -144,10 +144,10 @@
 
 /datum/action/cooldown/flood/create_constructor
 	name = "Create Flood Constructor"
-	desc = "Bud off a new Flood constructor."
+	desc = "Bud off a new Flood constructor every 180 seconds."
 	button_icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	button_icon_state = "constructor"
-	cooldown_time = 30 SECONDS
+	cooldown_time = 180 SECONDS
 
 /datum/action/cooldown/flood/create_constructor/Activate(atom/target)
 	var/mob/living/basic/flood/overseer/overseer = owner
