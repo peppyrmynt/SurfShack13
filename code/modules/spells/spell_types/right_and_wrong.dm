@@ -84,7 +84,8 @@ GLOBAL_LIST_INIT(summoned_magic, list(
 	/obj/item/scrying,
 	/obj/item/warp_whistle,
 	/obj/item/immortality_talisman,
-	/obj/item/melee/ghost_sword))
+	/obj/item/melee/ghost_sword,
+	/obj/item/stand_arrow))
 
 GLOBAL_LIST_INIT(summoned_special_magic, list(
 	/obj/item/gun/magic/staff/change,
@@ -103,6 +104,7 @@ GLOBAL_LIST_INIT(summoned_magic_objectives, list(
 	/obj/item/necromantic_stone,
 	/obj/item/scrying,
 	/obj/item/spellbook,
+	/obj/item/stand_arrow,
 	/obj/item/storage/belt/wands/full,
 	/obj/item/warp_whistle))
 

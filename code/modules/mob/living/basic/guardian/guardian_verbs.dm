@@ -154,6 +154,10 @@
 	var/mob/living/living_owner = owner
 	var/list/guardians = living_owner.get_all_linked_holoparasites()
 	for(var/mob/living/basic/guardian/resetting_guardian as anything in guardians)
+		// Arrow-awakened Stands keep their original ghost permanently.
+		if(resetting_guardian.GetComponent(/datum/component/arrow_stand))
+			guardians -= resetting_guardian
+			continue
 		if (!COOLDOWN_FINISHED(resetting_guardian, resetting_cooldown))
 			guardians -= resetting_guardian //clear out guardians that are already reset
 
