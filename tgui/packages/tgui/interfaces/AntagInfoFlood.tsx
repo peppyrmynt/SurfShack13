@@ -134,7 +134,7 @@ export const AntagInfoFlood = () => {
   const [tab, setTab] = useState<GuideTab>(current_form || 'Overview');
 
   return (
-    <Window width={720} height={620}>
+    <Window width={720} height={620} theme="flood">
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>
@@ -192,7 +192,7 @@ export const AntagInfoFlood = () => {
                         <ReplaceObjectivesButton
                           can_change_objective={can_change_objective}
                           button_title="Change Objective"
-                          button_colour="red"
+                          button_colour="yellow"
                         />
                       }
                     />

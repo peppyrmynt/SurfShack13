@@ -87,6 +87,7 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 /datum/antagonist/flood/ui_data(mob/user)
 	var/list/data = list()
 	var/mob/living/basic/flood/current_form = owner?.current
+	data["can_change_objective"] = can_assign_self_objectives && istype(current_form, /mob/living/basic/flood/overseer) && user == current_form && current_form.stat != DEAD
 	if(istype(current_form, /mob/living/basic/flood/overseer))
 		data["current_form"] = "Overseer"
 	else if(istype(current_form, /mob/living/basic/flood/constructor))
@@ -96,6 +97,15 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 	else
 		data["current_form"] = "Combat"
 	return data
+
+/datum/antagonist/flood/ui_static_data(mob/user)
+	. = ..()
+	.["can_change_objective"] = can_assign_self_objectives && istype(owner?.current, /mob/living/basic/flood/overseer) && user == owner.current && owner.current.stat != DEAD
+
+/datum/antagonist/flood/submit_player_objective(retain_existing = FALSE, retain_escape = TRUE, force = FALSE)
+	if(!force && (!istype(owner?.current, /mob/living/basic/flood/overseer) || owner.current.stat == DEAD))
+		return
+	return ..()
 
 /datum/antagonist/flood/create_team(datum/team/flood/new_team)
 	if(!new_team)
