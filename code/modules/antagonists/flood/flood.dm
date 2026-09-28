@@ -698,11 +698,14 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	var/mob/living/carbon/human/latched_host
 	var/swarm_size = 1
 	var/max_swarm_size = 6
+	var/next_swarm_merge = 0
 
 /mob/living/basic/flood/infestor/Initialize(mapload)
 	. = ..()
 	pixel_x = rand(-8, 8)
 	pixel_y = rand(0, 24)
+	// Newly released infection forms spread out before they coalesce into swarms.
+	next_swarm_merge = world.time + 3 SECONDS
 
 /// Infection forms leave small, cleanable remains, as in the original infestation.
 /obj/effect/decal/cleanable/flood_infestor
@@ -772,10 +775,10 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		. += extra_form
 
 /mob/living/basic/flood/infestor/proc/merge_nearby_infestors()
-	if(client || mind || latched_host || swarm_size >= max_swarm_size)
+	if(client || mind || latched_host || swarm_size >= max_swarm_size || world.time < next_swarm_merge)
 		return
 	for(var/mob/living/basic/flood/infestor/other in range(1, src))
-		if(other == src || other.stat == DEAD || other.client || other.mind || other.latched_host || swarm_size + other.swarm_size > max_swarm_size)
+		if(other == src || other.stat == DEAD || other.client || other.mind || other.latched_host || world.time < other.next_swarm_merge || swarm_size + other.swarm_size > max_swarm_size)
 			continue
 		var/added_forms = other.swarm_size
 		var/combined_health = health + other.health
@@ -925,11 +928,20 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 	next_airlock_infest = world.time + 10 SECONDS
 	visible_message(span_danger("[src] leaps onto [target_airlock] and burrows into its control mechanisms!"))
-	target_airlock.locked = FALSE
 	target_airlock.set_machine_stat(target_airlock.machine_stat | BROKEN)
-	INVOKE_ASYNC(target_airlock, TYPE_PROC_REF(/obj/machinery/door/airlock, open), BYPASS_DOOR_CHECKS)
+	addtimer(CALLBACK(target_airlock, TYPE_PROC_REF(/obj/machinery/door/airlock, finish_flood_infestation)), 15 SECONDS)
 	qdel(src)
 	return TRUE
+
+/// Give the crew time to weld or repair an infested airlock before it opens.
+/obj/machinery/door/airlock/proc/finish_flood_infestation()
+	if(QDELETED(src) || !(machine_stat & BROKEN) || welded || seal)
+		return
+	visible_message(span_danger("Flood tendrils burst from [src]'s control panel as it forces itself open!"))
+	if(locked)
+		unbolt()
+	if(open(BYPASS_DOOR_CHECKS))
+		bolt()
 
 /mob/living/basic/flood/infestor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
