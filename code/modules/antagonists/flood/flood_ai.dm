@@ -112,6 +112,6 @@
 	return ..()
 
 /datum/targeting_strategy/basic/flood/infestor/can_attack(mob/living/living_mob, atom/the_target, vision_range = 9)
-	if(!ishuman(the_target))
+	if(!isliving(the_target) || !is_flood_infectable(the_target))
 		return FALSE
 	return ..()

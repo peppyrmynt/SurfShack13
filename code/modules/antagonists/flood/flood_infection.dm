@@ -24,7 +24,10 @@
 	attack_verb_simple = "leap at"
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
-	var/mob/living/carbon/human/latched_host
+	var/mob/living/latched_host
+	/// Some animals normally disappear on death; keep their body for the five-second takeover.
+	var/restore_basic_death_cleanup = FALSE
+	var/restore_simple_death_cleanup = FALSE
 	/// Restore the normal draw order when the infector releases its host.
 	var/unlatched_layer
 	var/latch_generation = 0
@@ -131,10 +134,10 @@
 		return
 
 /mob/living/basic/flood/infestor/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
-	if(stat == DEAD || buckled || latched_host || !ishuman(attacked_target))
+	if(stat == DEAD || buckled || latched_host || !isliving(attacked_target))
 		return FALSE
-	var/mob/living/carbon/human/host = attacked_target
-	if(is_flood_target(host) || !Adjacent(host))
+	var/mob/living/host = attacked_target
+	if(!is_flood_infectable(host) || !Adjacent(host))
 		return FALSE
 	for(var/mob/living/basic/flood/infestor/other in range(1, host))
 		if(other != src && other.latched_host == host)
@@ -153,6 +156,16 @@
 	if(!host.buckle_mob(src, force = TRUE))
 		return FALSE
 	latched_host = host
+	if(isbasicmob(host))
+		var/mob/living/basic/basic_host = host
+		if(basic_host.basic_mob_flags & DEL_ON_DEATH)
+			basic_host.basic_mob_flags &= ~DEL_ON_DEATH
+			restore_basic_death_cleanup = TRUE
+	else if(isanimal(host))
+		var/mob/living/simple_animal/simple_host = host
+		if(simple_host.del_on_death)
+			simple_host.del_on_death = FALSE
+			restore_simple_death_cleanup = TRUE
 	unlatched_layer = layer
 	layer = ABOVE_ALL_MOB_LAYER
 	latch_generation++
@@ -168,10 +181,10 @@
 		addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
 	return TRUE
 
-/mob/living/basic/flood/infestor/proc/latch_still_valid(mob/living/carbon/human/host)
-	return stat != DEAD && !QDELETED(host) && latched_host == host && buckled == host && !is_flood_target(host)
+/mob/living/basic/flood/infestor/proc/latch_still_valid(mob/living/host)
+	return stat != DEAD && !QDELETED(host) && latched_host == host && buckled == host && is_flood_infectable(host)
 
-/mob/living/basic/flood/infestor/proc/convert_human(mob/living/carbon/human/victim, infection_message)
+/mob/living/basic/flood/infestor/proc/convert_host(mob/living/victim, infection_message)
 	if(!latch_still_valid(victim) || victim.stat != DEAD)
 		return FALSE
 
@@ -179,12 +192,17 @@
 	if(!conversion_turf)
 		return FALSE
 
-	var/mob/living/basic/flood/combat_form/human/new_form = new(conversion_turf)
+	var/form_type = /mob/living/basic/flood/combat_form/human
+	if(ismonkey(victim))
+		form_type = /mob/living/basic/flood/carrier
+	else if(islizard(victim))
+		form_type = /mob/living/basic/flood/combat_form/human/sangheili
+	var/mob/living/basic/flood/new_form = new form_type(conversion_turf)
 	// Ordinary spawns keep their numbered names; a converted host keeps theirs.
 	var/victim_name = victim.real_name
 	if(!victim_name || victim_name == initial(victim.real_name))
 		victim_name = victim.name
-	if(victim_name && victim_name != initial(victim.name))
+	if(victim_name && (victim_name != initial(victim.name) || !ishuman(victim) || ismonkey(victim)))
 		new_form.name = victim_name
 		new_form.real_name = victim_name
 		new_form.identifier = 0
@@ -214,8 +232,17 @@
 	return TRUE
 
 /mob/living/basic/flood/infestor/proc/clear_latch()
-	var/mob/living/carbon/human/old_host = latched_host
+	var/mob/living/old_host = latched_host
 	latched_host = null
+	if(old_host && !QDELETED(old_host))
+		if(restore_basic_death_cleanup)
+			var/mob/living/basic/basic_host = old_host
+			basic_host.basic_mob_flags |= DEL_ON_DEATH
+		else if(restore_simple_death_cleanup)
+			var/mob/living/simple_animal/simple_host = old_host
+			simple_host.del_on_death = TRUE
+	restore_basic_death_cleanup = FALSE
+	restore_simple_death_cleanup = FALSE
 	if(!isnull(unlatched_layer))
 		layer = unlatched_layer
 		unlatched_layer = null
@@ -231,14 +258,14 @@
 	if(old_buckle == latched_host)
 		clear_latch()
 
-/mob/living/basic/flood/infestor/proc/on_host_resist(mob/living/carbon/human/host)
+/mob/living/basic/flood/infestor/proc/on_host_resist(mob/living/host)
 	SIGNAL_HANDLER
 	if(latched_host != host)
 		return
 	host.visible_message(span_notice("[host] shakes [src] loose!"), span_notice("You shake [src] loose!"))
 	clear_latch()
 
-/mob/living/basic/flood/infestor/proc/on_host_death(mob/living/carbon/human/host, gibbed)
+/mob/living/basic/flood/infestor/proc/on_host_death(mob/living/host, gibbed)
 	SIGNAL_HANDLER
 	if(host != latched_host)
 		return
@@ -247,7 +274,7 @@
 		return
 	begin_corpse_infection(host)
 
-/mob/living/basic/flood/infestor/proc/on_host_revive(mob/living/carbon/human/host)
+/mob/living/basic/flood/infestor/proc/on_host_revive(mob/living/host)
 	SIGNAL_HANDLER
 	if(host != latched_host || host.stat == DEAD)
 		return
@@ -255,12 +282,12 @@
 	latch_generation++
 	addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
 
-/mob/living/basic/flood/infestor/proc/on_host_deleted(mob/living/carbon/human/host)
+/mob/living/basic/flood/infestor/proc/on_host_deleted(mob/living/host)
 	SIGNAL_HANDLER
 	if(host == latched_host)
 		clear_latch()
 
-/mob/living/basic/flood/infestor/proc/latch_hit(mob/living/carbon/human/host, expected_generation)
+/mob/living/basic/flood/infestor/proc/latch_hit(mob/living/host, expected_generation)
 	if(expected_generation != latch_generation)
 		return
 	if(!latch_still_valid(host))
@@ -278,7 +305,7 @@
 		else
 			addtimer(CALLBACK(src, PROC_REF(latch_hit), host, expected_generation), 2 SECONDS)
 
-/mob/living/basic/flood/infestor/proc/begin_corpse_infection(mob/living/carbon/human/host)
+/mob/living/basic/flood/infestor/proc/begin_corpse_infection(mob/living/host)
 	if(!latch_still_valid(host) || host.stat != DEAD)
 		return
 	// A new generation prevents an earlier damage hit or corpse timer from firing.
@@ -286,7 +313,7 @@
 	shake_infected_corpse(host, latch_generation)
 	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, latch_generation), 5 SECONDS)
 
-/mob/living/basic/flood/infestor/proc/shake_infected_corpse(mob/living/carbon/human/host, expected_generation)
+/mob/living/basic/flood/infestor/proc/shake_infected_corpse(mob/living/host, expected_generation)
 	if(expected_generation != latch_generation || !latch_still_valid(host) || host.stat != DEAD)
 		return
 	// A short, gentle tremble returns the corpse to its original position each time.
@@ -296,7 +323,7 @@
 	animate(pixel_w = -1, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
 	addtimer(CALLBACK(src, PROC_REF(shake_infected_corpse), host, expected_generation), 0.5 SECONDS)
 
-/mob/living/basic/flood/infestor/proc/finish_latch(mob/living/carbon/human/host, expected_generation)
+/mob/living/basic/flood/infestor/proc/finish_latch(mob/living/host, expected_generation)
 	if(expected_generation != latch_generation)
 		return
 	if(!latch_still_valid(host))
@@ -307,7 +334,8 @@
 		latch_generation++
 		addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
 		return
-	var/infected = convert_human(host, "[src] burrows into [host], converting them into a Flood combat form!")
+	var/form_name = ismonkey(host) ? "carrier" : "combat"
+	var/infected = convert_host(host, "[src] burrows into [host], converting them into a Flood [form_name] form!")
 	clear_latch()
 	if(infected)
 		qdel(src)

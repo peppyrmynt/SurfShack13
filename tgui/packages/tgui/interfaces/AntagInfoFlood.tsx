@@ -43,11 +43,11 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Infected hosts',
-        text: 'A human converted by an infection form becomes an empty-handed combat form with their original name. Their gear drops on the floor, and a player-controlled converted form has extra health.',
+        text: 'A converted human keeps their original name and becomes an empty-handed combat form. Infected lizards use the Sangheili Flood appearance with the same combat abilities. Animals can also be infected; monkeys become carrier forms, while other animals become combat forms. Their gear drops on the floor, and a player-controlled converted form has extra health.',
       },
       {
         label: 'Attacks',
-        text: 'Your melee attacks damage targets but never infect them. Infection requires an infection form attached to a dead human.',
+        text: 'Your melee attacks damage targets but never infect them. Infection requires an infection form attached to a dead human or animal.',
       },
     ],
   },
@@ -167,11 +167,11 @@ export const AntagInfoFlood = () => {
                   <Stack.Item>
                     <Section title="Infection forms (AI allies)">
                       Infection forms cannot be taken over from the ghost spawner.
-                      They leap onto a human and remain buckled to them. Against
-                      living hosts, they deal 10 brute every two seconds; the
-                      host can resist or the form can be killed to break the
-                      latch. Only a dead human can be converted, after five
-                      seconds attached to the corpse. Their swarms can merge,
+                      They leap onto humans or animals and remain buckled to
+                      them. Against living hosts, they deal 10 brute every two
+                      seconds; the host can resist or the form can be killed to
+                      break the latch. Only a dead host can be converted, after
+                      five seconds attached to the corpse. Their swarms can merge,
                       and an unlatched form can reanimate a fallen Flood combat
                       form once. Dying infection forms also release a small
                       Reactive Spines smoke cloud.

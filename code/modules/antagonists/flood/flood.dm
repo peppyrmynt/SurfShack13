@@ -20,6 +20,14 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 /proc/is_flood_target(mob/target_mob)
 	return target_mob?.mind?.has_antag_datum(/datum/antagonist/flood) || istype(target_mob, /mob/living/basic/flood)
 
+/// Infection forms can latch onto people, monkeys, and organic animals.
+/proc/is_flood_infectable(mob/living/host)
+	if(is_flood_target(host))
+		return FALSE
+	if(ishuman(host))
+		return TRUE
+	return isanimal_or_basicmob(host) && (host.mob_biotypes & MOB_ORGANIC) && !(host.mob_biotypes & MOB_ROBOTIC)
+
 /// Spoken Flood language is local; the chorus verb below reaches every active Flood player.
 /datum/language/flood
 	name = "Floodmind"
@@ -69,10 +77,10 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 
 /datum/antagonist/flood/greet()
 	to_chat(owner.current, span_danger("You are part of the Flood."))
-	to_chat(owner.current, span_notice("Infection forms latch onto living humans before dealing damage."))
+	to_chat(owner.current, span_notice("Infection forms latch onto living people and animals before dealing damage."))
 	to_chat(owner.current, span_notice("Combat forms can evolve into carrier or constructor forms. Constructors can become the next overseer when the hive is ready."))
 	to_chat(owner.current, span_notice("Human combat forms can use ordinary station equipment and guns."))
-	to_chat(owner.current, span_notice("While latched to living humans, infection forms deal 10 brute every two seconds. Only dead hosts can be converted, after five seconds attached to the corpse. Living hosts can resist or escape."))
+	to_chat(owner.current, span_notice("While latched to living hosts, infection forms deal 10 brute every two seconds. Only dead hosts can be converted, after five seconds attached to the corpse. Infected monkeys become carriers. Living hosts can resist or escape."))
 	to_chat(owner.current, span_notice("Standing on Flood-covered floors slowly heals your biomass."))
 	to_chat(owner.current, span_notice("Use Flood Chorus to speak to every active Flood player, or :f to speak Floodmind nearby."))
 
