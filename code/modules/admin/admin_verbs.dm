@@ -664,3 +664,7 @@ ADMIN_VERB(create_mob_worm, R_FUN, "Create Mob Worm", "Attach a linked list of m
 		QDEL_NULL(segment.ai_controller)
 		segment.AddComponent(/datum/component/mob_chain, front = previous)
 		previous = segment
+
+ADMIN_VERB(reload_dances, R_DEBUG, "Reload Dances", "Reload dance moves from file", ADMIN_CATEGORY_DEBUG)
+	load_dances_from_file()
+	to_chat(user, "reloaded dances from file")
