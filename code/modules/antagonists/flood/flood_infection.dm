@@ -13,8 +13,8 @@
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
 	health = 5
 	speed = -0.5
-	melee_damage_lower = 10
-	melee_damage_upper = 10
+	melee_damage_lower = 0
+	melee_damage_upper = 0
 	pass_flags = PASSMOB
 	basic_mob_flags = DEL_ON_DEATH
 	// Only a forced unbuckle (resist, death, or cleanup) can remove a latched form.
@@ -132,7 +132,8 @@
 	for(var/mob/living/basic/flood/infestor/other in range(1, host))
 		if(other != src && other.latched_host == host)
 			return FALSE
-	if(host.stat != DEAD && !..())
+	// The leap establishes the latch; damage is dealt by latch_hit while attached.
+	if(!early_melee_attack(host, modifiers, ignore_cooldown))
 		return FALSE
 	if(stat == DEAD || QDELETED(host) || !Adjacent(host))
 		return FALSE
