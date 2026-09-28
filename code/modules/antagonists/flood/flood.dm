@@ -494,6 +494,29 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	pixel_x = rand(-8, 8)
 	pixel_y = rand(0, 24)
 
+/// Infection forms leave small, cleanable remains, as in the original infestation.
+/obj/effect/decal/cleanable/flood_infestor
+	name = "dead Flood infection form"
+	desc = "The husk of a tiny Flood parasite."
+	icon = 'icons/mob/flood/flood_infection.dmi'
+	icon_state = "dead"
+
+/obj/effect/decal/cleanable/flood_infestor/Initialize(mapload)
+	. = ..()
+	pixel_x = rand(-8, 8)
+	pixel_y = rand(0, 24)
+
+/mob/living/basic/flood/infestor/death(gibbed)
+	if(!gibbed)
+		var/turf/death_turf = get_turf(src)
+		if(death_turf)
+			var/remains = 0
+			for(var/obj/effect/decal/cleanable/flood_infestor/existing in death_turf)
+				remains++
+			if(remains < 8)
+				new /obj/effect/decal/cleanable/flood_infestor(death_turf)
+	return ..()
+
 /mob/living/basic/flood/infestor/Destroy()
 	if(latched_host)
 		UnregisterSignal(latched_host, COMSIG_LIVING_RESIST)
