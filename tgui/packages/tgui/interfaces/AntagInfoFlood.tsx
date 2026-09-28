@@ -31,7 +31,8 @@ const tabs: GuideTab[] = [
 
 const guides: Record<Form, Guide> = {
   Combat: {
-    summary: 'Fight for the infestation and evolve into a specialized Flood unit.',
+    summary:
+      'Fight for the infestation and evolve into a specialized Flood unit.',
     entries: [
       {
         label: 'Equipment',
@@ -164,29 +165,29 @@ export const AntagInfoFlood = () => {
                 <Stack vertical>
                   <Stack.Item>
                     Expand the infestation, protect corpses for your infectors,
-                    and establish Flood biomass. You share Floodmind
-                    speech nearby with :f, and Flood Chorus reaches every active
-                    Flood player.
+                    and establish Flood biomass. You share Floodmind speech
+                    nearby with :f, and Flood Chorus reaches every active Flood
+                    player.
                   </Stack.Item>
                   <Stack.Item>
                     <Section title="Flood Infectors (AI allies)">
-                      Flood Infectors cannot be taken over from the ghost spawner.
-                      They leap onto humans or animals and remain buckled to
-                      them. Against living hosts, they deal 10 brute every two
-                      seconds; the host can resist or the infector can be killed
-                      to break the latch. Only a dead host can be converted,
-                      after five seconds attached to the corpse. Their swarms
-                      can merge, and an unlatched infector can reanimate a fallen
-                      Flood Combat once. Dying infectors also release a small
-                      Reactive Spines smoke cloud.
+                      Flood Infectors cannot be taken over from the ghost
+                      spawner. They leap onto humans or animals and remain
+                      buckled to them. Against living hosts, they deal 10 brute
+                      every two seconds; the host can resist or the infector can
+                      be killed to break the latch. Only a dead host can be
+                      converted, after five seconds attached to the corpse.
+                      Their swarms can merge, and an unlatched infector can
+                      reanimate a fallen Flood Combat once. Dying infectors also
+                      release a small Reactive Spines smoke cloud.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>
                     <Section title="Biomass and fire">
                       Flood units heal slowly only while standing on
-                      Flood-covered floor. Enough fire damage gibs Flood
-                      bodies. Fire can destroy biomass; crew can also clear
-                      floor growth with a welder or by removing the floor.
+                      Flood-covered floor. Enough fire damage gibs Flood bodies.
+                      Fire can destroy biomass; crew can also clear floor growth
+                      with a welder or by removing the floor.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>
