@@ -464,6 +464,12 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	AddElement(/datum/element/dextrous)
 	AddComponent(/datum/component/basic_inhands)
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
+	// Source human forms occasionally arrive armed. Use ordinary station guns.
+	if(prob(25))
+		var/gun_type = pick(/obj/item/gun/ballistic/automatic/pistol, /obj/item/gun/energy/laser)
+		var/obj/item/gun/starter_gun = new gun_type(src)
+		if(!put_in_hands(starter_gun))
+			starter_gun.forceMove(drop_location())
 
 /mob/living/basic/flood/combat_form/human/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
@@ -786,6 +792,10 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	var/mob/living/basic/flood/new_form = new corpse.type(corpse.loc)
 	new_form.name = corpse.name
 	var/mob/living/basic/flood/combat_form/reanimated_form = new_form
+	reanimated_form.icon = corpse.icon
+	reanimated_form.icon_living = corpse.icon_living
+	reanimated_form.icon_dead = corpse.icon_dead
+	reanimated_form.icon_state = corpse.icon_living
 	reanimated_form.reanimated = TRUE
 	if(corpse.mind)
 		var/datum/mind/corpse_mind = corpse.mind
