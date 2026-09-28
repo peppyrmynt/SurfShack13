@@ -537,6 +537,57 @@
 	var/next_build = 0
 	var/next_biomass_upgrade = 0
 	var/next_wall_build = 0
+	var/next_auto_growth = 0
+	var/next_auto_biomass = 0
+
+/mob/living/basic/flood/constructor/Initialize(mapload)
+	. = ..()
+	next_auto_growth = world.time + rand(10, 20) SECONDS
+	next_auto_biomass = world.time + 45 SECONDS
+
+/mob/living/basic/flood/constructor/Life(seconds_per_tick = SSMOBS_DT, times_fired)
+	. = ..()
+	if(!. || stat == DEAD || client || world.time < next_auto_growth)
+		return
+	next_auto_growth = world.time + 20 SECONDS
+	auto_grow()
+
+/// NPC constructors spread passable growth, adding a small spawner only when
+/// they have moved away from existing biomass. The player's solid barriers
+/// remain a deliberate choice rather than automatic path blockers.
+/mob/living/basic/flood/constructor/proc/auto_grow()
+	var/nearby_growth = 0
+	for(var/obj/structure/flood_growth/existing in range(4, src))
+		nearby_growth++
+	if(nearby_growth >= 10)
+		return
+	var/list/floor_candidates = list()
+	for(var/turf/open/candidate in range(1, src))
+		if(candidate == loc || isspaceturf(candidate) || locate(/obj/structure/flood_growth) in candidate)
+			continue
+		floor_candidates += candidate
+	if(length(floor_candidates))
+		var/turf/open/target = pick(floor_candidates)
+		if(world.time >= next_auto_biomass)
+			var/nearby_biomass = 0
+			for(var/obj/structure/flood_biomass/existing_biomass in range(4, src))
+				nearby_biomass++
+			if(!nearby_biomass && can_build(target, /obj/structure/flood_biomass))
+				next_auto_biomass = world.time + 90 SECONDS
+				new /obj/structure/flood_biomass/tiny(target)
+				visible_message(span_warning("[src] plants a new knot of Flood biomass."))
+				return
+		if(can_build(target, /obj/structure/flood_growth))
+			new /obj/structure/flood_growth(target)
+		return
+	var/list/wall_candidates = list()
+	for(var/turf/closed/candidate_wall in range(1, src))
+		if(!locate(/obj/structure/flood_wall_growth) in candidate_wall)
+			wall_candidates += candidate_wall
+	if(length(wall_candidates))
+		var/turf/closed/target_wall = pick(wall_candidates)
+		if(can_build(target_wall, /obj/structure/flood_wall_growth, on_wall = TRUE))
+			new /obj/structure/flood_wall_growth(target_wall)
 
 /mob/living/basic/flood/constructor/proc/can_build(turf/target_turf, structure_type, solid = FALSE, on_wall = FALSE)
 	if(stat == DEAD)
@@ -694,6 +745,26 @@
 	var/next_constructor = 0
 	var/next_direct_growth = 0
 	var/next_assault = 0
+	var/next_auto_direct = 0
+
+/mob/living/basic/flood/overseer/Initialize(mapload)
+	. = ..()
+	next_auto_direct = world.time + rand(15, 25) SECONDS
+
+/mob/living/basic/flood/overseer/Life(seconds_per_tick = SSMOBS_DT, times_fired)
+	. = ..()
+	if(!. || stat == DEAD || client || world.time < next_auto_direct)
+		return
+	next_auto_direct = world.time + 20 SECONDS
+	direct_growth()
+	if(world.time < next_constructor)
+		return
+	var/nearby_constructors = 0
+	for(var/mob/living/basic/flood/constructor/ally in range(5, src))
+		if(ally.stat != DEAD)
+			nearby_constructors++
+	if(nearby_constructors < 2)
+		create_constructor()
 
 /mob/living/basic/flood/overseer/verb/direct_assault()
 	set name = "Direct Flood Assault"
