@@ -575,6 +575,19 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	melee_damage_lower = 20
 	melee_damage_upper = 30
 
+/mob/living/basic/flood/combat_form/human/prisoner/abomination
+	name = "Flood abomination"
+	desc = "A heavily mutated human form dragging itself forward on enlarged arms."
+	icon_state = "abomination"
+	icon_living = "abomination"
+	icon_dead = "abomination_dead"
+	maxHealth = 250
+	health = 250
+	melee_damage_lower = 30
+	melee_damage_upper = 40
+	mob_size = MOB_SIZE_LARGE
+	speed = -0.5
+
 /mob/living/basic/flood/combat_form/human/crew
 	name = "Flood infected crew member"
 	desc = "An infected human stripped of most of its clothing."
@@ -622,6 +635,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	var/turf/spawn_turf = get_turf(src)
 	if(!spawn_turf)
 		return
+	new /obj/effect/temp_visual/flood_carrier_burst(spawn_turf)
 	playsound(spawn_turf, 'sound/effects/splat.ogg', 70, TRUE)
 
 	var/list/spawn_turfs = list(spawn_turf)

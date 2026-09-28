@@ -6,6 +6,11 @@
 GLOBAL_LIST_EMPTY(flood_patrol_targets)
 GLOBAL_LIST_EMPTY(flood_assault_targets)
 
+/obj/effect/temp_visual/flood_carrier_burst
+	icon = 'icons/mob/flood/flood_carrier_old.dmi'
+	icon_state = "burst"
+	duration = 0.4 SECONDS
+
 /// A mapper can give a Flood nest its own ambience without changing the
 /// station's usual area sounds or broadcasting from every biomass growth.
 /area/ruin/unpowered/flood_nest
