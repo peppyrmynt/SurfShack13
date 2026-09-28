@@ -222,6 +222,15 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	required_distance = 5
 	avoid_friendly_fire = TRUE
 
+/datum/ai_behavior/basic_ranged_attack/flood_gun/perform(seconds_per_tick, datum/ai_controller/controller, target_key, targeting_strategy_key, hiding_location_key)
+	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
+	if(!istype(armed_form))
+		return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_FAILED
+	var/obj/item/gun/held_gun = armed_form.get_active_held_item()
+	if(!istype(held_gun) || !held_gun.can_shoot() || armed_form.Adjacent(controller.blackboard[target_key]))
+		return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_FAILED
+	return ..()
+
 /datum/targeting_strategy/basic/flood_infestor/can_attack(mob/living/living_mob, atom/the_target, vision_range)
 	if(!ishuman(the_target))
 		return FALSE
