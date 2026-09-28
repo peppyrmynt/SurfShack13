@@ -1,6 +1,6 @@
 /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
 	blackboard = list(
-		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic,
+		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic/flood,
 		BB_TARGET_MINIMUM_STAT = HARD_CRIT,
 	)
 	planning_subtrees = list(
@@ -12,7 +12,7 @@
 
 /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
 	blackboard = list(
-		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic/flood_infestor,
+		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic/flood/infestor,
 		BB_TARGET_MINIMUM_STAT = DEAD,
 	)
 
@@ -86,13 +86,15 @@
 		return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_FAILED
 	return ..()
 
-/datum/targeting_strategy/basic/flood_infestor/can_attack(mob/living/living_mob, atom/the_target, vision_range)
+/// Flood can acquire visible hosts without having to be attacked first.
+/// The basic AI calls can_attack without a range during both target discovery
+/// and pursuit, so provide the same sight range used by its target finder.
+/datum/targeting_strategy/basic/flood/can_attack(mob/living/living_mob, atom/the_target, vision_range = 9)
+	if(ismob(the_target) && is_flood_target(the_target))
+		return FALSE
+	return ..()
+
+/datum/targeting_strategy/basic/flood/infestor/can_attack(mob/living/living_mob, atom/the_target, vision_range = 9)
 	if(!ishuman(the_target))
-		return FALSE
-	var/mob/living/carbon/human/host = the_target
-	if(is_flood_target(host))
-		return FALSE
-	var/damage_taken = host.getBruteLoss() + host.getFireLoss()
-	if(host.stat == CONSCIOUS && damage_taken <= host.maxHealth * 0.25)
 		return FALSE
 	return ..()

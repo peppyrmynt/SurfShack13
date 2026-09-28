@@ -42,7 +42,7 @@ GLOBAL_LIST_EMPTY(flood_assault_targets)
 	qdel(src)
 
 /// A mapper can place several of these to give NPC combat and builder forms
-/// a route through a nest. Infestors continue seeking vulnerable hosts.
+/// a route through a nest. Infestors continue seeking human hosts.
 /obj/effect/landmark/flood_patrol_target
 	name = "Flood patrol target"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'

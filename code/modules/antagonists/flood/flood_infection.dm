@@ -129,8 +129,6 @@
 	var/mob/living/carbon/human/host = attacked_target
 	if(is_flood_target(host) || !Adjacent(host))
 		return FALSE
-	if(host.stat == CONSCIOUS && host.getBruteLoss() + host.getFireLoss() <= host.maxHealth * 0.25)
-		return FALSE
 	for(var/mob/living/basic/flood/infestor/other in range(1, host))
 		if(other != src && other.latched_host == host)
 			return FALSE
