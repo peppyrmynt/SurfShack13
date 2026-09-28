@@ -123,6 +123,7 @@
 	drop_all_held_items()
 	qdel(src)
 
+/// Ordinary combat forms, including converted hosts, start empty-handed.
 /mob/living/basic/flood/combat_form/human
 	name = "Flood combat form"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
@@ -136,7 +137,6 @@
 	melee_damage_upper = 35
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
 	var/next_gun_check = 0
-	var/spawn_gun_chance = 25
 
 /mob/living/basic/flood/combat_form/human/Initialize(mapload)
 	. = ..()
@@ -145,11 +145,16 @@
 	AddComponent(/datum/component/basic_inhands, display_layer = 0)
 	update_held_items()
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
-	// Source human forms occasionally arrive armed. Use ordinary station guns.
-	if(prob(spawn_gun_chance))
-		INVOKE_ASYNC(src, PROC_REF(equip_spawn_gun))
 
-/mob/living/basic/flood/combat_form/human/proc/equip_spawn_gun()
+/// An armed variant for admin spawning only; no outbreak or biomass spawn pool uses it.
+/mob/living/basic/flood/combat_form/human/armed
+	name = "Armed Flood combat form"
+
+/mob/living/basic/flood/combat_form/human/armed/Initialize(mapload)
+	. = ..()
+	INVOKE_ASYNC(src, PROC_REF(equip_spawn_gun))
+
+/mob/living/basic/flood/combat_form/human/armed/proc/equip_spawn_gun()
 	if(stat == DEAD)
 		return
 	var/gun_type = pick(/obj/item/gun/ballistic/automatic/pistol, /obj/item/gun/energy/laser)
