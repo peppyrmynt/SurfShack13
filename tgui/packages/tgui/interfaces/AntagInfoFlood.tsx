@@ -31,23 +31,23 @@ const tabs: GuideTab[] = [
 
 const guides: Record<Form, Guide> = {
   Combat: {
-    summary: 'Fight for the infestation and evolve into a specialized form.',
+    summary: 'Fight for the infestation and evolve into a specialized Flood unit.',
     entries: [
       {
         label: 'Equipment',
-        text: 'Normal combat forms spawn empty-handed. You can pick up and use ordinary station equipment and guns. AI combat forms may scavenge guns; no normal spawn starts with one.',
+        text: 'Flood Combat spawns empty-handed. You can pick up and use ordinary station equipment and guns. AI Flood Combat may scavenge guns; no normal spawn starts with one.',
       },
       {
         label: 'Evolution',
-        text: 'Use Evolve Flood Form to become a carrier or constructor. Constructors can become overseers when the hive has no living overseer and the death penalty has ended. Combat forms cannot produce infection forms directly.',
+        text: 'Use Evolve Flood to become a Flood Carrier or Flood Constructor. Constructors can become overseers when the hive has no living overseer and the death penalty has ended. Flood Combat cannot produce infectors directly.',
       },
       {
         label: 'Infected hosts',
-        text: 'A converted human, including a lizard, keeps their original name and becomes an empty-handed combat form. Infected monkeys and other animals become carrier forms. Their gear drops on the floor, and a player-controlled converted form has extra health.',
+        text: 'A converted human, including a lizard, keeps their original name and becomes an empty-handed Flood Combat. Infected monkeys and other animals become Flood Carriers. Their gear drops on the floor, and a player-controlled converted unit has extra health.',
       },
       {
         label: 'Attacks',
-        text: 'Your melee attacks damage targets but never infect them. Infection requires an infection form attached to a dead human or animal.',
+        text: 'Your melee attacks damage targets but never infect them. Infection requires a Flood Infector attached to a dead human or animal.',
       },
     ],
   },
@@ -56,11 +56,11 @@ const guides: Record<Form, Guide> = {
     entries: [
       {
         label: 'Release',
-        text: 'Use Release Infection Forms to burst immediately. Attacking in melee or dying also bursts the carrier. Bursting destroys your carrier body.',
+        text: 'Use Release Infectors to burst immediately. Attacking in melee or dying also bursts the carrier. Bursting destroys your carrier body.',
       },
       {
         label: 'Swarm',
-        text: 'A burst releases 6 to 12 AI infection forms onto nearby open tiles, along with a small Reactive Spines smoke cloud.',
+        text: 'A burst releases 6 to 12 AI Flood Infectors onto nearby open tiles, along with a small Reactive Spines smoke cloud.',
       },
       {
         label: 'AI behavior',
@@ -68,7 +68,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'After bursting',
-        text: 'Infection forms are AI-controlled and cannot be taken over through the ghost spawner menu. Protect them as they latch onto hosts.',
+        text: 'Flood Infectors are AI-controlled and cannot be taken over through the ghost spawner menu. Protect them as they latch onto hosts.',
       },
     ],
   },
@@ -77,23 +77,23 @@ const guides: Record<Form, Guide> = {
     entries: [
       {
         label: 'Infest Floor',
-        text: 'Cover the floor you stand on with Flood growth every five seconds. It does not replace ordinary station walls or airlocks. Flood forms slowly heal while standing on this floor.',
+        text: 'Cover the floor you stand on with Flood growth every five seconds. It does not replace ordinary station walls or airlocks. Flood units slowly heal while standing on this floor.',
       },
       {
         label: 'Grow Biomass',
-        text: 'Create a small biomass spawner on your tile every 60 seconds. Spawners spread growth and produce carrier forms 80% of the time or combat forms 20% of the time while limiting their nearby population. Flood and ghosts can see the countdown to the next spawn attempt.',
+        text: 'Create a small biomass spawner on your tile every 60 seconds. Spawners spread growth and produce Flood Carriers 80% of the time or Flood Combat 20% of the time while limiting their nearby population. Flood and ghosts can see the countdown to the next spawn attempt.',
       },
       {
         label: 'Structures',
-        text: 'Build a solid wall, a door, or a translucent membrane on your tile. Each structure has a 15-second cooldown; successful construction also has a shared two-second recovery.',
+        text: 'Build a solid wall, a door, or a translucent membrane on your tile. Each structure has a 15-second cooldown; successful construction also has a shared two-second recovery. AI constructors spread Flood floors without building these structures.',
       },
       {
-        label: 'Produce Infection Form',
-        text: 'Bud off one AI infection form every 45 seconds. Uncontrolled constructors also produce them over time.',
+        label: 'Produce Infector',
+        text: 'Bud off one AI Flood Infector every 45 seconds. Uncontrolled constructors also produce them over time.',
       },
       {
         label: 'Grow Spore Cluster',
-        text: 'Place a cluster on your tile every 180 seconds. When a human passes through it, the cluster bursts after two seconds and releases four infection forms. Too many nearby clusters block placement.',
+        text: 'Place a cluster on your tile every 180 seconds. When a human passes through it, the cluster bursts after two seconds and releases four Flood Infectors. Too many nearby clusters block placement.',
       },
       {
         label: 'Become Overseer',
@@ -102,15 +102,15 @@ const guides: Record<Form, Guide> = {
     ],
   },
   Overseer: {
-    summary: 'Grow the nest and command nearby AI Flood forms.',
+    summary: 'Grow the nest and command nearby AI Flood units.',
     entries: [
       {
         label: 'Infest Floor',
         text: 'Cover the floor you stand on with Flood growth every five seconds, like a constructor.',
       },
       {
-        label: 'Create forms',
-        text: 'Create a constructor every 30 seconds or a carrier every 120 seconds. Both appear on your tile as separate AI forms.',
+        label: 'Create Flood units',
+        text: 'Create a Flood Constructor every 30 seconds or a Flood Carrier every 120 seconds. Both appear on your tile as separate AI units.',
       },
       {
         label: 'Direct Infestation Growth',
@@ -122,7 +122,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Middle-click orders',
-        text: 'In Overseer Mode, middle-click a living human within 15 tiles of your view to direct nearby AI Flood forms, including infection forms, to attack them. Middle-click a floor tile to rally those forms there. Player-controlled forms are unaffected.',
+        text: 'In Overseer Mode, middle-click a living human within 15 tiles of your view to direct nearby AI Flood units, including infectors, to attack them. Middle-click a floor tile to rally those units there. Player-controlled units are unaffected.',
       },
       {
         label: 'Death',
@@ -158,35 +158,35 @@ export const AntagInfoFlood = () => {
             <Section
               fill
               scrollable
-              title={tab === 'Overview' ? 'The Flood' : `${tab} Form`}
+              title={tab === 'Overview' ? 'The Flood' : `Flood ${tab}`}
             >
               {tab === 'Overview' ? (
                 <Stack vertical>
                   <Stack.Item>
-                    Expand the infestation, protect corpses for your infection
-                    forms, and establish Flood biomass. You share Floodmind
+                    Expand the infestation, protect corpses for your infectors,
+                    and establish Flood biomass. You share Floodmind
                     speech nearby with :f, and Flood Chorus reaches every active
                     Flood player.
                   </Stack.Item>
                   <Stack.Item>
-                    <Section title="Infection forms (AI allies)">
-                      Infection forms cannot be taken over from the ghost spawner.
+                    <Section title="Flood Infectors (AI allies)">
+                      Flood Infectors cannot be taken over from the ghost spawner.
                       They leap onto humans or animals and remain buckled to
                       them. Against living hosts, they deal 10 brute every two
-                      seconds; the host can resist or the form can be killed to
-                      break the latch. Only a dead host can be converted, after
-                      five seconds attached to the corpse. Their swarms can merge,
-                      and an unlatched form can reanimate a fallen Flood combat
-                      form once. Dying infection forms also release a small
+                      seconds; the host can resist or the infector can be killed
+                      to break the latch. Only a dead host can be converted,
+                      after five seconds attached to the corpse. Their swarms
+                      can merge, and an unlatched infector can reanimate a fallen
+                      Flood Combat once. Dying infectors also release a small
                       Reactive Spines smoke cloud.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>
                     <Section title="Biomass and fire">
-                      Flood forms heal slowly only while standing on
-                      Flood-covered floor. Fire burns Flood bodies and can
-                      destroy biomass; crew can also clear floor growth with a
-                      welder or by removing the floor.
+                      Flood units heal slowly only while standing on
+                      Flood-covered floor. Enough fire damage gibs Flood
+                      bodies. Fire can destroy biomass; crew can also clear
+                      floor growth with a welder or by removing the floor.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>

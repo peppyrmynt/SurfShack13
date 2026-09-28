@@ -1,5 +1,5 @@
 /mob/living/basic/flood/infestor
-	name = "Flood infection form"
+	name = "Flood Infector"
 	desc = "A small Flood organism seeking a host."
 	icon = 'icons/mob/flood/flood_infection.dmi'
 	icon_state = "static"
@@ -9,9 +9,9 @@
 	sentience_type = SENTIENCE_HUMANOID
 	faction = list("Flood")
 	combat_mode = TRUE
-	maxHealth = 3
+	maxHealth = 5
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
-	health = 3
+	health = 5
 	speed = -0.5
 	melee_damage_lower = 0
 	melee_damage_upper = 0
@@ -50,7 +50,7 @@
 
 /// Infection forms leave small, cleanable remains, as in the original infestation.
 /obj/effect/decal/cleanable/flood_infestor
-	name = "dead Flood infection form"
+	name = "dead Flood Infector"
 	desc = "The husk of a tiny Flood parasite."
 	icon = 'icons/mob/flood/flood_infection.dmi'
 	icon_state = "dead"
@@ -104,7 +104,7 @@
 /mob/living/basic/flood/infestor/examine(mob/user)
 	. = ..()
 	if(swarm_size > 1)
-		. += span_warning("[swarm_size] infection forms are moving together in this swarm.")
+		. += span_warning("[swarm_size] Flood Infectors are moving together in this swarm.")
 
 /mob/living/basic/flood/infestor/update_overlays()
 	. = ..()
@@ -128,7 +128,7 @@
 		bruteloss = max(0, maxHealth - combined_health)
 		updatehealth()
 		swarm_size += added_forms
-		name = "Flood infection form swarm"
+		name = "Flood Infector swarm"
 		qdel(other)
 		update_appearance(UPDATE_OVERLAYS)
 		return
@@ -332,7 +332,7 @@
 		latch_generation++
 		addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
 		return
-	var/infected = convert_host(host, "[src] burrows into [host], converting them into a Flood form!")
+	var/infected = convert_host(host, "[src] burrows into [host], converting them into a Flood unit!")
 	clear_latch()
 	if(infected)
 		qdel(src)

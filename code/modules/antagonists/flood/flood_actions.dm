@@ -22,8 +22,8 @@
 	return TRUE
 
 /datum/action/cooldown/flood/evolve
-	name = "Evolve Flood Form"
-	desc = "Choose a specialized Flood form."
+	name = "Evolve Flood"
+	desc = "Choose a Flood specialization."
 	button_icon = 'icons/mob/flood/flood_combat_human.dmi'
 	button_icon_state = "nudist"
 	cooldown_time = 30 SECONDS
@@ -35,7 +35,7 @@
 
 /datum/action/cooldown/flood/reanimate
 	name = "Reanimate Flood Corpse"
-	desc = "Reanimate a nearby fallen Flood combat form."
+	desc = "Reanimate a nearby fallen Flood Combat."
 	button_icon = 'icons/mob/flood/flood_infection.dmi'
 	button_icon_state = "dead"
 
@@ -44,8 +44,8 @@
 	return infestor.reanimate_nearby_flood(TRUE)
 
 /datum/action/cooldown/flood/release_infection_forms
-	name = "Release Infection Forms"
-	desc = "Rupture and release a swarm of infection forms."
+	name = "Release Infectors"
+	desc = "Rupture and release a swarm of Flood Infectors."
 	button_icon = 'icons/mob/flood/flood_carrier.dmi'
 	button_icon_state = "static"
 
@@ -65,8 +65,8 @@
 	return constructor.grow_biomass()
 
 /datum/action/cooldown/flood/produce_infestor
-	name = "Produce Infection Form"
-	desc = "Produce a single Flood infection form every 45 seconds."
+	name = "Produce Infector"
+	desc = "Produce a single Flood Infector every 45 seconds."
 	button_icon = 'icons/mob/flood/flood_infection.dmi'
 	button_icon_state = "static"
 	cooldown_time = 45 SECONDS
@@ -143,7 +143,7 @@
 	return constructor.grow_spores()
 
 /datum/action/cooldown/flood/create_constructor
-	name = "Create Constructor Form"
+	name = "Create Flood Constructor"
 	desc = "Bud off a new Flood constructor."
 	button_icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	button_icon_state = "constructor"
@@ -159,8 +159,8 @@
 	return TRUE
 
 /datum/action/cooldown/flood/create_carrier
-	name = "Create Carrier Form"
-	desc = "Bud off a Flood carrier form every 120 seconds."
+	name = "Create Flood Carrier"
+	desc = "Bud off a Flood Carrier every 120 seconds."
 	button_icon = 'icons/mob/flood/flood_carrier.dmi'
 	button_icon_state = "static"
 	cooldown_time = 120 SECONDS
@@ -189,7 +189,7 @@
 
 /datum/action/cooldown/flood/toggle_overseer_mode
 	name = "Toggle Overseer Mode"
-	desc = "Survey connected Flood growth and middle-click to direct nearby AI forms."
+	desc = "Survey connected Flood growth and middle-click to direct nearby AI units."
 	button_icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	button_icon_state = "designator"
 

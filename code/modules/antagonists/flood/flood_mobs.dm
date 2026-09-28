@@ -1,6 +1,6 @@
 /mob/living/basic/flood
-	name = "Flood combat form"
-	desc = "A biomass-driven combat form belonging to a parasitic hive mind."
+	name = "Flood Combat"
+	desc = "A biomass-driven fighter belonging to a parasitic hive mind."
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
 	icon_state = "nudist"
 	icon_living = "nudist"
@@ -31,6 +31,8 @@
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
 	var/next_evolution = 0
 	var/next_idle_sound = 0
+	/// Basic mobs combine damage types internally; track burn separately for fire gibbing.
+	var/fire_damage_taken = 0
 
 /mob/living/basic/flood/Initialize(mapload)
 	. = ..()
@@ -73,6 +75,14 @@
 			client?.images -= countdown.flood_display
 	return ..()
 
+/// :f selects local Floodmind speech; the normal language prefix ,f belongs to Nekomimetic.
+/mob/living/basic/flood/get_message_mods(message, list/mods)
+	. = ..()
+	if(mods[RADIO_KEY] == "f" && !mods[RADIO_EXTENSION])
+		mods[LANGUAGE_EXTENSION] = /datum/language/flood
+		mods -= RADIO_KEY
+	return .
+
 /mob/living/basic/flood/proc/on_flood_mind_transfer(mob/living/basic/flood/source, mob/living/old_body)
 	SIGNAL_HANDLER
 	grant_flood_antag()
@@ -101,8 +111,27 @@
 
 /mob/living/basic/flood/fire_act()
 	. = ..()
-	if(stat != DEAD)
+	if(!QDELETED(src))
 		adjustFireLoss(2)
+
+/mob/living/basic/flood/adjust_health(amount, updating_health = TRUE, forced = FALSE)
+	. = ..()
+	if(amount < 0)
+		fire_damage_taken = min(fire_damage_taken, bruteloss)
+
+/mob/living/basic/flood/adjustFireLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
+	var/previous_damage = bruteloss
+	// Check burn damage before health updates can delete a dying infector or carrier.
+	. = ..(amount, FALSE, forced, required_bodytype)
+	if(QDELETED(src))
+		return
+	fire_damage_taken += max(0, bruteloss - previous_damage)
+	if(fire_damage_taken >= maxHealth)
+		visible_message(span_danger("[src] burns away into a spray of biomass!"))
+		gib()
+		return
+	if(updating_health && bruteloss != previous_damage)
+		updatehealth()
 
 /mob/living/basic/flood/melee_attack(atom/target, list/modifiers, ignore_cooldown)
 	if(istype(src, /mob/living/basic/flood/infestor))

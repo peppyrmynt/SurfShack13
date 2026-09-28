@@ -36,7 +36,7 @@ GLOBAL_LIST_EMPTY(flood_assault_targets)
 		qdel(src)
 		return
 	playsound(spawn_turf, 'sound/effects/grillehit.ogg', 80, TRUE)
-	spawn_turf.visible_message(span_danger("Flood infection forms erupt from the surrounding biomass!"))
+	spawn_turf.visible_message(span_danger("Flood Infectors erupt from the surrounding biomass!"))
 	for(var/i in 1 to 8)
 		new /mob/living/basic/flood/infestor(spawn_turf)
 	qdel(src)
@@ -84,10 +84,10 @@ GLOBAL_LIST_EMPTY(flood_assault_targets)
 	density = FALSE
 	mob_type = /mob/living/basic/flood/combat_form/human
 	role_ban = ROLE_FLOOD
-	prompt_name = "Flood combat form"
-	you_are_text = "You are a Flood combat form."
-	flavour_text = "Spread the infestation with infection forms. Your human hands can use ordinary station equipment and weapons."
-	important_text = "Infection forms hurt living hosts. Only forms latched to dead humans for five seconds can convert them."
+	prompt_name = "Flood Combat"
+	you_are_text = "You are a Flood Combat."
+	flavour_text = "Spread the infestation."
+	important_text = "Open your Flood antagonist information for your guide and abilities."
 
 /obj/effect/mob_spawn/ghost_role/flood/special(mob/living/spawned_mob, mob/mob_possessor)
 	. = ..()

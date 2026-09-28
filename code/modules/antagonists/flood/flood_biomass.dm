@@ -262,7 +262,7 @@ GLOBAL_LIST_EMPTY(flood_growth_countdowns)
 	if(!spawn_turf)
 		return
 	playsound(spawn_turf, 'sound/effects/splat.ogg', 50, TRUE)
-	visible_message(span_warning("[src] bursts, releasing Flood infection forms!"))
+	visible_message(span_warning("[src] bursts, releasing Flood Infectors!"))
 	for(var/i in 1 to 4)
 		new /mob/living/basic/flood/infestor(spawn_turf)
 	qdel(src)

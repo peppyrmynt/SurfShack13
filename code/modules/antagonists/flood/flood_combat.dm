@@ -63,7 +63,7 @@
 				), 25, TRUE)
 
 /mob/living/basic/flood/combat_form
-	name = "Flood combat form"
+	name = "Flood Combat"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
 	icon_state = "nudist"
 	icon_living = "nudist"
@@ -115,7 +115,7 @@
 
 /// Ordinary combat forms, including converted hosts, start empty-handed.
 /mob/living/basic/flood/combat_form/human
-	name = "Flood combat form"
+	name = "Flood Combat"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
 	icon_state = "nudist"
 	icon_living = "nudist"
@@ -138,7 +138,7 @@
 
 /// An armed variant for admin spawning only; no outbreak or biomass spawn pool uses it.
 /mob/living/basic/flood/combat_form/human/armed
-	name = "Armed Flood combat form"
+	name = "Armed Flood Combat"
 
 /mob/living/basic/flood/combat_form/human/armed/Initialize(mapload)
 	. = ..()

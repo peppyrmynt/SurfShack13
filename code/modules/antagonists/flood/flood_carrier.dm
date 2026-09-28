@@ -4,8 +4,8 @@
 	duration = 0.4 SECONDS
 
 /mob/living/basic/flood/carrier
-	name = "Flood carrier form"
-	desc = "A bloated Flood form packed with infection forms."
+	name = "Flood Carrier"
+	desc = "A bloated Flood unit packed with infectors."
 	icon = 'icons/mob/flood/flood_carrier.dmi'
 	icon_state = "static"
 	icon_living = "static"
@@ -60,7 +60,7 @@
 
 	for(var/i in 1 to rand(6, 12))
 		new /mob/living/basic/flood/infestor(pick(spawn_turfs))
-	visible_message(span_warning("[src] ruptures, releasing a swarm of Flood infection forms!"))
+	visible_message(span_warning("[src] ruptures, releasing a swarm of Flood Infectors!"))
 
 /mob/living/basic/flood/carrier/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	if(!attacked_target || !Adjacent(attacked_target))

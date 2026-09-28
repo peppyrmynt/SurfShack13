@@ -1,7 +1,7 @@
 /mob/living/basic/flood/constructor
-	name = "Flood constructor form"
+	name = "Flood Constructor"
 	unique_name = TRUE
-	desc = "A specialized Flood form that converts its surroundings into infestation."
+	desc = "A specialized Flood unit that converts its surroundings into infestation."
 	icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	icon_state = "constructor"
 	icon_living = "constructor"
@@ -55,6 +55,8 @@
 	if(nearby_growth >= 10)
 		return
 	var/turf/target = get_build_turf()
+	if(!isfloorturf(target))
+		return
 	if(world.time >= next_auto_biomass && world.time >= next_biomass_build)
 		var/nearby_biomass = 0
 		for(var/obj/structure/flood_biomass/existing_biomass in range(4, src))
@@ -64,6 +66,14 @@
 			return
 	if(can_grow_flood_floor(target) && can_build(target, /turf/open/floor/flood_biomass))
 		grow_flood_floor(target)
+		return
+	// Keep spreading when the constructor is already standing on Flood floor.
+	var/list/adjacent_floors = list()
+	for(var/turf/open/floor/candidate in range(1, src))
+		if(candidate != target && can_grow_flood_floor(candidate))
+			adjacent_floors += candidate
+	if(length(adjacent_floors))
+		grow_flood_floor(pick(adjacent_floors))
 
 /mob/living/basic/flood/constructor/proc/can_build(turf/target_turf, structure_type, solid = FALSE)
 	if(stat == DEAD)
@@ -133,7 +143,7 @@
 		return FALSE
 	next_infestor = world.time + 45 SECONDS
 	new /mob/living/basic/flood/infestor(spawn_turf)
-	visible_message(span_warning("[src] produces a Flood infection form."))
+	visible_message(span_warning("[src] produces a Flood Infector."))
 	for(var/datum/action/cooldown/flood/produce_infestor/infestor_action in actions)
 		infestor_action.StartCooldownSelf()
 	return TRUE
@@ -150,6 +160,8 @@
 	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_barrier()
+	if(!client)
+		return FALSE
 	if(world.time < next_wall_build)
 		to_chat(src, span_warning("Your biomass is still recovering from growing a wall."))
 		return FALSE
@@ -164,6 +176,8 @@
 	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_door()
+	if(!client)
+		return FALSE
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_door, TRUE))
 		return FALSE
@@ -174,6 +188,8 @@
 	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_membrane()
+	if(!client)
+		return FALSE
 	var/turf/target_turf = get_build_turf()
 	if(!can_build(target_turf, /obj/structure/flood_window, TRUE))
 		return FALSE
@@ -198,7 +214,7 @@
 	var/mob/living/basic/flood/overseer/new_overseer = new(evolution_turf)
 	var/datum/mind/flood_mind = mind
 	flood_mind.transfer_to(new_overseer)
-	visible_message(span_warning("[src] reshapes into the new Flood overseer!"))
+	visible_message(span_warning("[src] reshapes into the new Flood Overseer!"))
 	qdel(src)
 	return TRUE
 
@@ -223,8 +239,8 @@
 	return TRUE
 
 /mob/living/basic/flood/overseer
-	name = "Flood overseer form"
-	desc = "A specialized Flood form directing the spread of infestation."
+	name = "Flood Overseer"
+	desc = "A specialized Flood unit directing the spread of infestation."
 	icon = 'icons/mob/flood/flood_constructor_builder.dmi'
 	icon_state = "designator"
 	icon_living = "designator"
@@ -291,7 +307,7 @@
 		return
 	next_constructor = world.time + 30 SECONDS
 	new /mob/living/basic/flood/constructor(loc)
-	visible_message(span_warning("[src] buds off a new Flood constructor form."))
+	visible_message(span_warning("[src] buds off a new Flood Constructor."))
 
 /mob/living/basic/flood/overseer/proc/create_carrier()
 	if(stat == DEAD || world.time < next_carrier)
@@ -301,7 +317,7 @@
 		return FALSE
 	next_carrier = world.time + 120 SECONDS
 	new /mob/living/basic/flood/carrier(spawn_turf)
-	visible_message(span_warning("[src] buds off a Flood carrier form."))
+	visible_message(span_warning("[src] buds off a Flood Carrier."))
 	return TRUE
 
 /mob/living/basic/flood/overseer/proc/direct_growth()

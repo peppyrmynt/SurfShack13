@@ -102,4 +102,4 @@ GLOBAL_LIST_EMPTY(flood_overseer_eyes)
 			ally.ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
 			ally.ai_controller.set_blackboard_key("flood_rally_destination", order_location)
 		directed++
-	to_chat(src, span_notice("You [target ? "direct" : "rally"] [directed] Flood forms [target ? "against [target]" : "toward [order_location]"]."))
+	to_chat(src, span_notice("You [target ? "direct" : "rally"] [directed] Flood units [target ? "against [target]" : "toward [order_location]"]."))
