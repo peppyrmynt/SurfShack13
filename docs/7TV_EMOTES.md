@@ -67,3 +67,13 @@ The explicit macro owns the wheel shortcut so the generic Any-key handler cannot
 immediately toggle it closed. A short debounce also ignores duplicate events.
 Emote captions use the default runechat colour scheme, including the speaker's
 generated colour and the existing emote styling.
+
+Players can enable **Compact emote wheel** in Game Preferences → UI. The default
+remains the large wheel. Compact mode uses the same pagination as the curator
+Bible picker: seven emotes plus a Next Page button, wrapping back to the first
+page. Its radius is 80 instead of 160, allowing room for the command labels.
+Both layouts reuse cached thumbnails, Alt+E, and the same emote execution path.
+The preference is saved per player and applies on the next opening.
+
+In-game checks: switch layouts, reopen with Alt+E, cycle all compact pages,
+select an emote on the second page, and reconnect to confirm the setting persists.

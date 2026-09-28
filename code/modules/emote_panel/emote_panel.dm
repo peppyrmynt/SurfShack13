@@ -77,15 +77,16 @@
 		if(emote.can_run_emote(src, status_check = FALSE, intentional = TRUE))
 			options[key] = GLOB.emote_wheel_choices[key]
 
+	var/compact = opening_client.prefs.read_preference(/datum/preference/toggle/compact_emote_wheel)
 	var/selection = show_radial_menu(
 		src, src, options,
 		uniqueid = "emote_wheel_[REF(opening_client)]",
-		radius = 160,
+		radius = compact ? 80 : 160,
 		custom_check = CALLBACK(src, PROC_REF(emote_wheel_available), opening_client),
 		tooltips = TRUE,
 		autopick_single_option = FALSE,
 		entry_animation = TRUE,
-		menu_type = /datum/radial_menu/emote_wheel,
+		menu_type = compact ? /datum/radial_menu/emote_wheel/compact : /datum/radial_menu/emote_wheel,
 	)
 	if(selection && emote_wheel_available(opening_client) && (selection in options))
 		emote(selection, intentional = TRUE)
@@ -96,6 +97,11 @@
 /// All fourteen current emotes fit on one page; additional emotes can paginate normally.
 /datum/radial_menu/emote_wheel
 	min_angle = 22.5
+
+/// Bible-style pagination: seven emotes and a next-page button.
+/// Extra radius compared to the Bible leaves room for command labels.
+/datum/radial_menu/emote_wheel/compact
+	min_angle = 45
 
 /datum/radial_menu/emote_wheel/SetElement(atom/movable/screen/radial/slice/element, choice_id, angle, anim, anim_order)
 	. = ..()
