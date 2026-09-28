@@ -36,7 +36,7 @@ const guides: Record<Form, Guide> = {
     entries: [
       {
         label: 'Equipment',
-        text: 'Flood Combat spawns empty-handed. You can pick up and use ordinary station equipment and guns. AI Flood Combat may scavenge guns; no normal spawn starts with one.',
+        text: 'Flood Combat spawns empty-handed. You can pick up and use ordinary station equipment and guns. AI Flood Combat seeks usable guns and weapons that deal more than 10 brute or burn damage, including thrown weapons. It also recovers weapons from fallen enemies and drops empty guns. No normal spawn starts with a gun.',
       },
       {
         label: 'Evolution',
@@ -81,10 +81,6 @@ const guides: Record<Form, Guide> = {
         text: 'Cover the floor you stand on with Flood growth every five seconds. It does not replace ordinary station walls or airlocks. Flood units slowly heal while standing on this floor.',
       },
       {
-        label: 'Grow Biomass',
-        text: 'Create a small biomass spawner on your tile every 60 seconds. Spawners spread growth and produce Flood Carriers 80% of the time or Flood Combat 20% of the time while limiting their nearby population. Flood and ghosts can see the countdown to the next spawn attempt.',
-      },
-      {
         label: 'Structures',
         text: 'Build a solid wall, a door, or a translucent membrane on your tile. Each structure has a 15-second cooldown; successful construction also has a shared two-second recovery. AI constructors spread Flood floors without building these structures.',
       },
@@ -108,6 +104,10 @@ const guides: Record<Form, Guide> = {
       {
         label: 'Infest Floor',
         text: 'Cover the floor you stand on with Flood growth every five seconds, like a constructor.',
+      },
+      {
+        label: 'Grow Biomass',
+        text: 'Only overseers can create biomass spawners. Grow one on your tile every 60 seconds. Spawners spread growth and produce Flood Carriers 80% of the time or Flood Combat 20% of the time while limiting their nearby population. Flood and ghosts can see the countdown to the next spawn attempt.',
       },
       {
         label: 'Create Flood units',

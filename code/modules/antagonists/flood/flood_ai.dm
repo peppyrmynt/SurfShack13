@@ -17,13 +17,13 @@
 		BB_TARGET_MINIMUM_STAT = DEAD,
 	)
 
-/// Human combat forms can use guns they find on the station. Other Flood forms
-/// retain the normal melee controller.
+/// Combat forms recover useful weapons; other Flood units retain the melee controller.
 /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/flood_rally,
 		/datum/ai_planning_subtree/simple_find_target,
-		/datum/ai_planning_subtree/flood_use_gun,
+		/datum/ai_planning_subtree/flood_recover_weapon,
+		/datum/ai_planning_subtree/flood_use_ranged_weapon,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree,
 		/datum/ai_planning_subtree/flood_patrol,
@@ -76,30 +76,71 @@
 	controller.queue_behavior(/datum/ai_behavior/travel_towards/stop_on_arrival, BB_TRAVEL_DESTINATION)
 	return SUBTREE_RETURN_FINISH_PLANNING
 
-/datum/ai_planning_subtree/flood_use_gun/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+/// Recover visible weapons between fights, or a weapon within reach during a fight.
+/datum/ai_planning_subtree/flood_recover_weapon/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
 	if(!istype(armed_form) || armed_form.client)
 		return
-	var/obj/item/gun/held_gun = armed_form.get_active_held_item()
-	if(!istype(held_gun) || !held_gun.can_shoot())
+	armed_form.drop_empty_guns()
+	var/has_enemy = controller.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET)
+	if(world.time >= armed_form.next_weapon_check)
+		armed_form.next_weapon_check = world.time + 2 SECONDS
+		armed_form.recovery_target = armed_form.find_recovery_weapon(only_adjacent = has_enemy)
+	var/obj/item/weapon = armed_form.recovery_target
+	var/mob/living/carbon/dead_enemy = weapon?.loc
+	if(QDELETED(weapon) || (!isturf(weapon.loc) && (!istype(dead_enemy) || dead_enemy.stat != DEAD || !(weapon in dead_enemy.held_items))) || armed_form.weapon_score(weapon) <= max(armed_form.weapon_score(armed_form.get_active_held_item()), armed_form.weapon_score(armed_form.get_inactive_held_item())) || (has_enemy && !armed_form.Adjacent(weapon)))
+		armed_form.recovery_target = null
+		return
+	controller.queue_behavior(/datum/ai_behavior/flood_recover_weapon, weapon)
+	return SUBTREE_RETURN_FINISH_PLANNING
+
+/datum/ai_behavior/flood_recover_weapon
+	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_REQUIRE_REACH | AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
+	required_distance = 1
+
+/datum/ai_behavior/flood_recover_weapon/setup(datum/ai_controller/controller, obj/item/weapon)
+	. = ..()
+	if(QDELETED(weapon))
+		return FALSE
+	set_movement_target(controller, ismob(weapon.loc) ? weapon.loc : weapon)
+
+/datum/ai_behavior/flood_recover_weapon/perform(seconds_per_tick, datum/ai_controller/controller, obj/item/weapon)
+	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
+	return AI_BEHAVIOR_DELAY | (armed_form.recover_weapon(weapon) ? AI_BEHAVIOR_SUCCEEDED : AI_BEHAVIOR_FAILED)
+
+/datum/ai_behavior/flood_recover_weapon/finish_action(datum/ai_controller/controller, succeeded, obj/item/weapon)
+	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
+	if(armed_form?.recovery_target == weapon)
+		armed_form.recovery_target = null
+	return ..()
+
+/datum/ai_planning_subtree/flood_use_ranged_weapon/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
+	if(!istype(armed_form) || armed_form.client)
+		return
+	var/obj/item/held_weapon = armed_form.get_active_held_item()
+	if(!istype(held_weapon, /obj/item/gun) && (armed_form.weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 10 || held_weapon.throwforce <= held_weapon.force))
 		return
 	var/atom/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
 	if(QDELETED(target) || armed_form.Adjacent(target))
 		return
-	controller.queue_behavior(/datum/ai_behavior/basic_ranged_attack/flood_gun, BB_BASIC_MOB_CURRENT_TARGET, BB_TARGETING_STRATEGY, BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
+	controller.queue_behavior(istype(held_weapon, /obj/item/gun) ? /datum/ai_behavior/basic_ranged_attack/flood_weapon : /datum/ai_behavior/basic_ranged_attack/flood_weapon/throwable, BB_BASIC_MOB_CURRENT_TARGET, BB_TARGETING_STRATEGY, BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
 	return SUBTREE_RETURN_FINISH_PLANNING
 
-/datum/ai_behavior/basic_ranged_attack/flood_gun
+/datum/ai_behavior/basic_ranged_attack/flood_weapon
 	action_cooldown = 1.5 SECONDS
 	required_distance = 5
 	avoid_friendly_fire = TRUE
 
-/datum/ai_behavior/basic_ranged_attack/flood_gun/perform(seconds_per_tick, datum/ai_controller/controller, target_key, targeting_strategy_key, hiding_location_key)
+/datum/ai_behavior/basic_ranged_attack/flood_weapon/throwable
+	required_distance = 3
+
+/datum/ai_behavior/basic_ranged_attack/flood_weapon/perform(seconds_per_tick, datum/ai_controller/controller, target_key, targeting_strategy_key, hiding_location_key)
 	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
 	if(!istype(armed_form))
 		return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_FAILED
-	var/obj/item/gun/held_gun = armed_form.get_active_held_item()
-	if(!istype(held_gun) || !held_gun.can_shoot() || armed_form.Adjacent(controller.blackboard[target_key]))
+	var/obj/item/held_weapon = armed_form.get_active_held_item()
+	if(armed_form.weapon_score(held_weapon) <= 0 || armed_form.Adjacent(controller.blackboard[target_key]))
 		return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_FAILED
 	return ..()
 

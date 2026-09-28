@@ -126,7 +126,8 @@
 	melee_damage_lower = 25
 	melee_damage_upper = 35
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
-	var/next_gun_check = 0
+	var/next_weapon_check = 0
+	var/obj/item/recovery_target
 
 /mob/living/basic/flood/combat_form/human/Initialize(mapload)
 	. = ..()
@@ -152,40 +153,98 @@
 	if(!put_in_hands(starter_gun))
 		starter_gun.forceMove(drop_location())
 
-/mob/living/basic/flood/combat_form/human/Life(seconds_per_tick = SSMOBS_DT, times_fired)
-	. = ..()
-	if(!. || stat == DEAD || client || world.time < next_gun_check)
-		return
-	next_gun_check = world.time + 2 SECONDS
-	INVOKE_ASYNC(src, PROC_REF(scavenge_station_gun))
+/// Guns come first; otherwise choose weapons with more than 10 brute or burn
+/// damage, including throwable weapons that can deal that damage at range.
+/mob/living/basic/flood/combat_form/human/proc/weapon_score(obj/item/weapon)
+	if(QDELETED(weapon) || weapon.anchored || (weapon.item_flags & ABSTRACT) || HAS_TRAIT(weapon, TRAIT_NODROP))
+		return 0
+	if(istype(weapon, /obj/item/gun))
+		var/obj/item/gun/gun = weapon
+		return gun.can_shoot() ? 100 + gun.force : 0
+	if(weapon.damtype != BRUTE && weapon.damtype != BURN)
+		return 0
+	var/melee_damage = weapon.force > 10 ? weapon.force : 0
+	var/ranged_damage = weapon.throw_range >= 3 && weapon.throwforce > 10 ? weapon.throwforce : 0
+	return max(melee_damage, ranged_damage)
 
-/mob/living/basic/flood/combat_form/human/proc/scavenge_station_gun()
-	if(stat == DEAD || client)
-		return
-	var/obj/item/held = get_active_held_item()
-	if(istype(held, /obj/item/gun))
-		var/obj/item/gun/held_gun = held
-		if(held_gun.can_shoot())
-			return
-		dropItemToGround(held_gun, TRUE)
-	else if(held)
-		return
-	for(var/obj/item/gun/candidate in range(1, src))
-		if(candidate.loc != get_turf(candidate) || !Adjacent(candidate) || candidate.weapon_weight >= WEAPON_HEAVY || !candidate.can_shoot())
+/mob/living/basic/flood/combat_form/human/proc/drop_empty_guns()
+	for(var/obj/item/gun/gun in held_items)
+		if(!gun.can_shoot())
+			dropItemToGround(gun, TRUE)
+	if(!get_active_held_item() && get_inactive_held_item())
+		swap_hand(get_inactive_hand_index())
+
+/mob/living/basic/flood/combat_form/human/proc/find_recovery_weapon(only_adjacent = FALSE)
+	var/obj/item/best_weapon
+	var/held_score = max(weapon_score(get_active_held_item()), weapon_score(get_inactive_held_item()))
+	var/best_score = held_score
+	var/best_distance = INFINITY
+	var/search_range = only_adjacent ? 1 : 7
+	for(var/obj/item/candidate in view(search_range, src))
+		if(!isturf(candidate.loc))
 			continue
-		if(!istype(candidate, /obj/item/gun/ballistic) && !istype(candidate, /obj/item/gun/energy))
+		var/score = weapon_score(candidate)
+		var/distance = get_dist(src, candidate)
+		if(score <= held_score || score < best_score || (score == best_score && distance >= best_distance))
 			continue
-		if(put_in_hands(candidate))
-			visible_message(span_warning("[src] picks up [candidate]."))
-			return
+		best_weapon = candidate
+		best_score = score
+		best_distance = distance
+	for(var/mob/living/carbon/dead_enemy in view(search_range, src))
+		if(dead_enemy.stat != DEAD || is_flood_target(dead_enemy))
+			continue
+		for(var/obj/item/candidate in dead_enemy.held_items)
+			var/score = weapon_score(candidate)
+			var/distance = get_dist(src, dead_enemy)
+			if(score <= held_score || score < best_score || (score == best_score && distance >= best_distance))
+				continue
+			best_weapon = candidate
+			best_score = score
+			best_distance = distance
+	return best_weapon
+
+/mob/living/basic/flood/combat_form/human/proc/recover_weapon(obj/item/weapon)
+	if(stat == DEAD || client || weapon_score(weapon) <= max(weapon_score(get_active_held_item()), weapon_score(get_inactive_held_item())))
+		return FALSE
+	var/mob/living/carbon/dead_enemy = weapon.loc
+	if(istype(dead_enemy))
+		if(dead_enemy.stat != DEAD || is_flood_target(dead_enemy) || !(weapon in dead_enemy.held_items) || !CanReach(dead_enemy) || !dead_enemy.dropItemToGround(weapon))
+			return FALSE
+	else if(!isturf(weapon.loc) || !CanReach(weapon))
+		return FALSE
+	var/obj/item/current_weapon = get_active_held_item()
+	if(current_weapon && !dropItemToGround(current_weapon))
+		return FALSE
+	if(istype(weapon, /obj/item/gun))
+		var/obj/item/gun/new_gun = weapon
+		var/obj/item/inactive_weapon = get_inactive_held_item()
+		if(new_gun.weapon_weight == WEAPON_HEAVY && inactive_weapon && !dropItemToGround(inactive_weapon))
+			return FALSE
+	if(!put_in_active_hand(weapon))
+		return FALSE
+	visible_message(span_warning("[src] recovers [weapon]."))
+	return TRUE
 
 /mob/living/basic/flood/combat_form/human/RangedAttack(atom/target, modifiers)
 	if(client)
 		return ..()
-	var/obj/item/gun/held_gun = get_active_held_item()
-	if(!istype(held_gun) || !held_gun.can_shoot() || !target || Adjacent(target))
+	var/obj/item/held_weapon = get_active_held_item()
+	if(!target || Adjacent(target))
 		return FALSE
-	return held_gun.try_fire_gun(target, src, null)
+	if(istype(held_weapon, /obj/item/gun))
+		var/obj/item/gun/held_gun = held_weapon
+		if(!held_gun.can_shoot())
+			return FALSE
+		. = held_gun.try_fire_gun(target, src, null)
+		if(!held_gun.can_shoot())
+			dropItemToGround(held_gun, TRUE)
+		return .
+	if(weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 10 || held_weapon.throwforce <= held_weapon.force || get_dist(src, target) > held_weapon.throw_range)
+		return FALSE
+	if(!dropItemToGround(held_weapon, TRUE))
+		return FALSE
+	held_weapon.safe_throw_at(target, held_weapon.throw_range, held_weapon.throw_speed, src)
+	return TRUE
 
 /mob/living/basic/flood/combat_form/human/death(gibbed)
 	// Let survivors recover station weapons from fallen combat forms.

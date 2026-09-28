@@ -61,8 +61,8 @@
 	cooldown_time = 60 SECONDS
 
 /datum/action/cooldown/flood/grow_biomass/Activate(atom/target)
-	var/mob/living/basic/flood/constructor/constructor = owner
-	return constructor.grow_biomass()
+	var/mob/living/basic/flood/overseer/overseer = owner
+	return overseer.grow_biomass()
 
 /datum/action/cooldown/flood/produce_infestor
 	name = "Produce Infector"

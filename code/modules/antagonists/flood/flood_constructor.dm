@@ -11,22 +11,18 @@
 	melee_damage_lower = 5
 	melee_damage_upper = 10
 	var/next_build = 0
-	var/next_biomass_build = 0
 	var/next_wall_build = 0
 	var/next_spore_build = 0
 	var/next_infestor = 0
 	var/next_auto_growth = 0
-	var/next_auto_biomass = 0
 
 /mob/living/basic/flood/constructor/Initialize(mapload)
 	. = ..()
 	next_auto_growth = world.time + rand(10, 20) SECONDS
-	next_auto_biomass = world.time + 45 SECONDS
 
 /mob/living/basic/flood/constructor/get_flood_actions()
 	. = ..()
 	. += list(
-		/datum/action/cooldown/flood/grow_biomass,
 		/datum/action/cooldown/flood/infest_floor,
 		/datum/action/cooldown/flood/grow_barrier,
 		/datum/action/cooldown/flood/grow_door,
@@ -57,13 +53,6 @@
 	var/turf/target = get_build_turf()
 	if(!isfloorturf(target))
 		return
-	if(world.time >= next_auto_biomass && world.time >= next_biomass_build)
-		var/nearby_biomass = 0
-		for(var/obj/structure/flood_biomass/existing_biomass in range(4, src))
-			nearby_biomass++
-		if(!nearby_biomass && grow_biomass())
-			next_auto_biomass = world.time + 90 SECONDS
-			return
 	if(can_grow_flood_floor(target) && can_build(target, /turf/open/floor/flood_biomass))
 		grow_flood_floor(target)
 		return
@@ -88,13 +77,6 @@
 	else if(locate(structure_type) in target_turf)
 		to_chat(src, span_warning("That tile already has this kind of Flood growth."))
 		return FALSE
-	if(structure_type == /obj/structure/flood_biomass)
-		var/nearby_biomass = 0
-		for(var/obj/structure/flood_biomass/biomass in range(4, target_turf))
-			nearby_biomass++
-			if(nearby_biomass >= 2)
-				to_chat(src, span_warning("This area has enough biomass already."))
-				return FALSE
 	if(solid)
 		if(locate(/obj/structure/flood_door) in target_turf || locate(/obj/structure/flood_window) in target_turf || locate(/obj/structure/flood_wall) in target_turf)
 			to_chat(src, span_warning("A Flood structure already occupies that tile."))
@@ -120,20 +102,6 @@
 
 /mob/living/basic/flood/constructor/proc/get_build_turf()
 	return get_turf(src)
-
-/mob/living/basic/flood/constructor/proc/grow_biomass()
-	if(world.time < next_biomass_build)
-		to_chat(src, span_warning("Your biomass is still recovering from growing a spawner."))
-		return FALSE
-	var/turf/target_turf = get_build_turf()
-	if(!can_build(target_turf, /obj/structure/flood_biomass))
-		return FALSE
-	next_biomass_build = world.time + 60 SECONDS
-	new /obj/structure/flood_biomass/tiny(target_turf)
-	visible_message(span_warning("Flood biomass spreads outward beneath [src]."))
-	for(var/datum/action/cooldown/flood/grow_biomass/growth_action in actions)
-		growth_action.StartCooldownSelf()
-	return TRUE
 
 /mob/living/basic/flood/constructor/proc/produce_infestor()
 	if(stat == DEAD || world.time < next_infestor)
@@ -249,6 +217,7 @@
 	health = 150
 	melee_damage_lower = 5
 	melee_damage_upper = 10
+	var/next_biomass_build = 0
 	var/next_constructor = 0
 	var/next_carrier = 0
 	var/next_direct_growth = 0
@@ -262,6 +231,7 @@
 /mob/living/basic/flood/overseer/get_flood_actions()
 	. = ..()
 	. += list(
+		/datum/action/cooldown/flood/grow_biomass,
 		/datum/action/cooldown/flood/infest_floor,
 		/datum/action/cooldown/flood/create_constructor,
 		/datum/action/cooldown/flood/create_carrier,
@@ -282,6 +252,29 @@
 	visible_message(span_warning("Pulsating Flood tissue creeps across the floor."))
 	for(var/datum/action/cooldown/flood/infest_floor/floor_action in actions)
 		floor_action.StartCooldownSelf()
+	return TRUE
+
+/mob/living/basic/flood/overseer/proc/grow_biomass()
+	if(stat == DEAD || world.time < next_biomass_build)
+		return FALSE
+	var/turf/target_turf = get_turf(src)
+	if(!isfloorturf(target_turf))
+		to_chat(src, span_warning("You need to stand on a floor to grow Flood tissue."))
+		return FALSE
+	if(locate(/obj/structure/flood_biomass) in target_turf)
+		to_chat(src, span_warning("That tile already has a biomass spawner."))
+		return FALSE
+	var/nearby_biomass = 0
+	for(var/obj/structure/flood_biomass/biomass in range(4, target_turf))
+		nearby_biomass++
+		if(nearby_biomass >= 2)
+			to_chat(src, span_warning("This area has enough biomass already."))
+			return FALSE
+	next_biomass_build = world.time + 60 SECONDS
+	new /obj/structure/flood_biomass/tiny(target_turf)
+	visible_message(span_warning("Flood biomass spreads outward beneath [src]."))
+	for(var/datum/action/cooldown/flood/grow_biomass/growth_action in actions)
+		growth_action.StartCooldownSelf()
 	return TRUE
 
 /mob/living/basic/flood/overseer/Life(seconds_per_tick = SSMOBS_DT, times_fired)
