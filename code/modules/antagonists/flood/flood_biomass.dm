@@ -163,14 +163,6 @@
 	initial_spawn_count = 1
 	spawn_pool = list(/mob/living/basic/flood/combat_form/human)
 
-/// A mapper-placed prison outbreak uses the source's human prisoner and crew
-/// forms without changing the forms grown by constructors elsewhere.
-/obj/structure/flood_biomass/tiny/prison
-	spawn_pool = list(
-		/mob/living/basic/flood/combat_form/human/prisoner,
-		/mob/living/basic/flood/combat_form/human/crew,
-	)
-
 /// Invisible map spawner adapted from the original Flood spawn landmark.
 /obj/structure/flood_biomass/hidden
 	name = "hidden Flood spawn marker"

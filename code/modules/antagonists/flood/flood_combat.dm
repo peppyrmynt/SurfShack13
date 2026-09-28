@@ -62,9 +62,10 @@
 /mob/living/basic/flood/combat_form
 	name = "Flood combat form"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
-	icon_state = "marine_infested"
-	icon_living = "marine_infested"
-	icon_dead = "marine_dead"
+	icon_state = "nudist"
+	icon_living = "nudist"
+	icon_dead = "nudist_dead"
+	unique_name = TRUE
 	maxHealth = 150
 	health = 150
 	melee_damage_lower = 25
@@ -123,10 +124,11 @@
 	qdel(src)
 
 /mob/living/basic/flood/combat_form/human
-	name = "Flood infested human"
+	name = "Flood combat form"
 	icon = 'icons/mob/flood/flood_combat_human.dmi'
-	icon_state = "marine_infested"
-	icon_living = "marine_infested"
+	icon_state = "nudist"
+	icon_living = "nudist"
+	icon_dead = "nudist_dead"
 	speed = 0.5
 	maxHealth = 100
 	health = 100
@@ -139,7 +141,9 @@
 /mob/living/basic/flood/combat_form/human/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/dextrous)
-	AddComponent(/datum/component/basic_inhands)
+	// These sprites draw their bodies in the base icon, so held items go above it.
+	AddComponent(/datum/component/basic_inhands, display_layer = 0)
+	update_held_items()
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
 	// Source human forms occasionally arrive armed. Use ordinary station guns.
 	if(prob(spawn_gun_chance))
@@ -192,52 +196,6 @@
 	// Let survivors recover station weapons from fallen combat forms.
 	drop_all_held_items()
 	return ..()
-
-/// Human-only forms from the source's prisoner infestation. These can be
-/// placed in maps without introducing its nonhuman or specialist variants.
-/mob/living/basic/flood/combat_form/human/prisoner
-	name = "infected prisoner"
-	desc = "An infected human with the remains of an orange jumpsuit."
-	icon_state = "prisoner_infected2"
-	icon_living = "prisoner_infected2"
-	icon_dead = "prisoner_infected2_dead"
-	maxHealth = 50
-	health = 50
-	melee_damage_lower = 15
-	melee_damage_upper = 25
-	spawn_gun_chance = 0
-
-/mob/living/basic/flood/combat_form/human/prisoner/mutated
-	name = "mutated infected prisoner"
-	desc = "A mutated human form with shreds of an orange jumpsuit."
-	icon_state = "prisoner_infected1"
-	icon_living = "prisoner_infected1"
-	icon_dead = "prisoner_infected1_dead"
-	maxHealth = 85
-	health = 85
-	melee_damage_lower = 20
-	melee_damage_upper = 30
-
-/mob/living/basic/flood/combat_form/human/prisoner/abomination
-	name = "Flood abomination"
-	desc = "A heavily mutated human form dragging itself forward on enlarged arms."
-	icon_state = "abomination"
-	icon_living = "abomination"
-	icon_dead = "abomination_dead"
-	maxHealth = 250
-	health = 250
-	melee_damage_lower = 30
-	melee_damage_upper = 40
-	mob_size = MOB_SIZE_LARGE
-	speed = -0.5
-
-/mob/living/basic/flood/combat_form/human/crew
-	name = "Flood infected crew member"
-	desc = "An infected human stripped of most of its clothing."
-	icon_state = "nudist"
-	icon_living = "nudist"
-	icon_dead = "nudist_dead"
-	spawn_gun_chance = 0
 
 /mob/living/basic/flood/combat_form/juggernaut
 	name = "Flood Juggernaut"

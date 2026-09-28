@@ -43,7 +43,7 @@
 	name = "Evolve Flood Form"
 	desc = "Choose a specialized Flood form."
 	button_icon = 'icons/mob/flood/flood_combat_human.dmi'
-	button_icon_state = "marine_infested"
+	button_icon_state = "nudist"
 	cooldown_time = 30 SECONDS
 
 /datum/action/cooldown/flood/evolve/Activate(atom/target)
@@ -145,7 +145,7 @@
 	name = "Direct Flood Assault"
 	desc = "Command nearby Flood forms to pursue a human in sight."
 	button_icon = 'icons/mob/flood/flood_combat_human.dmi'
-	button_icon_state = "marine_infested"
+	button_icon_state = "nudist"
 	cooldown_time = 30 SECONDS
 
 /datum/action/cooldown/flood/direct_assault/Activate(atom/target)
