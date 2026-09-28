@@ -123,6 +123,8 @@
 
 ///Called when the obj is exposed to fire.
 /obj/fire_act(exposed_temperature, exposed_volume)
+	if(QDELETED(src))
+		return FALSE
 	if(isturf(loc))
 		var/turf/our_turf = loc
 		if(our_turf.underfloor_accessibility < UNDERFLOOR_INTERACTABLE && HAS_TRAIT(src, TRAIT_T_RAY_VISIBLE))
