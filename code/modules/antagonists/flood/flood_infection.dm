@@ -25,6 +25,8 @@
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
 	var/mob/living/carbon/human/latched_host
+	/// Restore the normal draw order when the infector releases its host.
+	var/unlatched_layer
 	var/latch_generation = 0
 	var/swarm_size = 1
 	var/max_swarm_size = 6
@@ -151,6 +153,8 @@
 	if(!host.buckle_mob(src, force = TRUE))
 		return FALSE
 	latched_host = host
+	unlatched_layer = layer
+	layer = ABOVE_ALL_MOB_LAYER
 	latch_generation++
 	RegisterSignal(host, COMSIG_LIVING_RESIST, PROC_REF(on_host_resist))
 	RegisterSignal(host, COMSIG_LIVING_DEATH, PROC_REF(on_host_death))
@@ -212,6 +216,9 @@
 /mob/living/basic/flood/infestor/proc/clear_latch()
 	var/mob/living/carbon/human/old_host = latched_host
 	latched_host = null
+	if(!isnull(unlatched_layer))
+		layer = unlatched_layer
+		unlatched_layer = null
 	latch_generation++
 	if(old_host)
 		UnregisterSignal(old_host, list(COMSIG_LIVING_RESIST, COMSIG_LIVING_DEATH, COMSIG_LIVING_REVIVE, COMSIG_QDELETING))
