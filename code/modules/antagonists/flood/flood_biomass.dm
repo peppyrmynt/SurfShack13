@@ -149,36 +149,6 @@
 	else
 		. += span_warning("It is heavily damaged!")
 
-/obj/structure/flood_biomass/medium
-	name = "large Flood biomass"
-	icon = 'icons/mob/flood/flood_bio_med.dmi'
-	icon_state = "biomass1"
-	max_integrity = 600
-	spawn_delay = 50 SECONDS
-	max_nearby_flood = 10
-	max_nearby_growth = 20
-	spread_delay = 20 SECONDS
-	initial_spawn_count = 3
-
-/obj/structure/flood_biomass/medium/Initialize(mapload)
-	. = ..()
-	icon_state = pick(icon_states(icon))
-
-/obj/structure/flood_biomass/large
-	name = "massive Flood biomass"
-	icon = 'icons/mob/flood/flood_bio_large.dmi'
-	icon_state = "biomass1"
-	max_integrity = 1500
-	spawn_delay = 40 SECONDS
-	max_nearby_flood = 15
-	max_nearby_growth = 32
-	spread_delay = 10 SECONDS
-	initial_spawn_count = 4
-
-/obj/structure/flood_biomass/large/Initialize(mapload)
-	. = ..()
-	icon_state = pick(icon_states(icon))
-
 /obj/structure/flood_biomass/tiny
 	name = "Flood growth"
 	icon = 'icons/mob/flood/flood_bio.dmi'
@@ -257,4 +227,3 @@
 	for(var/i in 1 to 4)
 		new /mob/living/basic/flood/infestor(spawn_turf)
 	qdel(src)
-
