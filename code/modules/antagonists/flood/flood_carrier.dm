@@ -14,7 +14,7 @@
 	health = 100
 	melee_damage_lower = 10
 	melee_damage_upper = 18
-	basic_mob_flags = DEL_ON_DEATH
+	basic_mob_flags = DEL_ON_DEATH | FLAMMABLE_MOB
 	icon_dead = "static"
 
 	var/has_released_infection_forms = FALSE

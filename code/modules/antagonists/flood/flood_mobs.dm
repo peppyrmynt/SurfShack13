@@ -6,6 +6,7 @@
 	icon_living = "nudist"
 	icon_dead = "nudist_dead"
 	mob_biotypes = MOB_ORGANIC | MOB_HUMANOID
+	basic_mob_flags = FLAMMABLE_MOB
 	sentience_type = SENTIENCE_HUMANOID
 	initial_language_holder = /datum/language_holder/flood
 	faction = list("Flood")
@@ -34,8 +35,9 @@
 /mob/living/basic/flood/Initialize(mapload)
 	. = ..()
 	RegisterSignal(src, COMSIG_MOB_MIND_TRANSFERRED_INTO, PROC_REF(on_flood_mind_transfer))
-	// Offer existing AI forms through the ghost spawners menu without polling every spawn.
-	AddComponent(/datum/component/ghost_direct_control, ban_type = ROLE_FLOOD, poll_candidates = FALSE)
+	// Infection forms remain AI-controlled; other AI forms can join the ghost spawners menu.
+	if(!istype(src, /mob/living/basic/flood/infestor))
+		AddComponent(/datum/component/ghost_direct_control, ban_type = ROLE_FLOOD, poll_candidates = FALSE)
 	grant_actions_by_list(get_flood_actions())
 	attacked_sound = pick(
 		'sound/flood/pain.pain1.ogg',

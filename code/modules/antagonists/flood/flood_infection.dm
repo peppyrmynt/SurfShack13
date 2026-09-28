@@ -16,7 +16,7 @@
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	pass_flags = PASSMOB
-	basic_mob_flags = DEL_ON_DEATH
+	basic_mob_flags = DEL_ON_DEATH | FLAMMABLE_MOB
 	// Only a forced unbuckle (resist, death, or cleanup) can remove a latched form.
 	can_buckle_to = FALSE
 	mob_size = MOB_SIZE_TINY
