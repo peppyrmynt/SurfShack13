@@ -1,5 +1,43 @@
 /// A mapper can give a Flood nest its own ambience without changing the
 /// station's usual area sounds or broadcasting from every biomass growth.
+GLOBAL_LIST_EMPTY(flood_growth_countdowns)
+
+/obj/effect/countdown/flood_growth
+	name = "Flood growth countdown"
+	color = "#E0CC49"
+	pixel_x = 22
+	var/image/flood_display
+
+/obj/effect/countdown/flood_growth/Initialize(mapload)
+	. = ..()
+	flood_display = image(loc = get_turf(src), layer = ABOVE_ALL_MOB_LAYER)
+	flood_display.plane = GHOST_PLANE
+	flood_display.color = color
+	flood_display.pixel_x = pixel_x
+	flood_display.maptext_width = 32
+	GLOB.flood_growth_countdowns += src
+	for(var/mob/living/basic/flood/ally in GLOB.mob_living_list)
+		if(ally.client)
+			ally.client.images += flood_display
+
+/obj/effect/countdown/flood_growth/get_value()
+	var/obj/structure/flood_biomass/growth = attached_to
+	if(!istype(growth))
+		return
+	return round(max(0, (growth.next_spawn - world.time) / 10))
+
+/obj/effect/countdown/flood_growth/process()
+	. = ..()
+	if(!QDELETED(src) && flood_display)
+		flood_display.maptext = maptext
+
+/obj/effect/countdown/flood_growth/Destroy()
+	GLOB.flood_growth_countdowns -= src
+	for(var/client/viewer as anything in GLOB.clients)
+		viewer.images -= flood_display
+	flood_display = null
+	return ..()
+
 /area/ruin/unpowered/flood_nest
 	name = "Flood nest"
 	ambientsounds = list('sound/flood/flood_ambience.ogg')
@@ -52,23 +90,28 @@
 	/// Map-placed nests start with a small wave, as in the source spawner.
 	var/initial_spawn_count = 2
 	var/list/spawn_pool = list(
-		/mob/living/basic/flood/carrier,
-		/mob/living/basic/flood/combat_form/human,
+		/mob/living/basic/flood/carrier = 80,
+		/mob/living/basic/flood/combat_form/human = 20,
 	)
 	/// Tracks this biomass's living offspring even after they leave the area.
 	var/list/spawned_flood = list()
+	var/obj/effect/countdown/flood_growth/countdown
 
 /obj/structure/flood_biomass/Initialize(mapload)
 	. = ..()
 	icon_state = "spore[rand(1, 8)]"
 	next_spawn = world.time + spawn_delay
 	next_spread = world.time + spread_delay
+	if(!istype(src, /obj/structure/flood_biomass/hidden))
+		countdown = new(src)
+		countdown.start()
 	START_PROCESSING(SSobj, src)
 	if(mapload && initial_spawn_count)
 		addtimer(CALLBACK(src, PROC_REF(spawn_initial_wave)), rand(1, 3) SECONDS)
 
 /obj/structure/flood_biomass/Destroy()
 	STOP_PROCESSING(SSobj, src)
+	QDEL_NULL(countdown)
 	for(var/mob/living/basic/flood/offspring as anything in spawned_flood)
 		UnregisterSignal(offspring, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING))
 	spawned_flood = null
@@ -104,7 +147,7 @@
 	if(!isopenturf(spawn_turf) || isspaceturf(spawn_turf))
 		return FALSE
 
-	var/spawn_type = pick(spawn_pool)
+	var/spawn_type = pick_weight(spawn_pool)
 	var/mob/living/basic/flood/new_flood = new spawn_type(spawn_turf)
 	spawned_flood += new_flood
 	RegisterSignals(new_flood, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING), PROC_REF(on_spawned_flood_lost))
@@ -161,7 +204,6 @@
 	spawn_delay = 90 SECONDS
 	max_nearby_flood = 3
 	initial_spawn_count = 1
-	spawn_pool = list(/mob/living/basic/flood/combat_form/human)
 
 /// Invisible map spawner adapted from the original Flood spawn landmark.
 /obj/structure/flood_biomass/hidden

@@ -81,7 +81,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Grow Biomass',
-        text: 'Create a small biomass spawner on your tile every 60 seconds. Spawners spread growth and produce Flood forms while limiting their nearby population.',
+        text: 'Create a small biomass spawner on your tile every 60 seconds. Spawners spread growth and produce carrier forms 80% of the time or combat forms 20% of the time while limiting their nearby population. Flood and ghosts can see the countdown to the next spawn attempt.',
       },
       {
         label: 'Structures',
@@ -104,6 +104,10 @@ const guides: Record<Form, Guide> = {
   Overseer: {
     summary: 'Grow the nest and command nearby AI Flood forms.',
     entries: [
+      {
+        label: 'Infest Floor',
+        text: 'Cover the floor you stand on with Flood growth every five seconds, like a constructor.',
+      },
       {
         label: 'Create forms',
         text: 'Create a constructor every 30 seconds or a carrier every 120 seconds. Both appear on your tile as separate AI forms.',

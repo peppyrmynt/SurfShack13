@@ -60,11 +60,17 @@
 	for(var/mob/eye/flood_overseer/eye as anything in GLOB.flood_overseer_eyes)
 		if(eye.flood_marker)
 			client?.images += eye.flood_marker
+	for(var/obj/effect/countdown/flood_growth/countdown as anything in GLOB.flood_growth_countdowns)
+		if(countdown.flood_display)
+			client?.images += countdown.flood_display
 
 /mob/living/basic/flood/Logout()
 	for(var/mob/eye/flood_overseer/eye as anything in GLOB.flood_overseer_eyes)
 		if(eye.flood_marker)
 			client?.images -= eye.flood_marker
+	for(var/obj/effect/countdown/flood_growth/countdown as anything in GLOB.flood_growth_countdowns)
+		if(countdown.flood_display)
+			client?.images -= countdown.flood_display
 	return ..()
 
 /mob/living/basic/flood/proc/on_flood_mind_transfer(mob/living/basic/flood/source, mob/living/old_body)

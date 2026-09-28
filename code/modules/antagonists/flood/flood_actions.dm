@@ -83,6 +83,9 @@
 	cooldown_time = 5 SECONDS
 
 /datum/action/cooldown/flood/infest_floor/Activate(atom/target)
+	if(istype(owner, /mob/living/basic/flood/overseer))
+		var/mob/living/basic/flood/overseer/overseer = owner
+		return overseer.infest_floor()
 	var/mob/living/basic/flood/constructor/constructor = owner
 	return constructor.infest_floor()
 

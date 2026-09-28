@@ -246,11 +246,27 @@
 /mob/living/basic/flood/overseer/get_flood_actions()
 	. = ..()
 	. += list(
+		/datum/action/cooldown/flood/infest_floor,
 		/datum/action/cooldown/flood/create_constructor,
 		/datum/action/cooldown/flood/create_carrier,
 		/datum/action/cooldown/flood/direct_growth,
 		/datum/action/cooldown/flood/toggle_overseer_mode,
 	)
+
+/mob/living/basic/flood/overseer/proc/infest_floor()
+	if(stat == DEAD)
+		return FALSE
+	var/turf/target_turf = get_turf(src)
+	if(!isfloorturf(target_turf))
+		to_chat(src, span_warning("You need to stand on a floor to grow Flood tissue."))
+		return FALSE
+	if(!grow_flood_floor(target_turf))
+		to_chat(src, span_warning("Flood growth cannot cover that floor."))
+		return FALSE
+	visible_message(span_warning("Pulsating Flood tissue creeps across the floor."))
+	for(var/datum/action/cooldown/flood/infest_floor/floor_action in actions)
+		floor_action.StartCooldownSelf()
+	return TRUE
 
 /mob/living/basic/flood/overseer/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	. = ..()
