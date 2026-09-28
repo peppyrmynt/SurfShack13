@@ -90,10 +90,9 @@
 	if(!ishuman(the_target))
 		return FALSE
 	var/mob/living/carbon/human/host = the_target
-	if(IS_FLOOD(host))
+	if(is_flood_target(host))
 		return FALSE
 	var/damage_taken = host.getBruteLoss() + host.getFireLoss()
 	if(host.stat == CONSCIOUS && damage_taken <= host.maxHealth * 0.25)
 		return FALSE
 	return ..()
-

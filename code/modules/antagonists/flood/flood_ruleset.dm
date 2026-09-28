@@ -28,7 +28,3 @@
 	if(applicant.mind)
 		applicant.mind.transfer_to(new_flood)
 	return new_flood
-
-#undef IS_FLOOD
-#undef FLOOD_INFESTOR_COOLDOWN
-#undef FLOOD_EVOLUTION_COOLDOWN

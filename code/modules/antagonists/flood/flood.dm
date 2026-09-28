@@ -5,9 +5,9 @@
 
 GLOBAL_VAR_INIT(flood_infections, 0)
 
-#define IS_FLOOD(target_mob) (target_mob?.mind?.has_antag_datum(/datum/antagonist/flood) || istype(target_mob, /mob/living/basic/flood))
-#define FLOOD_INFESTOR_COOLDOWN (30 SECONDS)
-#define FLOOD_EVOLUTION_COOLDOWN (60 SECONDS)
+/// Check both infected minds and Flood forms when selecting potential hosts.
+/proc/is_flood_target(mob/target_mob)
+	return target_mob?.mind?.has_antag_datum(/datum/antagonist/flood) || istype(target_mob, /mob/living/basic/flood)
 
 /// Spoken Flood language is local; the chorus verb below reaches every active Flood player.
 /datum/language/flood
@@ -96,4 +96,3 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	report += printplayer(owner)
 	report += span_notice("Hosts infected by the Flood: [GLOB.flood_infections]")
 	return "<div class='panel redborder'>[report.Join("<br>")]</div>"
-

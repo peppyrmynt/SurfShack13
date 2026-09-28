@@ -123,7 +123,7 @@
 	if(stat == DEAD || latched_host || !ishuman(attacked_target))
 		return FALSE
 	var/mob/living/carbon/human/host = attacked_target
-	if(IS_FLOOD(host) || !Adjacent(host))
+	if(is_flood_target(host) || !Adjacent(host))
 		return FALSE
 	if(host.stat == CONSCIOUS && host.getBruteLoss() + host.getFireLoss() <= host.maxHealth * 0.25)
 		return FALSE
@@ -141,7 +141,7 @@
 	return TRUE
 
 /mob/living/basic/flood/infestor/proc/latch_still_valid(mob/living/carbon/human/host)
-	if(stat == DEAD || QDELETED(host) || latched_host != host || IS_FLOOD(host) || !Adjacent(host))
+	if(stat == DEAD || QDELETED(host) || latched_host != host || is_flood_target(host) || !Adjacent(host))
 		return FALSE
 	if(host.stat == CONSCIOUS && host.getBruteLoss() + host.getFireLoss() <= host.maxHealth * 0.25)
 		return FALSE
@@ -245,4 +245,3 @@
 	if(stat == DEAD)
 		return
 	reanimate_nearby_flood(TRUE)
-

@@ -11,6 +11,7 @@
 			)
 		else if(!istype(src, /mob/living/basic/flood/carrier))
 			death_sound = pick(
+				'sound/flood/death.ogg',
 				'sound/flood/death.death2.ogg',
 				'sound/flood/death.death3.ogg',
 				'sound/flood/death.death4.ogg',
@@ -30,13 +31,32 @@
 	if(stat != DEAD && world.time >= next_idle_sound)
 		next_idle_sound = world.time + rand(450, 750)
 		if(prob(40))
-			playsound(loc, pick(
-				'sound/flood/flood_idle_noncombat.idle1.ogg',
-				'sound/flood/flood_idle_noncombat.idle2.ogg',
-				'sound/flood/flood_idle_noncombat.idle3.ogg',
-				'sound/flood/flood_idle_noncombat.idle4.ogg',
-				'sound/flood/flood_idle_noncombat.idle5.ogg',
-			), 25, TRUE)
+			if(ai_controller?.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET))
+				playsound(loc, pick(
+					'sound/flood/flood_idle_combat.leap1.ogg',
+					'sound/flood/flood_idle_combat.leap2.ogg',
+					'sound/flood/flood_idle_combat.leap5.ogg',
+					'sound/flood/flood_idle_combat.leap11.ogg',
+					'sound/flood/flood_idle_combat.leap15.ogg',
+					'sound/flood/flood_idle_combat.melee1.ogg',
+					'sound/flood/flood_idle_combat.melee2.ogg',
+					'sound/flood/flood_idle_combat.melee5.ogg',
+					'sound/flood/flood_idle_combat.melee6.ogg',
+					'sound/flood/flood_idle_combat.melee7.ogg',
+					'sound/flood/flood_idle_combat.melee8.ogg',
+					'sound/flood/flood_idle_combat.melee10.ogg',
+					'sound/flood/flood_idle_combat.melee11.ogg',
+					'sound/flood/flood_idle_combat.melee15.ogg',
+					'sound/flood/flood_idle_combat.melee20.ogg',
+				), 25, TRUE)
+			else
+				playsound(loc, pick(
+					'sound/flood/flood_idle_noncombat.idle1.ogg',
+					'sound/flood/flood_idle_noncombat.idle2.ogg',
+					'sound/flood/flood_idle_noncombat.idle3.ogg',
+					'sound/flood/flood_idle_noncombat.idle4.ogg',
+					'sound/flood/flood_idle_noncombat.idle5.ogg',
+				), 25, TRUE)
 
 /mob/living/basic/flood/combat_form
 	name = "Flood combat form"
@@ -57,7 +77,7 @@
 		. += span_warning("Its biomass has already been reanimated and cannot be raised again.")
 
 /mob/living/basic/flood/proc/convert_human(mob/living/carbon/human/victim, infection_message)
-	if(!victim || QDELETED(victim) || IS_FLOOD(victim))
+	if(!victim || QDELETED(victim) || is_flood_target(victim))
 		return FALSE
 
 	var/turf/conversion_turf = get_turf(victim)
@@ -105,7 +125,7 @@
 		to_chat(src, span_warning("Your biomass is not ready to produce another infection form."))
 		return
 
-	next_evolution = world.time + FLOOD_INFESTOR_COOLDOWN
+	next_evolution = world.time + 30 SECONDS
 	new /mob/living/basic/flood/infestor(loc)
 	visible_message(span_warning("[src]'s flesh tears open and produces a Flood infection form."))
 
@@ -129,7 +149,7 @@
 	if(!chosen_form || stat == DEAD)
 		return
 
-	next_evolution = world.time + FLOOD_EVOLUTION_COOLDOWN
+	next_evolution = world.time + 60 SECONDS
 	var/form_type = evolution_choices[chosen_form]
 	var/mob/living/basic/flood/new_form = new form_type(loc)
 
@@ -273,4 +293,3 @@
 	melee_damage_upper = 55
 	obj_damage = 120
 	mob_size = MOB_SIZE_LARGE
-
