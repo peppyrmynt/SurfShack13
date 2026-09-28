@@ -3,6 +3,8 @@
 /// These are SurfShack-native structures using the visual assets from the
 /// original HaloSpaceStation13 implementation.
 
+GLOBAL_LIST_EMPTY(flood_patrol_targets)
+
 /// A mapper can give a Flood nest its own ambience without changing the
 /// station's usual area sounds or broadcasting from every biomass growth.
 /area/ruin/unpowered/flood_nest
@@ -356,6 +358,23 @@
 	for(var/i in 1 to 8)
 		new /mob/living/basic/flood/infestor(spawn_turf)
 	qdel(src)
+
+/// A mapper can place several of these to give NPC combat and builder forms
+/// a route through a nest. Infestors continue seeking vulnerable hosts.
+/obj/effect/landmark/flood_patrol_target
+	name = "Flood patrol target"
+	icon = 'icons/mob/flood/flood_combat_human.dmi'
+	icon_state = "maptrigger"
+	invisibility = INVISIBILITY_ABSTRACT
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/obj/effect/landmark/flood_patrol_target/Initialize(mapload)
+	. = ..()
+	GLOB.flood_patrol_targets += src
+
+/obj/effect/landmark/flood_patrol_target/Destroy()
+	GLOB.flood_patrol_targets -= src
+	return ..()
 
 /// A map-placed ghost entry point for a human Flood combat form.
 /obj/effect/mob_spawn/ghost_role/flood

@@ -187,6 +187,12 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic,
 		BB_TARGET_MINIMUM_STAT = HARD_CRIT,
 	)
+	planning_subtrees = list(
+		/datum/ai_planning_subtree/simple_find_target,
+		/datum/ai_planning_subtree/attack_obstacle_in_path,
+		/datum/ai_planning_subtree/basic_melee_attack_subtree,
+		/datum/ai_planning_subtree/flood_patrol,
+	)
 
 /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/infestor
 	blackboard = list(
@@ -202,7 +208,30 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		/datum/ai_planning_subtree/flood_use_gun,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree,
+		/datum/ai_planning_subtree/flood_patrol,
 	)
+
+/// Map patrol points are used only while an NPC Flood form has no target.
+/datum/ai_planning_subtree/flood_patrol/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/basic/flood/patroller = controller.pawn
+	if(!istype(patroller) || patroller.client || istype(patroller, /mob/living/basic/flood/infestor) || controller.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET))
+		return
+	var/obj/effect/landmark/flood_patrol_target/destination = controller.blackboard[BB_TRAVEL_DESTINATION]
+	if(QDELETED(destination) || get_dist(patroller, destination) <= 1)
+		var/list/possible_destinations = list()
+		for(var/obj/effect/landmark/flood_patrol_target/point as anything in GLOB.flood_patrol_targets)
+			if(point.z != patroller.z)
+				continue
+			var/distance = get_dist(patroller, point)
+			if(distance > 1 && distance <= 10)
+				possible_destinations += point
+		if(!length(possible_destinations))
+			controller.clear_blackboard_key(BB_TRAVEL_DESTINATION)
+			return
+		destination = pick(possible_destinations)
+		controller.set_blackboard_key(BB_TRAVEL_DESTINATION, destination)
+	controller.queue_behavior(/datum/ai_behavior/travel_towards/stop_on_arrival, BB_TRAVEL_DESTINATION)
+	return SUBTREE_RETURN_FINISH_PLANNING
 
 /datum/ai_planning_subtree/flood_use_gun/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
