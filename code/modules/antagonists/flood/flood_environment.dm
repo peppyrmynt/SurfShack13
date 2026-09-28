@@ -3,6 +3,15 @@
 /// These are SurfShack-native structures using the visual assets from the
 /// original HaloSpaceStation13 implementation.
 
+/// A mapper can give a Flood nest its own ambience without changing the
+/// station's usual area sounds or broadcasting from every biomass growth.
+/area/ruin/unpowered/flood_nest
+	name = "Flood nest"
+	ambientsounds = list('sound/flood/flood_ambience.ogg')
+	ambient_buzz = null
+	min_ambience_cooldown = 70 SECONDS
+	max_ambience_cooldown = 100 SECONDS
+
 /// Map-placed counterpart to the original Flood biomass flooring. Runtime
 /// growth uses the removable structure below to preserve the underlying floor.
 /turf/open/floor/flood_biomass
