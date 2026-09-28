@@ -9,6 +9,8 @@ GLOBAL_LIST_EMPTY(flood_overseer_eyes)
 	var/mob/living/basic/flood/overseer/controller
 	/// A client-side marker seen only by Flood players, including the overseer.
 	var/image/flood_marker
+	/// The last attack or rally order, briefly visible to Flood players.
+	var/image/order_marker
 
 /mob/eye/flood_overseer/Initialize(mapload)
 	. = ..()
@@ -31,8 +33,28 @@ GLOBAL_LIST_EMPTY(flood_overseer_eyes)
 	flood_marker.loc = next_tile
 	return TRUE
 
+/mob/eye/flood_overseer/proc/show_order_marker(atom/target, attacking)
+	clear_order_marker(order_marker)
+	order_marker = image(icon = 'icons/effects/effects.dmi', loc = target, icon_state = "target_tile", layer = ABOVE_ALL_MOB_LAYER)
+	order_marker.plane = ABOVE_GAME_PLANE
+	order_marker.color = attacking ? "#E56159" : "#E0CC49"
+	order_marker.alpha = 220
+	order_marker.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	for(var/mob/living/basic/flood/ally in GLOB.mob_living_list)
+		if(ally.client)
+			ally.client.images += order_marker
+	addtimer(CALLBACK(src, PROC_REF(clear_order_marker), order_marker), 5 SECONDS)
+
+/mob/eye/flood_overseer/proc/clear_order_marker(image/old_marker)
+	if(old_marker != order_marker || !order_marker)
+		return
+	for(var/client/viewer as anything in GLOB.clients)
+		viewer.images -= order_marker
+	QDEL_NULL(order_marker)
+
 /mob/eye/flood_overseer/Destroy()
 	GLOB.flood_overseer_eyes -= src
+	clear_order_marker(order_marker)
 	for(var/client/viewer as anything in GLOB.clients)
 		viewer.images -= flood_marker
 	QDEL_NULL(flood_marker)
@@ -102,4 +124,6 @@ GLOBAL_LIST_EMPTY(flood_overseer_eyes)
 			ally.ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
 			ally.ai_controller.set_blackboard_key("flood_rally_destination", order_location)
 		directed++
+	if(directed)
+		overseer_eye.show_order_marker(target ? target : order_location, !!target)
 	to_chat(src, span_notice("You [target ? "direct" : "rally"] [directed] Flood units [target ? "against [target]" : "toward [order_location]"]."))

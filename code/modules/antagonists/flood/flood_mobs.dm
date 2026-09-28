@@ -62,6 +62,8 @@
 	for(var/mob/eye/flood_overseer/eye as anything in GLOB.flood_overseer_eyes)
 		if(eye.flood_marker)
 			client?.images += eye.flood_marker
+		if(eye.order_marker)
+			client?.images += eye.order_marker
 	for(var/obj/effect/countdown/flood_growth/countdown as anything in GLOB.flood_growth_countdowns)
 		if(countdown.flood_display)
 			client?.images += countdown.flood_display
@@ -70,6 +72,8 @@
 	for(var/mob/eye/flood_overseer/eye as anything in GLOB.flood_overseer_eyes)
 		if(eye.flood_marker)
 			client?.images -= eye.flood_marker
+		if(eye.order_marker)
+			client?.images -= eye.order_marker
 	for(var/obj/effect/countdown/flood_growth/countdown as anything in GLOB.flood_growth_countdowns)
 		if(countdown.flood_display)
 			client?.images -= countdown.flood_display

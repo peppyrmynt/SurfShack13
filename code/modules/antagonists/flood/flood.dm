@@ -7,9 +7,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 /// Time when the hive can appoint a new overseer after its leader dies.
 GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 
-#define FLOOD_AI_POPULATION_CAP 60
-#define FLOOD_SPREAD_TARGET 5
-
 /// Limit new AI spawns across the entire hive; player conversions and form replacements are unaffected.
 /proc/flood_ai_population()
 	var/count = 0
