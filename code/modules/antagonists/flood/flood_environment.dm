@@ -309,6 +309,7 @@
 	var/turf/spawn_turf = get_turf(src)
 	if(!spawn_turf)
 		return
+	playsound(spawn_turf, 'sound/effects/splat.ogg', 50, TRUE)
 	visible_message(span_warning("[src] bursts, releasing Flood infection forms!"))
 	for(var/i in 1 to 4)
 		new /mob/living/basic/flood/infestor(spawn_turf)
@@ -341,6 +342,7 @@
 	if(!isopenturf(spawn_turf) || isspaceturf(spawn_turf))
 		qdel(src)
 		return
+	playsound(spawn_turf, 'sound/effects/grillehit.ogg', 80, TRUE)
 	spawn_turf.visible_message(span_danger("Flood infection forms erupt from the surrounding biomass!"))
 	for(var/i in 1 to 8)
 		new /mob/living/basic/flood/infestor(spawn_turf)

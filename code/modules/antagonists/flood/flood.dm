@@ -505,6 +505,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	var/turf/spawn_turf = get_turf(src)
 	if(!spawn_turf)
 		return
+	playsound(spawn_turf, 'sound/effects/splat.ogg', 70, TRUE)
 
 	var/list/spawn_turfs = list(spawn_turf)
 	for(var/turf/open/candidate in range(2, src))
@@ -586,14 +587,37 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 /mob/living/basic/flood/infestor/death(gibbed)
 	if(!gibbed)
-		var/turf/death_turf = get_turf(src)
-		if(death_turf)
-			var/remains = 0
-			for(var/obj/effect/decal/cleanable/flood_infestor/existing in death_turf)
-				remains++
-			if(remains < 8)
-				new /obj/effect/decal/cleanable/flood_infestor(death_turf)
+		drop_infestor_remains(swarm_size)
 	return ..()
+
+/mob/living/basic/flood/infestor/proc/drop_infestor_remains(amount)
+	var/turf/death_turf = get_turf(src)
+	if(!death_turf)
+		return
+	var/remains = 0
+	for(var/obj/effect/decal/cleanable/flood_infestor/existing in death_turf)
+		remains++
+	if(remains >= 8)
+		return
+	for(var/i in 1 to min(amount, 8 - remains))
+		new /obj/effect/decal/cleanable/flood_infestor(death_turf)
+
+/mob/living/basic/flood/infestor/adjust_health(amount, updating_health = TRUE, forced = FALSE)
+	. = ..()
+	if(amount <= 0 || !updating_health || stat == DEAD || swarm_size <= 1)
+		return
+	var/remaining_forms = max(1, CEILING(health / initial(maxHealth), 1))
+	if(remaining_forms >= swarm_size)
+		return
+	var/lost_forms = swarm_size - remaining_forms
+	swarm_size = remaining_forms
+	var/current_health = health
+	maxHealth -= lost_forms * initial(maxHealth)
+	bruteloss = max(0, maxHealth - current_health)
+	updatehealth()
+	melee_damage_upper = initial(melee_damage_upper) + swarm_size - 1
+	drop_infestor_remains(lost_forms)
+	update_appearance(UPDATE_OVERLAYS)
 
 /mob/living/basic/flood/infestor/Destroy()
 	if(latched_host)
@@ -623,8 +647,10 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		if(other == src || other.stat == DEAD || other.client || other.mind || other.latched_host || swarm_size + other.swarm_size > max_swarm_size)
 			continue
 		var/added_forms = other.swarm_size
+		var/combined_health = health + other.health
 		maxHealth += other.maxHealth
-		health += other.health
+		bruteloss = max(0, maxHealth - combined_health)
+		updatehealth()
 		melee_damage_upper += added_forms
 		swarm_size += added_forms
 		name = "Flood infection form swarm"
@@ -710,7 +736,6 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 
 /mob/living/basic/flood/carrier/death(gibbed)
 	if(!has_released_infection_forms)
-		playsound(loc, 'sound/effects/explosion/explosion1.ogg', 50, TRUE)
 		release_swarm()
 	return ..()
 
