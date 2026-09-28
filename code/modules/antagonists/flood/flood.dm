@@ -7,6 +7,29 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 /// Time when the hive can appoint a new overseer after its leader dies.
 GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 
+#define FLOOD_AI_POPULATION_CAP 60
+#define FLOOD_SPREAD_TARGET 5
+
+/// Limit new AI spawns across the entire hive; player conversions and form replacements are unaffected.
+/proc/flood_ai_population()
+	var/count = 0
+	for(var/mob/living/basic/flood/unit in GLOB.mob_living_list)
+		if(!QDELETED(unit) && unit.stat != DEAD && !unit.client)
+			count++
+	return count
+
+/proc/flood_living_population()
+	var/count = 0
+	for(var/mob/living/basic/flood/unit in GLOB.mob_living_list)
+		if(!QDELETED(unit) && unit.stat != DEAD)
+			count++
+	return count
+
+/proc/flood_try_spawn_ai(form_type, turf/spawn_turf)
+	if(!ispath(form_type, /mob/living/basic/flood) || !spawn_turf || flood_ai_population() >= FLOOD_AI_POPULATION_CAP)
+		return null
+	return new form_type(spawn_turf)
+
 /proc/flood_has_living_overseer()
 	for(var/mob/living/basic/flood/overseer/leader in GLOB.mob_living_list)
 		if(!QDELETED(leader) && leader.stat != DEAD)
@@ -83,7 +106,17 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 /datum/antagonist/flood/ui_data(mob/user)
 	var/list/data = list()
 	var/mob/living/basic/flood/current_form = owner?.current
-	data["can_change_objective"] = can_assign_self_objectives && istype(current_form, /mob/living/basic/flood/overseer) && user == current_form && current_form.stat != DEAD
+	var/is_overseer = istype(current_form, /mob/living/basic/flood/overseer) && user == current_form && current_form.stat != DEAD
+	data["can_change_objective"] = can_assign_self_objectives && is_overseer
+	if(is_overseer)
+		data["hive_status"] = list(
+			"growths" = length(GLOB.flood_mob_growths),
+			"living_units" = flood_living_population(),
+			"ai_units" = flood_ai_population(),
+			"ai_cap" = FLOOD_AI_POPULATION_CAP,
+			"infections" = GLOB.flood_infections,
+			"infection_target" = FLOOD_SPREAD_TARGET,
+		)
 	if(istype(current_form, /mob/living/basic/flood/overseer))
 		data["current_form"] = "Overseer"
 	else if(istype(current_form, /mob/living/basic/flood/constructor))
@@ -127,7 +160,7 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 	explanation_text = "Spread the Flood by creating infected hosts."
 
 /datum/objective/flood_spread/check_completion()
-	return GLOB.flood_infections >= 5
+	return GLOB.flood_infections >= FLOOD_SPREAD_TARGET
 
 /datum/antagonist/flood/roundend_report()
 	if(!owner?.current)

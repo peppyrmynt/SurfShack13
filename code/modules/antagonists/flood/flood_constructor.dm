@@ -109,8 +109,13 @@
 	var/turf/spawn_turf = get_turf(src)
 	if(!spawn_turf)
 		return FALSE
+	if(!flood_try_spawn_ai(/mob/living/basic/flood/infestor, spawn_turf))
+		if(client)
+			to_chat(src, span_warning("The hive cannot support more AI Flood right now."))
+		else
+			next_infestor = world.time + 10 SECONDS
+		return FALSE
 	next_infestor = world.time + 45 SECONDS
-	new /mob/living/basic/flood/infestor(spawn_turf)
 	visible_message(span_warning("[src] produces a Flood Infector."))
 	for(var/datum/action/cooldown/flood/produce_infestor/infestor_action in actions)
 		infestor_action.StartCooldownSelf()
@@ -294,13 +299,17 @@
 
 /mob/living/basic/flood/overseer/proc/create_constructor()
 	if(stat == DEAD)
-		return
+		return FALSE
 	if(world.time < next_constructor)
 		to_chat(src, span_warning("Your biomass is not ready to form another constructor."))
-		return
+		return FALSE
+	if(!flood_try_spawn_ai(/mob/living/basic/flood/constructor, get_turf(src)))
+		if(client)
+			to_chat(src, span_warning("The hive cannot support more AI Flood right now."))
+		return FALSE
 	next_constructor = world.time + 30 SECONDS
-	new /mob/living/basic/flood/constructor(loc)
 	visible_message(span_warning("[src] buds off a new Flood Constructor."))
+	return TRUE
 
 /mob/living/basic/flood/overseer/proc/create_carrier()
 	if(stat == DEAD || world.time < next_carrier)
@@ -308,8 +317,11 @@
 	var/turf/spawn_turf = get_turf(src)
 	if(!spawn_turf)
 		return FALSE
+	if(!flood_try_spawn_ai(/mob/living/basic/flood/carrier, spawn_turf))
+		if(client)
+			to_chat(src, span_warning("The hive cannot support more AI Flood right now."))
+		return FALSE
 	next_carrier = world.time + 120 SECONDS
-	new /mob/living/basic/flood/carrier(spawn_turf)
 	visible_message(span_warning("[src] buds off a Flood Carrier."))
 	return TRUE
 

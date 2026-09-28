@@ -1,6 +1,7 @@
 /// A mapper can give a Flood nest its own ambience without changing the
 /// station's usual area sounds or broadcasting from every biomass growth.
 GLOBAL_LIST_EMPTY(flood_growth_countdowns)
+GLOBAL_LIST_EMPTY(flood_mob_growths)
 
 /obj/effect/countdown/flood_growth
 	name = "Flood growth countdown"
@@ -87,6 +88,8 @@ GLOBAL_LIST_EMPTY(flood_growth_countdowns)
 	var/max_nearby_growth = 12
 	var/next_spread = 0
 	var/spread_delay = 30 SECONDS
+	/// A ready growth shudders for three seconds before releasing a unit.
+	var/spawn_warning_sent = FALSE
 	/// Map-placed nests start with a small wave, as in the source spawner.
 	var/initial_spawn_count = 2
 	var/list/spawn_pool = list(
@@ -99,6 +102,7 @@ GLOBAL_LIST_EMPTY(flood_growth_countdowns)
 
 /obj/structure/flood_biomass/Initialize(mapload)
 	. = ..()
+	GLOB.flood_mob_growths += src
 	icon_state = "spore[rand(1, 8)]"
 	next_spawn = world.time + spawn_delay
 	next_spread = world.time + spread_delay
@@ -111,6 +115,7 @@ GLOBAL_LIST_EMPTY(flood_growth_countdowns)
 
 /obj/structure/flood_biomass/Destroy()
 	STOP_PROCESSING(SSobj, src)
+	GLOB.flood_mob_growths -= src
 	QDEL_NULL(countdown)
 	for(var/mob/living/basic/flood/offspring as anything in spawned_flood)
 		UnregisterSignal(offspring, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING))
@@ -122,18 +127,34 @@ GLOBAL_LIST_EMPTY(flood_growth_countdowns)
 		next_spread = world.time + spread_delay
 		spread_growth()
 
+	if(!spawn_warning_sent && invisibility < INVISIBILITY_ABSTRACT && world.time >= next_spawn - 3 SECONDS && can_spawn_flood())
+		spawn_warning_sent = TRUE
+		next_spawn = max(next_spawn, world.time + 3 SECONDS)
+		show_spawn_warning()
 	if(world.time < next_spawn)
 		return
+	spawn_warning_sent = FALSE
 	next_spawn = world.time + spawn_delay
 	spawn_flood()
 
-/obj/structure/flood_biomass/proc/spawn_initial_wave()
+/obj/structure/flood_biomass/proc/show_spawn_warning()
+	visible_message(span_warning("[src] swells and shudders, about to release something!"))
+	animate(src, pixel_x = 2, time = 0.2 SECONDS, flags = ANIMATION_PARALLEL | ANIMATION_RELATIVE)
+	animate(pixel_x = -4, time = 0.2 SECONDS, flags = ANIMATION_RELATIVE)
+	animate(pixel_x = 4, time = 0.2 SECONDS, flags = ANIMATION_RELATIVE)
+	animate(pixel_x = -2, time = 0.2 SECONDS, flags = ANIMATION_RELATIVE)
+
+/obj/structure/flood_biomass/proc/spawn_initial_wave(warned = FALSE)
+	if(!warned && invisibility < INVISIBILITY_ABSTRACT && can_spawn_flood())
+		show_spawn_warning()
+		addtimer(CALLBACK(src, PROC_REF(spawn_initial_wave), TRUE), 3 SECONDS)
+		return
 	for(var/i in 1 to initial_spawn_count)
 		if(!spawn_flood())
 			return
 
-/obj/structure/flood_biomass/proc/spawn_flood()
-	if(length(spawned_flood) >= max_nearby_flood)
+/obj/structure/flood_biomass/proc/can_spawn_flood()
+	if(length(spawned_flood) >= max_nearby_flood || flood_ai_population() >= FLOOD_AI_POPULATION_CAP)
 		return FALSE
 
 	var/nearby_flood = 0
@@ -146,9 +167,16 @@ GLOBAL_LIST_EMPTY(flood_growth_countdowns)
 	var/turf/spawn_turf = get_turf(src)
 	if(!isopenturf(spawn_turf) || isspaceturf(spawn_turf))
 		return FALSE
+	return TRUE
 
+/obj/structure/flood_biomass/proc/spawn_flood()
+	if(!can_spawn_flood())
+		return FALSE
+	var/turf/spawn_turf = get_turf(src)
 	var/spawn_type = pick_weight(spawn_pool)
-	var/mob/living/basic/flood/new_flood = new spawn_type(spawn_turf)
+	var/mob/living/basic/flood/new_flood = flood_try_spawn_ai(spawn_type, spawn_turf)
+	if(!new_flood)
+		return FALSE
 	spawned_flood += new_flood
 	RegisterSignals(new_flood, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING), PROC_REF(on_spawned_flood_lost))
 	if(invisibility < INVISIBILITY_ABSTRACT)
@@ -162,6 +190,7 @@ GLOBAL_LIST_EMPTY(flood_growth_countdowns)
 	spawned_flood -= offspring
 	UnregisterSignal(offspring, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING))
 	next_spawn = world.time + spawn_delay
+	spawn_warning_sent = FALSE
 
 /obj/structure/flood_biomass/proc/spread_growth()
 	var/nearby_growth = 0
@@ -261,8 +290,14 @@ GLOBAL_LIST_EMPTY(flood_growth_countdowns)
 	var/turf/spawn_turf = get_turf(src)
 	if(!spawn_turf)
 		return
+	if(flood_ai_population() >= FLOOD_AI_POPULATION_CAP)
+		triggered = FALSE
+		return
 	playsound(spawn_turf, 'sound/effects/splat.ogg', 50, TRUE)
-	visible_message(span_warning("[src] bursts, releasing Flood Infectors!"))
+	var/released = 0
 	for(var/i in 1 to 4)
-		new /mob/living/basic/flood/infestor(spawn_turf)
+		if(!flood_try_spawn_ai(/mob/living/basic/flood/infestor, spawn_turf))
+			break
+		released++
+	visible_message(span_warning("[src] bursts, releasing [released] Flood Infectors!"))
 	qdel(src)

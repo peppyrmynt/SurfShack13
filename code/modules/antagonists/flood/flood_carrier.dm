@@ -58,9 +58,12 @@
 		if(!blocked)
 			spawn_turfs += candidate
 
+	var/released = 0
 	for(var/i in 1 to rand(6, 12))
-		new /mob/living/basic/flood/infestor(pick(spawn_turfs))
-	visible_message(span_warning("[src] ruptures, releasing a swarm of Flood Infectors!"))
+		if(!flood_try_spawn_ai(/mob/living/basic/flood/infestor, pick(spawn_turfs)))
+			break
+		released++
+	visible_message(span_warning("[src] ruptures[released ? ", releasing [released] Flood Infectors!" : "!"]"))
 
 /mob/living/basic/flood/carrier/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	if(!attacked_target || !Adjacent(attacked_target))

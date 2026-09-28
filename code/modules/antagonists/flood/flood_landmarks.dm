@@ -38,7 +38,8 @@ GLOBAL_LIST_EMPTY(flood_assault_targets)
 	playsound(spawn_turf, 'sound/effects/grillehit.ogg', 80, TRUE)
 	spawn_turf.visible_message(span_danger("Flood Infectors erupt from the surrounding biomass!"))
 	for(var/i in 1 to 8)
-		new /mob/living/basic/flood/infestor(spawn_turf)
+		if(!flood_try_spawn_ai(/mob/living/basic/flood/infestor, spawn_turf))
+			break
 	qdel(src)
 
 /// A mapper can place several of these to give NPC combat and builder forms

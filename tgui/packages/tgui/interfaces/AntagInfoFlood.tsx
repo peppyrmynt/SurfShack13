@@ -14,11 +14,20 @@ type Form = 'Combat' | 'Carrier' | 'Constructor' | 'Overseer';
 type GuideTab = 'Overview' | Form;
 type GuideEntry = { label: string; text: string };
 type Guide = { summary: string; entries: GuideEntry[] };
+type HiveStatus = {
+  growths: number;
+  living_units: number;
+  ai_units: number;
+  ai_cap: number;
+  infections: number;
+  infection_target: number;
+};
 
 type Data = {
   current_form?: Form;
   objectives: Objective[];
   can_change_objective: BooleanLike;
+  hive_status?: HiveStatus;
 };
 
 const tabs: GuideTab[] = [
@@ -107,7 +116,11 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Grow Biomass',
-        text: 'Only overseers can create biomass spawners. Grow one on your tile every 60 seconds. Spawners spread growth and produce Flood Carriers 80% of the time or Flood Combat 20% of the time while limiting their nearby population. Flood and ghosts can see the countdown to the next spawn attempt.',
+        text: 'Only overseers can create biomass spawners. Grow one on your tile every 60 seconds. Spawners spread growth and produce Flood Carriers 80% of the time or Flood Combat 20% of the time. Visible growth shudders for three seconds before spawning. Flood and ghosts can see the countdown.',
+      },
+      {
+        label: 'Hive population',
+        text: 'New AI Flood pause at the hive-wide cap of 60. Infected players and units changing form can still join. The status panel tracks growths, living units, AI units, and infected hosts.',
       },
       {
         label: 'Create Flood units',
@@ -135,7 +148,12 @@ const guides: Record<Form, Guide> = {
 
 export const AntagInfoFlood = () => {
   const { data } = useBackend<Data>();
-  const { current_form, objectives = [], can_change_objective } = data;
+  const {
+    current_form,
+    objectives = [],
+    can_change_objective,
+    hive_status,
+  } = data;
   const [tab, setTab] = useState<GuideTab>(current_form || 'Overview');
 
   return (
@@ -206,6 +224,29 @@ export const AntagInfoFlood = () => {
               ) : (
                 <Stack vertical>
                   <Stack.Item>{guides[tab].summary}</Stack.Item>
+                  {tab === 'Overseer' &&
+                    current_form === 'Overseer' &&
+                    hive_status && (
+                      <Stack.Item>
+                        <Section title="Hive Status">
+                          <LabeledList>
+                            <LabeledList.Item label="Mob growths">
+                              {hive_status.growths}
+                            </LabeledList.Item>
+                            <LabeledList.Item label="Living Flood">
+                              {hive_status.living_units}
+                            </LabeledList.Item>
+                            <LabeledList.Item label="AI Flood">
+                              {hive_status.ai_units} / {hive_status.ai_cap}
+                            </LabeledList.Item>
+                            <LabeledList.Item label="Infected hosts">
+                              {hive_status.infections} /{' '}
+                              {hive_status.infection_target}
+                            </LabeledList.Item>
+                          </LabeledList>
+                        </Section>
+                      </Stack.Item>
+                    )}
                   <Stack.Item>
                     <LabeledList>
                       {guides[tab].entries.map((entry) => (
