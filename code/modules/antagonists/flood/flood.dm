@@ -108,6 +108,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	initial_language_holder = /datum/language_holder/flood
 	faction = list("Flood")
 	combat_mode = TRUE
+	see_in_dark = 5
 	habitable_atmos = null
 	unsuitable_atmos_damage = 0
 	minimum_survivable_temperature = 0
@@ -134,16 +135,33 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		'sound/flood/pain.pain1.ogg',
 		'sound/flood/pain.pain2.ogg',
 		'sound/flood/pain.pain5.ogg',
+		'sound/flood/pain.pain3.ogg',
+		'sound/flood/pain.pain6.ogg',
+		'sound/flood/pain.pain15.ogg',
 	)
 	next_idle_sound = world.time + rand(300, 600)
 
 /mob/living/basic/flood/melee_attack(atom/target, list/modifiers, ignore_cooldown)
-	if(!istype(src, /mob/living/basic/flood/infestor))
+	if(istype(src, /mob/living/basic/flood/infestor))
+		attack_sound = pick(
+			'sound/flood/leap.leap1.ogg',
+			'sound/flood/leap.leap2.ogg',
+			'sound/flood/leap.leap5.ogg',
+			'sound/flood/leap.leap11.ogg',
+			'sound/flood/leap.leap15.ogg',
+		)
+	else
 		attack_sound = pick(
 			'sound/flood/melee.melee1.ogg',
 			'sound/flood/melee.melee2.ogg',
 			'sound/flood/melee.melee5.ogg',
 			'sound/flood/melee.melee7.ogg',
+			'sound/flood/melee.melee6.ogg',
+			'sound/flood/melee.melee8.ogg',
+			'sound/flood/melee.melee10.ogg',
+			'sound/flood/melee.melee11.ogg',
+			'sound/flood/melee.melee15.ogg',
+			'sound/flood/melee.melee20.ogg',
 		)
 	return ..()
 
@@ -211,24 +229,34 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 		/datum/ai_planning_subtree/flood_patrol,
 	)
 
-/// Map patrol points are used only while an NPC Flood form has no target.
+/// Map assault and patrol points are used only while an NPC has no target.
 /datum/ai_planning_subtree/flood_patrol/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/basic/flood/patroller = controller.pawn
 	if(!istype(patroller) || patroller.client || istype(patroller, /mob/living/basic/flood/infestor) || controller.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET))
 		return
-	var/obj/effect/landmark/flood_patrol_target/destination = controller.blackboard[BB_TRAVEL_DESTINATION]
+	var/obj/effect/landmark/destination = controller.blackboard[BB_TRAVEL_DESTINATION]
 	if(QDELETED(destination) || get_dist(patroller, destination) <= 1)
 		var/list/possible_destinations = list()
-		for(var/obj/effect/landmark/flood_patrol_target/point as anything in GLOB.flood_patrol_targets)
-			if(point.z != patroller.z)
+		for(var/obj/effect/landmark/assault_target/flood/objective as anything in GLOB.flood_assault_targets)
+			if(objective.z != patroller.z)
 				continue
-			var/distance = get_dist(patroller, point)
-			if(distance > 1 && distance <= 10)
-				possible_destinations += point
-		if(!length(possible_destinations))
+			var/distance = get_dist(patroller, objective)
+			if(distance > 1 && distance <= 20)
+				possible_destinations += objective
+		if(length(possible_destinations))
+			destination = pick(possible_destinations)
+		else
+			for(var/obj/effect/landmark/flood_patrol_target/point as anything in GLOB.flood_patrol_targets)
+				if(point.z != patroller.z)
+					continue
+				var/distance = get_dist(patroller, point)
+				if(distance > 1 && distance <= 10)
+					possible_destinations += point
+			if(length(possible_destinations))
+				destination = pick(possible_destinations)
+		if(QDELETED(destination) || get_dist(patroller, destination) <= 1)
 			controller.clear_blackboard_key(BB_TRAVEL_DESTINATION)
 			return
-		destination = pick(possible_destinations)
 		controller.set_blackboard_key(BB_TRAVEL_DESTINATION, destination)
 	controller.queue_behavior(/datum/ai_behavior/travel_towards/stop_on_arrival, BB_TRAVEL_DESTINATION)
 	return SUBTREE_RETURN_FINISH_PLANNING
@@ -288,6 +316,9 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 				'sound/flood/death.death3.ogg',
 				'sound/flood/death.death4.ogg',
 				'sound/flood/death.death5.ogg',
+				'sound/flood/death.death10.ogg',
+				'sound/flood/death.death15.ogg',
+				'sound/flood/death.death20.ogg',
 			)
 		if(death_sound)
 			playsound(loc, death_sound, 50, TRUE)
@@ -304,6 +335,8 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 				'sound/flood/flood_idle_noncombat.idle1.ogg',
 				'sound/flood/flood_idle_noncombat.idle2.ogg',
 				'sound/flood/flood_idle_noncombat.idle3.ogg',
+				'sound/flood/flood_idle_noncombat.idle4.ogg',
+				'sound/flood/flood_idle_noncombat.idle5.ogg',
 			), 25, TRUE)
 
 /mob/living/basic/flood/combat_form
@@ -458,6 +491,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	melee_damage_upper = 35
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
 	var/next_gun_check = 0
+	var/spawn_gun_chance = 25
 
 /mob/living/basic/flood/combat_form/human/Initialize(mapload)
 	. = ..()
@@ -465,7 +499,7 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	AddComponent(/datum/component/basic_inhands)
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
 	// Source human forms occasionally arrive armed. Use ordinary station guns.
-	if(prob(25))
+	if(prob(spawn_gun_chance))
 		INVOKE_ASYNC(src, PROC_REF(equip_spawn_gun))
 
 /mob/living/basic/flood/combat_form/human/proc/equip_spawn_gun()
@@ -510,6 +544,44 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(!istype(held_gun) || !held_gun.can_shoot() || !target || Adjacent(target))
 		return FALSE
 	return held_gun.try_fire_gun(target, src, null)
+
+/mob/living/basic/flood/combat_form/human/death(gibbed)
+	// Let survivors recover station weapons from fallen combat forms.
+	drop_all_held_items()
+	return ..()
+
+/// Human-only forms from the source's prisoner infestation. These can be
+/// placed in maps without introducing its nonhuman or specialist variants.
+/mob/living/basic/flood/combat_form/human/prisoner
+	name = "infected prisoner"
+	desc = "An infected human with the remains of an orange jumpsuit."
+	icon_state = "prisoner_infected2"
+	icon_living = "prisoner_infected2"
+	icon_dead = "prisoner_infected2_dead"
+	maxHealth = 50
+	health = 50
+	melee_damage_lower = 15
+	melee_damage_upper = 25
+	spawn_gun_chance = 0
+
+/mob/living/basic/flood/combat_form/human/prisoner/mutated
+	name = "mutated infected prisoner"
+	desc = "A mutated human form with shreds of an orange jumpsuit."
+	icon_state = "prisoner_infected1"
+	icon_living = "prisoner_infected1"
+	icon_dead = "prisoner_infected1_dead"
+	maxHealth = 85
+	health = 85
+	melee_damage_lower = 20
+	melee_damage_upper = 30
+
+/mob/living/basic/flood/combat_form/human/crew
+	name = "Flood infected crew member"
+	desc = "An infected human stripped of most of its clothing."
+	icon_state = "nudist"
+	icon_living = "nudist"
+	icon_dead = "nudist_dead"
+	spawn_gun_chance = 0
 
 /mob/living/basic/flood/combat_form/juggernaut
 	name = "Flood Juggernaut"

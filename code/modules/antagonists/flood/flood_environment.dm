@@ -4,6 +4,7 @@
 /// original HaloSpaceStation13 implementation.
 
 GLOBAL_LIST_EMPTY(flood_patrol_targets)
+GLOBAL_LIST_EMPTY(flood_assault_targets)
 
 /// A mapper can give a Flood nest its own ambience without changing the
 /// station's usual area sounds or broadcasting from every biomass growth.
@@ -252,6 +253,14 @@ GLOBAL_LIST_EMPTY(flood_patrol_targets)
 	initial_spawn_count = 1
 	spawn_pool = list(/mob/living/basic/flood/combat_form/human)
 
+/// A mapper-placed prison outbreak uses the source's human prisoner and crew
+/// forms without changing the forms grown by constructors elsewhere.
+/obj/structure/flood_biomass/tiny/prison
+	spawn_pool = list(
+		/mob/living/basic/flood/combat_form/human/prisoner,
+		/mob/living/basic/flood/combat_form/human/crew,
+	)
+
 /// Invisible map spawner adapted from the original Flood spawn landmark.
 /obj/structure/flood_biomass/hidden
 	name = "hidden Flood spawn marker"
@@ -384,6 +393,23 @@ GLOBAL_LIST_EMPTY(flood_patrol_targets)
 
 /obj/effect/landmark/flood_patrol_target/Destroy()
 	GLOB.flood_patrol_targets -= src
+	return ..()
+
+/// An optional map objective for idle NPC Flood. These take priority over
+/// patrol points, but a living target always takes priority over the route.
+/obj/effect/landmark/assault_target/flood
+	name = "Flood assault target"
+	icon = 'icons/mob/flood/flood_combat_human.dmi'
+	icon_state = "spawntrigger"
+	invisibility = INVISIBILITY_ABSTRACT
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/obj/effect/landmark/assault_target/flood/Initialize(mapload)
+	. = ..()
+	GLOB.flood_assault_targets += src
+
+/obj/effect/landmark/assault_target/flood/Destroy()
+	GLOB.flood_assault_targets -= src
 	return ..()
 
 /// A map-placed ghost entry point for a human Flood combat form.
