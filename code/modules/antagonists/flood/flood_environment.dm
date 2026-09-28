@@ -54,6 +54,10 @@
 	var/max_nearby_growth = 12
 	var/next_spread = 0
 	var/spread_delay = 30 SECONDS
+	var/list/spawn_pool = list(
+		/mob/living/basic/flood/carrier,
+		/mob/living/basic/flood/combat_form/human,
+	)
 	/// Tracks this biomass's living offspring even after they leave the area.
 	var/list/spawned_flood = list()
 
@@ -93,11 +97,7 @@
 	if(!isopenturf(spawn_turf) || isspaceturf(spawn_turf))
 		return
 
-	var/spawn_type = pick(
-		/mob/living/basic/flood/infestor,
-		/mob/living/basic/flood/combat_form/human,
-		/mob/living/basic/flood/carrier,
-	)
+	var/spawn_type = pick(spawn_pool)
 	var/mob/living/basic/flood/new_flood = new spawn_type(spawn_turf)
 	spawned_flood += new_flood
 	RegisterSignals(new_flood, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING), PROC_REF(on_spawned_flood_lost))
@@ -198,6 +198,7 @@
 	max_integrity = 250
 	spawn_delay = 90 SECONDS
 	max_nearby_flood = 3
+	spawn_pool = list(/mob/living/basic/flood/combat_form/human)
 
 /// Invisible map spawner adapted from the original Flood spawn landmark.
 /obj/structure/flood_biomass/hidden
@@ -389,6 +390,11 @@
 	else
 		return ..()
 
+/obj/structure/flood_door/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+	if(damage_type == BURN)
+		damage_amount *= 2
+	return ..(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
+
 /obj/structure/flood_door/attack_hand(mob/user, list/modifiers)
 	. = ..()
 	if(.)
@@ -459,6 +465,11 @@
 		playsound(src, 'sound/flood/flood_hit_sfx.ogg', 50, TRUE)
 	else
 		return ..()
+
+/obj/structure/flood_window/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+	if(damage_type == BURN)
+		damage_amount *= 2
+	return ..(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
 
 /mob/living/basic/flood/constructor
 	name = "Flood constructor form"
