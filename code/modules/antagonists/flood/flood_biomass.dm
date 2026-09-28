@@ -37,6 +37,8 @@
 	icon_state = "spore1"
 	anchored = TRUE
 	density = FALSE
+	layer = MID_TURF_LAYER
+	plane = FLOOR_PLANE
 	max_integrity = 400
 	resistance_flags = ACID_PROOF
 	var/next_spawn = 0
