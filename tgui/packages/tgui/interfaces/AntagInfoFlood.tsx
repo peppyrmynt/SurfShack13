@@ -43,7 +43,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Infected hosts',
-        text: 'A converted human keeps their original name and becomes an empty-handed combat form. Infected lizards use the Sangheili Flood appearance with the same combat abilities. Infected monkeys and other animals become carrier forms. Their gear drops on the floor, and a player-controlled converted form has extra health.',
+        text: 'A converted human, including a lizard, keeps their original name and becomes an empty-handed combat form. Infected monkeys and other animals become carrier forms. Their gear drops on the floor, and a player-controlled converted form has extra health.',
       },
       {
         label: 'Attacks',
@@ -77,7 +77,7 @@ const guides: Record<Form, Guide> = {
     entries: [
       {
         label: 'Infest Floor',
-        text: 'Cover the floor you stand on with Flood growth. It does not replace ordinary station walls or airlocks. Flood forms slowly heal while standing on this floor.',
+        text: 'Cover the floor you stand on with Flood growth every five seconds. It does not replace ordinary station walls or airlocks. Flood forms slowly heal while standing on this floor.',
       },
       {
         label: 'Grow Biomass',
@@ -85,7 +85,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Structures',
-        text: 'Build a solid wall, a door, or a translucent membrane on your tile. Wall growth has a 15-second cooldown; successful construction also has a shared two-second recovery.',
+        text: 'Build a solid wall, a door, or a translucent membrane on your tile. Each structure has a 15-second cooldown; successful construction also has a shared two-second recovery.',
       },
       {
         label: 'Produce Infection Form',

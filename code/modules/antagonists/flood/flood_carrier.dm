@@ -44,7 +44,7 @@
 		return
 	new /obj/effect/temp_visual/flood_carrier_burst(spawn_turf)
 	playsound(spawn_turf, 'sound/effects/splat.ogg', 70, TRUE)
-	do_chem_smoke(range = 0, holder = src, location = spawn_turf, reagent_type = /datum/reagent/blob/reactive_spines)
+	do_chem_smoke(range = 0, holder = src, location = spawn_turf, reagent_type = /datum/reagent/blob/reactive_spines, reagent_volume = 3)
 
 	var/list/spawn_turfs = list(spawn_turf)
 	for(var/turf/open/candidate in range(2, src))

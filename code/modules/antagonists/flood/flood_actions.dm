@@ -80,7 +80,7 @@
 	desc = "Cover the floor under you with Flood biomass."
 	button_icon = 'icons/turf/floors/flood_floor.dmi'
 	button_icon_state = "floor"
-	cooldown_time = 2 SECONDS
+	cooldown_time = 5 SECONDS
 
 /datum/action/cooldown/flood/infest_floor/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner
@@ -102,7 +102,7 @@
 	desc = "Build a Flood door on your tile."
 	button_icon = 'icons/obj/flood/flood_door.dmi'
 	button_icon_state = "flood"
-	cooldown_time = 2 SECONDS
+	cooldown_time = 15 SECONDS
 
 /datum/action/cooldown/flood/grow_door/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner
@@ -113,7 +113,7 @@
 	desc = "Build a translucent Flood membrane on your tile."
 	button_icon = 'icons/obj/flood/flood_window.dmi'
 	button_icon_state = "flood_window"
-	cooldown_time = 2 SECONDS
+	cooldown_time = 15 SECONDS
 
 /datum/action/cooldown/flood/grow_membrane/Activate(atom/target)
 	var/mob/living/basic/flood/constructor/constructor = owner

@@ -145,6 +145,8 @@
 	if(!grow_flood_floor(target_turf))
 		return FALSE
 	visible_message(span_warning("Pulsating Flood tissue creeps across the floor."))
+	for(var/datum/action/cooldown/flood/infest_floor/floor_action in actions)
+		floor_action.StartCooldownSelf()
 	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_barrier()
@@ -167,6 +169,8 @@
 		return FALSE
 	new /obj/structure/flood_door(target_turf)
 	visible_message(span_warning("Flood tissue swells into a thick membrane."))
+	for(var/datum/action/cooldown/flood/grow_door/door_action in actions)
+		door_action.StartCooldownSelf()
 	return TRUE
 
 /mob/living/basic/flood/constructor/proc/grow_membrane()
@@ -175,6 +179,8 @@
 		return FALSE
 	new /obj/structure/flood_window(target_turf)
 	visible_message(span_warning("A translucent Flood membrane hardens into place."))
+	for(var/datum/action/cooldown/flood/grow_membrane/membrane_action in actions)
+		membrane_action.StartCooldownSelf()
 	return TRUE
 
 /mob/living/basic/flood/constructor/proc/become_overseer()

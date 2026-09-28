@@ -136,13 +136,6 @@
 	update_held_items()
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
 
-/// A lizard host uses the Sangheili appearance, with the same combat rules as any other converted host.
-/mob/living/basic/flood/combat_form/human/sangheili
-	icon = 'icons/mob/flood/sangheili_flood_uf.dmi'
-	icon_state = "Minor 1"
-	icon_living = "Minor 1"
-	icon_dead = "Minor 1 Dead"
-
 /// An armed variant for admin spawning only; no outbreak or biomass spawn pool uses it.
 /mob/living/basic/flood/combat_form/human/armed
 	name = "Armed Flood combat form"
