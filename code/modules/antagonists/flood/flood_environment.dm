@@ -54,7 +54,7 @@
 				return
 
 	var/turf/spawn_turf = get_turf(src)
-	if(!spawn_turf)
+	if(!isopenturf(spawn_turf) || isspaceturf(spawn_turf))
 		return
 
 	var/spawn_type = pick(
@@ -65,7 +65,8 @@
 	var/mob/living/basic/flood/new_flood = new spawn_type(spawn_turf)
 	spawned_flood += new_flood
 	RegisterSignals(new_flood, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING), PROC_REF(on_spawned_flood_lost))
-	visible_message(span_warning("[src] writhes and produces [new_flood]."))
+	if(invisibility < INVISIBILITY_ABSTRACT)
+		visible_message(span_warning("[src] writhes and produces [new_flood]."))
 
 /obj/structure/flood_biomass/proc/on_spawned_flood_lost(mob/living/basic/flood/offspring)
 	SIGNAL_HANDLER
@@ -161,6 +162,29 @@
 	max_integrity = 250
 	spawn_delay = 90 SECONDS
 	max_nearby_flood = 3
+
+/// Invisible map spawner adapted from the original Flood spawn landmark.
+/obj/structure/flood_biomass/hidden
+	name = "hidden Flood spawn marker"
+	invisibility = INVISIBILITY_ABSTRACT
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	resistance_flags = INDESTRUCTIBLE
+	max_nearby_flood = 10
+	var/disable_when_explored = FALSE
+
+/obj/structure/flood_biomass/hidden/process()
+	if(disable_when_explored)
+		for(var/mob/living/carbon/human/explorer in range(6, src))
+			if(explorer.stat != DEAD && !explorer.mind?.has_antag_datum(/datum/antagonist/flood))
+				qdel(src)
+				return
+	return ..()
+
+/obj/structure/flood_biomass/hidden/spread_growth()
+	return
+
+/obj/structure/flood_biomass/hidden/explorable
+	disable_when_explored = TRUE
 
 /obj/structure/flood_growth
 	name = "Flood growth"
