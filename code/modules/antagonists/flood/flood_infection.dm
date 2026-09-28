@@ -196,7 +196,7 @@
 		visible_message(span_danger(infection_message))
 	new /obj/effect/decal/cleanable/blood/splatter(conversion_turf)
 	if(prob(50))
-		playsound(conversion_turf, 'sound/flood/flood_join_chorus.ogg', 70, TRUE)
+		playsound(conversion_turf, 'sound/flood/flood_idle_noncombat.idle1.ogg', 70, TRUE)
 	qdel(victim)
 	return TRUE
 
