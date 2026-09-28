@@ -48,3 +48,11 @@ export const tgui_say_light_mode: FeatureToggle = {
   description: 'Sets TGUI Say to use a light mode.',
   component: CheckboxInput,
 };
+
+export const compact_emote_wheel: FeatureToggle = {
+  name: 'Compact emote wheel',
+  category: 'UI',
+  description:
+    'Use a smaller emote wheel with a Next Page button. Turn off to show all current emotes at once. Applies the next time you open the wheel.',
+  component: CheckboxInput,
+};

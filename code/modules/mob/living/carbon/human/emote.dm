@@ -247,3 +247,162 @@
 	key_third_person = "signs"
 	message_param = "signs the number %t."
 	hands_use_check = TRUE
+
+/// 7TV-inspired image emotes ported from tgstation commit d72fcf2177c44000b350ab4a519b3b937513ff8c.
+/datum/emote/living/seventv
+	/// Asset and display time can be overridden by emotes with their own animation.
+	var/emote_icon = 'icons/mob/human/aprilfools_emotes.dmi'
+	var/emote_icon_state
+	var/emote_duration = 3 SECONDS
+	/// Composited once per emote; retains every animation frame and its timing.
+	var/icon/bubble_artwork
+	cooldown = 60 SECONDS
+	emote_type = EMOTE_VISIBLE
+
+/datum/emote/living/seventv/can_run_emote(mob/user, status_check = TRUE, intentional, params)
+	if(!user.client && !user.mind)
+		return FALSE
+	return ..()
+
+/datum/emote/living/seventv/run_emote(mob/living/user, params, type_override, intentional)
+	. = ..()
+	if(!emote_icon || !emote_icon_state)
+		return
+
+	// Like laugh_k, use one complete animated icon so the frame cannot cover the art.
+	// Keep its top at pixel 28, below the overhead runechat text.
+	var/image/bubble = image(get_emote_bubble_icon(), loc = user, pixel_x = 24, pixel_y = -8)
+	bubble.plane = ABOVE_HUD_PLANE
+	bubble.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	bubble.alpha = 255
+
+	var/list/recipients = list()
+	for(var/mob/viewer in viewers(world.view, user))
+		if(viewer.client && !viewer.is_blind())
+			recipients |= viewer.client
+	bubble.transform = matrix() * 0
+	for(var/client/recipient as anything in recipients)
+		recipient.images += bubble
+	animate(bubble, transform = matrix(), time = 0.15 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(fade_bubble), bubble, recipients), emote_duration)
+
+/// Compose all DMI frames over the background instead of relying on overlay plane ordering.
+/datum/emote/living/seventv/proc/get_emote_bubble_icon()
+	if(!bubble_artwork)
+		bubble_artwork = icon(emote_icon, emote_icon_state)
+		var/artwork_scale = min(32 / bubble_artwork.Width(), 32 / bubble_artwork.Height())
+		var/artwork_width = max(1, round(bubble_artwork.Width() * artwork_scale))
+		var/artwork_height = max(1, round(bubble_artwork.Height() * artwork_scale))
+		bubble_artwork.Scale(artwork_width, artwork_height)
+		var/offset_x = 18 + round((32 - artwork_width) / 2)
+		var/offset_y = 2 + round((32 - artwork_height) / 2)
+		bubble_artwork.Crop(1 - offset_x, 1 - offset_y, 56 - offset_x, 36 - offset_y)
+		bubble_artwork.Blend(get_bubble_icon(), ICON_UNDERLAY)
+	return bubble_artwork
+
+/// Reuse the original king-laugh frame, replacing only its character-filled center.
+/datum/emote/living/seventv/proc/get_bubble_icon()
+	var/static/icon/bubble_icon
+	if(!bubble_icon)
+		bubble_icon = icon('icons/hud/laugh_king.dmi', frame = 1)
+		// Crop off the crown and transparent margins; retain the original pointer and corners.
+		bubble_icon.Crop(30, 13, 135, 79)
+		// This clean column contains the original top border, white fill and bottom border.
+		// Stretch it across the king, preserving the existing sprite's outline and shading.
+		var/icon/empty_center = icon('icons/hud/laugh_king.dmi', frame = 1)
+		empty_center.Crop(121, 13, 121, 79)
+		empty_center.Scale(60, 67)
+		bubble_icon.DrawBox(null, 32, 1, 91, 67)
+		bubble_icon.Blend(empty_center, ICON_OVERLAY, 32, 1)
+		bubble_icon.Scale(56, 36)
+	return bubble_icon
+
+/datum/emote/living/seventv/proc/fade_bubble(image/bubble, list/recipients)
+	if(QDELETED(bubble))
+		return
+	animate(bubble, transform = matrix() * 0, time = 0.15 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(remove_bubble), bubble, recipients), 0.2 SECONDS)
+
+/datum/emote/living/seventv/proc/remove_bubble(image/bubble, list/recipients)
+	remove_image_from_clients(bubble, recipients)
+	qdel(bubble)
+
+/datum/emote/living/seventv/sigma
+	key = "sigma"
+	message = "gives a knowing smirk."
+	emote_icon = 'icons/mob/human/sigma_emote.dmi'
+	emote_icon_state = "sigma"
+	emote_duration = 5 SECONDS
+	sound = 'sound/effects/aprilfools/sigma.ogg'
+	affected_by_pitch = FALSE
+	general_emote_audio_cooldown = 5 SECONDS
+
+/datum/emote/living/seventv/clueless
+	key = "clueless"
+	message = "looks clueless."
+	emote_icon_state = "clueless"
+
+/datum/emote/living/seventv/hmm
+	key = "hmm"
+	message = "squints their eyes."
+	emote_icon_state = "hmm"
+
+/datum/emote/living/seventv/lmao
+	key = "lmao"
+	message = "is laughing their ass off!"
+	emote_icon_state = "troll"
+
+/datum/emote/living/seventv/reallymad
+	key = "reallymad"
+	message = "looks really mad about something!"
+	emote_icon_state = "reallymad"
+	sound = 'sound/effects/aprilfools/angry.ogg'
+
+/datum/emote/living/seventv/zorp
+	key = "zorp"
+	message = "feels their impending doom approaching."
+	emote_icon_state = "zorp"
+	sound = 'sound/effects/aprilfools/bell.ogg'
+
+/datum/emote/living/seventv/uncanny
+	key = "uncanny"
+	message = "looks really uncanny."
+	emote_icon_state = "uncanny"
+	sound = 'sound/effects/aprilfools/bell.ogg'
+
+/datum/emote/living/seventv/xdd
+	key = "xdd"
+	message = "laughs."
+	emote_icon_state = "xdd"
+
+/datum/emote/living/seventv/xdd/get_sound(mob/living/user)
+	return prob(20) ? 'sound/effects/aprilfools/goofylaugh2.ogg' : 'sound/effects/aprilfools/goofylaugh.ogg'
+
+/datum/emote/living/seventv/taa
+	key = "taa"
+	message = "smokes an imaginary cigar."
+	emote_icon_state = "taa"
+	sound = 'sound/effects/aprilfools/rizz.ogg'
+
+/datum/emote/living/seventv/noway
+	key = "noway"
+	message = "looks shocked!"
+	emote_icon_state = "noway"
+	sound = 'sound/effects/aprilfools/rizz.ogg'
+
+/datum/emote/living/seventv/tuh
+	key = "tuh"
+	message = "gasps in shock!"
+	emote_icon_state = "tuh"
+	sound = 'sound/effects/aprilfools/vineboom.ogg'
+
+/datum/emote/living/seventv/jokerge
+	key = "jokerge"
+	message = "grins."
+	emote_icon_state = "jokerge"
+
+/datum/emote/living/seventv/fuckingdies
+	key = "fuckingdies"
+	message = "fucking dies."
+	emote_icon_state = "die"
+	sound = 'sound/effects/aprilfools/rpdeath.ogg'
