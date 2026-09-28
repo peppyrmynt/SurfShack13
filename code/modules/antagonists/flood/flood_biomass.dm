@@ -11,7 +11,7 @@
 /obj/effect/flood_spore
 	name = "Flood spores"
 	desc = "Patches of alien spores cling to the ground."
-	icon = 'icons/mob/flood/flood_bio.dmi'
+	icon = 'icons/obj/flood/flood_bio.dmi'
 	icon_state = "spore1"
 	anchored = TRUE
 	layer = MID_TURF_LAYER
@@ -35,7 +35,7 @@
 /obj/structure/flood_biomass
 	name = "Flood biomass"
 	desc = "A pulsating mass of alien flesh."
-	icon = 'icons/mob/flood/flood_bio.dmi'
+	icon = 'icons/obj/flood/flood_bio.dmi'
 	icon_state = "spore1"
 	anchored = TRUE
 	density = FALSE
@@ -155,7 +155,7 @@
 
 /obj/structure/flood_biomass/tiny
 	name = "Flood growth"
-	icon = 'icons/mob/flood/flood_bio.dmi'
+	icon = 'icons/obj/flood/flood_bio.dmi'
 	icon_state = "pulsating"
 	max_integrity = 250
 	spawn_delay = 90 SECONDS
@@ -198,7 +198,7 @@
 /obj/structure/flood_spore_trap
 	name = "Flood spore cluster"
 	desc = "A tense knot of spores woven into the floor growth."
-	icon = 'icons/mob/flood/flood_bio.dmi'
+	icon = 'icons/obj/flood/flood_bio.dmi'
 	icon_state = "pulsating"
 	anchored = TRUE
 	density = FALSE

@@ -3,7 +3,7 @@
 /turf/open/floor/flood_biomass
 	name = "Flood biomass"
 	desc = "Pulsating biomass writhes beneath your feet."
-	icon = 'icons/mob/flood/flood_floor.dmi'
+	icon = 'icons/turf/floors/flood_floor.dmi'
 	icon_state = "floor"
 	base_icon_state = "floor"
 	resistance_flags = ACID_PROOF
@@ -12,7 +12,7 @@
 /turf/open/floor/flood_biomass/Initialize(mapload)
 	. = ..()
 	if(prob(35))
-		var/image/spore = image(icon = 'icons/mob/flood/flood_bio.dmi', icon_state = "animated[rand(1, 6)]")
+		var/image/spore = image(icon = 'icons/obj/flood/flood_bio.dmi', icon_state = "animated[rand(1, 6)]")
 		spore.pixel_x = rand(-8, 8)
 		spore.pixel_y = rand(-8, 8)
 		add_overlay(spore)

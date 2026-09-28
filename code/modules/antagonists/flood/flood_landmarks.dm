@@ -79,7 +79,7 @@ GLOBAL_LIST_EMPTY(flood_assault_targets)
 /obj/effect/mob_spawn/ghost_role/flood
 	name = "Flood biomass cocoon"
 	desc = "A humanoid shape twists within this pulsating mass."
-	icon = 'icons/mob/flood/flood_bio.dmi'
+	icon = 'icons/obj/flood/flood_bio.dmi'
 	icon_state = "pulsating"
 	density = FALSE
 	mob_type = /mob/living/basic/flood/combat_form/human

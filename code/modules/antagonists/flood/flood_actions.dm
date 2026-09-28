@@ -3,7 +3,7 @@
 	panel = "Flood"
 	background_icon_state = "bg_alien"
 	overlay_icon_state = "bg_alien_border"
-	button_icon = 'icons/mob/flood/flood_bio.dmi'
+	button_icon = 'icons/obj/flood/flood_bio.dmi'
 	button_icon_state = "pulsating"
 	check_flags = NONE
 
@@ -85,7 +85,7 @@
 /datum/action/cooldown/flood/infest_floor
 	name = "Infest Floor"
 	desc = "Cover the floor ahead with Flood biomass."
-	button_icon = 'icons/mob/flood/flood_floor.dmi'
+	button_icon = 'icons/turf/floors/flood_floor.dmi'
 	button_icon_state = "floor"
 
 /datum/action/cooldown/flood/infest_floor/Activate(atom/target)
@@ -96,7 +96,7 @@
 /datum/action/cooldown/flood/grow_barrier
 	name = "Grow Biomass Wall"
 	desc = "Build a solid biomass wall on the floor ahead."
-	button_icon = 'icons/mob/flood/Flood_Spore.dmi'
+	button_icon = 'icons/obj/flood/Flood_Spore.dmi'
 	button_icon_state = "flood wall gif"
 	cooldown_time = 15 SECONDS
 
@@ -112,7 +112,7 @@
 /datum/action/cooldown/flood/grow_door
 	name = "Grow Biomass Door"
 	desc = "Build a Flood door on the floor ahead."
-	button_icon = 'icons/mob/flood/flood_door.dmi'
+	button_icon = 'icons/obj/flood/flood_door.dmi'
 	button_icon_state = "flood"
 
 /datum/action/cooldown/flood/grow_door/Activate(atom/target)
@@ -123,7 +123,7 @@
 /datum/action/cooldown/flood/grow_membrane
 	name = "Grow Biomass Membrane"
 	desc = "Build a translucent Flood membrane on the floor ahead."
-	button_icon = 'icons/mob/flood/flood_window.dmi'
+	button_icon = 'icons/obj/flood/flood_window.dmi'
 	button_icon_state = "flood_window"
 
 /datum/action/cooldown/flood/grow_membrane/Activate(atom/target)

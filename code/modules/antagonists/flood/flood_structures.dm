@@ -2,7 +2,7 @@
 /obj/structure/flood_wall
 	name = "Flood biomass wall"
 	desc = "A solid barrier of hardened, pulsating Flood tissue."
-	icon = 'icons/mob/flood/Flood_Spore.dmi'
+	icon = 'icons/obj/flood/Flood_Spore.dmi'
 	icon_state = "flood wall gif"
 	anchored = TRUE
 	density = TRUE
@@ -27,7 +27,7 @@
 /obj/structure/flood_door
 	name = "Flood biomass door"
 	desc = "A fleshy membrane capable of sealing an infested passage."
-	icon = 'icons/mob/flood/flood_door.dmi'
+	icon = 'icons/obj/flood/flood_door.dmi'
 	icon_state = "flood"
 	anchored = TRUE
 	density = TRUE
@@ -111,7 +111,7 @@
 /obj/structure/flood_window
 	name = "Flood biomass membrane"
 	desc = "A translucent mesh of Flood tissue stretched across the passage."
-	icon = 'icons/mob/flood/flood_window.dmi'
+	icon = 'icons/obj/flood/flood_window.dmi'
 	icon_state = "flood_window"
 	anchored = TRUE
 	density = TRUE
