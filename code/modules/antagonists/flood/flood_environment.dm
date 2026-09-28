@@ -305,8 +305,13 @@ GLOBAL_LIST_EMPTY(flood_patrol_targets)
 	layer = ABOVE_OPEN_TURF_LAYER
 	var/triggered = FALSE
 
-/obj/structure/flood_spore_trap/Crossed(atom/movable/crossed_atom, oldloc)
+/obj/structure/flood_spore_trap/Initialize(mapload)
 	. = ..()
+	var/static/list/loc_connections = list(COMSIG_ATOM_ENTERED = PROC_REF(on_entered))
+	AddElement(/datum/element/connect_loc, loc_connections)
+
+/obj/structure/flood_spore_trap/proc/on_entered(datum/source, atom/movable/crossed_atom)
+	SIGNAL_HANDLER
 	if(triggered || !ishuman(crossed_atom))
 		return
 	var/mob/living/carbon/human/host = crossed_atom
@@ -334,8 +339,13 @@ GLOBAL_LIST_EMPTY(flood_patrol_targets)
 	var/spawn_spot_y = 0
 	var/triggered = FALSE
 
-/obj/effect/landmark/flood_ambush/Crossed(atom/movable/crossed_atom, oldloc)
+/obj/effect/landmark/flood_ambush/Initialize(mapload)
 	. = ..()
+	var/static/list/loc_connections = list(COMSIG_ATOM_ENTERED = PROC_REF(on_entered))
+	AddElement(/datum/element/connect_loc, loc_connections)
+
+/obj/effect/landmark/flood_ambush/proc/on_entered(datum/source, atom/movable/crossed_atom)
+	SIGNAL_HANDLER
 	if(triggered || !ishuman(crossed_atom))
 		return
 	var/mob/living/carbon/human/host = crossed_atom

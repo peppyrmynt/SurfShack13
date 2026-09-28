@@ -476,6 +476,11 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 	if(!. || stat == DEAD || client || world.time < next_gun_check)
 		return
 	next_gun_check = world.time + 2 SECONDS
+	INVOKE_ASYNC(src, PROC_REF(scavenge_station_gun))
+
+/mob/living/basic/flood/combat_form/human/proc/scavenge_station_gun()
+	if(stat == DEAD || client)
+		return
 	var/obj/item/held = get_active_held_item()
 	if(istype(held, /obj/item/gun))
 		var/obj/item/gun/held_gun = held
