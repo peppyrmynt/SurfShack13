@@ -16,6 +16,31 @@
 /turf/open/floor/flood_biomass/broken_states()
 	return list()
 
+/// An actual wall tile for map-placed nests, paired with the biomass floor.
+/// Constructors still use the destructible structure so they cannot replace
+/// an existing station wall with a new turf.
+/turf/closed/wall/flood_biomass
+	name = "biomass covered wall"
+	desc = "A wall covered in pulsating Flood biomass."
+	icon = 'icons/mob/flood/Flood_Spore.dmi'
+	icon_state = "flood wall gif"
+	base_icon_state = "flood wall gif"
+	smoothing_flags = NONE
+	canSmoothWith = null
+	baseturfs = /turf/open/floor/flood_biomass
+	decon_type = /turf/open/floor/flood_biomass
+	slicing_duration = 50
+	girder_type = null
+
+/turf/closed/wall/flood_biomass/break_wall()
+	return null
+
+/turf/closed/wall/flood_biomass/devastate_wall()
+	return
+
+/turf/closed/wall/flood_biomass/deconstruction_hints(mob/user)
+	return span_notice("The biomass can be cut away with a welder.")
+
 /// Source spore props for decorating map-placed Flood terrain.
 /obj/effect/flood_spore
 	name = "Flood spores"
@@ -54,6 +79,8 @@
 	var/max_nearby_growth = 12
 	var/next_spread = 0
 	var/spread_delay = 30 SECONDS
+	/// Map-placed nests start with a small wave, as in the source spawner.
+	var/initial_spawn_count = 2
 	var/list/spawn_pool = list(
 		/mob/living/basic/flood/carrier,
 		/mob/living/basic/flood/combat_form/human,
@@ -67,6 +94,8 @@
 	next_spawn = world.time + spawn_delay
 	next_spread = world.time + spread_delay
 	START_PROCESSING(SSobj, src)
+	if(mapload && initial_spawn_count)
+		addtimer(CALLBACK(src, PROC_REF(spawn_initial_wave)), rand(1, 3) SECONDS)
 
 /obj/structure/flood_biomass/Destroy()
 	STOP_PROCESSING(SSobj, src)
@@ -83,19 +112,27 @@
 	if(world.time < next_spawn)
 		return
 	next_spawn = world.time + spawn_delay
+	spawn_flood()
+
+/obj/structure/flood_biomass/proc/spawn_initial_wave()
+	for(var/i in 1 to initial_spawn_count)
+		if(!spawn_flood())
+			return
+
+/obj/structure/flood_biomass/proc/spawn_flood()
 	if(length(spawned_flood) >= max_nearby_flood)
-		return
+		return FALSE
 
 	var/nearby_flood = 0
 	for(var/mob/living/basic/flood/flood_form in range(7, src))
 		if(flood_form.stat != DEAD)
 			nearby_flood++
 			if(nearby_flood >= max_nearby_flood)
-				return
+				return FALSE
 
 	var/turf/spawn_turf = get_turf(src)
 	if(!isopenturf(spawn_turf) || isspaceturf(spawn_turf))
-		return
+		return FALSE
 
 	var/spawn_type = pick(spawn_pool)
 	var/mob/living/basic/flood/new_flood = new spawn_type(spawn_turf)
@@ -103,6 +140,7 @@
 	RegisterSignals(new_flood, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING), PROC_REF(on_spawned_flood_lost))
 	if(invisibility < INVISIBILITY_ABSTRACT)
 		visible_message(span_warning("[src] writhes and produces [new_flood]."))
+	return TRUE
 
 /obj/structure/flood_biomass/proc/on_spawned_flood_lost(mob/living/basic/flood/offspring)
 	SIGNAL_HANDLER
@@ -172,6 +210,7 @@
 	max_nearby_flood = 10
 	max_nearby_growth = 20
 	spread_delay = 20 SECONDS
+	initial_spawn_count = 3
 
 /obj/structure/flood_biomass/medium/Initialize(mapload)
 	. = ..()
@@ -186,6 +225,7 @@
 	max_nearby_flood = 15
 	max_nearby_growth = 32
 	spread_delay = 10 SECONDS
+	initial_spawn_count = 4
 
 /obj/structure/flood_biomass/large/Initialize(mapload)
 	. = ..()
@@ -198,6 +238,7 @@
 	max_integrity = 250
 	spawn_delay = 90 SECONDS
 	max_nearby_flood = 3
+	initial_spawn_count = 1
 	spawn_pool = list(/mob/living/basic/flood/combat_form/human)
 
 /// Invisible map spawner adapted from the original Flood spawn landmark.
