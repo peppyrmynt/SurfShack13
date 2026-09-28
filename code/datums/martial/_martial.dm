@@ -177,6 +177,20 @@
 	PROTECTED_PROC(TRUE)
 	return MARTIAL_ATTACK_INVALID
 
+/datum/martial_art/proc/apply_hyper_martial_damage(mob/living/attacker, mob/living/defender, damage, damagetype = BRUTE, def_zone = null, blocked = 0, wound_bonus = 0, bare_wound_bonus = 0)
+	if(!defender)
+		return 0
+	if(damagetype != BRUTE || !GLOB.hyper_adrenaline_active)
+		return defender.apply_damage(damage, damagetype, def_zone, blocked, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus)
+	if(iscarbon(defender) && !isbodypart(def_zone))
+		var/mob/living/carbon/carbon_defender = defender
+		def_zone = carbon_defender.get_bodypart(def_zone || carbon_defender.get_random_valid_zone(attacker?.zone_selected || BODY_ZONE_CHEST))
+	if(wound_bonus == CANT_WOUND)
+		wound_bonus = 0
+	wound_bonus = max(wound_bonus, 35)
+	bare_wound_bonus = max(bare_wound_bonus, 55)
+	return defender.apply_damage(damage, damagetype, def_zone, blocked, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus)
+
 /**
  * Checks if the passed mob can use this martial art.
  *

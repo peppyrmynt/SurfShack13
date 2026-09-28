@@ -269,6 +269,17 @@ ADMIN_VERB(check_bomb_impacts, R_DEBUG, "Check Bomb Impact", "See what the effec
 	if(SEND_SIGNAL(epicenter_area, COMSIG_AREA_INTERNAL_EXPLOSION, arguments) & COMSIG_CANCEL_EXPLOSION)
 		return
 
+	if(GLOB.hyper_adrenaline_active)
+		arguments[EXARG_KEY_DEV_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+		arguments[EXARG_KEY_HEAVY_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+		arguments[EXARG_KEY_LIGHT_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+
+		if(!isnull(arguments[EXARG_KEY_FLAME_RANGE]))
+			arguments[EXARG_KEY_FLAME_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+
+		if(!isnull(arguments[EXARG_KEY_FLASH_RANGE]))
+			arguments[EXARG_KEY_FLASH_RANGE] *= HYPER_ADRENALINE_EXPLOSION_MULTIPLIER
+
 	arguments -= EXARG_KEY_ORIGIN
 
 	propagate_blastwave(arglist(list(location) + arguments))
