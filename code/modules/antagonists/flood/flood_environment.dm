@@ -510,8 +510,8 @@ GLOBAL_LIST_EMPTY(flood_assault_targets)
 	air_update_turf(TRUE, TRUE)
 
 /obj/structure/flood_door/CanAllowThrough(atom/movable/mover, border_dir)
-	if(istype(mover, /mob/living/basic/flood))
-		return TRUE
+	if(istype(mover, /mob/living/basic/flood) && !door_opened)
+		open_door()
 	return ..()
 
 /obj/structure/flood_window
