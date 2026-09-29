@@ -6,6 +6,8 @@
 #define ULTRAVIOLENCE_EXECUTION_SLICE_TIME (1.5 SECONDS)
 /// Trait source for holding an execution victim down.
 #define ULTRAVIOLENCE_PIN_TRAIT "ultraviolence_pin"
+/// Chicken mask executions on targets who are still conscious (stunned or knocked down, not in crit) take this many times longer.
+#define ULTRAVIOLENCE_CONSCIOUS_EXECUTION_MULTIPLIER 3
 /// Minimum force for an item to be used for an execution.
 #define ULTRAVIOLENCE_EXECUTION_MIN_FORCE 10
 /// Force a bladed weapon needs to cut someone in half, or a blunt one to cave a chest in.
@@ -273,6 +275,10 @@
 		start_text = list("[attacker] grabs [victim] by the head", "You grab [victim] by the head")
 		blow_text = list("[attacker] slams [victim]'s head into the [surface]", "You slam [victim]'s head into the [surface]")
 
+	// Chicken mask: someone who's only stunned or knocked down, still conscious and not in crit, takes three times as long to finish.
+	if(HAS_TRAIT(attacker, TRAIT_RAMPAGE_EXECUTIONER) && victim.stat == CONSCIOUS)
+		blow_time *= ULTRAVIOLENCE_CONSCIOUS_EXECUTION_MULTIPLIER
+
 	attacker.visible_message(span_danger("[start_text[1]]..."), span_danger("[start_text[2]]..."), ignored_mobs = victim)
 	to_chat(victim, span_userdanger("[attacker] pins you down!"))
 	log_combat(attacker, victim, "started executing (ultraviolence)", weapon)
@@ -342,6 +348,7 @@
 	return TRUE
 
 #undef ULTRAVIOLENCE_PIN_TRAIT
+#undef ULTRAVIOLENCE_CONSCIOUS_EXECUTION_MULTIPLIER
 #undef ULTRAVIOLENCE_EXECUTION_BLOW_TIME
 #undef ULTRAVIOLENCE_EXECUTION_STAB_TIME
 #undef ULTRAVIOLENCE_EXECUTION_SLICE_TIME

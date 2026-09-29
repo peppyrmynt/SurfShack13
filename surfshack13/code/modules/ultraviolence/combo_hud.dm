@@ -4,13 +4,15 @@
 #define COMBO_FLASH_SLOWEST (1.2 SECONDS)
 /// Time for one flash of the counter when the combo is about to run out.
 #define COMBO_FLASH_FASTEST (0.2 SECONDS)
+/// How visible the counter is while there's no combo going.
+#define COMBO_IDLE_ALPHA 90
 
 /**
  * Hotline style combo counter in the top right of the screen, like "12X".
  * Built out of single digit sprites so it can count as high as it needs to.
- * Flashes faster and faster as the combo gets close to running out.
+ * Sits dimmed at "0X" while there's no combo, and flashes faster and faster as an active combo gets close to running out.
  *
- * This holder takes the pop animation on each hit; the glyphs inside it do the flashing,
+ * This holder takes the pop animation on each hit and the brightness; the glyphs inside it do the flashing,
  * so neither animation cancels the other.
  */
 /atom/movable/screen/rampage_combo
@@ -18,9 +20,9 @@
 	screen_loc = "EAST:-6,NORTH:-10"
 	plane = ABOVE_HUD_PLANE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	alpha = 0
-	/// The number currently shown.
-	var/shown_combo = 0
+	alpha = COMBO_IDLE_ALPHA
+	/// The number currently shown. Starts invalid so the first set_combo() always draws.
+	var/shown_combo = -1
 	/// Current flash cycle length, so we only restart the flash loop when it changes.
 	var/flash_period = 0
 	/// The digits themselves.
@@ -30,22 +32,20 @@
 	. = ..()
 	glyphs = new(null, hud_owner)
 	vis_contents += glyphs
+	set_combo(0)
 
 /atom/movable/screen/rampage_combo/Destroy()
 	vis_contents -= glyphs
 	QDEL_NULL(glyphs)
 	return ..()
 
-/// Shows the given combo, popping the counter up. Zero hides it.
+/// Shows the given combo. Going up pops the counter, zero dims it back to idle.
 /atom/movable/screen/rampage_combo/proc/set_combo(combo)
+	combo = max(combo, 0)
 	if(combo == shown_combo)
 		return
-	var/increased = combo > shown_combo
+	var/increased = combo > shown_combo && shown_combo >= 0
 	shown_combo = combo
-	if(combo <= 0)
-		flash_period = 0
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-		return
 
 	glyphs.cut_overlays()
 	var/digits = "[combo]"
@@ -54,6 +54,16 @@
 		var/mutable_appearance/digit = mutable_appearance(glyphs.icon, copytext(digits, position, position + 1))
 		digit.pixel_x = -(digit_count - position + 1) * COMBO_GLYPH_SPACING
 		glyphs.add_overlay(digit)
+
+	// Stop whatever the holder was doing (like a fade out that hadn't finished) before deciding how it looks now.
+	animate(src)
+	transform = matrix()
+	if(combo <= 0)
+		flash_period = 0
+		animate(glyphs)
+		glyphs.alpha = 255
+		animate(src, alpha = COMBO_IDLE_ALPHA, time = 0.5 SECONDS)
+		return
 
 	alpha = 255
 	if(increased)
@@ -88,3 +98,4 @@
 #undef COMBO_GLYPH_SPACING
 #undef COMBO_FLASH_SLOWEST
 #undef COMBO_FLASH_FASTEST
+#undef COMBO_IDLE_ALPHA
