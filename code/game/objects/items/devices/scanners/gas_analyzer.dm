@@ -196,10 +196,6 @@
 			message += span_boldnotice("Node [mix_number]")
 			mix_name += " - Node [mix_number]"
 
-		var/list/fusion = LAZYACCESS(air.analyzer_results, "fusion")
-		if(fusion)
-			message += span_warning("Classic fusion detected. Last fusion power: [round(fusion["power"], 0.01)] ([fusion["tier"]] tier); instability: [round(fusion["instability"], 0.01)].")
-
 		var/total_moles = air.total_moles()
 		var/pressure = air.return_pressure()
 		var/volume = air.return_volume() //could just do mixture.volume... but safety, I guess?
@@ -222,6 +218,10 @@
 		else
 			message += airs.len > 1 ? span_notice("This node is empty!") : span_notice("[target] is empty!")
 			message += span_notice("Volume: [volume] L") // don't want to change the order volume appears in, suck it
+
+		var/list/fusion = LAZYACCESS(air.analyzer_results, "fusion")
+		if(fusion)
+			message += span_warning("Fusion tier: [fusion["tier"]]. Last reaction power: [round(fusion["power"], 0.01)]; instability: [round(fusion["instability"], 0.01)].")
 
 	// we let the join apply newlines so we do need handholding
 	to_chat(user, boxed_message(jointext(message, "\n")), type = MESSAGE_TYPE_INFO)
