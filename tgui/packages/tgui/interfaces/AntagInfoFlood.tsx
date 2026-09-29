@@ -190,10 +190,10 @@ export const AntagInfoFlood = () => {
                       buckled to them. Against living hosts, they deal 10 brute
                       every two seconds; the host can resist or the infector can
                       be killed to break the latch. Only a dead host can be
-                      converted, after five seconds attached to the corpse.
-                      Their swarms can merge, and an unlatched infector can
-                      reanimate a fallen Flood Combat once. Dying infectors also
-                      release a small Reactive Spines smoke cloud.
+                      converted, after ten seconds attached to the corpse. Their
+                      swarms can merge, and an unlatched infector can reanimate
+                      a fallen Flood Combat once. Dying infectors also release a
+                      small Reactive Spines smoke cloud.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>

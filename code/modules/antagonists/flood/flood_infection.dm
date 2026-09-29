@@ -25,7 +25,7 @@
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
 	var/mob/living/latched_host
-	/// Some animals normally disappear on death; keep their body for the five-second takeover.
+	/// Some animals normally disappear on death; keep their body for the ten-second takeover.
 	var/restore_basic_death_cleanup = FALSE
 	var/restore_simple_death_cleanup = FALSE
 	/// Restore the normal draw order when the infector releases its host.
@@ -331,7 +331,7 @@
 	// A new generation prevents an earlier damage hit or corpse timer from firing.
 	latch_generation++
 	shake_infected_corpse(host, latch_generation)
-	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, latch_generation), 5 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, latch_generation), 10 SECONDS)
 
 /mob/living/basic/flood/infestor/proc/shake_infected_corpse(mob/living/host, expected_generation)
 	if(expected_generation != latch_generation || !latch_still_valid(host) || host.stat != DEAD)
