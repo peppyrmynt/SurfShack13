@@ -16,6 +16,8 @@
 #define RAMPAGE_MIN_CLICK_MODIFIER 0.1
 /// Damage of every punch thrown by the mask's martial art.
 #define RAMPAGE_PUNCH_DAMAGE 15
+/// Melee armor at which punches only penetrate half of it. Below this they penetrate more, up to all of it against no armor.
+#define RAMPAGE_PUNCH_HEAVY_ARMOR 50
 
 /**
  * The chicken mask.
@@ -264,6 +266,21 @@
 	id = "chicken_rampage"
 	allow_temp_override = FALSE
 
+/**
+ * Punches go through armor, but the heavier the armor the less of it they ignore.
+ * No armor: fully penetrated. At RAMPAGE_PUNCH_HEAVY_ARMOR melee armor or more: only half of it is ignored.
+ *
+ * Returns the percentage of damage the armor still blocks.
+ */
+/datum/martial_art/chicken_rampage/proc/get_punch_armor_block(mob/living/defender, zone)
+	var/armor = defender.run_armor_check(zone, MELEE, silent = TRUE)
+	if(armor <= 0)
+		return armor
+	var/penetration = 1 - 0.5 * clamp(armor / RAMPAGE_PUNCH_HEAVY_ARMOR, 0, 1)
+	var/blocked = min(armor * (1 - penetration), ARMOR_MAX_BLOCK)
+	to_chat(defender, span_warning("The punch smashes straight through your armor!"))
+	return blocked
+
 /datum/martial_art/chicken_rampage/can_use(mob/living/martial_artist)
 	return !!martial_artist.GetComponent(/datum/component/chicken_rampage)
 
@@ -280,7 +297,7 @@
 	var/zone = check_zone(attacker.zone_selected)
 	if(!defender.get_bodypart(zone) && iscarbon(defender))
 		zone = BODY_ZONE_CHEST
-	var/armor_block = defender.run_armor_check(zone, MELEE)
+	var/armor_block = get_punch_armor_block(defender, zone)
 	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
 	playsound(defender, 'sound/items/weapons/punch1.ogg', 50, TRUE, -1)
 	defender.visible_message(
@@ -377,3 +394,4 @@
 #undef RAMPAGE_CLICK_SPEED_PER_COMBO
 #undef RAMPAGE_MIN_CLICK_MODIFIER
 #undef RAMPAGE_PUNCH_DAMAGE
+#undef RAMPAGE_PUNCH_HEAVY_ARMOR
