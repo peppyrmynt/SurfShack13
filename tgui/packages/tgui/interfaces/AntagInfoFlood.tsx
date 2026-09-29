@@ -19,6 +19,8 @@ type HiveStatus = {
   living_units: number;
   ai_units: number;
   ai_cap: number;
+  ai_infestors: number;
+  ai_infestor_cap: number;
 };
 
 type Data = {
@@ -55,7 +57,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Attacks',
-        text: 'Your melee attacks damage targets but never infect them. Infection requires a Flood Infector attached to a dead human or animal. Infectors can latch onto an occupied mech to damage its organic pilot, who can resist to shake them off. A pilot who dies while the infector stays attached can be converted.',
+        text: 'Your melee attacks damage targets but never infect them. Infection requires a Flood Infector attached to a dead human or animal. Infectors attack occupied mechs without infecting their pilots.',
       },
     ],
   },
@@ -114,11 +116,11 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Grow and Spread Biomass',
-        text: 'Every 90 seconds, spread growth to up to three nearby floor tiles and grow a biomass spawner on your tile if placement limits allow it. Spawners produce Flood Carriers 80% of the time or Flood Combat 20% of the time. Visible growth shakes for ten seconds before spawning. Flood and ghosts can see the countdown.',
+        text: 'Every 90 seconds, spread growth to up to three nearby floor tiles and grow a biomass spawner on your tile if placement limits allow it. Spawners release a Flood Carrier every 120 seconds. Visible growth shakes for ten seconds before spawning; crowding holds the timer. Flood and ghosts can see the countdown. Destroying a growth causes its rooted floor biomass to wither.',
       },
       {
         label: 'Hive population',
-        text: 'New AI Flood pause at the hive-wide cap of 60. Infected players and units changing form can still join. The status panel tracks growths, living units, and AI units.',
+        text: 'AI Infectors and all other AI Flood have separate hive-wide limits of 30 each. Infected players and units changing form can still join. The status panel tracks both limits.',
       },
       {
         label: 'Create Flood units',
@@ -197,9 +199,10 @@ export const AntagInfoFlood = () => {
                   <Stack.Item>
                     <Section title="Biomass and fire">
                       Flood units heal slowly only while standing on
-                      Flood-covered floor. Enough fire damage gibs Flood bodies.
-                      Fire can destroy biomass; crew can also clear floor growth
-                      with a welder or by removing the floor.
+                      Flood-covered floor. Fire damages Flood bodies.
+                      Fire can destroy biomass; crew can clear floor growth
+                      with a welder, by removing the floor, or by destroying its
+                      parent growth. Sharp weapons can carve apart fallen Flood.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>
@@ -230,8 +233,11 @@ export const AntagInfoFlood = () => {
                             <LabeledList.Item label="Living Flood">
                               {hive_status.living_units}
                             </LabeledList.Item>
-                            <LabeledList.Item label="AI Flood">
+                            <LabeledList.Item label="Other AI Flood">
                               {hive_status.ai_units} / {hive_status.ai_cap}
+                            </LabeledList.Item>
+                            <LabeledList.Item label="AI Infectors">
+                              {hive_status.ai_infestors} / {hive_status.ai_infestor_cap}
                             </LabeledList.Item>
                           </LabeledList>
                         </Section>

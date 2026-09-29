@@ -25,8 +25,6 @@
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
 	var/mob/living/latched_host
-	/// When attacking a mech pilot, the infector buckles to the exterior so it stays visible and vulnerable.
-	var/obj/vehicle/sealed/mecha/latched_mech
 	/// Some animals normally disappear on death; keep their body for the five-second takeover.
 	var/restore_basic_death_cleanup = FALSE
 	var/restore_simple_death_cleanup = FALSE
@@ -104,7 +102,7 @@
 	return ..()
 
 /mob/living/basic/flood/infestor/Move(atom/newloc, direct, glide_size_override)
-	// The attached infector follows its host or mech, but cannot move either by itself.
+	// The attached infector follows its host, but cannot move by itself.
 	if(latched_host && buckled && buckled.loc != newloc)
 		return FALSE
 	return ..()
@@ -141,49 +139,36 @@
 		update_appearance(UPDATE_OVERLAYS)
 		return
 
-/// A mech is only a target when an organic, uninfected occupant is still inside it.
-/obj/vehicle/sealed/mecha/proc/flood_infectable_occupant()
-	var/mob/living/dead_host
-	for(var/mob/living/occupant as anything in occupants)
-		if(QDELETED(occupant) || occupant.loc != src || !is_flood_infectable(occupant))
-			continue
-		if(occupant.stat != DEAD)
-			return occupant
-		dead_host = occupant
-	return dead_host
-
 /mob/living/basic/flood/infestor/melee_attack(atom/attacked_target, list/modifiers, ignore_cooldown)
 	if(stat == DEAD || buckled || latched_host)
 		return FALSE
-	var/obj/vehicle/sealed/mecha/target_mech
-	var/mob/living/host
 	if(ismecha(attacked_target))
-		target_mech = attacked_target
-		host = target_mech.flood_infectable_occupant()
-	else if(isliving(attacked_target))
-		host = attacked_target
-	var/atom/latch_target = target_mech ? target_mech : host
-	if(!host || !is_flood_infectable(host) || !Adjacent(latch_target))
+		if(!Adjacent(attacked_target) || !early_melee_attack(attacked_target, modifiers, ignore_cooldown))
+			return FALSE
+		var/obj/vehicle/sealed/mecha/mech = attacked_target
+		mech.take_damage(5, BRUTE)
+		return TRUE
+	var/mob/living/host = attacked_target
+	if(!istype(host) || !is_flood_infectable(host) || !Adjacent(host))
 		return FALSE
 	for(var/mob/living/basic/flood/infestor/other in range(1, host))
 		if(other != src && other.latched_host == host)
-			return FALSE
+			return damage_occupied_host(host, modifiers, ignore_cooldown)
 	// The leap establishes the latch; damage is dealt by latch_hit while attached.
 	if(!early_melee_attack(attacked_target, modifiers, ignore_cooldown))
 		return FALSE
-	if(stat == DEAD || QDELETED(host) || !Adjacent(latch_target) || (target_mech && host.loc != target_mech))
+	if(stat == DEAD || QDELETED(host) || !Adjacent(host))
 		return FALSE
 	// An existing rider must not make its host immune to infection.
 	for(var/mob/living/rider as anything in host.buckled_mobs)
 		if(istype(rider, /mob/living/basic/flood/infestor))
-			return FALSE
+			host.apply_damage(5, BRUTE, BODY_ZONE_CHEST)
+			return TRUE
 		host.unbuckle_mob(rider, force = TRUE)
 	forceMove(get_turf(host))
-	var/buckled_successfully = target_mech ? target_mech.buckle_mob(src, force = TRUE) : host.buckle_mob(src, force = TRUE)
-	if(!buckled_successfully)
+	if(!host.buckle_mob(src, force = TRUE))
 		return FALSE
 	latched_host = host
-	latched_mech = target_mech
 	if(isbasicmob(host))
 		var/mob/living/basic/basic_host = host
 		if(basic_host.basic_mob_flags & DEL_ON_DEATH)
@@ -201,40 +186,29 @@
 	RegisterSignal(host, COMSIG_LIVING_DEATH, PROC_REF(on_host_death))
 	RegisterSignal(host, COMSIG_LIVING_REVIVE, PROC_REF(on_host_revive))
 	RegisterSignal(host, COMSIG_QDELETING, PROC_REF(on_host_deleted))
-	if(target_mech)
-		RegisterSignal(host, COMSIG_MOVABLE_MOVED, PROC_REF(on_host_moved))
-		RegisterSignal(target_mech, COMSIG_QDELETING, PROC_REF(on_mecha_deleted))
 	RegisterSignal(src, COMSIG_MOB_UNBUCKLED, PROC_REF(on_unbuckled))
-	if(target_mech)
-		target_mech.visible_message(span_danger("[src] latches onto [target_mech] and tears at [host] inside!"))
-		to_chat(host, span_userdanger("[src] has latched onto your mech and is tearing into you! Resist or kill it to break its grip!"))
-	else
-		host.visible_message(span_danger("[src] latches onto [host]!"), span_userdanger("[src] latches onto you! Resist or kill it to break its grip!"))
+	host.visible_message(span_danger("[src] latches onto [host]!"), span_userdanger("[src] latches onto you! Resist or kill it to break its grip!"))
 	if(host.stat == DEAD)
 		begin_corpse_infection(host)
 	else
 		addtimer(CALLBACK(src, PROC_REF(latch_hit), host, latch_generation), 2 SECONDS)
 	return TRUE
 
+/mob/living/basic/flood/infestor/proc/damage_occupied_host(mob/living/host, list/modifiers, ignore_cooldown)
+	if(!early_melee_attack(host, modifiers, ignore_cooldown))
+		return FALSE
+	host.visible_message(span_danger("[src] strikes [host], unable to latch on!"))
+	host.apply_damage(5, BRUTE, BODY_ZONE_CHEST)
+	return TRUE
+
 /mob/living/basic/flood/infestor/proc/latch_still_valid(mob/living/host)
 	if(stat == DEAD || QDELETED(host) || latched_host != host || !is_flood_infectable(host))
 		return FALSE
-	if(latched_mech)
-		return !QDELETED(latched_mech) && host.loc == latched_mech && (host in latched_mech.occupants) && buckled == latched_mech
 	return buckled == host
 
 /mob/living/basic/flood/infestor/proc/convert_host(mob/living/victim, infection_message)
 	if(!latch_still_valid(victim) || victim.stat != DEAD)
 		return FALSE
-
-	if(latched_mech)
-		var/obj/vehicle/sealed/mecha/mech = latched_mech
-		// Move the corpse out through the normal mech exit path before replacing it.
-		// Otherwise deleting an occupant during conversion can take the mech with it.
-		mech.mob_exit(victim, silent = TRUE, forced = TRUE)
-		if(victim.loc == mech || mech.is_occupant(victim))
-			return FALSE
-		mech.visible_message(span_danger("[victim] is forced out of [mech] as the Flood takes hold!"))
 
 	var/turf/conversion_turf = get_turf(victim)
 	if(!conversion_turf)
@@ -279,9 +253,7 @@
 
 /mob/living/basic/flood/infestor/proc/clear_latch()
 	var/mob/living/old_host = latched_host
-	var/obj/vehicle/sealed/mecha/old_mech = latched_mech
 	latched_host = null
-	latched_mech = null
 	if(old_host && !QDELETED(old_host))
 		if(restore_basic_death_cleanup)
 			var/mob/living/basic/basic_host = old_host
@@ -296,40 +268,22 @@
 		unlatched_layer = null
 	latch_generation++
 	if(old_host)
-		UnregisterSignal(old_host, list(COMSIG_LIVING_RESIST, COMSIG_LIVING_DEATH, COMSIG_LIVING_REVIVE, COMSIG_QDELETING, COMSIG_MOVABLE_MOVED))
-	if(old_mech)
-		UnregisterSignal(old_mech, COMSIG_QDELETING)
+		UnregisterSignal(old_host, list(COMSIG_LIVING_RESIST, COMSIG_LIVING_DEATH, COMSIG_LIVING_REVIVE, COMSIG_QDELETING))
 	UnregisterSignal(src, COMSIG_MOB_UNBUCKLED)
-	if(old_mech && buckled == old_mech)
-		old_mech.unbuckle_mob(src, force = TRUE)
-	else if(old_host && buckled == old_host)
+	if(old_host && buckled == old_host)
 		old_host.unbuckle_mob(src, force = TRUE)
 
 /mob/living/basic/flood/infestor/proc/on_unbuckled(mob/living/source, atom/movable/old_buckle)
 	SIGNAL_HANDLER
-	if(old_buckle == latched_host || old_buckle == latched_mech)
+	if(old_buckle == latched_host)
 		clear_latch()
 
 /mob/living/basic/flood/infestor/proc/on_host_resist(mob/living/host)
 	SIGNAL_HANDLER
 	if(latched_host != host)
 		return
-	if(latched_mech)
-		latched_mech.visible_message(span_notice("[host] shakes [src] loose from [latched_mech]!"))
-		to_chat(host, span_notice("You shake [src] loose from your mech!"))
-	else
-		host.visible_message(span_notice("[host] shakes [src] loose!"), span_notice("You shake [src] loose!"))
+	host.visible_message(span_notice("[host] shakes [src] loose!"), span_notice("You shake [src] loose!"))
 	clear_latch()
-
-/mob/living/basic/flood/infestor/proc/on_host_moved(mob/living/host)
-	SIGNAL_HANDLER
-	if(host == latched_host && latched_mech && host.loc != latched_mech)
-		clear_latch()
-
-/mob/living/basic/flood/infestor/proc/on_mecha_deleted(obj/vehicle/sealed/mecha/mecha)
-	SIGNAL_HANDLER
-	if(mecha == latched_mech)
-		clear_latch()
 
 /mob/living/basic/flood/infestor/proc/on_host_death(mob/living/host, gibbed)
 	SIGNAL_HANDLER
@@ -362,12 +316,8 @@
 	if(host.stat == DEAD)
 		begin_corpse_infection(host)
 		return
-	if(latched_mech)
-		latched_mech.visible_message(span_danger("[src] tears into [host] inside [latched_mech]!"))
-		to_chat(host, span_userdanger("[src] tears into you inside your mech!"))
-	else
-		host.visible_message(span_danger("[src] tears into [host]!"), span_userdanger("[src] tears into you!"))
-	playsound(latched_mech ? latched_mech : host, attack_sound, 50, TRUE, TRUE)
+	host.visible_message(span_danger("[src] tears into [host]!"), span_userdanger("[src] tears into you!"))
+	playsound(host, attack_sound, 50, TRUE, TRUE)
 	host.apply_damage(10, BRUTE, BODY_ZONE_CHEST)
 	if(expected_generation == latch_generation && latch_still_valid(host))
 		if(host.stat == DEAD)

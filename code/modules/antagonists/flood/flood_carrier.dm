@@ -5,6 +5,7 @@
 
 /mob/living/basic/flood/carrier
 	name = "Flood Carrier"
+	unique_name = TRUE
 	desc = "A bloated Flood unit packed with infectors."
 	icon = 'icons/mob/flood/flood_carrier.dmi'
 	icon_state = "static"

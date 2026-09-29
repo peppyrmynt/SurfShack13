@@ -28,3 +28,19 @@
 	TEST_ASSERT(grenade.active, "The grenade was not armed.")
 	TEST_ASSERT(flood.RangedAttack(target), "The Flood did not throw the primed grenade.")
 	TEST_ASSERT(!flood.is_holding(grenade), "The Flood kept holding the primed grenade.")
+	TEST_ASSERT_EQUAL(flood.recent_thrown_grenade, grenade, "The Flood did not track the live grenade to flee it.")
+	TEST_ASSERT_EQUAL(flood.weapon_score(grenade), 0, "The Flood tried to recover its thrown grenade.")
+	TEST_ASSERT(flood.grenade_flee_until > world.time, "The Flood did not begin avoiding its grenade.")
+
+/// A controlled Flood Combat can enable the HUD throw button and throw a held item.
+/datum/unit_test/flood_combat_player_throw
+
+/datum/unit_test/flood_combat_player_throw/Run()
+	var/mob/living/basic/flood/combat_form/human/flood = allocate(/mob/living/basic/flood/combat_form/human)
+	var/obj/item/crowbar/weapon = allocate(/obj/item/crowbar)
+	TEST_ASSERT_NOTNULL(flood.hud_used?.throw_icon, "The Flood HUD has no throw button.")
+	TEST_ASSERT(flood.put_in_hands(weapon), "The Flood could not hold the throwing weapon.")
+	flood.toggle_flood_throw_mode()
+	TEST_ASSERT(flood.throw_mode, "The Flood did not enter throw mode.")
+	TEST_ASSERT(flood.throw_item(get_step(flood, EAST)), "The Flood could not throw the held weapon.")
+	TEST_ASSERT(!flood.throw_mode && !flood.is_holding(weapon), "Throw mode or the held weapon was not cleared.")

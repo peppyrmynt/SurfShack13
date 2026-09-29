@@ -20,6 +20,7 @@
 /// Combat forms recover useful weapons; other Flood units retain the melee controller.
 /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
 	planning_subtrees = list(
+		/datum/ai_planning_subtree/flood_avoid_grenade,
 		/datum/ai_planning_subtree/flood_rally,
 		/datum/ai_planning_subtree/simple_find_target,
 		/datum/ai_planning_subtree/flood_recover_weapon,
@@ -29,6 +30,30 @@
 		/datum/ai_planning_subtree/basic_melee_attack_subtree,
 		/datum/ai_planning_subtree/flood_patrol,
 	)
+
+/// Stay out of the blast radius until a thrown grenade detonates.
+/datum/ai_planning_subtree/flood_avoid_grenade/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/basic/flood/combat_form/human/flood = controller.pawn
+	if(!istype(flood) || flood.client)
+		return
+	var/obj/item/grenade/grenade = flood.recent_thrown_grenade
+	if(QDELETED(grenade) || !grenade.active || world.time >= flood.grenade_flee_until)
+		flood.recent_thrown_grenade = null
+		flood.recent_grenade_target = null
+		controller.clear_blackboard_key("flood_thrown_grenade")
+		return
+	// The grenade starts in our tile before its throw animation moves it.
+	var/atom/hazard = get_turf(grenade) == get_turf(flood) ? flood.recent_grenade_target : grenade
+	if(!hazard)
+		hazard = grenade
+	controller.set_blackboard_key("flood_thrown_grenade", hazard)
+	if(get_dist(flood, hazard) < 6)
+		controller.queue_behavior(/datum/ai_behavior/run_away_from_target/flood_grenade, "flood_thrown_grenade")
+	return SUBTREE_RETURN_FINISH_PLANNING
+
+/datum/ai_behavior/run_away_from_target/flood_grenade
+	run_distance = 6
+	clear_failed_targets = FALSE
 
 /// Overseer orders temporarily take priority over ordinary target acquisition and patrols.
 /datum/ai_planning_subtree/flood_rally
@@ -197,7 +222,7 @@
 /datum/targeting_strategy/basic/flood/infestor/can_attack(mob/living/living_mob, atom/the_target, vision_range = 9)
 	if(ismecha(the_target))
 		var/obj/vehicle/sealed/mecha/mecha = the_target
-		if(!mecha.flood_infectable_occupant())
+		if(!length(mecha.occupants))
 			return FALSE
 	else if(!isliving(the_target) || !is_flood_infectable(the_target))
 		return FALSE

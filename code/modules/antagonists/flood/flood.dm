@@ -8,10 +8,10 @@ GLOBAL_VAR_INIT(flood_infections, 0)
 GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 
 /// Limit new AI spawns across the entire hive; player conversions and form replacements are unaffected.
-/proc/flood_ai_population()
+/proc/flood_ai_population(infestors_only = null)
 	var/count = 0
 	for(var/mob/living/basic/flood/unit in GLOB.mob_living_list)
-		if(!QDELETED(unit) && unit.stat != DEAD && !unit.client)
+		if(!QDELETED(unit) && unit.stat != DEAD && !unit.client && (isnull(infestors_only) || istype(unit, /mob/living/basic/flood/infestor) == infectors_only))
 			count++
 	return count
 
@@ -23,7 +23,10 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 	return count
 
 /proc/flood_try_spawn_ai(form_type, turf/spawn_turf)
-	if(!ispath(form_type, /mob/living/basic/flood) || !spawn_turf || flood_ai_population() >= FLOOD_AI_POPULATION_CAP)
+	if(!ispath(form_type, /mob/living/basic/flood) || !spawn_turf)
+		return null
+	var/infestor = ispath(form_type, /mob/living/basic/flood/infestor)
+	if(flood_ai_population(infestor) >= (infestor ? FLOOD_AI_INFESTOR_CAP : FLOOD_AI_POPULATION_CAP))
 		return null
 	return new form_type(spawn_turf)
 
@@ -114,8 +117,10 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 		data["hive_status"] = list(
 			"growths" = length(GLOB.flood_mob_growths),
 			"living_units" = flood_living_population(),
-			"ai_units" = flood_ai_population(),
+			"ai_units" = flood_ai_population(FALSE),
 			"ai_cap" = FLOOD_AI_POPULATION_CAP,
+			"ai_infestors" = flood_ai_population(TRUE),
+			"ai_infestor_cap" = FLOOD_AI_INFESTOR_CAP,
 		)
 	if(istype(current_form, /mob/living/basic/flood/overseer))
 		data["current_form"] = "Overseer"

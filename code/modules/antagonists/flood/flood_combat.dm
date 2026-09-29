@@ -126,17 +126,53 @@
 	melee_damage_lower = 25
 	melee_damage_upper = 35
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
+	hud_type = /datum/hud/dextrous/flood
 	var/next_weapon_check = 0
 	var/obj/item/recovery_target
 	var/next_weapon_activation = 0
+	/// Primed grenades the AI has already thrown must never be recovered.
+	var/list/thrown_grenades = list()
+	var/obj/item/grenade/recent_thrown_grenade
+	var/turf/recent_grenade_target
+	var/grenade_flee_until = 0
 
 /mob/living/basic/flood/combat_form/human/Initialize(mapload)
 	. = ..()
-	AddElement(/datum/element/dextrous)
+	AddElement(/datum/element/dextrous, hud_type = /datum/hud/dextrous/flood)
 	// These sprites draw their bodies in the base icon, so held items go above it.
 	AddComponent(/datum/component/basic_inhands, display_layer = 0)
 	update_held_items()
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
+
+/// Combat forms have hands and use the same throw toggle location as humans.
+/datum/hud/dextrous/flood/New(mob/living/basic/flood/combat_form/human/owner)
+	..()
+	throw_icon = new /atom/movable/screen/throw_catch(null, src)
+	throw_icon.icon = ui_style
+	throw_icon.screen_loc = ui_drop_throw
+	hotkeybuttons += throw_icon
+
+/mob/living/basic/flood/combat_form/human/proc/toggle_flood_throw_mode()
+	if(stat != CONSCIOUS)
+		return
+	throw_mode = throw_mode ? THROW_MODE_DISABLED : THROW_MODE_TOGGLE
+	if(hud_used?.throw_icon)
+		hud_used.throw_icon.icon_state = throw_mode ? "act_throw_on" : "act_throw_off"
+	SEND_SIGNAL(src, COMSIG_LIVING_THROW_MODE_TOGGLE, throw_mode)
+
+/mob/living/basic/flood/combat_form/human/throw_item(atom/target)
+	. = ..()
+	throw_mode = THROW_MODE_DISABLED
+	if(hud_used?.throw_icon)
+		hud_used.throw_icon.icon_state = "act_throw_off"
+	SEND_SIGNAL(src, COMSIG_LIVING_THROW_MODE_TOGGLE, throw_mode)
+	var/obj/item/held_weapon = get_active_held_item()
+	if(!target || istype(target, /atom/movable/screen) || !isturf(loc) || !held_weapon || !dropItemToGround(held_weapon, TRUE))
+		return FALSE
+	visible_message(span_danger("[src] hurls [held_weapon] at [target]!"))
+	playsound(src, 'sound/items/weapons/throw.ogg', 40, TRUE)
+	held_weapon.safe_throw_at(target, held_weapon.throw_range, held_weapon.throw_speed, src)
+	return TRUE
 
 /// An armed variant for admin spawning only; no outbreak or biomass spawn pool uses it.
 /mob/living/basic/flood/combat_form/human/armed
@@ -161,6 +197,8 @@
 		return 0
 	if(istype(weapon, /obj/item/grenade))
 		var/obj/item/grenade/grenade = weapon
+		if(grenade in thrown_grenades || (grenade.active && !is_holding(grenade)))
+			return 0
 		return grenade.active || (!grenade.dud_flags && grenade.det_time >= 2 SECONDS) ? 60 : 0
 	if(istype(weapon, /obj/item/gun))
 		var/obj/item/gun/gun = weapon
@@ -288,6 +326,11 @@
 		var/obj/item/grenade/grenade = held_weapon
 		if(!grenade.active || get_dist(src, target) > grenade.throw_range || !dropItemToGround(grenade, TRUE))
 			return FALSE
+		thrown_grenades += grenade
+		recent_thrown_grenade = grenade
+		recent_grenade_target = get_turf(target)
+		grenade_flee_until = world.time + grenade.det_time
+		recovery_target = null
 		visible_message(span_danger("[src] hurls [grenade] at [target]!"))
 		grenade.safe_throw_at(target, grenade.throw_range, grenade.throw_speed, src)
 		return TRUE

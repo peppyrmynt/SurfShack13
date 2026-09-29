@@ -83,7 +83,7 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	max_integrity = 400
 	resistance_flags = ACID_PROOF
 	var/next_spawn = 0
-	var/spawn_delay = 60 SECONDS
+	var/spawn_delay = 120 SECONDS
 	var/max_nearby_flood = 6
 	var/max_nearby_growth = 12
 	var/next_spread = 0
@@ -95,20 +95,20 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	var/bz_delay = 30 SECONDS
 	/// A ready growth shudders for ten seconds before releasing a unit.
 	var/spawn_warning_sent = FALSE
-	/// Map-placed nests start with a small wave, as in the source spawner.
-	var/initial_spawn_count = 2
-	var/list/spawn_pool = list(
-		/mob/living/basic/flood/carrier = 80,
-		/mob/living/basic/flood/combat_form/human = 20,
-	)
+	var/spawn_type = /mob/living/basic/flood/carrier
 	/// Tracks this biomass's living offspring even after they leave the area.
 	var/list/spawned_flood = list()
+	/// Floors planted by this growth are the roots of its spreading biomass.
+	var/list/owned_seeds = list()
 	var/obj/effect/countdown/flood_growth/countdown
 
 /obj/structure/flood_biomass/Initialize(mapload)
 	. = ..()
 	GLOB.flood_mob_growths += src
 	icon_state = "spore[rand(1, 8)]"
+	var/turf/open/floor/flood_biomass/root = get_turf(src)
+	if(istype(root) && root.parent_seed == root)
+		owned_seeds += root
 	next_spawn = world.time + spawn_delay
 	next_spread = world.time + spread_delay
 	next_miasma = world.time + rand(1, miasma_delay)
@@ -117,13 +117,15 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 		countdown = new(src)
 		countdown.start()
 	START_PROCESSING(SSobj, src)
-	if(mapload && initial_spawn_count)
-		addtimer(CALLBACK(src, PROC_REF(spawn_initial_wave)), rand(1, 3) SECONDS)
 
 /obj/structure/flood_biomass/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	GLOB.flood_mob_growths -= src
 	QDEL_NULL(countdown)
+	for(var/turf/open/floor/flood_biomass/seed as anything in owned_seeds)
+		if(!QDELETED(seed))
+			seed.ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
+	owned_seeds = null
 	for(var/mob/living/basic/flood/offspring as anything in spawned_flood)
 		UnregisterSignal(offspring, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING))
 	spawned_flood = null
@@ -135,27 +137,35 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 		if(invisibility < INVISIBILITY_ABSTRACT)
 			var/turf/open/growth_turf = get_turf(src)
 			if(istype(growth_turf) && !isspaceturf(growth_turf))
-				growth_turf.atmos_spawn_air("[GAS_MIASMA]=1")
+				growth_turf.atmos_spawn_air("[GAS_MIASMA]=1.5")
 	if(world.time >= next_bz)
 		next_bz = world.time + bz_delay
 		if(invisibility < INVISIBILITY_ABSTRACT)
 			var/turf/open/growth_turf = get_turf(src)
 			if(istype(growth_turf) && !isspaceturf(growth_turf))
-				growth_turf.atmos_spawn_air("[GAS_BZ]=1")
+				growth_turf.atmos_spawn_air("[GAS_BZ]=2")
 
 	if(world.time >= next_spread)
 		next_spread = world.time + spread_delay
 		spread_growth()
 
-	if(!spawn_warning_sent && invisibility < INVISIBILITY_ABSTRACT && world.time >= next_spawn - 10 SECONDS && can_spawn_flood())
-		spawn_warning_sent = TRUE
-		next_spawn = max(next_spawn, world.time + 10 SECONDS)
-		show_spawn_warning()
+	if(world.time >= next_spawn - 10 SECONDS)
+		if(!can_spawn_flood())
+			// Keep the countdown above zero while capped; begin the full warning once room opens.
+			stop_spawn_warning()
+			next_spawn = world.time + 11 SECONDS
+			return
+		if(!spawn_warning_sent && invisibility < INVISIBILITY_ABSTRACT)
+			spawn_warning_sent = TRUE
+			next_spawn = max(next_spawn, world.time + 10 SECONDS)
+			show_spawn_warning()
 	if(world.time < next_spawn)
 		return
+	if(spawn_flood())
+		next_spawn = world.time + spawn_delay
+	else
+		next_spawn = world.time + 11 SECONDS
 	stop_spawn_warning()
-	next_spawn = world.time + spawn_delay
-	spawn_flood()
 
 /obj/structure/flood_biomass/proc/show_spawn_warning()
 	visible_message(span_warning("[src] swells and shudders, about to release something!"))
@@ -170,19 +180,8 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	spawn_warning_sent = FALSE
 	animate(src, pixel_x = initial(pixel_x), time = 0, flags = ANIMATION_END_NOW)
 
-/obj/structure/flood_biomass/proc/spawn_initial_wave(warned = FALSE)
-	if(!warned && invisibility < INVISIBILITY_ABSTRACT && can_spawn_flood())
-		spawn_warning_sent = TRUE
-		show_spawn_warning()
-		addtimer(CALLBACK(src, PROC_REF(spawn_initial_wave), TRUE), 10 SECONDS)
-		return
-	stop_spawn_warning()
-	for(var/i in 1 to initial_spawn_count)
-		if(!spawn_flood())
-			return
-
 /obj/structure/flood_biomass/proc/can_spawn_flood()
-	if(length(spawned_flood) >= max_nearby_flood || flood_ai_population() >= FLOOD_AI_POPULATION_CAP)
+	if(length(spawned_flood) >= max_nearby_flood || flood_ai_population(FALSE) >= FLOOD_AI_POPULATION_CAP)
 		return FALSE
 
 	var/nearby_flood = 0
@@ -201,7 +200,6 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	if(!can_spawn_flood())
 		return FALSE
 	var/turf/spawn_turf = get_turf(src)
-	var/spawn_type = pick_weight(spawn_pool)
 	var/mob/living/basic/flood/new_flood = flood_try_spawn_ai(spawn_type, spawn_turf)
 	if(!new_flood)
 		return FALSE
@@ -217,8 +215,6 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 		return
 	spawned_flood -= offspring
 	UnregisterSignal(offspring, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING))
-	next_spawn = world.time + spawn_delay
-	stop_spawn_warning()
 
 /obj/structure/flood_biomass/proc/spread_growth()
 	var/nearby_growth = 0
@@ -236,7 +232,10 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	if(!length(valid_turfs))
 		return
 
-	grow_flood_floor(pick(valid_turfs))
+	var/turf/target = pick(valid_turfs)
+	var/turf/open/floor/flood_biomass/seed = grow_flood_floor(target)
+	if(seed)
+		owned_seeds += seed
 
 /obj/structure/flood_biomass/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
 	if(damage_type == BURN)
@@ -245,6 +244,8 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 
 /obj/structure/flood_biomass/examine(mob/user)
 	. = ..()
+	if(isobserver(user) || istype(user, /mob/living/basic/flood))
+		. += span_notice("The countdown shows when this growth will release a Flood Carrier. It shakes during the final 10 seconds; crowding holds the timer until a spawn is possible.")
 	var/health_ratio = get_integrity() / max_integrity
 	if(health_ratio > 0.66)
 		. += span_notice("It looks very healthy.")
@@ -258,9 +259,8 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	icon = 'icons/obj/flood/flood_bio.dmi'
 	icon_state = "pulsating"
 	max_integrity = 250
-	spawn_delay = 90 SECONDS
+	spawn_delay = 120 SECONDS
 	max_nearby_flood = 3
-	initial_spawn_count = 1
 
 /obj/structure/flood_biomass/tiny/Initialize(mapload)
 	. = ..()
@@ -323,7 +323,7 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	var/turf/spawn_turf = get_turf(src)
 	if(!spawn_turf)
 		return
-	if(flood_ai_population() >= FLOOD_AI_POPULATION_CAP)
+	if(flood_ai_population(TRUE) >= FLOOD_AI_INFESTOR_CAP)
 		triggered = FALSE
 		return
 	playsound(spawn_turf, 'sound/effects/splat.ogg', 50, TRUE)

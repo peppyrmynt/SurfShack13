@@ -93,4 +93,4 @@
 		return FALSE
 	if(parent_seed && !QDELETED(parent_seed))
 		new_floor.set_parent_seed(parent_seed)
-	return TRUE
+	return new_floor

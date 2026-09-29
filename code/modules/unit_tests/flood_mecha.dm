@@ -1,4 +1,4 @@
-/// Flood Infectors should target an occupied mech, wound its pilot, and release on resistance.
+/// Infectors damage occupied mechs without latching onto or converting their pilots.
 /datum/unit_test/flood_mecha_pilot
 
 /datum/unit_test/flood_mecha_pilot/Run()
@@ -12,34 +12,41 @@
 	mech.mob_enter(pilot, silent = TRUE)
 	TEST_ASSERT(mech.is_occupant(pilot), "The pilot did not enter the mech.")
 	TEST_ASSERT(targeting.can_attack(infector, mech), "The Infector cannot target an occupied mech.")
-	TEST_ASSERT(infector.melee_attack(mech), "The Infector failed to latch onto the occupied mech.")
-	TEST_ASSERT_EQUAL(infector.latched_host, pilot, "The Infector latched onto the wrong occupant.")
-	TEST_ASSERT_EQUAL(infector.buckled, mech, "The Infector did not stay exposed on the mech exterior.")
-
-	infector.latch_hit(pilot, infector.latch_generation)
-	TEST_ASSERT(pilot.getBruteLoss() > 0, "The pilot took no damage from the Infector.")
-	SEND_SIGNAL(pilot, COMSIG_LIVING_RESIST, pilot)
-	TEST_ASSERT(!infector.latched_host && !infector.buckled, "Resisting did not remove the Infector from the mech.")
-	TEST_ASSERT(mech.is_occupant(pilot), "The pilot was ejected when resisting the Infector.")
-	TEST_ASSERT(infector.melee_attack(mech), "The Infector could not latch again after being shaken off.")
-	mech.mob_exit(pilot, silent = TRUE)
-	TEST_ASSERT(!infector.latched_host && !infector.buckled, "The Infector remained attached after the pilot exited.")
-	TEST_ASSERT(!targeting.can_attack(infector, mech), "The Infector still targeted the empty mech.")
-
-/// Converting a pilot must eject their body and leave the mech for other players to use.
-/datum/unit_test/flood_mecha_pilot_infection
-
-/datum/unit_test/flood_mecha_pilot_infection/Run()
-	var/obj/vehicle/sealed/mecha/mech = allocate(/obj/vehicle/sealed/mecha/ripley)
-	var/mob/living/carbon/human/consistent/pilot = allocate(/mob/living/carbon/human/consistent)
-	var/mob/living/basic/flood/infestor/infector = allocate(/mob/living/basic/flood/infestor)
-	mech.mob_enter(pilot, silent = TRUE)
-	infector.forceMove(get_step(mech, EAST))
-	TEST_ASSERT(infector.melee_attack(mech), "The Infector failed to latch onto the pilot's mech.")
-
+	var/initial_integrity = mech.get_integrity()
+	TEST_ASSERT(infector.melee_attack(mech), "The Infector failed to attack the occupied mech.")
+	TEST_ASSERT(mech.get_integrity() < initial_integrity, "The mech took no damage from the Infector.")
+	TEST_ASSERT_EQUAL(pilot.getBruteLoss(), 0, "The pilot was injured through the mech.")
+	TEST_ASSERT(!infector.latched_host && !infector.buckled, "The Infector latched onto the mech or pilot.")
 	pilot.death()
-	infector.finish_latch(pilot, infector.latch_generation)
-	TEST_ASSERT(!QDELETED(mech), "Infecting the pilot deleted the mech.")
-	TEST_ASSERT(!length(mech.occupants), "The converted pilot is still registered as a mech occupant.")
-	var/mob/living/basic/flood/combat_form/human/converted = locate(/mob/living/basic/flood/combat_form/human) in get_turf(mech)
-	TEST_ASSERT(converted && converted.loc == get_turf(mech), "The new Flood was not created outside the mech.")
+	TEST_ASSERT(!QDELETED(mech), "The pilot dying destroyed the mech.")
+	TEST_ASSERT(!locate(/mob/living/basic/flood/combat_form/human) in get_turf(mech), "The pilot was converted inside the mech.")
+
+/// A second infector can still hurt a host already occupied by another infector.
+/datum/unit_test/flood_second_infestor_attack
+
+/datum/unit_test/flood_second_infestor_attack/Run()
+	var/mob/living/carbon/human/consistent/host = allocate(/mob/living/carbon/human/consistent)
+	var/mob/living/basic/flood/infestor/first = allocate(/mob/living/basic/flood/infestor)
+	var/mob/living/basic/flood/infestor/second = allocate(/mob/living/basic/flood/infestor)
+	first.forceMove(get_step(host, NORTH))
+	second.forceMove(get_step(host, EAST))
+	TEST_ASSERT(first.melee_attack(host), "The first Infector could not latch on.")
+	var/initial_damage = host.getBruteLoss()
+	TEST_ASSERT(second.melee_attack(host), "The second Infector could not attack an occupied host.")
+	TEST_ASSERT_EQUAL(host.getBruteLoss() - initial_damage, 5, "The second Infector did not deal 5 brute.")
+	TEST_ASSERT(!second.latched_host && !second.buckled, "The second Infector latched on despite an existing Infector.")
+
+/// Destroying a growth removes the floor seed beneath it.
+/datum/unit_test/flood_growth_removes_root
+
+/datum/unit_test/flood_growth_removes_root/Run()
+	var/turf/site = run_loc_floor_bottom_left
+	var/turf/open/floor/flood_biomass/seed = grow_flood_floor(site)
+	TEST_ASSERT_NOTNULL(seed, "The Flood floor seed could not grow.")
+	var/obj/structure/flood_biomass/tiny/growth = new(seed)
+	TEST_ASSERT(seed in growth.owned_seeds, "The growth did not register its floor seed.")
+	var/seed_x = seed.x
+	var/seed_y = seed.y
+	var/seed_z = seed.z
+	qdel(growth)
+	TEST_ASSERT(!istype(locate(seed_x, seed_y, seed_z), /turf/open/floor/flood_biomass), "The biomass seed persisted after its growth was destroyed.")
