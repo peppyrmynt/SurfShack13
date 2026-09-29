@@ -44,13 +44,13 @@
 #define RAMPAGE_PUNCH_HEAVY_ARMOR 50
 
 /**
- * The chicken mask.
+ * The chicken mask. Worn on the head, over everything, like a full rubber chicken head.
  *
  * Once it's on, it doesn't come off. The wearer goes on a rampage: gory kills, executions on anyone who's down,
  * a combo counter that makes them faster and attack quicker, no soft crit, brutal throws, and music that plays out
  * of them, through walls, changing with their health.
  */
-/obj/item/clothing/mask/chicken_rampage
+/obj/item/clothing/head/chicken_rampage
 	name = "chicken mask"
 	desc = "A rubber chicken mask. It smells like blood and cheap cologne."
 	icon = 'surfshack13/icons/obj/clothing/chicken_mask.dmi'
@@ -61,36 +61,38 @@
 	righthand_file = 'icons/mob/inhands/clothing/hats_righthand.dmi'
 	inhand_icon_state = "chicken_head"
 	w_class = WEIGHT_CLASS_SMALL
-	flags_inv = HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
-	flags_cover = MASKCOVERSMOUTH
+	slot_flags = ITEM_SLOT_HEAD
+	clothing_flags = SNUG_FIT
+	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
+	flags_cover = HEADCOVERSMOUTH
 	/// The song the mask plays from the moment it exists until someone first puts it on.
 	var/datum/rampage_music/unworn_music
 
-/obj/item/clothing/mask/chicken_rampage/Initialize(mapload)
+/obj/item/clothing/head/chicken_rampage/Initialize(mapload)
 	. = ..()
 	unworn_music = new(src, 9, 50, 25)
 	unworn_music.play('surfshack13/sound/chicken_mask/box.ogg')
 
-/obj/item/clothing/mask/chicken_rampage/Destroy()
+/obj/item/clothing/head/chicken_rampage/Destroy()
 	QDEL_NULL(unworn_music)
 	return ..()
 
-/obj/item/clothing/mask/chicken_rampage/equipped(mob/living/user, slot)
+/obj/item/clothing/head/chicken_rampage/equipped(mob/living/user, slot)
 	. = ..()
-	if(!(slot & ITEM_SLOT_MASK) || !isliving(user))
+	if(!(slot & ITEM_SLOT_HEAD) || !isliving(user))
 		return
 	// Its song is over; the wearer's music takes it from here, and it never plays again.
 	QDEL_NULL(unworn_music)
 	ADD_TRAIT(src, TRAIT_NODROP, CHICKEN_MASK_TRAIT)
 	user.AddComponent(/datum/component/chicken_rampage, src)
 
-/obj/item/clothing/mask/chicken_rampage/dropped(mob/living/user)
+/obj/item/clothing/head/chicken_rampage/dropped(mob/living/user)
 	. = ..()
 	// Only happens if it gets forced off, like losing the head.
 	REMOVE_TRAIT(src, TRAIT_NODROP, CHICKEN_MASK_TRAIT)
 	qdel(user.GetComponent(/datum/component/chicken_rampage))
 
-/obj/item/clothing/mask/chicken_rampage/examine(mob/user)
+/obj/item/clothing/head/chicken_rampage/examine(mob/user)
 	. = ..()
 	if(HAS_TRAIT(src, TRAIT_NODROP))
 		. += span_warning("It's stuck fast. It isn't coming off.")
@@ -100,7 +102,7 @@
  */
 /datum/component/chicken_rampage
 	/// The mask that gave us this.
-	var/obj/item/clothing/mask/chicken_rampage/mask
+	var/obj/item/clothing/head/chicken_rampage/mask
 	/// Current combo. Uncapped.
 	var/combo = 0
 	/// world.time the combo runs out at.
@@ -128,7 +130,7 @@
 	var/playing_dying_song = FALSE
 	COOLDOWN_DECLARE(door_kick_cooldown)
 
-/datum/component/chicken_rampage/Initialize(obj/item/clothing/mask/chicken_rampage/mask)
+/datum/component/chicken_rampage/Initialize(obj/item/clothing/head/chicken_rampage/mask)
 	if(!isliving(parent) || QDELETED(mask))
 		return COMPONENT_INCOMPATIBLE
 	src.mask = mask
@@ -497,7 +499,7 @@
 	desc = "A plain cardboard box. There's music coming from inside it."
 
 /obj/item/storage/box/chicken_mask/PopulateContents()
-	new /obj/item/clothing/mask/chicken_rampage(src)
+	new /obj/item/clothing/head/chicken_rampage(src)
 
 /datum/uplink_item/dangerous/chicken_mask
 	name = "Suspicious Chicken Mask"
