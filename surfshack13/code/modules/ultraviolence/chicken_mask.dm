@@ -107,6 +107,7 @@
 	RegisterSignal(wearer, COMSIG_MOB_ATTACK_LANDED, PROC_REF(on_attack_landed))
 	RegisterSignal(wearer, COMSIG_MOB_ULTRAVIOLENCE_EXECUTION, PROC_REF(on_execution))
 	RegisterSignal(wearer, COMSIG_MOB_AFTER_APPLY_DAMAGE, PROC_REF(on_damaged))
+	RegisterSignal(wearer, COMSIG_ATOM_HITBY, PROC_REF(on_hit_by_thrown))
 	RegisterSignal(wearer, COMSIG_LIVING_HEALTH_UPDATE, PROC_REF(update_music))
 	RegisterSignal(wearer, COMSIG_LIVING_DEATH, PROC_REF(on_death))
 	RegisterSignal(wearer, COMSIG_LIVING_REVIVE, PROC_REF(update_music))
@@ -120,6 +121,7 @@
 		COMSIG_MOB_ATTACK_LANDED,
 		COMSIG_MOB_ULTRAVIOLENCE_EXECUTION,
 		COMSIG_MOB_AFTER_APPLY_DAMAGE,
+		COMSIG_ATOM_HITBY,
 		COMSIG_LIVING_HEALTH_UPDATE,
 		COMSIG_LIVING_DEATH,
 		COMSIG_LIVING_REVIVE,
@@ -201,10 +203,27 @@
 /datum/component/chicken_rampage/proc/on_damaged(mob/living/source, damage_dealt, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item, wound_clothing)
 	SIGNAL_HANDLER
 
-	if(combo <= 0 || damage_dealt <= 0 || last_hurt_time == world.time)
+	if(damage_dealt <= 0)
 		return
-	// Only actual attacks, not burning, bleeding or other damage over time.
+	// Only actual attacks, not burning, bleeding or other damage over time. Thrown things are handled by on_hit_by_thrown().
 	if(!attacking_item && !attack_direction)
+		return
+	lose_combo_time()
+
+/// Getting hit by a thrown object also eats into the combo timer.
+/datum/component/chicken_rampage/proc/on_hit_by_thrown(mob/living/source, atom/movable/hitting_atom, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
+	SIGNAL_HANDLER
+
+	if(blocked || !isitem(hitting_atom))
+		return
+	var/obj/item/thrown_item = hitting_atom
+	if(thrown_item.throwforce <= 0)
+		return
+	lose_combo_time()
+
+/// Takes RAMPAGE_HIT_TIMER_PENALTY off the combo timer, at most once per tick so a shotgun blast counts once.
+/datum/component/chicken_rampage/proc/lose_combo_time()
+	if(combo <= 0 || last_hurt_time == world.time)
 		return
 	last_hurt_time = world.time
 	combo_expires -= RAMPAGE_HIT_TIMER_PENALTY

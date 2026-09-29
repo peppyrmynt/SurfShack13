@@ -4,6 +4,8 @@
 #define ULTRAVIOLENCE_EXECUTION_STAB_TIME (0.4 SECONDS)
 /// How long a single-swing bladed execution takes.
 #define ULTRAVIOLENCE_EXECUTION_SLICE_TIME (1.5 SECONDS)
+/// Trait source for holding an execution victim down.
+#define ULTRAVIOLENCE_PIN_TRAIT "ultraviolence_pin"
 /// Minimum force for an item to be used for an execution.
 #define ULTRAVIOLENCE_EXECUTION_MIN_FORCE 10
 /// Force a bladed weapon needs to cut someone in half, or a blunt one to cave a chest in.
@@ -24,7 +26,7 @@
  * by aiming for the head in combat mode.
  * It never changes how much damage anything deals, it only changes what a lethal hit looks like.
  *
- * Sourced so several things (a mask, an admin, a future antag datum) can grant it at once.
+ * Only granted by the chicken mask traitor item (see chicken_mask.dm). Sourced so admins can also add it for testing.
  */
 /datum/component/ultraviolence
 	dupe_mode = COMPONENT_DUPE_SOURCES
@@ -34,7 +36,13 @@
 	var/datum/weakref/last_gored
 	/// world.time of the last kill effect.
 	var/last_gore_time = 0
+	/// The victim we're currently holding down for an execution, if any. Chicken mask only.
+	var/datum/weakref/pinned_victim
 	COOLDOWN_DECLARE(mutilate_cooldown)
+
+/datum/component/ultraviolence/Destroy()
+	release_pin()
+	return ..()
 
 /datum/component/ultraviolence/Initialize()
 	if(!isliving(parent))
@@ -265,9 +273,11 @@
 	attacker.visible_message(span_danger("[start_text[1]]..."), span_danger("[start_text[2]]..."), ignored_mobs = victim)
 	to_chat(victim, span_userdanger("[attacker] pins you down!"))
 	log_combat(attacker, victim, "started executing (ultraviolence)", weapon)
+	pin_victim(attacker, victim)
 
 	for(var/blow in 1 to blows)
-		if(!do_after(attacker, blow_time, victim, extra_checks = CALLBACK(src, PROC_REF(execution_still_valid), attacker, victim, weapon)))
+		if(!do_after(attacker, blow_time, victim, extra_checks = CALLBACK(src, PROC_REF(execution_still_valid), attacker, victim, weapon)) || QDELETED(src))
+			release_pin()
 			executing = FALSE
 			return
 		attacker.do_attack_animation(victim, weapon ? null : ATTACK_EFFECT_KICK, weapon)
@@ -282,6 +292,7 @@
 		if(blow_text && blow < blows)
 			attacker.visible_message(span_danger("[blow_text[1]]!"), span_danger("[blow_text[2]]!"))
 
+	release_pin()
 	var/splatter_dir = wall_dir || get_dir(attacker, victim)
 	victim.gore_witnessed(attacker)
 	if(decapitate)
@@ -297,9 +308,27 @@
 	executing = FALSE
 	SEND_SIGNAL(attacker, COMSIG_MOB_ULTRAVIOLENCE_EXECUTION, victim)
 
+/**
+ * Chicken mask only: holds the victim down for the whole execution, so a stun wearing off halfway through
+ * doesn't let them get up. Released as soon as the execution ends, however it ends.
+ */
+/datum/component/ultraviolence/proc/pin_victim(mob/living/attacker, mob/living/carbon/victim)
+	if(!HAS_TRAIT(attacker, TRAIT_RAMPAGE_EXECUTIONER))
+		return
+	release_pin()
+	victim.add_traits(list(TRAIT_INCAPACITATED, TRAIT_IMMOBILIZED, TRAIT_FLOORED, TRAIT_HANDS_BLOCKED), ULTRAVIOLENCE_PIN_TRAIT)
+	pinned_victim = WEAKREF(victim)
+
+/// Lets go of whoever we were holding down.
+/datum/component/ultraviolence/proc/release_pin()
+	var/mob/living/victim = pinned_victim?.resolve()
+	pinned_victim = null
+	if(victim)
+		victim.remove_traits(list(TRAIT_INCAPACITATED, TRAIT_IMMOBILIZED, TRAIT_FLOORED, TRAIT_HANDS_BLOCKED), ULTRAVIOLENCE_PIN_TRAIT)
+
 /// Extra do_after checks for executions, so the victim can't be dragged away or stood back up mid-execution.
 /datum/component/ultraviolence/proc/execution_still_valid(mob/living/attacker, mob/living/carbon/victim, obj/item/weapon)
-	if(QDELETED(victim) || !is_executable(attacker, victim))
+	if(QDELETED(src) || QDELETED(victim) || !is_executable(attacker, victim))
 		return FALSE
 	if(!victim.get_bodypart(BODY_ZONE_HEAD))
 		return FALSE
@@ -307,6 +336,7 @@
 		return FALSE
 	return TRUE
 
+#undef ULTRAVIOLENCE_PIN_TRAIT
 #undef ULTRAVIOLENCE_EXECUTION_BLOW_TIME
 #undef ULTRAVIOLENCE_EXECUTION_STAB_TIME
 #undef ULTRAVIOLENCE_EXECUTION_SLICE_TIME

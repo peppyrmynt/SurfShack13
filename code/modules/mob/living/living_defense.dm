@@ -249,7 +249,7 @@
 	var/brutal_throw = thrown_by && HAS_TRAIT(thrown_by, TRAIT_BRUTAL_THROWER)
 	if(brutal_throw)
 		throw_damage *= BRUTAL_THROWER_DAMAGE_MULTIPLIER
-	var/damage_done = apply_damage(throw_damage, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND), attacking_item = thrown_item)
+	var/damage_done = apply_damage(throw_damage, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
 	if(QDELETED(src)) //Damage can delete the mob.
 		return
 	if(damage_done > 0 && thrown_by)
