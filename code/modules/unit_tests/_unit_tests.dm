@@ -157,6 +157,7 @@
 #include "ensure_subtree_operational_datum.dm"
 #include "explosion_action.dm"
 #include "fish_unit_tests.dm"
+#include "flood_mecha.dm"
 #include "focus_only_tests.dm"
 #include "font_awesome_icons.dm"
 #include "food_edibility_check.dm"

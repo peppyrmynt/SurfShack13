@@ -55,7 +55,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Attacks',
-        text: 'Your melee attacks damage targets but never infect them. Infection requires a Flood Infector attached to a dead human or animal.',
+        text: 'Your melee attacks damage targets but never infect them. Infection requires a Flood Infector attached to a dead human or animal. Infectors can latch onto an occupied mech to damage its organic pilot, who can resist to shake them off. A pilot who dies while the infector stays attached can be converted.',
       },
     ],
   },
