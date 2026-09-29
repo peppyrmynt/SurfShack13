@@ -4,9 +4,9 @@
 
 /datum/unit_test/classic_fusion/proc/fuel(datum/gas_mixture/air)
 	air.gases.Cut()
-	air.assert_gases(/datum/gas/plasma, /datum/gas/hydrogen, /datum/gas/tritium)
+	air.assert_gases(/datum/gas/plasma, /datum/gas/carbon_dioxide, /datum/gas/tritium)
 	air.gases[/datum/gas/plasma][MOLES] = 1000
-	air.gases[/datum/gas/hydrogen][MOLES] = 1000
+	air.gases[/datum/gas/carbon_dioxide][MOLES] = 1000
 	air.gases[/datum/gas/tritium][MOLES] = 100
 	air.temperature = 20000
 
@@ -25,11 +25,11 @@
 	var/list/parsed = gas_mixture_parser(air, "Test")
 	TEST_ASSERT_EQUAL(parsed["fusion"], reading, "The analyzer UI must receive the persistent reading")
 
-	// The late classic hydrogen requirement is essential, as is the temperature gate.
+	// The classic carbon dioxide requirement is essential, as is the temperature gate.
 	fuel(air)
-	air.gases[/datum/gas/hydrogen][MOLES] = 249
+	air.gases[/datum/gas/carbon_dioxide][MOLES] = 249
 	air.react(null)
-	TEST_ASSERT_EQUAL(air.gases[/datum/gas/tritium][MOLES], 100, "Fusion below the hydrogen threshold")
+	TEST_ASSERT_EQUAL(air.gases[/datum/gas/tritium][MOLES], 100, "Fusion below the carbon dioxide threshold")
 	fuel(air)
 	air.temperature = CLASSIC_FUSION_TEMPERATURE_THRESHOLD - 1
 	air.react(null)
@@ -38,6 +38,22 @@
 	air.assert_gas(/datum/gas/hypernoblium)
 	air.gases[/datum/gas/hypernoblium][MOLES] = REACTION_OPPRESSION_THRESHOLD
 	TEST_ASSERT_EQUAL(air.react(null), STOP_REACTIONS, "Hyper-noblium must still suppress fusion")
+
+/datum/unit_test/classic_fusion/carbon_dioxide_required/Run()
+	var/datum/gas_reaction/fusion/reaction = new
+	var/datum/gas_mixture/air = allocate(/datum/gas_mixture, 1000)
+	fuel(air)
+	air.gases -= /datum/gas/carbon_dioxide
+	air.assert_gas(/datum/gas/hydrogen)
+	air.gases[/datum/gas/hydrogen][MOLES] = 1000
+	TEST_ASSERT_EQUAL(reaction.react(air, null), NO_REACTION, "Hydrogen must not replace missing carbon dioxide")
+	air.react(null)
+	TEST_ASSERT_NULL(air.analyzer_results, "Hydrogen-only fuel must not trigger classic fusion through the scheduler")
+	TEST_ASSERT_EQUAL(air.gases[/datum/gas/tritium][MOLES], 100, "Rejected fusion must not consume tritium")
+	air.assert_gas(/datum/gas/carbon_dioxide)
+	air.gases[/datum/gas/carbon_dioxide][MOLES] = CLASSIC_FUSION_MOLE_THRESHOLD - 1
+	TEST_ASSERT_EQUAL(reaction.react(air, null), NO_REACTION, "Hydrogen must not bypass the carbon dioxide threshold")
+	qdel(reaction)
 
 /datum/unit_test/classic_fusion/products/Run()
 	var/datum/gas_reaction/fusion/reaction = new

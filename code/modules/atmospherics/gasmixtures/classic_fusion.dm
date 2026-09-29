@@ -8,21 +8,21 @@
 	priority_group = PRIORITY_PRE_FORMATION
 	name = "Plasmic Fusion"
 	id = "fusion"
-	desc = "Chaotic plasma-hydrogen fusion catalyzed by tritium. Produces heat or absorbs it, tier-dependent gases, radiation, nuclear particles and electrical arcs."
+	desc = "Chaotic plasma-CO2 fusion catalyzed by tritium. Produces heat or absorbs it, tier-dependent gases, radiation, nuclear particles and electrical arcs."
 
 /datum/gas_reaction/fusion/init_reqs()
 	requirements = list(
 		"MIN_TEMP" = CLASSIC_FUSION_TEMPERATURE_THRESHOLD,
 		/datum/gas/tritium = CLASSIC_FUSION_TRITIUM_MOLES_USED,
 		/datum/gas/plasma = CLASSIC_FUSION_MOLE_THRESHOLD,
-		/datum/gas/hydrogen = CLASSIC_FUSION_MOLE_THRESHOLD,
+		/datum/gas/carbon_dioxide = CLASSIC_FUSION_MOLE_THRESHOLD,
 	)
 
 /datum/gas_reaction/fusion/init_factors()
 	factor = list(
 		"Temperature" = "Requires at least 9000 K. Exothermic heating stops above 100 million K; endothermic reactions can still cool the mixture.",
-		GAS_PLASMA = "Requires at least 250 mol. Plasma and hydrogen follow a chaotic kicked-rotator reaction.",
-		GAS_HYDROGEN = "Requires at least 250 mol.",
+		GAS_PLASMA = "Requires at least 250 mol. Plasma and carbon dioxide follow a chaotic kicked-rotator reaction.",
+		GAS_CO2 = "Requires at least 250 mol.",
 		GAS_TRITIUM = "Consumes 1 mol per successful reaction.",
 		"Products" = "Low: BZ and carbon dioxide. Mid: nitrium and nitrous oxide. High: nitrium and pluoxium. Super: tritium. Yield scales with the absolute reaction energy.",
 		"Dangers" = "Radiation, nuclear particles and Tesla arcs. High and super tiers can generate explosive shockwaves. Hyper-noblium suppresses this reaction.",
@@ -95,15 +95,15 @@
 	// Reactions can be invoked directly by unit tests or callers outside the scheduler.
 	// Never assume init_reqs() has already guaranteed that these entries exist.
 	var/list/plasma_entry = cached_gases[/datum/gas/plasma]
-	var/list/hydrogen_entry = cached_gases[/datum/gas/hydrogen]
+	var/list/carbon_dioxide_entry = cached_gases[/datum/gas/carbon_dioxide]
 	var/list/tritium_entry = cached_gases[/datum/gas/tritium]
-	if(!plasma_entry || !hydrogen_entry || !tritium_entry)
+	if(!plasma_entry || !carbon_dioxide_entry || !tritium_entry)
 		return NO_REACTION
-	if(plasma_entry[MOLES] < CLASSIC_FUSION_MOLE_THRESHOLD || hydrogen_entry[MOLES] < CLASSIC_FUSION_MOLE_THRESHOLD || tritium_entry[MOLES] < CLASSIC_FUSION_TRITIUM_MOLES_USED)
+	if(plasma_entry[MOLES] < CLASSIC_FUSION_MOLE_THRESHOLD || carbon_dioxide_entry[MOLES] < CLASSIC_FUSION_MOLE_THRESHOLD || tritium_entry[MOLES] < CLASSIC_FUSION_TRITIUM_MOLES_USED)
 		return NO_REACTION
 	var/old_heat_capacity = air.heat_capacity()
 	var/initial_plasma = plasma_entry[MOLES]
-	var/initial_hydrogen = hydrogen_entry[MOLES]
+	var/initial_carbon_dioxide = carbon_dioxide_entry[MOLES]
 	var/scale_factor = air.volume / PI
 	var/toroidal_size = 2 * PI
 	var/power = gas_power(air)
@@ -111,13 +111,13 @@
 	var/tier_power = power_ratio(air, power)
 	var/tier = classic_fusion_tier(tier_power)
 	var/plasma = (initial_plasma - CLASSIC_FUSION_MOLE_THRESHOLD) / scale_factor
-	var/hydrogen = (initial_hydrogen - CLASSIC_FUSION_MOLE_THRESHOLD) / scale_factor
+	var/carbon_dioxide = (initial_carbon_dioxide - CLASSIC_FUSION_MOLE_THRESHOLD) / scale_factor
 
-	// Final classic kicked-rotator formula, with hydrogen rather than carbon dioxide.
-	plasma = MODULUS(plasma - instability * sin(TODEGREES(hydrogen)), toroidal_size)
-	hydrogen = MODULUS(hydrogen - plasma, toroidal_size)
+	// Classic kicked-rotator formula using carbon dioxide as the second reactant.
+	plasma = MODULUS(plasma - instability * sin(TODEGREES(carbon_dioxide)), toroidal_size)
+	carbon_dioxide = MODULUS(carbon_dioxide - plasma, toroidal_size)
 	var/new_plasma = plasma * scale_factor + CLASSIC_FUSION_MOLE_THRESHOLD
-	var/new_hydrogen = hydrogen * scale_factor + CLASSIC_FUSION_MOLE_THRESHOLD
+	var/new_carbon_dioxide = carbon_dioxide * scale_factor + CLASSIC_FUSION_MOLE_THRESHOLD
 	var/reaction_energy = (initial_plasma - new_plasma) * CLASSIC_FUSION_BINDING_ENERGY
 	if(instability < CLASSIC_FUSION_ENDOTHERMALITY)
 		reaction_energy = max(reaction_energy, 0)
@@ -127,7 +127,7 @@
 		return NO_REACTION
 
 	plasma_entry[MOLES] = new_plasma
-	hydrogen_entry[MOLES] = new_hydrogen
+	carbon_dioxide_entry[MOLES] = new_carbon_dioxide
 	tritium_entry[MOLES] -= CLASSIC_FUSION_TRITIUM_MOLES_USED
 	// The older reaction consumed ALL gas at once. Apply its product fractions to
 	// the final reaction's waste budget instead, retaining sustained fusion.
