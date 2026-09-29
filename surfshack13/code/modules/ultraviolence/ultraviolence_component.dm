@@ -210,6 +210,18 @@
 	INVOKE_ASYNC(src, PROC_REF(execute), source, target)
 	return COMPONENT_CANCEL_ATTACK_CHAIN
 
+/**
+ * Knives get the frenzied stabbing execution instead of a decapitation, even though most of them count as edged.
+ * The butcher's cleaver is a chopper, so it still takes the head off. Anything only pointy (and not edged) stabs too.
+ */
+/datum/component/ultraviolence/proc/is_stabbing_weapon(obj/item/weapon)
+	if(!weapon)
+		return FALSE
+	if(istype(weapon, /obj/item/knife))
+		return !istype(weapon, /obj/item/knife/butcher)
+	var/sharpness = weapon.get_sharpness()
+	return (sharpness & SHARP_POINTY) && !(sharpness & SHARP_EDGED)
+
 /// Returns the direction of a wall next to the victim, if there is one to slam their head into.
 /datum/component/ultraviolence/proc/find_adjacent_wall(mob/living/carbon/victim)
 	for(var/direction in GLOB.cardinals)
@@ -219,8 +231,8 @@
 
 /**
  * Ground executions, only possible on downed targets (see is_executable()). The finisher depends on what you're holding:
- * * Blades: one long cut that takes the head off.
  * * Knives and other pointy things: frenzied stabbing until the head is pulp.
+ * * Other blades (including the butcher's cleaver): one long cut that takes the head off.
  * * Blunt weapons: repeated blows to the head, into a wall if there's one next to them.
  * * Shoes: curbstomp. Bare hands: grab the head and slam it into the floor or a wall.
  */
@@ -244,19 +256,19 @@
 	var/decapitate = FALSE
 	var/blow_sound = weapon?.hitsound || 'sound/effects/hit_kick.ogg'
 	var/surface = wall_dir ? "wall" : "floor"
-	if(sharpness & SHARP_EDGED)
-		blows = 1
-		blow_time = ULTRAVIOLENCE_EXECUTION_SLICE_TIME
-		start_text = list("[attacker] presses [attacker.p_their()] [weapon.name] against [victim]'s neck", "You press your [weapon.name] against [victim]'s neck")
-		decapitate = TRUE
-		blow_sound = 'sound/items/weapons/bladeslice.ogg'
-	else if(sharpness & SHARP_POINTY)
+	if(is_stabbing_weapon(weapon))
 		blows = 5
 		blow_time = ULTRAVIOLENCE_EXECUTION_STAB_TIME
 		start_text = list("[attacker] pins [victim] down and raises [attacker.p_their()] [weapon.name]", "You pin [victim] down and raise your [weapon.name]")
 		blow_text = list("[attacker] stabs [victim] in the face", "You stab [victim] in the face")
 		head_method = GORE_HEAD_STABBED
 		blow_sound = 'sound/effects/wounds/pierce1.ogg'
+	else if(sharpness & SHARP_EDGED)
+		blows = 1
+		blow_time = ULTRAVIOLENCE_EXECUTION_SLICE_TIME
+		start_text = list("[attacker] presses [attacker.p_their()] [weapon.name] against [victim]'s neck", "You press your [weapon.name] against [victim]'s neck")
+		decapitate = TRUE
+		blow_sound = 'sound/items/weapons/bladeslice.ogg'
 	else if(weapon)
 		blows = 3
 		blow_time = ULTRAVIOLENCE_EXECUTION_BLOW_TIME
