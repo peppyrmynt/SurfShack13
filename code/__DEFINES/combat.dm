@@ -185,6 +185,10 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define BRUTAL_THROWER_SPEED_BONUS 2
 /// Thrown item damage multiplier for mobs with TRAIT_BRUTAL_THROWER.
 #define BRUTAL_THROWER_DAMAGE_MULTIPLIER 1.5
+/// Flat embed chance bonus for things thrown by mobs with TRAIT_BRUTAL_THROWER.
+#define BRUTAL_THROWER_EMBED_BONUS 35
+/// How much armor still counts against embedding for things thrown by mobs with TRAIT_BRUTAL_THROWER.
+#define BRUTAL_THROWER_EMBED_ARMOR_MULTIPLIER 0.5
 
 //Gun weapon weight
 /// Default normal ol' gun. Akimboable, one handed.

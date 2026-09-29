@@ -173,6 +173,11 @@
 	if (throwingdatum?.speed > parent.throw_speed)
 		chance += (throwingdatum.speed - parent.throw_speed) * EMBED_CHANCE_SPEED_BONUS
 
+	var/mob/thrower = throwingdatum?.get_thrower()
+	var/brutal_throw = thrower && HAS_TRAIT(thrower, TRAIT_BRUTAL_THROWER)
+	if (brutal_throw)
+		chance += BRUTAL_THROWER_EMBED_BONUS
+
 	if (is_harmless())
 		return prob(embed_chance)
 
@@ -184,6 +189,9 @@
 
 	if (parent.weak_against_armour)
 		armor *= ARMOR_WEAKENED_MULTIPLIER
+
+	if (brutal_throw)
+		armor *= BRUTAL_THROWER_EMBED_ARMOR_MULTIPLIER
 
 	chance -= armor
 	if (chance < 0)

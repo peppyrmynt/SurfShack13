@@ -35,6 +35,8 @@
 #define RAMPAGE_WOUND_HEAL_MIN_CHANCE 35
 /// Combo at which every combo gain mends a wound.
 #define RAMPAGE_WOUND_HEAL_MAX_COMBO 50
+/// How long a sharp thrown item keeps its temporary embedding if it doesn't stick in anyone.
+#define RAMPAGE_THROW_EMBED_WINDOW (5 SECONDS)
 /// Damage of every punch thrown by the mask's martial art.
 #define RAMPAGE_PUNCH_DAMAGE 15
 /// Melee armor at which punches only penetrate half of it. Below this they penetrate more, up to all of it against no armor.
@@ -196,6 +198,7 @@
 	RegisterSignal(wearer, COMSIG_MOB_LOGIN, PROC_REF(on_login))
 	RegisterSignal(wearer, COMSIG_LIVING_UNARMED_ATTACK, PROC_REF(on_unarmed_kick))
 	RegisterSignal(wearer, COMSIG_USER_ITEM_INTERACTION_SECONDARY, PROC_REF(on_item_kick))
+	RegisterSignal(wearer, COMSIG_MOB_THROW, PROC_REF(on_throw))
 
 	to_chat(wearer, span_userdanger("The mask tightens around your head. It isn't coming off. <i>Do you like hurting other people?</i>"))
 
@@ -212,6 +215,7 @@
 		COMSIG_MOB_LOGIN,
 		COMSIG_LIVING_UNARMED_ATTACK,
 		COMSIG_USER_ITEM_INTERACTION_SECONDARY,
+		COMSIG_MOB_THROW,
 	))
 	wearer.remove_traits(list(TRAIT_NOSOFTCRIT, TRAIT_ANALGESIA, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.RemoveComponentSource(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
@@ -434,6 +438,38 @@
 	SIGNAL_HANDLER
 	source.client?.screen |= combo_display
 
+/// Anything sharp the wearer throws can embed, even if it normally couldn't (kitchen knives, glass, screwdrivers...).
+/datum/component/chicken_rampage/proc/on_throw(mob/living/source, atom/target)
+	SIGNAL_HANDLER
+
+	var/obj/item/thrown = source.get_active_held_item()
+	if(!thrown || !thrown.get_sharpness() || thrown.get_embed())
+		return
+	thrown.set_embed(/datum/embedding/rampage_throw)
+	// If it doesn't stick, it goes back to normal once the throw is over.
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(clear_rampage_embed), WEAKREF(thrown)), RAMPAGE_THROW_EMBED_WINDOW)
+
+/// Takes the temporary rampage embedding off an item that didn't end up stuck in anyone.
+/proc/clear_rampage_embed(datum/weakref/item_ref)
+	var/obj/item/thrown = item_ref?.resolve()
+	if(!thrown)
+		return
+	var/datum/embedding/embed = thrown.get_embed()
+	if(istype(embed, /datum/embedding/rampage_throw) && !embed.owner)
+		thrown.set_embed(null)
+
+/**
+ * Temporary embedding given to sharp things thrown by the chicken mask wearer.
+ * Once it's pulled out or falls out, the item goes back to not being embeddable.
+ */
+/datum/embedding/rampage_throw
+	embed_chance = 50
+
+/datum/embedding/rampage_throw/stop_embedding()
+	. = ..()
+	if(!QDELETED(parent))
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(clear_rampage_embed), WEAKREF(parent)), 1)
+
 /datum/movespeed_modifier/chicken_rampage
 	variable = TRUE
 
@@ -564,6 +600,7 @@
 #undef RAMPAGE_CLICK_SPEED_PER_COMBO
 #undef RAMPAGE_MIN_CLICK_MODIFIER
 #undef RAMPAGE_PUNCH_DAMAGE
+#undef RAMPAGE_THROW_EMBED_WINDOW
 #undef RAMPAGE_WOUND_HEAL_MIN_COMBO
 #undef RAMPAGE_WOUND_HEAL_MIN_CHANCE
 #undef RAMPAGE_WOUND_HEAL_MAX_COMBO
