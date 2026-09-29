@@ -227,6 +227,15 @@
 	if(!latch_still_valid(victim) || victim.stat != DEAD)
 		return FALSE
 
+	if(latched_mech)
+		var/obj/vehicle/sealed/mecha/mech = latched_mech
+		// Move the corpse out through the normal mech exit path before replacing it.
+		// Otherwise deleting an occupant during conversion can take the mech with it.
+		mech.mob_exit(victim, silent = TRUE, forced = TRUE)
+		if(victim.loc == mech || mech.is_occupant(victim))
+			return FALSE
+		mech.visible_message(span_danger("[victim] is forced out of [mech] as the Flood takes hold!"))
+
 	var/turf/conversion_turf = get_turf(victim)
 	if(!conversion_turf)
 		return FALSE

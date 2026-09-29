@@ -25,3 +25,21 @@
 	mech.mob_exit(pilot, silent = TRUE)
 	TEST_ASSERT(!infector.latched_host && !infector.buckled, "The Infector remained attached after the pilot exited.")
 	TEST_ASSERT(!targeting.can_attack(infector, mech), "The Infector still targeted the empty mech.")
+
+/// Converting a pilot must eject their body and leave the mech for other players to use.
+/datum/unit_test/flood_mecha_pilot_infection
+
+/datum/unit_test/flood_mecha_pilot_infection/Run()
+	var/obj/vehicle/sealed/mecha/mech = allocate(/obj/vehicle/sealed/mecha/ripley)
+	var/mob/living/carbon/human/consistent/pilot = allocate(/mob/living/carbon/human/consistent)
+	var/mob/living/basic/flood/infestor/infector = allocate(/mob/living/basic/flood/infestor)
+	mech.mob_enter(pilot, silent = TRUE)
+	infector.forceMove(get_step(mech, EAST))
+	TEST_ASSERT(infector.melee_attack(mech), "The Infector failed to latch onto the pilot's mech.")
+
+	pilot.death()
+	infector.finish_latch(pilot, infector.latch_generation)
+	TEST_ASSERT(!QDELETED(mech), "Infecting the pilot deleted the mech.")
+	TEST_ASSERT(!length(mech.occupants), "The converted pilot is still registered as a mech occupant.")
+	var/mob/living/basic/flood/combat_form/human/converted = locate(/mob/living/basic/flood/combat_form/human) in get_turf(mech)
+	TEST_ASSERT(converted && converted.loc == get_turf(mech), "The new Flood was not created outside the mech.")
