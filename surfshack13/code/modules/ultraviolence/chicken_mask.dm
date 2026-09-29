@@ -100,10 +100,11 @@
 	REMOVE_TRAIT(src, TRAIT_NODROP, CHICKEN_MASK_TRAIT)
 	qdel(user.GetComponent(/datum/component/chicken_rampage))
 
-/// Someone who isn't the owner put the mask on. They get none of the rampage.
+/// Someone who isn't the owner put the mask on. They get none of the rampage, just the curse.
 /obj/item/clothing/head/chicken_rampage/proc/thief_equipped(mob/living/thief)
 	to_chat(thief, span_userdanger("<i>Do you really like hurting people?</i>"))
 	log_combat(thief, thief, "put on a chicken mask that isn't theirs")
+	thief.AddComponent(/datum/component/chicken_thief_curse, src)
 
 /obj/item/clothing/head/chicken_rampage/examine(mob/user)
 	. = ..()

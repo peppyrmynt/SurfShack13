@@ -6610,6 +6610,7 @@
 #include "surfshack13\code\modules\swarmers\swarmer_objs.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_ruleset.dm"
 #include "surfshack13\code\modules\ultraviolence\chicken_mask.dm"
+#include "surfshack13\code\modules\ultraviolence\chicken_thief_curse.dm"
 #include "surfshack13\code\modules\ultraviolence\combo_hud.dm"
 #include "surfshack13\code\modules\ultraviolence\door_kick.dm"
 #include "surfshack13\code\modules\ultraviolence\gore.dm"
