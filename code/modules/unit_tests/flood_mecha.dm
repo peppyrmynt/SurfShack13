@@ -69,3 +69,67 @@
 	biomass.bullet_act(laser)
 	site = locate(site.x, site.y, site.z)
 	TEST_ASSERT_EQUAL(site.type, original_floor_type, "A laser hit did not burn away the biomass.")
+
+/// A midround ghost gets a placement view, reserves leadership, and becomes the chosen Overseer.
+/datum/unit_test/flood_midround_placement
+	var/turf/placed_floor
+	var/mob/living/basic/flood/overseer/placed_overseer
+	var/list/original_blob_spawns
+	var/test_z
+	var/original_station_flag
+	var/area/test_area
+	var/original_area_flags
+
+/datum/unit_test/flood_midround_placement/Destroy()
+	QDEL_NULL(placed_overseer)
+	if(istype(placed_floor, /turf/open/floor/flood_biomass))
+		placed_floor.ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
+	if(test_z)
+		GLOB.station_levels_cache[test_z] = original_station_flag
+	if(test_area)
+		test_area.area_flags = original_area_flags
+	if(original_blob_spawns)
+		GLOB.blobstart = original_blob_spawns
+	return ..()
+
+/datum/unit_test/flood_midround_placement/Run()
+	// Treat the isolated test room as a station and give it a known Blob spawn.
+	test_z = run_loc_floor_bottom_left.z
+	original_station_flag = is_station_level(test_z)
+	GLOB.station_levels_cache[test_z] = TRUE
+	test_area = get_area(run_loc_floor_bottom_left)
+	original_area_flags = test_area.area_flags
+	test_area.area_flags |= BLOBS_ALLOWED
+	original_blob_spawns = GLOB.blobstart
+	GLOB.blobstart = list(run_loc_floor_bottom_left)
+	var/datum/dynamic_ruleset/midround/from_ghosts/flood/ruleset = allocate(/datum/dynamic_ruleset/midround/from_ghosts/flood)
+	var/mob/dead/observer/applicant = allocate(/mob/dead/observer)
+	var/mob/eye/flood_spawn/placement = ruleset.generate_ruleset_body(applicant)
+	TEST_ASSERT(istype(placement), "The Flood midround did not create a placement view for a ghost without a mind.")
+	allocated += placement
+	TEST_ASSERT_EQUAL(get_turf(placement), run_loc_floor_bottom_left, "The placement view did not start at the existing Blob spawn.")
+	TEST_ASSERT(!flood_has_living_overseer(), "The midround spawned an Overseer before the player chose a location.")
+	TEST_ASSERT(!can_form_flood_overseer(), "An incoming Overseer did not reserve the leadership slot.")
+	TEST_ASSERT(can_form_flood_overseer(placement), "The placement view was blocked by its own leadership reservation.")
+	TEST_ASSERT(locate(/datum/action/flood_place_overseer) in placement.actions, "The placement view has no Spawn Overseer action.")
+	TEST_ASSERT(placement.placement_error(null), "The placement view accepted an invalid location.")
+	GLOB.station_levels_cache[test_z] = FALSE
+	TEST_ASSERT(placement.placement_error(run_loc_floor_bottom_left), "The placement view allowed spawning on an off-station level.")
+	GLOB.station_levels_cache[test_z] = TRUE
+	// Possession normally initializes the fresh mind through Login; there is no client in a unit test.
+	placement.mind_initialize()
+	ruleset.finish_setup(placement, 1)
+	var/datum/mind/selected_mind = placement.mind
+	TEST_ASSERT(selected_mind.has_antag_datum(/datum/antagonist/flood), "The chosen ghost did not receive the Flood antagonist.")
+	var/turf/valid_floor = get_step(run_loc_floor_bottom_left, EAST)
+	TEST_ASSERT(placement.Move(valid_floor, EAST), "The placement view could not scout away from its initial spawn.")
+	var/obj/structure/closet/blocker = allocate(/obj/structure/closet, valid_floor)
+	TEST_ASSERT(placement.placement_error(valid_floor), "The placement view accepted a blocked tile.")
+	qdel(blocker)
+	placed_overseer = placement.place_overseer()
+	placed_floor = locate(valid_floor.x, valid_floor.y, valid_floor.z)
+	TEST_ASSERT_NOTNULL(placed_overseer, "The placement view did not spawn an Overseer on a valid tile.")
+	TEST_ASSERT_EQUAL(placed_overseer.mind, selected_mind, "The selected player's mind did not reach the Overseer.")
+	TEST_ASSERT(istype(placed_floor, /turf/open/floor/flood_biomass), "The Overseer did not start on biomass.")
+	TEST_ASSERT(QDELETED(placement), "The placement view remained after spawning its Overseer.")
+	TEST_ASSERT(!can_form_flood_overseer(), "The hive allowed a second Overseer after placement.")

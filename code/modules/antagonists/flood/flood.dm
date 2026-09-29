@@ -6,6 +6,8 @@
 GLOBAL_VAR_INIT(flood_infections, 0)
 /// Time when the hive can appoint a new overseer after its leader dies.
 GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
+/// Ghosts choosing the first Overseer's location reserve the hive's leadership slot.
+GLOBAL_LIST_EMPTY(flood_spawn_eyes)
 
 /// Limit new AI spawns across the entire hive; player conversions and form replacements are unaffected.
 /proc/flood_ai_population(infestors_only = null)
@@ -36,8 +38,13 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 			return TRUE
 	return FALSE
 
-/proc/can_form_flood_overseer()
-	return world.time >= GLOB.flood_overseer_replacement_at && !flood_has_living_overseer()
+/proc/can_form_flood_overseer(mob/eye/flood_spawn/placing_eye)
+	if(world.time < GLOB.flood_overseer_replacement_at || flood_has_living_overseer())
+		return FALSE
+	for(var/mob/eye/flood_spawn/pending_eye as anything in GLOB.flood_spawn_eyes)
+		if(pending_eye != placing_eye && !QDELETED(pending_eye))
+			return FALSE
+	return TRUE
 
 /// Check both infected minds and Flood forms when selecting potential hosts.
 /proc/is_flood_target(mob/target_mob)
@@ -123,7 +130,7 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 			"ai_infestors" = flood_ai_population(TRUE),
 			"ai_infestor_cap" = FLOOD_AI_INFESTOR_CAP,
 		)
-	if(istype(current_form, /mob/living/basic/flood/overseer))
+	if(istype(current_form, /mob/living/basic/flood/overseer) || istype(current_form, /mob/eye/flood_spawn))
 		data["current_form"] = "Overseer"
 	else if(istype(current_form, /mob/living/basic/flood/constructor))
 		data["current_form"] = "Constructor"

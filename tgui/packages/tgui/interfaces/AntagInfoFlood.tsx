@@ -111,6 +111,10 @@ const guides: Record<Form, Guide> = {
     summary: 'Grow the nest and command nearby AI Flood units.',
     entries: [
       {
+        label: 'Starting an outbreak',
+        text: 'When selected from a midround ghost poll, you begin in a placement view at an existing Blob spawn point. Move around the station and press Spawn Overseer on a clear floor away from crew. That tile becomes biomass and you take control of the first Overseer. Only one Overseer can be active or choosing a spawn at a time.',
+      },
+      {
         label: 'Infest Floor',
         text: 'Cover the floor you stand on with Flood growth every five seconds, like a constructor.',
       },

@@ -3191,6 +3191,7 @@
 #include "code\modules\antagonists\flood\flood_overseer_mode.dm"
 #include "code\modules\antagonists\flood\flood_rocket.dm"
 #include "code\modules\antagonists\flood\flood_ruleset.dm"
+#include "code\modules\antagonists\flood\flood_spawn.dm"
 #include "code\modules\antagonists\flood\flood_structures.dm"
 #include "code\modules\antagonists\flood\flood_turfs.dm"
 #include "code\modules\antagonists\fugitive\fugitive.dm"

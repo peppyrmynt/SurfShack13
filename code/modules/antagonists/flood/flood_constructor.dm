@@ -175,8 +175,8 @@
 /mob/living/basic/flood/constructor/proc/become_overseer()
 	if(stat == DEAD || !mind)
 		return FALSE
-	if(flood_has_living_overseer())
-		to_chat(src, span_warning("The hive already has a living overseer."))
+	if(flood_has_living_overseer() || length(GLOB.flood_spawn_eyes))
+		to_chat(src, span_warning("The hive already has an Overseer, or one is choosing where to spawn."))
 		return FALSE
 	if(world.time < GLOB.flood_overseer_replacement_at)
 		to_chat(src, span_warning("The hive is still grieving. You can become the overseer in [round((GLOB.flood_overseer_replacement_at - world.time) / 10)] seconds."))
