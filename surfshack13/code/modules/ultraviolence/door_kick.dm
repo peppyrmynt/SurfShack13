@@ -91,8 +91,8 @@
 		name = "kicked-in [door.name]"
 		desc = initial(desc)
 		density = TRUE
+		// Plane comes from the door's appearance, which already has the right offset for this z-level.
 		layer = ABOVE_MOB_LAYER
-		plane = GAME_PLANE
 	kicker_ref = WEAKREF(kicker)
 	RegisterSignal(src, COMSIG_MOVABLE_THROW_LANDED, PROC_REF(on_landed))
 

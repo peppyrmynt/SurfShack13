@@ -4,6 +4,10 @@
 #define ULTRAVIOLENCE_EXECUTION_STAB_TIME (0.4 SECONDS)
 /// How long a single-swing bladed execution takes.
 #define ULTRAVIOLENCE_EXECUTION_SLICE_TIME (1.5 SECONDS)
+/// Minimum time between blood sprays from the same victim.
+#define ULTRAVIOLENCE_SPRAY_COOLDOWN (0.3 SECONDS)
+/// Extra time on top of an execution's expected length before the failsafe forcibly ends it.
+#define ULTRAVIOLENCE_EXECUTION_FAILSAFE_GRACE (5 SECONDS)
 /// Trait source for holding an execution victim down.
 #define ULTRAVIOLENCE_PIN_TRAIT "ultraviolence_pin"
 /// Chicken mask executions on targets who are still conscious (stunned or knocked down, not in crit) take this many times longer.
@@ -38,12 +42,17 @@
 	var/datum/weakref/last_gored
 	/// world.time of the last kill effect.
 	var/last_gore_time = 0
+	/// The last body we sprayed blood out of, and when, to cap how many splatters rapid hits make.
+	var/datum/weakref/last_sprayed
+	var/last_spray_time = 0
 	/// The victim we're currently holding down for an execution, if any. Chicken mask only.
 	var/datum/weakref/pinned_victim
+	/// Failsafe timer that ends an execution that somehow never finished, so nobody stays pinned forever.
+	var/execution_failsafe_timer
 	COOLDOWN_DECLARE(mutilate_cooldown)
 
 /datum/component/ultraviolence/Destroy()
-	release_pin()
+	end_execution()
 	return ..()
 
 /datum/component/ultraviolence/Initialize()
@@ -84,11 +93,18 @@
 	var/zone = check_zone(def_zone)
 	var/style = get_style(weapon, sharpness)
 
-	if(victim.can_gore_bleed() && victim.blood_volume)
+	// Spray at most once per victim every ULTRAVIOLENCE_SPRAY_COOLDOWN, so shotgun pellets and automatic fire
+	// don't spawn dozens of flying splatters at once.
+	var/datum/weakref/victim_ref = WEAKREF(victim)
+	var/can_spray = (last_sprayed != victim_ref || world.time >= last_spray_time + ULTRAVIOLENCE_SPRAY_COOLDOWN)
+	if(can_spray && victim.can_gore_bleed() && victim.blood_volume)
+		last_sprayed = victim_ref
+		last_spray_time = world.time
 		// Bigger hits throw more blood, further, in a wider fan.
 		victim.gore_spray(clamp(round(damage_done / 8), 1, 4), splatter_dir, damage_done >= 20 ? 3 : 1)
 		if(prob(damage_done * 2))
 			victim.gore_splatter_floor(get_turf(victim), small_drip = TRUE)
+	if(victim.can_gore_bleed())
 		if(get_dist(source, victim) <= 1)
 			source.add_mob_blood(victim)
 		if(isitem(weapon))
@@ -106,7 +122,6 @@
 		return
 
 	// Only one kill effect per body per tick, so each pellet of a shotgun blast doesn't trigger its own.
-	var/datum/weakref/victim_ref = WEAKREF(victim)
 	if(last_gored == victim_ref && last_gore_time == world.time)
 		return
 	last_gored = victim_ref
@@ -299,11 +314,13 @@
 	to_chat(victim, span_userdanger("[attacker] pins you down!"))
 	log_combat(attacker, victim, "started executing (ultraviolence)", weapon)
 	pin_victim(attacker, victim)
+	// If anything goes wrong mid-execution, this makes sure the victim is let go and we can execute again.
+	deltimer(execution_failsafe_timer)
+	execution_failsafe_timer = addtimer(CALLBACK(src, PROC_REF(end_execution)), blows * blow_time + ULTRAVIOLENCE_EXECUTION_FAILSAFE_GRACE, TIMER_STOPPABLE)
 
 	for(var/blow in 1 to blows)
 		if(!do_after(attacker, blow_time, victim, extra_checks = CALLBACK(src, PROC_REF(execution_still_valid), attacker, victim, weapon)) || QDELETED(src))
-			release_pin()
-			executing = FALSE
+			end_execution()
 			return
 		attacker.do_attack_animation(victim, weapon ? null : ATTACK_EFFECT_KICK, weapon)
 		playsound(victim, blow_sound, 70, TRUE)
@@ -332,7 +349,7 @@
 	if(victim.stat != DEAD && !HAS_TRAIT(victim, TRAIT_NODEATH))
 		victim.death()
 	log_combat(attacker, victim, "executed (ultraviolence)", weapon)
-	executing = FALSE
+	end_execution()
 	SEND_SIGNAL(attacker, COMSIG_MOB_ULTRAVIOLENCE_EXECUTION, victim, victim_was_alive)
 
 /**
@@ -345,6 +362,13 @@
 	release_pin()
 	victim.add_traits(list(TRAIT_INCAPACITATED, TRAIT_IMMOBILIZED, TRAIT_FLOORED, TRAIT_HANDS_BLOCKED), ULTRAVIOLENCE_PIN_TRAIT)
 	pinned_victim = WEAKREF(victim)
+
+/// Wraps up an execution however it ended: lets the victim go and allows the next execution.
+/datum/component/ultraviolence/proc/end_execution()
+	deltimer(execution_failsafe_timer)
+	execution_failsafe_timer = null
+	release_pin()
+	executing = FALSE
 
 /// Lets go of whoever we were holding down.
 /datum/component/ultraviolence/proc/release_pin()
@@ -364,6 +388,8 @@
 	return TRUE
 
 #undef ULTRAVIOLENCE_PIN_TRAIT
+#undef ULTRAVIOLENCE_SPRAY_COOLDOWN
+#undef ULTRAVIOLENCE_EXECUTION_FAILSAFE_GRACE
 #undef ULTRAVIOLENCE_CONSCIOUS_EXECUTION_MULTIPLIER
 #undef ULTRAVIOLENCE_EXECUTION_BLOW_TIME
 #undef ULTRAVIOLENCE_EXECUTION_STAB_TIME
