@@ -226,6 +226,7 @@
  */
 /datum/component/ultraviolence/proc/execute(mob/living/attacker, mob/living/carbon/victim, obj/item/weapon)
 	executing = TRUE
+	var/victim_was_alive = victim.stat != DEAD
 
 	var/sharpness = weapon?.get_sharpness()
 	var/wall_dir = find_adjacent_wall(victim)
@@ -317,7 +318,7 @@
 		victim.death()
 	log_combat(attacker, victim, "executed (ultraviolence)", weapon)
 	executing = FALSE
-	SEND_SIGNAL(attacker, COMSIG_MOB_ULTRAVIOLENCE_EXECUTION, victim)
+	SEND_SIGNAL(attacker, COMSIG_MOB_ULTRAVIOLENCE_EXECUTION, victim, victim_was_alive)
 
 /**
  * Chicken mask only: holds the victim down for the whole execution, so a stun wearing off halfway through

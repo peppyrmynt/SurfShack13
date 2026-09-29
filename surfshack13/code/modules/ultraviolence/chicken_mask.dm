@@ -11,8 +11,16 @@
 #define RAMPAGE_EXECUTION_BONUS 2
 /// Speed boost just for wearing the mask.
 #define RAMPAGE_BASE_SPEED 0.15
-/// Extra speed per point of combo. Uncapped.
+/// Extra speed per point of combo.
 #define RAMPAGE_SPEED_PER_COMBO 0.025
+/// Speed boost can't go past this, the same as stimulants.
+#define RAMPAGE_MAX_SPEED 0.55
+/// Extra combo for a kill, on top of the point for the hit itself.
+#define RAMPAGE_KILL_COMBO_BONUS 1
+/// Score for a kill, multiplied by the combo.
+#define RAMPAGE_KILL_POINTS 100
+/// Score for an execution, multiplied by the combo.
+#define RAMPAGE_EXECUTION_POINTS 250
 /// Click cooldown reduction per point of combo.
 #define RAMPAGE_CLICK_SPEED_PER_COMBO 0.01
 /// Click cooldown can't drop below this fraction of normal, otherwise a big enough combo means no cooldown at all.
@@ -84,6 +92,9 @@
 	var/datum/rampage_music/music
 	/// The mask's martial art, so punches never miss.
 	var/datum/martial_art/chicken_rampage/martial
+	/// This wearer's score and stats for the round end report.
+	var/datum/rampage_record/record
+	COOLDOWN_DECLARE(door_kick_cooldown)
 
 /datum/component/chicken_rampage/Initialize(obj/item/clothing/mask/chicken_rampage/mask)
 	if(!isliving(parent) || QDELETED(mask))
@@ -96,6 +107,7 @@
 	var/mob/living/wearer = parent
 	wearer.add_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.AddComponentFrom(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
+	record = get_rampage_record(wearer)
 	update_combo_bonuses()
 	// Temporary, so whatever martial art they had comes back if the mask ever comes off.
 	martial = new
@@ -115,6 +127,8 @@
 	RegisterSignal(wearer, COMSIG_LIVING_DEATH, PROC_REF(on_death))
 	RegisterSignal(wearer, COMSIG_LIVING_REVIVE, PROC_REF(update_music))
 	RegisterSignal(wearer, COMSIG_MOB_LOGIN, PROC_REF(on_login))
+	RegisterSignal(wearer, COMSIG_LIVING_UNARMED_ATTACK, PROC_REF(on_unarmed_kick))
+	RegisterSignal(wearer, COMSIG_USER_ITEM_INTERACTION_SECONDARY, PROC_REF(on_item_kick))
 
 	to_chat(wearer, span_userdanger("The mask tightens around your head. It isn't coming off. <i>Do you like hurting other people?</i>"))
 
@@ -129,6 +143,8 @@
 		COMSIG_LIVING_DEATH,
 		COMSIG_LIVING_REVIVE,
 		COMSIG_MOB_LOGIN,
+		COMSIG_LIVING_UNARMED_ATTACK,
+		COMSIG_USER_ITEM_INTERACTION_SECONDARY,
 	))
 	wearer.remove_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.RemoveComponentSource(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
@@ -187,22 +203,37 @@
 	last_combo_time = world.time
 	add_combo(1)
 
+	// That hit killed them: bonus combo, and points multiplied by the combo.
+	if(target.stat == DEAD)
+		add_combo(RAMPAGE_KILL_COMBO_BONUS)
+		record?.kills++
+		award_points(RAMPAGE_KILL_POINTS, target)
+
+/// Adds points to the wearer's score, multiplied by the current combo, and pops them up over the victim.
+/datum/component/chicken_rampage/proc/award_points(base_points, atom/where)
+	var/points = base_points * max(combo, 1)
+	if(record)
+		record.score += points
+	where?.balloon_alert(parent, "+[points]")
+
 /// Only players count towards the combo: no monkeys, no NPCs, no mindless bodies.
 /datum/component/chicken_rampage/proc/is_sentient_player(mob/living/target)
 	if(!RAMPAGE_REQUIRE_SENTIENT_TARGETS)
 		return TRUE
 	return !isnull(target.mind?.key)
 
-/// Executions of players are worth extra combo and heal a percentage of max health equal to the combo.
-/datum/component/chicken_rampage/proc/on_execution(mob/living/source, mob/living/carbon/victim)
+/// Executions of players are worth extra combo, points multiplied by the combo, and heal a percentage of max health equal to the combo.
+/datum/component/chicken_rampage/proc/on_execution(mob/living/source, mob/living/carbon/victim, was_alive)
 	SIGNAL_HANDLER
 
 	if(!is_sentient_player(victim))
 		return
 	add_combo(RAMPAGE_EXECUTION_BONUS)
+	record?.executions++
+	award_points(RAMPAGE_EXECUTION_POINTS, victim)
 	var/heal_amount = source.maxHealth * combo / 100
 	source.heal_ordered_damage(heal_amount, list(BRUTE, BURN, TOX, OXY))
-	source.balloon_alert(source, "+[RAMPAGE_EXECUTION_BONUS] combo, healed [combo]%")
+	to_chat(source, span_notice("+[RAMPAGE_EXECUTION_BONUS] combo, healed [combo]%."))
 
 /// Getting hit eats into the time left on the combo.
 /datum/component/chicken_rampage/proc/on_damaged(mob/living/source, damage_dealt, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item, wound_clothing)
@@ -235,13 +266,15 @@
 
 /datum/component/chicken_rampage/proc/set_combo(new_combo)
 	combo = max(new_combo, 0)
+	if(record)
+		record.best_combo = max(record.best_combo, combo)
 	combo_display?.set_combo(combo)
 	update_combo_bonuses()
 
 /// Movement and click speed both scale with the combo.
 /datum/component/chicken_rampage/proc/update_combo_bonuses()
 	var/mob/living/wearer = parent
-	var/speed = RAMPAGE_BASE_SPEED + combo * RAMPAGE_SPEED_PER_COMBO
+	var/speed = min(RAMPAGE_BASE_SPEED + combo * RAMPAGE_SPEED_PER_COMBO, RAMPAGE_MAX_SPEED)
 	wearer.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/chicken_rampage, multiplicative_slowdown = -speed)
 
 	var/click_modifier = max(1 - combo * RAMPAGE_CLICK_SPEED_PER_COMBO, RAMPAGE_MIN_CLICK_MODIFIER)
@@ -416,6 +449,10 @@
 #undef RAMPAGE_EXECUTION_BONUS
 #undef RAMPAGE_BASE_SPEED
 #undef RAMPAGE_SPEED_PER_COMBO
+#undef RAMPAGE_MAX_SPEED
+#undef RAMPAGE_KILL_COMBO_BONUS
+#undef RAMPAGE_KILL_POINTS
+#undef RAMPAGE_EXECUTION_POINTS
 #undef RAMPAGE_CLICK_SPEED_PER_COMBO
 #undef RAMPAGE_MIN_CLICK_MODIFIER
 #undef RAMPAGE_PUNCH_DAMAGE

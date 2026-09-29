@@ -8,5 +8,5 @@
 
 /// Lets an ultraviolent mob execute anyone prone, stunned, unconscious or dead, instead of only people in crit.
 #define TRAIT_RAMPAGE_EXECUTIONER "rampage_executioner"
-/// Sent to the attacker when an ultraviolence execution finishes: (mob/living/carbon/victim)
+/// Sent to the attacker when an ultraviolence execution finishes: (mob/living/carbon/victim, was_alive)
 #define COMSIG_MOB_ULTRAVIOLENCE_EXECUTION "mob_ultraviolence_execution"
