@@ -2,18 +2,25 @@
 #define CHICKEN_MASK_TRAIT "chicken_mask"
 /// Time without landing a hit before the combo resets.
 #define RAMPAGE_COMBO_TIMEOUT (12.5 SECONDS)
+/// Getting hit takes this much off the time left on the combo.
+#define RAMPAGE_HIT_TIMER_PENALTY (RAMPAGE_COMBO_TIMEOUT / 4)
+/// Combo points for finishing an execution.
+#define RAMPAGE_EXECUTION_BONUS 2
 /// Speed boost just for wearing the mask.
 #define RAMPAGE_BASE_SPEED 0.15
-/// Extra speed per point of combo.
+/// Extra speed per point of combo. Uncapped.
 #define RAMPAGE_SPEED_PER_COMBO 0.025
-/// Speed boost can't go past this, around the same as stimulants.
-#define RAMPAGE_MAX_SPEED 0.55
+/// Click cooldown reduction per point of combo.
+#define RAMPAGE_CLICK_SPEED_PER_COMBO 0.01
+/// Click cooldown can't drop below this fraction of normal, otherwise a big enough combo means no cooldown at all.
+#define RAMPAGE_MIN_CLICK_MODIFIER 0.1
 
 /**
  * The chicken mask.
  *
- * Once it's on, it doesn't come off. The wearer goes on a rampage: gory kills, a combo counter, a speed boost that
- * grows with the combo, no soft crit, harder throws, and music that plays out of them, through walls, changing with their health.
+ * Once it's on, it doesn't come off. The wearer goes on a rampage: gory kills, executions on anyone who's down,
+ * a combo counter that makes them faster and attack quicker, no soft crit, brutal throws, and music that plays out
+ * of them, through walls, changing with their health.
  */
 /obj/item/clothing/mask/chicken_rampage
 	name = "chicken mask"
@@ -53,13 +60,17 @@
 /datum/component/chicken_rampage
 	/// The mask that gave us this.
 	var/obj/item/clothing/mask/chicken_rampage/mask
-	/// Current combo.
+	/// Current combo. Uncapped.
 	var/combo = 0
-	/// Timer that resets the combo.
-	var/combo_timer
+	/// world.time the combo runs out at.
+	var/combo_expires = 0
 	/// Last mob we got a combo point from and when, so a shotgun blast only counts as one hit on each target.
 	var/datum/weakref/last_combo_target
 	var/last_combo_time = 0
+	/// Last time getting hit cut our combo timer, so a shotgun blast only counts once.
+	var/last_hurt_time = 0
+	/// The click cooldown multiplier we've applied to the wearer, so we can take it back off exactly.
+	var/applied_click_modifier = 1
 	/// The combo counter on the wearer's screen.
 	var/atom/movable/screen/rampage_combo/combo_display
 	/// The music coming out of the wearer.
@@ -74,9 +85,9 @@
 
 /datum/component/chicken_rampage/RegisterWithParent()
 	var/mob/living/wearer = parent
-	wearer.add_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER), CHICKEN_MASK_TRAIT)
+	wearer.add_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.AddComponentFrom(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
-	update_speed()
+	update_combo_bonuses()
 
 	combo_display = new
 	wearer.client?.screen += combo_display
@@ -84,6 +95,8 @@
 	update_music()
 
 	RegisterSignal(wearer, COMSIG_MOB_ATTACK_LANDED, PROC_REF(on_attack_landed))
+	RegisterSignal(wearer, COMSIG_MOB_ULTRAVIOLENCE_EXECUTION, PROC_REF(on_execution))
+	RegisterSignal(wearer, COMSIG_MOB_AFTER_APPLY_DAMAGE, PROC_REF(on_damaged))
 	RegisterSignal(wearer, COMSIG_LIVING_HEALTH_UPDATE, PROC_REF(update_music))
 	RegisterSignal(wearer, COMSIG_LIVING_DEATH, PROC_REF(on_death))
 	RegisterSignal(wearer, COMSIG_LIVING_REVIVE, PROC_REF(update_music))
@@ -93,14 +106,24 @@
 
 /datum/component/chicken_rampage/UnregisterFromParent()
 	var/mob/living/wearer = parent
-	UnregisterSignal(wearer, list(COMSIG_MOB_ATTACK_LANDED, COMSIG_LIVING_HEALTH_UPDATE, COMSIG_LIVING_DEATH, COMSIG_LIVING_REVIVE, COMSIG_MOB_LOGIN))
-	wearer.remove_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER), CHICKEN_MASK_TRAIT)
+	UnregisterSignal(wearer, list(
+		COMSIG_MOB_ATTACK_LANDED,
+		COMSIG_MOB_ULTRAVIOLENCE_EXECUTION,
+		COMSIG_MOB_AFTER_APPLY_DAMAGE,
+		COMSIG_LIVING_HEALTH_UPDATE,
+		COMSIG_LIVING_DEATH,
+		COMSIG_LIVING_REVIVE,
+		COMSIG_MOB_LOGIN,
+	))
+	wearer.remove_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.RemoveComponentSource(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
 	wearer.remove_movespeed_modifier(/datum/movespeed_modifier/chicken_rampage)
+	wearer.next_move_modifier /= applied_click_modifier
+	applied_click_modifier = 1
 	wearer.client?.screen -= combo_display
 
 /datum/component/chicken_rampage/Destroy()
-	deltimer(combo_timer)
+	STOP_PROCESSING(SSfastprocess, src)
 	var/mob/living/wearer = parent
 	wearer?.client?.screen -= combo_display
 	QDEL_NULL(combo_display)
@@ -113,6 +136,23 @@
 /datum/component/chicken_rampage/proc/on_mask_lost(datum/source)
 	SIGNAL_HANDLER
 	qdel(src)
+
+/// Counts the combo down and makes the counter flash faster as it runs out.
+/datum/component/chicken_rampage/process(seconds_per_tick)
+	if(combo <= 0)
+		return PROCESS_KILL
+	var/time_left = combo_expires - world.time
+	if(time_left <= 0)
+		set_combo(0)
+		return PROCESS_KILL
+	combo_display?.set_time_left(time_left / RAMPAGE_COMBO_TIMEOUT)
+
+/// Adds combo and refreshes the combo timer.
+/datum/component/chicken_rampage/proc/add_combo(amount)
+	set_combo(combo + amount)
+	combo_expires = world.time + RAMPAGE_COMBO_TIMEOUT
+	combo_display?.set_time_left(1)
+	START_PROCESSING(SSfastprocess, src)
 
 /// Every hit on something alive counts: melee, fists, guns, thrown stuff.
 /datum/component/chicken_rampage/proc/on_attack_landed(mob/living/source, mob/living/target, damage_done, damagetype, def_zone, sharpness, atom/weapon)
@@ -128,19 +168,43 @@
 		return
 	last_combo_target = target_ref
 	last_combo_time = world.time
-	set_combo(combo + 1)
-	combo_timer = addtimer(CALLBACK(src, PROC_REF(set_combo), 0), RAMPAGE_COMBO_TIMEOUT, TIMER_STOPPABLE|TIMER_UNIQUE|TIMER_OVERRIDE)
+	add_combo(1)
+
+/// Executions are worth extra combo and heal a percentage of max health equal to the combo.
+/datum/component/chicken_rampage/proc/on_execution(mob/living/source, mob/living/carbon/victim)
+	SIGNAL_HANDLER
+
+	add_combo(RAMPAGE_EXECUTION_BONUS)
+	var/heal_amount = source.maxHealth * combo / 100
+	source.heal_ordered_damage(heal_amount, list(BRUTE, BURN, TOX, OXY))
+	source.balloon_alert(source, "+[RAMPAGE_EXECUTION_BONUS] combo, healed [combo]%")
+
+/// Getting hit eats into the time left on the combo.
+/datum/component/chicken_rampage/proc/on_damaged(mob/living/source, damage_dealt, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item, wound_clothing)
+	SIGNAL_HANDLER
+
+	if(combo <= 0 || damage_dealt <= 0 || last_hurt_time == world.time)
+		return
+	// Only actual attacks, not burning, bleeding or other damage over time.
+	if(!attacking_item && !attack_direction)
+		return
+	last_hurt_time = world.time
+	combo_expires -= RAMPAGE_HIT_TIMER_PENALTY
 
 /datum/component/chicken_rampage/proc/set_combo(new_combo)
 	combo = max(new_combo, 0)
 	combo_display?.set_combo(combo)
-	update_speed()
+	update_combo_bonuses()
 
-/// Faster the higher the combo goes.
-/datum/component/chicken_rampage/proc/update_speed()
+/// Movement and click speed both scale with the combo.
+/datum/component/chicken_rampage/proc/update_combo_bonuses()
 	var/mob/living/wearer = parent
-	var/speed = min(RAMPAGE_BASE_SPEED + combo * RAMPAGE_SPEED_PER_COMBO, RAMPAGE_MAX_SPEED)
+	var/speed = RAMPAGE_BASE_SPEED + combo * RAMPAGE_SPEED_PER_COMBO
 	wearer.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/chicken_rampage, multiplicative_slowdown = -speed)
+
+	var/click_modifier = max(1 - combo * RAMPAGE_CLICK_SPEED_PER_COMBO, RAMPAGE_MIN_CLICK_MODIFIER)
+	wearer.next_move_modifier *= click_modifier / applied_click_modifier
+	applied_click_modifier = click_modifier
 
 /// Picks the song for how hurt the wearer is.
 /datum/component/chicken_rampage/proc/update_music()
@@ -164,8 +228,8 @@
 
 /datum/component/chicken_rampage/proc/on_death(mob/living/source, gibbed)
 	SIGNAL_HANDLER
-	deltimer(combo_timer)
 	set_combo(0)
+	STOP_PROCESSING(SSfastprocess, src)
 	music?.stop(immediate = TRUE)
 
 /datum/component/chicken_rampage/proc/on_login(mob/living/source)
@@ -174,6 +238,20 @@
 
 /datum/movespeed_modifier/chicken_rampage
 	variable = TRUE
+
+/**
+ * Called from /mob/living/hitby() when a bulky or bigger item thrown by someone with TRAIT_BRUTAL_THROWER hits us.
+ * Sometimes knocks us down, sometimes leaves us dazed, sometimes nothing.
+ */
+/mob/living/proc/brutal_throw_impact(obj/item/thrown_item, mob/thrower)
+	if(prob(30))
+		visible_message(span_danger("[src] is knocked off [p_their()] feet by [thrown_item]!"), span_userdanger("[thrown_item] knocks you off your feet!"))
+		Knockdown(2 SECONDS)
+	else if(prob(45))
+		visible_message(span_danger("[src] reels from the impact of [thrown_item]!"), span_userdanger("[thrown_item] leaves you dazed!"))
+		adjust_staggered_up_to(3 SECONDS, 6 SECONDS)
+		set_confusion_if_lower(3 SECONDS)
+		set_dizzy_if_lower(4 SECONDS)
 
 /**
  * The box the chicken mask comes in. Looks like any other cardboard box, except it won't stop playing music
@@ -222,9 +300,9 @@
 /datum/uplink_item/dangerous/chicken_mask
 	name = "Chicken Mask"
 	desc = "A rubber chicken mask in a cardboard box that won't stop playing music. Once you put it on, it never comes off. \
-			The wearer goes on a rampage: every hit builds a combo that makes you faster, kills turn into a bloodbath, \
-			downed targets can be executed, thrown objects hit harder and you shrug off soft crit. \
-			Music plays out of you, through walls, for everyone nearby to hear. They will know where you are."
+			The wearer goes on a rampage: every hit builds a combo that makes you move and attack faster, kills turn into \
+			a bloodbath, anyone who's down can be executed for extra combo and healing, thrown objects hit harder and you \
+			shrug off soft crit. Music plays out of you, through walls, for everyone nearby to hear. They will know where you are."
 	item = /obj/item/storage/box/chicken_mask
 	cost = 20
 	surplus = 0
@@ -232,6 +310,9 @@
 
 #undef CHICKEN_MASK_TRAIT
 #undef RAMPAGE_COMBO_TIMEOUT
+#undef RAMPAGE_HIT_TIMER_PENALTY
+#undef RAMPAGE_EXECUTION_BONUS
 #undef RAMPAGE_BASE_SPEED
 #undef RAMPAGE_SPEED_PER_COMBO
-#undef RAMPAGE_MAX_SPEED
+#undef RAMPAGE_CLICK_SPEED_PER_COMBO
+#undef RAMPAGE_MIN_CLICK_MODIFIER

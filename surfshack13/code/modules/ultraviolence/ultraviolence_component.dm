@@ -163,13 +163,22 @@
 		return
 	victim.gore_blood_burst(1, splatter_dir)
 
+/**
+ * Is the target down enough to be executed?
+ * Normally that means lying in crit. With TRAIT_RAMPAGE_EXECUTIONER, anyone prone, stunned, unconscious or dead will do.
+ */
+/datum/component/ultraviolence/proc/is_executable(mob/living/attacker, mob/living/target)
+	if(HAS_TRAIT(attacker, TRAIT_RAMPAGE_EXECUTIONER))
+		return target.body_position == LYING_DOWN || target.stat >= UNCONSCIOUS || HAS_TRAIT(target, TRAIT_INCAPACITATED)
+	return target.body_position == LYING_DOWN && target.stat >= SOFT_CRIT && target.stat != DEAD
+
 /// Can we start an execution on this target right now?
 /datum/component/ultraviolence/proc/can_execute(mob/living/attacker, mob/living/target, obj/item/weapon)
 	if(executing || !attacker.combat_mode || target == attacker || !iscarbon(target))
 		return FALSE
 	if(check_zone(attacker.zone_selected) != BODY_ZONE_HEAD)
 		return FALSE
-	if(target.body_position != LYING_DOWN || target.stat < SOFT_CRIT || target.stat == DEAD)
+	if(!is_executable(attacker, target))
 		return FALSE
 	var/mob/living/carbon/victim = target
 	if(!victim.get_bodypart(BODY_ZONE_HEAD) || !victim.can_be_gored())
@@ -205,7 +214,7 @@
 	return null
 
 /**
- * Ground executions, only possible on targets already in crit. The finisher depends on what you're holding:
+ * Ground executions, only possible on downed targets (see is_executable()). The finisher depends on what you're holding:
  * * Blades: one long cut that takes the head off.
  * * Knives and other pointy things: frenzied stabbing until the head is pulp.
  * * Blunt weapons: repeated blows to the head, into a wall if there's one next to them.
@@ -295,10 +304,11 @@
 		victim.death()
 	log_combat(attacker, victim, "executed (ultraviolence)", weapon)
 	executing = FALSE
+	SEND_SIGNAL(attacker, COMSIG_MOB_ULTRAVIOLENCE_EXECUTION, victim)
 
 /// Extra do_after checks for executions, so the victim can't be dragged away or stood back up mid-execution.
 /datum/component/ultraviolence/proc/execution_still_valid(mob/living/attacker, mob/living/carbon/victim, obj/item/weapon)
-	if(QDELETED(victim) || victim.stat == DEAD || victim.body_position != LYING_DOWN)
+	if(QDELETED(victim) || !is_executable(attacker, victim))
 		return FALSE
 	if(!victim.get_bodypart(BODY_ZONE_HEAD))
 		return FALSE
