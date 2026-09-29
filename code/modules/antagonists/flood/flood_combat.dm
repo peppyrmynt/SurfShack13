@@ -128,6 +128,7 @@
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood/armed
 	var/next_weapon_check = 0
 	var/obj/item/recovery_target
+	var/next_weapon_activation = 0
 
 /mob/living/basic/flood/combat_form/human/Initialize(mapload)
 	. = ..()
@@ -158,6 +159,9 @@
 /mob/living/basic/flood/combat_form/human/proc/weapon_score(obj/item/weapon)
 	if(QDELETED(weapon) || weapon.anchored || (weapon.item_flags & ABSTRACT) || HAS_TRAIT(weapon, TRAIT_NODROP))
 		return 0
+	if(istype(weapon, /obj/item/grenade))
+		var/obj/item/grenade/grenade = weapon
+		return grenade.active || (!grenade.dud_flags && grenade.det_time >= 2 SECONDS) ? 60 : 0
 	if(istype(weapon, /obj/item/gun))
 		var/obj/item/gun/gun = weapon
 		return gun.can_shoot() ? 100 + gun.force : 0
@@ -169,7 +173,7 @@
 
 /mob/living/basic/flood/combat_form/human/proc/drop_empty_guns()
 	for(var/obj/item/gun/gun in held_items)
-		if(!gun.can_shoot())
+		if(!gun.can_shoot() && !(istype(src, /mob/living/basic/flood/combat_form/human/rocket) && istype(gun, /obj/item/gun/ballistic/rocketlauncher/unrestricted/flood)))
 			dropItemToGround(gun, TRUE)
 	if(!get_active_held_item() && get_inactive_held_item())
 		swap_hand(get_inactive_hand_index())
@@ -225,21 +229,79 @@
 	visible_message(span_warning("[src] recovers [weapon]."))
 	return TRUE
 
+/// Only activate held items with a detectable armed, wielded, or powered state.
+/mob/living/basic/flood/combat_form/human/proc/should_activate_weapon(atom/target)
+	if(stat == DEAD || client || world.time < next_weapon_activation)
+		return FALSE
+	var/obj/item/weapon = get_active_held_item()
+	if(!weapon || QDELETED(target))
+		return FALSE
+	if(istype(weapon, /obj/item/grenade))
+		var/obj/item/grenade/grenade = weapon
+		return !grenade.active && !grenade.dud_flags && grenade.det_time >= 2 SECONDS && get_dist(src, target) <= grenade.throw_range && !Adjacent(target)
+	if(istype(weapon, /obj/item/gun))
+		var/obj/item/gun/gun = weapon
+		return gun.weapon_weight == WEAPON_HEAVY && get_inactive_held_item()
+	if(weapon.GetComponent(/datum/component/two_handed) && !HAS_TRAIT(weapon, TRAIT_WIELDED))
+		return weapon_score(weapon) > 0
+	if((istype(weapon, /obj/item/melee/energy) || istype(weapon, /obj/item/chainsaw)) && !HAS_TRAIT(weapon, TRAIT_TRANSFORM_ACTIVE))
+		return TRUE
+	return FALSE
+
+/mob/living/basic/flood/combat_form/human/proc/activate_weapon(atom/target)
+	if(!should_activate_weapon(target))
+		return FALSE
+	var/obj/item/weapon = get_active_held_item()
+	if(istype(weapon, /obj/item/gun))
+		var/obj/item/inactive_item = get_inactive_held_item()
+		if(!dropItemToGround(inactive_item))
+			return FALSE
+		next_weapon_activation = world.time + 2 SECONDS
+		return TRUE
+	var/datum/component/two_handed/two_handed = weapon.GetComponent(/datum/component/two_handed)
+	if(two_handed && !HAS_TRAIT(weapon, TRAIT_WIELDED))
+		var/obj/item/inactive_item = get_inactive_held_item()
+		if(inactive_item && (weapon_score(inactive_item) > weapon_score(weapon) || !dropItemToGround(inactive_item)))
+			return FALSE
+	next_weapon_activation = world.time + 2 SECONDS
+	activate_hand()
+	return TRUE
+
+/mob/living/basic/flood/combat_form/human/melee_attack(atom/target, list/modifiers, ignore_cooldown = FALSE)
+	if(client || !Adjacent(target))
+		return ..()
+	var/obj/item/weapon = get_active_held_item()
+	if(!weapon || istype(weapon, /obj/item/grenade) || istype(weapon, /obj/item/gun) || weapon_score(weapon) <= 0 || weapon.force <= 0)
+		return ..()
+	if(!early_melee_attack(target, modifiers, ignore_cooldown))
+		return FALSE
+	weapon.melee_attack_chain(src, target)
+	return TRUE
+
 /mob/living/basic/flood/combat_form/human/RangedAttack(atom/target, modifiers)
 	if(client)
 		return ..()
 	var/obj/item/held_weapon = get_active_held_item()
-	if(!target || Adjacent(target))
+	if(!target)
+		return FALSE
+	if(istype(held_weapon, /obj/item/grenade))
+		var/obj/item/grenade/grenade = held_weapon
+		if(!grenade.active || get_dist(src, target) > grenade.throw_range || !dropItemToGround(grenade, TRUE))
+			return FALSE
+		visible_message(span_danger("[src] hurls [grenade] at [target]!"))
+		grenade.safe_throw_at(target, grenade.throw_range, grenade.throw_speed, src)
+		return TRUE
+	if(Adjacent(target))
 		return FALSE
 	if(istype(held_weapon, /obj/item/gun))
 		var/obj/item/gun/held_gun = held_weapon
 		if(!held_gun.can_shoot())
 			return FALSE
 		. = held_gun.try_fire_gun(target, src, null)
-		if(!held_gun.can_shoot())
+		if(!held_gun.can_shoot() && !(istype(src, /mob/living/basic/flood/combat_form/human/rocket) && istype(held_gun, /obj/item/gun/ballistic/rocketlauncher/unrestricted/flood)))
 			dropItemToGround(held_gun, TRUE)
 		return .
-	if(weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 10 || held_weapon.throwforce <= held_weapon.force || get_dist(src, target) > held_weapon.throw_range)
+	if(weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 10 || HAS_TRAIT(held_weapon, TRAIT_WIELDED) || get_dist(src, target) > held_weapon.throw_range)
 		return FALSE
 	if(!dropItemToGround(held_weapon, TRUE))
 		return FALSE

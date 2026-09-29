@@ -23,6 +23,7 @@
 		/datum/ai_planning_subtree/flood_rally,
 		/datum/ai_planning_subtree/simple_find_target,
 		/datum/ai_planning_subtree/flood_recover_weapon,
+		/datum/ai_planning_subtree/flood_prepare_weapon,
 		/datum/ai_planning_subtree/flood_use_ranged_weapon,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree,
@@ -82,6 +83,12 @@
 	if(!istype(armed_form) || armed_form.client)
 		return
 	armed_form.drop_empty_guns()
+	var/obj/item/grenade/held_grenade = armed_form.get_active_held_item()
+	if(istype(held_grenade) && held_grenade.active)
+		return
+	// The rocket variant replenishes its launcher on a timer; it should hold on to it while empty.
+	if(istype(armed_form, /mob/living/basic/flood/combat_form/human/rocket) && istype(armed_form.get_active_held_item(), /obj/item/gun/ballistic/rocketlauncher/unrestricted/flood))
+		return
 	var/has_enemy = controller.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET)
 	if(world.time >= armed_form.next_weapon_check)
 		armed_form.next_weapon_check = world.time + 2 SECONDS
@@ -114,17 +121,48 @@
 		armed_form.recovery_target = null
 	return ..()
 
+/// Prime grenades and wield or switch on weapons before choosing an attack.
+/datum/ai_planning_subtree/flood_prepare_weapon/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
+	if(!istype(armed_form) || armed_form.client || !controller.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET))
+		return
+	var/atom/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	if(QDELETED(target) || !armed_form.should_activate_weapon(target))
+		return
+	controller.queue_behavior(/datum/ai_behavior/flood_prepare_weapon, BB_BASIC_MOB_CURRENT_TARGET)
+	return SUBTREE_RETURN_FINISH_PLANNING
+
+/datum/ai_behavior/flood_prepare_weapon
+	behavior_flags = AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
+	action_cooldown = 1 SECONDS
+
+/datum/ai_behavior/flood_prepare_weapon/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
+	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
+	var/atom/target = controller.blackboard[target_key]
+	if(!istype(armed_form) || QDELETED(target))
+		return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_FAILED
+	return AI_BEHAVIOR_DELAY | (armed_form.activate_weapon(target) ? AI_BEHAVIOR_SUCCEEDED : AI_BEHAVIOR_FAILED)
+
 /datum/ai_planning_subtree/flood_use_ranged_weapon/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
 	if(!istype(armed_form) || armed_form.client)
 		return
 	var/obj/item/held_weapon = armed_form.get_active_held_item()
-	if(!istype(held_weapon, /obj/item/gun) && (armed_form.weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 10 || held_weapon.throwforce <= held_weapon.force))
+	var/obj/item/grenade/held_grenade = held_weapon
+	var/primed_grenade = istype(held_grenade) && held_grenade.active
+	if(!istype(held_weapon, /obj/item/gun) && !primed_grenade && (armed_form.weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 10 || HAS_TRAIT(held_weapon, TRAIT_WIELDED)))
 		return
 	var/atom/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
-	if(QDELETED(target) || armed_form.Adjacent(target))
+	if(QDELETED(target) || (armed_form.Adjacent(target) && !primed_grenade))
 		return
-	controller.queue_behavior(istype(held_weapon, /obj/item/gun) ? /datum/ai_behavior/basic_ranged_attack/flood_weapon : /datum/ai_behavior/basic_ranged_attack/flood_weapon/throwable, BB_BASIC_MOB_CURRENT_TARGET, BB_TARGETING_STRATEGY, BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
+	if(istype(armed_form, /mob/living/basic/flood/combat_form/human/rocket) && get_dist(armed_form, target) < 3)
+		return
+	var/attack_behavior = /datum/ai_behavior/basic_ranged_attack/flood_weapon/throwable
+	if(istype(held_weapon, /obj/item/gun))
+		attack_behavior = /datum/ai_behavior/basic_ranged_attack/flood_weapon
+	else if(primed_grenade)
+		attack_behavior = /datum/ai_behavior/basic_ranged_attack/flood_weapon/throwable/grenade
+	controller.queue_behavior(attack_behavior, BB_BASIC_MOB_CURRENT_TARGET, BB_TARGETING_STRATEGY, BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
 	return SUBTREE_RETURN_FINISH_PLANNING
 
 /datum/ai_behavior/basic_ranged_attack/flood_weapon
@@ -135,12 +173,16 @@
 /datum/ai_behavior/basic_ranged_attack/flood_weapon/throwable
 	required_distance = 3
 
+/datum/ai_behavior/basic_ranged_attack/flood_weapon/throwable/grenade
+	required_distance = 7
+
 /datum/ai_behavior/basic_ranged_attack/flood_weapon/perform(seconds_per_tick, datum/ai_controller/controller, target_key, targeting_strategy_key, hiding_location_key)
 	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
 	if(!istype(armed_form))
 		return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_FAILED
 	var/obj/item/held_weapon = armed_form.get_active_held_item()
-	if(armed_form.weapon_score(held_weapon) <= 0 || armed_form.Adjacent(controller.blackboard[target_key]))
+	var/obj/item/grenade/grenade = held_weapon
+	if(armed_form.weapon_score(held_weapon) <= 0 || (armed_form.Adjacent(controller.blackboard[target_key]) && !(istype(grenade) && grenade.active)))
 		return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_FAILED
 	return ..()
 
