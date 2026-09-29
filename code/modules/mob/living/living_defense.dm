@@ -245,7 +245,10 @@
 	if(!thrown_item.throwforce)
 		return
 	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour)
-	var/damage_done = apply_damage(thrown_item.throwforce, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
+	var/throw_damage = thrown_item.throwforce
+	if(thrown_by && HAS_TRAIT(thrown_by, TRAIT_BRUTAL_THROWER))
+		throw_damage *= BRUTAL_THROWER_DAMAGE_MULTIPLIER
+	var/damage_done = apply_damage(throw_damage, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
 	if(QDELETED(src)) //Damage can delete the mob.
 		return
 	if(damage_done > 0 && thrown_by)

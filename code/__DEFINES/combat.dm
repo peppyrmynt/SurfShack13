@@ -181,6 +181,10 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define EMBED_THROWSPEED_THRESHOLD 4
 /// For thrown embedding weapons, every extra speed it's thrown at above its normal throwspeed will add this to the embed chance
 #define EMBED_CHANCE_SPEED_BONUS 10
+/// Extra throw speed for mobs with TRAIT_BRUTAL_THROWER. Each point also adds EMBED_CHANCE_SPEED_BONUS to embed chance.
+#define BRUTAL_THROWER_SPEED_BONUS 2
+/// Thrown item damage multiplier for mobs with TRAIT_BRUTAL_THROWER.
+#define BRUTAL_THROWER_DAMAGE_MULTIPLIER 1.5
 
 //Gun weapon weight
 /// Default normal ol' gun. Akimboable, one handed.
