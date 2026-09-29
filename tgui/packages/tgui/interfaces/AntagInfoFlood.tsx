@@ -188,13 +188,10 @@ export const AntagInfoFlood = () => {
                   <Stack.Item>
                     <Section title="Flood Infectors">
                       Flood Infectors cannot be taken over from the ghost
-                      spawner. A player-controlled Carrier becomes one of its
-                      Infectors on bursting. Infectors can vent crawl by
-                      alt-clicking a vent. They leap onto humans or animals and
-                      remain buckled to them. Against living hosts, they deal 10
-                      brute every two seconds; the host can resist or the
-                      infector can be killed to break the latch. Only a dead
-                      host can be
+                      spawner. They leap onto humans or animals and remain
+                      buckled to them. Against living hosts, they deal 10 brute
+                      every two seconds; the host can resist or the infector can
+                      be killed to break the latch. Only a dead host can be
                       converted, after five seconds attached to the corpse.
                       Their swarms can merge, and an unlatched infector can
                       reanimate a fallen Flood Combat once. Dying infectors also
