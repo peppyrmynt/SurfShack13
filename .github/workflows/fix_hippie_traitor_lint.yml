@@ -1,0 +1,66 @@
+name: Fix Hippie traitor lint
+
+on:
+  push:
+    branches:
+      - restore-classic-atmos-fusion
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: restore-classic-atmos-fusion
+          fetch-depth: 0
+
+      - name: Patch DreamChecker issues
+        shell: python
+        run: |
+          from pathlib import Path
+
+          assets = Path('surfshack13/code/modules/uplink/uplink_items/hippie_traitor_assets.dm')
+          text = assets.read_text()
+          old = '''/obj/item/highfrequencyblade/hippie/update_icon_state()\n\ticon_state = brazil ? "hfblade-red" : "hfblade"\n\tinhand_icon_state = icon_state\n\treturn NONE\n'''
+          new = '''/obj/item/highfrequencyblade/hippie/update_icon_state()\n\t. = ..()\n\ticon_state = brazil ? "hfblade-red" : "hfblade"\n\tinhand_icon_state = icon_state\n\treturn .\n'''
+          if old not in text:
+              raise SystemExit('HFB update_icon_state patch point missing')
+          assets.write_text(text.replace(old, new, 1))
+
+          crynet = Path('surfshack13/code/modules/uplink/uplink_items/crynet_nanosuit.dm')
+          text = crynet.read_text()
+          old = '''/obj/item/mod/control/pre_equipped/crynet/emp_act(severity)\n\tfor(var/obj/item/mod/module/crynet_controller/controller as anything in modules)\n\t\tcontroller.handle_emp(severity)\n\t\tbreak\n\treturn EMP_PROTECT_SELF\n'''
+          new = '''/obj/item/mod/control/pre_equipped/crynet/emp_act(severity)\n\t. = ..()\n\tfor(var/obj/item/mod/module/crynet_controller/controller as anything in modules)\n\t\tcontroller.handle_emp(severity)\n\t\tbreak\n\treturn . | EMP_PROTECT_SELF\n'''
+          if old not in text:
+              raise SystemExit('CryNet emp_act patch point missing')
+          crynet.write_text(text.replace(old, new, 1))
+
+          fidelity = Path('surfshack13/code/modules/uplink/uplink_items/crynet_fidelity.dm')
+          text = fidelity.read_text()
+          old = '''\tplaysound(get_turf(mod.wearer), 'surfshack13/sound/hippie/nanosuitengage.ogg', 100, FALSE)\n\tGLOB.huds[DATA_HUD_MEDICAL_ADVANCED]?.show_to(mod.wearer)\n\tGLOB.huds[DATA_HUD_SECURITY_ADVANCED]?.show_to(mod.wearer)\n\tGLOB.huds[DATA_HUD_DIAGNOSTIC]?.show_to(mod.wearer)\n\tRegisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION, PROC_REF(sense_explosion))\n'''
+          new = '''\tplaysound(get_turf(mod.wearer), 'surfshack13/sound/hippie/nanosuitengage.ogg', 100, FALSE)\n\tvar/datum/atom_hud/medical_hud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]\n\tvar/datum/atom_hud/security_hud = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]\n\tvar/datum/atom_hud/diagnostic_hud = GLOB.huds[DATA_HUD_DIAGNOSTIC]\n\tmedical_hud?.show_to(mod.wearer)\n\tsecurity_hud?.show_to(mod.wearer)\n\tdiagnostic_hud?.show_to(mod.wearer)\n\tRegisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION, PROC_REF(sense_explosion))\n'''
+          if old not in text:
+              raise SystemExit('CryNet HUD show patch point missing')
+          text = text.replace(old, new, 1)
+          old = '''\tif(mod?.wearer)\n\t\tGLOB.huds[DATA_HUD_MEDICAL_ADVANCED]?.hide_from(mod.wearer)\n\t\tGLOB.huds[DATA_HUD_SECURITY_ADVANCED]?.hide_from(mod.wearer)\n\t\tGLOB.huds[DATA_HUD_DIAGNOSTIC]?.hide_from(mod.wearer)\n'''
+          new = '''\tif(mod?.wearer)\n\t\tvar/datum/atom_hud/medical_hud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]\n\t\tvar/datum/atom_hud/security_hud = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]\n\t\tvar/datum/atom_hud/diagnostic_hud = GLOB.huds[DATA_HUD_DIAGNOSTIC]\n\t\tmedical_hud?.hide_from(mod.wearer)\n\t\tsecurity_hud?.hide_from(mod.wearer)\n\t\tdiagnostic_hud?.hide_from(mod.wearer)\n'''
+          if old not in text:
+              raise SystemExit('CryNet HUD hide patch point missing')
+          fidelity.write_text(text.replace(old, new, 1))
+
+      - name: Commit fixes and remove workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/fix_hippie_traitor_lint.yml
+          git add surfshack13/code/modules/uplink/uplink_items/hippie_traitor_assets.dm \
+                  surfshack13/code/modules/uplink/uplink_items/crynet_nanosuit.dm \
+                  surfshack13/code/modules/uplink/uplink_items/crynet_fidelity.dm
+          git commit -m "Fix traitor port DreamChecker issues"
+          git push origin HEAD:restore-classic-atmos-fusion
