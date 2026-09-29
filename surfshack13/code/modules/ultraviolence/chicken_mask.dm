@@ -65,8 +65,11 @@
 	clothing_flags = SNUG_FIT
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
 	flags_cover = HEADCOVERSMOUTH
-	/// The song the mask plays from the moment it exists until someone first puts it on.
+	/// The song the mask plays from the moment it exists until its owner first puts it on.
 	var/datum/rampage_music/unworn_music
+	/// Mind of whoever bought the mask. Only they get the rampage; anyone else who puts it on gets punished instead.
+	/// Unset masks (admin spawned) belong to the first person to wear them.
+	var/datum/weakref/owner_mind
 
 /obj/item/clothing/head/chicken_rampage/Initialize(mapload)
 	. = ..()
@@ -81,6 +84,11 @@
 	. = ..()
 	if(!(slot & ITEM_SLOT_HEAD) || !isliving(user))
 		return
+	if(isnull(owner_mind) && user.mind)
+		owner_mind = WEAKREF(user.mind)
+	if(!user.mind || user.mind != owner_mind?.resolve())
+		thief_equipped(user)
+		return
 	// Its song is over; the wearer's music takes it from here, and it never plays again.
 	QDEL_NULL(unworn_music)
 	ADD_TRAIT(src, TRAIT_NODROP, CHICKEN_MASK_TRAIT)
@@ -91,6 +99,11 @@
 	// Only happens if it gets forced off, like losing the head.
 	REMOVE_TRAIT(src, TRAIT_NODROP, CHICKEN_MASK_TRAIT)
 	qdel(user.GetComponent(/datum/component/chicken_rampage))
+
+/// Someone who isn't the owner put the mask on. They get none of the rampage.
+/obj/item/clothing/head/chicken_rampage/proc/thief_equipped(mob/living/thief)
+	to_chat(thief, span_userdanger("<i>Do you really like hurting people?</i>"))
+	log_combat(thief, thief, "put on a chicken mask that isn't theirs")
 
 /obj/item/clothing/head/chicken_rampage/examine(mob/user)
 	. = ..()
@@ -510,6 +523,14 @@
 	cost = 20
 	surplus = 0
 	purchasable_from = UPLINK_TRAITORS
+
+/// The mask belongs to whoever bought it.
+/datum/uplink_item/dangerous/chicken_mask/spawn_item(spawn_path, mob/user, datum/uplink_handler/uplink_handler, atom/movable/source)
+	var/atom/box = ..()
+	var/obj/item/clothing/head/chicken_rampage/mask = locate() in box
+	if(mask && user?.mind)
+		mask.owner_mind = WEAKREF(user.mind)
+	return box
 
 #undef CHICKEN_MASK_TRAIT
 #undef RAMPAGE_REQUIRE_SENTIENT_TARGETS
