@@ -11,11 +11,15 @@
 	initial_language_holder = /datum/language_holder/flood
 	faction = list("Flood")
 	combat_mode = TRUE
-	see_in_dark = 5
+	// Match the night vision used by goliaths and other mining mobs.
+	lighting_cutoff_red = 25
+	lighting_cutoff_green = 15
+	lighting_cutoff_blue = 35
 	habitable_atmos = null
 	unsuitable_atmos_damage = 0
 	minimum_survivable_temperature = 0
 	maximum_survivable_temperature = NPC_DEFAULT_MAX_TEMP
+	unsuitable_heat_damage = 2
 	fire_stack_decay_rate = -0.5
 	maxHealth = 125
 	health = 125
@@ -27,7 +31,7 @@
 	attacked_sound = 'sound/flood/pain.pain1.ogg'
 	death_message = "collapses into a twitching mass of biomass."
 	obj_damage = 60
-	damage_coeff = list(BRUTE = 1, BURN = 1.5, TOX = 1, STAMINA = 0, OXY = 1)
+	damage_coeff = list(BRUTE = 1, BURN = 2, TOX = 1, STAMINA = 0, OXY = 1)
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
 	var/next_evolution = 0
 	var/next_idle_sound = 0

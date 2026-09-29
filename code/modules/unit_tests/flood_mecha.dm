@@ -50,3 +50,22 @@
 	var/seed_z = seed.z
 	qdel(growth)
 	TEST_ASSERT(!istype(locate(seed_x, seed_y, seed_z), /turf/open/floor/flood_biomass), "The biomass seed persisted after its growth was destroyed.")
+
+/// Heat and burn projectiles remove biomass without destroying the original floor.
+/datum/unit_test/flood_floor_burns
+
+/datum/unit_test/flood_floor_burns/Run()
+	var/turf/site = run_loc_floor_bottom_left
+	var/original_floor_type = site.type
+	var/original_baseturfs = json_encode(site.baseturfs)
+	var/turf/open/floor/flood_biomass/biomass = grow_flood_floor(site)
+	TEST_ASSERT_NOTNULL(biomass, "The biomass floor could not grow.")
+	biomass.atmos_expose(biomass.return_air(), 600)
+	site = locate(site.x, site.y, site.z)
+	TEST_ASSERT_EQUAL(site.type, original_floor_type, "Moderate heat did not restore the original floor.")
+	TEST_ASSERT_EQUAL(json_encode(site.baseturfs), original_baseturfs, "Burning biomass damaged the underlying floor layers.")
+	biomass = grow_flood_floor(site)
+	var/obj/projectile/beam/laser/laser = allocate(/obj/projectile/beam/laser)
+	biomass.bullet_act(laser)
+	site = locate(site.x, site.y, site.z)
+	TEST_ASSERT_EQUAL(site.type, original_floor_type, "A laser hit did not burn away the biomass.")

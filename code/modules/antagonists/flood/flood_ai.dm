@@ -102,7 +102,7 @@
 	controller.queue_behavior(/datum/ai_behavior/travel_towards/stop_on_arrival, BB_TRAVEL_DESTINATION)
 	return SUBTREE_RETURN_FINISH_PLANNING
 
-/// Recover visible weapons between fights, or a weapon within reach during a fight.
+/// Seek visible weapons even during combat. Armed Flood only stop to fight when an enemy is adjacent.
 /datum/ai_planning_subtree/flood_recover_weapon/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/basic/flood/combat_form/human/armed_form = controller.pawn
 	if(!istype(armed_form) || armed_form.client)
@@ -114,13 +114,15 @@
 	// The rocket variant replenishes its launcher on a timer; it should hold on to it while empty.
 	if(istype(armed_form, /mob/living/basic/flood/combat_form/human/rocket) && istype(armed_form.get_active_held_item(), /obj/item/gun/ballistic/rocketlauncher/unrestricted/flood))
 		return
-	var/has_enemy = controller.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET)
+	var/held_score = max(armed_form.weapon_score(armed_form.get_active_held_item()), armed_form.weapon_score(armed_form.get_inactive_held_item()))
+	var/atom/enemy = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	var/only_adjacent = held_score > 0 && !QDELETED(enemy) && armed_form.Adjacent(enemy)
 	if(world.time >= armed_form.next_weapon_check)
 		armed_form.next_weapon_check = world.time + 2 SECONDS
-		armed_form.recovery_target = armed_form.find_recovery_weapon(only_adjacent = has_enemy)
+		armed_form.recovery_target = armed_form.find_recovery_weapon(only_adjacent = only_adjacent)
 	var/obj/item/weapon = armed_form.recovery_target
 	var/mob/living/carbon/dead_enemy = weapon?.loc
-	if(QDELETED(weapon) || (!isturf(weapon.loc) && (!istype(dead_enemy) || dead_enemy.stat != DEAD || !(weapon in dead_enemy.held_items))) || armed_form.weapon_score(weapon) <= max(armed_form.weapon_score(armed_form.get_active_held_item()), armed_form.weapon_score(armed_form.get_inactive_held_item())) || (has_enemy && !armed_form.Adjacent(weapon)))
+	if(QDELETED(weapon) || (!isturf(weapon.loc) && (!istype(dead_enemy) || dead_enemy.stat != DEAD || !(weapon in dead_enemy.held_items))) || armed_form.weapon_score(weapon) <= held_score || (only_adjacent && !armed_form.Adjacent(weapon)))
 		armed_form.recovery_target = null
 		return
 	controller.queue_behavior(/datum/ai_behavior/flood_recover_weapon, weapon)
@@ -175,7 +177,7 @@
 	var/obj/item/held_weapon = armed_form.get_active_held_item()
 	var/obj/item/grenade/held_grenade = held_weapon
 	var/primed_grenade = istype(held_grenade) && held_grenade.active
-	if(!istype(held_weapon, /obj/item/gun) && !primed_grenade && (armed_form.weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 10 || HAS_TRAIT(held_weapon, TRAIT_WIELDED)))
+	if(!istype(held_weapon, /obj/item/gun) && !primed_grenade && (armed_form.weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 15 || HAS_TRAIT(held_weapon, TRAIT_WIELDED)))
 		return
 	var/atom/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
 	if(QDELETED(target) || (armed_form.Adjacent(target) && !primed_grenade))

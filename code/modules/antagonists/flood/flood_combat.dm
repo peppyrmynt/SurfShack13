@@ -190,8 +190,8 @@
 	if(!put_in_hands(starter_gun))
 		starter_gun.forceMove(drop_location())
 
-/// Guns come first; otherwise choose weapons with more than 10 brute or burn
-/// damage, including throwable weapons that can deal that damage at range.
+/// Loaded guns outrank grenades, which outrank weapons dealing over 15 brute or burn.
+/// Keep melee scores below 500 so even exceptionally strong weapons respect that order.
 /mob/living/basic/flood/combat_form/human/proc/weapon_score(obj/item/weapon)
 	if(QDELETED(weapon) || weapon.anchored || (weapon.item_flags & ABSTRACT) || HAS_TRAIT(weapon, TRAIT_NODROP))
 		return 0
@@ -199,15 +199,24 @@
 		var/obj/item/grenade/grenade = weapon
 		if((grenade in thrown_grenades) || (grenade.active && !is_holding(grenade)))
 			return 0
-		return grenade.active || (!grenade.dud_flags && grenade.det_time >= 2 SECONDS) ? 60 : 0
+		return grenade.active || (!grenade.dud_flags && grenade.det_time >= 2 SECONDS) ? 500 : 0
 	if(istype(weapon, /obj/item/gun))
 		var/obj/item/gun/gun = weapon
-		return gun.can_shoot() ? 100 + gun.force : 0
+		return gun.can_shoot() ? 1000 + max(gun.force, 0) : 0
 	if(weapon.damtype != BRUTE && weapon.damtype != BURN)
 		return 0
-	var/melee_damage = weapon.force > 10 ? weapon.force : 0
-	var/ranged_damage = weapon.throw_range >= 3 && weapon.throwforce > 10 ? weapon.throwforce : 0
-	return max(melee_damage, ranged_damage)
+	var/melee_damage = weapon.force
+	var/datum/component/two_handed/two_handed = weapon.GetComponent(/datum/component/two_handed)
+	if(two_handed && !HAS_TRAIT(weapon, TRAIT_WIELDED))
+		melee_damage = max(melee_damage, two_handed.force_wielded, weapon.force * two_handed.force_multiplier)
+	// Judge powered weapons by the damage they will deal after we activate them.
+	if(istype(weapon, /obj/item/melee/energy) || istype(weapon, /obj/item/chainsaw))
+		var/datum/component/transforming/transforming = weapon.GetComponent(/datum/component/transforming)
+		if(transforming)
+			melee_damage = max(melee_damage, transforming.force_on)
+	var/ranged_damage = weapon.throw_range >= 3 ? weapon.throwforce : 0
+	var/best_damage = max(melee_damage, ranged_damage)
+	return best_damage > 15 ? min(best_damage, 499) : 0
 
 /mob/living/basic/flood/combat_form/human/proc/drop_empty_guns()
 	for(var/obj/item/gun/gun in held_items)
@@ -344,7 +353,7 @@
 		if(!held_gun.can_shoot() && !(istype(src, /mob/living/basic/flood/combat_form/human/rocket) && istype(held_gun, /obj/item/gun/ballistic/rocketlauncher/unrestricted/flood)))
 			dropItemToGround(held_gun, TRUE)
 		return .
-	if(weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 10 || HAS_TRAIT(held_weapon, TRAIT_WIELDED) || get_dist(src, target) > held_weapon.throw_range)
+	if(weapon_score(held_weapon) <= 0 || held_weapon.throwforce <= 15 || HAS_TRAIT(held_weapon, TRAIT_WIELDED) || get_dist(src, target) > held_weapon.throw_range)
 		return FALSE
 	if(!dropItemToGround(held_weapon, TRUE))
 		return FALSE

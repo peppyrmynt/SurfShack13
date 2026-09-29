@@ -45,7 +45,7 @@ const guides: Record<Form, Guide> = {
     entries: [
       {
         label: 'Equipment',
-        text: 'Flood Combat spawns empty-handed. You can pick up and use ordinary station equipment and guns. AI Flood Combat seeks usable guns and weapons that deal more than 10 brute or burn damage, including thrown weapons. It also recovers weapons from fallen enemies and drops empty guns. No normal spawn starts with a gun.',
+        text: 'Flood Combat spawns empty-handed. You can pick up and use ordinary station equipment and guns. AI Flood Combat prioritizes loaded guns, then grenades, then weapons that deal more than 15 brute or burn damage when wielded, powered, or thrown. Unarmed Flood seek weapons even during a fight. They also recover weapons from fallen enemies and drop empty guns. No normal spawn starts with a gun.',
       },
       {
         label: 'Evolution',
@@ -181,7 +181,7 @@ export const AntagInfoFlood = () => {
                     Expand the infestation, protect corpses for your infectors,
                     and establish Flood biomass. You share Floodmind speech
                     nearby with :f, and Flood Chorus reaches every active Flood
-                    player.
+                    player. All Flood can see in the dark.
                   </Stack.Item>
                   <Stack.Item>
                     <Section title="Flood Infectors">
@@ -199,10 +199,13 @@ export const AntagInfoFlood = () => {
                   <Stack.Item>
                     <Section title="Biomass and fire">
                       Flood units heal slowly only while standing on
-                      Flood-covered floor. Fire damages Flood bodies. Fire can
-                      destroy biomass; crew can clear floor growth with a
-                      welder, by removing the floor, or by destroying its parent
-                      growth. Sharp weapons can carve apart fallen Flood.
+                      Flood-covered floor. Flood take double burn damage,
+                      including fire. Biomass floors burn away easily from heat
+                      and burn weapons; crew can also clear them with a welder,
+                      by removing the floor, or by destroying their parent
+                      growth. Growths release 2 moles of miasma every 10 seconds
+                      and 4 moles of BZ every 30 seconds. Sharp weapons can
+                      carve apart fallen Flood.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>

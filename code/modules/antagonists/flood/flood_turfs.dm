@@ -7,6 +7,7 @@
 	icon_state = "floor"
 	base_icon_state = "floor"
 	resistance_flags = ACID_PROOF
+	heat_capacity = 500
 	damaged_dmi = null
 	slowdown = 0.2
 	/// Planted floors act like xeno weed nodes; floors they spread stay tied to that node.
@@ -80,6 +81,31 @@
 
 /turf/open/floor/flood_biomass/burn_tile()
 	ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
+
+/// Burning biomass only removes the growth, never melts the floor beneath it.
+/turf/open/floor/flood_biomass/burn_turf()
+	burn_tile()
+
+/turf/open/floor/flood_biomass/fire_act(exposed_temperature, exposed_volume)
+	. = ..()
+	if(isnull(exposed_temperature) || exposed_temperature >= FIRE_MINIMUM_TEMPERATURE_TO_EXIST)
+		burn_tile()
+
+/turf/open/floor/flood_biomass/attackby(obj/item/attacking_item, mob/living/user, params)
+	. = ..()
+	if(. || !user.combat_mode || attacking_item.damtype != BURN || attacking_item.force <= 0)
+		return
+	user.changeNext_move(attacking_item.attack_speed)
+	user.do_attack_animation(src)
+	visible_message(span_notice("[user] burns away [src] with [attacking_item]."))
+	burn_tile()
+	return TRUE
+
+/turf/open/floor/flood_biomass/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE, blocked = 0)
+	var/burns_growth = hitting_projectile.damage_type == BURN && hitting_projectile.damage > 0 && blocked < 100
+	. = ..()
+	if(. == BULLET_ACT_HIT && burns_growth && istype(src, /turf/open/floor/flood_biomass))
+		burn_tile()
 
 /// Spread biomass over a floor while preserving the previous floor beneath it.
 /proc/can_grow_flood_floor(turf/target)

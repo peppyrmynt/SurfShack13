@@ -137,13 +137,13 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 		if(invisibility < INVISIBILITY_ABSTRACT)
 			var/turf/open/growth_turf = get_turf(src)
 			if(istype(growth_turf) && !isspaceturf(growth_turf))
-				growth_turf.atmos_spawn_air("[GAS_MIASMA]=1.5")
+				growth_turf.atmos_spawn_air("[GAS_MIASMA]=2")
 	if(world.time >= next_bz)
 		next_bz = world.time + bz_delay
 		if(invisibility < INVISIBILITY_ABSTRACT)
 			var/turf/open/growth_turf = get_turf(src)
 			if(istype(growth_turf) && !isspaceturf(growth_turf))
-				growth_turf.atmos_spawn_air("[GAS_BZ]=2")
+				growth_turf.atmos_spawn_air("[GAS_BZ]=4")
 
 	if(world.time >= next_spread)
 		next_spread = world.time + spread_delay
