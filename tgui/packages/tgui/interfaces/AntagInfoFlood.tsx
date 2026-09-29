@@ -113,8 +113,8 @@ const guides: Record<Form, Guide> = {
         text: 'Cover the floor you stand on with Flood growth every five seconds, like a constructor.',
       },
       {
-        label: 'Grow Biomass',
-        text: 'Only overseers can create biomass spawners. Grow one on your tile every 60 seconds. Spawners spread growth and produce Flood Carriers 80% of the time or Flood Combat 20% of the time. Visible growth shudders for three seconds before spawning. Flood and ghosts can see the countdown.',
+        label: 'Grow and Spread Biomass',
+        text: 'Every 30 seconds, spread growth to up to three nearby floor tiles. The same action also grows a biomass spawner on your tile when its 60-second timer and placement limits allow it. Spawners produce Flood Carriers 80% of the time or Flood Combat 20% of the time. Visible growth shudders for three seconds before spawning. Flood and ghosts can see the countdown.',
       },
       {
         label: 'Hive population',
@@ -123,10 +123,6 @@ const guides: Record<Form, Guide> = {
       {
         label: 'Create Flood units',
         text: 'Create a Flood Constructor every 180 seconds or a Flood Carrier every 120 seconds. Both appear on your tile as separate AI units.',
-      },
-      {
-        label: 'Direct Infestation Growth',
-        text: 'Spread growth to up to three nearby floor tiles with a 30-second cooldown.',
       },
       {
         label: 'Overseer Mode',

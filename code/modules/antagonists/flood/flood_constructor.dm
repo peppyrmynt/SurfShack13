@@ -240,7 +240,6 @@
 		/datum/action/cooldown/flood/infest_floor,
 		/datum/action/cooldown/flood/create_constructor,
 		/datum/action/cooldown/flood/create_carrier,
-		/datum/action/cooldown/flood/direct_growth,
 		/datum/action/cooldown/flood/toggle_overseer_mode,
 	)
 
@@ -278,8 +277,6 @@
 	next_biomass_build = world.time + 60 SECONDS
 	new /obj/structure/flood_biomass/tiny(target_turf)
 	visible_message(span_warning("Flood biomass spreads outward beneath [src]."))
-	for(var/datum/action/cooldown/flood/grow_biomass/growth_action in actions)
-		growth_action.StartCooldownSelf()
 	return TRUE
 
 /mob/living/basic/flood/overseer/Life(seconds_per_tick = SSMOBS_DT, times_fired)
@@ -325,12 +322,13 @@
 	visible_message(span_warning("[src] buds off a Flood Carrier."))
 	return TRUE
 
-/mob/living/basic/flood/overseer/proc/direct_growth()
+/mob/living/basic/flood/overseer/proc/direct_growth(show_failure = TRUE)
 	if(stat == DEAD)
-		return
+		return FALSE
 	if(world.time < next_direct_growth)
-		to_chat(src, span_warning("The nearby biomass has not recovered yet."))
-		return
+		if(show_failure)
+			to_chat(src, span_warning("The nearby biomass has not recovered yet."))
+		return FALSE
 
 	next_direct_growth = world.time + 30 SECONDS
 	var/created = 0
@@ -343,5 +341,6 @@
 
 	if(created)
 		visible_message(span_warning("Flood growth surges outward under [src]'s direction."))
-	else
+	else if(show_failure)
 		to_chat(src, span_warning("There is nowhere nearby for the infestation to spread."))
+	return created > 0

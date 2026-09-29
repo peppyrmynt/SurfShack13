@@ -55,14 +55,19 @@
 	return TRUE
 
 /datum/action/cooldown/flood/grow_biomass
-	name = "Grow Biomass"
-	desc = "Grow a small biomass spawner on your tile."
+	name = "Grow and Spread Biomass"
+	desc = "Spread to nearby floors every 30 seconds and grow a biomass spawner on your tile when its 60-second timer is ready."
 	button_icon_state = "biomass1"
-	cooldown_time = 60 SECONDS
+	cooldown_time = 30 SECONDS
 
 /datum/action/cooldown/flood/grow_biomass/Activate(atom/target)
 	var/mob/living/basic/flood/overseer/overseer = owner
-	return overseer.grow_biomass()
+	var/built_spawner = world.time >= overseer.next_biomass_build && overseer.grow_biomass()
+	var/spread_floor = overseer.direct_growth(show_failure = !built_spawner)
+	if(!built_spawner && !spread_floor)
+		return FALSE
+	StartCooldownSelf()
+	return TRUE
 
 /datum/action/cooldown/flood/produce_infestor
 	name = "Produce Infector"
@@ -168,21 +173,6 @@
 /datum/action/cooldown/flood/create_carrier/Activate(atom/target)
 	var/mob/living/basic/flood/overseer/overseer = owner
 	if(!overseer.create_carrier())
-		return FALSE
-	StartCooldownSelf()
-	return TRUE
-
-/datum/action/cooldown/flood/direct_growth
-	name = "Direct Infestation Growth"
-	desc = "Spread Flood biomass across nearby floor tiles."
-	button_icon_state = "biomass2"
-	cooldown_time = 30 SECONDS
-
-/datum/action/cooldown/flood/direct_growth/Activate(atom/target)
-	var/mob/living/basic/flood/overseer/overseer = owner
-	var/previous_cooldown = overseer.next_direct_growth
-	overseer.direct_growth()
-	if(overseer.next_direct_growth <= previous_cooldown)
 		return FALSE
 	StartCooldownSelf()
 	return TRUE
