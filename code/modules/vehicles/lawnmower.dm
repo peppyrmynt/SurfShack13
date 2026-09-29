@@ -52,8 +52,24 @@
 		secbot.gib()
 		gibbed = TRUE
 
+	for(var/mob/living/dead_mob in loc)
+		if(dead_mob == rider || dead_mob.stat != DEAD)
+			continue
+		visible_message(span_danger("[src] grinds [dead_mob] into a fine paste!"))
+		playsound(loc, hit_sound, 50, TRUE)
+		add_mob_blood(dead_mob)
+		var/turf/below_dead_mob = get_turf(src)
+		below_dead_mob.add_mob_blood(dead_mob)
+		AddComponent(/datum/component/blood_walk, \
+			blood_type = /obj/effect/decal/cleanable/blood/tracks/lawnmower, \
+			target_dir_change = TRUE, \
+			transfer_blood_dna = TRUE, \
+			max_blood = 4)
+		dead_mob.gib()
+		gibbed = TRUE
+
 	for(var/mob/living/carbon/human/victim in loc)
-		if(victim == rider)
+		if(victim == rider || victim.stat == DEAD)
 			continue
 		if(victim.body_position == LYING_DOWN)
 			if(iszombie(victim) || is_species(victim, /datum/species/human/krokodil_addict))
