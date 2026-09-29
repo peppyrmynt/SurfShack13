@@ -63,11 +63,24 @@
 	w_class = WEIGHT_CLASS_SMALL
 	flags_inv = HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
 	flags_cover = MASKCOVERSMOUTH
+	/// The song the mask plays from the moment it exists until someone first puts it on.
+	var/datum/rampage_music/unworn_music
+
+/obj/item/clothing/mask/chicken_rampage/Initialize(mapload)
+	. = ..()
+	unworn_music = new(src, 9, 50, 25)
+	unworn_music.play('surfshack13/sound/chicken_mask/box.ogg')
+
+/obj/item/clothing/mask/chicken_rampage/Destroy()
+	QDEL_NULL(unworn_music)
+	return ..()
 
 /obj/item/clothing/mask/chicken_rampage/equipped(mob/living/user, slot)
 	. = ..()
 	if(!(slot & ITEM_SLOT_MASK) || !isliving(user))
 		return
+	// Its song is over; the wearer's music takes it from here, and it never plays again.
+	QDEL_NULL(unworn_music)
 	ADD_TRAIT(src, TRAIT_NODROP, CHICKEN_MASK_TRAIT)
 	user.AddComponent(/datum/component/chicken_rampage, src)
 
@@ -454,61 +467,37 @@
 
 /**
  * Called from /mob/living/hitby() when a bulky or bigger item thrown by someone with TRAIT_BRUTAL_THROWER hits us.
- * Sometimes knocks us down, sometimes leaves us dazed, sometimes nothing.
+ * Sometimes knocks us down, sometimes leaves us dazed, sometimes nothing. The bigger the item, the likelier both are.
  */
 /mob/living/proc/brutal_throw_impact(obj/item/thrown_item, mob/thrower)
-	if(prob(30))
+	var/knockdown_chance = 30
+	var/daze_chance = 45
+	switch(thrown_item.w_class)
+		if(WEIGHT_CLASS_HUGE)
+			knockdown_chance = 45
+			daze_chance = 60
+		if(WEIGHT_CLASS_GIGANTIC to INFINITY)
+			knockdown_chance = 65
+			daze_chance = 80
+	if(prob(knockdown_chance))
 		visible_message(span_danger("[src] is knocked off [p_their()] feet by [thrown_item]!"), span_userdanger("[thrown_item] knocks you off your feet!"))
 		Knockdown(2 SECONDS)
-	else if(prob(45))
+	else if(prob(daze_chance))
 		visible_message(span_danger("[src] reels from the impact of [thrown_item]!"), span_userdanger("[thrown_item] leaves you dazed!"))
 		adjust_staggered_up_to(3 SECONDS, 6 SECONDS)
 		set_confusion_if_lower(3 SECONDS)
 		set_dizzy_if_lower(4 SECONDS)
 
 /**
- * The box the chicken mask comes in. Looks like any other cardboard box, except it won't stop playing music
- * until the mask is taken out.
+ * The box the chicken mask comes in. Looks like any other cardboard box. The music people hear is coming from
+ * the mask inside it.
  */
 /obj/item/storage/box/chicken_mask
 	name = "cardboard box"
 	desc = "A plain cardboard box. There's music coming from inside it."
-	/// The song coming out of the box.
-	var/datum/rampage_music/music
 
 /obj/item/storage/box/chicken_mask/PopulateContents()
 	new /obj/item/clothing/mask/chicken_rampage(src)
-
-/obj/item/storage/box/chicken_mask/Initialize(mapload)
-	. = ..()
-	music = new(src, 9, 50, 25)
-	update_music()
-
-/obj/item/storage/box/chicken_mask/Destroy()
-	QDEL_NULL(music)
-	return ..()
-
-/obj/item/storage/box/chicken_mask/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
-	. = ..()
-	if(istype(arrived, /obj/item/clothing/mask/chicken_rampage))
-		update_music()
-
-/obj/item/storage/box/chicken_mask/Exited(atom/movable/gone, direction)
-	. = ..()
-	if(istype(gone, /obj/item/clothing/mask/chicken_rampage))
-		update_music()
-
-/// Plays while the mask is inside.
-/obj/item/storage/box/chicken_mask/proc/update_music()
-	if(!music)
-		return
-	if(QDELETED(src))
-		music.stop(immediate = TRUE)
-		return
-	if(locate(/obj/item/clothing/mask/chicken_rampage) in src)
-		music.play('surfshack13/sound/chicken_mask/box.ogg')
-	else
-		music.stop()
 
 /datum/uplink_item/dangerous/chicken_mask
 	name = "Suspicious Chicken Mask"
