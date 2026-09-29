@@ -31,8 +31,6 @@
 	ai_controller = /datum/ai_controller/basic_controller/simple_hostile_obstacles/flood
 	var/next_evolution = 0
 	var/next_idle_sound = 0
-	/// Basic mobs combine damage types internally; track burn separately for fire gibbing.
-	var/fire_damage_taken = 0
 
 /mob/living/basic/flood/Initialize(mapload)
 	. = ..()
@@ -118,24 +116,22 @@
 	if(!QDELETED(src))
 		adjustFireLoss(2)
 
-/mob/living/basic/flood/adjust_health(amount, updating_health = TRUE, forced = FALSE)
-	. = ..()
-	if(amount < 0)
-		fire_damage_taken = min(fire_damage_taken, bruteloss)
+/mob/living/basic/flood/attackby(obj/item/attacking_item, mob/living/user, params)
+	if(stat != DEAD || !user.combat_mode || !user.is_holding(attacking_item) || !attacking_item.get_sharpness())
+		return ..()
+	if(DOING_INTERACTION_WITH_TARGET(user, src))
+		return TRUE
+	user.visible_message(span_notice("[user] starts carving apart [src] with [attacking_item]."), span_notice("You start carving apart [src]..."))
+	playsound(src, 'sound/effects/butcher.ogg', 50, TRUE)
+	if(do_after(user, 5 SECONDS, src) && !QDELETED(src) && stat == DEAD && user.is_holding(attacking_item) && attacking_item.get_sharpness())
+		user.visible_message(span_notice("[user] carves [src] into pieces."), span_notice("You carve [src] into pieces."))
+		gib(DROP_ITEMS)
+	return TRUE
 
-/mob/living/basic/flood/adjustFireLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
-	var/previous_damage = bruteloss
-	// Check burn damage before health updates can delete a dying infector or carrier.
-	. = ..(amount, FALSE, forced, required_bodytype)
-	if(QDELETED(src))
-		return
-	fire_damage_taken += max(0, bruteloss - previous_damage)
-	if(fire_damage_taken >= maxHealth)
-		visible_message(span_danger("[src] burns away into a spray of biomass!"))
-		gib()
-		return
-	if(updating_health && bruteloss != previous_damage)
-		updatehealth()
+/mob/living/basic/flood/examine(mob/user)
+	. = ..()
+	if(stat == DEAD)
+		. += span_notice("A sharp weapon could carve this body apart.")
 
 /mob/living/basic/flood/melee_attack(atom/target, list/modifiers, ignore_cooldown)
 	if(istype(src, /mob/living/basic/flood/infestor))
