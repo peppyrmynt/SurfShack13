@@ -88,11 +88,11 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	var/max_nearby_growth = 12
 	var/next_spread = 0
 	var/spread_delay = 30 SECONDS
-	/// Visible growths vent miasma and zauker into the surrounding air.
+	/// Visible growths vent miasma and BZ into the surrounding air.
 	var/next_miasma = 0
 	var/miasma_delay = 10 SECONDS
-	var/next_zauker = 0
-	var/zauker_delay = 30 SECONDS
+	var/next_bz = 0
+	var/bz_delay = 30 SECONDS
 	/// A ready growth shudders for ten seconds before releasing a unit.
 	var/spawn_warning_sent = FALSE
 	/// Map-placed nests start with a small wave, as in the source spawner.
@@ -112,7 +112,7 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	next_spawn = world.time + spawn_delay
 	next_spread = world.time + spread_delay
 	next_miasma = world.time + rand(1, miasma_delay)
-	next_zauker = world.time + rand(1, zauker_delay)
+	next_bz = world.time + rand(1, bz_delay)
 	if(!istype(src, /obj/structure/flood_biomass/hidden))
 		countdown = new(src)
 		countdown.start()
@@ -136,12 +136,12 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 			var/turf/open/growth_turf = get_turf(src)
 			if(istype(growth_turf) && !isspaceturf(growth_turf))
 				growth_turf.atmos_spawn_air("[GAS_MIASMA]=1")
-	if(world.time >= next_zauker)
-		next_zauker = world.time + zauker_delay
+	if(world.time >= next_bz)
+		next_bz = world.time + bz_delay
 		if(invisibility < INVISIBILITY_ABSTRACT)
 			var/turf/open/growth_turf = get_turf(src)
 			if(istype(growth_turf) && !isspaceturf(growth_turf))
-				growth_turf.atmos_spawn_air("[GAS_ZAUKER]=0.5")
+				growth_turf.atmos_spawn_air("[GAS_BZ]=1")
 
 	if(world.time >= next_spread)
 		next_spread = world.time + spread_delay
