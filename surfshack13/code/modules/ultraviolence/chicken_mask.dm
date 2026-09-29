@@ -1,8 +1,7 @@
 /// Trait source for everything the chicken mask applies.
 #define CHICKEN_MASK_TRAIT "chicken_mask"
-/// If TRUE, only hits on and executions of player-controlled mobs count towards the combo.
-/// FALSE while testing so NPCs and monkeys count. MUST be TRUE before this is pushed/PR'd.
-#define RAMPAGE_REQUIRE_SENTIENT_TARGETS FALSE
+/// If TRUE, only hits on and executions of player-controlled mobs count towards the combo. Set to FALSE to test against NPCs.
+#define RAMPAGE_REQUIRE_SENTIENT_TARGETS TRUE
 /// Time without landing a hit before the combo resets.
 #define RAMPAGE_COMBO_TIMEOUT (12.5 SECONDS)
 /// Getting hit takes this much off the time left on the combo.
