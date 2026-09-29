@@ -112,8 +112,10 @@
 
 /datum/component/chicken_rampage/RegisterWithParent()
 	var/mob/living/wearer = parent
-	wearer.add_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
+	wearer.add_traits(list(TRAIT_NOSOFTCRIT, TRAIT_ANALGESIA, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.AddComponentFrom(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
+	// Feels no pain, like morphine: no pain messages or shock, and injuries don't slow them down.
+	wearer.add_movespeed_mod_immunities(CHICKEN_MASK_TRAIT, /datum/movespeed_modifier/damage_slowdown)
 	record = get_rampage_record(wearer)
 	update_combo_bonuses()
 	// Temporary, so whatever martial art they had comes back if the mask ever comes off.
@@ -153,9 +155,10 @@
 		COMSIG_LIVING_UNARMED_ATTACK,
 		COMSIG_USER_ITEM_INTERACTION_SECONDARY,
 	))
-	wearer.remove_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
+	wearer.remove_traits(list(TRAIT_NOSOFTCRIT, TRAIT_ANALGESIA, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.RemoveComponentSource(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
 	wearer.remove_movespeed_modifier(/datum/movespeed_modifier/chicken_rampage)
+	wearer.remove_movespeed_mod_immunities(CHICKEN_MASK_TRAIT, /datum/movespeed_modifier/damage_slowdown)
 	wearer.next_move_modifier /= applied_click_modifier
 	applied_click_modifier = 1
 	wearer.client?.screen -= combo_display
