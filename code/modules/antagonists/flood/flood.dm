@@ -11,7 +11,7 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 /proc/flood_ai_population(infestors_only = null)
 	var/count = 0
 	for(var/mob/living/basic/flood/unit in GLOB.mob_living_list)
-		if(!QDELETED(unit) && unit.stat != DEAD && !unit.client && (isnull(infestors_only) || istype(unit, /mob/living/basic/flood/infestor) == infectors_only))
+		if(!QDELETED(unit) && unit.stat != DEAD && !unit.client && (isnull(infestors_only) || istype(unit, /mob/living/basic/flood/infestor) == infestors_only))
 			count++
 	return count
 

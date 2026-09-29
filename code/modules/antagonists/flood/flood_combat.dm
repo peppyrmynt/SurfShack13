@@ -139,8 +139,8 @@
 /mob/living/basic/flood/combat_form/human/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/dextrous, hud_type = /datum/hud/dextrous/flood)
-	// These sprites draw their bodies in the base icon, so held items go above it.
-	AddComponent(/datum/component/basic_inhands, display_layer = 0)
+	// Draw held items on top of the body and its other overlays.
+	AddComponent(/datum/component/basic_inhands, display_layer = -HIGHEST_LAYER)
 	update_held_items()
 	ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, INNATE_TRAIT)
 

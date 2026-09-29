@@ -237,7 +237,8 @@ export const AntagInfoFlood = () => {
                               {hive_status.ai_units} / {hive_status.ai_cap}
                             </LabeledList.Item>
                             <LabeledList.Item label="AI Infectors">
-                              {hive_status.ai_infestors} / {hive_status.ai_infestor_cap}
+                              {hive_status.ai_infestors} /{' '}
+                              {hive_status.ai_infestor_cap}
                             </LabeledList.Item>
                           </LabeledList>
                         </Section>
