@@ -155,12 +155,13 @@
 
 /**
  * Is the target down enough to be executed?
- * Normally that means lying in crit. With TRAIT_RAMPAGE_EXECUTIONER, anyone prone, stunned, unconscious or dead will do.
+ * Normally that means in crit (soft crit or worse) but still alive.
+ * With TRAIT_RAMPAGE_EXECUTIONER, anyone prone, stunned, in soft crit or worse, or dead will do.
  */
 /datum/component/ultraviolence/proc/is_executable(mob/living/attacker, mob/living/target)
 	if(HAS_TRAIT(attacker, TRAIT_RAMPAGE_EXECUTIONER))
-		return target.body_position == LYING_DOWN || target.stat >= UNCONSCIOUS || HAS_TRAIT(target, TRAIT_INCAPACITATED)
-	return target.body_position == LYING_DOWN && target.stat >= SOFT_CRIT && target.stat != DEAD
+		return target.body_position == LYING_DOWN || target.stat >= SOFT_CRIT || HAS_TRAIT(target, TRAIT_INCAPACITATED)
+	return target.stat >= SOFT_CRIT && target.stat != DEAD
 
 /// Can we start an execution on this target right now?
 /datum/component/ultraviolence/proc/can_execute(mob/living/attacker, mob/living/target, obj/item/weapon)
