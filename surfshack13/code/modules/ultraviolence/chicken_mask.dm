@@ -67,6 +67,9 @@
 	/// Mind of whoever bought the mask. Only they get the rampage; anyone else who puts it on gets punished instead.
 	/// Unset masks (admin spawned) belong to the first person to wear them.
 	var/datum/weakref/owner_mind
+	/// Body of whoever bought the mask. Checked alongside the mind, because a mind can leave its body
+	/// (decapitation, brain transplants) and a revived body can come back with a fresh one.
+	var/datum/weakref/owner_body
 
 /obj/item/clothing/head/chicken_rampage/Initialize(mapload)
 	. = ..()
@@ -81,11 +84,13 @@
 	. = ..()
 	if(!(slot & ITEM_SLOT_HEAD) || !isliving(user))
 		return
-	if(isnull(owner_mind) && user.mind)
-		owner_mind = WEAKREF(user.mind)
-	if(!user.mind || user.mind != owner_mind?.resolve())
+	if(isnull(owner_mind) && isnull(owner_body))
+		set_owner(user)
+	if(!is_owner(user))
 		thief_equipped(user)
 		return
+	// Keep both halves of the ownership up to date, so it survives whatever happens next.
+	set_owner(user)
 	// Its song is over; the wearer's music takes it from here, and it never plays again.
 	QDEL_NULL(unworn_music)
 	ADD_TRAIT(src, TRAIT_NODROP, CHICKEN_MASK_TRAIT)
@@ -96,6 +101,21 @@
 	// Only happens if it gets forced off, like losing the head.
 	REMOVE_TRAIT(src, TRAIT_NODROP, CHICKEN_MASK_TRAIT)
 	qdel(user.GetComponent(/datum/component/chicken_rampage))
+
+/// Makes this mob the mask's owner, remembering both their mind and their body.
+/obj/item/clothing/head/chicken_rampage/proc/set_owner(mob/living/owner)
+	owner_body = WEAKREF(owner)
+	if(owner.mind)
+		owner_mind = WEAKREF(owner.mind)
+
+/**
+ * Is this the person who bought the mask? True if they have the buyer's mind (even in a new body, like after
+ * cloning or a brain transplant) or are the buyer's body (even with a new mind, like after being revived with a new brain).
+ */
+/obj/item/clothing/head/chicken_rampage/proc/is_owner(mob/living/wearer)
+	if(wearer.mind && wearer.mind == owner_mind?.resolve())
+		return TRUE
+	return wearer == owner_body?.resolve()
 
 /// Someone who isn't the owner put the mask on. They get none of the rampage, just the curse.
 /obj/item/clothing/head/chicken_rampage/proc/thief_equipped(mob/living/thief)
@@ -524,8 +544,8 @@
 /datum/uplink_item/dangerous/chicken_mask/spawn_item(spawn_path, mob/user, datum/uplink_handler/uplink_handler, atom/movable/source)
 	var/atom/box = ..()
 	var/obj/item/clothing/head/chicken_rampage/mask = locate() in box
-	if(mask && user?.mind)
-		mask.owner_mind = WEAKREF(user.mind)
+	if(mask && isliving(user))
+		mask.set_owner(user)
 	return box
 
 #undef CHICKEN_MASK_TRAIT

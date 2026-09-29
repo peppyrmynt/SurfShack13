@@ -23,16 +23,24 @@ GLOBAL_LIST_EMPTY(rampage_records)
 	/// Doors kicked off their hinges.
 	var/doors_kicked = 0
 
+	/// Body of the wearer, so the same person keeps one record even if their mind gets swapped out.
+	var/datum/weakref/body
+
 /datum/rampage_record/New(mob/living/wearer)
 	mind = wearer.mind
+	body = WEAKREF(wearer)
 	name = wearer.real_name
 	key = wearer.ckey || wearer.mind?.key
 	GLOB.rampage_records += src
 
-/// Finds the record for this wearer's mind, or starts a new one.
+/// Finds the record for this wearer (matching their mind or their body), or starts a new one.
 /proc/get_rampage_record(mob/living/wearer)
 	for(var/datum/rampage_record/record as anything in GLOB.rampage_records)
-		if(wearer.mind && record.mind == wearer.mind)
+		if((wearer.mind && record.mind == wearer.mind) || record.body?.resolve() == wearer)
+			// Keep it pointing at whoever they are now.
+			if(wearer.mind)
+				record.mind = wearer.mind
+			record.body = WEAKREF(wearer)
 			return record
 	return new /datum/rampage_record(wearer)
 
