@@ -1,6 +1,6 @@
-#include "crynet_nanosuit.inc"
-#include "crynet_fidelity.inc"
-#include "fusion_test_canisters.inc"
+#include "crynet_nanosuit.dm"
+#include "crynet_fidelity.dm"
+#include "fusion_test_canisters.dm"
 
 /datum/uplink_item/dangerous/execution_sword
 	name = "Execution Sword"
@@ -35,8 +35,8 @@
 /obj/item/extra_arm
 	name = "extra arm installer"
 	desc = "A Syndicate surgical device that adapts the user's nervous system to support an additional arm."
-	icon = 'icons/obj/devices/tool.dmi'
-	icon_state = "autosurgeon"
+	icon = 'surfshack13/icons/hippie/device.dmi'
+	icon_state = "extra_arm"
 	w_class = WEIGHT_CLASS_SMALL
 	var/used = FALSE
 
@@ -47,6 +47,7 @@
 
 	user.change_number_of_hands(length(user.held_items) + 1)
 	used = TRUE
+	icon_state = "extra_arm_none"
 	desc += " It has already been used."
 	user.visible_message(
 		span_notice("[user] presses a button on [src], followed by a disgusting wet noise."),
@@ -65,9 +66,10 @@
 
 /datum/uplink_item/dangerous/high_frequency_blade
 	name = "High Frequency Blade"
-	desc = "An electric katana that weakens the molecular bonds of whatever it touches. Perfect for slicing apart obstacles and opponents."
-	item = /obj/item/highfrequencyblade
+	desc = "An electric katana that weakens the molecular bonds of whatever it touches. Perfect for slicing off the limbs of your coworkers. Avoid using a multitool on it."
+	item = /obj/item/storage/belt/hfblade/hippie
 	cost = 9
+	surplus = 15
 	purchasable_from = UPLINK_TRAITORS
 
 // The normal MOD control powers itself off at exactly zero charge. CryNet instead falls back to
@@ -84,3 +86,5 @@
 	cost = 20
 	surplus = 0
 	purchasable_from = UPLINK_TRAITORS
+
+#include "hippie_traitor_assets.dm"

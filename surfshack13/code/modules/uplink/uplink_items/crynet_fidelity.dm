@@ -8,6 +8,7 @@
 	. = ..()
 	if(!mod?.wearer)
 		return
+	playsound(get_turf(mod.wearer), 'surfshack13/sound/hippie/nanosuitengage.ogg', 100, FALSE)
 	GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]?.show_to(mod.wearer)
 	GLOB.huds[DATA_HUD_SECURITY_ADVANCED]?.show_to(mod.wearer)
 	GLOB.huds[DATA_HUD_DIAGNOSTIC]?.show_to(mod.wearer)
@@ -69,5 +70,5 @@
 		/obj/item/mod/module/shock_absorber,
 		/obj/item/mod/module/rad_protection,
 		/obj/item/mod/module/jetpack,
-		/obj/item/mod/module/visor/night,
+		/obj/item/mod/module/visor/night/crynet,
 	)
