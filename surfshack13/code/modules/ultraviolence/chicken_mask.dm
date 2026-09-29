@@ -11,10 +11,16 @@
 #define RAMPAGE_EXECUTION_BONUS 2
 /// Speed boost just for wearing the mask.
 #define RAMPAGE_BASE_SPEED 0.15
-/// Extra speed per point of combo.
-#define RAMPAGE_SPEED_PER_COMBO 0.025
-/// Speed boost can't go past this, the same as stimulants.
+/// Speed boost at max, the same as stimulants.
 #define RAMPAGE_MAX_SPEED 0.55
+/// Combo at which the speed boost reaches RAMPAGE_MAX_SPEED. It ramps up evenly until then.
+#define RAMPAGE_MAX_SPEED_COMBO 50
+/// How far the wearer's music carries with no combo.
+#define RAMPAGE_MUSIC_BASE_RANGE 15
+/// How far the wearer's music carries at RAMPAGE_MUSIC_MAX_RANGE_COMBO combo and above.
+#define RAMPAGE_MUSIC_MAX_RANGE 50
+/// Combo at which the music reaches its max range.
+#define RAMPAGE_MUSIC_MAX_RANGE_COMBO 100
 /// Extra combo for a kill, on top of the point for the hit itself.
 #define RAMPAGE_KILL_COMBO_BONUS 1
 /// Score for a kill, multiplied by the combo.
@@ -23,8 +29,9 @@
 #define RAMPAGE_EXECUTION_POINTS 250
 /// Click cooldown reduction per point of combo.
 #define RAMPAGE_CLICK_SPEED_PER_COMBO 0.01
-/// Click cooldown can't drop below this fraction of normal, otherwise a big enough combo means no cooldown at all.
-#define RAMPAGE_MIN_CLICK_MODIFIER 0.1
+/// Click cooldown floor. Effectively no limit (a melee cooldown at 1% is shorter than a server tick),
+/// it only exists because the modifier is multiplied in and divided back out, and can't be zero.
+#define RAMPAGE_MIN_CLICK_MODIFIER 0.01
 /// Damage of every punch thrown by the mask's martial art.
 #define RAMPAGE_PUNCH_DAMAGE 15
 /// Melee armor at which punches only penetrate half of it. Below this they penetrate more, up to all of it against no armor.
@@ -116,7 +123,7 @@
 
 	combo_display = new
 	wearer.client?.screen += combo_display
-	music = new(wearer)
+	music = new(wearer, RAMPAGE_MUSIC_BASE_RANGE)
 	update_music()
 
 	RegisterSignal(wearer, COMSIG_MOB_ATTACK_LANDED, PROC_REF(on_attack_landed))
@@ -271,10 +278,13 @@
 	combo_display?.set_combo(combo)
 	update_combo_bonuses()
 
-/// Movement and click speed both scale with the combo.
+/// Movement speed, click speed and how far the music carries all scale with the combo.
 /datum/component/chicken_rampage/proc/update_combo_bonuses()
+	if(music)
+		music.range = round(RAMPAGE_MUSIC_BASE_RANGE + (RAMPAGE_MUSIC_MAX_RANGE - RAMPAGE_MUSIC_BASE_RANGE) * min(combo / RAMPAGE_MUSIC_MAX_RANGE_COMBO, 1))
+
 	var/mob/living/wearer = parent
-	var/speed = min(RAMPAGE_BASE_SPEED + combo * RAMPAGE_SPEED_PER_COMBO, RAMPAGE_MAX_SPEED)
+	var/speed = RAMPAGE_BASE_SPEED + (RAMPAGE_MAX_SPEED - RAMPAGE_BASE_SPEED) * min(combo / RAMPAGE_MAX_SPEED_COMBO, 1)
 	wearer.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/chicken_rampage, multiplicative_slowdown = -speed)
 
 	var/click_modifier = max(1 - combo * RAMPAGE_CLICK_SPEED_PER_COMBO, RAMPAGE_MIN_CLICK_MODIFIER)
@@ -448,8 +458,11 @@
 #undef RAMPAGE_HIT_TIMER_PENALTY
 #undef RAMPAGE_EXECUTION_BONUS
 #undef RAMPAGE_BASE_SPEED
-#undef RAMPAGE_SPEED_PER_COMBO
 #undef RAMPAGE_MAX_SPEED
+#undef RAMPAGE_MAX_SPEED_COMBO
+#undef RAMPAGE_MUSIC_BASE_RANGE
+#undef RAMPAGE_MUSIC_MAX_RANGE
+#undef RAMPAGE_MUSIC_MAX_RANGE_COMBO
 #undef RAMPAGE_KILL_COMBO_BONUS
 #undef RAMPAGE_KILL_POINTS
 #undef RAMPAGE_EXECUTION_POINTS
