@@ -6,10 +6,16 @@
  * Brains are always spilled rather than deleted so victims stay revivable through a brain transplant.
  */
 
-/// How many times a fresh corpse's blood pool spreads.
-#define GORE_POOL_SPREADS 6
-/// Time between each spread of a corpse's blood pool.
-#define GORE_POOL_SPREAD_DELAY (1.5 SECONDS)
+/// Fewest times a fresh corpse's blood pool spreads.
+#define GORE_POOL_SPREADS_MIN 4
+/// Most times a fresh corpse's blood pool spreads.
+#define GORE_POOL_SPREADS_MAX 9
+/// Shortest time between each spread of a corpse's blood pool, in deciseconds.
+#define GORE_POOL_SPREAD_DELAY_MIN 8
+/// Longest time between each spread of a corpse's blood pool, in deciseconds.
+#define GORE_POOL_SPREAD_DELAY_MAX 22
+/// How far floor splatters get nudged off the centre of their tile, so they don't all line up on the grid.
+#define GORE_SPLATTER_NUDGE 7
 /// How far away people are horrified by ultraviolence.
 #define GORE_WITNESS_RANGE 7
 
@@ -22,10 +28,54 @@
 	return !HAS_TRAIT(src, TRAIT_NOBLOOD) && get_blood_id() == /datum/reagent/blood
 
 /**
- * Paints the floor around us red and throws some gibs around.
+ * Picks a direction close to the passed one, so sprays fan out instead of all flying in a straight line.
+ * Mostly dead on, sometimes 45 degrees off, rarely 90.
+ */
+/proc/gore_jitter_dir(direction)
+	if(!direction)
+		return pick(GLOB.alldirs)
+	switch(rand(1, 100))
+		if(1 to 55)
+			return direction
+		if(56 to 75)
+			return turn(direction, 45)
+		if(76 to 95)
+			return turn(direction, -45)
+		else
+			return turn(direction, pick(90, -90))
+
+/// Adds a floor splatter to the turf and nudges it off-grid so pools look organic.
+/mob/living/carbon/proc/gore_splatter_floor(turf/target_turf, small_drip = FALSE)
+	if(!target_turf)
+		return
+	add_splatter_floor(target_turf, small_drip)
+	var/obj/effect/decal/cleanable/blood/splatter = locate() in target_turf
+	if(splatter)
+		splatter.pixel_x = rand(-GORE_SPLATTER_NUDGE, GORE_SPLATTER_NUDGE)
+		splatter.pixel_y = rand(-GORE_SPLATTER_NUDGE, GORE_SPLATTER_NUDGE)
+
+/**
+ * Sprays blood out of us. Each call is different: how many sprays, how far they fly,
+ * and which way they fan out around splatter_dir are all randomised.
  *
  * Arguments:
- * * intensity - 1 to 5, how many tiles and splatters get covered.
+ * * strength - rough strength of the spray, 1 to 5.
+ * * splatter_dir - direction the blood mostly flies in, or null for everywhere.
+ * * max_sprays - most sprays this call can make.
+ */
+/mob/living/carbon/proc/gore_spray(strength = 2, splatter_dir, max_sprays = 2)
+	if(!can_gore_bleed() || !isturf(loc))
+		return
+	for(var/i in 1 to rand(1, max(max_sprays, 1)))
+		var/direction = (splatter_dir && prob(85)) ? gore_jitter_dir(splatter_dir) : pick(GLOB.alldirs)
+		spray_blood(direction, clamp(strength + rand(-1, 1), 1, 6))
+
+/**
+ * Paints the floor around us red. No two bursts look the same: the size, spread,
+ * number of sprays and trail of drips are all rolled each time.
+ *
+ * Arguments:
+ * * intensity - 1 to 5, roughly how much of the room gets covered.
  * * splatter_dir - optional direction the blood should mostly fly in, for that "shot from the doorway" look.
  */
 /mob/living/carbon/proc/gore_blood_burst(intensity = 1, splatter_dir)
@@ -33,29 +83,43 @@
 	if(!location || !can_gore_bleed())
 		return
 
-	intensity = clamp(intensity, 1, 5)
-	add_splatter_floor(location)
-	for(var/turf/nearby_turf in range(intensity > 2 ? 1 : 0, location))
-		if(prob(40 + intensity * 10))
-			add_splatter_floor(nearby_turf)
+	intensity = clamp(intensity + rand(-1, 1), 1, 5)
+	gore_splatter_floor(location)
+
+	// Patchy pool around the body, leaning towards the direction of the hit.
+	var/radius = intensity >= 4 ? rand(1, 2) : (intensity >= 2 ? 1 : 0)
+	for(var/turf/open/nearby_turf in range(radius, location))
+		var/chance = 25 + intensity * 10
+		if(splatter_dir && (get_dir(location, nearby_turf) & splatter_dir))
+			chance += 25
+		if(get_dist(location, nearby_turf) > 1)
+			chance -= 30
+		if(prob(chance))
+			gore_splatter_floor(nearby_turf)
 
 	// Splatters that reach a wall paint it, which is most of the look.
-	for(var/i in 1 to intensity)
-		spray_blood(splatter_dir && prob(70) ? splatter_dir : pick(GLOB.alldirs), clamp(intensity, 2, 5))
-	playsound(location, 'sound/effects/wounds/splatter.ogg', 60, TRUE)
+	gore_spray(intensity, splatter_dir, intensity + rand(0, intensity))
 
-/// Slowly spreads a pool of blood out from under a fresh corpse.
-/mob/living/carbon/proc/gore_blood_pool(spreads_left = GORE_POOL_SPREADS)
+	// A few drips flung further out.
+	for(var/i in 1 to rand(0, intensity))
+		var/turf/drip_turf = get_ranged_target_turf(src, gore_jitter_dir(splatter_dir), rand(1, intensity + 1))
+		if(isopenturf(drip_turf))
+			gore_splatter_floor(drip_turf, small_drip = TRUE)
+
+	playsound(location, 'sound/effects/wounds/splatter.ogg', rand(45, 70), TRUE)
+
+/// Slowly spreads a pool of blood out from under a fresh corpse, at an uneven pace.
+/mob/living/carbon/proc/gore_blood_pool(spreads_left = rand(GORE_POOL_SPREADS_MIN, GORE_POOL_SPREADS_MAX))
 	if(QDELETED(src) || spreads_left <= 0 || !can_gore_bleed())
 		return
 	var/turf/location = get_turf(src)
 	if(!location)
 		return
-	var/list/pool_turfs = list(location)
+	var/list/pool_turfs = list(location, location) // twice as likely to pool right under the body
 	for(var/turf/open/adjacent in orange(1, location))
 		pool_turfs += adjacent
-	add_splatter_floor(pick(pool_turfs))
-	addtimer(CALLBACK(src, PROC_REF(gore_blood_pool), spreads_left - 1), GORE_POOL_SPREAD_DELAY)
+	gore_splatter_floor(pick(pool_turfs), small_drip = prob(30))
+	addtimer(CALLBACK(src, PROC_REF(gore_blood_pool), spreads_left - 1), rand(GORE_POOL_SPREAD_DELAY_MIN, GORE_POOL_SPREAD_DELAY_MAX))
 
 /**
  * Flings the body backwards, smearing blood along every tile it slides over.
@@ -75,7 +139,7 @@
 			break
 		landing = next
 		if(can_gore_bleed())
-			add_splatter_floor(landing)
+			gore_splatter_floor(landing, small_drip = prob(35))
 	if(landing == get_turf(src))
 		return
 	throw_at(landing, distance, 2, thrower, spin = FALSE)
@@ -293,6 +357,9 @@
 	mood_change = 4
 	timeout = 4 MINUTES
 
-#undef GORE_POOL_SPREADS
-#undef GORE_POOL_SPREAD_DELAY
+#undef GORE_POOL_SPREADS_MIN
+#undef GORE_POOL_SPREADS_MAX
+#undef GORE_POOL_SPREAD_DELAY_MIN
+#undef GORE_POOL_SPREAD_DELAY_MAX
+#undef GORE_SPLATTER_NUDGE
 #undef GORE_WITNESS_RANGE

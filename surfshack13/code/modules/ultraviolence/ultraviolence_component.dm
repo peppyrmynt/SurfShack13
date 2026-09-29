@@ -83,7 +83,10 @@
 	var/style = get_style(weapon, sharpness)
 
 	if(victim.can_gore_bleed() && victim.blood_volume)
-		victim.spray_blood(splatter_dir, clamp(round(damage_done / 8), 1, 4))
+		// Bigger hits throw more blood, further, in a wider fan.
+		victim.gore_spray(clamp(round(damage_done / 8), 1, 4), splatter_dir, damage_done >= 20 ? 3 : 1)
+		if(prob(damage_done * 2))
+			victim.gore_splatter_floor(get_turf(victim), small_drip = TRUE)
 		if(get_dist(source, victim) <= 1)
 			source.add_mob_blood(victim)
 		if(isitem(weapon))
@@ -285,7 +288,9 @@
 		if(!decapitate && head_method == GORE_HEAD_CRUSHED)
 			playsound(victim, pick('sound/effects/wounds/crack1.ogg', 'sound/effects/wounds/crack2.ogg'), 60, TRUE)
 		if(victim.can_gore_bleed())
-			victim.spray_blood(wall_dir || pick(GLOB.alldirs), 2)
+			victim.gore_spray(rand(1, 3), wall_dir, 2)
+			if(prob(40))
+				victim.gore_splatter_floor(get_turf(victim), small_drip = TRUE)
 			attacker.add_mob_blood(victim)
 			weapon?.add_mob_blood(victim)
 		shake_camera(attacker, 1, 1)
