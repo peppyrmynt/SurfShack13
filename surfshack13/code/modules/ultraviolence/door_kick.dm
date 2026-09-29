@@ -69,11 +69,11 @@
 
 /**
  * A door that's been kicked off its hinges. Flies through the air, and whoever it hits gets crushed like a vending machine
- * fell on them. Afterwards it lies flat on the floor as wreckage.
+ * fell on them. Afterwards it stays where it crashed down as a solid obstacle until it's broken apart.
  */
 /obj/structure/kicked_door
 	name = "kicked-in door"
-	desc = "Someone kicked this clean off its frame."
+	desc = "Someone kicked this clean off its frame. It's wedged in the way; you'll have to break it apart to get past."
 	density = TRUE
 	anchored = FALSE
 	max_integrity = 150
@@ -127,10 +127,11 @@
 	playsound(src, 'sound/effects/bang.ogg', 60, TRUE)
 	lie_flat(TRUE)
 
-/// Drops to the floor as wreckage people can walk over.
+/// Crashes down where it landed. Still solid: it blocks the way like a barricade until someone breaks it apart.
 /obj/structure/kicked_door/proc/lie_flat(rotate = TRUE)
-	density = FALSE
-	layer = BELOW_OBJ_LAYER
+	density = TRUE
+	anchored = TRUE
+	layer = ABOVE_OBJ_LAYER
 	if(rotate)
 		transform = turn(transform, pick(90, 270))
 
