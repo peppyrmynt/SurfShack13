@@ -81,6 +81,7 @@
 	var/original_area_flags
 
 /datum/unit_test/flood_midround_placement/Destroy()
+	placed_overseer?.mind?.remove_antag_datum(/datum/antagonist/flood)
 	QDEL_NULL(placed_overseer)
 	if(istype(placed_floor, /turf/open/floor/flood_biomass))
 		placed_floor.ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
