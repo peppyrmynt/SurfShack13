@@ -91,6 +91,11 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 	default_custom_objective = "Spread the Flood and establish a viable infestation."
 	var/datum/team/flood/flood_team
 
+/datum/antagonist/flood/get_preview_icon()
+	var/icon/preview_icon = icon('icons/mob/flood/flood_carrier.dmi', "static")
+	preview_icon.Scale(ANTAGONIST_PREVIEW_ICON_SIZE, ANTAGONIST_PREVIEW_ICON_SIZE)
+	return preview_icon
+
 /datum/antagonist/flood/on_gain()
 	forge_objectives()
 	. = ..()
