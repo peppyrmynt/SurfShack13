@@ -560,6 +560,7 @@
 		span_danger("[attacker] brings a nanosuit-assisted stomp down on [defender]'s head!"),
 		span_userdanger("[attacker] crushes your head under a powered stomp!"),
 	)
+	playsound(defender, 'surfshack13/sound/hippie/squishy.ogg', 75, TRUE)
 	head.dismember()
 	defender.apply_damage(40, BRUTE, BODY_ZONE_HEAD, wound_bonus = CANT_WOUND)
 	if(!HAS_TRAIT(defender, TRAIT_NODEATH))
