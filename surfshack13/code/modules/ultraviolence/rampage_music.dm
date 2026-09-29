@@ -3,7 +3,10 @@
  *
  * Plays a looping song out of an atom to every player within range, straight through walls,
  * so everyone nearby can hear where it's coming from. Changing songs crossfades between two sound channels
- * instead of cutting, and the atom itself (if it's a mob) hears the song quieter so it can still hear the fight.
+ * instead of cutting, and the mob carrying the source hears the song quieter so it can still hear the fight.
+ *
+ * Listeners are tracked by client rather than mob, so ghosting, body swaps and disconnects can't leave a song stuck playing.
+ * Everything stops the moment the source is deleted or ends up in nullspace.
  */
 /datum/rampage_music
 	/// Where the music is coming from.
@@ -12,7 +15,7 @@
 	var/range = 15
 	/// Volume for listeners standing right next to the source. Fades down with distance.
 	var/volume = 70
-	/// Volume for the source itself, if it's a mob.
+	/// Volume for the mob the source is, or is carried by.
 	var/self_volume = 30
 	/// How long a crossfade between songs takes.
 	var/fade_time = 1.5 SECONDS
@@ -26,7 +29,7 @@
 	var/list/channel_target = list(0, 0)
 	/// Index of the channel playing the current song.
 	var/active_channel = 1
-	/// Assoc list of listening mob -> list of the last sound state sent per channel, or null if the channel isn't playing for them.
+	/// Assoc list of listening client -> list of the last sound state sent per channel, or null if that channel isn't playing for them.
 	var/list/listeners = list()
 
 /datum/rampage_music/New(atom/source, range, volume, self_volume)
@@ -43,9 +46,7 @@
 
 /datum/rampage_music/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
-	for(var/mob/listener as anything in listeners)
-		stop_for(listener)
-	listeners.Cut()
+	silence_all()
 	SSsounds.free_datum_channels(src)
 	source = null
 	return ..()
@@ -56,6 +57,8 @@
 
 /// Fades into the passed song. Does nothing if it's already the song playing.
 /datum/rampage_music/proc/play(song)
+	if(QDELETED(src) || QDELETED(source))
+		return
 	if(channel_songs[active_channel] == song && channel_target[active_channel] == 1)
 		return
 	var/new_channel = active_channel
@@ -70,30 +73,58 @@
 	active_channel = new_channel
 	START_PROCESSING(SSfastprocess, src)
 
-/// Fades out whatever is playing.
-/datum/rampage_music/proc/stop()
+/**
+ * Stops the music.
+ *
+ * Arguments:
+ * * immediate - cut it off right now instead of fading out.
+ */
+/datum/rampage_music/proc/stop(immediate = FALSE)
 	channel_target[1] = 0
 	channel_target[2] = 0
+	if(!immediate)
+		return
+	STOP_PROCESSING(SSfastprocess, src)
+	silence_all()
 
 /// Is anything audible or about to be?
 /datum/rampage_music/proc/is_playing()
 	return channel_target[1] || channel_target[2] || channel_gain[1] || channel_gain[2]
+
+/// Cuts every channel for every listener and forgets all songs.
+/datum/rampage_music/proc/silence_all()
+	for(var/index in 1 to 2)
+		channel_songs[index] = null
+		channel_gain[index] = 0
+		channel_target[index] = 0
+	for(var/client/listener as anything in listeners)
+		stop_for(listener)
+	listeners.Cut()
 
 /// Stops a channel dead for every listener.
 /datum/rampage_music/proc/reset_channel(index)
 	channel_songs[index] = null
 	channel_gain[index] = 0
 	channel_target[index] = 0
-	for(var/mob/listener as anything in listeners)
-		listener.stop_sound_channel(channels[index])
+	for(var/client/listener as anything in listeners)
+		if(!listener)
+			continue
+		SEND_SOUND(listener, sound(null, channel = channels[index]))
 		var/list/sent = listeners[listener]
 		sent[index] = null
 
-/datum/rampage_music/proc/stop_for(mob/listener)
+/// Stops both of our channels for one client.
+/datum/rampage_music/proc/stop_for(client/listener)
+	if(!listener)
+		return
 	for(var/channel in channels)
-		listener.stop_sound_channel(channel)
+		SEND_SOUND(listener, sound(null, channel = channel))
 
 /datum/rampage_music/process(seconds_per_tick)
+	if(QDELETED(source))
+		qdel(src)
+		return PROCESS_KILL
+
 	var/fade_step = (seconds_per_tick SECONDS) / fade_time
 	for(var/index in 1 to 2)
 		if(channel_gain[index] < channel_target[index])
@@ -103,39 +134,42 @@
 		if(channel_songs[index] && !channel_gain[index] && !channel_target[index])
 			reset_channel(index)
 
-	update_listeners()
-
 	if(!is_playing())
-		for(var/mob/listener as anything in listeners)
-			stop_for(listener)
-		listeners.Cut()
+		silence_all()
 		return PROCESS_KILL
+
+	update_listeners()
 
 /// Works out who should hear us and sends them the song at the right volume and position.
 /datum/rampage_music/proc/update_listeners()
+	// Disconnected clients leave null keys behind.
+	listeners -= null
+
 	var/turf/source_turf = get_turf(source)
+	var/mob/carrier = ismob(source) ? source : get(source, /mob)
 	var/list/in_range = list()
 	if(source_turf)
-		for(var/mob/player as anything in GLOB.player_list)
-			var/turf/player_turf = get_turf(player)
+		for(var/client/player as anything in GLOB.clients)
+			var/mob/player_mob = player?.mob
+			var/turf/player_turf = get_turf(player_mob)
 			if(!player_turf || player_turf.z != source_turf.z || get_dist(player_turf, source_turf) > range)
 				continue
-			if(HAS_TRAIT(player, TRAIT_DEAF))
+			if(HAS_TRAIT(player_mob, TRAIT_DEAF))
 				continue
-			in_range += player
+			in_range[player] = player_turf
 
-	for(var/mob/listener as anything in listeners)
-		if(listener in in_range)
+	for(var/client/listener as anything in listeners)
+		if(in_range[listener])
 			continue
 		stop_for(listener)
 		listeners -= listener
 
-	for(var/mob/listener as anything in in_range)
+	for(var/client/listener as anything in in_range)
 		if(!listeners[listener])
 			listeners[listener] = list(null, null)
 		var/list/sent = listeners[listener]
-		var/turf/listener_turf = get_turf(listener)
-		var/is_self = (listener == source || listener == get(source, /mob))
+		var/turf/listener_turf = in_range[listener]
+		var/is_self = (carrier && listener.mob == carrier)
 		var/base_volume = is_self ? self_volume : volume * (1 - 0.6 * get_dist(listener_turf, source_turf) / range)
 		// Sound space is x/z, world is x/y.
 		var/offset_x = is_self ? 0 : source_turf.x - listener_turf.x

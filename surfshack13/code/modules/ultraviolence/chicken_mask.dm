@@ -66,9 +66,11 @@
 	var/datum/rampage_music/music
 
 /datum/component/chicken_rampage/Initialize(obj/item/clothing/mask/chicken_rampage/mask)
-	if(!isliving(parent))
+	if(!isliving(parent) || QDELETED(mask))
 		return COMPONENT_INCOMPATIBLE
 	src.mask = mask
+	// However the mask leaves the wearer's face, the rampage (and its music) ends with it.
+	RegisterSignals(mask, list(COMSIG_QDELETING, COMSIG_ITEM_POST_UNEQUIP), PROC_REF(on_mask_lost))
 
 /datum/component/chicken_rampage/RegisterWithParent()
 	var/mob/living/wearer = parent
@@ -99,10 +101,18 @@
 
 /datum/component/chicken_rampage/Destroy()
 	deltimer(combo_timer)
+	var/mob/living/wearer = parent
+	wearer?.client?.screen -= combo_display
 	QDEL_NULL(combo_display)
 	QDEL_NULL(music)
-	mask = null
+	if(mask)
+		UnregisterSignal(mask, list(COMSIG_QDELETING, COMSIG_ITEM_POST_UNEQUIP))
+		mask = null
 	return ..()
+
+/datum/component/chicken_rampage/proc/on_mask_lost(datum/source)
+	SIGNAL_HANDLER
+	qdel(src)
 
 /// Every hit on something alive counts: melee, fists, guns, thrown stuff.
 /datum/component/chicken_rampage/proc/on_attack_landed(mob/living/source, mob/living/target, damage_done, damagetype, def_zone, sharpness, atom/weapon)
@@ -139,8 +149,8 @@
 	var/mob/living/wearer = parent
 	if(!music)
 		return
-	if(wearer.stat == DEAD)
-		music.stop()
+	if(wearer.stat == DEAD || QDELETED(wearer))
+		music.stop(immediate = TRUE)
 		return
 	var/health_percent = wearer.maxHealth ? (wearer.health / wearer.maxHealth) * 100 : 0
 	if(wearer.stat >= SOFT_CRIT || wearer.health <= HEALTH_THRESHOLD_CRIT)
@@ -156,7 +166,7 @@
 	SIGNAL_HANDLER
 	deltimer(combo_timer)
 	set_combo(0)
-	music?.stop()
+	music?.stop(immediate = TRUE)
 
 /datum/component/chicken_rampage/proc/on_login(mob/living/source)
 	SIGNAL_HANDLER
@@ -200,6 +210,9 @@
 /// Plays while the mask is inside.
 /obj/item/storage/box/chicken_mask/proc/update_music()
 	if(!music)
+		return
+	if(QDELETED(src))
+		music.stop(immediate = TRUE)
 		return
 	if(locate(/obj/item/clothing/mask/chicken_rampage) in src)
 		music.play('surfshack13/sound/chicken_mask/box.ogg')
