@@ -58,8 +58,17 @@
 		if(!blocked)
 			spawn_turfs += candidate
 
+	var/swarm_size = rand(6, 12)
 	var/released = 0
-	for(var/i in 1 to rand(6, 12))
+	if(mind)
+		// Keep a controlled carrier's player in the swarm even when the AI population is capped.
+		var/mob/living/basic/flood/infestor/player_infestor = new(spawn_turf)
+		var/datum/mind/carrier_mind = mind
+		carrier_mind.transfer_to(player_infestor)
+		to_chat(player_infestor, span_notice("You emerge from the carrier as a Flood Infector. Alt-click a vent to crawl through it."))
+		released++
+	var/ai_forms_to_release = swarm_size - released
+	for(var/i in 1 to ai_forms_to_release)
 		if(!flood_try_spawn_ai(/mob/living/basic/flood/infestor, pick(spawn_turfs)))
 			break
 		released++

@@ -68,7 +68,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Swarm',
-        text: 'A burst releases 6 to 12 AI Flood Infectors onto nearby open tiles, along with a small Reactive Spines smoke cloud.',
+        text: 'A burst releases 6 to 12 Flood Infectors onto nearby open tiles, along with a small Reactive Spines smoke cloud. If you control the carrier, you become one of those infectors; the others are AI-controlled.',
       },
       {
         label: 'AI behavior',
@@ -76,7 +76,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'After bursting',
-        text: 'Flood Infectors are AI-controlled and cannot be taken over through the ghost spawner menu. Protect them as they latch onto hosts.',
+        text: 'As an infector, alt-click a vent to crawl through it. Latch onto living hosts to damage them, or dead hosts to infect them. Other infectors cannot be taken over through the ghost spawner menu.',
       },
     ],
   },
@@ -186,12 +186,15 @@ export const AntagInfoFlood = () => {
                     player.
                   </Stack.Item>
                   <Stack.Item>
-                    <Section title="Flood Infectors (AI allies)">
+                    <Section title="Flood Infectors">
                       Flood Infectors cannot be taken over from the ghost
-                      spawner. They leap onto humans or animals and remain
-                      buckled to them. Against living hosts, they deal 10 brute
-                      every two seconds; the host can resist or the infector can
-                      be killed to break the latch. Only a dead host can be
+                      spawner. A player-controlled Carrier becomes one of its
+                      Infectors on bursting. Infectors can vent crawl by
+                      alt-clicking a vent. They leap onto humans or animals and
+                      remain buckled to them. Against living hosts, they deal 10
+                      brute every two seconds; the host can resist or the
+                      infector can be killed to break the latch. Only a dead
+                      host can be
                       converted, after five seconds attached to the corpse.
                       Their swarms can merge, and an unlatched infector can
                       reanimate a fallen Flood Combat once. Dying infectors also
