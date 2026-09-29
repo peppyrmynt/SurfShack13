@@ -4,6 +4,8 @@
 #define ULTRAVIOLENCE_EXECUTION_STAB_TIME (0.4 SECONDS)
 /// How long a single-swing bladed execution takes.
 #define ULTRAVIOLENCE_EXECUTION_SLICE_TIME (1.5 SECONDS)
+/// How long a gun execution takes to line up the shot.
+#define ULTRAVIOLENCE_EXECUTION_GUN_TIME (0.75 SECONDS)
 /// Minimum time between blood sprays from the same victim.
 #define ULTRAVIOLENCE_SPRAY_COOLDOWN (0.3 SECONDS)
 /// Extra time on top of an execution's expected length before the failsafe forcibly ends it.
@@ -282,7 +284,7 @@
 	var/gun_execution = isgun(weapon)
 	if(gun_execution)
 		blows = 1
-		blow_time = ULTRAVIOLENCE_EXECUTION_SLICE_TIME
+		blow_time = ULTRAVIOLENCE_EXECUTION_GUN_TIME
 		start_text = list("[attacker] presses the barrel of [attacker.p_their()] [weapon.name] to [victim]'s head", "You press the barrel of your [weapon.name] to [victim]'s head")
 		head_method = GORE_HEAD_BLASTED
 	else if(is_stabbing_weapon(weapon))
@@ -375,7 +377,7 @@
 
 /**
  * Fires exactly one round from the gun into the victim's head, point blank. Burst weapons only fire once.
- * Returns TRUE if a round was actually fired; an empty gun just clicks.
+ * Returns TRUE if the gun had a round to fire; an empty gun just clicks.
  */
 /datum/component/ultraviolence/proc/fire_execution_shot(obj/item/gun/gun, mob/living/attacker, mob/living/carbon/victim)
 	if(QDELETED(gun) || QDELETED(victim))
@@ -385,11 +387,11 @@
 		return FALSE
 	var/old_burst_size = gun.burst_size
 	gun.burst_size = 1
-	var/fired = gun.process_fire(victim, attacker, TRUE, null, BODY_ZONE_HEAD)
+	// Don't trust the return value: some guns (revolvers, for one) fire fine but don't pass it back up.
+	gun.process_fire(victim, attacker, TRUE, null, BODY_ZONE_HEAD)
 	gun.burst_size = old_burst_size
-	if(fired)
-		shake_camera(attacker, 3, 2)
-	return fired
+	shake_camera(attacker, 3, 2)
+	return TRUE
 
 /**
  * Chicken mask only: holds the victim down for the whole execution, so a stun wearing off halfway through
@@ -433,6 +435,7 @@
 #undef ULTRAVIOLENCE_EXECUTION_BLOW_TIME
 #undef ULTRAVIOLENCE_EXECUTION_STAB_TIME
 #undef ULTRAVIOLENCE_EXECUTION_SLICE_TIME
+#undef ULTRAVIOLENCE_EXECUTION_GUN_TIME
 #undef ULTRAVIOLENCE_EXECUTION_MIN_FORCE
 #undef ULTRAVIOLENCE_HEAVY_WEAPON_FORCE
 #undef ULTRAVIOLENCE_MUTILATE_COOLDOWN
