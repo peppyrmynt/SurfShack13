@@ -14,6 +14,8 @@
 #define RAMPAGE_CLICK_SPEED_PER_COMBO 0.01
 /// Click cooldown can't drop below this fraction of normal, otherwise a big enough combo means no cooldown at all.
 #define RAMPAGE_MIN_CLICK_MODIFIER 0.1
+/// Damage of every punch thrown by the mask's martial art.
+#define RAMPAGE_PUNCH_DAMAGE 15
 
 /**
  * The chicken mask.
@@ -25,10 +27,10 @@
 /obj/item/clothing/mask/chicken_rampage
 	name = "chicken mask"
 	desc = "A rubber chicken mask. It smells like blood and cheap cologne."
-	icon = 'icons/obj/clothing/head/costume.dmi'
-	icon_state = "chickenhead"
-	worn_icon = 'icons/mob/clothing/head/costume.dmi'
-	worn_icon_state = "chickenhead"
+	icon = 'surfshack13/icons/obj/clothing/chicken_mask.dmi'
+	icon_state = "chicken_rampage"
+	worn_icon = 'surfshack13/icons/mob/clothing/chicken_mask.dmi'
+	worn_icon_state = "chicken_rampage"
 	lefthand_file = 'icons/mob/inhands/clothing/hats_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/clothing/hats_righthand.dmi'
 	inhand_icon_state = "chicken_head"
@@ -75,6 +77,8 @@
 	var/atom/movable/screen/rampage_combo/combo_display
 	/// The music coming out of the wearer.
 	var/datum/rampage_music/music
+	/// The mask's martial art, so punches never miss.
+	var/datum/martial_art/chicken_rampage/martial
 
 /datum/component/chicken_rampage/Initialize(obj/item/clothing/mask/chicken_rampage/mask)
 	if(!isliving(parent) || QDELETED(mask))
@@ -88,6 +92,10 @@
 	wearer.add_traits(list(TRAIT_NOSOFTCRIT, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.AddComponentFrom(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
 	update_combo_bonuses()
+	// Temporary, so whatever martial art they had comes back if the mask ever comes off.
+	martial = new
+	if(!martial.teach(wearer, make_temporary = TRUE))
+		QDEL_NULL(martial)
 
 	combo_display = new
 	wearer.client?.screen += combo_display
@@ -121,6 +129,8 @@
 	wearer.next_move_modifier /= applied_click_modifier
 	applied_click_modifier = 1
 	wearer.client?.screen -= combo_display
+	martial?.fully_remove(wearer)
+	martial = null
 
 /datum/component/chicken_rampage/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
@@ -158,7 +168,7 @@
 /datum/component/chicken_rampage/proc/on_attack_landed(mob/living/source, mob/living/target, damage_done, damagetype, def_zone, sharpness, atom/weapon)
 	SIGNAL_HANDLER
 
-	if(target == source || !isliving(target))
+	if(target == source || !isliving(target) || !is_sentient_player(target))
 		return
 	// Corpses don't count, unless this is the hit that killed them.
 	if(target.stat == DEAD && target.timeofdeath != world.time)
@@ -170,10 +180,16 @@
 	last_combo_time = world.time
 	add_combo(1)
 
-/// Executions are worth extra combo and heal a percentage of max health equal to the combo.
+/// Only players count towards the combo: no monkeys, no NPCs, no mindless bodies.
+/datum/component/chicken_rampage/proc/is_sentient_player(mob/living/target)
+	return !isnull(target.mind?.key)
+
+/// Executions of players are worth extra combo and heal a percentage of max health equal to the combo.
 /datum/component/chicken_rampage/proc/on_execution(mob/living/source, mob/living/carbon/victim)
 	SIGNAL_HANDLER
 
+	if(!is_sentient_player(victim))
+		return
 	add_combo(RAMPAGE_EXECUTION_BONUS)
 	var/heal_amount = source.maxHealth * combo / 100
 	source.heal_ordered_damage(heal_amount, list(BRUTE, BURN, TOX, OXY))
@@ -238,6 +254,50 @@
 
 /datum/movespeed_modifier/chicken_rampage
 	variable = TRUE
+
+/**
+ * The chicken mask's fighting style: every punch lands where you aim it and hits for a flat RAMPAGE_PUNCH_DAMAGE.
+ * Only works while wearing the mask, so it's inert if it somehow ends up in another body.
+ */
+/datum/martial_art/chicken_rampage
+	name = "Rampage"
+	id = "chicken_rampage"
+	allow_temp_override = FALSE
+
+/datum/martial_art/chicken_rampage/can_use(mob/living/martial_artist)
+	return !!martial_artist.GetComponent(/datum/component/chicken_rampage)
+
+/datum/martial_art/chicken_rampage/harm_act(mob/living/attacker, mob/living/defender)
+	// Executions take priority over punching.
+	var/datum/component/ultraviolence/violence = attacker.GetComponent(/datum/component/ultraviolence)
+	if(violence && (violence.executing || violence.can_execute(attacker, defender)))
+		return MARTIAL_ATTACK_INVALID
+
+	var/attack_type = attacker.get_attack_type()
+	if(defender.check_block(attacker, RAMPAGE_PUNCH_DAMAGE, "[attacker]'s punch", UNARMED_ATTACK, 0, attack_type))
+		return MARTIAL_ATTACK_FAIL
+
+	var/zone = check_zone(attacker.zone_selected)
+	if(!defender.get_bodypart(zone) && iscarbon(defender))
+		zone = BODY_ZONE_CHEST
+	var/armor_block = defender.run_armor_check(zone, MELEE)
+	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
+	playsound(defender, 'sound/items/weapons/punch1.ogg', 50, TRUE, -1)
+	defender.visible_message(
+		span_danger("[attacker] punches [defender] in the [parse_zone(zone)]!"),
+		span_userdanger("[attacker] punches you in the [parse_zone(zone)]!"),
+		span_hear("You hear a sickening sound of flesh hitting flesh!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You punch [defender] in the [parse_zone(zone)]!"))
+	defender.lastattacker = attacker.real_name
+	defender.lastattackerckey = attacker.ckey
+	var/damage_done = defender.apply_damage(RAMPAGE_PUNCH_DAMAGE, attack_type, zone, armor_block, attack_direction = get_dir(attacker, defender))
+	log_combat(attacker, defender, "punched (Rampage)")
+	if(damage_done > 0)
+		SEND_SIGNAL(attacker, COMSIG_MOB_ATTACK_LANDED, defender, damage_done, attack_type, zone, NONE, null)
+	return MARTIAL_ATTACK_SUCCESS
 
 /**
  * Called from /mob/living/hitby() when a bulky or bigger item thrown by someone with TRAIT_BRUTAL_THROWER hits us.
@@ -316,3 +376,4 @@
 #undef RAMPAGE_SPEED_PER_COMBO
 #undef RAMPAGE_CLICK_SPEED_PER_COMBO
 #undef RAMPAGE_MIN_CLICK_MODIFIER
+#undef RAMPAGE_PUNCH_DAMAGE

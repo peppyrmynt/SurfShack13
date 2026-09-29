@@ -42,11 +42,6 @@
 	// Splatters that reach a wall paint it, which is most of the look.
 	for(var/i in 1 to intensity)
 		spray_blood(splatter_dir && prob(70) ? splatter_dir : pick(GLOB.alldirs), clamp(intensity, 2, 5))
-
-	var/gib_type = pick(/obj/effect/decal/cleanable/blood/gibs, /obj/effect/decal/cleanable/blood/gibs/up, /obj/effect/decal/cleanable/blood/gibs/core)
-	var/obj/effect/decal/cleanable/blood/gibs/gibs = new gib_type(location)
-	gibs.add_blood_DNA(get_blood_dna_list())
-	gibs.streak(splatter_dir ? list(splatter_dir, turn(splatter_dir, 45), turn(splatter_dir, -45)) : GLOB.alldirs)
 	playsound(location, 'sound/effects/wounds/splatter.ogg', 60, TRUE)
 
 /// Slowly spreads a pool of blood out from under a fresh corpse.
@@ -95,24 +90,48 @@
 		else
 			witness.add_mood_event("ultraviolence", /datum/mood_event/ultraviolence_witnessed)
 
-/// Rips every organ in the given zone out of us and scatters it on the floor. Returns the list of spilled organs.
+/**
+ * Rips the organs in the given zone out of us and scatters them on the floor.
+ *
+ * Only ever moves organs that are really inside this body right now. It never creates organs, so a body with
+ * nothing left in that zone spills nothing, and an organ can't be spilled twice.
+ * Gib decals only appear when something was actually spilled.
+ *
+ * Returns the list of organs that ended up on the floor.
+ */
 /mob/living/carbon/proc/gore_spill_organs(zone, splatter_dir)
-	var/list/spilled_organs = list()
 	var/atom/drop_loc = drop_location()
+	// Nowhere to put them (nullspace), so leave them where they are.
+	if(!drop_loc)
+		return list()
+	var/list/obj/item/organ/to_spill = list()
 	for(var/obj/item/organ/organ as anything in organs)
-		if(check_zone(organ.zone) != zone)
+		if(QDELETED(organ) || organ.owner != src || check_zone(organ.zone) != zone)
 			continue
-		spilled_organs += organ
+		if(organ.organ_flags & ORGAN_UNREMOVABLE)
+			continue
+		to_spill += organ
 
-	for(var/obj/item/organ/organ as anything in spilled_organs)
+	var/list/obj/item/organ/spilled_organs = list()
+	for(var/obj/item/organ/organ as anything in to_spill)
+		// Something earlier in this loop (like the brain leaving) may have already taken it out or deleted it.
+		if(QDELETED(organ) || organ.owner != src)
+			continue
 		organ.Remove(src)
-		if(!drop_loc)
+		// Some organs delete themselves or refuse to leave when removed.
+		if(QDELETED(organ) || organ.owner)
 			continue
 		organ.forceMove(drop_loc)
 		if(can_gore_bleed())
 			organ.add_mob_blood(src)
 		var/throw_dir = splatter_dir && prob(60) ? splatter_dir : pick(GLOB.alldirs)
 		organ.throw_at(get_ranged_target_turf(src, throw_dir, rand(1, 3)), 3, 2)
+		spilled_organs += organ
+
+	if(length(spilled_organs) && can_gore_bleed())
+		var/obj/effect/decal/cleanable/blood/gibs/gibs = new(get_turf(drop_loc))
+		gibs.add_blood_DNA(get_blood_dna_list())
+		gibs.streak(splatter_dir ? list(splatter_dir, turn(splatter_dir, 45), turn(splatter_dir, -45)) : GLOB.alldirs)
 	return spilled_organs
 
 /**
@@ -142,8 +161,9 @@
 			verb_text = "blown apart"
 			sound_file = 'sound/effects/splat.ogg'
 
+	var/spilled_anything = length(gore_spill_organs(BODY_ZONE_HEAD, splatter_dir))
 	visible_message(
-		span_danger("<B>[src]'s head is [verb_text], spraying blood and brains everywhere!</B>"),
+		span_danger("<B>[src]'s head is [verb_text], spraying blood[spilled_anything ? " and brains" : ""] everywhere!</B>"),
 		span_userdanger("Your head is [verb_text]!"),
 		span_hear("You hear a sickening wet crunch!"),
 		ignored_mobs = attacker,
@@ -151,8 +171,6 @@
 	if(attacker && attacker != src)
 		to_chat(attacker, span_danger("[src]'s head is [verb_text] in a shower of gore!"))
 	playsound(src, sound_file, 80, TRUE)
-
-	gore_spill_organs(BODY_ZONE_HEAD, splatter_dir)
 	gore_blood_burst(5, splatter_dir)
 	if(can_gore_bleed())
 		head_part.add_mob_blood(src)
@@ -263,25 +281,6 @@
 
 	if(attacker)
 		log_combat(attacker, src, "severed the [parse_zone(zone)] of (ultraviolence)")
-	return TRUE
-
-/// Blows the whole body apart. Everything, brain included, is left on the floor rather than deleted.
-/mob/living/carbon/proc/gore_obliterate(mob/living/attacker, splatter_dir)
-	if(!can_be_gored())
-		return FALSE
-
-	visible_message(
-		span_danger("<B>[src] explodes into a shower of meat and bone!</B>"),
-		span_userdanger("Your body comes apart!"),
-		span_hear("You hear a wet explosion!"),
-		ignored_mobs = attacker,
-	)
-	if(attacker && attacker != src)
-		to_chat(attacker, span_danger("[src] explodes into a shower of meat and bone!"))
-	gore_blood_burst(5, splatter_dir)
-	if(attacker)
-		log_combat(attacker, src, "obliterated (ultraviolence)")
-	gib(DROP_ALL_REMAINS)
 	return TRUE
 
 /datum/mood_event/ultraviolence_witnessed

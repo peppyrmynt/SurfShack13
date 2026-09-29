@@ -8,8 +8,6 @@
 #define ULTRAVIOLENCE_EXECUTION_MIN_FORCE 10
 /// Force a bladed weapon needs to cut someone in half, or a blunt one to cave a chest in.
 #define ULTRAVIOLENCE_HEAVY_WEAPON_FORCE 20
-/// A single killing hit this strong blows the whole body apart.
-#define ULTRAVIOLENCE_OBLITERATE_DAMAGE 50
 /// Cooldown between mutilations of an already dead body.
 #define ULTRAVIOLENCE_MUTILATE_COOLDOWN (1 SECONDS)
 
@@ -109,14 +107,6 @@
 		return
 
 	victim.gore_witnessed(attacker)
-
-	// Massive overkill, like a sniper round or a point blank slug: nothing recognizable is left.
-	var/overkill_damage = damage_done
-	if(style == ULTRAVIOLENCE_STYLE_BALLISTIC && point_blank)
-		overkill_damage *= 1.5
-	if(overkill_damage >= ULTRAVIOLENCE_OBLITERATE_DAMAGE && victim.gore_obliterate(attacker, splatter_dir))
-		return
-
 	victim.gore_blood_burst(style == ULTRAVIOLENCE_STYLE_BALLISTIC ? 4 : 3, splatter_dir)
 	victim.gore_blood_pool()
 	if(victim.can_be_gored())
@@ -321,7 +311,6 @@
 #undef ULTRAVIOLENCE_EXECUTION_SLICE_TIME
 #undef ULTRAVIOLENCE_EXECUTION_MIN_FORCE
 #undef ULTRAVIOLENCE_HEAVY_WEAPON_FORCE
-#undef ULTRAVIOLENCE_OBLITERATE_DAMAGE
 #undef ULTRAVIOLENCE_MUTILATE_COOLDOWN
 #undef ULTRAVIOLENCE_STYLE_BLUNT
 #undef ULTRAVIOLENCE_STYLE_SHARP

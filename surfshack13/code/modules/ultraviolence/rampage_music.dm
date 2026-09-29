@@ -140,6 +140,14 @@
 
 	update_listeners()
 
+/**
+ * Volume for someone this many tiles away. Drops off quickly: full volume up close, about a third halfway out,
+ * and a faint 10% at the edge of the range so it can still be tracked through walls.
+ */
+/datum/rampage_music/proc/get_distance_volume(distance)
+	var/closeness = 1 - clamp(distance / range, 0, 1)
+	return volume * (0.1 + 0.9 * closeness * closeness)
+
 /// Works out who should hear us and sends them the song at the right volume and position.
 /datum/rampage_music/proc/update_listeners()
 	// Disconnected clients leave null keys behind.
@@ -170,7 +178,7 @@
 		var/list/sent = listeners[listener]
 		var/turf/listener_turf = in_range[listener]
 		var/is_self = (carrier && listener.mob == carrier)
-		var/base_volume = is_self ? self_volume : volume * (1 - 0.6 * get_dist(listener_turf, source_turf) / range)
+		var/base_volume = is_self ? self_volume : get_distance_volume(get_dist(listener_turf, source_turf))
 		// Sound space is x/z, world is x/y.
 		var/offset_x = is_self ? 0 : source_turf.x - listener_turf.x
 		var/offset_z = is_self ? 0 : source_turf.y - listener_turf.y
