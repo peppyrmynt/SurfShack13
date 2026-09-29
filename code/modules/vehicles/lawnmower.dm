@@ -18,6 +18,9 @@
 	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/lawnmower)
 
 /obj/vehicle/ridden/lawnmower/emagged
+	name = "Blood Red Lawnmower"
+	desc = "A viciously modified lawn mower, painted blood red and stripped of every sensible safety feature. The blades look hungry."
+	icon_state = "lawnmoweremag"
 	emagged = TRUE
 
 /obj/vehicle/ridden/lawnmower/emag_act(mob/user)
@@ -26,6 +29,9 @@
 		return
 	to_chat(user, span_warning("You disable the safety mechanisms on [src]."))
 	emagged = TRUE
+	name = "Blood Red Lawnmower"
+	desc = "A viciously modified lawn mower, painted blood red and stripped of every sensible safety feature. The blades look hungry."
+	icon_state = "lawnmoweremag"
 
 /obj/vehicle/ridden/lawnmower/Bump(atom/bumped_thing)
 	if(isliving(bumped_thing))
