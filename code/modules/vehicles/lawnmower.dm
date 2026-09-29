@@ -20,7 +20,6 @@
 /obj/vehicle/ridden/lawnmower/emagged
 	name = "Blood Red Lawnmower"
 	desc = "A viciously modified lawn mower, painted blood red and stripped of every sensible safety feature. The blades look hungry."
-	icon = 'icons/obj/vehicles/lawnmower_emag.dmi'
 	icon_state = "lawnmoweremag"
 	emagged = TRUE
 
@@ -32,7 +31,6 @@
 	emagged = TRUE
 	name = "Blood Red Lawnmower"
 	desc = "A viciously modified lawn mower, painted blood red and stripped of every sensible safety feature. The blades look hungry."
-	icon = 'icons/obj/vehicles/lawnmower_emag.dmi'
 	icon_state = "lawnmoweremag"
 
 /obj/vehicle/ridden/lawnmower/Bump(atom/bumped_thing)
