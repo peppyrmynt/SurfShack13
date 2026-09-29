@@ -93,7 +93,7 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	var/miasma_delay = 10 SECONDS
 	var/next_zauker = 0
 	var/zauker_delay = 30 SECONDS
-	/// A ready growth shudders for three seconds before releasing a unit.
+	/// A ready growth shudders for ten seconds before releasing a unit.
 	var/spawn_warning_sent = FALSE
 	/// Map-placed nests start with a small wave, as in the source spawner.
 	var/initial_spawn_count = 2
@@ -147,28 +147,36 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 		next_spread = world.time + spread_delay
 		spread_growth()
 
-	if(!spawn_warning_sent && invisibility < INVISIBILITY_ABSTRACT && world.time >= next_spawn - 3 SECONDS && can_spawn_flood())
+	if(!spawn_warning_sent && invisibility < INVISIBILITY_ABSTRACT && world.time >= next_spawn - 10 SECONDS && can_spawn_flood())
 		spawn_warning_sent = TRUE
-		next_spawn = max(next_spawn, world.time + 3 SECONDS)
+		next_spawn = max(next_spawn, world.time + 10 SECONDS)
 		show_spawn_warning()
 	if(world.time < next_spawn)
 		return
-	spawn_warning_sent = FALSE
+	stop_spawn_warning()
 	next_spawn = world.time + spawn_delay
 	spawn_flood()
 
 /obj/structure/flood_biomass/proc/show_spawn_warning()
 	visible_message(span_warning("[src] swells and shudders, about to release something!"))
-	animate(src, pixel_x = 2, time = 0.2 SECONDS, flags = ANIMATION_PARALLEL | ANIMATION_RELATIVE)
+	animate(src, pixel_x = 2, time = 0.2 SECONDS, loop = -1, flags = ANIMATION_RELATIVE)
 	animate(pixel_x = -4, time = 0.2 SECONDS, flags = ANIMATION_RELATIVE)
 	animate(pixel_x = 4, time = 0.2 SECONDS, flags = ANIMATION_RELATIVE)
 	animate(pixel_x = -2, time = 0.2 SECONDS, flags = ANIMATION_RELATIVE)
 
+/obj/structure/flood_biomass/proc/stop_spawn_warning()
+	if(!spawn_warning_sent)
+		return
+	spawn_warning_sent = FALSE
+	animate(src, pixel_x = initial(pixel_x), time = 0, flags = ANIMATION_END_NOW)
+
 /obj/structure/flood_biomass/proc/spawn_initial_wave(warned = FALSE)
 	if(!warned && invisibility < INVISIBILITY_ABSTRACT && can_spawn_flood())
+		spawn_warning_sent = TRUE
 		show_spawn_warning()
-		addtimer(CALLBACK(src, PROC_REF(spawn_initial_wave), TRUE), 3 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(spawn_initial_wave), TRUE), 10 SECONDS)
 		return
+	stop_spawn_warning()
 	for(var/i in 1 to initial_spawn_count)
 		if(!spawn_flood())
 			return
@@ -210,7 +218,7 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	spawned_flood -= offspring
 	UnregisterSignal(offspring, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING))
 	next_spawn = world.time + spawn_delay
-	spawn_warning_sent = FALSE
+	stop_spawn_warning()
 
 /obj/structure/flood_biomass/proc/spread_growth()
 	var/nearby_growth = 0
@@ -253,6 +261,11 @@ GLOBAL_LIST_EMPTY(flood_mob_growths)
 	spawn_delay = 90 SECONDS
 	max_nearby_flood = 3
 	initial_spawn_count = 1
+
+/obj/structure/flood_biomass/tiny/Initialize(mapload)
+	. = ..()
+	icon_state = "pulsating"
+	transform = matrix().Scale(1.2)
 
 /// Invisible map spawner adapted from the original Flood spawn landmark.
 /obj/structure/flood_biomass/hidden

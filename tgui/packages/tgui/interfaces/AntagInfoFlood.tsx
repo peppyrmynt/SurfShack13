@@ -114,7 +114,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Grow and Spread Biomass',
-        text: 'Every 30 seconds, spread growth to up to three nearby floor tiles. The same action also grows a biomass spawner on your tile when its 60-second timer and placement limits allow it. Spawners produce Flood Carriers 80% of the time or Flood Combat 20% of the time. Visible growth shudders for three seconds before spawning. Flood and ghosts can see the countdown.',
+        text: 'Every 90 seconds, spread growth to up to three nearby floor tiles and grow a biomass spawner on your tile if placement limits allow it. Spawners produce Flood Carriers 80% of the time or Flood Combat 20% of the time. Visible growth shakes for ten seconds before spawning. Flood and ghosts can see the countdown.',
       },
       {
         label: 'Hive population',

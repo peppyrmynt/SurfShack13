@@ -274,7 +274,7 @@
 		if(nearby_biomass >= 2)
 			to_chat(src, span_warning("This area has enough biomass already."))
 			return FALSE
-	next_biomass_build = world.time + 60 SECONDS
+	next_biomass_build = world.time + 90 SECONDS
 	new /obj/structure/flood_biomass/tiny(target_turf)
 	visible_message(span_warning("Flood biomass spreads outward beneath [src]."))
 	return TRUE

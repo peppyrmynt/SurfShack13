@@ -56,13 +56,13 @@
 
 /datum/action/cooldown/flood/grow_biomass
 	name = "Grow and Spread Biomass"
-	desc = "Spread to nearby floors every 30 seconds and grow a biomass spawner on your tile when its 60-second timer is ready."
+	desc = "Every 90 seconds, spread to nearby floors and grow a biomass spawner on your tile if there is room."
 	button_icon_state = "biomass1"
-	cooldown_time = 30 SECONDS
+	cooldown_time = 90 SECONDS
 
 /datum/action/cooldown/flood/grow_biomass/Activate(atom/target)
 	var/mob/living/basic/flood/overseer/overseer = owner
-	var/built_spawner = world.time >= overseer.next_biomass_build && overseer.grow_biomass()
+	var/built_spawner = overseer.grow_biomass()
 	var/spread_floor = overseer.direct_growth(show_failure = !built_spawner)
 	if(!built_spawner && !spread_floor)
 		return FALSE
