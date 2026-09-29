@@ -1,7 +1,5 @@
 /// Trait source for everything the chicken mask applies.
 #define CHICKEN_MASK_TRAIT "chicken_mask"
-/// If TRUE, only hits on and executions of player-controlled mobs count towards the combo. Set to FALSE to test against NPCs.
-#define RAMPAGE_REQUIRE_SENTIENT_TARGETS TRUE
 /// Time without landing a hit before the combo resets.
 #define RAMPAGE_COMBO_TIMEOUT (12.5 SECONDS)
 /// Getting hit takes this much off the time left on the combo.
@@ -291,8 +289,6 @@
 
 /// Only players count towards the combo: no monkeys, no NPCs, no mindless bodies.
 /datum/component/chicken_rampage/proc/is_sentient_player(mob/living/target)
-	if(!RAMPAGE_REQUIRE_SENTIENT_TARGETS)
-		return TRUE
 	return !isnull(target.mind?.key)
 
 /// Executions of players are worth extra combo, points multiplied by the combo, and heal a percentage of max health equal to the combo.
@@ -533,7 +529,6 @@
 	return box
 
 #undef CHICKEN_MASK_TRAIT
-#undef RAMPAGE_REQUIRE_SENTIENT_TARGETS
 #undef RAMPAGE_COMBO_TIMEOUT
 #undef RAMPAGE_HIT_TIMER_PENALTY
 #undef RAMPAGE_EXECUTION_BONUS
