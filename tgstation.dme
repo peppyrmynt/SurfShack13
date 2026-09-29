@@ -6608,6 +6608,8 @@
 #include "surfshack13\code\modules\swarmers\swarmer_mob.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_objs.dm"
 #include "surfshack13\code\modules\swarmers\swarmer_ruleset.dm"
+#include "surfshack13\code\modules\ultraviolence\gore.dm"
+#include "surfshack13\code\modules\ultraviolence\ultraviolence_component.dm"
 #include "surfshack13\code\modules\unit_test\_unit_test.dm"
 #include "surfshack13\code\modules\uplink\uplink_items\dangerous.dm"
 #include "surfshack13\code\modules\uplink\uplink_items\job.dm"

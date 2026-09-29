@@ -342,6 +342,8 @@
 	)
 
 	attack_effects(damage_done, targeting, armor_block, attacking_item, user)
+	if(damage_done > 0)
+		SEND_SIGNAL(user, COMSIG_MOB_ATTACK_LANDED, src, damage_done, attacking_item.damtype, targeting, attacking_item.get_sharpness(), attacking_item)
 
 	return TRUE
 

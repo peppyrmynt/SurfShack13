@@ -119,7 +119,7 @@
 		apply_projectile_effects(proj, def_zone, blocked)
 
 /mob/living/proc/apply_projectile_effects(obj/projectile/proj, def_zone, armor_check)
-	apply_damage(
+	var/damage_done = apply_damage(
 		damage = proj.damage,
 		damagetype = proj.damage_type,
 		def_zone = def_zone,
@@ -150,6 +150,9 @@
 
 	if (proj.damage && armor_check < 100)
 		create_projectile_hit_effects(proj, def_zone, armor_check)
+
+	if(damage_done > 0 && ismob(proj.firer))
+		SEND_SIGNAL(proj.firer, COMSIG_MOB_ATTACK_LANDED, src, damage_done, proj.damage_type, check_hit_limb_zone_name(def_zone), proj.sharpness, proj)
 
 /mob/living/proc/create_projectile_hit_effects(obj/projectile/proj, def_zone, blocked)
 	if (proj.damage_type != BRUTE)
