@@ -141,6 +141,9 @@
 		if(BODY_ZONE_HEAD)
 			switch(style)
 				if(ULTRAVIOLENCE_STYLE_SHARP)
+					// Knives are a coin flip between taking the head off and stabbing it to pulp.
+					if(isitem(weapon) && is_stabbing_weapon(weapon) && prob(50))
+						return victim.gore_destroy_head(attacker, splatter_dir, GORE_HEAD_STABBED, delete_head = TRUE)
 					return victim.gore_decapitate(attacker, splatter_dir)
 				if(ULTRAVIOLENCE_STYLE_BALLISTIC)
 					return victim.gore_destroy_head(attacker, splatter_dir, GORE_HEAD_BLASTED, delete_head = point_blank || prob(65))
