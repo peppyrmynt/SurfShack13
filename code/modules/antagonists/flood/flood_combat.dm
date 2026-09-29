@@ -197,7 +197,7 @@
 		return 0
 	if(istype(weapon, /obj/item/grenade))
 		var/obj/item/grenade/grenade = weapon
-		if(grenade in thrown_grenades || (grenade.active && !is_holding(grenade)))
+		if((grenade in thrown_grenades) || (grenade.active && !is_holding(grenade)))
 			return 0
 		return grenade.active || (!grenade.dud_flags && grenade.det_time >= 2 SECONDS) ? 60 : 0
 	if(istype(weapon, /obj/item/gun))

@@ -92,6 +92,7 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 	show_in_antagpanel = TRUE
 	can_assign_self_objectives = TRUE
 	default_custom_objective = "Spread the Flood and establish a viable infestation."
+	stinger_sound = 'sound/music/antag/ling_alert.ogg'
 	var/datum/team/flood/flood_team
 
 /datum/antagonist/flood/get_preview_icon()
@@ -101,10 +102,10 @@ GLOBAL_VAR_INIT(flood_overseer_replacement_at, 0)
 
 /datum/antagonist/flood/on_gain()
 	forge_objectives()
-	. = ..()
-	SEND_SOUND(owner.current, sound('sound/flood/flood_infect_gravemind.ogg', volume = 60))
+	return ..()
 
 /datum/antagonist/flood/greet()
+	play_stinger()
 	to_chat(owner.current, span_danger("You are part of the Flood."))
 	to_chat(owner.current, span_notice("Open your Flood antagonist information for your abilities, objectives, and guide."))
 

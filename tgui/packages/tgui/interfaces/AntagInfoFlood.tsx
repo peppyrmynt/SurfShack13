@@ -199,10 +199,10 @@ export const AntagInfoFlood = () => {
                   <Stack.Item>
                     <Section title="Biomass and fire">
                       Flood units heal slowly only while standing on
-                      Flood-covered floor. Fire damages Flood bodies.
-                      Fire can destroy biomass; crew can clear floor growth
-                      with a welder, by removing the floor, or by destroying its
-                      parent growth. Sharp weapons can carve apart fallen Flood.
+                      Flood-covered floor. Fire damages Flood bodies. Fire can
+                      destroy biomass; crew can clear floor growth with a
+                      welder, by removing the floor, or by destroying its parent
+                      growth. Sharp weapons can carve apart fallen Flood.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>
