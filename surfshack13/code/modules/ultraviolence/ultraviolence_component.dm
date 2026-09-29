@@ -86,7 +86,8 @@
 /datum/component/ultraviolence/proc/on_attack_landed(mob/living/source, mob/living/target, damage_done, damagetype, def_zone, sharpness, atom/weapon)
 	SIGNAL_HANDLER
 
-	if(target == source || damagetype != BRUTE || !iscarbon(target))
+	// Hits during an execution (like the execution gunshot) are handled by the execution itself.
+	if(executing || target == source || damagetype != BRUTE || !iscarbon(target))
 		return
 	var/mob/living/carbon/victim = target
 	var/splatter_dir = get_dir(source, victim) || pick(GLOB.alldirs)
@@ -205,6 +206,10 @@
 	var/mob/living/carbon/victim = target
 	if(!victim.get_bodypart(BODY_ZONE_HEAD) || !victim.can_be_gored())
 		return FALSE
+	if(isgun(weapon))
+		// Guns execute by shooting the head, so they need a round to fire.
+		var/obj/item/gun/gun = weapon
+		return gun.can_shoot()
 	if(weapon && (weapon.force < ULTRAVIOLENCE_EXECUTION_MIN_FORCE || weapon.damtype != BRUTE))
 		return FALSE
 	return TRUE
@@ -274,7 +279,13 @@
 	var/decapitate = FALSE
 	var/blow_sound = weapon?.hitsound || 'sound/effects/hit_kick.ogg'
 	var/surface = wall_dir ? "wall" : "floor"
-	if(is_stabbing_weapon(weapon))
+	var/gun_execution = isgun(weapon)
+	if(gun_execution)
+		blows = 1
+		blow_time = ULTRAVIOLENCE_EXECUTION_SLICE_TIME
+		start_text = list("[attacker] presses the barrel of [attacker.p_their()] [weapon.name] to [victim]'s head", "You press the barrel of your [weapon.name] to [victim]'s head")
+		head_method = GORE_HEAD_BLASTED
+	else if(is_stabbing_weapon(weapon))
 		blows = 5
 		blow_time = ULTRAVIOLENCE_EXECUTION_STAB_TIME
 		start_text = list("[attacker] pins [victim] down and raises [attacker.p_their()] [weapon.name]", "You pin [victim] down and raise your [weapon.name]")
@@ -322,6 +333,9 @@
 		if(!do_after(attacker, blow_time, victim, extra_checks = CALLBACK(src, PROC_REF(execution_still_valid), attacker, victim, weapon)) || QDELETED(src))
 			end_execution()
 			return
+		// A gun execution is one held breath, then the shot below.
+		if(gun_execution)
+			continue
 		attacker.do_attack_animation(victim, weapon ? null : ATTACK_EFFECT_KICK, weapon)
 		playsound(victim, blow_sound, 70, TRUE)
 		if(!decapitate && head_method == GORE_HEAD_CRUSHED)
@@ -335,6 +349,13 @@
 		shake_camera(attacker, 1, 1)
 		if(blow_text && blow < blows)
 			attacker.visible_message(span_danger("[blow_text[1]]!"), span_danger("[blow_text[2]]!"))
+
+	if(gun_execution && !fire_execution_shot(weapon, attacker, victim))
+		end_execution()
+		return
+	if(QDELETED(victim))
+		end_execution()
+		return
 
 	release_pin()
 	var/splatter_dir = wall_dir || get_dir(attacker, victim)
@@ -351,6 +372,24 @@
 	log_combat(attacker, victim, "executed (ultraviolence)", weapon)
 	end_execution()
 	SEND_SIGNAL(attacker, COMSIG_MOB_ULTRAVIOLENCE_EXECUTION, victim, victim_was_alive)
+
+/**
+ * Fires exactly one round from the gun into the victim's head, point blank. Burst weapons only fire once.
+ * Returns TRUE if a round was actually fired; an empty gun just clicks.
+ */
+/datum/component/ultraviolence/proc/fire_execution_shot(obj/item/gun/gun, mob/living/attacker, mob/living/carbon/victim)
+	if(QDELETED(gun) || QDELETED(victim))
+		return FALSE
+	if(!gun.can_shoot())
+		gun.shoot_with_empty_chamber(attacker)
+		return FALSE
+	var/old_burst_size = gun.burst_size
+	gun.burst_size = 1
+	var/fired = gun.process_fire(victim, attacker, TRUE, null, BODY_ZONE_HEAD)
+	gun.burst_size = old_burst_size
+	if(fired)
+		shake_camera(attacker, 3, 2)
+	return fired
 
 /**
  * Chicken mask only: holds the victim down for the whole execution, so a stun wearing off halfway through

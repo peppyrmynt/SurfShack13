@@ -32,6 +32,12 @@
 /// Click cooldown floor. Effectively no limit (a melee cooldown at 1% is shorter than a server tick),
 /// it only exists because the modifier is multiplied in and divided back out, and can't be zero.
 #define RAMPAGE_MIN_CLICK_MODIFIER 0.01
+/// Combo at which gaining combo starts having a chance to mend a wound.
+#define RAMPAGE_WOUND_HEAL_MIN_COMBO 10
+/// Chance to mend a wound per combo gain at RAMPAGE_WOUND_HEAL_MIN_COMBO.
+#define RAMPAGE_WOUND_HEAL_MIN_CHANCE 35
+/// Combo at which every combo gain mends a wound.
+#define RAMPAGE_WOUND_HEAL_MAX_COMBO 50
 /// Damage of every punch thrown by the mask's martial art.
 #define RAMPAGE_PUNCH_DAMAGE 15
 /// Melee armor at which punches only penetrate half of it. Below this they penetrate more, up to all of it against no armor.
@@ -101,6 +107,12 @@
 	var/datum/martial_art/chicken_rampage/martial
 	/// This wearer's score and stats for the round end report.
 	var/datum/rampage_record/record
+	/// Timer that moves the playlist on to the next song.
+	var/playlist_timer
+	/// The last playlist song, so the shuffle never plays it twice in a row.
+	var/last_song
+	/// Are we playing the dying song instead of the playlist?
+	var/playing_dying_song = FALSE
 	COOLDOWN_DECLARE(door_kick_cooldown)
 
 /datum/component/chicken_rampage/Initialize(obj/item/clothing/mask/chicken_rampage/mask)
@@ -167,6 +179,7 @@
 
 /datum/component/chicken_rampage/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
+	stop_playlist()
 	var/mob/living/wearer = parent
 	wearer?.client?.screen -= combo_display
 	QDEL_NULL(combo_display)
@@ -196,12 +209,34 @@
 	combo_expires = world.time + RAMPAGE_COMBO_TIMEOUT
 	combo_display?.set_time_left(1)
 	START_PROCESSING(SSfastprocess, src)
+	try_mend_wound()
+
+/**
+ * From RAMPAGE_WOUND_HEAL_MIN_COMBO combo on, every combo gain has a chance to close one of the wearer's wounds:
+ * RAMPAGE_WOUND_HEAL_MIN_CHANCE at the start, rising evenly to 100% at RAMPAGE_WOUND_HEAL_MAX_COMBO.
+ */
+/datum/component/chicken_rampage/proc/try_mend_wound()
+	if(combo < RAMPAGE_WOUND_HEAL_MIN_COMBO || !iscarbon(parent))
+		return
+	var/mob/living/carbon/wearer = parent
+	if(!LAZYLEN(wearer.all_wounds))
+		return
+	var/progress = min((combo - RAMPAGE_WOUND_HEAL_MIN_COMBO) / (RAMPAGE_WOUND_HEAL_MAX_COMBO - RAMPAGE_WOUND_HEAL_MIN_COMBO), 1)
+	if(!prob(RAMPAGE_WOUND_HEAL_MIN_CHANCE + (100 - RAMPAGE_WOUND_HEAL_MIN_CHANCE) * progress))
+		return
+	var/datum/wound/mended = pick(wearer.all_wounds)
+	to_chat(wearer, span_notice("The adrenaline shuts out your [LOWER_TEXT(mended.name)]. It's gone."))
+	mended.remove_wound()
 
 /// Every hit on something alive counts: melee, fists, guns, thrown stuff.
 /datum/component/chicken_rampage/proc/on_attack_landed(mob/living/source, mob/living/target, damage_done, damagetype, def_zone, sharpness, atom/weapon)
 	SIGNAL_HANDLER
 
 	if(target == source || !isliving(target) || !is_sentient_player(target))
+		return
+	// The execution gunshot is paid out by on_execution() instead.
+	var/datum/component/ultraviolence/violence = source.GetComponent(/datum/component/ultraviolence)
+	if(violence?.executing)
 		return
 	// Corpses don't count, unless this is the hit that killed them.
 	if(target.stat == DEAD && target.timeofdeath != world.time)
@@ -294,7 +329,10 @@
 	wearer.next_move_modifier *= click_modifier / applied_click_modifier
 	applied_click_modifier = click_modifier
 
-/// Picks the song for how hurt the wearer is.
+/**
+ * Keeps the right music going. Normally a shuffled playlist that never plays the same song twice in a row;
+ * in crit it switches to the dying song until they either die (silence) or pull through (back to the playlist).
+ */
 /datum/component/chicken_rampage/proc/update_music()
 	SIGNAL_HANDLER
 
@@ -302,22 +340,50 @@
 	if(!music)
 		return
 	if(wearer.stat == DEAD || QDELETED(wearer))
+		stop_playlist()
+		playing_dying_song = FALSE
 		music.stop(immediate = TRUE)
 		return
-	var/health_percent = wearer.maxHealth ? (wearer.health / wearer.maxHealth) * 100 : 0
 	if(wearer.stat >= SOFT_CRIT || wearer.health <= HEALTH_THRESHOLD_CRIT)
-		music.play('surfshack13/sound/chicken_mask/health_dying.ogg')
-	else if(health_percent >= 85)
-		music.play('surfshack13/sound/chicken_mask/health_full.ogg')
-	else if(health_percent >= 50)
-		music.play('surfshack13/sound/chicken_mask/health_hurt.ogg')
-	else
-		music.play('surfshack13/sound/chicken_mask/health_wounded.ogg')
+		if(!playing_dying_song)
+			stop_playlist()
+			playing_dying_song = TRUE
+			music.play('surfshack13/sound/chicken_mask/health_dying.ogg')
+		return
+	if(playing_dying_song || !playlist_timer || !music.is_playing())
+		playing_dying_song = FALSE
+		next_song()
+
+/// Crossfades into a random playlist song that isn't the one that just played, and queues the one after it.
+/datum/component/chicken_rampage/proc/next_song()
+	if(QDELETED(src) || !music)
+		return
+	// Song file = length in deciseconds.
+	var/static/list/playlist = list(
+		'surfshack13/sound/chicken_mask/health_full.ogg' = 295.6 SECONDS,
+		'surfshack13/sound/chicken_mask/health_hurt.ogg' = 231.6 SECONDS,
+		'surfshack13/sound/chicken_mask/health_wounded.ogg' = 257.5 SECONDS,
+	)
+	var/list/choices = playlist.Copy()
+	choices -= last_song
+	var/song = pick(choices)
+	last_song = song
+	music.play(song)
+	// Start fading into the next song just before this one ends.
+	deltimer(playlist_timer)
+	playlist_timer = addtimer(CALLBACK(src, PROC_REF(next_song)), max(playlist[song] - music.fade_time, 1 SECONDS), TIMER_STOPPABLE)
+
+/// Stops the playlist from queueing its next song.
+/datum/component/chicken_rampage/proc/stop_playlist()
+	deltimer(playlist_timer)
+	playlist_timer = null
 
 /datum/component/chicken_rampage/proc/on_death(mob/living/source, gibbed)
 	SIGNAL_HANDLER
 	set_combo(0)
 	STOP_PROCESSING(SSfastprocess, src)
+	stop_playlist()
+	playing_dying_song = FALSE
 	music?.stop(immediate = TRUE)
 
 /datum/component/chicken_rampage/proc/on_login(mob/living/source)
@@ -445,11 +511,10 @@
 		music.stop()
 
 /datum/uplink_item/dangerous/chicken_mask
-	name = "Chicken Mask"
-	desc = "A rubber chicken mask in a cardboard box that won't stop playing music. Once you put it on, it never comes off. \
-			The wearer goes on a rampage: every hit builds a combo that makes you move and attack faster, kills turn into \
-			a bloodbath, anyone who's down can be executed for extra combo and healing, thrown objects hit harder and you \
-			shrug off soft crit. Music plays out of you, through walls, for everyone nearby to hear. They will know where you are."
+	name = "Suspicious Chicken Mask"
+	desc = "A cardboard box, left on your doorstep. No return address, no note, just a rubber chicken mask and \
+			a tape deck that won't stop playing. Once it's on, it stays on. Chain your hits and you get faster, \
+			finish anyone who hits the floor, and the music never stops. Everyone will hear you coming."
 	item = /obj/item/storage/box/chicken_mask
 	cost = 20
 	surplus = 0
@@ -472,4 +537,7 @@
 #undef RAMPAGE_CLICK_SPEED_PER_COMBO
 #undef RAMPAGE_MIN_CLICK_MODIFIER
 #undef RAMPAGE_PUNCH_DAMAGE
+#undef RAMPAGE_WOUND_HEAL_MIN_COMBO
+#undef RAMPAGE_WOUND_HEAL_MIN_CHANCE
+#undef RAMPAGE_WOUND_HEAL_MAX_COMBO
 #undef RAMPAGE_PUNCH_HEAVY_ARMOR
