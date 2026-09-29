@@ -55,6 +55,23 @@
 	TEST_ASSERT_EQUAL(reaction.react(air, null), NO_REACTION, "Hydrogen must not bypass the carbon dioxide threshold")
 	qdel(reaction)
 
+/datum/unit_test/classic_fusion/power_tiers/Run()
+	var/datum/gas_reaction/fusion/reaction = new
+	var/datum/gas_mixture/air = allocate(/datum/gas_mixture, 1000)
+	fuel(air)
+	var/base_power = reaction.gas_power(air)
+	TEST_ASSERT_EQUAL(base_power, 3100, "Restored fusion power must include carbon dioxide at its historical weight")
+	var/base_ratio = reaction.power_ratio(air, base_power)
+	TEST_ASSERT_EQUAL(classic_fusion_tier(base_ratio), "low", "The baseline fusion test mix should remain low tier")
+
+	air.gases[/datum/gas/plasma][MOLES] = 10000
+	air.gases[/datum/gas/carbon_dioxide][MOLES] = 10000
+	var/strong_power = reaction.gas_power(air)
+	var/strong_ratio = reaction.power_ratio(air, strong_power)
+	TEST_ASSERT(strong_ratio > CLASSIC_FUSION_MID_THRESHOLD, "A stronger balanced plasma/CO2 mix must be able to leave low tier")
+	TEST_ASSERT(classic_fusion_tier(strong_ratio) != "low", "Fusion tier reporting must not be stuck on low")
+	qdel(reaction)
+
 /datum/unit_test/classic_fusion/products/Run()
 	var/datum/gas_reaction/fusion/reaction = new
 	var/list/expected = list(
