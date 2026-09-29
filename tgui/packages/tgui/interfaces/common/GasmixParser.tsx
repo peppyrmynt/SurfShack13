@@ -102,11 +102,6 @@ export const GasmixParser = (props: GasmixParserProps) => {
       >
         {(total_moles ? pressure.toFixed(2) : '-') + ' kPa'}
       </LabeledList.Item>
-      {!!gasmix.fusion && (
-        <LabeledList.Item label="Last Classic Fusion" color="orange">
-          {`${gasmix.fusion.tier} tier — power ${gasmix.fusion.power.toFixed(2)}, instability ${gasmix.fusion.instability.toFixed(2)}`}
-        </LabeledList.Item>
-      )}
       {detailedReactions ? (
         reactions.map((reaction) => (
           <LabeledList.Item
@@ -141,6 +136,11 @@ export const GasmixParser = (props: GasmixParserProps) => {
                 ),
               )
             : 'No reactions detected'}
+        </LabeledList.Item>
+      )}
+      {!!gasmix.fusion && (
+        <LabeledList.Item label="Fusion" color="orange">
+          {`${gasmix.fusion.tier} tier — power ${gasmix.fusion.power.toFixed(2)}, instability ${gasmix.fusion.instability.toFixed(2)}`}
         </LabeledList.Item>
       )}
     </LabeledList>
