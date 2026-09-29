@@ -44,9 +44,10 @@
 	var/brazil = FALSE
 
 /obj/item/highfrequencyblade/hippie/update_icon_state()
+	. = ..()
 	icon_state = brazil ? "hfblade-red" : "hfblade"
 	inhand_icon_state = icon_state
-	return NONE
+	return .
 
 /obj/item/highfrequencyblade/hippie/attackby(obj/item/used_item, mob/living/user, params)
 	if(istype(used_item, /obj/item/multitool))

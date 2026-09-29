@@ -514,10 +514,11 @@
 	return FALSE
 
 /obj/item/mod/control/pre_equipped/crynet/emp_act(severity)
+	. = ..()
 	for(var/obj/item/mod/module/crynet_controller/controller as anything in modules)
 		controller.handle_emp(severity)
 		break
-	return EMP_PROTECT_SELF
+	return . | EMP_PROTECT_SELF
 
 /datum/martial_art/crynet_strength
 	name = "CryNet Strength Mode"

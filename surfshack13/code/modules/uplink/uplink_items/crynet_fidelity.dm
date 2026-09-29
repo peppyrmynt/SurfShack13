@@ -9,16 +9,22 @@
 	if(!mod?.wearer)
 		return
 	playsound(get_turf(mod.wearer), 'surfshack13/sound/hippie/nanosuitengage.ogg', 100, FALSE)
-	GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]?.show_to(mod.wearer)
-	GLOB.huds[DATA_HUD_SECURITY_ADVANCED]?.show_to(mod.wearer)
-	GLOB.huds[DATA_HUD_DIAGNOSTIC]?.show_to(mod.wearer)
+	var/datum/atom_hud/medical_hud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+	var/datum/atom_hud/security_hud = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
+	var/datum/atom_hud/diagnostic_hud = GLOB.huds[DATA_HUD_DIAGNOSTIC]
+	medical_hud?.show_to(mod.wearer)
+	security_hud?.show_to(mod.wearer)
+	diagnostic_hud?.show_to(mod.wearer)
 	RegisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION, PROC_REF(sense_explosion))
 
 /obj/item/mod/module/crynet_controller/faithful/on_unequip()
 	if(mod?.wearer)
-		GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]?.hide_from(mod.wearer)
-		GLOB.huds[DATA_HUD_SECURITY_ADVANCED]?.hide_from(mod.wearer)
-		GLOB.huds[DATA_HUD_DIAGNOSTIC]?.hide_from(mod.wearer)
+		var/datum/atom_hud/medical_hud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+		var/datum/atom_hud/security_hud = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
+		var/datum/atom_hud/diagnostic_hud = GLOB.huds[DATA_HUD_DIAGNOSTIC]
+		medical_hud?.hide_from(mod.wearer)
+		security_hud?.hide_from(mod.wearer)
+		diagnostic_hud?.hide_from(mod.wearer)
 	UnregisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION)
 	return ..()
 
