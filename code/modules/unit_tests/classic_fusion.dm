@@ -52,7 +52,8 @@
 		reaction.produce_gases(air, tier, 100)
 		var/list/products = expected[tier]
 		for(var/gas in products)
-			TEST_ASSERT_EQUAL(air.gases[gas][MOLES], products[gas], "Incorrect [tier] tier product yield for [gas]")
+			// Fractional yields have single-precision rounding in BYOND.
+			TEST_ASSERT(abs(air.gases[gas][MOLES] - products[gas]) < 0.001, "Incorrect [tier] tier product yield for [gas]")
 	TEST_ASSERT_EQUAL(classic_fusion_tier(5), "low", "Low tier boundary")
 	TEST_ASSERT_EQUAL(classic_fusion_tier(20), "mid", "Mid tier boundary")
 	TEST_ASSERT_EQUAL(classic_fusion_tier(50), "high", "High tier boundary")
@@ -63,7 +64,7 @@
 	for(var/machine_type in list(/obj/machinery/portable_atmospherics/canister, /obj/machinery/portable_atmospherics/pump, /obj/machinery/portable_atmospherics/scrubber))
 		var/obj/machinery/portable_atmospherics/machine = allocate(machine_type)
 		// Nullspace suppresses physical effects while exercising the real processing chain.
-		machine.forceMove(null)
+		machine.moveToNullspace()
 		fuel(machine.air_contents)
 		machine.air_contents.temperature = 1e9
 		var/integrity = machine.get_integrity()
