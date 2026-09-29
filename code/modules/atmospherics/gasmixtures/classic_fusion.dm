@@ -49,9 +49,17 @@
 			continue
 		var/list/gas_meta = gas_entry[GAS_META]
 		var/weight = gas_meta ? gas_meta[META_GAS_FUSION_POWER] : 0
+		// These gases changed fusion weights after this reaction was removed. Keep the old
+		// values local to gas-mixture fusion so modern/HFR gas metadata remains untouched.
 		switch(gas_id)
+			if(/datum/gas/carbon_dioxide)
+				weight = 3
 			if(/datum/gas/tritium)
 				weight = 1
+			if(/datum/gas/nitrous_oxide)
+				weight = 0
+			if(/datum/gas/pluoxium)
+				weight = 10
 			if(/datum/gas/hydrogen, /datum/gas/hypernoblium)
 				weight = 0
 			// Nitrium superseded stimulum/nitryl; use its current weight of 7.
