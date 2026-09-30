@@ -865,6 +865,18 @@
 	new /obj/item/storage/fancy/cigarettes/cigpack_syndicate(src)
 	new /obj/item/lighter(src)
 
+/obj/item/storage/box/syndie_kit/hypnotic_grenade
+	name = "hypnotic ordnance kit"
+	desc = "A specialized covert deployment kit containing a programmable hypnotic flashbang, a standard multitool for payload configuration, and a subdermal HUD implanter to monitor compromised crewmates."
+	icon_state = "syndiebox"
+
+/obj/item/implanter/hypno_tracker
+
+/obj/item/storage/box/syndie_kit/hypnotic_grenade/PopulateContents()
+	new /obj/item/grenade/hypnotic(src)
+	new /obj/item/multitool(src)
+	new /obj/item/implanter/hypno_tracker(src)
+
 #undef KIT_RECON
 #undef KIT_BLOODY_SPAI
 #undef KIT_STEALTHY
