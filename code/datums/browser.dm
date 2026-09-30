@@ -78,6 +78,30 @@
 			</style>
 			"}
 
+	// SURFSHACK EDIT START - Forward key releases for keys pressed on the map. If this popup has
+	// focus when a movement key is let go, BYOND never sees it and you keep moving that way.
+	head_content += {"<script type='text/javascript'>
+		(function () {
+			var pressedHere = {};
+			var names = {16: 'Shift', 17: 'Ctrl', 18: 'Alt', 33: 'Northeast', 34: 'Southeast', 35: 'Southwest', 36: 'Northwest', 37: 'West', 38: 'North', 39: 'East', 40: 'South'};
+			function keyCodeToByond(code) {
+				if (names\[code\]) return names\[code\];
+				if ((code >= 48 && code <= 57) || (code >= 65 && code <= 90)) return String.fromCharCode(code);
+				if (code >= 96 && code <= 105) return 'Numpad' + (code - 96);
+			}
+			window.addEventListener('blur', function () { pressedHere = {}; });
+			document.addEventListener('keydown', function (e) { if (!e.repeat) pressedHere\[e.keyCode\] = true; }, true);
+			document.addEventListener('keyup', function (e) {
+				var wasPressedHere = pressedHere\[e.keyCode\];
+				pressedHere\[e.keyCode\] = false;
+				var byondKey = keyCodeToByond(e.keyCode);
+				if (wasPressedHere || !byondKey) return;
+				location.href = 'byond://winset?command=' + encodeURIComponent('KeyUp "' + byondKey + '"');
+			}, true);
+		})();
+	</script>"}
+	// SURFSHACK EDIT END
+
 	for (file in scripts)
 		head_content += "<script type='text/javascript' src='[SSassets.transport.get_asset_url(file)]'></script>"
 

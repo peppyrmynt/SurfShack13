@@ -8,11 +8,23 @@ GLOBAL_LIST_EMPTY(escape_menus)
 
 	var/current_escape_menu = GLOB.escape_menus[ckey]
 	if (!isnull(current_escape_menu))
+		// SURFSHACK EDIT: reset on every escape menu toggle (like upstream) so it always unsticks movement
+		reset_held_keys()
 		qdel(current_escape_menu)
 		return
 
-	reset_held_keys()
+	// SURFSHACK EDIT START: tgui windows hand focus back to the map, so Escape no longer reaches them.
+	// Close the most recently opened one instead. Held keys are kept so you can keep walking.
+	var/datum/tgui/latest_ui
+	for(var/datum/tgui/ui as anything in mob?.tgui_open_uis)
+		if(!latest_ui || ui.opened_at > latest_ui.opened_at)
+			latest_ui = ui
+	if(latest_ui)
+		latest_ui.close()
+		return
+	// SURFSHACK EDIT END
 
+	reset_held_keys()
 	new /datum/escape_menu(src)
 
 #define PAGE_HOME "PAGE_HOME"
