@@ -293,6 +293,43 @@ function updateVolumes() {
 }
 
 // Voice Activity Detection (VAD)
+// Measures mic loudness inside the audio engine. Timers and animation frames get slowed or
+// stopped when the tab is hidden (e.g. the browser behind the game window), which clipped or
+// dropped the start of speech; the audio engine keeps running at full speed.
+// Loudness is the RMS of the last 2048 samples, the same window the old AnalyserNode check used,
+// so the sensitivity slider means the same thing.
+const VAD_WORKLET_SOURCE = `
+class VoiceLevel extends AudioWorkletProcessor {
+    constructor() {
+        super();
+        this.window = new Float32Array(2048); // squared samples
+        this.pos = 0;
+        this.sum = 0;
+        this.sinceReport = 0;
+    }
+    process(inputs) {
+        const channel = inputs[0] && inputs[0][0];
+        if (channel) {
+            for (let i = 0; i < channel.length; i++) {
+                const sq = channel[i] * channel[i];
+                this.sum += sq - this.window[this.pos];
+                this.window[this.pos] = sq;
+                this.pos = (this.pos + 1) % this.window.length;
+            }
+            this.sinceReport += channel.length;
+            // report roughly every 20ms
+            if (this.sinceReport >= sampleRate / 50) {
+                this.sinceReport = 0;
+                this.port.postMessage(Math.sqrt(Math.max(0, this.sum) / this.window.length));
+            }
+        }
+        return true;
+    }
+}
+registerProcessor('voice-level', VoiceLevel);
+`;
+let vadMode = null; // 'worklet' or 'timer', for troubleshooting
+
 function setupVoiceActivityDetection() {
     if (vadTimer) {
         clearInterval(vadTimer);
@@ -302,58 +339,85 @@ function setupVoiceActivityDetection() {
         vadAudioContext.close();
     }
 
-    vadAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-    vadSource = vadAudioContext.createMediaStreamSource(localStream);
-    vadAnalyser = vadAudioContext.createAnalyser();
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    vadAudioContext = ctx;
+    vadSource = ctx.createMediaStreamSource(localStream);
+
+    startWorkletVad(ctx).catch(err => {
+        if (vadAudioContext !== ctx) return; // replaced meanwhile (mic switched)
+        console.warn('AudioWorklet voice detection unavailable, using a timer:', err);
+        startTimerVad(ctx);
+    });
+}
+
+async function startWorkletVad(ctx) {
+    if (!ctx.audioWorklet || typeof AudioWorkletNode === 'undefined') throw new Error('AudioWorklet not supported');
+    const url = URL.createObjectURL(new Blob([VAD_WORKLET_SOURCE], { type: 'application/javascript' }));
+    try {
+        await ctx.audioWorklet.addModule(url);
+    } finally {
+        URL.revokeObjectURL(url);
+    }
+    if (vadAudioContext !== ctx) return;
+    const node = new AudioWorkletNode(ctx, 'voice-level', { numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [1] });
+    // connected to the output through a silent gain so the browser keeps running it
+    const silent = ctx.createGain();
+    silent.gain.value = 0;
+    vadSource.connect(node);
+    node.connect(silent);
+    silent.connect(ctx.destination);
+    node.port.onmessage = (event) => {
+        if (vadAudioContext === ctx) handleMicLevel(event.data);
+    };
+    vadMode = 'worklet';
+}
+
+// fallback for browsers without AudioWorklet: the previous timer-based check
+function startTimerVad(ctx) {
+    vadAnalyser = ctx.createAnalyser();
     vadAnalyser.fftSize = 2048;
     const bufferLength = vadAnalyser.frequencyBinCount;
     const dataArray = new Float32Array(bufferLength);
-
     vadSource.connect(vadAnalyser);
-
-    function getRMS() {
+    vadTimer = setInterval(() => {
         vadAnalyser.getFloatTimeDomainData(dataArray);
         let sum = 0;
         for (let i = 0; i < bufferLength; i++) {
             sum += dataArray[i] * dataArray[i];
         }
-        return Math.sqrt(sum / bufferLength);
+        handleMicLevel(Math.sqrt(sum / bufferLength));
+    }, 30);
+    vadMode = 'timer';
+}
+
+function handleMicLevel(rms) {
+    const now = Date.now();
+
+    const indicator = document.getElementById('mic_test_visual_indicator');
+    if (indicator) {
+        const level = Math.min(1, rms / 0.5) * 100;
+        const detected = rms > volumeThreshold;
+        indicator.style.backgroundColor = detected ? 'green' : 'grey';
+        indicator.style.width = `${level}%`;
     }
 
-    function monitorAudio() {
-        const rms = getRMS();
-        const now = Date.now();
-
-        const indicator = document.getElementById('mic_test_visual_indicator');
-        if (indicator) {
-            const level = Math.min(1, rms / 0.5) * 100;
-            const detected = rms > volumeThreshold;
-            indicator.style.backgroundColor = detected ? 'green' : 'grey';
-            indicator.style.width = `${level}%`;
+    if (!isManuallyMuted) {
+        if (rms > volumeThreshold) {
+            lastActiveTime = now;
+            if (!isVoiceActive) {
+                isVoiceActive = true;
+                handleVoiceActivityChange(true);
+            }
+        } else if (isVoiceActive && now - lastActiveTime > VAD_DEBOUNCE_TIME) {
+            isVoiceActive = false;
+            handleVoiceActivityChange(false);
         }
-
-        if (!isManuallyMuted) {
-            if (rms > volumeThreshold) {
-                lastActiveTime = now;
-                if (!isVoiceActive) {
-                    isVoiceActive = true;
-                    handleVoiceActivityChange(true);
-                }
-            } else if (isVoiceActive && now - lastActiveTime > VAD_DEBOUNCE_TIME) {
-                isVoiceActive = false;
-                handleVoiceActivityChange(false);
-            }
-        } else {
-            if (isVoiceActive) {
-                isVoiceActive = false;
-                handleVoiceActivityChange(false);
-            }
+    } else {
+        if (isVoiceActive) {
+            isVoiceActive = false;
+            handleVoiceActivityChange(false);
         }
     }
-
-    // not requestAnimationFrame: that stops completely when the tab is hidden or the window
-    // minimized, which froze voice detection and left people unable to be heard.
-    vadTimer = setInterval(monitorAudio, 30);
 }
 
 function handleVoiceActivityChange(active) {
