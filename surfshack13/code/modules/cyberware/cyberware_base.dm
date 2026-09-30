@@ -190,6 +190,7 @@
 	name = "cyberware optics"
 	desc = "Aftermarket eyes. The irises catch the light in a way real ones don't."
 	icon = 'surfshack13/icons/cyberware/cyberware.dmi'
+	icon_state = "nightshade"
 	actions_types = list(/datum/action/cooldown/cyberware/chrome_read)
 	/// Neural load this ware puts on its bearer.
 	var/chrome_load = 1
@@ -264,6 +265,7 @@
 	name = "arm cyberware"
 	desc = "Aftermarket arm hardware. Folds away until you want it."
 	icon = 'surfshack13/icons/cyberware/cyberware.dmi'
+	icon_state = "fixers"
 	/// Neural load this ware puts on its bearer.
 	var/chrome_load = 1
 	/// CYBERWARE_TIER_*, drives accent colours and the parlor experience.
