@@ -119,6 +119,7 @@
 #include "changeling.dm"
 #include "chat_filter.dm"
 #include "circuit_component_category.dm"
+#include "classic_fusion.dm"
 #include "client_colours.dm"
 #include "closets.dm"
 #include "clothing_drops_items.dm"

@@ -1,4 +1,6 @@
 /obj/machinery/portable_atmospherics/pump
+	// SURFSHACK EDIT: classic fusion does not require powered internal containment.
+	internal_atmos_damage = FALSE
 	name = "portable air pump"
 	icon_state = "siphon"
 	density = TRUE

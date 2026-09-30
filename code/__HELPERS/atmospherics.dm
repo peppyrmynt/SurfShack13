@@ -58,6 +58,7 @@
 	.["volume"] = gasmix.volume
 	.["pressure"] = gasmix.return_pressure()
 	.["reference"] = REF(gasmix)
+	.["fusion"] = LAZYACCESS(gasmix.analyzer_results, "fusion")
 
 GLOBAL_LIST_EMPTY(reaction_handbook)
 GLOBAL_LIST_EMPTY(gas_handbook)

@@ -4,6 +4,8 @@
 #define TEMPERATURE_RESISTANCE (1000 + T0C)
 
 /obj/machinery/portable_atmospherics/canister
+	// SURFSHACK EDIT: classic fusion does not require powered internal containment.
+	internal_atmos_damage = FALSE
 	name = "canister"
 	desc = "A canister for the storage of gas."
 	icon = 'icons/obj/pipes_n_cables/canisters.dmi'
@@ -103,12 +105,12 @@
 	. = ..()
 	if(atom_integrity < max_integrity)
 		. += span_notice("Integrity compromised, repair hull with a welding tool.")
-	. += span_notice("A sticker on its side says <b>MAX SAFE PRESSURE: [siunit_pressure(initial(pressure_limit), 0)]; MAX SAFE TEMPERATURE: [siunit(temp_limit, "K", 0)]</b>.")
+	. += span_notice("The hull has no internal temperature or pressure limit. Powered shielding protects against external heat.")
 	. += span_notice("The hull is <b>welded</b> together and can be cut apart.")
 	if(internal_cell)
 		. += span_notice("The internal cell has [internal_cell.percent()]% of its total charge.")
 	else
-		. += span_notice("Warning, no cell installed, use a screwdriver to open the hatch and insert one.")
+		. += span_notice("No shielding cell installed. Internal gas containment does not require a cell.")
 	if(panel_open)
 		. += span_notice("Hatch open, close it with a screwdriver.")
 

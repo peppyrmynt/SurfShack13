@@ -25,6 +25,8 @@
 
 	/// Max amount of heat allowed inside the machine before it starts to melt. [PORTABLE_ATMOS_IGNORE_ATMOS_LIMIT] is special value meaning we are immune.
 	var/temp_limit = 10000
+	/// SURFSHACK EDIT: internal containment limits are optional; external damage is unaffected.
+	var/internal_atmos_damage = TRUE
 	/// Max amount of pressure allowed inside of the canister before it starts to break. [PORTABLE_ATMOS_IGNORE_ATMOS_LIMIT] is special value meaning we are immune.
 	var/pressure_limit = 500000
 
@@ -87,7 +89,7 @@
 	return ..()
 
 /obj/machinery/portable_atmospherics/process_atmos()
-	excited = (!suppress_reactions && (excited || air_contents.react(src)))
+	excited = (!suppress_reactions && (air_contents.react(src) || excited))
 	if(!excited)
 		return PROCESS_KILL
 	excited = FALSE
@@ -119,6 +121,8 @@
 /// The damage multiplier is treated as 1 if something is being ignored while the other one is exceeded.
 /// On most cases only one will be exceeded, so the other one is scaled down.
 /obj/machinery/portable_atmospherics/proc/take_atmos_damage()
+	if(!internal_atmos_damage)
+		return FALSE
 	var/taking_damage = FALSE
 
 	var/temp_damage = 1
