@@ -20,6 +20,8 @@ SUBSYSTEM_DEF(voicechat)
 	var/list/userCode_mob_map = alist()
 	// mob to client map, needed for tracking switched mobs
 	var/list/mob_client_map = alist()
+	/// ckeys of players who turned off hearing the living while dead
+	var/list/ghost_hearing_optout = list()
 	// SS_INIT_NO_NEED still sets initialized to true, so we use this instead
 	var/actually_initialized = FALSE
 
@@ -190,6 +192,11 @@ SUBSYSTEM_DEF(voicechat)
 			if(!packet[localroom])
 				packet[localroom] = list()
 			packet[localroom][userCode] = list(T.x, T.y)
+			// ghosts also listen in on living players near them, one way only
+			if(room == ROOM_GHOST && !(C.ckey in ghost_hearing_optout))
+				if(!packet["listeners"])
+					packet["listeners"] = list()
+				packet["listeners"][userCode] = list(T.x, T.y, T.z)
 		else
 			var/room_noprox = room + "_noprox"
 			if(!packet[room_noprox])

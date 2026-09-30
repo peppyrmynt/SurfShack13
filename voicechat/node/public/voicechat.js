@@ -12,6 +12,9 @@ let peerConnections = new Map();
 let audioElements = new Map();
 let audioSenders = new Map();
 let distances = new Map();
+// one-way pairs from the server: 'listen' = I only hear them (I'm a ghost listening to the living),
+// 'talk' = they only hear me, their audio stays silent here
+let peerModes = new Map();
 let mutedUsers = new Map();
 let gainNode = null;
 let gainAudioContext = null;
@@ -275,7 +278,7 @@ function updateSensitivity() {
 function updateVolumes() {
     const masterVolume = document.getElementById('volume_slider').value ;
     audioElements.forEach((audio, userCode) => {
-        const isMuted = mutedUsers.get(userCode);
+        const isMuted = mutedUsers.get(userCode) || peerModes.get(userCode) === 'talk';
         if(!isMuted){
             const dist = distances.get(userCode) || 0;
             const linearBase = Math.max(0, 1 - dist / 10);
@@ -365,8 +368,10 @@ function updateAudioSenders() {
     if (!localStream) return;
     const shouldSend = !isManuallyMuted && !isDeafened && isVoiceActive;
     const track = shouldSend ? localStream.getAudioTracks()[0] : null;
-    audioSenders.forEach(sender => {
-        sender.replaceTrack(track).catch(err => console.error('replaceTrack failed:', err));
+    audioSenders.forEach((sender, userCode) => {
+        const peerTrack = peerModes.get(userCode) === 'listen' ? null : track;
+        if (sender.track === peerTrack) return;
+        sender.replaceTrack(peerTrack).catch(err => console.error('replaceTrack failed:', err));
     });
 }
 
@@ -454,7 +459,7 @@ function createPeerConnection(userCode, sendOffer) {
     audio.autoplay = true;
     if (sinkId) audio.setSinkId(sinkId).catch(err => console.error('setSinkId failed:', err));
     audio.muted = isDeafened;
-    audio.volume = document.getElementById('volume_slider').value;
+    audio.volume = peerModes.get(userCode) === 'talk' ? 0 : document.getElementById('volume_slider').value;
     document.body.appendChild(audio);
     audioElements.set(userCode, audio);
 
@@ -530,10 +535,13 @@ function setupSocketHandlers() {
     socket.on('loc', (data) => {
         if (data.none === 1) {
             Array.from(peerConnections.keys()).forEach(removePeer);
+            peerModes.clear();
             toggleRoomStatus(false);
         } else {
             const peers = data['peers']
             const myUserCode = data['own']
+            // set before creating connections so new ones start with the right direction
+            peerModes = new Map(Object.entries(data['modes'] || {}));
             const newUserCodes = new Set(Object.keys(peers));
             const currentUserCodes = new Set(peerConnections.keys());
 
@@ -549,7 +557,10 @@ function setupSocketHandlers() {
 
             distances = new Map(Object.entries(peers));
             updateVolumes();
-            toggleRoomStatus(peerConnections.size > 0);
+            updateAudioSenders();
+            // ghosts listening in don't count, the living shouldn't be able to tell they're there
+            const audible = [...peerConnections.keys()].some(code => peerModes.get(code) !== 'talk');
+            toggleRoomStatus(audible);
         }
     });
 

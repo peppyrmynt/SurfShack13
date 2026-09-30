@@ -38,6 +38,7 @@
 			Leave - disconnects you from voicechat, note the website doesnt close<br>
 			Mute - mutes yourself<br>
 			Deafen - deafens yourself<br>
+			Toggle Hearing The Living - while dead, hear living players near you (on by default). They never hear you.<br>
 			Note: for security, <b>mute and deafen are one way, use the web browser to unmute</b>
 		</p>
 		<h4>Trouble shooting tips</h4>
@@ -66,6 +67,19 @@
 		</p>
 	</html>
 	"}, "window=voicechat_help")
+
+/mob/verb/toggle_ghost_hearing()
+	set name = "Toggle Hearing The Living"
+	set category = "ProxChat"
+	if(!SSvoicechat || !client)
+		return
+	var/list/optout = SSvoicechat.ghost_hearing_optout
+	if(client.ckey in optout)
+		optout -= client.ckey
+		to_chat(src, span_ooc("While dead you will now hear living players near you. They can't hear you."))
+	else
+		optout += client.ckey
+		to_chat(src, span_ooc("While dead you will now only hear other ghosts."))
 
 /mob/verb/mute_self()
 	set name = "Mute"
