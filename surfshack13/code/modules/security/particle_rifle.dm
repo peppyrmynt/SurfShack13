@@ -31,6 +31,7 @@
 	w_class = WEIGHT_CLASS_BULKY
 	ammo_type = list(/obj/item/ammo_casing/energy/particle_rifle)
 	cell_type = /obj/item/stock_parts/power_store/cell/particle_rifle
+	pin = /obj/item/firing_pin/implant/mindshield
 	/// Piercing mode punches through up to PARTICLE_RIFLE_STRUCTURE_PIERCES structures, impact mode stops at the first one and hits harder.
 	var/pierce_mode = TRUE
 
