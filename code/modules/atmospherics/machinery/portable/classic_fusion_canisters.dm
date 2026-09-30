@@ -1,4 +1,4 @@
-// Admin-spawnable classic fusion presets for local testing.
+// SURFSHACK EDIT: admin-spawnable classic fusion presets for local testing.
 // These inherit the existing fusion_test canister safety limits and appear in the Game Panel object spawner.
 // Each mix keeps plasma equal to all non-plasma fuel combined for peak classic-fusion efficiency.
 
