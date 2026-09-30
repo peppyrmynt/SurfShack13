@@ -4,14 +4,15 @@ The fourth mode uses the existing electrode projectile without changing its effe
 A full stock HoS cell contains 12,000 charge; LASER_SHOTS(3, 12,000) costs 4,000 per shot.
 The other three modes retain their original casings and costs.
 
-Authorization requires a human with an assigned-role job datum titled Head of Security,
+Firing authorization requires a human with an assigned-role job datum titled Head of Security,
 a name-matching crew manifest record with rank Head of Security, a mindshield, and
 the ID returned by get_idcard(TRUE). That card must have ACCESS_HOS, assignment
 Head of Security, and the operator's real name. Agent/chameleon cards are rejected.
 A held ID takes precedence according to the existing get_idcard implementation.
 
-Denied selection skips stun and wraps to disabler. A transferred gun may remain set
-to stun, but process_fire checks credentials again before the parent firing code,
+Anyone can cycle through disable, laser, ion, stun, then back to disable without
+an authorization warning. Selecting stun does not grant firing permission.
+process_fire checks credentials before the parent firing code,
 including direct calls from dual wielding. It checks both selected and chambered ammo.
 There is no emag or EMP exemption. EMP can still affect the gun normally.
 
@@ -38,7 +39,8 @@ The sprite uses existing nonlethal overlays for the new mode.
 2. Repeat selection and attempted firing with the wrong assigned job, a missing
    manifest entry, wrong manifest rank, no mindshield, no ID, missing ACCESS_HOS,
    wrong ID assignment, wrong registered name, and an agent/chameleon ID.
-   Each failure must display ACCESS DENIED without revealing the failed check,
+   Selection must still succeed and allow cycling onward. Each firing failure must
+   display ACCESS DENIED without revealing the failed check,
    and produce no stun projectile or charge use.
 3. Select stun as an authorized HoS, then hand the gun to an officer or assistant.
    Attempt ordinary and dual-wield firing. Also remove the original HoS's mindshield

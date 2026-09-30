@@ -5,7 +5,7 @@
 
 /obj/item/gun/energy/e_gun/hos/examine(mob/user)
 	. = ..()
-	. += span_notice("Its stun mode is locked to a mindshielded, manifest-verified Head of Security carrying their own Head of Security ID. A full charge provides three stun shots.")
+	. += span_notice("Anyone can select its stun mode, but firing it requires a mindshielded, manifest-verified Head of Security carrying their own Head of Security ID. A full charge provides three stun shots.")
 
 /// Returns a specific denial reason, or null when all credentials match.
 /obj/item/gun/energy/e_gun/hos/proc/stun_denial_reason(mob/living/user)
@@ -33,7 +33,7 @@
 		return "ID name does not match operator"
 	return null
 
-/// Re-evaluated on selection and every shot; emagging never bypasses credentials.
+/// Re-evaluated on every firing attempt; emagging never bypasses credentials.
 /obj/item/gun/energy/e_gun/hos/proc/is_authorized_for_stun(mob/living/user)
 	var/reason = stun_denial_reason(user)
 	if(!reason)
@@ -42,13 +42,6 @@
 		balloon_alert(user, "ACCESS DENIED")
 		to_chat(user, span_warning("[src] displays: UNAUTHORIZED USER. ACCESS DENIED."))
 	return FALSE
-
-/obj/item/gun/energy/e_gun/hos/select_fire(mob/living/user)
-	var/next_select = (select % length(ammo_type)) + 1
-	if(istype(ammo_type[next_select], /obj/item/ammo_casing/energy/electrode/hos) && !is_authorized_for_stun(user))
-		// Skip the denied mode before the parent chambers or announces it.
-		select = next_select
-	return ..()
 
 /obj/item/gun/energy/e_gun/hos/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
 	// Check both the selector and any already chambered stun shot after a handoff.
