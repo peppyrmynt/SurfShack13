@@ -14,19 +14,24 @@ Anyone can cycle through disable, laser, ion, stun, then back to disable without
 an authorization warning. Selecting stun does not grant firing permission.
 process_fire checks credentials before the parent firing code,
 including direct calls from dual wielding. It checks both selected and chambered ammo.
+The restricted casing also checks authorization immediately before firing, covering
+delayed burst callbacks and credential changes after the initial trigger check.
 There is no emag or EMP exemption. EMP can still affect the gun normally.
 
 Acting Captain status alone grants nothing. A promoted HoS qualifies only when their
 mind's assigned role, manifest rank, ID details and mindshield all satisfy the checks.
 An admin-spawned HoS without a matching manifest record is denied. Renaming without
 updating the manifest and ID is denied. Cyborgs and AIs are always denied stun.
-The sprite uses existing nonlethal overlays for the new mode.
+The sprite uses existing nonlethal overlays and left/right hand states for the new mode.
 
 ## Verification on 2026-09-30
 
 - tools/ci/check_grep.sh: passed.
 - Dreamchecker: zero diagnostics.
 - git diff --check: passed.
+- DMI state inspection: floor overlays, both hand sprites at charge levels 0-4,
+  electrode, muzzle, tracer, impact, and firing effect states all present.
+- Taser firing and impact sound files present.
 - BYOND build: not run; neither the requested Windows dm.exe nor a Linux DreamMaker
   executable is available in this environment.
 - In-game verification: not performed; no running BYOND test server is available.
@@ -48,4 +53,7 @@ The sprite uses existing nonlethal overlays for the new mode.
 4. Attempt stun as a cyborg/AI, after emagging, and after EMP exposure. Neither
    electronic effect grants authorization. Verify the other three modes remain usable
    by an ordinary officer/assistant and preserve their previous effects and costs.
-5. Check that the mode and charge indicators remain visible while stun is selected.
+5. Check that the floor icon, both hand icons, and charge indicators remain visible
+   while stun is selected, at every charge level including empty.
+6. If burst_size is changed for testing, change credentials or switch from another
+   mode to stun between burst callbacks. Unauthorized stun projectiles must not fire.

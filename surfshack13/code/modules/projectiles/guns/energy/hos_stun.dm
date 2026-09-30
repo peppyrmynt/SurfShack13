@@ -3,6 +3,13 @@
 	select_name = "stun"
 	e_cost = LASER_SHOTS(3, STANDARD_CELL_CHARGE * 1.2)
 
+// Guard the actual casing entry point too, including delayed burst callbacks.
+/obj/item/ammo_casing/energy/electrode/hos/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from)
+	var/obj/item/gun/energy/e_gun/hos/gun = fired_from
+	if(!istype(gun) || !gun.is_authorized_for_stun(user))
+		return FALSE
+	return ..()
+
 /obj/item/gun/energy/e_gun/hos/examine(mob/user)
 	. = ..()
 	. += span_notice("Anyone can select its stun mode, but firing it requires a mindshielded, manifest-verified Head of Security carrying their own Head of Security ID. A full charge provides three stun shots.")
@@ -48,6 +55,12 @@
 	if((istype(ammo_type[select], /obj/item/ammo_casing/energy/electrode/hos) || istype(chambered, /obj/item/ammo_casing/energy/electrode/hos)) && !is_authorized_for_stun(user))
 		return FALSE
 	return ..()
+
+/obj/item/gun/energy/e_gun/hos/update_icon_state()
+	. = ..()
+	if(istype(ammo_type[select], /obj/item/ammo_casing/energy/electrode/hos))
+		// Both hand icon files provide disable0 through disable4, but no stun states.
+		inhand_icon_state = "hoslaserdisable[get_charge_ratio()]"
 
 /obj/item/gun/energy/e_gun/hos/update_overlays()
 	. = ..()
