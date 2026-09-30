@@ -182,7 +182,8 @@ GLOBAL_LIST_EMPTY(cortical_borers)
 	if(SPT_PROB(2.5, seconds_per_tick))
 		host.adjustOrganLoss(ORGAN_SLOT_BRAIN, rand(1, 2))
 	if(SPT_PROB(host.get_organ_loss(ORGAN_SLOT_BRAIN) / 20, seconds_per_tick))
-		host.emote(pick("blink", "blink_r", "choke", "drool", "twitch", "twitch_s", "gasp"))
+		// emotes can sleep, and Life() must not
+		INVOKE_ASYNC(host, TYPE_PROC_REF(/mob, emote), pick("blink", "blink_r", "choke", "drool", "twitch", "twitch_s", "gasp"))
 
 /mob/living/basic/cortical_borer/proc/wake_up()
 	to_chat(controlling ? host : src, span_warning("You finish shaking off your lethargy."))
