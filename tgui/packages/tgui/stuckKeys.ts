@@ -64,10 +64,7 @@ export function setupStuckKeyRelease() {
   document.addEventListener(
     'focus',
     (event) => {
-      if (
-        event.target instanceof HTMLElement &&
-        canStealFocus(event.target)
-      ) {
+      if (event.target instanceof HTMLElement && canStealFocus(event.target)) {
         releaseHeldKeys();
       }
     },
