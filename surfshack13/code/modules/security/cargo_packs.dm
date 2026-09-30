@@ -36,3 +36,11 @@
 	access_view = ACCESS_SECURITY
 	contains = list(/obj/item/mod/construction/plating/security)
 	crate_name = "\improper MOD plating crate"
+
+// Security MOD plating can also be printed at the security protolathe (still unlocked by the Security Modular Suits node).
+/datum/design/mod_plating/security
+	build_type = MECHFAB | PROTOLATHE
+	category = list(
+		RND_CATEGORY_MODSUITS + RND_SUBCATEGORY_MODSUITS_PLATING,
+		RND_CATEGORY_EQUIPMENT + RND_SUBCATEGORY_EQUIPMENT_SECURITY,
+	)
