@@ -70,7 +70,7 @@
 	if(!userCode || (userCode in vc_clients))
 		return
 	var/client/C = userCode_client_map[userCode]
-	var/mob/M = C.mob
+	var/mob/M = C?.mob
 	if(!C || !M)
 		disconnect(userCode)
 		return
@@ -210,7 +210,7 @@
 		userCode_room_map.Remove(userCode)
 		vc_clients -= userCode
 
-	var/mob/M = C.mob
+	var/mob/M = C?.mob
 
 	if(M)
 		unregister_mob_signals(M)

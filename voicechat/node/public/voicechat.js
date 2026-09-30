@@ -13,9 +13,11 @@ let audioSenders = new Map();
 let distances = new Map();
 let mutedUsers = new Map();
 let gainNode = null;
+let gainAudioContext = null;
 let vadAudioContext = null;
 let vadAnalyser = null;
 let vadSource = null;
+let vadTimer = null;
 let isVoiceActive = false;
 let lastActiveTime = 0;
 let isDeafened = false;
@@ -34,14 +36,26 @@ const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get('sessionId');
 const socket_address = urlParams.get('socket_address');
 
+// The page itself is served by the local byond client (127.0.0.1), so the game server's
+// address has to come from socket_address, not window.location.
+function getServerHost() {
+    try {
+        const addr = /^[a-z]+:\/\//i.test(socket_address) ? socket_address : `http://${socket_address}`;
+        return new URL(addr).hostname;
+    } catch (e) {
+        return window.location.hostname;
+    }
+}
+const SERVER_HOST = getServerHost();
+
 const ICE_SERVERS = [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' },
-    { urls: `turn:${window.location.hostname}:3478`,
+    // the game server's own STUN/TURN comes first, google STUN is blocked or throttled in some countries
+    { urls: `stun:${SERVER_HOST}:3478` },
+    { urls: `turn:${SERVER_HOST}:3478?transport=udp`,
         credential: sessionId,
         username: sessionId,
-    }
+    },
+    { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] },
 ]
 
 function toggleDarkMode() {
@@ -86,6 +100,30 @@ function updateStatus(message) {
     document.getElementById('status').innerText = message;
 }
 
+// Browsers can start audio suspended until the user clicks the page, which silently
+// kills both the outgoing mic (gain node) and voice activity detection.
+function resumeAudio() {
+    let blocked = false;
+    [gainAudioContext, vadAudioContext].forEach(ctx => {
+        if (ctx && ctx.state === 'suspended') {
+            ctx.resume().catch(() => {});
+            blocked = true;
+        }
+    });
+    audioElements.forEach(audio => {
+        if (audio.paused && audio.srcObject) {
+            audio.play().catch(() => {});
+            blocked = true;
+        }
+    });
+    return blocked;
+}
+
+function checkAudioBlocked() {
+    const suspended = [gainAudioContext, vadAudioContext].some(ctx => ctx && ctx.state === 'suspended');
+    if (suspended) updateStatus('Click anywhere on this page to enable audio');
+}
+
 // Audio Device Management
 async function populateDevices() {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -110,7 +148,7 @@ async function handleInputChange(event) {
     }
 
     localStream = await navigator.mediaDevices.getUserMedia({
-        audio: { deviceId: { exact: deviceId } }
+        audio: { deviceId: { exact: deviceId }, echoCancellation: true, noiseSuppression: true }
     });
 
     setupGainNode(localStream);
@@ -133,11 +171,17 @@ async function handleOutputChange(event) {
 // Microphone Access
 async function getMic() {
     try {
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        if (localStream) localStream.getTracks().forEach(track => track.stop());
+        localStream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: true, noiseSuppression: true }
+        });
         await populateDevices();
         setupGainNode(localStream);
         setupVoiceActivityDetection();
-        socket.emit('mic_access_granted');
+        updateAudioSenders();
+        checkAudioBlocked();
+        // if not connected yet, the 'connect' handler sends this after joining
+        if (socket.connected) socket.emit('mic_access_granted');
     } catch (err) {
         console.error('Failed to get microphone access:', err);
     }
@@ -150,7 +194,9 @@ function setupGainNode(stream) {
         return;
     }
 
+    if (gainAudioContext) gainAudioContext.close();
     const ctx = new AudioContext();
+    gainAudioContext = ctx;
     const src = ctx.createMediaStreamSource(new MediaStream([audioTrack]));
     const dst = ctx.createMediaStreamDestination();
     gainNode = ctx.createGain();
@@ -200,6 +246,10 @@ function updateVolumes() {
 
 // Voice Activity Detection (VAD)
 function setupVoiceActivityDetection() {
+    if (vadTimer) {
+        clearInterval(vadTimer);
+        vadTimer = null;
+    }
     if (vadAudioContext) {
         vadAudioContext.close();
     }
@@ -251,17 +301,17 @@ function setupVoiceActivityDetection() {
                 handleVoiceActivityChange(false);
             }
         }
-
-        requestAnimationFrame(monitorAudio);
     }
 
-    monitorAudio();
+    // not requestAnimationFrame: that stops completely when the tab is hidden or the window
+    // minimized, which froze voice detection and left people unable to be heard.
+    vadTimer = setInterval(monitorAudio, 30);
 }
 
 function handleVoiceActivityChange(active) {
     const voiceStatus = document.getElementById('voice_activity_status');
     voiceStatus.classList = active ? 'active' : '';
-    socket.emit('voice_activity', { active });
+    if (socket) socket.emit('voice_activity', { active });
     updateAudioSenders();
 }
 
@@ -271,7 +321,7 @@ function updateAudioSenders() {
     const shouldSend = !isManuallyMuted && !isDeafened && isVoiceActive;
     const track = shouldSend ? localStream.getAudioTracks()[0] : null;
     audioSenders.forEach(sender => {
-        sender.replaceTrack(track);
+        sender.replaceTrack(track).catch(err => console.error('replaceTrack failed:', err));
     });
 }
 
@@ -348,6 +398,7 @@ function toggleMicTest() {
 
 // Peer Connection Management
 function createPeerConnection(userCode, sendOffer) {
+    removePeer(userCode); // never leave an old connection behind
     const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
     peerConnections.set(userCode, pc);
 
@@ -359,30 +410,35 @@ function createPeerConnection(userCode, sendOffer) {
     document.body.appendChild(audio);
     audioElements.set(userCode, audio);
 
-    if (localStream) {
-        const track = localStream.getAudioTracks()[0];
-        const sender = pc.addTrack(track, localStream);
-        audioSenders.set(userCode, sender);
-        updateAudioSenders(); // Apply current state
+    const track = localStream ? localStream.getAudioTracks()[0] : null;
+    if (track) {
+        audioSenders.set(userCode, pc.addTrack(track, localStream));
+    } else if (sendOffer) {
+        // always offer an audio line, even without a mic yet, so we can still hear the other side
+        audioSenders.set(userCode, pc.addTransceiver('audio', { direction: 'sendrecv' }).sender);
     }
-
-    let iceCandidates = [];
+    updateAudioSenders(); // Apply current state
 
     pc.onicecandidate = (event) => {
         if (event.candidate) {
-            iceCandidates.push(event.candidate);
             socket.emit('ice-candidate', { to: userCode, candidate: event.candidate });
         }
     };
-    pc.oniceconnectionstatechange = () => {
-        const state = pc.iceConnectionState;
-        if (state === 'failed') {
-            socket.emit('ice_failed')
-            updateStatus('a peer connection failed, view console error for more info')
+    pc.onconnectionstatechange = () => {
+        if (peerConnections.get(userCode) !== pc) return;
+        if (pc.connectionState === 'failed') {
+            console.error(`connection to ${userCode} failed, rebuilding`);
+            socket.emit('ice_failed');
+            updateStatus('a peer connection failed, retrying...');
+            // the server resets both ends and they reconnect on the next location update
+            socket.emit('peer_failed', { userCode });
+        } else if (pc.connectionState === 'connected') {
+            updateStatus('Connected successfully');
         }
     };
     pc.ontrack = (event) => {
-        audio.srcObject = event.streams[0];
+        audio.srcObject = event.streams[0] || new MediaStream([event.track]);
+        audio.play().catch(() => checkAudioBlocked());
     };
 
     if (sendOffer) {
@@ -398,11 +454,6 @@ function createPeerConnection(userCode, sendOffer) {
     return pc;
 }
 
-addEventListener("icecandidateerror", (event) => {
-    updateStatus('peer connection failed, view console for details')
-    socket.emit('ice_failed', {event})
- })
-
 function removePeer(userCode) {
     const pc = peerConnections.get(userCode);
     if (pc) {
@@ -416,6 +467,7 @@ function removePeer(userCode) {
     }
     audioSenders.delete(userCode);
     distances.delete(userCode);
+    if (peerConnections.size === 0) toggleRoomStatus(false);
 }
 
 // Socket Event Handlers
@@ -452,10 +504,31 @@ function setupSocketHandlers() {
         }
     });
 
+    socket.on('connect', () => {
+        // also runs after socket.io reconnects on its own, the server needs to know who we are again
+        socket.emit('join', { sessionId: sessionId });
+        if (localStream) socket.emit('mic_access_granted');
+    });
+
+    socket.on('peer-reset', (data) => {
+        if (data && data.userCode) removePeer(data.userCode);
+    });
+
     socket.on('offer', (data) => {
         const { from, offer } = data;
-        const pc = peerConnections.get(from) || createPeerConnection(from, false);
+        let pc = peerConnections.get(from);
+        // an offer on a connection that already negotiated means the other side started over
+        if (!pc || pc.remoteDescription) pc = createPeerConnection(from, false);
         pc.setRemoteDescription(new RTCSessionDescription(offer))
+            .then(() => {
+                // make sure we answer with our mic on the negotiated audio line
+                const transceiver = pc.getTransceivers().find(t => t.mid !== null);
+                if (transceiver) {
+                    transceiver.direction = 'sendrecv';
+                    audioSenders.set(from, transceiver.sender);
+                    updateAudioSenders();
+                }
+            })
             .then(() => pc.createAnswer())
             .then(answer => pc.setLocalDescription(answer))
             .then(() => socket.emit('answer', { to: from, answer: pc.localDescription }))
@@ -474,7 +547,7 @@ function setupSocketHandlers() {
     socket.on('ice-candidate', (data) => {
         const { from, candidate } = data;
         const pc = peerConnections.get(from);
-        if (pc) {
+        if (pc && candidate) {
             pc.addIceCandidate(new RTCIceCandidate(candidate))
                 .catch(err => console.error('Error adding ICE candidate:', err));
         }
@@ -487,8 +560,10 @@ function setupSocketHandlers() {
     });
 
     socket.on('disconnect', (reason) => {
-        cleanupConnections();
+        // keep the mic, socket.io will reconnect and rejoin
+        closePeerConnections();
         toggleRoomStatus(false);
+        if (reason !== 'io server disconnect') updateStatus('Connection lost, reconnecting...');
     });
 
     socket.on('mute_mic', () => {
@@ -509,13 +584,12 @@ function setupSocketHandlers() {
     })
 }
 
+function closePeerConnections() {
+    Array.from(peerConnections.keys()).forEach(removePeer);
+}
+
 function cleanupConnections() {
-    peerConnections.forEach(pc => pc.close());
-    peerConnections.clear();
-    audioElements.forEach(audio => audio.remove());
-    audioElements.clear();
-    audioSenders.clear();
-    distances.clear();
+    closePeerConnections();
     if (localStream) {
         localStream.getTracks().forEach(track => track.stop());
     }
@@ -531,6 +605,12 @@ function setupUIListeners() {
             tooltip.innerHTML = trigger.dataset.tip;
         });
     });
+
+    // any click or key press unlocks audio if the browser blocked it
+    document.addEventListener('click', () => {
+        if (resumeAudio()) updateStatus('Audio enabled');
+    });
+    document.addEventListener('keydown', () => resumeAudio());
 
     // Buttons
 	document.getElementById('dark_mode_toggle').addEventListener('click', toggleDarkMode)
@@ -570,8 +650,7 @@ function toggleSettings() {
 // Initialization
 async function init() {
     socket = io(socket_address, { rejectUnauthorized: false });
-    socket.emit('join', { sessionId: sessionId });
-    setupSocketHandlers();
+    setupSocketHandlers(); // joins on 'connect'
     setupUIListeners();
     await getMic();
 }

@@ -29,9 +29,7 @@
 			Once the external browser is loaded:<br>
 				1. When prompted, allow mic perms,.<br>
 				2. Verify this is working, by looking for a voice indicator over your mob when speaking.<br>
-				3. Drag voicechat to its own window so its only the <b>active tab</b><br>
-			If you open a different tab it stops detecting microphone input.
-			So make sure voicechat is in its to its own browser window.
+				3. If you see "Click anywhere on this page to enable audio", click the voicechat page once.<br>
 		</p>
 		<h4>Verbs</h4>
 		<p>
@@ -46,6 +44,7 @@
 		<p>
 			* Ensure browser extensions are off and the page is whitelisted.<br>
 			* VPNS occasionally break voicechat.<br>
+			* If your connection drops, the page reconnects on its own. Only use Join again if it says disconnected.<br>
 			* For best results, look up if your browser supports webRTC well.
 		</p>
 		<h4>Issues</h4>

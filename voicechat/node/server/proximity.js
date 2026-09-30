@@ -12,12 +12,30 @@ function normalizeStringify(obj) {
     return JSON.stringify({ peers: sortedPeers, own: obj.own });
 }
 
+// Forget what every client was last sent, so the next location packet is re-sent in full,
+// and tell everyone to drop their connection to userCode so it gets rebuilt from scratch.
+function resetPeer(io, userCode) {
+    prevPackets.clear();
+    io.emit('peer-reset', { userCode });
+}
+
+// Rebuild the connection between two peers only, for when their link failed.
+function resetPair(io, userCodeA, userCodeB) {
+    for (const [self, other] of [[userCodeA, userCodeB], [userCodeB, userCodeA]]) {
+        prevPackets.delete(self);
+        const socket = io.sockets.sockets.get(userCodeToSocketId.get(self));
+        if (socket) socket.emit('peer-reset', { userCode: other });
+    }
+}
+
 const handleLocationPacket = (packet, io) => {
+    const seen = new Set();
     for (const room in packet) {
-        if (room === "loc") continue;
+        if (room === "cmd") continue;
         const isNoProx = room.endsWith('_noprox');
         const locations = packet[room];
         const userCodes = Object.keys(locations);
+        userCodes.forEach(code => seen.add(code));
         const numUsers = userCodes.length;
 
         // Initialize peers for all users
@@ -75,5 +93,14 @@ const handleLocationPacket = (packet, io) => {
             }
         }
     }
+
+    // users missing from the packet (knocked out, muted trait, left voice) have no peers anymore.
+    // Without this their browser keeps stale connections and never rebuilds them when they come back.
+    for (const userCode of [...prevPackets.keys()]) {
+        if (seen.has(userCode)) continue;
+        prevPackets.delete(userCode);
+        const socket = io.sockets.sockets.get(userCodeToSocketId.get(userCode));
+        if (socket) socket.emit('loc', { none: 1 });
+    }
 };
-module.exports = {handleLocationPacket};
+module.exports = {handleLocationPacket, resetPeer, resetPair};

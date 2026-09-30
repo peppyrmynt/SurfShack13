@@ -196,7 +196,8 @@ SUBSYSTEM_DEF(voicechat)
 
 		locs_sent ++
 
-	if(!locs_sent) //dont send empty packets
+	// still send when nobody is in a room, so node can tell clients they lost their peers
+	if(!locs_sent && !length(vc_clients))
 		return
 	send_json(packet)
 
