@@ -12,6 +12,8 @@
 #define ULTRAVIOLENCE_EXECUTION_FAILSAFE_GRACE (5 SECONDS)
 /// Stamina damage a floored target needs before the chicken mask can execute them, so a baton hit counts but a shove doesn't.
 #define ULTRAVIOLENCE_EXECUTION_MIN_STAMINA_LOSS 50
+/// How much longer than a shove kick a paralyze must last to count as a real stun (covers same-tick rounding).
+#define ULTRAVIOLENCE_SHOVE_STUN_MARGIN (0.2 SECONDS)
 /// Trait source for holding an execution victim down.
 #define ULTRAVIOLENCE_PIN_TRAIT "ultraviolence_pin"
 /// Chicken mask executions on targets who are still conscious (stunned or knocked down, not in crit) take this many times longer.
@@ -203,11 +205,25 @@
 	if(HAS_TRAIT(attacker, TRAIT_RAMPAGE_EXECUTIONER))
 		if(target.stat >= SOFT_CRIT || target.has_status_effect(/datum/status_effect/incapacitating/stamcrit))
 			return TRUE
-		// Being kicked onto your side by a shove paralyzes you, but it's still just a shove.
-		if(HAS_TRAIT(target, TRAIT_INCAPACITATED) && !target.has_status_effect(/datum/status_effect/shove_kicked))
+		if(HAS_TRAIT(target, TRAIT_INCAPACITATED) && has_real_stun(target))
 			return TRUE
 		return target.body_position == LYING_DOWN && target.getStaminaLoss() >= ULTRAVIOLENCE_EXECUTION_MIN_STAMINA_LOSS
 	return target.body_position == LYING_DOWN && target.stat >= SOFT_CRIT && target.stat != DEAD
+
+/**
+ * Is an incapacitated target down because of a real stun, rather than just being kicked onto their side by a shove?
+ *
+ * The shove kick only paralyzes, and tags them with /datum/status_effect/shove_kicked for exactly as long.
+ * Paralyzes merge by keeping the longest one, so if the paralyze outlasts that tag, something stronger landed on top.
+ */
+/datum/component/ultraviolence/proc/has_real_stun(mob/living/target)
+	var/datum/status_effect/shove_kicked/shove = target.has_status_effect(/datum/status_effect/shove_kicked)
+	if(!shove)
+		return TRUE
+	// None of these come from a shove.
+	if(target.AmountStun() || target.AmountUnconscious() || target.has_status_effect(/datum/status_effect/incapacitating/incapacitated))
+		return TRUE
+	return target.AmountParalyzed() > (shove.duration - world.time) + ULTRAVIOLENCE_SHOVE_STUN_MARGIN
 
 /// Can we start an execution on this target right now?
 /datum/component/ultraviolence/proc/can_execute(mob/living/attacker, mob/living/target, obj/item/weapon)
@@ -451,6 +467,7 @@
 	alert_type = null
 
 #undef ULTRAVIOLENCE_PIN_TRAIT
+#undef ULTRAVIOLENCE_SHOVE_STUN_MARGIN
 #undef ULTRAVIOLENCE_EXECUTION_MIN_STAMINA_LOSS
 #undef ULTRAVIOLENCE_SPRAY_COOLDOWN
 #undef ULTRAVIOLENCE_EXECUTION_FAILSAFE_GRACE
