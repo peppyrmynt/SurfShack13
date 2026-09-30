@@ -10,6 +10,57 @@ TCP and over TLS on port 443, which looks like normal HTTPS traffic and gets thr
 
 Without `voicechat/node/turn_config.json`, nothing changes and the built-in relay is used.
 
+## How voice picks a path
+
+There are two separate choices.
+
+**1. Which relay server exists (server side, chosen by you).** Only one runs at a time:
+
+| `voicechat/node/turn_config.json` | Relay used |
+| --- | --- |
+| missing, or `"mode": "builtin"` | built-in `node-turn`, UDP 3478 only |
+| `"mode": "coturn"` with `secret` and `urls` | coturn; the built-in relay is not started |
+
+It is read when the node server starts, so restart voice chat after changing it. The node log
+prints `TURN mode: builtin` or `TURN mode: coturn`. If the file is broken or missing `secret`/`urls`,
+it logs an error and falls back to the built-in relay.
+
+If you stay on the built-in relay and the server is behind NAT (e.g. Docker), use
+`{"mode": "builtin", "externalIp": "YOUR.PUBLIC.IP"}` so relays hand out the public address.
+
+**2. Which path each pair of players uses (automatic, in the browser).** When two players get
+near each other, both browsers collect every way they could be reached, then test them all
+at once (WebRTC "ICE"):
+
+1. **Direct**: their own addresses, plus their public address learned from the STUN server.
+   Used whenever it works; most players connect this way and the relay isn't involved.
+2. **Relay over UDP**: through the relay's UDP port 3478.
+3. **Relay over TCP**: through `turn:...?transport=tcp` (coturn only).
+4. **Relay over TLS**: through `turns:...:443` (coturn only, needs a domain and certificate).
+
+The browser prefers them in that order and keeps the best one that actually works. Nothing needs
+to be configured per player, and it's decided separately for every pair, so a player in Russia
+can be relayed over TLS while everyone else keeps talking directly. Only the player whose network
+blocks things needs the relay; the other side just sends UDP to the relay's address.
+
+## Players in Russia (or anywhere UDP voice is blocked)
+
+Russian ISPs block or throttle WebRTC voice to many foreign servers, mostly UDP. Google's STUN
+servers are also blocked there, which is why the game server's own STUN is listed first.
+The built-in relay only speaks UDP, so for those players it fails. To make them work:
+
+1. Set up coturn (steps 1-3 below), with at least `turn:{host}:3478?transport=tcp` in `urls`.
+   That already gets through plain UDP blocking.
+2. Best: also set up TLS on 443 (step 4). The relay traffic then looks like an ordinary HTTPS
+   connection to your server, which is the hardest thing for filtering to block.
+3. Open the firewall ports (step 5).
+4. Have a Russian player check it (see "Checking it works"): the connection should show
+   `relay` with protocol `tcp` or `tls`.
+
+The voice page itself also connects to the game server over TCP (port 3000 by default). If that
+port is blocked for someone, no relay helps; it would need to be moved behind the same port 443
+with a reverse proxy, which this setup doesn't cover.
+
 ## 1. Install coturn
 
 ```bash
@@ -98,6 +149,8 @@ Open inbound:
 | 49152-65535 | UDP | relayed audio |
 
 ## Checking it works
+
+In the node log, look for `TURN mode: coturn`.
 
 In Chrome open `chrome://webrtc-internals` while in voice chat. The selected candidate pair
 shows `relay` and the protocol when a player is going through coturn. Or test the server with
