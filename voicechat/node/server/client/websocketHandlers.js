@@ -30,6 +30,8 @@ function endSession(userCode, io, reason) {
     resetPeer(io, userCode);
 }
 
+const VOICE_ACTIVITY_INTERVAL = 150; // ms
+
 function createConnectionHandler(byondPort, io) {
     return function handleConnection(socket) {
         console.log('A user connected:', socket.id);
@@ -93,9 +95,13 @@ function createConnectionHandler(byondPort, io) {
         });
 
         // browser is ready for voice; also sent without a mic, those players join listen-only
+        // every message forwarded to byond is a world/Topic call, so a spamming page mustn't
+        // be able to flood the game server with them
         on('mic_access_granted', () => {
             const userCode = socketIdToUserCode.get(socket.id);
-            if(userCode) sendJSON({ 'confirmed': userCode }, byondPort);
+            if (!userCode || socket.confirmedSent) return; // once per connection is enough
+            socket.confirmedSent = true;
+            sendJSON({ 'confirmed': userCode }, byondPort);
         })
 
         on('disconnect_page', () => {
@@ -113,6 +119,7 @@ function createConnectionHandler(byondPort, io) {
         // connection dropped (network, closed tab). Keep the session so the browser can rejoin.
         socket.on('disconnect', () => {
             clearTimeout(authTimer);
+            clearTimeout(socket.voiceTimer);
             const userCode = socketIdToUserCode.get(socket.id);
             socketIdToUserCode.delete(socket.id);
             if (userCode && userCodeToSocketId.get(userCode) === socket.id) {
@@ -161,13 +168,27 @@ function createConnectionHandler(byondPort, io) {
 
         on('ice_failed', () => {
             const userCode = socketIdToUserCode.get(socket.id);
-            if(userCode) sendJSON({ 'ice_failed': userCode}, byondPort);
+            const now = Date.now();
+            if (!userCode || now - (socket.lastIceFailed || 0) < 10000) return;
+            socket.lastIceFailed = now;
+            sendJSON({ 'ice_failed': userCode}, byondPort);
         });
 
+        // talking indicator: only changes are forwarded, at most one per VOICE_ACTIVITY_INTERVAL,
+        // and the latest state is always sent last so the icon never gets stuck
         on('voice_activity', (data) => {
-            const userCode = socketIdToUserCode.get(socket.id);
-            if (!userCode) return;
-            sendJSON({voice_activity: userCode, active: !!data['active']}, byondPort)
+            if (!socketIdToUserCode.get(socket.id)) return;
+            socket.pendingActive = !!data['active'];
+            if (socket.voiceTimer) return;
+            const flush = () => {
+                socket.voiceTimer = null;
+                const userCode = socketIdToUserCode.get(socket.id);
+                if (!userCode || socket.pendingActive === socket.sentActive) return;
+                socket.sentActive = socket.pendingActive;
+                sendJSON({ voice_activity: userCode, active: socket.sentActive }, byondPort);
+                socket.voiceTimer = setTimeout(flush, VOICE_ACTIVITY_INTERVAL);
+            };
+            flush();
         });
     };
 }

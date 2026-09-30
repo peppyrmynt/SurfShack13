@@ -31,7 +31,13 @@
 	if(addr != "127.0.0.1")
 		return
 
-	var/list/data = json_decode(T)
+	var/list/data
+	try
+		data = json_decode(T)
+	catch
+		return
+	if(!islist(data))
+		return
 	if(data["error"])
 		message_admins(T)
 		return

@@ -5,7 +5,9 @@ SUBSYSTEM_DEF(voicechat)
 	wait = 3 //300 ms
 	flags = SS_KEEP_TIMING|SS_OK_TO_FAIL_INIT
 	init_order = INIT_ORDER_VOICECHAT
-	runlevels = RUNLEVEL_GAME|RUNLEVEL_POSTGAME
+	// lobby too: rejoining after a dropped connection and retrying failed connections wait for
+	// the next location update, which never came before the round started
+	runlevels = RUNLEVEL_LOBBY|RUNLEVELS_DEFAULT
 	//userCodes associated thats been fully confirmed - browser paired and mic perms on
 	var/list/vc_clients = list()
 	//userCode to clientRef
@@ -46,10 +48,14 @@ SUBSYSTEM_DEF(voicechat)
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/voicechat/proc/restart()
+	if(!CONFIG_GET(flag/enable_voicechat))
+		return
 	send_ooc_announcement("Voicechat restarting in a few seconds, please reconnect with join")
 	disconnect_all_clients()
 	stop_node()
-	spawn(4 SECONDS) start_node()
+	actually_initialized = FALSE
+	spawn(4 SECONDS)
+		actually_initialized = start_node()
 
 /datum/controller/subsystem/voicechat/proc/on_ice_failed(userCode)
 	// if(!userCode)
@@ -80,6 +86,8 @@ SUBSYSTEM_DEF(voicechat)
 		disconnect_all_clients()
 		stop_node()
 		send_ooc_announcement("voicechat stopped")
+		// so the join verbs say it's off, instead of handing out links to a dead server
+		actually_initialized = FALSE
 	. = ..()
 
 /datum/controller/subsystem/voicechat/proc/disconnect_all_clients()
@@ -111,6 +119,8 @@ SUBSYSTEM_DEF(voicechat)
 
 
 /datum/controller/subsystem/voicechat/fire()
+	if(!actually_initialized)
+		return
 	send_locations()
 
 /datum/controller/subsystem/voicechat/proc/on_node_start()
