@@ -12,6 +12,8 @@
 #define RAMPAGE_MAX_SPEED 0.55
 /// Combo at which the speed boost reaches RAMPAGE_MAX_SPEED. It ramps up evenly until then.
 #define RAMPAGE_MAX_SPEED_COMBO 50
+/// How loud the wearer hears their own music. Kept low so they can still hear what's going on around them.
+#define RAMPAGE_MUSIC_SELF_VOLUME 15
 /// How far the wearer's music carries with no combo.
 #define RAMPAGE_MUSIC_BASE_RANGE 15
 /// How far the wearer's music carries at RAMPAGE_MUSIC_MAX_RANGE_COMBO combo and above.
@@ -172,7 +174,7 @@
 
 /datum/component/chicken_rampage/RegisterWithParent()
 	var/mob/living/wearer = parent
-	wearer.add_traits(list(TRAIT_NOSOFTCRIT, TRAIT_ANALGESIA, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
+	wearer.add_traits(list(TRAIT_NOSOFTCRIT, TRAIT_ANALGESIA, TRAIT_BRUTAL_THROWER, TRAIT_THROWINGARM, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.AddComponentFrom(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
 	// Feels no pain, like morphine: no pain messages or shock, and injuries don't slow them down.
 	wearer.add_movespeed_mod_immunities(CHICKEN_MASK_TRAIT, /datum/movespeed_modifier/damage_slowdown)
@@ -185,7 +187,7 @@
 
 	combo_display = new
 	wearer.client?.screen += combo_display
-	music = new(wearer, RAMPAGE_MUSIC_BASE_RANGE)
+	music = new(wearer, RAMPAGE_MUSIC_BASE_RANGE, null, RAMPAGE_MUSIC_SELF_VOLUME)
 	update_music()
 
 	RegisterSignal(wearer, COMSIG_MOB_ATTACK_LANDED, PROC_REF(on_attack_landed))
@@ -217,7 +219,7 @@
 		COMSIG_USER_ITEM_INTERACTION_SECONDARY,
 		COMSIG_MOB_THROW,
 	))
-	wearer.remove_traits(list(TRAIT_NOSOFTCRIT, TRAIT_ANALGESIA, TRAIT_BRUTAL_THROWER, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
+	wearer.remove_traits(list(TRAIT_NOSOFTCRIT, TRAIT_ANALGESIA, TRAIT_BRUTAL_THROWER, TRAIT_THROWINGARM, TRAIT_RAMPAGE_EXECUTIONER), CHICKEN_MASK_TRAIT)
 	wearer.RemoveComponentSource(CHICKEN_MASK_TRAIT, /datum/component/ultraviolence)
 	wearer.remove_movespeed_modifier(/datum/movespeed_modifier/chicken_rampage)
 	wearer.remove_movespeed_mod_immunities(CHICKEN_MASK_TRAIT, /datum/movespeed_modifier/damage_slowdown)
@@ -609,6 +611,7 @@
 #undef RAMPAGE_BASE_SPEED
 #undef RAMPAGE_MAX_SPEED
 #undef RAMPAGE_MAX_SPEED_COMBO
+#undef RAMPAGE_MUSIC_SELF_VOLUME
 #undef RAMPAGE_MUSIC_BASE_RANGE
 #undef RAMPAGE_MUSIC_MAX_RANGE
 #undef RAMPAGE_MUSIC_MAX_RANGE_COMBO

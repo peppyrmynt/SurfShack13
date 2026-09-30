@@ -201,7 +201,10 @@
  */
 /datum/component/ultraviolence/proc/is_executable(mob/living/attacker, mob/living/target)
 	if(HAS_TRAIT(attacker, TRAIT_RAMPAGE_EXECUTIONER))
-		if(target.stat >= SOFT_CRIT || HAS_TRAIT(target, TRAIT_INCAPACITATED))
+		if(target.stat >= SOFT_CRIT || target.has_status_effect(/datum/status_effect/incapacitating/stamcrit))
+			return TRUE
+		// Being kicked onto your side by a shove paralyzes you, but it's still just a shove.
+		if(HAS_TRAIT(target, TRAIT_INCAPACITATED) && !target.has_status_effect(/datum/status_effect/shove_kicked))
 			return TRUE
 		return target.body_position == LYING_DOWN && target.getStaminaLoss() >= ULTRAVIOLENCE_EXECUTION_MIN_STAMINA_LOSS
 	return target.body_position == LYING_DOWN && target.stat >= SOFT_CRIT && target.stat != DEAD
@@ -436,6 +439,16 @@
 	if(weapon && attacker.get_active_held_item() != weapon)
 		return FALSE
 	return TRUE
+
+/**
+ * Marker for someone who was just kicked onto their side by a shove (see /mob/living/proc/disarm).
+ * Does nothing by itself; it lets chicken mask executions tell a shove apart from a real stun.
+ */
+/datum/status_effect/shove_kicked
+	id = "shove_kicked"
+	duration = SHOVE_CHAIN_PARALYZE
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = null
 
 #undef ULTRAVIOLENCE_PIN_TRAIT
 #undef ULTRAVIOLENCE_EXECUTION_MIN_STAMINA_LOSS
