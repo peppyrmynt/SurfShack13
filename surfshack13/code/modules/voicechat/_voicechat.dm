@@ -184,6 +184,8 @@ SUBSYSTEM_DEF(voicechat)
 			continue
 		if(room_has_proximity[room])
 			var/turf/T = get_turf(M)
+			if(!T) // nullspace, a runtime here would stop location updates for everyone
+				continue
 			var/localroom = "[T.z]_[room]"
 			if(!packet[localroom])
 				packet[localroom] = list()

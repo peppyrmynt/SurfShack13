@@ -7,6 +7,7 @@ const GAIN_SCALE_FACTOR = 50; // Slider 0-100 maps to gain 0-2
 // Global State
 let socket;
 let localStream = null;
+let rawMicTrack = null; // the real microphone, localStream only holds the gain-adjusted copy
 let peerConnections = new Map();
 let audioElements = new Map();
 let audioSenders = new Map();
@@ -22,6 +23,8 @@ let isVoiceActive = false;
 let lastActiveTime = 0;
 let isDeafened = false;
 let isManuallyMuted = false;
+let mutedBeforeDeafen = false;
+let micError = null; // shown instead of "connected" while we have no microphone
 let isMicTesting = false;
 let previousDeafenedState = false;
 let testAudioContext = null;
@@ -137,32 +140,52 @@ function checkAudioBlocked() {
     if (suspended) updateStatus('Click anywhere on this page to enable audio');
 }
 
+// localStream.getTracks() misses the real microphone track (it's swapped for the gain output),
+// so stopping only those left the old mic captured after switching devices.
+function stopLocalStream() {
+    if (localStream) localStream.getTracks().forEach(track => track.stop());
+    if (rawMicTrack) rawMicTrack.stop();
+    localStream = null;
+    rawMicTrack = null;
+}
+
 // Audio Device Management
 async function populateDevices() {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const audioInputs = devices.filter(device => device.kind === 'audioinput');
     const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
 
-    const inputSelect = document.getElementById('audioInput');
-    inputSelect.innerHTML = audioInputs.map(device =>
-        `<option value="${device.deviceId}" ${device.deviceId === 'default' ? 'selected' : ''}>${device.label || 'Default Input'}</option>`
-    ).join('');
+    // keep the chosen devices selected when the list refreshes (e.g. a headset is plugged in)
+    fillDeviceSelect(document.getElementById('audioInput'), audioInputs, rawMicTrack && rawMicTrack.getSettings().deviceId, 'Default Input');
+    fillDeviceSelect(document.getElementById('audioOutput'), audioOutputs, sinkId, 'Default Output');
+}
 
-    const outputSelect = document.getElementById('audioOutput');
-    outputSelect.innerHTML = audioOutputs.map(device =>
-        `<option value="${device.deviceId}" ${device.deviceId === 'default' ? 'selected' : ''}>${device.label || 'Default Output'}</option>`
-    ).join('');
+function fillDeviceSelect(select, devices, currentId, fallbackLabel) {
+    select.innerHTML = '';
+    devices.forEach(device => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.textContent = device.label || fallbackLabel;
+        select.appendChild(option);
+    });
+    const ids = devices.map(device => device.deviceId);
+    select.value = ids.includes(currentId) ? currentId : (ids.includes('default') ? 'default' : (ids[0] || ''));
 }
 
 async function handleInputChange(event) {
     const deviceId = event.target.value;
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
+    let stream;
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            audio: { deviceId: { exact: deviceId }, echoCancellation: true, noiseSuppression: true }
+        });
+    } catch (err) {
+        console.error('Failed to switch microphone:', err);
+        updateStatus('Could not use that microphone');
+        return;
     }
-
-    localStream = await navigator.mediaDevices.getUserMedia({
-        audio: { deviceId: { exact: deviceId }, echoCancellation: true, noiseSuppression: true }
-    });
+    stopLocalStream();
+    localStream = stream;
 
     setupGainNode(localStream);
     setupVoiceActivityDetection();
@@ -177,26 +200,32 @@ async function handleInputChange(event) {
 async function handleOutputChange(event) {
     sinkId = event.target.value;
     audioElements.forEach(audio => {
-        audio.setSinkId(sinkId);
+        audio.setSinkId(sinkId).catch(err => console.error('setSinkId failed:', err));
     });
 }
 
 // Microphone Access
 async function getMic() {
     try {
-        if (localStream) localStream.getTracks().forEach(track => track.stop());
-        localStream = await navigator.mediaDevices.getUserMedia({
+        const stream = await navigator.mediaDevices.getUserMedia({
             audio: { echoCancellation: true, noiseSuppression: true }
         });
-        await populateDevices();
+        stopLocalStream();
+        localStream = stream;
         setupGainNode(localStream);
+        await populateDevices();
         setupVoiceActivityDetection();
         updateAudioSenders();
+        if (micError) updateStatus(socket.connected ? 'Connected successfully' : 'Connecting...');
+        micError = null;
         checkAudioBlocked();
         // if not connected yet, the 'connect' handler sends this after joining
         if (socket.connected) socket.emit('mic_access_granted');
     } catch (err) {
         console.error('Failed to get microphone access:', err);
+        // without a mic the game never adds you to voice, so say so instead of looking connected
+        micError = `Microphone blocked or missing (${err.name}). Allow it, then click "try microphone again"`;
+        updateStatus(micError);
     }
 }
 // Gain and Volume Control
@@ -210,6 +239,7 @@ function setupGainNode(stream) {
     if (gainAudioContext) gainAudioContext.close();
     const ctx = new AudioContext();
     gainAudioContext = ctx;
+    rawMicTrack = audioTrack;
     const src = ctx.createMediaStreamSource(new MediaStream([audioTrack]));
     const dst = ctx.createMediaStreamDestination();
     gainNode = ctx.createGain();
@@ -341,6 +371,7 @@ function updateAudioSenders() {
 function toggleMute(forceMute = false) {
     if (!localStream) return;
     if (isDeafened && !forceMute) {
+        mutedBeforeDeafen = false; // clicking mute while deafened means "let me talk again"
         toggleDeafen();
         return;
     }
@@ -355,8 +386,11 @@ function toggleMute(forceMute = false) {
 
 function toggleDeafen(forceDeafen = false) {
     if (!localStream) return;
+    const wasDeafened = isDeafened;
     isDeafened = forceDeafen ? true : !isDeafened;
-    isManuallyMuted = isDeafened;
+    // undeafening puts mute back to how it was, instead of always unmuting
+    if (isDeafened && !wasDeafened) mutedBeforeDeafen = isManuallyMuted;
+    isManuallyMuted = isDeafened ? true : mutedBeforeDeafen;
     audioElements.forEach(audio => {
         audio.muted = isDeafened;
     });
@@ -417,7 +451,7 @@ function createPeerConnection(userCode, sendOffer) {
 
     const audio = document.createElement('audio');
     audio.autoplay = true;
-    if (sinkId) audio.setSinkId(sinkId);
+    if (sinkId) audio.setSinkId(sinkId).catch(err => console.error('setSinkId failed:', err));
     audio.muted = isDeafened;
     audio.volume = document.getElementById('volume_slider').value;
     document.body.appendChild(audio);
@@ -487,7 +521,8 @@ function removePeer(userCode) {
 function setupSocketHandlers() {
     socket.on('update', (update) => {
         if (update.type === 'status') {
-            updateStatus(update.data);
+            const connectedMsg = typeof update.data === 'string' && update.data.startsWith('Connected');
+            updateStatus(micError && connectedMsg ? micError : update.data);
         }
     });
 
@@ -605,9 +640,7 @@ function closePeerConnections() {
 
 function cleanupConnections() {
     closePeerConnections();
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-    }
+    stopLocalStream();
 }
 
 // UI Event Listeners
@@ -649,9 +682,6 @@ function setupUIListeners() {
     // Cleanup on unload
     window.addEventListener('unload', () => {
         if (vadAudioContext) vadAudioContext.close();
-        if (localStream) {
-            localStream.getTracks().forEach(track => track.stop());
-        }
         cleanupConnections();
     });
 }

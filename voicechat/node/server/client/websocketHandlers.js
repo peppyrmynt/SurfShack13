@@ -34,6 +34,16 @@ function createConnectionHandler(byondPort, io) {
     return function handleConnection(socket) {
         console.log('A user connected:', socket.id);
 
+        // A throw inside a socket.io handler is uncaught and kills node, taking voice down for
+        // everyone, so one malformed message from any browser must never reach that far.
+        const on = (event, handler) => socket.on(event, (data) => {
+            try {
+                handler(data && typeof data === 'object' ? data : {});
+            } catch (err) {
+                console.error(`error handling '${event}' from ${socket.id}:`, err);
+            }
+        });
+
         const authTimer = setTimeout(() => {
             if (!socketIdToUserCode.get(socket.id)) {
                 console.log(`Unauthenticated socket ${socket.id} timed out, disconnecting`);
@@ -42,9 +52,9 @@ function createConnectionHandler(byondPort, io) {
             }
         }, 5000);
 
-        socket.on('join', (data) => {
+        on('join', (data) => {
             if (socket.userCode) return; // already joined on this socket
-            const sessionId = data && data.sessionId;
+            const sessionId = data.sessionId;
             // a fresh link from byond, or a browser rejoining after its connection dropped
             let userCode = sessionIdToUserCode.get(sessionId);
             const isRejoin = !userCode && activeSessionToUserCode.has(sessionId);
@@ -82,12 +92,12 @@ function createConnectionHandler(byondPort, io) {
             resetPeer(io, userCode);
         });
 
-        socket.on('mic_access_granted', () => {
+        on('mic_access_granted', () => {
             const userCode = socketIdToUserCode.get(socket.id);
             if(userCode) sendJSON({ 'confirmed': userCode }, byondPort);
         })
 
-        socket.on('disconnect_page', () => {
+        on('disconnect_page', () => {
             const userCode = socketIdToUserCode.get(socket.id);
             if (userCode) {
                 sendJSON({disconnect: userCode}, byondPort);
@@ -106,11 +116,13 @@ function createConnectionHandler(byondPort, io) {
             socketIdToUserCode.delete(socket.id);
             if (userCode && userCodeToSocketId.get(userCode) === socket.id) {
                 userCodeToSocketId.delete(userCode);
+                // otherwise a player cut off mid-sentence keeps the speaking icon over their head
+                sendJSON({ voice_activity: userCode, active: false }, byondPort);
                 resetPeer(io, userCode);
             }
         });
 
-        socket.on('offer', (data) => {
+        on('offer', (data) => {
             const { to, offer } = data;
             const targetSocketId = userCodeToSocketId.get(to);
             const socket_sending = io.sockets.sockets.get(targetSocketId)
@@ -119,7 +131,7 @@ function createConnectionHandler(byondPort, io) {
             }
         });
 
-        socket.on('answer', (data) => {
+        on('answer', (data) => {
             const { to, answer } = data;
             const targetSocketId = userCodeToSocketId.get(to);
             const socket_sending = io.sockets.sockets.get(targetSocketId)
@@ -128,7 +140,7 @@ function createConnectionHandler(byondPort, io) {
             }
         });
 
-        socket.on('ice-candidate', (data) => {
+        on('ice-candidate', (data) => {
             const { to, candidate } = data;
             const targetSocketId = userCodeToSocketId.get(to);
             const socket_sending = io.sockets.sockets.get(targetSocketId)
@@ -138,22 +150,22 @@ function createConnectionHandler(byondPort, io) {
         });
 
         // a peer connection failed, rebuild just that pair from scratch
-        socket.on('peer_failed', (data) => {
+        on('peer_failed', (data) => {
             const userCode = socket.userCode;
-            const other = data && data.userCode;
+            const other = data.userCode;
             if (!userCode || !other || !userCodeToSocketId.has(other)) return;
             console.log(`peer connection ${userCode} <-> ${other} failed, rebuilding`);
             resetPair(io, userCode, other);
         });
 
-        socket.on('ice_failed', () => {
+        on('ice_failed', () => {
             const userCode = socketIdToUserCode.get(socket.id);
             if(userCode) sendJSON({ 'ice_failed': userCode}, byondPort);
         });
 
-        socket.on('voice_activity', (data) => {
+        on('voice_activity', (data) => {
             const userCode = socketIdToUserCode.get(socket.id);
-            if (!userCode || !data) return;
+            if (!userCode) return;
             sendJSON({voice_activity: userCode, active: !!data['active']}, byondPort)
         });
     };

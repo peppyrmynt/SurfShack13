@@ -79,14 +79,13 @@
 	vc_clients += userCode
 	register_mob_signals(M)
 	check_mob_conditions(M)
-	RegisterSignal(C, COMSIG_QDELETING, PROC_REF(on_client_leaving_game))
+	RegisterSignal(C, COMSIG_QDELETING, PROC_REF(on_client_leaving_game), override = TRUE)
+	// fires with the new mob every time the client takes one over (ghosting, cloning, mind swaps)
+	RegisterSignal(C, COMSIG_CLIENT_MOB_LOGIN, PROC_REF(on_client_mob_changed), override = TRUE)
 
 /// the big ugly.
 /datum/controller/subsystem/voicechat/proc/register_mob_signals(mob/M)
 	SIGNAL_HANDLER
-	// whenever client switches to a different mob, setup signals
-	RegisterSignal(M, COMSIG_MOB_LOGOUT, PROC_REF(on_mob_changed))
-
 	if(isliving(M))
 		RegisterSignals(M, list(\
 			SIGNAL_ADDTRAIT(TRAIT_KNOCKEDOUT),
@@ -105,21 +104,29 @@
 		RegisterSignal(M, COMSIG_LIVING_REVIVE, PROC_REF(on_mob_revive))
 
 
-/datum/controller/subsystem/voicechat/proc/on_mob_changed(mob/M)
-	var/client/C = mob_client_map[M]
-	var/mob/new_mob = C.mob
+// Not hooked to the old mob's logout: when that fires the client may not be in the new mob yet,
+// which left people in the wrong room (e.g. ghosts still heard by the living).
+/datum/controller/subsystem/voicechat/proc/on_client_mob_changed(client/C, mob/new_mob)
+	SIGNAL_HANDLER
 	if(!C || !new_mob)
 		return
-
-	mob_client_map.Remove(M)
-	mob_client_map[new_mob] = C
-	unregister_mob_signals(M)
-
-	register_mob_signals(new_mob)
+	for(var/mob/old_mob as anything in mobs_of_client(C))
+		if(old_mob != new_mob)
+			mob_client_map.Remove(old_mob)
+			unregister_mob_signals(old_mob)
+	if(mob_client_map[new_mob] != C)
+		mob_client_map[new_mob] = C
+		register_mob_signals(new_mob)
 	check_mob_conditions(new_mob)
 
+/// mobs we track for this client, copied so callers can remove from mob_client_map while looping
+/datum/controller/subsystem/voicechat/proc/mobs_of_client(client/C)
+	. = list()
+	for(var/mob/M as anything in mob_client_map)
+		if(mob_client_map[M] == C)
+			. += M
+
 /datum/controller/subsystem/voicechat/proc/unregister_mob_signals(mob/M)
-	UnregisterSignal(M, COMSIG_MOB_LOGOUT)
 	if(isliving(M))
 		UnregisterSignal(M, list(\
 			SIGNAL_ADDTRAIT(TRAIT_KNOCKEDOUT),
@@ -177,6 +184,10 @@
 	if(SSticker.current_state == GAME_STATE_FINISHED)
 		room = ROOM_GLOBAL_LOBBY
 
+	// lobby players are /mob/dead with stat DEAD too, they belong in the lobby room, not with ghosts
+	else if(isnewplayer(M))
+		room = M.voice_chat_room
+
 	else if(M.stat == DEAD)
 		room = ROOM_GHOST
 
@@ -203,17 +214,19 @@
 	toggle_active(userCode, FALSE)
 	clear_userCode(userCode)
 
+	current_rooms[ROOM_NONE] -= userCode
+	userCode_room_map.Remove(userCode)
+	userCode_mob_map.Remove(userCode)
+	vc_clients -= userCode
+
 	var/client/C = userCode_client_map[userCode]
+	userCode_client_map.Remove(userCode)
 	if(C)
-		userCode_client_map.Remove(userCode)
 		client_userCode_map.Remove(C)
-		userCode_room_map.Remove(userCode)
-		vc_clients -= userCode
-
-	var/mob/M = C?.mob
-
-	if(M)
-		unregister_mob_signals(M)
+		UnregisterSignal(C, list(COMSIG_QDELETING, COMSIG_CLIENT_MOB_LOGIN))
+		for(var/mob/tracked as anything in mobs_of_client(C))
+			mob_client_map.Remove(tracked)
+			unregister_mob_signals(tracked)
 
 	if(from_byond)
 		send_json(alist(cmd= "disconnect", userCode= userCode))
