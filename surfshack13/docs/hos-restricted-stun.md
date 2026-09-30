@@ -38,7 +38,8 @@ The sprite uses existing nonlethal overlays for the new mode.
 2. Repeat selection and attempted firing with the wrong assigned job, a missing
    manifest entry, wrong manifest rank, no mindshield, no ID, missing ACCESS_HOS,
    wrong ID assignment, wrong registered name, and an agent/chameleon ID.
-   Each failure must show its reason and produce no stun projectile or charge use.
+   Each failure must display ACCESS DENIED without revealing the failed check,
+   and produce no stun projectile or charge use.
 3. Select stun as an authorized HoS, then hand the gun to an officer or assistant.
    Attempt ordinary and dual-wield firing. Also remove the original HoS's mindshield
    or swap their ID after selecting stun. All unauthorized shots must fail.

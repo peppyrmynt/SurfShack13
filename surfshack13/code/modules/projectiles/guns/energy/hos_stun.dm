@@ -39,8 +39,8 @@
 	if(!reason)
 		return TRUE
 	if(user)
-		balloon_alert(user, reason)
-		to_chat(user, span_warning("[src]'s stun mode is locked: [reason]."))
+		balloon_alert(user, "ACCESS DENIED")
+		to_chat(user, span_warning("[src] displays: UNAUTHORIZED USER. ACCESS DENIED."))
 	return FALSE
 
 /obj/item/gun/energy/e_gun/hos/select_fire(mob/living/user)
