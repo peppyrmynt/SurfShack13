@@ -47,9 +47,7 @@ function startTurnServer(externalIp) {
   const options = {
     authMech: 'long-term',
     realm: 'voicechat',
-    listeningPort: 3478, defaultAllocatetLifetime: 70, debugLevel: 'ALL', debug: (l, m) => { if (/refresh/.test(String(m))) console.log('TURN', String(m).slice(0,120)); },
-    debugLevel: 'ALL',
-    debug: (l, m) => { if (!/relaying data|permission fail|relayed/.test(m)) console.log(Date.now(), l, String(m).slice(0, 160)); },
+    listeningPort: 3478,
   };
   if (externalIp) options.externalIps = externalIp;
   server = new Turn(options);
