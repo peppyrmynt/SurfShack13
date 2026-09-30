@@ -129,6 +129,9 @@
 //Swarmers
 #define ROLE_SWARMER "Swarmer"
 
+//Hippie ports
+#define ROLE_GANG "Gangster"
+
 /// This defines the antagonists you can operate with in the settings.
 /// Keys are the antagonist, values are the number of days since the player's
 /// first connection in order to play.
@@ -146,6 +149,7 @@ GLOBAL_LIST_INIT(special_roles, list(
 	ROLE_WIZARD = 14,
 	ROLE_SPY = 0,
 	ROLE_BLOODSUCKER = 0,
+	ROLE_GANG = 14,
 
 	// Midround
 	ROLE_ABDUCTOR = 0,
