@@ -248,6 +248,9 @@
 	log_tgui(client,
 		context = "[id]/close",
 		window = src)
+	// SURFSHACK EDIT: let the window release any keys it passed through before it's destroyed,
+	// or they stay held forever and movement gets stuck.
+	send_message("keys/release")
 	release_lock()
 	visible = FALSE
 	status = TGUI_WINDOW_CLOSED

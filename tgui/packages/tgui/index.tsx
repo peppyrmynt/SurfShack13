@@ -36,6 +36,7 @@ import { loadIconRefMap } from './icons';
 import { captureExternalLinks } from './links';
 import { createRenderer } from './renderer';
 import { configureStore } from './store';
+import { setupStuckKeyRelease } from './stuckKeys'; // SURFSHACK EDIT
 
 perf.mark('inception', window.performance?.timing?.navigationStart);
 perf.mark('init');
@@ -60,6 +61,7 @@ function setupApp() {
 
   setupGlobalEvents();
   setupHotKeys();
+  setupStuckKeyRelease(); // SURFSHACK EDIT - release keys held when the window stole focus
   captureExternalLinks();
 
   // Re-render UI on store updates

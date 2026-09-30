@@ -6,12 +6,13 @@ GLOBAL_LIST_EMPTY(escape_menus)
 	set name = "Open Escape Menu"
 	set hidden = TRUE
 
+	// SURFSHACK EDIT: reset on every Escape press (like upstream) so it always unsticks movement
+	reset_held_keys()
+
 	var/current_escape_menu = GLOB.escape_menus[ckey]
 	if (!isnull(current_escape_menu))
 		qdel(current_escape_menu)
 		return
-
-	reset_held_keys()
 
 	new /datum/escape_menu(src)
 
