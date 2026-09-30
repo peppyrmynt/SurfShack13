@@ -27,11 +27,9 @@
 			Try <b>join</b> to load with default browser.
 			If the browser fails to open, try <b>"Join with URL"</b> instead.<br>
 			Once the external browser is loaded:<br>
-				1. When prompted, allow mic perms,.<br>
+				1. When prompted, allow mic perms. No mic? You can still join and listen, others just won't hear you.<br>
 				2. Verify this is working, by looking for a voice indicator over your mob when speaking.<br>
-				3. Drag voicechat to its own window so its only the <b>active tab</b><br>
-			If you open a different tab it stops detecting microphone input.
-			So make sure voicechat is in its to its own browser window.
+				3. If you see "Click anywhere on this page to enable audio", click the voicechat page once.<br>
 		</p>
 		<h4>Verbs</h4>
 		<p>
@@ -40,12 +38,14 @@
 			Leave - disconnects you from voicechat, note the website doesnt close<br>
 			Mute - mutes yourself<br>
 			Deafen - deafens yourself<br>
+			Toggle Hearing The Living - while dead, hear living players near you (on by default). They never hear you.<br>
 			Note: for security, <b>mute and deafen are one way, use the web browser to unmute</b>
 		</p>
 		<h4>Trouble shooting tips</h4>
 		<p>
 			* Ensure browser extensions are off and the page is whitelisted.<br>
 			* VPNS occasionally break voicechat.<br>
+			* If your connection drops, the page reconnects on its own. Only use Join again if it says disconnected.<br>
 			* For best results, look up if your browser supports webRTC well.
 		</p>
 		<h4>Issues</h4>
@@ -67,6 +67,19 @@
 		</p>
 	</html>
 	"}, "window=voicechat_help")
+
+/mob/verb/toggle_ghost_hearing()
+	set name = "Toggle Hearing The Living"
+	set category = "ProxChat"
+	if(!SSvoicechat || !client)
+		return
+	var/list/optout = SSvoicechat.ghost_hearing_optout
+	if(client.ckey in optout)
+		optout -= client.ckey
+		to_chat(src, span_ooc("While dead you will now hear living players near you. They can't hear you."))
+	else
+		optout += client.ckey
+		to_chat(src, span_ooc("While dead you will now only hear other ghosts."))
 
 /mob/verb/mute_self()
 	set name = "Mute"

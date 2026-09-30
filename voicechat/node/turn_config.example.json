@@ -1,0 +1,9 @@
+{
+  "mode": "coturn",
+  "secret": "same value as static-auth-secret in turnserver.conf",
+  "urls": [
+    "turn:{host}:3478?transport=udp",
+    "turn:{host}:3478?transport=tcp",
+    "turns:turn.example.com:443?transport=tcp"
+  ]
+}

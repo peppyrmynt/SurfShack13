@@ -3,18 +3,23 @@ const minimist = require('minimist');
 const fs = require('fs')
 const { startWebSocketServer, disconnectAllClients } = require('./client/websocketServer.js');
 const { startByondServer } = require('./byond/ByondServer.js');
-const {startTurnServer} = require('./turn.js')
+const {startTurnServer, stopTurnServer} = require('./turn.js')
 const argv = minimist(process.argv.slice(2));
 const byondPort = argv['byond-port']
 const nodePort = argv['node-port']
 const byondPID = argv['byond-pid']
+// optional: public IP to advertise for TURN relays when this machine is behind NAT
+const turnExternalIp = argv['turn-external-ip']
 
 const nodePidPath = 'node.pid'
 
+let shuttingDown = false;
 const shutdown_function = () => {
-    fs.unlinkSync(nodePidPath)
+    if (shuttingDown) return;
+    shuttingDown = true;
+    try { fs.unlinkSync(nodePidPath) } catch (e) {}
     disconnectAllClients(io);
-    turnServer.stop()
+    stopTurnServer()
     io.close(() => {
         httpserver.close(() => {
             ByondServer.close(() => {
@@ -62,7 +67,7 @@ monitorParentProcess(shutdown_function);
 // Start servers
 const { io, httpserver } = startWebSocketServer(byondPort, nodePort);
 const ByondServer = startByondServer(byondPort, io, shutdown_function);
-const turnServer = startTurnServer()
+startTurnServer(turnExternalIp)
 fs.writeFileSync(nodePidPath, process.pid.toString());
 
 
