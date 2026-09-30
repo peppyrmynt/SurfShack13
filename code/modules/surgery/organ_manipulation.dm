@@ -183,6 +183,10 @@
 		preop_sound = 'sound/items/handling/surgery/hemostat1.ogg'
 		success_sound = 'sound/items/handling/surgery/organ2.ogg'
 		target_organ = tool
+		//surfshack start - cyberware capacity gate and install window
+		if(!target_organ.pre_surgical_insertion(user, target, target_zone))
+			return SURGERY_STEP_FAIL
+		//surfshack end
 		if(target_zone != target_organ.zone || target.get_organ_slot(target_organ.slot))
 			to_chat(user, span_warning("There is no room for [target_organ] in [target]'s [target.parse_zone_with_bodypart(target_zone)]!"))
 			return SURGERY_STEP_FAIL
