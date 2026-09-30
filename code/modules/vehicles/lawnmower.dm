@@ -61,6 +61,11 @@
 	for(var/mob/living/dead_mob in loc)
 		if(dead_mob == rider || dead_mob.stat != DEAD)
 			continue
+		// Only dead zombie humans are gibbed; dead animals are handled below.
+		if(ishuman(dead_mob))
+			var/mob/living/carbon/human/dead_human = dead_mob
+			if(!iszombie(dead_human) && !is_species(dead_human, /datum/species/human/krokodil_addict))
+				continue
 		visible_message(span_danger("[src] grinds [dead_mob] into a fine paste!"))
 		playsound(loc, hit_sound, 50, TRUE)
 		add_mob_blood(dead_mob)
