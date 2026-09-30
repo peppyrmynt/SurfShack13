@@ -87,18 +87,16 @@
 /datum/controller/subsystem/voicechat/proc/register_mob_signals(mob/M)
 	SIGNAL_HANDLER
 	if(isliving(M))
+		RegisterSignals(M, list(SIGNAL_ADDTRAIT(TRAIT_KNOCKEDOUT), SIGNAL_REMOVETRAIT(TRAIT_KNOCKEDOUT)), PROC_REF(on_knockout_changed))
+		// deaf, mute and miming don't change rooms, they only make hearing one-way
 		RegisterSignals(M, list(\
-			SIGNAL_ADDTRAIT(TRAIT_KNOCKEDOUT),
-			SIGNAL_ADDTRAIT(TRAIT_DEAF),
 			SIGNAL_ADDTRAIT(TRAIT_MUTE),
-			SIGNAL_ADDTRAIT(TRAIT_MIMING),
-			), PROC_REF(clear_from_room))
-		RegisterSignals(M, list(\
-			SIGNAL_REMOVETRAIT(TRAIT_KNOCKEDOUT),
-			SIGNAL_REMOVETRAIT(TRAIT_DEAF),
 			SIGNAL_REMOVETRAIT(TRAIT_MUTE),
-			SIGNAL_REMOVETRAIT(TRAIT_MIMING)
-			), PROC_REF(add_to_room))
+			SIGNAL_ADDTRAIT(TRAIT_MIMING),
+			SIGNAL_REMOVETRAIT(TRAIT_MIMING),
+			SIGNAL_ADDTRAIT(TRAIT_DEAF),
+			SIGNAL_REMOVETRAIT(TRAIT_DEAF),
+			), PROC_REF(on_speech_trait_changed))
 
 		RegisterSignal(M, COMSIG_LIVING_DEATH, PROC_REF(on_mob_death))
 		RegisterSignal(M, COMSIG_LIVING_REVIVE, PROC_REF(on_mob_revive))
@@ -130,39 +128,44 @@
 	if(isliving(M))
 		UnregisterSignal(M, list(\
 			SIGNAL_ADDTRAIT(TRAIT_KNOCKEDOUT),
-			SIGNAL_ADDTRAIT(TRAIT_DEAF),
-			SIGNAL_ADDTRAIT(TRAIT_MUTE),
-			SIGNAL_ADDTRAIT(TRAIT_MIMING),
 			SIGNAL_REMOVETRAIT(TRAIT_KNOCKEDOUT),
-			SIGNAL_REMOVETRAIT(TRAIT_DEAF),
+			SIGNAL_ADDTRAIT(TRAIT_MUTE),
 			SIGNAL_REMOVETRAIT(TRAIT_MUTE),
+			SIGNAL_ADDTRAIT(TRAIT_MIMING),
 			SIGNAL_REMOVETRAIT(TRAIT_MIMING),
+			SIGNAL_ADDTRAIT(TRAIT_DEAF),
+			SIGNAL_REMOVETRAIT(TRAIT_DEAF),
 			COMSIG_LIVING_DEATH,
 			COMSIG_LIVING_REVIVE,
 		))
 
 
-/datum/controller/subsystem/voicechat/proc/clear_from_room(mob/M)
+// Goes through check_mob_conditions rather than straight back to the mob's room, which put
+// people back in voice while still dead or knocked out when some other trait wore off.
+/datum/controller/subsystem/voicechat/proc/on_knockout_changed(mob/M)
 	SIGNAL_HANDLER
-	if(!M)
-		// CRASH("signal called without user {usr: [usr || "null"]}")
-		return
-	var/client/C = M.client
-	var/userCode = client_userCode_map[C]
-	if(!C || !userCode)
-		return
-	clear_userCode(userCode)
+	check_mob_conditions(M)
 
-/datum/controller/subsystem/voicechat/proc/add_to_room(mob/M)
+/datum/controller/subsystem/voicechat/proc/on_speech_trait_changed(mob/M)
 	SIGNAL_HANDLER
-	if(!M)
-		// CRASH("signal called without user {usr: [usr || "null"]}")
+	update_speech_flags(M)
+
+/// Mutes and mimes still hear but aren't heard, the deaf are heard but don't hear.
+/// Uses the same checks as normal speech. Only runs on trait/mob/life changes, not every tick.
+/datum/controller/subsystem/voicechat/proc/update_speech_flags(mob/M)
+	var/userCode = client_userCode_map[M?.client]
+	if(!userCode)
 		return
-	var/client/C = M.client
-	var/userCode = client_userCode_map[C]
-	if(!C || !userCode)
-		return
-	move_userCode_to_room(userCode, M.voice_chat_room)
+	// ghosts and lobby players are exempt, a corpse's state doesn't matter
+	var/living = isliving(M) && M.stat != DEAD
+	if(living && !M.can_speak())
+		cant_speak_users |= userCode
+	else
+		cant_speak_users -= userCode
+	if(living && !M.can_hear())
+		cant_hear_users |= userCode
+	else
+		cant_hear_users -= userCode
 
 /datum/controller/subsystem/voicechat/proc/on_mob_death(mob/M)
 	SIGNAL_HANDLER
@@ -179,6 +182,7 @@
 	var/userCode = client_userCode_map[C]
 	if(!C || !userCode)
 		return
+	update_speech_flags(M)
 	var/room
 	// everyone goes to no prox to yell at each other at round end and round start.
 	if(SSticker.current_state == GAME_STATE_FINISHED)
@@ -191,8 +195,9 @@
 	else if(M.stat == DEAD)
 		room = ROOM_GHOST
 
+	// unconscious: can't hear or speak. Deaf/mute/mime stay in the room, see send_locations
 	else if(isliving(M))
-		if(HAS_TRAIT(M, TRAIT_KNOCKEDOUT) || HAS_TRAIT(M, TRAIT_DEAF)|| HAS_TRAIT(M, TRAIT_MUTE) || HAS_TRAIT(M, TRAIT_MIMING))
+		if(HAS_TRAIT(M, TRAIT_KNOCKEDOUT))
 			room = ROOM_NONE
 		else
 			room = M.voice_chat_room
@@ -215,6 +220,8 @@
 	clear_userCode(userCode)
 
 	current_rooms[ROOM_NONE] -= userCode
+	cant_speak_users -= userCode
+	cant_hear_users -= userCode
 	userCode_room_map.Remove(userCode)
 	userCode_mob_map.Remove(userCode)
 	vc_clients -= userCode
@@ -252,8 +259,8 @@
 			old_mob.toggle_voice_overlay(FALSE)
 		userCode_mob_map[userCode] = M
 	var/room = userCode_room_map[userCode]
-	//stat is used to ensure dead people dont have talking overlays
-	if(is_active && room && !M.stat)
+	// only show it when others can actually hear them: not dead or unconscious, not mute or miming
+	if(is_active && room && room != ROOM_NONE && M.stat < UNCONSCIOUS && M.can_speak())
 		M.toggle_voice_overlay(TRUE)
 	else
 		M.toggle_voice_overlay(FALSE)

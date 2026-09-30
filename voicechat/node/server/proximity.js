@@ -36,8 +36,15 @@ function resetPair(io, userCodeA, userCodeB) {
     }
 }
 
+// packet keys that aren't rooms
+const NOT_ROOMS = new Set(['cmd', 'listeners', 'cant_speak', 'cant_hear']);
+
 const handleLocationPacket = (packet, io) => {
     const seen = new Set();
+    // mutes/mimes aren't heard, the deaf don't hear. Everyone else in range hears each other.
+    const cantSpeak = new Set(Array.isArray(packet.cant_speak) ? packet.cant_speak : []);
+    const cantHear = new Set(Array.isArray(packet.cant_hear) ? packet.cant_hear : []);
+    const heardBy = (speaker, listener) => !cantSpeak.has(speaker) && !cantHear.has(listener);
     // userCode -> {otherCode: distance}, across all rooms
     const peersByUser = {};
     // userCode -> {otherCode: 'listen' | 'talk'} for one-way pairs, see below
@@ -46,9 +53,19 @@ const handleLocationPacket = (packet, io) => {
         seen.add(code);
         if (!peersByUser[code]) peersByUser[code] = {};
     };
+    // connect a and b if either can hear the other. One-way pairs get a mode on each side:
+    // 'talk' = only the other side hears me (I don't play their audio), 'listen' = the reverse
+    const connect = (a, b, dist, aToB, bToA) => {
+        if (!aToB && !bToA) return;
+        peersByUser[a][b] = dist;
+        peersByUser[b][a] = dist;
+        if (aToB && bToA) return;
+        (modesByUser[a] = modesByUser[a] || {})[b] = aToB ? 'talk' : 'listen';
+        (modesByUser[b] = modesByUser[b] || {})[a] = bToA ? 'talk' : 'listen';
+    };
 
     for (const room in packet) {
-        if (room === "cmd" || room === "listeners") continue;
+        if (NOT_ROOMS.has(room)) continue;
         const isNoProx = room.endsWith('_noprox');
         const locations = packet[room];
         if (!locations || typeof locations !== 'object') continue;
@@ -62,8 +79,7 @@ const handleLocationPacket = (packet, io) => {
                 const otherCode = userCodes[j];
                 const dist = isNoProx ? 0 : distanceIfInRange(locations[userCode], locations[otherCode]);
                 if (dist === null) continue;
-                peersByUser[userCode][otherCode] = dist;
-                peersByUser[otherCode][userCode] = dist;
+                connect(userCode, otherCode, dist, heardBy(userCode, otherCode), heardBy(otherCode, userCode));
             }
         }
     }
@@ -77,17 +93,15 @@ const handleLocationPacket = (packet, io) => {
         const [lx, ly, lz] = listeners[listener];
         addUser(listener);
         for (const room in packet) {
-            if (room === "cmd" || room === "listeners" || room.endsWith('_noprox')) continue;
+            if (NOT_ROOMS.has(room) || room.endsWith('_noprox')) continue;
             if (!room.startsWith(`${lz}_`) || room === `${lz}_${GHOST_ROOM}`) continue;
             if (!packet[room] || typeof packet[room] !== 'object') continue;
             for (const living in packet[room]) {
                 if (living === listener || peersByUser[listener][living] !== undefined) continue;
                 const dist = distanceIfInRange([lx, ly], packet[room][living]);
                 if (dist === null) continue;
-                peersByUser[listener][living] = dist;
-                peersByUser[living][listener] = dist;
-                (modesByUser[listener] = modesByUser[listener] || {})[living] = 'listen';
-                (modesByUser[living] = modesByUser[living] || {})[listener] = 'talk';
+                // never ghost -> living
+                connect(listener, living, dist, false, heardBy(living, listener));
             }
         }
     }

@@ -20,6 +20,9 @@ SUBSYSTEM_DEF(voicechat)
 	var/list/userCode_mob_map = alist()
 	// mob to client map, needed for tracking switched mobs
 	var/list/mob_client_map = alist()
+	/// userCodes that can't be heard (mute, miming) or can't hear (deaf). Updated by signals, see update_speech_flags
+	var/list/cant_speak_users = list()
+	var/list/cant_hear_users = list()
 	/// ckeys of players who turned off hearing the living while dead
 	var/list/ghost_hearing_optout = list()
 	// SS_INIT_NO_NEED still sets initialized to true, so we use this instead
@@ -208,6 +211,11 @@ SUBSYSTEM_DEF(voicechat)
 	// still send when nobody is in a room, so node can tell clients they lost their peers
 	if(!locs_sent && !length(vc_clients))
 		return
+	// node decides per pair who hears who from these
+	if(length(cant_speak_users))
+		packet["cant_speak"] = cant_speak_users.Copy()
+	if(length(cant_hear_users))
+		packet["cant_hear"] = cant_hear_users.Copy()
 	send_json(packet)
 
 
