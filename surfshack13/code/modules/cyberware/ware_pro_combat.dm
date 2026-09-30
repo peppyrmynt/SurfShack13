@@ -11,11 +11,9 @@
  *   is still 40%, not 49%. Any future dodge chrome must register a source
  *   through cyberware_register_dodge_source() rather than hanging its own
  *   COMSIG_ATOM_PRE_BULLET_ACT handler.
- * - cyberware_is_ally(): the crew filter for auto-targeting ware (Deadeye's
- *   tag, Widowline's cleave). Allies are people who share a ship team with
- *   you; NPC boarders standing on your deck are NOT allies, and rival players
- *   are fair game. Manual swings never consult this, it exists only so
- *   automatic effects can't be aimed at your own crew.
+ * - cyberware_is_ally(): the self filter for auto-targeting ware (Deadeye's
+ *   tag, Widowline's cleave). Only the user is spared; everyone else can be
+ *   hit.
  */
 
 // ---- Shared dodge arbiter ----------------------------------------------
@@ -130,38 +128,12 @@
 // ---- Shared ally filter ------------------------------------------------
 
 /**
- * Which side this mob is on, as far as auto-targeting chrome is concerned.
- * Station port: Voidcrew keyed this off ship crews. Here it is the first
- * antagonist team the mind belongs to, a solo antagonist's own mind (they
- * side with nobody), or "crew" for everyone with no antagonist datums at all.
- * Mindless mobs have no side.
- */
-/proc/cyberware_crew_team(mob/living/crewmate)
-	if(!istype(crewmate) || !crewmate.mind)
-		return null
-	var/datum/mind/crew_mind = crewmate.mind
-	if(!length(crew_mind.antag_datums))
-		return "crew"
-	for(var/datum/antagonist/antag as anything in crew_mind.antag_datums)
-		var/datum/team/antag_team = antag.get_team()
-		if(antag_team)
-			return antag_team
-	return crew_mind
-
-/**
- * TRUE when target is someone this user's AUTO-targeting chrome must refuse:
- * themselves, or someone on the same side (see cyberware_crew_team()).
- * Mindless mobs are never allies, and anyone on another side is fair game.
+ * TRUE when target is someone this user's AUTO-targeting chrome must refuse.
+ * Station port: that is only the user themselves. Everyone else, crew or
+ * antagonist, is fair game for sweeps, lunges and homing shots.
  */
 /proc/cyberware_is_ally(mob/living/user, mob/living/target)
-	if(user == target)
-		return TRUE
-	if(!istype(user) || !istype(target))
-		return FALSE
-	var/user_team = cyberware_crew_team(user)
-	if(!user_team)
-		return FALSE
-	return cyberware_crew_team(target) == user_team
+	return user == target
 
 // =========================================================================
 // DEADEYE LINK
