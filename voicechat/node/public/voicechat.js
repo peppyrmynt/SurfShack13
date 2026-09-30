@@ -25,6 +25,7 @@ let isDeafened = false;
 let isManuallyMuted = false;
 let mutedBeforeDeafen = false;
 let micError = null; // shown instead of "connected" while we have no microphone
+let micAttempted = false; // once true we join voice, with or without a mic (listen-only)
 let isMicTesting = false;
 let previousDeafenedState = false;
 let testAudioContext = null;
@@ -219,14 +220,15 @@ async function getMic() {
         if (micError) updateStatus(socket.connected ? 'Connected successfully' : 'Connecting...');
         micError = null;
         checkAudioBlocked();
-        // if not connected yet, the 'connect' handler sends this after joining
-        if (socket.connected) socket.emit('mic_access_granted');
     } catch (err) {
         console.error('Failed to get microphone access:', err);
-        // without a mic the game never adds you to voice, so say so instead of looking connected
-        micError = `Microphone blocked or missing (${err.name}). Allow it, then click "try microphone again"`;
+        // no mic: still join and listen. Others can't hear us until a mic works.
+        micError = `Listening only: microphone blocked or missing (${err.name}). Click "try microphone again" to talk`;
         updateStatus(micError);
     }
+    micAttempted = true;
+    // tells the game we're ready for voice. If not connected yet, the 'connect' handler sends it.
+    if (socket.connected) socket.emit('mic_access_granted');
 }
 // Gain and Volume Control
 function setupGainNode(stream) {
@@ -369,12 +371,12 @@ function updateAudioSenders() {
 }
 
 function toggleMute(forceMute = false) {
-    if (!localStream) return;
     if (isDeafened && !forceMute) {
         mutedBeforeDeafen = false; // clicking mute while deafened means "let me talk again"
         toggleDeafen();
         return;
     }
+    if (!localStream) return;
     isManuallyMuted = forceMute ? true : !isManuallyMuted;
     if (isManuallyMuted && isVoiceActive) {
         isVoiceActive = false;
@@ -385,7 +387,6 @@ function toggleMute(forceMute = false) {
 }
 
 function toggleDeafen(forceDeafen = false) {
-    if (!localStream) return;
     const wasDeafened = isDeafened;
     isDeafened = forceDeafen ? true : !isDeafened;
     // undeafening puts mute back to how it was, instead of always unmuting
@@ -480,7 +481,7 @@ function createPeerConnection(userCode, sendOffer) {
             // the server resets both ends and they reconnect on the next location update
             socket.emit('peer_failed', { userCode });
         } else if (pc.connectionState === 'connected') {
-            updateStatus('Connected successfully');
+            updateStatus(micError || 'Connected successfully');
         }
     };
     pc.ontrack = (event) => {
@@ -555,7 +556,7 @@ function setupSocketHandlers() {
     socket.on('connect', () => {
         // also runs after socket.io reconnects on its own, the server needs to know who we are again
         socket.emit('join', { sessionId: sessionId });
-        if (localStream) socket.emit('mic_access_granted');
+        if (micAttempted) socket.emit('mic_access_granted');
     });
 
     socket.on('ice_servers', setIceServers);

@@ -27,7 +27,7 @@
 			Try <b>join</b> to load with default browser.
 			If the browser fails to open, try <b>"Join with URL"</b> instead.<br>
 			Once the external browser is loaded:<br>
-				1. When prompted, allow mic perms,.<br>
+				1. When prompted, allow mic perms. No mic? You can still join and listen, others just won't hear you.<br>
 				2. Verify this is working, by looking for a voice indicator over your mob when speaking.<br>
 				3. If you see "Click anywhere on this page to enable audio", click the voicechat page once.<br>
 		</p>

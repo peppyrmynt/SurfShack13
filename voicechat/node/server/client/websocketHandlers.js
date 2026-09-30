@@ -92,6 +92,7 @@ function createConnectionHandler(byondPort, io) {
             resetPeer(io, userCode);
         });
 
+        // browser is ready for voice; also sent without a mic, those players join listen-only
         on('mic_access_granted', () => {
             const userCode = socketIdToUserCode.get(socket.id);
             if(userCode) sendJSON({ 'confirmed': userCode }, byondPort);
