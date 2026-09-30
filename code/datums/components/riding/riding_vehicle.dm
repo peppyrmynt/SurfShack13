@@ -536,7 +536,7 @@
 	if(ishuman(user))
 		var/mob/living/carbon/human/human_driver = user
 		if(istype(human_driver.w_uniform, /obj/item/clothing/under/rank/civilian/cookjorts))
-			vehicle_move_delay /= 1.05
+			vehicle_move_delay /= 1.10
 	return ..()
 
 /datum/component/riding/vehicle/lawnmower/get_rider_offsets_and_layers(pass_index, mob/offsetter)
