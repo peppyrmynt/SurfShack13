@@ -43,7 +43,8 @@
 	gang?.gangtools -= src
 	gang = null
 	for(var/category in buyable_items)
-		QDEL_LIST_ASSOC_VAL(buyable_items[category])
+		var/list/entries = buyable_items[category]
+		QDEL_LIST_ASSOC_VAL(entries)
 	buyable_items.Cut()
 	return ..()
 
@@ -140,7 +141,7 @@
 		if("buy")
 			var/list/category = buyable_items[params["category"]]
 			var/datum/gang_item/item = category?[params["id"]]
-			if(gang && item?.can_buy(user, gang, src))
+			if(can_shop() && item?.can_buy(user, gang, src))
 				INVOKE_ASYNC(item, TYPE_PROC_REF(/datum/gang_item, purchase), user, gang, src)
 			return TRUE
 		if("register")
@@ -154,6 +155,15 @@
 			if(gang)
 				recall(user)
 			return TRUE
+	return handle_extra_action(action, params, user)
+
+/// Whether this tool's shop can be used right now
+/obj/item/gangtool/proc/can_shop()
+	return !!gang
+
+/// Lets subtypes add their own window actions. Return TRUE if the action was handled.
+/obj/item/gangtool/proc/handle_extra_action(action, list/params, mob/user)
+	return FALSE
 
 /// Currency available to spend in this tool's shop
 /obj/item/gangtool/proc/get_points()

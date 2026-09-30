@@ -211,20 +211,15 @@ GLOBAL_VAR_INIT(gangmageddon_active, FALSE)
 	data["categories"] = shop_data(user)
 	return data
 
-/obj/item/gangtool/personal/vigilante/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
-	var/mob/user = usr
-	if(!can_use(user))
-		return
-	switch(action)
-		if("buy")
-			var/list/category = buyable_items[params["category"]]
-			var/datum/gang_item/item = category?[params["id"]]
-			if(item?.can_buy(user, null, src))
-				INVOKE_ASYNC(item, TYPE_PROC_REF(/datum/gang_item, purchase), user, null, src)
-			return TRUE
-		if("destroy")
-			INVOKE_ASYNC(src, PROC_REF(destroy_contraband), user)
-			return TRUE
+// Vigilantes shop without a gang
+/obj/item/gangtool/personal/vigilante/can_shop()
+	return TRUE
+
+/obj/item/gangtool/personal/vigilante/handle_extra_action(action, list/params, mob/user)
+	if(action != "destroy")
+		return FALSE
+	INVOKE_ASYNC(src, PROC_REF(destroy_contraband), user)
+	return TRUE
 
 /// Gang gear a vigilante can hand in, and what it pays
 /obj/item/gangtool/personal/vigilante/proc/contraband_value(obj/item/thing)
