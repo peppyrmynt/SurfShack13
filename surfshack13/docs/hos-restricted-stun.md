@@ -22,7 +22,10 @@ Acting Captain status alone grants nothing. A promoted HoS qualifies only when t
 mind's assigned role, manifest rank, ID details and mindshield all satisfy the checks.
 An admin-spawned HoS without a matching manifest record is denied. Renaming without
 updating the manifest and ID is denied. Cyborgs and AIs are always denied stun.
-The sprite uses existing nonlethal overlays and left/right hand states for the new mode.
+The stun mode uses the original yellow HoS stun overlays and left/right hand states
+from HippieStation/HippieStationdeprecated2020, revision
+bc7cdaf6e4636e2e7b7af0c712efbbfff6591aed. Only the missing stun states are imported;
+all pre-existing sprite states and pixels are preserved.
 
 ## Verification on 2026-09-30
 

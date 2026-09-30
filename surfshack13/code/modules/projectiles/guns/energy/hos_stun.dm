@@ -55,20 +55,3 @@
 	if((istype(ammo_type[select], /obj/item/ammo_casing/energy/electrode/hos) || istype(chambered, /obj/item/ammo_casing/energy/electrode/hos)) && !is_authorized_for_stun(user))
 		return FALSE
 	return ..()
-
-/obj/item/gun/energy/e_gun/hos/update_icon_state()
-	. = ..()
-	if(istype(ammo_type[select], /obj/item/ammo_casing/energy/electrode/hos))
-		// Both hand icon files provide disable0 through disable4, but no stun states.
-		inhand_icon_state = "hoslaserdisable[get_charge_ratio()]"
-
-/obj/item/gun/energy/e_gun/hos/update_overlays()
-	. = ..()
-	// The HoS sprite has no stun overlays; reuse its nonlethal mode indicators.
-	for(var/index in 1 to length(.))
-		if(.[index] == "hoslaser_stun")
-			.[index] = "hoslaser_disable"
-		else if(istype(.[index], /mutable_appearance))
-			var/mutable_appearance/overlay = .[index]
-			if(overlay.icon_state == "hoslaser_charge_stun")
-				overlay.icon_state = "hoslaser_charge_disable"
