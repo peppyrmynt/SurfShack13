@@ -497,6 +497,23 @@
 	to_chat(defender, span_warning("The punch smashes straight through your armor!"))
 	return blocked
 
+/**
+ * Punch damage: at least RAMPAGE_PUNCH_DAMAGE, but never less than a normal hit from the limb the attacker would use,
+ * so anything that already makes their punches stronger (super saiyan, bloodsucker strength, golem food...) still counts.
+ */
+/datum/martial_art/chicken_rampage/proc/get_punch_damage(mob/living/attacker, mob/living/defender)
+	if(!iscarbon(attacker))
+		return RAMPAGE_PUNCH_DAMAGE
+	var/mob/living/carbon/carbon_attacker = attacker
+	// Same limb choice as a normal unarmed attack (kicks when they're down, for example).
+	var/obj/item/bodypart/attacking_limb = carbon_attacker.get_active_hand()
+	if(!attacking_limb)
+		return RAMPAGE_PUNCH_DAMAGE
+	var/obj/item/organ/brain/brain = carbon_attacker.get_organ_slot(ORGAN_SLOT_BRAIN)
+	if(brain)
+		attacking_limb = brain.get_attacking_limb(defender) || attacking_limb
+	return max(RAMPAGE_PUNCH_DAMAGE, rand(attacking_limb.unarmed_damage_low, attacking_limb.unarmed_damage_high))
+
 /datum/martial_art/chicken_rampage/can_use(mob/living/martial_artist)
 	return !!martial_artist.GetComponent(/datum/component/chicken_rampage)
 
@@ -507,7 +524,8 @@
 		return MARTIAL_ATTACK_INVALID
 
 	var/attack_type = attacker.get_attack_type()
-	if(defender.check_block(attacker, RAMPAGE_PUNCH_DAMAGE, "[attacker]'s punch", UNARMED_ATTACK, 0, attack_type))
+	var/punch_damage = get_punch_damage(attacker, defender)
+	if(defender.check_block(attacker, punch_damage, "[attacker]'s punch", UNARMED_ATTACK, 0, attack_type))
 		return MARTIAL_ATTACK_FAIL
 
 	var/zone = check_zone(attacker.zone_selected)
@@ -526,7 +544,7 @@
 	to_chat(attacker, span_danger("You punch [defender] in the [parse_zone(zone)]!"))
 	defender.lastattacker = attacker.real_name
 	defender.lastattackerckey = attacker.ckey
-	var/damage_done = defender.apply_damage(RAMPAGE_PUNCH_DAMAGE, attack_type, zone, armor_block, attack_direction = get_dir(attacker, defender))
+	var/damage_done = defender.apply_damage(punch_damage, attack_type, zone, armor_block, attack_direction = get_dir(attacker, defender))
 	log_combat(attacker, defender, "punched (Rampage)")
 	if(damage_done > 0)
 		SEND_SIGNAL(attacker, COMSIG_MOB_ATTACK_LANDED, defender, damage_done, attack_type, zone, NONE, null)
