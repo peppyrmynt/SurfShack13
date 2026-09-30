@@ -10,6 +10,8 @@
 #define ULTRAVIOLENCE_SPRAY_COOLDOWN (0.3 SECONDS)
 /// Extra time on top of an execution's expected length before the failsafe forcibly ends it.
 #define ULTRAVIOLENCE_EXECUTION_FAILSAFE_GRACE (5 SECONDS)
+/// Stamina damage a floored target needs before the chicken mask can execute them, so a baton hit counts but a shove doesn't.
+#define ULTRAVIOLENCE_EXECUTION_MIN_STAMINA_LOSS 50
 /// Trait source for holding an execution victim down.
 #define ULTRAVIOLENCE_PIN_TRAIT "ultraviolence_pin"
 /// Chicken mask executions on targets who are still conscious (stunned or knocked down, not in crit) take this many times longer.
@@ -190,11 +192,18 @@
 /**
  * Is the target down enough to be executed?
  * Normally that means lying in crit.
- * With TRAIT_RAMPAGE_EXECUTIONER (the chicken mask), anyone prone, stunned, in soft crit or worse, or dead will do.
+ *
+ * With TRAIT_RAMPAGE_EXECUTIONER (the chicken mask), anyone who's properly down counts:
+ * * in soft crit or worse, unconscious or dead,
+ * * hard stunned: stunned, paralyzed or stamina crit (stun batons, tasers, flashes, kicked doors...),
+ * * or on the floor with real stamina damage (a single baton hit).
+ * Just being knocked over (a shove) isn't enough.
  */
 /datum/component/ultraviolence/proc/is_executable(mob/living/attacker, mob/living/target)
 	if(HAS_TRAIT(attacker, TRAIT_RAMPAGE_EXECUTIONER))
-		return target.body_position == LYING_DOWN || target.stat >= SOFT_CRIT || HAS_TRAIT(target, TRAIT_INCAPACITATED)
+		if(target.stat >= SOFT_CRIT || HAS_TRAIT(target, TRAIT_INCAPACITATED))
+			return TRUE
+		return target.body_position == LYING_DOWN && target.getStaminaLoss() >= ULTRAVIOLENCE_EXECUTION_MIN_STAMINA_LOSS
 	return target.body_position == LYING_DOWN && target.stat >= SOFT_CRIT && target.stat != DEAD
 
 /// Can we start an execution on this target right now?
@@ -429,6 +438,7 @@
 	return TRUE
 
 #undef ULTRAVIOLENCE_PIN_TRAIT
+#undef ULTRAVIOLENCE_EXECUTION_MIN_STAMINA_LOSS
 #undef ULTRAVIOLENCE_SPRAY_COOLDOWN
 #undef ULTRAVIOLENCE_EXECUTION_FAILSAFE_GRACE
 #undef ULTRAVIOLENCE_CONSCIOUS_EXECUTION_MULTIPLIER
