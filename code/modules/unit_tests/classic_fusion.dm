@@ -2,11 +2,14 @@
 /datum/unit_test/classic_fusion
 	abstract_type = /datum/unit_test/classic_fusion
 
+/// Chosen so the first step has instability < CLASSIC_FUSION_ENDOTHERMALITY (about 1.07) and is
+/// therefore never endothermic. Mixes with more CO2 can take an endothermic step larger than the
+/// mixture's thermal energy, which correctly returns NO_REACTION.
 /datum/unit_test/classic_fusion/proc/fuel(datum/gas_mixture/air)
 	air.gases.Cut()
 	air.assert_gases(/datum/gas/plasma, /datum/gas/carbon_dioxide, /datum/gas/tritium)
 	air.gases[/datum/gas/plasma][MOLES] = 1000
-	air.gases[/datum/gas/carbon_dioxide][MOLES] = 1000
+	air.gases[/datum/gas/carbon_dioxide][MOLES] = 600
 	air.gases[/datum/gas/tritium][MOLES] = 100
 	air.temperature = 20000
 
@@ -60,7 +63,7 @@
 	var/datum/gas_mixture/air = allocate(/datum/gas_mixture, 1000)
 	fuel(air)
 	var/base_power = reaction.gas_power(air)
-	TEST_ASSERT_EQUAL(base_power, 3100, "Restored fusion power must include carbon dioxide at its historical weight")
+	TEST_ASSERT_EQUAL(base_power, 1900, "Restored fusion power must include carbon dioxide at its historical weight")
 	var/base_ratio = reaction.power_ratio(air, base_power)
 	TEST_ASSERT_EQUAL(classic_fusion_tier(base_ratio), "low", "The baseline fusion test mix should remain low tier")
 
