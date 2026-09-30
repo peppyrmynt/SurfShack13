@@ -1,0 +1,62 @@
+# Restricted HoS stun mode
+
+The fourth mode uses the existing electrode projectile without changing its effects.
+A full stock HoS cell contains 12,000 charge; LASER_SHOTS(3, 12,000) costs 4,000 per shot.
+The other three modes retain their original casings and costs.
+
+Firing authorization requires a human with an assigned-role job datum titled Head of Security,
+a name-matching crew manifest record with rank Head of Security, a mindshield, and
+the ID returned by get_idcard(TRUE). That card must have ACCESS_HOS, assignment
+Head of Security, and the operator's real name. Agent/chameleon cards are rejected.
+A held ID takes precedence according to the existing get_idcard implementation.
+
+Anyone can cycle through disable, laser, ion, stun, then back to disable without
+an authorization warning. Selecting stun does not grant firing permission.
+process_fire checks credentials before the parent firing code,
+including direct calls from dual wielding. It checks both selected and chambered ammo.
+The restricted casing also checks authorization immediately before firing, covering
+delayed burst callbacks and credential changes after the initial trigger check.
+There is no emag or EMP exemption. EMP can still affect the gun normally.
+
+Acting Captain status alone grants nothing. A promoted HoS qualifies only when their
+mind's assigned role, manifest rank, ID details and mindshield all satisfy the checks.
+An admin-spawned HoS without a matching manifest record is denied. Renaming without
+updating the manifest and ID is denied. Cyborgs and AIs are always denied stun.
+The stun mode uses the original yellow HoS stun overlays and left/right hand states
+from HippieStation/HippieStationdeprecated2020, revision
+bc7cdaf6e4636e2e7b7af0c712efbbfff6591aed. Only the missing stun states are imported;
+all pre-existing sprite states and pixels are preserved.
+
+## Verification on 2026-09-30
+
+- tools/ci/check_grep.sh: passed.
+- Dreamchecker: zero diagnostics.
+- git diff --check: passed.
+- DMI state inspection: floor overlays, both hand sprites at charge levels 0-4,
+  electrode, muzzle, tracer, impact, and firing effect states all present.
+- Taser firing and impact sound files present.
+- BYOND build: not run; neither the requested Windows dm.exe nor a Linux DreamMaker
+  executable is available in this environment.
+- In-game verification: not performed; no running BYOND test server is available.
+
+## Required in-game checks before merging
+
+1. Spawn a human HoS with a matching manifest, mindshield and personal HoS ID.
+   Cycle disable, laser, ion, stun; fire three stun shots from a full stock cell.
+   Confirm the fourth cannot fire, and recharge restores capacity.
+2. Repeat selection and attempted firing with the wrong assigned job, a missing
+   manifest entry, wrong manifest rank, no mindshield, no ID, missing ACCESS_HOS,
+   wrong ID assignment, wrong registered name, and an agent/chameleon ID.
+   Selection must still succeed and allow cycling onward. Each firing failure must
+   display ACCESS DENIED without revealing the failed check,
+   and produce no stun projectile or charge use.
+3. Select stun as an authorized HoS, then hand the gun to an officer or assistant.
+   Attempt ordinary and dual-wield firing. Also remove the original HoS's mindshield
+   or swap their ID after selecting stun. All unauthorized shots must fail.
+4. Attempt stun as a cyborg/AI, after emagging, and after EMP exposure. Neither
+   electronic effect grants authorization. Verify the other three modes remain usable
+   by an ordinary officer/assistant and preserve their previous effects and costs.
+5. Check that the floor icon, both hand icons, and charge indicators remain visible
+   while stun is selected, at every charge level including empty.
+6. If burst_size is changed for testing, change credentials or switch from another
+   mode to stun between burst callbacks. Unauthorized stun projectiles must not fire.
