@@ -13,7 +13,13 @@
 
 /// Can the chicken mask kick this off its hinges?
 /proc/is_kickable_door(atom/target)
-	if(!istype(target, /obj/machinery/door/airlock) && !istype(target, /obj/machinery/door/window) && !istype(target, /obj/structure/mineral_door))
+	var/static/list/kickable_types = typecacheof(list(
+		/obj/machinery/door/airlock,
+		/obj/machinery/door/firedoor,
+		/obj/machinery/door/window,
+		/obj/structure/mineral_door,
+	))
+	if(!is_type_in_typecache(target, kickable_types))
 		return FALSE
 	var/obj/door = target
 	if(!door.density || (door.resistance_flags & INDESTRUCTIBLE))
