@@ -2,6 +2,9 @@
  * @file
  * SURFSHACK EDIT - Fixes movement keys getting stuck with tgui windows open.
  *
+ * Most windows hand focus straight back to the map (see mapFocus.ts), so this
+ * is for the time a window does hold focus.
+ *
  * Port of the fix from BeeStation-Hornet#12834, which tgstation took in
  * with tgui-core v4.2 (tgui-core#192). tgui-core v2's focus tracking breaks
  * on BYOND 516: its "window-blur" event never fires when you click from a
@@ -10,20 +13,12 @@
  * Focusing a text input also has to release them, since key events from
  * inputs are ignored and the release would otherwise never be sent.
  *
- * On top of that:
- * - Releases of keys pressed on the map are forwarded (see common/keyRelease).
- * - tgui-core never passes arrow keys through to BYOND, so arrow-key movement
- *   stopped as soon as a window was focused. We pass them through, unless a
- *   component already handled the key.
+ * Releases of keys pressed on the map are forwarded (see common/keyRelease).
  */
 
-import { keyCodeToByond, setupKeyReleaseForwarding } from 'common/keyRelease';
+import { setupKeyReleaseForwarding } from 'common/keyRelease';
 import { canStealFocus } from 'tgui-core/events';
-import { listenForKeyEvents, releaseHeldKeys } from 'tgui-core/hotkeys';
-
-function isArrowKey(keyCode: number) {
-  return keyCode >= 37 && keyCode <= 40;
-}
+import { releaseHeldKeys } from 'tgui-core/hotkeys';
 
 export function setupStuckKeyRelease() {
   setupKeyReleaseForwarding();
@@ -61,41 +56,10 @@ export function setupStuckKeyRelease() {
     true,
   );
 
-  // Arrow keys we passed through to BYOND and still need to release.
-  const arrowsHeld: Record<string, boolean> = {};
-
-  listenForKeyEvents((key) => {
-    if (!isArrowKey(key.code)) {
-      return;
-    }
-    const byondKey = keyCodeToByond(key.code)!;
-    if (key.isDown()) {
-      if (!arrowsHeld[byondKey] && !key.event.defaultPrevented) {
-        arrowsHeld[byondKey] = true;
-        Byond.command(`KeyDown "${byondKey}"`);
-      }
-      return;
-    }
-    if (key.isUp() && arrowsHeld[byondKey]) {
-      arrowsHeld[byondKey] = false;
-      Byond.command(`KeyUp "${byondKey}"`);
-    }
-  });
-
-  const releaseAll = () => {
-    releaseHeldKeys();
-    for (const byondKey in arrowsHeld) {
-      if (arrowsHeld[byondKey]) {
-        arrowsHeld[byondKey] = false;
-        Byond.command(`KeyUp "${byondKey}"`);
-      }
-    }
-  };
-
   // Window lost focus (clicked the map, closed, ...): we won't see the
   // releases anymore, so let go now.
-  window.addEventListener('blur', releaseAll);
-  window.addEventListener('pagehide', releaseAll);
+  window.addEventListener('blur', releaseHeldKeys);
+  window.addEventListener('pagehide', releaseHeldKeys);
   // Text inputs swallow key events, same problem.
   document.addEventListener(
     'focus',
@@ -104,11 +68,11 @@ export function setupStuckKeyRelease() {
         event.target instanceof HTMLElement &&
         canStealFocus(event.target)
       ) {
-        releaseAll();
+        releaseHeldKeys();
       }
     },
     true,
   );
   // The window is about to be destroyed by the server.
-  Byond.subscribeTo('keys/release', releaseAll);
+  Byond.subscribeTo('keys/release', releaseHeldKeys);
 }
