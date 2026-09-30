@@ -1,6 +1,6 @@
 const { sessionIdToUserCode, userCodeToSocketId, socketIdToUserCode, activeSessionToUserCode } = require('../state');
 const { sendJSON } = require('../byond/ByondCommunication');
-const { createCredential, revokeCredential } = require('../turn');
+const { createCredential, revokeCredential, getIceServers } = require('../turn');
 const { resetPeer, resetPair } = require('../proximity');
 
 function sessionIdForUserCode(userCode) {
@@ -76,6 +76,7 @@ function createConnectionHandler(byondPort, io) {
             socket.userCode = userCode;
             socket.sessionId = sessionId;
             console.log(`Associated userCode ${userCode} with socket ${socket.id}${isRejoin ? ' (rejoin)' : ''}`);
+            socket.emit('ice_servers', getIceServers(sessionId));
             socket.emit('update', { type: 'status', data: 'Connected successfully' });
             // everyone drops any old connection to this user and rebuilds it on the next location update
             resetPeer(io, userCode);

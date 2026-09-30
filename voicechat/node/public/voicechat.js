@@ -48,15 +48,28 @@ function getServerHost() {
 }
 const SERVER_HOST = getServerHost();
 
-const ICE_SERVERS = [
-    // the game server's own STUN/TURN comes first, google STUN is blocked or throttled in some countries
+// google STUN is blocked or throttled in some countries, so it only goes last as a fallback
+const FALLBACK_STUN = { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] };
+
+// the game server's own STUN/TURN, replaced by whatever the server sends on join ('ice_servers')
+let ICE_SERVERS = [
     { urls: `stun:${SERVER_HOST}:3478` },
     { urls: `turn:${SERVER_HOST}:3478?transport=udp`,
         credential: sessionId,
         username: sessionId,
     },
-    { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] },
-]
+    FALLBACK_STUN,
+];
+
+function setIceServers(servers) {
+    if (!Array.isArray(servers) || !servers.length) return;
+    const withHost = (url) => url.replace('{host}', SERVER_HOST);
+    ICE_SERVERS = servers.map(server => ({
+        ...server,
+        urls: Array.isArray(server.urls) ? server.urls.map(withHost) : withHost(server.urls),
+    }));
+    ICE_SERVERS.push(FALLBACK_STUN);
+}
 
 function toggleDarkMode() {
 	darkMode = !darkMode;
@@ -509,6 +522,8 @@ function setupSocketHandlers() {
         socket.emit('join', { sessionId: sessionId });
         if (localStream) socket.emit('mic_access_granted');
     });
+
+    socket.on('ice_servers', setIceServers);
 
     socket.on('peer-reset', (data) => {
         if (data && data.userCode) removePeer(data.userCode);

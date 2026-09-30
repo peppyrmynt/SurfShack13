@@ -1,3 +1,6 @@
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 const Turn = require('node-turn');
 const ChannelBind = require('node-turn/lib/methods/channelBind');
 const Message = require('node-turn/lib/message');
@@ -42,8 +45,33 @@ if (!ChannelBind.prototype._integrityPatched) {
   };
 }
 
+// Optional, host specific. Without it the built-in relay is used. See voicechat/COTURN.md
+const CONFIG_PATH = path.resolve(__dirname, '..', 'turn_config.json');
+const COTURN_CREDENTIAL_TTL = 24 * 60 * 60; // seconds
+
+let config = { mode: 'builtin' };
+
+function loadConfig() {
+  if (!fs.existsSync(CONFIG_PATH)) return config;
+  try {
+    config = { mode: 'builtin', ...JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8')) };
+  } catch (err) {
+    console.error(`could not read ${CONFIG_PATH}, using the built-in relay:`, err.message);
+    return config;
+  }
+  if (config.mode === 'coturn' && (!config.secret || !Array.isArray(config.urls) || !config.urls.length)) {
+    console.error('coturn mode needs "secret" and "urls" in turn_config.json, using the built-in relay');
+    config.mode = 'builtin';
+  }
+  console.log(`TURN mode: ${config.mode}`);
+  return config;
+}
+
 // externalIp: public address to hand out for relays when the host sits behind NAT
 function startTurnServer(externalIp) {
+  loadConfig();
+  if (config.mode === 'coturn') return null; // coturn runs as its own service
+  externalIp = externalIp || config.externalIp;
   const options = {
     authMech: 'long-term',
     realm: 'voicechat',
@@ -59,6 +87,10 @@ function startTurnServer(externalIp) {
   return server;
 }
 
+function stopTurnServer() {
+  if (server) server.stop();
+}
+
 function createCredential(sessionId) {
   if (server && sessionId) server.addUser(sessionId, sessionId);
 }
@@ -68,4 +100,19 @@ function revokeCredential(sessionId) {
   if (server && sessionId) server.removeUser(sessionId);
 }
 
-module.exports = {startTurnServer, createCredential, revokeCredential};
+// ICE servers for a browser. "{host}" in a url is replaced by the browser with the
+// game server address it connected to.
+function getIceServers(sessionId) {
+  if (config.mode === 'coturn') {
+    // coturn's use-auth-secret scheme: username is "expiry:id", password is its HMAC
+    const username = `${Math.floor(Date.now() / 1000) + COTURN_CREDENTIAL_TTL}:${sessionId}`;
+    const credential = crypto.createHmac('sha1', config.secret).update(username).digest('base64');
+    return [{ urls: config.urls, username, credential }];
+  }
+  return [
+    { urls: 'stun:{host}:3478' },
+    { urls: 'turn:{host}:3478?transport=udp', username: sessionId, credential: sessionId },
+  ];
+}
+
+module.exports = {startTurnServer, stopTurnServer, createCredential, revokeCredential, getIceServers};
