@@ -103,10 +103,11 @@
 	gullet = new(holding)
 	return gullet
 
-/// Takes [victim] under the floor until the fog ends.
-/datum/weather/station_fog/proc/take_victim(mob/living/carbon/human/victim)
+/// Takes [victim] under the floor until the fog ends, or until [cluwne] dies.
+/datum/weather/station_fog/proc/take_victim(mob/living/carbon/human/victim, mob/living/basic/floor_cluwne/cluwne)
 	make_gullet()
-	eaten[victim] = TRUE
+	// Remember who took them: killing that cluwne brings them back up.
+	eaten[victim] = cluwne || TRUE
 	victim.forceMove(gullet)
 	victim.apply_status_effect(/datum/status_effect/grouped/stasis, FLOOR_CLUWNE_SOURCE)
 	victim.become_blind(FLOOR_CLUWNE_SOURCE)
@@ -122,28 +123,50 @@
 				if(!floor.is_blocked_turf())
 					maint_floors += floor
 	for(var/mob/living/carbon/human/victim as anything in eaten)
-		if(QDELETED(victim))
-			continue
-		var/turf/drop = length(maint_floors) ? pick(maint_floors) : random_fogged_floor()
-		if(drop)
-			victim.forceMove(drop)
-		victim.remove_status_effect(/datum/status_effect/grouped/stasis, FLOOR_CLUWNE_SOURCE)
-		victim.cure_blind(FLOOR_CLUWNE_SOURCE)
-		victim.adjustBruteLoss(60)
-		victim.adjustOxyLoss(30)
-		victim.adjustStaminaLoss(120)
-		victim.Knockdown(10 SECONDS)
-		victim.adjust_jitter(45 SECONDS)
-		victim.adjust_confusion(20 SECONDS)
-		victim.gain_trauma(/datum/brain_trauma/mild/phobia/clowns, TRAUMA_RESILIENCE_BASIC)
-		victim.add_mood_event("dragged_under", /datum/mood_event/dragged_under)
-		if(drop)
-			playsound(drop, 'surfshack13/sound/hippie/bodyscrape1.ogg', 50, TRUE)
-			drop.visible_message(span_danger("[victim] is spat up out of the floor!"))
+		spit_out(victim, length(maint_floors) ? pick(maint_floors) : random_fogged_floor())
 		to_chat(victim, span_userdanger("The floor spits you back out somewhere dark. You can still hear it laughing."))
 	eaten.Cut()
 	QDEL_NULL(gullet)
 	QDEL_NULL(gullet_reservation)
+
+/// [cluwne] has been killed: everyone it dragged under bursts back up where it died.
+/datum/weather/station_fog/proc/release_victims_of(mob/living/basic/floor_cluwne/cluwne, turf/where)
+	var/list/freed = list()
+	for(var/mob/living/carbon/human/victim as anything in eaten)
+		if(eaten[victim] == cluwne)
+			freed += victim
+	if(!length(freed))
+		return
+	for(var/mob/living/carbon/human/victim as anything in freed)
+		eaten -= victim
+		// Spill them around the spot, not all on one tile.
+		var/list/spots = list(where)
+		for(var/turf/open/floor/near in orange(1, where))
+			if(!near.is_blocked_turf())
+				spots += near
+		spit_out(victim, pick(spots))
+		to_chat(victim, span_userdanger("Whatever was holding you dies, and the floor heaves you back up into the light!"))
+	where.visible_message(span_danger("The floor bursts open where [cluwne] died, and [english_list(freed)] [length(freed) == 1 ? "is" : "are"] thrown back up out of it!"))
+
+/// Brings one victim back up onto [drop], hurt, shaken and scared of clowns.
+/datum/weather/station_fog/proc/spit_out(mob/living/carbon/human/victim, turf/drop)
+	if(QDELETED(victim))
+		return
+	if(drop)
+		victim.forceMove(drop)
+	victim.remove_status_effect(/datum/status_effect/grouped/stasis, FLOOR_CLUWNE_SOURCE)
+	victim.cure_blind(FLOOR_CLUWNE_SOURCE)
+	victim.adjustBruteLoss(60)
+	victim.adjustOxyLoss(30)
+	victim.adjustStaminaLoss(120)
+	victim.Knockdown(10 SECONDS)
+	victim.adjust_jitter(45 SECONDS)
+	victim.adjust_confusion(20 SECONDS)
+	victim.gain_trauma(/datum/brain_trauma/mild/phobia/clowns, TRAUMA_RESILIENCE_BASIC)
+	victim.add_mood_event("dragged_under", /datum/mood_event/dragged_under)
+	if(drop)
+		playsound(drop, 'surfshack13/sound/hippie/bodyscrape1.ogg', 50, TRUE)
+		drop.visible_message(span_danger("[victim] is spat up out of the floor!"))
 
 /// Something dragged you under the floor, and you came back.
 /datum/mood_event/dragged_under
@@ -222,12 +245,24 @@
 		var/datum/action/ability = new ability_type(src)
 		ability.Grant(src)
 
+/mob/living/basic/floor_cluwne/death(gibbed)
+	// Killed: everyone we took comes back up right here, before we're deleted.
+	var/turf/where = get_turf(src)
+	if(fog && where)
+		fog.release_victims_of(src, where)
+	return ..()
+
 /mob/living/basic/floor_cluwne/Destroy()
 	if(eating)
 		let_go()
 	QDEL_NULL(hole)
 	if(fog)
 		fog.cluwnes -= src
+		// Sent away rather than killed: anyone we still hold waits for the
+		// fog to end like everyone else, and the fog drops its ref to us.
+		for(var/mob/living/carbon/human/victim as anything in fog.eaten)
+			if(fog.eaten[victim] == src)
+				fog.eaten[victim] = TRUE
 		fog = null
 	return ..()
 
@@ -365,7 +400,7 @@
 			victim.add_splatter_floor(splatter_turf)
 	log_combat(src, victim, "dragged under the floor")
 	if(fog)
-		fog.take_victim(victim)
+		fog.take_victim(victim, src)
 		// Everyone in the fog hears it echo, wherever they are.
 		for(var/mob/living/listener as anything in fog.fogged_players)
 			listener.playsound_local(get_turf(listener), 'surfshack13/sound/hippie/honk_echo_distant.ogg', 50, TRUE, pressure_affected = FALSE)
