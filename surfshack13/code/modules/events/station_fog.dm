@@ -262,7 +262,20 @@ GLOBAL_LIST_INIT(station_fog_cluwne_sounds, list(
 ))
 
 /// How far a shared cluwne sound carries through the fog.
-#define STATION_FOG_CLUWNE_RANGE 12
+#define STATION_FOG_CLUWNE_RANGE 18
+
+/**
+ * How near the cluwne seems: distance from the chosen player in tiles, base
+ * volume, and how muffled (in millibels, negative is more muffled) it is.
+ * DirectHF cuts the highs off the sound; Occlusion makes it sound like it's
+ * coming through something. Listeners further from the spot also hear it
+ * quieter, through playsound_local's own distance falloff.
+ */
+GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
+	list("name" = "close", "min" = 3, "max" = 5, "volume" = 75, "direct_hf" = 0, "occlusion" = 0, "weight" = 25),
+	list("name" = "out there", "min" = 6, "max" = 9, "volume" = 50, "direct_hf" = -1200, "occlusion" = -800, "weight" = 40),
+	list("name" = "distant", "min" = 10, "max" = 14, "volume" = 35, "direct_hf" = -3000, "occlusion" = -2500, "weight" = 35),
+))
 
 /// At thickness 5, every so often, the floor cluwne makes itself heard.
 /datum/weather/station_fog/proc/roll_cluwne_sound()
@@ -280,8 +293,10 @@ GLOBAL_LIST_INIT(station_fog_cluwne_sounds, list(
 /**
  * Plays one floor cluwne sound from a spot in the fog near a random fogged
  * player, to every fogged player in earshot of it, so a group standing
- * together all hear the same thing from the same place. It's a hallucination:
- * nobody outside the fog hears anything. Returns how many heard it.
+ * together all hear the same thing from the same place. Each one picks how
+ * far off it seems (close and clear, out there, or distant and muffled). It's
+ * a hallucination: nobody outside the fog hears anything. Returns how many
+ * heard it.
  */
 /datum/weather/station_fog/proc/play_cluwne_sound(mob/living/near, sound_file)
 	var/list/candidates = list()
@@ -292,18 +307,37 @@ GLOBAL_LIST_INIT(station_fog_cluwne_sounds, list(
 		if(!length(candidates))
 			return 0
 		near = pick(candidates)
-	// Somewhere in the fog a few tiles off, so it comes from out there.
+
+	var/list/weighted = list()
+	for(var/list/profile as anything in GLOB.station_fog_cluwne_distances)
+		weighted[profile] = profile["weight"]
+	var/list/profile = pick_weight(weighted)
+
+	// A fogged spot at that distance; fall back to anywhere fogged nearby.
 	var/list/spots = list()
-	for(var/turf/open/spot in range(7, near))
-		if(get_dist(near, spot) >= 4 && fogged_area_set[get_area(spot)])
+	var/list/fallback = list()
+	for(var/turf/open/spot in range(profile["max"], near))
+		if(!fogged_area_set[get_area(spot)])
+			continue
+		var/dist = get_dist(near, spot)
+		if(dist >= profile["min"])
 			spots += spot
-	var/turf/origin = length(spots) ? pick(spots) : get_turf(near)
+		else if(dist >= 3)
+			fallback += spot
+	var/turf/origin = length(spots) ? pick(spots) : (length(fallback) ? pick(fallback) : get_turf(near))
 	sound_file ||= pick_weight(GLOB.station_fog_cluwne_sounds)
+	// Everyone hears the same pitch, so it reads as one thing out there.
+	var/pitch = rand(85, 110) / 100
+
 	var/heard = 0
 	for(var/mob/living/listener as anything in candidates | near)
 		if(listener.z != origin.z || get_dist(listener, origin) > STATION_FOG_CLUWNE_RANGE)
 			continue
-		listener.playsound_local(origin, sound_file, 60, FALSE)
+		var/sound/cluwne_sound = sound(sound_file)
+		cluwne_sound.frequency = pitch
+		cluwne_sound.echo[2] = profile["direct_hf"]
+		cluwne_sound.echo[7] = profile["occlusion"]
+		listener.playsound_local(origin, null, profile["volume"], FALSE, max_distance = STATION_FOG_CLUWNE_RANGE + 4, sound_to_use = cluwne_sound)
 		heard++
 	return heard
 
