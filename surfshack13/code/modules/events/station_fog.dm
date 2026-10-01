@@ -497,9 +497,12 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 	var/vanish_range = 2
 	/// The figure, as shown to the hallucinator.
 	var/image/figure
-	/// Wandering, creeping closer, or standing still.
+	/// "wander" (walks, with pauses), "approach" (runs at you), "run_past"
+	/// (runs across the fog in one direction) or "still".
 	var/behaviour
-	/// The looping step timer.
+	/// For run_past: the direction it is running.
+	var/run_dir
+	/// The pending step timer.
 	var/step_timer
 	/// Whether it's already dissolving.
 	var/vanishing = FALSE
@@ -529,39 +532,76 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 	figure.alpha = 0
 	hallucinator.client.images |= figure
 	animate(figure, alpha = 255, time = 1.5 SECONDS)
-	behaviour = pick(40; "wander", 35; "approach", 25; "still")
+	behaviour = pick(30; "wander", 30; "approach", 20; "run_past", 20; "still")
+	if(behaviour == "run_past")
+		// Across the player's line of sight, not straight at or away from them.
+		var/toward = get_dir(spot, hallucinator)
+		run_dir = pick(turn(toward, 90), turn(toward, -90))
+		if(!(run_dir in GLOB.cardinals))
+			run_dir = pick(GLOB.cardinals)
 	feedback_details += "Figure: [behaviour]"
 	if(prob(30))
 		addtimer(CALLBACK(src, PROC_REF(whisper)), rand(2 SECONDS, 5 SECONDS))
-	step_timer = addtimer(CALLBACK(src, PROC_REF(figure_step)), 0.8 SECONDS, TIMER_STOPPABLE | TIMER_LOOP)
+	// Let it fade in before it starts moving.
+	queue_step(1 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(vanish)), rand(8 SECONDS, 16 SECONDS))
 	return TRUE
 
-/// One beat: dissolve if they got close, otherwise maybe shuffle a tile.
+/// Movement speed per tile, matched to real spacemen from the server config.
+/datum/hallucination/fog_figure/proc/step_delay()
+	if(behaviour == "wander")
+		return CONFIG_GET(number/movedelay/walk_delay)
+	return CONFIG_GET(number/movedelay/run_delay)
+
+/datum/hallucination/fog_figure/proc/queue_step(delay)
+	step_timer = addtimer(CALLBACK(src, PROC_REF(figure_step)), max(delay, world.tick_lag), TIMER_STOPPABLE)
+
+/// One beat: dissolve if they got close, otherwise take a step at walk or run speed.
 /datum/hallucination/fog_figure/proc/figure_step()
+	step_timer = null
 	if(vanishing || QDELETED(hallucinator))
 		return
 	var/turf/here = figure.loc
 	if(!here || here.z != hallucinator.z || get_dist(hallucinator, here) <= vanish_range)
 		vanish()
 		return
-	if(behaviour == "still" || prob(35))
-		figure.dir = get_dir(here, hallucinator)
-		return
+	var/delay = step_delay()
+	switch(behaviour)
+		if("still")
+			figure.dir = get_dir(here, hallucinator)
+			queue_step(0.5 SECONDS)
+			return
+		if("wander")
+			// Walkers stop and look around now and then.
+			if(prob(35))
+				figure.dir = get_dir(here, hallucinator)
+				queue_step(rand(5, 15))
+				return
 	var/turf/open/next
-	if(behaviour == "approach" && get_dist(hallucinator, here) > vanish_range + 1)
-		next = get_step_towards(here, hallucinator)
-	else
-		next = get_step(here, pick(GLOB.cardinals))
+	switch(behaviour)
+		if("approach")
+			next = get_step_towards(here, hallucinator)
+		if("run_past")
+			next = get_step(here, run_dir)
+		else
+			next = get_step(here, pick(GLOB.cardinals))
 	if(!istype(next) || next.is_blocked_turf() || get_dist(hallucinator, next) <= vanish_range)
+		// A runner that hits a wall or the edge of the fog just isn't there any more.
+		if(behaviour == "run_past" || behaviour == "approach")
+			if(get_dist(hallucinator, next) <= vanish_range || behaviour == "run_past")
+				vanish()
+				return
+		queue_step(delay)
 		return
-	// Glide: jump the image to the new tile, offset back, slide the offset out.
+	// Glide: jump the image to the new tile, offset back, slide the offset out
+	// over exactly one step, so it moves as smoothly as a real spaceman.
 	var/step_dir = get_dir(here, next)
 	figure.loc = next
 	figure.dir = step_dir
 	figure.pixel_x = (step_dir & EAST) ? -32 : ((step_dir & WEST) ? 32 : 0)
 	figure.pixel_y = (step_dir & NORTH) ? -32 : ((step_dir & SOUTH) ? 32 : 0)
-	animate(figure, pixel_x = 0, pixel_y = 0, time = 0.8 SECONDS)
+	animate(figure, pixel_x = 0, pixel_y = 0, time = delay)
+	queue_step(delay)
 
 /// The figure says something, quietly, as an unknown voice.
 /datum/hallucination/fog_figure/proc/whisper()
