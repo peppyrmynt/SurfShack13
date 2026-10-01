@@ -13,6 +13,12 @@
  *   shrinks as the fog thickens the fog is solid, so nothing out there can be
  *   seen, like darkness without a flashlight. Stepping into maintenance clears it.
  *
+ * - identity concealment (after tgstation#97041's unconscious obscurity): to a
+ *   player in fog, or looking into it, any human or cyborg more than
+ *   STATION_FOG_CONCEAL_RANGE tiles away shows as an anonymous grey figure.
+ *   Hovering gives "unknown figure", examining fails, and sec/med HUD icons
+ *   on them are hidden. Voices still carry, so speech is still attributed.
+ *
  * Admins can drive it by hand with the "Debug Station Fog" verb.
  */
 
@@ -28,6 +34,10 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 #define STATION_FOG_SCREEN_EAST "station_fog_east"
 #define STATION_FOG_SCREEN_NORTH "station_fog_north"
 #define STATION_FOG_SCREEN_SOUTH "station_fog_south"
+/// People further than this many tiles away are concealed by the fog.
+#define STATION_FOG_CONCEAL_RANGE 2
+/// How far out to look for people to conceal; anything past this is off screen.
+#define STATION_FOG_CONCEAL_SCAN 10
 
 /datum/round_event_control/station_fog
 	name = "Station Fog"
@@ -83,6 +93,10 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/mob/living/fogged_players = list()
 	/// Whether the fog thickens by itself over time. Off for admin test fogs.
 	var/auto_thicken = TRUE
+	/// target mob -> its anonymous-figure alternate appearance.
+	var/list/disguises = list()
+	/// viewer mob -> list of target mobs currently concealed from them.
+	var/list/concealed_from = list()
 
 /datum/weather/station_fog/New(z_levels)
 	. = ..()
@@ -113,6 +127,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	if(GLOB.station_fog == src)
 		GLOB.station_fog = null
 	STOP_PROCESSING(SSprocessing, src)
+	reveal_everyone()
 	for(var/mob/living/player as anything in fogged_players)
 		clear_fog_screens(player)
 	fogged_players.Cut()
@@ -121,6 +136,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	if(GLOB.station_fog == src)
 		GLOB.station_fog = null
 	STOP_PROCESSING(SSprocessing, src)
+	reveal_everyone()
 	for(var/mob/living/player as anything in fogged_players)
 		clear_fog_screens(player, animated = 0)
 	fogged_players.Cut()
@@ -159,6 +175,114 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		if(!QDELETED(player))
 			clear_fog_screens(player)
 	fogged_players = still_fogged
+	update_concealment()
+
+// ---- Identity concealment ----------------------------------------------
+
+/// TRUE if the fog is currently hiding who [target] is from [viewer].
+/datum/weather/station_fog/proc/is_concealed_from(atom/target, mob/viewer)
+	var/list/hidden = concealed_from[viewer]
+	return hidden && (target in hidden)
+
+/// Whether a mob is something the fog disguises: people and cyborgs.
+/datum/weather/station_fog/proc/can_disguise(mob/living/target)
+	return ishuman(target) || iscyborg(target)
+
+/// Re-decides, for every player near the fog, which people they can't make out.
+/datum/weather/station_fog/proc/update_concealment()
+	var/list/new_concealed = list()
+	if(stage == MAIN_STAGE)
+		for(var/z_level in impacted_z_levels)
+			for(var/mob/living/viewer in SSmobs.clients_by_zlevel[z_level])
+				var/viewer_fogged = (viewer in fogged_players)
+				var/list/hide_here = list()
+				for(var/mob/living/target in range(STATION_FOG_CONCEAL_SCAN, viewer))
+					if(target == viewer || !can_disguise(target))
+						continue
+					if(get_dist(viewer, target) <= STATION_FOG_CONCEAL_RANGE)
+						continue
+					// Either side being in the fog is enough: looking out of
+					// maintenance into a fogged hall still hides who is in it.
+					if(!viewer_fogged && !(get_area(target) in impacted_areas))
+						continue
+					hide_here += target
+				if(length(hide_here))
+					new_concealed[viewer] = hide_here
+	for(var/mob/viewer as anything in concealed_from | new_concealed)
+		var/list/old_hidden = concealed_from[viewer] || list()
+		var/list/new_hidden = new_concealed[viewer] || list()
+		for(var/mob/living/target as anything in old_hidden - new_hidden)
+			reveal_to(target, viewer)
+		for(var/mob/living/target as anything in new_hidden - old_hidden)
+			conceal_from(target, viewer)
+	concealed_from = new_concealed
+	// Keep each figure's silhouette in step with the body it stands for.
+	for(var/mob/living/target as anything in disguises)
+		refresh_disguise(target)
+
+/// The anonymous-figure appearance for [target], made on first use.
+/datum/weather/station_fog/proc/get_disguise(mob/living/target)
+	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
+	if(disguise)
+		return disguise
+	var/image/figure = image(loc = target)
+	disguise = target.add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/station_fog, "[REF(target)]_station_fog", figure, NONE)
+	disguises[target] = disguise
+	refresh_disguise(target)
+	RegisterSignal(target, COMSIG_QDELETING, PROC_REF(on_target_deleted), override = TRUE)
+	return disguise
+
+/// Copies the body's current shape onto its figure, flattened to fog grey.
+/datum/weather/station_fog/proc/refresh_disguise(mob/living/target)
+	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
+	if(!disguise)
+		return
+	var/image/figure = disguise.image
+	figure.appearance = target.appearance
+	figure.appearance_flags |= KEEP_TOGETHER
+	figure.color = list(0,0,0, 0,0,0, 0,0,0, 0.48,0.5,0.53)
+	figure.override = TRUE
+	figure.name = iscyborg(target) ? "unknown cyborg" : "unknown figure"
+	figure.desc = "You can't make out who that is through the fog."
+	figure.loc = target
+
+/datum/weather/station_fog/proc/conceal_from(mob/living/target, mob/viewer)
+	get_disguise(target).show_to(viewer)
+	// Sec and med HUD icons would give the game away: hide this body's.
+	for(var/datum/atom_hud/data/human/hud in GLOB.huds)
+		hud.hide_single_atomhud_from(viewer, target)
+
+/datum/weather/station_fog/proc/reveal_to(mob/living/target, mob/viewer)
+	if(QDELETED(target) || QDELETED(viewer))
+		return
+	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
+	disguise?.hide_from(viewer, absolute = TRUE)
+	for(var/datum/atom_hud/data/human/hud in GLOB.huds)
+		hud.unhide_single_atomhud_from(viewer, target)
+
+/datum/weather/station_fog/proc/on_target_deleted(mob/living/source)
+	SIGNAL_HANDLER
+	for(var/mob/viewer as anything in concealed_from)
+		concealed_from[viewer] -= source
+	qdel(disguises[source])
+	disguises -= source
+
+/// Lifts every disguise, for when the fog ends.
+/datum/weather/station_fog/proc/reveal_everyone()
+	for(var/mob/viewer as anything in concealed_from)
+		for(var/mob/living/target as anything in concealed_from[viewer])
+			reveal_to(target, viewer)
+	concealed_from.Cut()
+	for(var/mob/living/target as anything in disguises)
+		UnregisterSignal(target, COMSIG_QDELETING)
+		qdel(disguises[target])
+	disguises.Cut()
+
+/// The fog's anonymous figure. Shown per viewer by the fog, never generically.
+/datum/atom_hud/alternate_appearance/basic/station_fog
+
+/datum/atom_hud/alternate_appearance/basic/station_fog/mobShouldSee(mob/M)
+	return FALSE
 
 /**
  * Puts the sight cut-off on a player. The vignette is the standard 15x15
@@ -267,3 +391,5 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 #undef STATION_FOG_SCREEN_EAST
 #undef STATION_FOG_SCREEN_NORTH
 #undef STATION_FOG_SCREEN_SOUTH
+#undef STATION_FOG_CONCEAL_RANGE
+#undef STATION_FOG_CONCEAL_SCAN
