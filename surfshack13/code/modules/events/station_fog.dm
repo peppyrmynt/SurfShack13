@@ -297,7 +297,8 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 	/datum/hallucination/nearby_fake_item/armblade = 2,
 ))
 
-/// At thickness 4 and 5, every so often, makes each player in fog see things.
+/// From thickness 4, every so often (more often the thicker it is), makes each
+/// player in fog see things.
 /datum/weather/station_fog/proc/roll_hallucinations()
 	if(stage != MAIN_STAGE || thickness < 4)
 		return
@@ -311,8 +312,27 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 			continue
 		if(world.time < due)
 			continue
-		next_hallucination[player] = world.time + (thickness >= 5 ? rand(15 SECONDS, 30 SECONDS) : rand(25 SECONDS, 50 SECONDS))
-		fog_hallucinate(player)
+		var/delay
+		switch(thickness)
+			if(4)
+				delay = rand(20 SECONDS, 35 SECONDS)
+			if(5)
+				delay = rand(12 SECONDS, 25 SECONDS)
+			else
+				delay = rand(8 SECONDS, 18 SECONDS)
+		next_hallucination[player] = world.time + delay
+		// Some hallucinations need room or company to start (a figure needs open
+		// fog in view, a drawn weapon needs someone nearby). If the one rolled
+		// can't happen here, roll another rather than wasting the turn.
+		var/list/tried = list()
+		for(var/attempt in 1 to 3)
+			var/picked = pick_weight(GLOB.station_fog_hallucinations - tried)
+			tried += picked
+			if(fog_hallucinate(player, picked))
+				break
+			if(attempt == 3)
+				// Distant gunfire can always happen.
+				fog_hallucinate(player, /datum/hallucination/battle/gun/disabler)
 
 /// Gives [player] one fog hallucination, picked from the weighted pool.
 /datum/weather/station_fog/proc/fog_hallucinate(mob/living/player, hallucination_type)
