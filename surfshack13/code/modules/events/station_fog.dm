@@ -187,7 +187,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	for(var/category in list(STATION_FOG_SCREEN, STATION_FOG_SCREEN_WEST, STATION_FOG_SCREEN_EAST, STATION_FOG_SCREEN_NORTH, STATION_FOG_SCREEN_SOUTH))
 		player.clear_fullscreen(category, animated)
 
-/// The 15x15 sight cut-off: clear circle, solid fog by 7 tiles out.
+/// The 15x15 distance falloff: fog gets denser further out, no hard clear ring.
 /atom/movable/screen/fullscreen/station_fog
 	icon = 'surfshack13/icons/effects/station_fog_vignette.dmi'
 	icon_state = "fog"
