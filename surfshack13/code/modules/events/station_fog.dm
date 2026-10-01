@@ -14,8 +14,9 @@
  *   seen, like darkness without a flashlight. Stepping into maintenance clears it.
  *
  * - identity concealment (after tgstation#97041's unconscious obscurity): to a
- *   player in fog, or looking into it, any human or cyborg more than
- *   STATION_FOG_CONCEAL_RANGE tiles away shows as an anonymous grey figure.
+ *   player in fog, or looking into it, any human or cyborg further away than
+ *   the fog's conceal range shows as an anonymous grey figure. It starts at
+ *   thickness 3 (4 tiles) and closes in to 3 tiles at 4 and 2 tiles at 5.
  *   Hovering gives "unknown figure", examining fails, and sec/med HUD icons
  *   on them are hidden. Voices still carry, so speech is still attributed.
  *
@@ -34,8 +35,6 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 #define STATION_FOG_SCREEN_EAST "station_fog_east"
 #define STATION_FOG_SCREEN_NORTH "station_fog_north"
 #define STATION_FOG_SCREEN_SOUTH "station_fog_south"
-/// People further than this many tiles away are concealed by the fog.
-#define STATION_FOG_CONCEAL_RANGE 2
 /// How far out to look for people to conceal; anything past this is off screen.
 #define STATION_FOG_CONCEAL_SCAN 10
 
@@ -193,6 +192,18 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/hidden = concealed_from[viewer]
 	return hidden && (target in hidden)
 
+/// How close someone must be to be recognised at the current thickness, or
+/// null while the fog is too thin to hide anyone.
+/datum/weather/station_fog/proc/get_conceal_range()
+	switch(thickness)
+		if(3)
+			return 4
+		if(4)
+			return 3
+		if(5)
+			return 2
+	return null
+
 /// Whether a mob is something the fog disguises: people and cyborgs.
 /datum/weather/station_fog/proc/can_disguise(mob/living/target)
 	return ishuman(target) || iscyborg(target)
@@ -202,7 +213,8 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/new_concealed = list()
 	/// Every body concealed from at least one viewer this tick.
 	var/list/in_use = list()
-	if(stage == MAIN_STAGE)
+	var/conceal_range = get_conceal_range()
+	if(stage == MAIN_STAGE && conceal_range)
 		for(var/z_level in impacted_z_levels)
 			for(var/mob/living/viewer in SSmobs.clients_by_zlevel[z_level])
 				var/viewer_fogged = fogged_players[viewer]
@@ -212,7 +224,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 				for(var/mob/living/target in SSspatial_grid.orthogonal_range_search(viewer, SPATIAL_GRID_CONTENTS_TYPE_HEARING, STATION_FOG_CONCEAL_SCAN))
 					if(target == viewer || !can_disguise(target))
 						continue
-					if(get_dist(viewer, target) <= STATION_FOG_CONCEAL_RANGE)
+					if(get_dist(viewer, target) <= conceal_range)
 						continue
 					// Either side being in the fog is enough: looking out of
 					// maintenance into a fogged hall still hides who is in it.
@@ -410,5 +422,4 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 #undef STATION_FOG_SCREEN_EAST
 #undef STATION_FOG_SCREEN_NORTH
 #undef STATION_FOG_SCREEN_SOUTH
-#undef STATION_FOG_CONCEAL_RANGE
 #undef STATION_FOG_CONCEAL_SCAN
