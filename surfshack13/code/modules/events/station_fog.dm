@@ -15,7 +15,7 @@
  *
  * - identity concealment (after tgstation#97041's unconscious obscurity): to a
  *   player in fog, or looking into it, any human or cyborg further away than
- *   the fog's conceal range shows as the PR's static-noise figure. It starts at
+ *   the fog's conceal range shows as a flat grey silhouette of themselves. It starts at
  *   thickness 3 (4 tiles) and closes in to 3 tiles at 4 and 2 tiles at 5.
  *   Hovering gives "unknown figure", examining fails, and sec/med HUD icons
  *   on them are hidden. Voices still carry, so speech is still attributed.
@@ -131,6 +131,9 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/disguises = list()
 	/// viewer mob -> list of target mobs currently concealed from them.
 	var/list/concealed_from = list()
+	/// target mob -> the appearance its figure was last copied from, so figures
+	/// are only repainted when the body's sprite actually changed.
+	var/list/disguise_sources = list()
 	/// viewer mob -> the client that was given their disguise images. Images
 	/// live on the client, not the mob, so if the client moves to another body
 	/// (aghost, possession, respawn) they must be taken off that client.
@@ -373,6 +376,24 @@ GLOBAL_LIST_INIT(station_fog_cluwne_sounds, list(
 	"look up" = list(1, 'sound/effects/hallucinations/look_up1.ogg', 'sound/effects/hallucinations/look_up2.ogg'),
 ))
 
+/// Cluwne sound groups that are laughter: hearing one sours your mood.
+GLOBAL_LIST_INIT(station_fog_cluwne_laughs, list(
+	"cluwne laugh",
+	"reversed laugh",
+	"giggle",
+	"clown laugh",
+	"evil laugh",
+	"low laugh",
+))
+
+/// Which group a cluwne sound file belongs to.
+/proc/station_fog_cluwne_group(sound_file)
+	for(var/group in GLOB.station_fog_cluwne_sounds)
+		var/list/entry = GLOB.station_fog_cluwne_sounds[group]
+		if(sound_file in entry)
+			return group
+	return null
+
 /// How many of the most recent cluwne sound groups can't be picked again.
 #define STATION_FOG_CLUWNE_NO_REPEAT 5
 
@@ -456,6 +477,7 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 			fallback += spot
 	var/turf/origin = length(spots) ? pick(spots) : (length(fallback) ? pick(fallback) : get_turf(near))
 	sound_file ||= pick_cluwne_sound()
+	var/is_laugh = (station_fog_cluwne_group(sound_file) in GLOB.station_fog_cluwne_laughs)
 	// Everyone hears the same pitch, so it reads as one thing out there.
 	var/pitch = rand(85, 110) / 100
 
@@ -468,6 +490,8 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 		cluwne_sound.echo[2] = profile["direct_hf"]
 		cluwne_sound.echo[7] = profile["occlusion"]
 		listener.playsound_local(origin, null, profile["volume"], FALSE, max_distance = STATION_FOG_CLUWNE_RANGE + 4, sound_to_use = cluwne_sound)
+		if(is_laugh)
+			listener.add_mood_event("station_fog_laugh", /datum/mood_event/station_fog_laugh)
 		heard++
 	return heard
 
@@ -503,6 +527,8 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 /datum/weather/station_fog/proc/update_concealment()
 	drop_moved_clients()
 	var/list/new_concealed = list()
+	/// Every body concealed from at least one viewer this tick.
+	var/list/in_use = list()
 	var/conceal_range = get_conceal_range()
 	if(stage == MAIN_STAGE && conceal_range)
 		for(var/z_level in impacted_z_levels)
@@ -525,6 +551,7 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 					if(!viewer_fogged && !fogged_area_set[get_area(target)])
 						continue
 					hide_here += target
+					in_use[target] = TRUE
 				if(length(hide_here))
 					new_concealed[viewer] = hide_here
 	for(var/mob/viewer as anything in concealed_from | new_concealed)
@@ -535,32 +562,40 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 		for(var/mob/living/target as anything in new_hidden - old_hidden)
 			conceal_from(target, viewer)
 	concealed_from = new_concealed
+	// Keep figures in step with their bodies, but only repaint the ones someone
+	// is looking at, and only when the body's sprite actually changed.
+	for(var/mob/living/target as anything in in_use)
+		if(disguise_sources[target] != target.appearance)
+			refresh_disguise(target)
 	strip_own_disguises()
 
-/// The anonymous figure for [target], made on first use. Same art as
-/// tgstation#97041: humans become a static-noise humanoid, cyborgs a stock
-/// cyborg chassis filled with static.
+/// The anonymous figure for [target], made on first use: their own shape,
+/// flattened to fog grey, so you can see someone's there but not who.
 /datum/weather/station_fog/proc/get_disguise(mob/living/target)
 	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
 	if(disguise)
 		return disguise
-	var/image/figure
-	if(iscyborg(target))
-		var/image/static_overlay = image('icons/effects/effects.dmi', null, "static_base")
-		static_overlay.blend_mode = BLEND_INSET_OVERLAY
-		figure = image('icons/mob/silicon/robots.dmi', target, "robot")
-		figure.appearance_flags |= KEEP_TOGETHER
-		figure.overlays += static_overlay
-		figure.name = "unknown cyborg"
-	else
-		figure = image('icons/effects/effects.dmi', target, "static")
-		figure.name = "unknown humanoid"
-	figure.override = TRUE
-	figure.transform = target.transform
+	var/image/figure = image(loc = target)
 	disguise = target.add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/station_fog, "[REF(target)]_station_fog", figure, NONE)
 	disguises[target] = disguise
+	refresh_disguise(target)
 	RegisterSignal(target, COMSIG_QDELETING, PROC_REF(on_target_deleted), override = TRUE)
 	return disguise
+
+/// Copies the body's current shape onto its figure, flattened to fog grey.
+/datum/weather/station_fog/proc/refresh_disguise(mob/living/target)
+	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
+	if(!disguise)
+		return
+	var/image/figure = disguise.image
+	disguise_sources[target] = target.appearance
+	figure.appearance = target.appearance
+	figure.appearance_flags |= KEEP_TOGETHER
+	figure.color = list(0,0,0, 0,0,0, 0,0,0, 0.48,0.5,0.53)
+	figure.override = TRUE
+	figure.name = iscyborg(target) ? "unknown cyborg" : "unknown figure"
+	figure.desc = "You can't make out who that is through the fog."
+	figure.loc = target
 
 /datum/weather/station_fog/proc/conceal_from(mob/living/target, mob/viewer)
 	if(target == viewer || !viewer.client)
@@ -590,6 +625,7 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 		concealed_from[viewer] -= source
 	qdel(disguises[source])
 	disguises -= source
+	disguise_sources -= source
 
 /// If a viewer's client has left their body (aghost, possession, respawn),
 /// strips every disguise image off the client that had them, before that
@@ -622,9 +658,11 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 		UnregisterSignal(target, COMSIG_QDELETING)
 		qdel(disguises[target])
 	disguises.Cut()
+	disguise_sources.Cut()
 
 /// The fog's anonymous figure. Shown per viewer by the fog, never generically.
-/// Turns with its body (lying down, etc), as in tgstation#97041.
+/// Turns with its body (lying down, etc) straight away, rather than waiting
+/// for the next repaint.
 /datum/atom_hud/alternate_appearance/basic/station_fog
 
 /datum/atom_hud/alternate_appearance/basic/station_fog/New(key, image/shown_image, options)
@@ -946,3 +984,9 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 	hallucinator?.client?.images -= figure
 	figure = null
 	return ..()
+
+/// Heard something laughing out in the fog.
+/datum/mood_event/station_fog_laugh
+	description = "Something out in the fog was laughing. At me?"
+	mood_change = -3
+	timeout = 3 MINUTES

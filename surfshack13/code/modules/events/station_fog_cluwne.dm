@@ -136,6 +136,7 @@
 		victim.adjust_jitter(45 SECONDS)
 		victim.adjust_confusion(20 SECONDS)
 		victim.gain_trauma(/datum/brain_trauma/mild/phobia/clowns, TRAUMA_RESILIENCE_BASIC)
+		victim.add_mood_event("dragged_under", /datum/mood_event/dragged_under)
 		if(drop)
 			playsound(drop, 'surfshack13/sound/hippie/bodyscrape1.ogg', 50, TRUE)
 			drop.visible_message(span_danger("[victim] is spat up out of the floor!"))
@@ -143,6 +144,12 @@
 	eaten.Cut()
 	QDEL_NULL(gullet)
 	QDEL_NULL(gullet_reservation)
+
+/// Something dragged you under the floor, and you came back.
+/datum/mood_event/dragged_under
+	description = "Something dragged me under the floor. It was so cold down there, and it never stopped laughing."
+	mood_change = -12
+	timeout = 15 MINUTES
 
 /// Where people dragged under the floor wait out the fog. Lives in nullspace.
 /obj/effect/abstract/floor_cluwne_gullet
