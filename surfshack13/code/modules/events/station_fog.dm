@@ -15,7 +15,7 @@
  *
  * - identity concealment (after tgstation#97041's unconscious obscurity): to a
  *   player in fog, or looking into it, any human or cyborg further away than
- *   the fog's conceal range shows as an anonymous grey figure. It starts at
+ *   the fog's conceal range shows as the PR's static-noise figure. It starts at
  *   thickness 3 (4 tiles) and closes in to 3 tiles at 4 and 2 tiles at 5.
  *   Hovering gives "unknown figure", examining fails, and sec/med HUD icons
  *   on them are hidden. Voices still carry, so speech is still attributed.
@@ -93,9 +93,6 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/mob/living/fogged_players = list()
 	/// impacted_areas as an assoc set, for O(1) "is this area fogged" checks.
 	var/list/fogged_area_set = list()
-	/// target mob -> the appearance its figure was last copied from, so figures
-	/// are only repainted when the body's sprite actually changed.
-	var/list/disguise_sources = list()
 	/// Whether the fog thickens by itself over time. Off for admin test fogs.
 	var/auto_thicken = TRUE
 	/// target mob -> its anonymous-figure alternate appearance.
@@ -211,8 +208,6 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 /// Re-decides, for every player near the fog, which people they can't make out.
 /datum/weather/station_fog/proc/update_concealment()
 	var/list/new_concealed = list()
-	/// Every body concealed from at least one viewer this tick.
-	var/list/in_use = list()
 	var/conceal_range = get_conceal_range()
 	if(stage == MAIN_STAGE && conceal_range)
 		for(var/z_level in impacted_z_levels)
@@ -231,7 +226,6 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 					if(!viewer_fogged && !fogged_area_set[get_area(target)])
 						continue
 					hide_here += target
-					in_use[target] = TRUE
 				if(length(hide_here))
 					new_concealed[viewer] = hide_here
 	for(var/mob/viewer as anything in concealed_from | new_concealed)
@@ -242,38 +236,31 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		for(var/mob/living/target as anything in new_hidden - old_hidden)
 			conceal_from(target, viewer)
 	concealed_from = new_concealed
-	// Keep figures in step with their bodies, but only repaint the ones someone
-	// is looking at, and only when the body's sprite actually changed.
-	for(var/mob/living/target as anything in in_use)
-		if(disguise_sources[target] != target.appearance)
-			refresh_disguise(target)
 
-/// The anonymous-figure appearance for [target], made on first use.
+/// The anonymous figure for [target], made on first use. Same art as
+/// tgstation#97041: humans become a static-noise humanoid, cyborgs a stock
+/// cyborg chassis filled with static.
 /datum/weather/station_fog/proc/get_disguise(mob/living/target)
 	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
 	if(disguise)
 		return disguise
-	var/image/figure = image(loc = target)
+	var/image/figure
+	if(iscyborg(target))
+		var/image/static_overlay = image('icons/effects/effects.dmi', null, "static_base")
+		static_overlay.blend_mode = BLEND_INSET_OVERLAY
+		figure = image('icons/mob/silicon/robots.dmi', target, "robot")
+		figure.appearance_flags |= KEEP_TOGETHER
+		figure.overlays += static_overlay
+		figure.name = "unknown cyborg"
+	else
+		figure = image('icons/effects/effects.dmi', target, "static")
+		figure.name = "unknown humanoid"
+	figure.override = TRUE
+	figure.transform = target.transform
 	disguise = target.add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/station_fog, "[REF(target)]_station_fog", figure, NONE)
 	disguises[target] = disguise
-	refresh_disguise(target)
 	RegisterSignal(target, COMSIG_QDELETING, PROC_REF(on_target_deleted), override = TRUE)
 	return disguise
-
-/// Copies the body's current shape onto its figure, flattened to fog grey.
-/datum/weather/station_fog/proc/refresh_disguise(mob/living/target)
-	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
-	if(!disguise)
-		return
-	var/image/figure = disguise.image
-	disguise_sources[target] = target.appearance
-	figure.appearance = target.appearance
-	figure.appearance_flags |= KEEP_TOGETHER
-	figure.color = list(0,0,0, 0,0,0, 0,0,0, 0.48,0.5,0.53)
-	figure.override = TRUE
-	figure.name = iscyborg(target) ? "unknown cyborg" : "unknown figure"
-	figure.desc = "You can't make out who that is through the fog."
-	figure.loc = target
 
 /datum/weather/station_fog/proc/conceal_from(mob/living/target, mob/viewer)
 	get_disguise(target).show_to(viewer)
@@ -295,7 +282,6 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		concealed_from[viewer] -= source
 	qdel(disguises[source])
 	disguises -= source
-	disguise_sources -= source
 
 /// Lifts every disguise, for when the fog ends.
 /datum/weather/station_fog/proc/reveal_everyone()
@@ -307,10 +293,18 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		UnregisterSignal(target, COMSIG_QDELETING)
 		qdel(disguises[target])
 	disguises.Cut()
-	disguise_sources.Cut()
 
 /// The fog's anonymous figure. Shown per viewer by the fog, never generically.
+/// Turns with its body (lying down, etc), as in tgstation#97041.
 /datum/atom_hud/alternate_appearance/basic/station_fog
+
+/datum/atom_hud/alternate_appearance/basic/station_fog/New(key, image/shown_image, options)
+	. = ..()
+	RegisterSignal(target, COMSIG_LIVING_POST_UPDATE_TRANSFORM, PROC_REF(turn_image))
+
+/datum/atom_hud/alternate_appearance/basic/station_fog/proc/turn_image(datum/source, ...)
+	SIGNAL_HANDLER
+	image.transform = target.transform
 
 /datum/atom_hud/alternate_appearance/basic/station_fog/mobShouldSee(mob/M)
 	return FALSE
