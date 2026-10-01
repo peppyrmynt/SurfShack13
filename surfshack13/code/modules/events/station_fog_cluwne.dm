@@ -169,7 +169,7 @@
 	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB | PASSGLASS
 	move_resist = MOVE_FORCE_OVERPOWERING
 	// Noticeably quicker than a running spaceman (1.5): the hunt is short.
-	speed = 0.6
+	speed = 0.4
 	sight = SEE_SELF | SEE_MOBS
 	lighting_cutoff_red = 30
 	lighting_cutoff_green = 20
