@@ -229,16 +229,6 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 /// Gives [player] one fog hallucination, picked from the weighted pool.
 /datum/weather/station_fog/proc/fog_hallucinate(mob/living/player, hallucination_type)
 	hallucination_type ||= pick_weight(GLOB.station_fog_hallucinations)
-	// Fake speech should come from someone in the fog with you, not over the
-	// radio: without another person in view, see a figure instead.
-	if(hallucination_type == /datum/hallucination/chat)
-		var/someone_near = FALSE
-		for(var/mob/living/carbon/nearby in view(player))
-			if(nearby != player)
-				someone_near = TRUE
-				break
-		if(!someone_near)
-			hallucination_type = /datum/hallucination/fog_figure
 	if(hallucination_type == /datum/hallucination/fog_figure)
 		return player.cause_hallucination(hallucination_type, "station fog", vanish_range = get_conceal_range() || 2)
 	return player.cause_hallucination(hallucination_type, "station fog")
