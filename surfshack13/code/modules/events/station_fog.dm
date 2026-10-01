@@ -20,6 +20,11 @@
  *   Hovering gives "unknown figure", examining fails, and sec/med HUD icons
  *   on them are hidden. Voices still carry, so speech is still attributed.
  *
+ * - hallucinations at thickness 4 and 5: players standing in fog see people
+ *   that aren't there (a static figure in the fog, see /datum/hallucination/fog_figure)
+ *   and get tg's own people hallucinations: fake speech from nearby people,
+ *   distant fights and gunfire, stray bullets, someone nearby drawing a weapon.
+ *
  * Admins can drive it by hand with the "Debug Station Fog" verb.
  */
 
@@ -99,6 +104,8 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/disguises = list()
 	/// viewer mob -> list of target mobs currently concealed from them.
 	var/list/concealed_from = list()
+	/// player -> world.time their next fog hallucination is due.
+	var/list/next_hallucination = list()
 
 /datum/weather/station_fog/New(z_levels)
 	. = ..()
@@ -181,6 +188,50 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 			clear_fog_screens(player)
 	fogged_players = still_fogged
 	update_concealment()
+	roll_hallucinations()
+
+// ---- Hallucinations ----------------------------------------------------
+
+/// What the fog makes people see, weighted. The figure is the fog's own; the
+/// rest are tg's existing people hallucinations.
+GLOBAL_LIST_INIT(station_fog_hallucinations, list(
+	/datum/hallucination/fog_figure = 40,
+	/datum/hallucination/chat = 15,
+	/datum/hallucination/battle/gun/disabler = 5,
+	/datum/hallucination/battle/gun/laser = 5,
+	/datum/hallucination/battle/e_sword = 4,
+	/datum/hallucination/battle/harm_baton = 4,
+	/datum/hallucination/battle/stun_prod = 3,
+	/datum/hallucination/stray_bullet = 6,
+	/datum/hallucination/nearby_fake_item/e_sword = 3,
+	/datum/hallucination/nearby_fake_item/taser = 3,
+	/datum/hallucination/nearby_fake_item/baton = 3,
+	/datum/hallucination/nearby_fake_item/armblade = 2,
+))
+
+/// At thickness 4 and 5, every so often, makes each player in fog see things.
+/datum/weather/station_fog/proc/roll_hallucinations()
+	if(stage != MAIN_STAGE || thickness < 4)
+		return
+	for(var/mob/living/player as anything in fogged_players)
+		if(player.stat != CONSCIOUS || (player.mob_biotypes & NO_HALLUCINATION_BIOTYPES))
+			continue
+		var/due = next_hallucination[player]
+		if(!due)
+			// First one comes a little after the fog gets this thick.
+			next_hallucination[player] = world.time + rand(5 SECONDS, 20 SECONDS)
+			continue
+		if(world.time < due)
+			continue
+		next_hallucination[player] = world.time + (thickness >= 5 ? rand(15 SECONDS, 30 SECONDS) : rand(25 SECONDS, 50 SECONDS))
+		fog_hallucinate(player)
+
+/// Gives [player] one fog hallucination, picked from the weighted pool.
+/datum/weather/station_fog/proc/fog_hallucinate(mob/living/player, hallucination_type)
+	hallucination_type ||= pick_weight(GLOB.station_fog_hallucinations)
+	if(hallucination_type == /datum/hallucination/fog_figure)
+		return player.cause_hallucination(hallucination_type, "station fog", vanish_range = get_conceal_range() || 2)
+	return player.cause_hallucination(hallucination_type, "station fog")
 
 // ---- Identity concealment ----------------------------------------------
 
@@ -374,6 +425,8 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 	var/list/options = list()
 	for(var/level in 1 to STATION_FOG_MAX_THICKNESS)
 		options += "Thickness [level][fog?.stage == MAIN_STAGE && fog.thickness == level ? " (current)" : ""]"
+	options += "Hallucinate a fog figure (me)"
+	options += "Hallucinate something random from the fog pool (me)"
 	options += "Resume automatic thickening"
 	options += "Stop fog"
 	var/choice = tgui_input_list(user, "Station fog is [fog ? "active" : "not active"]. Picking a thickness starts a test fog instantly (no telegraph, no timer) if none is running.", "Debug Station Fog", options)
@@ -387,6 +440,17 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 		fog.end()
 		message_admins("[key_name_admin(user)] stopped the station fog.")
 		log_admin("[key_name(user)] stopped the station fog.")
+		return
+	if(findtext(choice, "Hallucinate") == 1)
+		if(!fog)
+			to_chat(user, span_warning("Start a fog first, the figure only appears inside it."))
+			return
+		if(!isliving(user.mob))
+			to_chat(user, span_warning("You need to be in a living body for that."))
+			return
+		var/datum/hallucination/caused = fog.fog_hallucinate(user.mob, findtext(choice, "figure") ? /datum/hallucination/fog_figure : null)
+		if(!caused)
+			to_chat(user, span_warning("That hallucination couldn't start here (for the figure: you need fogged floor 4-7 tiles away in view)."))
 		return
 	if(!fog)
 		fog = new /datum/weather/station_fog(SSmapping.levels_by_trait(ZTRAIT_STATION))
@@ -417,3 +481,116 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 #undef STATION_FOG_SCREEN_NORTH
 #undef STATION_FOG_SCREEN_SOUTH
 #undef STATION_FOG_CONCEAL_SCAN
+
+/**
+ * # Fog figure
+ *
+ * Someone standing in the fog who isn't there. Shown only to the hallucinator,
+ * as the same static figure the fog uses for real people it conceals, so the
+ * two can't be told apart from a distance. It fades in on fogged floor just
+ * past recognition range, may drift around or creep closer, may whisper, and
+ * dissolves the moment you get close enough to see who it would be.
+ */
+/datum/hallucination/fog_figure
+	random_hallucination_weight = 0 // fog only
+	/// Get this close and the figure dissolves.
+	var/vanish_range = 2
+	/// The figure, as shown to the hallucinator.
+	var/image/figure
+	/// Wandering, creeping closer, or standing still.
+	var/behaviour
+	/// The looping step timer.
+	var/step_timer
+	/// Whether it's already dissolving.
+	var/vanishing = FALSE
+
+/datum/hallucination/fog_figure/New(mob/living/hallucinator, vanish_range = 2)
+	src.vanish_range = vanish_range
+	return ..()
+
+/datum/hallucination/fog_figure/start()
+	if(!hallucinator.client)
+		return FALSE
+	var/datum/weather/station_fog/fog = GLOB.station_fog
+	var/list/spots = list()
+	for(var/turf/open/spot in view(7, hallucinator))
+		if(get_dist(hallucinator, spot) <= vanish_range + 1 || spot.is_blocked_turf())
+			continue
+		if(fog && !fog.fogged_area_set[get_area(spot)])
+			continue
+		spots += spot
+	if(!length(spots))
+		return FALSE
+	var/turf/spot = pick(spots)
+	figure = image('icons/effects/effects.dmi', spot, "static", MOB_LAYER)
+	SET_PLANE_EXPLICIT(figure, GAME_PLANE, spot)
+	figure.name = "unknown humanoid"
+	figure.dir = get_dir(spot, hallucinator)
+	figure.alpha = 0
+	hallucinator.client.images |= figure
+	animate(figure, alpha = 255, time = 1.5 SECONDS)
+	behaviour = pick(40; "wander", 35; "approach", 25; "still")
+	feedback_details += "Figure: [behaviour]"
+	if(prob(30))
+		addtimer(CALLBACK(src, PROC_REF(whisper)), rand(2 SECONDS, 5 SECONDS))
+	step_timer = addtimer(CALLBACK(src, PROC_REF(figure_step)), 0.8 SECONDS, TIMER_STOPPABLE | TIMER_LOOP)
+	addtimer(CALLBACK(src, PROC_REF(vanish)), rand(8 SECONDS, 16 SECONDS))
+	return TRUE
+
+/// One beat: dissolve if they got close, otherwise maybe shuffle a tile.
+/datum/hallucination/fog_figure/proc/figure_step()
+	if(vanishing || QDELETED(hallucinator))
+		return
+	var/turf/here = figure.loc
+	if(!here || here.z != hallucinator.z || get_dist(hallucinator, here) <= vanish_range)
+		vanish()
+		return
+	if(behaviour == "still" || prob(35))
+		figure.dir = get_dir(here, hallucinator)
+		return
+	var/turf/open/next
+	if(behaviour == "approach" && get_dist(hallucinator, here) > vanish_range + 1)
+		next = get_step_towards(here, hallucinator)
+	else
+		next = get_step(here, pick(GLOB.cardinals))
+	if(!istype(next) || next.is_blocked_turf() || get_dist(hallucinator, next) <= vanish_range)
+		return
+	// Glide: jump the image to the new tile, offset back, slide the offset out.
+	var/step_dir = get_dir(here, next)
+	figure.loc = next
+	figure.dir = step_dir
+	figure.pixel_x = (step_dir & EAST) ? -32 : ((step_dir & WEST) ? 32 : 0)
+	figure.pixel_y = (step_dir & NORTH) ? -32 : ((step_dir & SOUTH) ? 32 : 0)
+	animate(figure, pixel_x = 0, pixel_y = 0, time = 0.8 SECONDS)
+
+/// The figure says something, quietly, as an unknown voice.
+/datum/hallucination/fog_figure/proc/whisper()
+	if(vanishing || QDELETED(hallucinator))
+		return
+	var/line = pick(
+		"[hallucinator.first_name()]?",
+		"Over here...",
+		"Who's there?",
+		"Help me.",
+		"I can see you.",
+		"Don't come closer.",
+	)
+	to_chat(hallucinator, "<span class='game say'><span class='name'>Unknown</span> <span class='message'>whispers, \"<i>[line]</i>\"</span></span>")
+
+/datum/hallucination/fog_figure/proc/vanish()
+	if(vanishing)
+		return
+	vanishing = TRUE
+	if(step_timer)
+		deltimer(step_timer)
+		step_timer = null
+	animate(figure, alpha = 0, time = 0.6 SECONDS)
+	QDEL_IN(src, 0.6 SECONDS)
+
+/datum/hallucination/fog_figure/Destroy()
+	if(step_timer)
+		deltimer(step_timer)
+		step_timer = null
+	hallucinator?.client?.images -= figure
+	figure = null
+	return ..()
