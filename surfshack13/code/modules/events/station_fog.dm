@@ -48,8 +48,8 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	typepath = /datum/round_event/station_fog
 	weight = 10
 	max_occurrences = 1
-	earliest_start = 20 MINUTES
-	min_players = 10
+	earliest_start = 15 MINUTES
+	min_players = 5
 	category = EVENT_CATEGORY_SPACE
 	description = "A thickening fog fills the station. Maintenance stays clear."
 	min_wizard_trigger_potency = 0
