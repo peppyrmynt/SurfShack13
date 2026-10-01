@@ -24,6 +24,9 @@
  *   that aren't there (a static figure in the fog, see /datum/hallucination/fog_figure)
  *   and get tg's own people hallucinations: fake speech from nearby people,
  *   distant fights and gunfire, stray bullets, someone nearby drawing a weapon.
+ * - at thickness 5, the floor cluwne: one of its sounds (from HippieStation)
+ *   plays from a spot in the fog, and every fogged player in earshot hears the
+ *   same sound from the same place at the same time.
  *
  * Admins can drive it by hand with the "Debug Station Fog" verb.
  */
@@ -110,6 +113,8 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/viewer_clients = list()
 	/// player -> world.time their next fog hallucination is due.
 	var/list/next_hallucination = list()
+	/// world.time the next shared floor cluwne sound is due, at thickness 5.
+	var/next_cluwne_sound = 0
 
 /datum/weather/station_fog/New(z_levels)
 	. = ..()
@@ -193,6 +198,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	fogged_players = still_fogged
 	update_concealment()
 	roll_hallucinations()
+	roll_cluwne_sound()
 
 // ---- Hallucinations ----------------------------------------------------
 
@@ -236,6 +242,72 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 	if(hallucination_type == /datum/hallucination/fog_figure)
 		return player.cause_hallucination(hallucination_type, "station fog", vanish_range = get_conceal_range() || 2)
 	return player.cause_hallucination(hallucination_type, "station fog")
+
+// ---- Floor cluwne ------------------------------------------------------
+
+/// What the floor cluwne sounds like. Laughs, breathing and emerging are
+/// HippieStation's floor cluwne sounds; the voice lines are the ones it used,
+/// which Surf already has.
+GLOBAL_LIST_INIT(station_fog_cluwne_sounds, list(
+	'surfshack13/sound/hippie/cluwne_breathing.ogg' = 3,
+	'surfshack13/sound/hippie/cluwnelaugh1.ogg' = 2,
+	'surfshack13/sound/hippie/cluwnelaugh2.ogg' = 2,
+	'surfshack13/sound/hippie/cluwnelaugh3.ogg' = 2,
+	'surfshack13/sound/hippie/cluwnelaugh2_reversed.ogg' = 2,
+	'surfshack13/sound/hippie/floor_cluwne_emerge.ogg' = 1,
+	'sound/misc/scary_horn.ogg' = 1,
+	'sound/effects/hallucinations/behind_you1.ogg' = 1,
+	'sound/effects/hallucinations/im_here1.ogg' = 1,
+	'sound/effects/hallucinations/i_see_you1.ogg' = 1,
+))
+
+/// How far a shared cluwne sound carries through the fog.
+#define STATION_FOG_CLUWNE_RANGE 12
+
+/// At thickness 5, every so often, the floor cluwne makes itself heard.
+/datum/weather/station_fog/proc/roll_cluwne_sound()
+	if(stage != MAIN_STAGE || thickness < STATION_FOG_MAX_THICKNESS)
+		next_cluwne_sound = 0
+		return
+	if(!next_cluwne_sound)
+		next_cluwne_sound = world.time + rand(10 SECONDS, 25 SECONDS)
+		return
+	if(world.time < next_cluwne_sound)
+		return
+	next_cluwne_sound = world.time + rand(40 SECONDS, 90 SECONDS)
+	play_cluwne_sound()
+
+/**
+ * Plays one floor cluwne sound from a spot in the fog near a random fogged
+ * player, to every fogged player in earshot of it, so a group standing
+ * together all hear the same thing from the same place. It's a hallucination:
+ * nobody outside the fog hears anything. Returns how many heard it.
+ */
+/datum/weather/station_fog/proc/play_cluwne_sound(mob/living/near, sound_file)
+	var/list/candidates = list()
+	for(var/mob/living/player as anything in fogged_players)
+		if(player.stat == CONSCIOUS && !(player.mob_biotypes & NO_HALLUCINATION_BIOTYPES))
+			candidates += player
+	if(!near)
+		if(!length(candidates))
+			return 0
+		near = pick(candidates)
+	// Somewhere in the fog a few tiles off, so it comes from out there.
+	var/list/spots = list()
+	for(var/turf/open/spot in range(7, near))
+		if(get_dist(near, spot) >= 4 && fogged_area_set[get_area(spot)])
+			spots += spot
+	var/turf/origin = length(spots) ? pick(spots) : get_turf(near)
+	sound_file ||= pick_weight(GLOB.station_fog_cluwne_sounds)
+	var/heard = 0
+	for(var/mob/living/listener as anything in candidates | near)
+		if(listener.z != origin.z || get_dist(listener, origin) > STATION_FOG_CLUWNE_RANGE)
+			continue
+		listener.playsound_local(origin, sound_file, 60, FALSE)
+		heard++
+	return heard
+
+#undef STATION_FOG_CLUWNE_RANGE
 
 // ---- Identity concealment ----------------------------------------------
 
@@ -462,6 +534,7 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 		options += "Thickness [level][fog?.stage == MAIN_STAGE && fog.thickness == level ? " (current)" : ""]"
 	options += "Hallucinate a fog figure (me)"
 	options += "Hallucinate something random from the fog pool (me)"
+	options += "Play a shared floor cluwne sound (near me)"
 	options += "Resume automatic thickening"
 	options += "Stop fog"
 	var/choice = tgui_input_list(user, "Station fog is [fog ? "active" : "not active"]. Picking a thickness starts a test fog instantly (no telegraph, no timer) if none is running.", "Debug Station Fog", options)
@@ -475,6 +548,13 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 		fog.end()
 		message_admins("[key_name_admin(user)] stopped the station fog.")
 		log_admin("[key_name(user)] stopped the station fog.")
+		return
+	if(findtext(choice, "Play a shared floor cluwne") == 1)
+		if(!fog || !isliving(user.mob))
+			to_chat(user, span_warning("Start a fog and be in a living body first."))
+			return
+		var/heard = fog.play_cluwne_sound(user.mob)
+		to_chat(user, span_notice("[heard] player\s in the fog heard it."))
 		return
 	if(findtext(choice, "Hallucinate") == 1)
 		if(!fog)
