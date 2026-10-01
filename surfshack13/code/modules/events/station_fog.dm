@@ -64,14 +64,41 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	earliest_start = 15 MINUTES
 	min_players = 5
 	category = EVENT_CATEGORY_SPACE
-	description = "A thickening fog fills the station. Maintenance stays clear."
+	description = "A thickening fog fills the station. Maintenance stays clear. A third of the time it's a nightmare fog: it reaches maintenance too, and a ghost plays a floor cluwne."
 	min_wizard_trigger_potency = 0
 	max_wizard_trigger_potency = 4
+	admin_setup = list(/datum/event_admin_setup/listed_options/station_fog)
 
 /datum/round_event/station_fog
 	announce_when = 1
 	start_when = 2
 	end_when = 3
+	/// Set by an admin forcing the event: TRUE/FALSE for nightmare or normal, null to roll.
+	var/forced_nightmare
+	/// How many floor cluwnes a nightmare fog polls for.
+	var/cluwne_count = 1
+
+/// Trigger Event: lets the admin pick a normal fog or a nightmare fog and its cluwne count.
+/datum/event_admin_setup/listed_options/station_fog
+	input_text = "What kind of fog?"
+	normal_run_option = "Random (a third of the time it's a nightmare fog with 1 floor cluwne)"
+
+/datum/event_admin_setup/listed_options/station_fog/get_list()
+	return list(
+		"Normal fog",
+		"Nightmare fog, 1 floor cluwne",
+		"Nightmare fog, 2 floor cluwnes",
+		"Nightmare fog, 3 floor cluwnes",
+	)
+
+/datum/event_admin_setup/listed_options/station_fog/apply_to_event(datum/round_event/station_fog/event)
+	if(!chosen)
+		return
+	if(chosen == "Normal fog")
+		event.forced_nightmare = FALSE
+		return
+	event.forced_nightmare = TRUE
+	event.cluwne_count = text2num(copytext(chosen, length("Nightmare fog, ") + 1))
 
 /datum/round_event/station_fog/announce(fake)
 	priority_announce("A dense vapour bank has been drawn into the station's air handling. Visibility will fall across the station as it thickens. Maintenance runs on independent scrubbers and should remain clear.", "Atmospheric Anomaly")
@@ -80,18 +107,36 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 #define STATION_FOG_NIGHTMARE_CHANCE 33
 
 /datum/round_event/station_fog/start()
-	if(!prob(STATION_FOG_NIGHTMARE_CHANCE))
-		SSweather.run_weather(/datum/weather/station_fog)
-		return
-	var/datum/weather/station_fog/fog = new(SSmapping.levels_by_trait(ZTRAIT_STATION))
-	fog.nightmare = TRUE
-	fog.cluwne_count = 1
-	fog.perpetual = TRUE
-	fog.telegraph()
-	message_admins("The station fog event rolled a NIGHTMARE fog: it will poll ghosts for a floor cluwne at thickness 5.")
-	log_game("The station fog event rolled a nightmare fog.")
+	var/nightmare = isnull(forced_nightmare) ? prob(STATION_FOG_NIGHTMARE_CHANCE) : forced_nightmare
+	start_station_fog(nightmare, cluwne_count)
+	if(nightmare)
+		message_admins("The station fog event is a NIGHTMARE fog: it will poll ghosts for [cluwne_count] floor cluwne\s at thickness 5.")
+		log_game("The station fog event is a nightmare fog ([cluwne_count] floor cluwnes).")
 
 #undef STATION_FOG_NIGHTMARE_CHANCE
+
+/**
+ * Starts a station fog, replacing any already running. The one way in for the
+ * random event, Trigger Event and the debug verb alike.
+ * * nightmare - climbs to 6, into maintenance, with floor cluwnes
+ * * cluwne_count - how many floor cluwnes a nightmare fog polls for
+ * * auto_thicken - FALSE to drive the thickness by hand (starts at 1, no timers)
+ * * announce - send the arrival announcement (the random event sends its own)
+ */
+/proc/start_station_fog(nightmare = FALSE, cluwne_count = 1, auto_thicken = TRUE, announce = FALSE)
+	GLOB.station_fog?.end()
+	var/datum/weather/station_fog/fog = new(SSmapping.levels_by_trait(ZTRAIT_STATION))
+	fog.nightmare = nightmare
+	fog.cluwne_count = cluwne_count
+	fog.auto_thicken = auto_thicken
+	// Nightmare fogs and hand-driven fogs end on their own schedule, not a random duration.
+	fog.perpetual = nightmare || !auto_thicken
+	if(announce)
+		priority_announce("A dense vapour bank has been drawn into the station's air handling. Visibility will fall across the station as it thickens. Maintenance runs on independent scrubbers and should remain clear.", "Atmospheric Anomaly")
+	fog.telegraph()
+	if(!auto_thicken)
+		fog.start()
+	return fog
 
 /datum/weather/station_fog
 	name = "station fog"
@@ -742,6 +787,10 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 	for(var/level in 1 to (fog ? fog.max_thickness() : STATION_FOG_MAX_THICKNESS))
 		options += "Thickness [level][fog?.stage == MAIN_STAGE && fog.thickness == level ? " (current)" : ""]"
 	options += "Start NIGHTMARE fog (level 6, maintenance, floor cluwnes)"
+	if(fog?.nightmare)
+		options += "Repoll ghosts for floor cluwnes"
+		options += "Make a player a floor cluwne"
+		options += "Send the floor cluwnes away"
 	options += "Hallucinate a fog figure (me)"
 	options += "Hallucinate something random from the fog pool (me)"
 	options += "Play a shared floor cluwne sound (near me)"
@@ -760,19 +809,44 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 		var/timeline = tgui_alert(user, "Run it automatically (thickens to 5 over ~3 minutes, polls for cluwnes, 6 a minute later, then 90 seconds of hunting), or drive it by hand with the thickness options (5 polls, 6 spreads into maintenance and starts the 90 second clock)?", "Nightmare fog", list("Automatic", "By hand"))
 		if(!timeline)
 			return
-		fog?.end()
-		fog = new /datum/weather/station_fog(SSmapping.levels_by_trait(ZTRAIT_STATION))
-		fog.nightmare = TRUE
-		fog.cluwne_count = count
-		fog.perpetual = TRUE
-		fog.auto_thicken = (timeline == "Automatic")
-		priority_announce("A dense vapour bank has been drawn into the station's air handling. Visibility will fall across the station as it thickens. Maintenance runs on independent scrubbers and should remain clear.", "Atmospheric Anomaly")
-		fog.telegraph()
-		if(!fog.auto_thicken)
-			fog.start()
+		fog = start_station_fog(TRUE, count, timeline == "Automatic", announce = TRUE)
 		message_admins("[key_name_admin(user)] started a NIGHTMARE station fog with [count] floor cluwne\s ([timeline]).")
 		log_admin("[key_name(user)] started a nightmare station fog with [count] floor cluwnes ([timeline]).")
 		BLACKBOX_LOG_ADMIN_VERB("Debug Station Fog")
+		return
+	if(choice == "Repoll ghosts for floor cluwnes")
+		if(fog.stage != MAIN_STAGE || fog.thickness < STATION_FOG_MAX_THICKNESS)
+			to_chat(user, span_warning("Floor cluwnes come at thickness 5 or 6. Set the fog to 5 first."))
+			return
+		var/count = tgui_input_number(user, "Poll for how many more floor cluwnes? ([length(fog.cluwnes)] hunting now.)", "Repoll floor cluwnes", 1, 3, 1)
+		if(!count)
+			return
+		fog.repoll_cluwnes(count)
+		message_admins("[key_name_admin(user)] repolled ghosts for [count] floor cluwne\s.")
+		log_admin("[key_name(user)] repolled ghosts for [count] floor cluwnes.")
+		return
+	if(choice == "Make a player a floor cluwne")
+		var/list/candidates = list()
+		for(var/mob/player as anything in GLOB.player_list)
+			if(player.client && !istype(player, /mob/living/basic/floor_cluwne) && !isnewplayer(player))
+				candidates["[player.real_name] ([player.ckey])[isobserver(player) ? " - ghost" : ""]"] = player
+		var/picked = tgui_input_list(user, "Who becomes a floor cluwne? A living player leaves their body behind.", "Make a floor cluwne", sort_list(candidates))
+		if(!picked)
+			return
+		var/mob/target = candidates[picked]
+		if(!isobserver(target) && tgui_alert(user, "[target] is alive. They'll leave their body to become the cluwne, and come back as a ghost. Continue?", "Make a floor cluwne", list("Yes", "No")) != "Yes")
+			return
+		var/mob/living/basic/floor_cluwne/cluwne = fog.make_player_cluwne(target)
+		if(cluwne)
+			message_admins("[key_name_admin(user)] made [key_name_admin(cluwne)] a floor cluwne.")
+			log_admin("[key_name(user)] made [key_name(cluwne)] a floor cluwne.")
+		else
+			to_chat(user, span_warning("Couldn't find fogged floor to put a cluwne on."))
+		return
+	if(choice == "Send the floor cluwnes away")
+		fog.remove_cluwnes()
+		message_admins("[key_name_admin(user)] sent the floor cluwnes away.")
+		log_admin("[key_name(user)] sent the floor cluwnes away.")
 		return
 	if(choice == "Stop fog")
 		if(!fog)
@@ -808,11 +882,14 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 		fog.start()
 	if(choice == "Resume automatic thickening")
 		fog.auto_thicken = TRUE
-		fog.perpetual = FALSE
-		var/remaining_steps = STATION_FOG_MAX_THICKNESS - fog.thickness
+		var/remaining_steps = fog.max_thickness() - fog.thickness
+		var/step_time = fog.nightmare ? 40 SECONDS : 2 MINUTES
 		for(var/step in 1 to remaining_steps)
-			addtimer(CALLBACK(fog, TYPE_PROC_REF(/datum/weather/station_fog, set_thickness), fog.thickness + step), 2 MINUTES * step)
-		addtimer(CALLBACK(fog, TYPE_PROC_REF(/datum/weather, wind_down)), 2 MINUTES * (remaining_steps + 1))
+			addtimer(CALLBACK(fog, TYPE_PROC_REF(/datum/weather/station_fog, set_thickness), fog.thickness + step), step_time * step)
+		// A nightmare fog winds itself down 90 seconds after reaching 6.
+		if(!fog.nightmare)
+			fog.perpetual = FALSE
+			addtimer(CALLBACK(fog, TYPE_PROC_REF(/datum/weather, wind_down)), step_time * (remaining_steps + 1))
 		message_admins("[key_name_admin(user)] set the station fog to thicken on its own.")
 		log_admin("[key_name(user)] set the station fog to thicken on its own.")
 		return

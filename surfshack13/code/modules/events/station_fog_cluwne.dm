@@ -22,6 +22,8 @@
 #define FLOOR_CLUWNE_SOURCE "floor_cluwne"
 /// How much damage the cluwne can take mid-grab before it lets go.
 #define FLOOR_CLUWNE_GRAB_BREAK_DAMAGE 60
+/// On someone a floor cluwne is dragging under, so no second cluwne grabs them too.
+#define TRAIT_FLOOR_CLUWNE_GRABBED "floor_cluwne_grabbed"
 
 // ---- The fog's side: polling, spawning, victims -----------------------------
 
@@ -49,19 +51,38 @@
 		return
 	make_gullet()
 	for(var/mob/dead/observer/ghost in chosen)
-		spawn_cluwne(ghost)
+		spawn_cluwne(ghost.key)
 
-/// Puts [ghost] into a new floor cluwne somewhere in the fog.
-/datum/weather/station_fog/proc/spawn_cluwne(mob/dead/observer/ghost)
+/// Asks the dead again for [count] more floor cluwnes (nobody signed up, or
+/// some died). Admin tool; only meaningful at thickness 5 or 6.
+/datum/weather/station_fog/proc/repoll_cluwnes(count = 1)
+	cluwnes_polled = FALSE
+	cluwne_count = count
+	INVOKE_ASYNC(src, PROC_REF(poll_for_cluwnes))
+
+/// Turns [target] (a ghost, or a living player who leaves their body) into a
+/// floor cluwne. Admin tool. Returns the cluwne, or null if there was nowhere to put it.
+/datum/weather/station_fog/proc/make_player_cluwne(mob/target)
+	if(!target?.key)
+		return null
+	var/player_key = target.key
+	if(!isobserver(target))
+		target.ghostize(TRUE)
+	return spawn_cluwne(player_key)
+
+/// Puts the player with [player_key] into a new floor cluwne somewhere in the fog.
+/datum/weather/station_fog/proc/spawn_cluwne(player_key)
 	var/turf/spot = random_fogged_floor()
 	if(!spot)
 		message_admins("Nightmare fog: no fogged floor to spawn a floor cluwne on.")
-		return
+		return null
 	var/mob/living/basic/floor_cluwne/cluwne = new(spot, src)
 	cluwnes += cluwne
-	cluwne.PossessByPlayer(ghost.key)
+	cluwne.PossessByPlayer(player_key)
+	cluwne.mind?.add_antag_datum(/datum/antagonist/floor_cluwne)
 	message_admins("[ADMIN_LOOKUPFLW(cluwne)] has been made into a floor cluwne by the nightmare fog.")
 	log_game("[key_name(cluwne)] was spawned as a floor cluwne by the nightmare fog.")
+	return cluwne
 
 /// A random open, unblocked floor in a fogged area.
 /datum/weather/station_fog/proc/random_fogged_floor()
@@ -278,6 +299,12 @@
 		span_bold("People you drag under aren't killed. They're spat back out when the fog lifts, which will be soon. Make it count."),
 	), "<br>")))
 
+/mob/living/basic/floor_cluwne/Life(seconds_per_tick, times_fired)
+	. = ..()
+	// Cheap, and plane masters are rebuilt whenever the HUD is (view changes etc).
+	if(client && times_fired % 5 == 0)
+		thin_the_fog()
+
 /// The fog is home: the haze drawn over the floors is only faint to us.
 /mob/living/basic/floor_cluwne/proc/thin_the_fog()
 	if(!hud_used)
@@ -335,6 +362,7 @@
 /// The grab: surface, drag them to the hole, and pull them under. Sleeps.
 /mob/living/basic/floor_cluwne/proc/drag_under(mob/living/carbon/human/victim)
 	eating = victim
+	ADD_TRAIT(victim, TRAIT_FLOOR_CLUWNE_GRABBED, REF(src))
 	grab_start_health = health
 	// Walls or doors in the way: come up right under them instead, as Hippie's did.
 	for(var/turf/crossed as anything in get_line(src, victim))
@@ -386,6 +414,7 @@
 /// Lets go of whoever we had, and sinks back down.
 /mob/living/basic/floor_cluwne/proc/let_go()
 	if(eating && !QDELETED(eating))
+		REMOVE_TRAIT(eating, TRAIT_FLOOR_CLUWNE_GRABBED, REF(src))
 		to_chat(eating, span_warning("The grip on your ankle lets go!"))
 	eating = null
 	submerge()
@@ -399,6 +428,10 @@
 		if(prob(40))
 			victim.add_splatter_floor(splatter_turf)
 	log_combat(src, victim, "dragged under the floor")
+	REMOVE_TRAIT(victim, TRAIT_FLOOR_CLUWNE_GRABBED, REF(src))
+	var/datum/antagonist/floor_cluwne/role = mind?.has_antag_datum(/datum/antagonist/floor_cluwne)
+	if(role)
+		role.dragged_under++
 	if(fog)
 		fog.take_victim(victim, src)
 		// Everyone in the fog hears it echo, wherever they are.
@@ -472,6 +505,7 @@
 	switch(rand(1, 4))
 		if(1)
 			victim.playsound_local(get_turf(owner), 'surfshack13/sound/hippie/cluwnelaugh2_reversed.ogg', 40, TRUE)
+			victim.add_mood_event("station_fog_laugh", /datum/mood_event/station_fog_laugh)
 			to_chat(victim, "<i>...edih t'nac uoY...</i>")
 		if(2)
 			victim.playsound_local(get_turf(owner), 'surfshack13/sound/hippie/bikehorn_creepy.ogg', 40, TRUE)
@@ -487,6 +521,7 @@
 				to_chat(victim, span_warning("What threw that?"))
 			else
 				victim.playsound_local(get_turf(owner), 'surfshack13/sound/hippie/cluwnelaugh1.ogg', 40, TRUE)
+				victim.add_mood_event("station_fog_laugh", /datum/mood_event/station_fog_laugh)
 		if(4)
 			victim.set_eye_blur_if_lower(6 SECONDS)
 			to_chat(victim, span_warning("Your eyes sting."))
@@ -535,6 +570,9 @@
 /datum/action/cooldown/floor_cluwne/grab/Activate(atom/target)
 	if(!valid_victim(target))
 		return FALSE
+	if(HAS_TRAIT(target, TRAIT_FLOOR_CLUWNE_GRABBED))
+		owner.balloon_alert(owner, "already being taken!")
+		return FALSE
 	var/mob/living/basic/floor_cluwne/cluwne = owner
 	StartCooldown()
 	INVOKE_ASYNC(cluwne, TYPE_PROC_REF(/mob/living/basic/floor_cluwne, drag_under), target)
@@ -543,3 +581,42 @@
 #undef FLOOR_CLUWNE_SUBMERGED
 #undef FLOOR_CLUWNE_SOURCE
 #undef FLOOR_CLUWNE_GRAB_BREAK_DAMAGE
+#undef TRAIT_FLOOR_CLUWNE_GRABBED
+
+/**
+ * The floor cluwne role: puts them in the antag lists, Check Antagonists and
+ * the round-end report (with how many people they dragged under), and lets
+ * admins turn someone into one from their antag panel while a nightmare fog
+ * is running.
+ */
+/datum/antagonist/floor_cluwne
+	name = "\improper Floor Cluwne"
+	roundend_category = "floor cluwnes"
+	antagpanel_category = ANTAG_GROUP_HORRORS
+	show_in_antagpanel = TRUE
+	show_name_in_check_antagonists = TRUE
+	show_to_ghosts = TRUE
+	// The cluwne's own Login message is the greeting.
+	silent = TRUE
+	/// How many people this cluwne dragged under the floor.
+	var/dragged_under = 0
+
+/datum/antagonist/floor_cluwne/admin_add(datum/mind/new_owner, mob/admin)
+	var/datum/weather/station_fog/fog = GLOB.station_fog
+	if(!fog?.nightmare || fog.stage != MAIN_STAGE)
+		to_chat(admin, span_warning("Floor cluwnes only exist inside a running nightmare fog. Start one from Debug Station Fog or Trigger Event first."))
+		return
+	if(!new_owner.current?.key)
+		to_chat(admin, span_warning("[new_owner] isn't connected to a body."))
+		return
+	var/mob/living/basic/floor_cluwne/cluwne = fog.make_player_cluwne(new_owner.current)
+	if(!cluwne)
+		to_chat(admin, span_warning("Couldn't find fogged floor to put a cluwne on."))
+		return
+	message_admins("[key_name_admin(admin)] made [key_name_admin(cluwne)] a floor cluwne.")
+	log_admin("[key_name(admin)] made [key_name(cluwne)] a floor cluwne.")
+
+/datum/antagonist/floor_cluwne/roundend_report()
+	var/list/report = list(printplayer(owner))
+	report += "Dragged <b>[dragged_under]</b> [dragged_under == 1 ? "person" : "people"] under the floor."
+	return report.Join("<br>")
