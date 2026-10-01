@@ -104,6 +104,10 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/disguises = list()
 	/// viewer mob -> list of target mobs currently concealed from them.
 	var/list/concealed_from = list()
+	/// viewer mob -> the client that was given their disguise images. Images
+	/// live on the client, not the mob, so if the client moves to another body
+	/// (aghost, possession, respawn) they must be taken off that client.
+	var/list/viewer_clients = list()
 	/// player -> world.time their next fog hallucination is due.
 	var/list/next_hallucination = list()
 
@@ -258,6 +262,7 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 
 /// Re-decides, for every player near the fog, which people they can't make out.
 /datum/weather/station_fog/proc/update_concealment()
+	drop_moved_clients()
 	var/list/new_concealed = list()
 	var/conceal_range = get_conceal_range()
 	if(stage == MAIN_STAGE && conceal_range)
@@ -287,6 +292,7 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 		for(var/mob/living/target as anything in new_hidden - old_hidden)
 			conceal_from(target, viewer)
 	concealed_from = new_concealed
+	strip_own_disguises()
 
 /// The anonymous figure for [target], made on first use. Same art as
 /// tgstation#97041: humans become a static-noise humanoid, cyborgs a stock
@@ -314,15 +320,23 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 	return disguise
 
 /datum/weather/station_fog/proc/conceal_from(mob/living/target, mob/viewer)
+	if(target == viewer || !viewer.client)
+		return
 	get_disguise(target).show_to(viewer)
+	viewer_clients[viewer] = viewer.client
 	// Sec and med HUD icons would give the game away: hide this body's.
 	for(var/datum/atom_hud/data/human/hud in GLOB.huds)
 		hud.hide_single_atomhud_from(viewer, target)
 
 /datum/weather/station_fog/proc/reveal_to(mob/living/target, mob/viewer)
+	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
+	// Whichever client got the image, take it back off that client directly.
+	var/client/given_to = viewer_clients[viewer]
+	if(disguise)
+		given_to?.images -= disguise.image
+		viewer?.client?.images -= disguise.image
 	if(QDELETED(target) || QDELETED(viewer))
 		return
-	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
 	disguise?.hide_from(viewer, absolute = TRUE)
 	for(var/datum/atom_hud/data/human/hud in GLOB.huds)
 		hud.unhide_single_atomhud_from(viewer, target)
@@ -334,12 +348,33 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 	qdel(disguises[source])
 	disguises -= source
 
+/// If a viewer's client has left their body (aghost, possession, respawn),
+/// strips every disguise image off the client that had them, before that
+/// client ends up looking at one of those bodies from the inside.
+/datum/weather/station_fog/proc/drop_moved_clients()
+	for(var/mob/viewer as anything in concealed_from.Copy())
+		var/client/given_to = viewer_clients[viewer]
+		if(!QDELETED(viewer) && viewer.client == given_to)
+			continue
+		for(var/mob/living/target as anything in concealed_from[viewer])
+			reveal_to(target, viewer)
+		concealed_from -= viewer
+		viewer_clients -= viewer
+
+/// Nobody ever sees their own disguise, however they came by it.
+/datum/weather/station_fog/proc/strip_own_disguises()
+	for(var/mob/living/target as anything in disguises)
+		var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = disguises[target]
+		if(target.client && disguise)
+			target.client.images -= disguise.image
+
 /// Lifts every disguise, for when the fog ends.
 /datum/weather/station_fog/proc/reveal_everyone()
 	for(var/mob/viewer as anything in concealed_from)
 		for(var/mob/living/target as anything in concealed_from[viewer])
 			reveal_to(target, viewer)
 	concealed_from.Cut()
+	viewer_clients.Cut()
 	for(var/mob/living/target as anything in disguises)
 		UnregisterSignal(target, COMSIG_QDELETING)
 		qdel(disguises[target])
