@@ -232,7 +232,7 @@
 	to_chat(src, boxed_message(jointext(list(
 		span_deadsay(span_boldbig("You are a floor cluwne.")),
 		span_bold("You move under the station's floors, through walls and doors, unseen by anyone but the dead. You can only go where the fog goes, and you see through it: heat and all."),
-		span_bold("Haunt, Trip and Torment scare the crew. Grab drags someone within 3 tiles under the floor: you surface to do it, and while you're up you can be hurt and pulled off them."),
+		span_bold("Until the fog thickens all the way you can only move and watch. Once it does, Haunt, Trip and Torment scare the crew. Grab drags someone within 3 tiles under the floor: you surface to do it, and while you're up you can be hurt and pulled off them."),
 		span_bold("People you drag under aren't killed. They're spat back out when the fog lifts, which will be soon. Make it count."),
 	), "<br>")))
 
@@ -398,6 +398,11 @@
 		return
 	var/mob/living/basic/floor_cluwne/cluwne = owner
 	if(!istype(cluwne) || cluwne.eating)
+		return FALSE
+	// At thickness 5 it can only stalk: its tricks wake up with the fog at 6.
+	if(!cluwne.fog?.maintenance_fogged)
+		if(feedback)
+			cluwne.balloon_alert(cluwne, "the fog isn't thick enough yet")
 		return FALSE
 
 /// Shared targeting check: a living, conscious person in view and in range.
