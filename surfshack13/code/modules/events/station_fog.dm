@@ -252,25 +252,24 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
  * (group -> list(weight, files...)). A group heard recently won't come up
  * again (see STATION_FOG_CLUWNE_NO_REPEAT), so it never loops one sound.
  *
- * Laughs, breathing, emerge, feast, creepy horn, distant honk and giggle are
+ * Laughs, breathing, feast, creepy horn, distant honk and giggle are
  * HippieStation's (surfshack13/sound/hippie); the voice lines are the floor
  * cluwne's own hallucination lines, which Surf already has, plus a few of
  * Surf's clown laughs.
  */
 GLOBAL_LIST_INIT(station_fog_cluwne_sounds, list(
-	"breathing" = list(3, 'surfshack13/sound/hippie/cluwne_breathing.ogg'),
-	"cluwne laugh" = list(3, 'surfshack13/sound/hippie/cluwnelaugh1.ogg', 'surfshack13/sound/hippie/cluwnelaugh2.ogg', 'surfshack13/sound/hippie/cluwnelaugh3.ogg'),
-	"reversed laugh" = list(2, 'surfshack13/sound/hippie/cluwnelaugh2_reversed.ogg'),
-	"emerge" = list(1, 'surfshack13/sound/hippie/floor_cluwne_emerge.ogg'),
-	"feast" = list(1, 'surfshack13/sound/hippie/cluwne_feast.ogg'),
-	"creepy horn" = list(2, 'surfshack13/sound/hippie/bikehorn_creepy.ogg'),
-	"distant honk" = list(2, 'surfshack13/sound/hippie/honk_echo_distant.ogg'),
-	"giggle" = list(2, 'surfshack13/sound/hippie/scrake_giggle.ogg'),
-	"scary horn" = list(1, 'sound/misc/scary_horn.ogg'),
-	"clown laugh" = list(2, 'sound/mobs/non-humanoids/clown/hehe.ogg', 'sound/mobs/non-humanoids/clown/hohoho.ogg'),
-	"evil laugh" = list(1, 'sound/mobs/non-humanoids/honkbot/honkbot_evil_laugh.ogg'),
-	"low laugh" = list(1, 'sound/misc/insane_low_laugh.ogg'),
-	"behind you" = list(1, 'sound/effects/hallucinations/behind_you1.ogg', 'sound/effects/hallucinations/behind_you2.ogg'),
+	"breathing" = list(6, 'surfshack13/sound/hippie/cluwne_breathing.ogg'),
+	"cluwne laugh" = list(6, 'surfshack13/sound/hippie/cluwnelaugh1.ogg', 'surfshack13/sound/hippie/cluwnelaugh2.ogg', 'surfshack13/sound/hippie/cluwnelaugh3.ogg'),
+	"reversed laugh" = list(4, 'surfshack13/sound/hippie/cluwnelaugh2_reversed.ogg'),
+	"feast" = list(2, 'surfshack13/sound/hippie/cluwne_feast.ogg'),
+	"creepy horn" = list(4, 'surfshack13/sound/hippie/bikehorn_creepy.ogg'),
+	"distant honk" = list(4, 'surfshack13/sound/hippie/honk_echo_distant.ogg'),
+	"giggle" = list(4, 'surfshack13/sound/hippie/scrake_giggle.ogg'),
+	"scary horn" = list(2, 'sound/misc/scary_horn.ogg'),
+	"clown laugh" = list(4, 'sound/mobs/non-humanoids/clown/hehe.ogg', 'sound/mobs/non-humanoids/clown/hohoho.ogg'),
+	"evil laugh" = list(2, 'sound/mobs/non-humanoids/honkbot/honkbot_evil_laugh.ogg'),
+	"low laugh" = list(2, 'sound/misc/insane_low_laugh.ogg'),
+	"behind you" = list(2, 'sound/effects/hallucinations/behind_you1.ogg', 'sound/effects/hallucinations/behind_you2.ogg'),
 	"im here" = list(1, 'sound/effects/hallucinations/im_here1.ogg', 'sound/effects/hallucinations/im_here2.ogg'),
 	"i see you" = list(1, 'sound/effects/hallucinations/i_see_you1.ogg', 'sound/effects/hallucinations/i_see_you2.ogg'),
 	"over here" = list(1, 'sound/effects/hallucinations/over_here1.ogg', 'sound/effects/hallucinations/over_here2.ogg', 'sound/effects/hallucinations/over_here3.ogg'),
