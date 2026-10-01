@@ -9,12 +9,18 @@
  * Two layers of visuals:
  * - an area overlay (weather style) so the fog is visible on every fogged tile,
  *   to everyone, including ghosts and cameras;
- * - a fullscreen vignette on living players standing in fog, whose clear centre
- *   shrinks as the fog thickens. Stepping into maintenance clears it.
+ * - a sight cut-off on living players standing in fog: past a radius that
+ *   shrinks as the fog thickens the fog is solid, so nothing out there can be
+ *   seen, like darkness without a flashlight. Stepping into maintenance clears it.
+ *
+ * Admins can drive it by hand with the "Debug Station Fog" verb.
  */
 
-/// Thickness steps the fog climbs through, matching the fog1..fog4 icon states.
-#define STATION_FOG_MAX_THICKNESS 4
+/// The fog currently rolling through the station, if any.
+GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
+
+/// Thickness steps the fog climbs through, matching the fog1..fog5 icon states.
+#define STATION_FOG_MAX_THICKNESS 5
 /// Fullscreen category for the fog vignette.
 #define STATION_FOG_SCREEN "station_fog"
 
@@ -70,6 +76,14 @@
 	var/thickness = 1
 	/// Players currently wearing the fog vignette, so leaving the fog clears it.
 	var/list/mob/living/fogged_players = list()
+	/// Whether the fog thickens by itself over time. Off for admin test fogs.
+	var/auto_thicken = TRUE
+
+/datum/weather/station_fog/New(z_levels)
+	. = ..()
+	if(GLOB.station_fog && GLOB.station_fog != src)
+		GLOB.station_fog.end()
+	GLOB.station_fog = src
 
 /datum/weather/station_fog/telegraph()
 	. = ..()
@@ -77,6 +91,8 @@
 
 /datum/weather/station_fog/start()
 	. = ..()
+	if(!auto_thicken)
+		return
 	// Thicken in even steps over the first three quarters of the fog, so the
 	// last stretch sits at full thickness before it winds down.
 	var/step_time = (weather_duration * 0.75) / (STATION_FOG_MAX_THICKNESS - 1)
@@ -89,24 +105,30 @@
 
 /datum/weather/station_fog/end()
 	. = ..()
+	if(GLOB.station_fog == src)
+		GLOB.station_fog = null
 	STOP_PROCESSING(SSprocessing, src)
 	for(var/mob/living/player as anything in fogged_players)
 		player.clear_fullscreen(STATION_FOG_SCREEN)
 	fogged_players.Cut()
 
 /datum/weather/station_fog/Destroy()
+	if(GLOB.station_fog == src)
+		GLOB.station_fog = null
 	STOP_PROCESSING(SSprocessing, src)
 	for(var/mob/living/player as anything in fogged_players)
 		player.clear_fullscreen(STATION_FOG_SCREEN, animated = 0)
 	fogged_players.Cut()
 	return ..()
 
-/datum/weather/station_fog/proc/set_thickness(new_thickness)
+/datum/weather/station_fog/proc/set_thickness(new_thickness, silent = FALSE)
 	if(stage != MAIN_STAGE)
 		return
+	var/old_thickness = thickness
 	thickness = clamp(new_thickness, 1, STATION_FOG_MAX_THICKNESS)
 	update_areas()
-	send_alert(span_warning("The fog grows thicker."))
+	if(!silent && thickness > old_thickness)
+		send_alert(span_warning("The fog grows thicker."))
 
 /datum/weather/station_fog/generate_overlay_cache()
 	if(stage == END_STAGE)
@@ -133,10 +155,59 @@
 			player.clear_fullscreen(STATION_FOG_SCREEN)
 	fogged_players = still_fogged
 
+/// The sight cut-off. 25x25 tiles and never scaled, so the clear circle stays
+/// round and the same size in tiles on any view width; past its edge it is
+/// solid fog, so a wide or zoomed-out view gains nothing.
 /atom/movable/screen/fullscreen/station_fog
 	icon = 'surfshack13/icons/effects/station_fog_vignette.dmi'
 	icon_state = "fog"
+	screen_loc = "CENTER-12,CENTER-12"
 	layer = FULLSCREEN_LAYER
+
+// =========================================================================
+// ADMIN TESTING
+// =========================================================================
+
+ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set the thickness of the station fog to test how each stage looks.", ADMIN_CATEGORY_EVENTS)
+	var/datum/weather/station_fog/fog = GLOB.station_fog
+	var/list/options = list()
+	for(var/level in 1 to STATION_FOG_MAX_THICKNESS)
+		options += "Thickness [level][fog?.stage == MAIN_STAGE && fog.thickness == level ? " (current)" : ""]"
+	options += "Resume automatic thickening"
+	options += "Stop fog"
+	var/choice = tgui_input_list(user, "Station fog is [fog ? "active" : "not active"]. Picking a thickness starts a test fog instantly (no telegraph, no timer) if none is running.", "Debug Station Fog", options)
+	if(!choice)
+		return
+	fog = GLOB.station_fog
+	if(choice == "Stop fog")
+		if(!fog)
+			to_chat(user, span_warning("There's no station fog running."))
+			return
+		fog.end()
+		message_admins("[key_name_admin(user)] stopped the station fog.")
+		log_admin("[key_name(user)] stopped the station fog.")
+		return
+	if(!fog)
+		fog = new /datum/weather/station_fog(SSmapping.levels_by_trait(ZTRAIT_STATION))
+		fog.auto_thicken = FALSE
+		fog.perpetual = TRUE
+		fog.telegraph()
+		fog.start()
+	if(choice == "Resume automatic thickening")
+		fog.auto_thicken = TRUE
+		fog.perpetual = FALSE
+		var/remaining_steps = STATION_FOG_MAX_THICKNESS - fog.thickness
+		for(var/step in 1 to remaining_steps)
+			addtimer(CALLBACK(fog, TYPE_PROC_REF(/datum/weather/station_fog, set_thickness), fog.thickness + step), 2 MINUTES * step)
+		addtimer(CALLBACK(fog, TYPE_PROC_REF(/datum/weather, wind_down)), 2 MINUTES * (remaining_steps + 1))
+		message_admins("[key_name_admin(user)] set the station fog to thicken on its own.")
+		log_admin("[key_name(user)] set the station fog to thicken on its own.")
+		return
+	var/level = text2num(copytext(choice, length("Thickness ") + 1))
+	fog.set_thickness(level, silent = TRUE)
+	message_admins("[key_name_admin(user)] set the station fog to thickness [level].")
+	log_admin("[key_name(user)] set the station fog to thickness [level].")
+	BLACKBOX_LOG_ADMIN_VERB("Debug Station Fog")
 
 #undef STATION_FOG_MAX_THICKNESS
 #undef STATION_FOG_SCREEN
