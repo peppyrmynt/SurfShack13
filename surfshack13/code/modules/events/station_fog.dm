@@ -89,8 +89,14 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 
 	/// Current fog step, 1 to STATION_FOG_MAX_THICKNESS.
 	var/thickness = 1
-	/// Players currently wearing the fog vignette, so leaving the fog clears it.
+	/// Players currently wearing the fog vignette (assoc, mob -> TRUE), so
+	/// leaving the fog clears it.
 	var/list/mob/living/fogged_players = list()
+	/// impacted_areas as an assoc set, for O(1) "is this area fogged" checks.
+	var/list/fogged_area_set = list()
+	/// target mob -> the appearance its figure was last copied from, so figures
+	/// are only repainted when the body's sprite actually changed.
+	var/list/disguise_sources = list()
 	/// Whether the fog thickens by itself over time. Off for admin test fogs.
 	var/auto_thicken = TRUE
 	/// target mob -> its anonymous-figure alternate appearance.
@@ -106,6 +112,9 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 
 /datum/weather/station_fog/telegraph()
 	. = ..()
+	fogged_area_set.Cut()
+	for(var/area/fogged as anything in impacted_areas)
+		fogged_area_set[fogged] = TRUE
 	START_PROCESSING(SSprocessing, src)
 
 /datum/weather/station_fog/start()
@@ -170,7 +179,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 			if(!vignette_level || !can_weather_act(player))
 				continue
 			apply_fog_screens(player, vignette_level)
-			still_fogged += player
+			still_fogged[player] = TRUE
 	for(var/mob/living/player as anything in fogged_players - still_fogged)
 		if(!QDELETED(player))
 			clear_fog_screens(player)
@@ -191,21 +200,26 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 /// Re-decides, for every player near the fog, which people they can't make out.
 /datum/weather/station_fog/proc/update_concealment()
 	var/list/new_concealed = list()
+	/// Every body concealed from at least one viewer this tick.
+	var/list/in_use = list()
 	if(stage == MAIN_STAGE)
 		for(var/z_level in impacted_z_levels)
 			for(var/mob/living/viewer in SSmobs.clients_by_zlevel[z_level])
-				var/viewer_fogged = (viewer in fogged_players)
+				var/viewer_fogged = fogged_players[viewer]
 				var/list/hide_here = list()
-				for(var/mob/living/target in range(STATION_FOG_CONCEAL_SCAN, viewer))
+				// The spatial grid hands back only the hearing-sensitive atoms in
+				// nearby grid cells, instead of every atom on 400-odd turfs.
+				for(var/mob/living/target in SSspatial_grid.orthogonal_range_search(viewer, SPATIAL_GRID_CONTENTS_TYPE_HEARING, STATION_FOG_CONCEAL_SCAN))
 					if(target == viewer || !can_disguise(target))
 						continue
 					if(get_dist(viewer, target) <= STATION_FOG_CONCEAL_RANGE)
 						continue
 					// Either side being in the fog is enough: looking out of
 					// maintenance into a fogged hall still hides who is in it.
-					if(!viewer_fogged && !(get_area(target) in impacted_areas))
+					if(!viewer_fogged && !fogged_area_set[get_area(target)])
 						continue
 					hide_here += target
+					in_use[target] = TRUE
 				if(length(hide_here))
 					new_concealed[viewer] = hide_here
 	for(var/mob/viewer as anything in concealed_from | new_concealed)
@@ -216,9 +230,11 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		for(var/mob/living/target as anything in new_hidden - old_hidden)
 			conceal_from(target, viewer)
 	concealed_from = new_concealed
-	// Keep each figure's silhouette in step with the body it stands for.
-	for(var/mob/living/target as anything in disguises)
-		refresh_disguise(target)
+	// Keep figures in step with their bodies, but only repaint the ones someone
+	// is looking at, and only when the body's sprite actually changed.
+	for(var/mob/living/target as anything in in_use)
+		if(disguise_sources[target] != target.appearance)
+			refresh_disguise(target)
 
 /// The anonymous-figure appearance for [target], made on first use.
 /datum/weather/station_fog/proc/get_disguise(mob/living/target)
@@ -238,6 +254,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	if(!disguise)
 		return
 	var/image/figure = disguise.image
+	disguise_sources[target] = target.appearance
 	figure.appearance = target.appearance
 	figure.appearance_flags |= KEEP_TOGETHER
 	figure.color = list(0,0,0, 0,0,0, 0,0,0, 0.48,0.5,0.53)
@@ -266,6 +283,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		concealed_from[viewer] -= source
 	qdel(disguises[source])
 	disguises -= source
+	disguise_sources -= source
 
 /// Lifts every disguise, for when the fog ends.
 /datum/weather/station_fog/proc/reveal_everyone()
@@ -277,6 +295,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		UnregisterSignal(target, COMSIG_QDELETING)
 		qdel(disguises[target])
 	disguises.Cut()
+	disguise_sources.Cut()
 
 /// The fog's anonymous figure. Shown per viewer by the fog, never generically.
 /datum/atom_hud/alternate_appearance/basic/station_fog
