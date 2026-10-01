@@ -23,6 +23,11 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 #define STATION_FOG_MAX_THICKNESS 5
 /// Fullscreen category for the fog vignette.
 #define STATION_FOG_SCREEN "station_fog"
+/// Fullscreen categories for the solid strips beyond the 15x15 vignette.
+#define STATION_FOG_SCREEN_WEST "station_fog_west"
+#define STATION_FOG_SCREEN_EAST "station_fog_east"
+#define STATION_FOG_SCREEN_NORTH "station_fog_north"
+#define STATION_FOG_SCREEN_SOUTH "station_fog_south"
 
 /datum/round_event_control/station_fog
 	name = "Station Fog"
@@ -109,7 +114,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		GLOB.station_fog = null
 	STOP_PROCESSING(SSprocessing, src)
 	for(var/mob/living/player as anything in fogged_players)
-		player.clear_fullscreen(STATION_FOG_SCREEN)
+		clear_fog_screens(player)
 	fogged_players.Cut()
 
 /datum/weather/station_fog/Destroy()
@@ -117,7 +122,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		GLOB.station_fog = null
 	STOP_PROCESSING(SSprocessing, src)
 	for(var/mob/living/player as anything in fogged_players)
-		player.clear_fullscreen(STATION_FOG_SCREEN, animated = 0)
+		clear_fog_screens(player, animated = 0)
 	fogged_players.Cut()
 	return ..()
 
@@ -148,21 +153,68 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 		for(var/mob/living/player in SSmobs.clients_by_zlevel[z_level])
 			if(!vignette_level || !can_weather_act(player))
 				continue
-			player.overlay_fullscreen(STATION_FOG_SCREEN, /atom/movable/screen/fullscreen/station_fog, vignette_level)
+			apply_fog_screens(player, vignette_level)
 			still_fogged += player
 	for(var/mob/living/player as anything in fogged_players - still_fogged)
 		if(!QDELETED(player))
-			player.clear_fullscreen(STATION_FOG_SCREEN)
+			clear_fog_screens(player)
 	fogged_players = still_fogged
 
-/// The sight cut-off. 25x25 tiles and never scaled, so the clear circle stays
-/// round and the same size in tiles on any view width; past its edge it is
-/// solid fog, so a wide or zoomed-out view gains nothing.
+/**
+ * Puts the sight cut-off on a player. The vignette is the standard 15x15
+ * fullscreen, drawn unscaled so its clear circle stays round. Any view wider
+ * or taller than that gets solid fog strips over the extra rows and columns.
+ * Everything stays inside the view, because a screen object outside it makes
+ * BYOND zoom the whole map out to fit it.
+ */
+/datum/weather/station_fog/proc/apply_fog_screens(mob/living/player, level)
+	player.overlay_fullscreen(STATION_FOG_SCREEN, /atom/movable/screen/fullscreen/station_fog, level)
+	var/list/view_size = getviewsize(player.client?.view || world.view)
+	if(view_size[1] > FULLSCREEN_OVERLAY_RESOLUTION_X)
+		player.overlay_fullscreen(STATION_FOG_SCREEN_WEST, /atom/movable/screen/fullscreen/station_fog_fill/west, level)
+		player.overlay_fullscreen(STATION_FOG_SCREEN_EAST, /atom/movable/screen/fullscreen/station_fog_fill/east, level)
+	else
+		player.clear_fullscreen(STATION_FOG_SCREEN_WEST, animated = 0)
+		player.clear_fullscreen(STATION_FOG_SCREEN_EAST, animated = 0)
+	if(view_size[2] > FULLSCREEN_OVERLAY_RESOLUTION_Y)
+		player.overlay_fullscreen(STATION_FOG_SCREEN_NORTH, /atom/movable/screen/fullscreen/station_fog_fill/north, level)
+		player.overlay_fullscreen(STATION_FOG_SCREEN_SOUTH, /atom/movable/screen/fullscreen/station_fog_fill/south, level)
+	else
+		player.clear_fullscreen(STATION_FOG_SCREEN_NORTH, animated = 0)
+		player.clear_fullscreen(STATION_FOG_SCREEN_SOUTH, animated = 0)
+
+/datum/weather/station_fog/proc/clear_fog_screens(mob/living/player, animated = 10)
+	for(var/category in list(STATION_FOG_SCREEN, STATION_FOG_SCREEN_WEST, STATION_FOG_SCREEN_EAST, STATION_FOG_SCREEN_NORTH, STATION_FOG_SCREEN_SOUTH))
+		player.clear_fullscreen(category, animated)
+
+/// The 15x15 sight cut-off: clear circle, solid fog by 7 tiles out.
 /atom/movable/screen/fullscreen/station_fog
 	icon = 'surfshack13/icons/effects/station_fog_vignette.dmi'
 	icon_state = "fog"
-	screen_loc = "CENTER-12,CENTER-12"
 	layer = FULLSCREEN_LAYER
+
+// Never stretched to the view width like other fullscreens: that would squash
+// the clear circle into an oval. The fill strips cover the extra width instead.
+/atom/movable/screen/fullscreen/station_fog/update_for_view(client_view)
+	view = client_view
+
+/// Solid fog over whatever the view has beyond the 15x15 vignette.
+/atom/movable/screen/fullscreen/station_fog_fill
+	icon = 'surfshack13/icons/effects/station_fog_fill.dmi'
+	icon_state = "fog"
+	layer = FULLSCREEN_LAYER
+
+/atom/movable/screen/fullscreen/station_fog_fill/west
+	screen_loc = "WEST,SOUTH to CENTER-8,NORTH"
+
+/atom/movable/screen/fullscreen/station_fog_fill/east
+	screen_loc = "CENTER+8,SOUTH to EAST,NORTH"
+
+/atom/movable/screen/fullscreen/station_fog_fill/north
+	screen_loc = "CENTER-7,CENTER+8 to CENTER+7,NORTH"
+
+/atom/movable/screen/fullscreen/station_fog_fill/south
+	screen_loc = "CENTER-7,SOUTH to CENTER+7,CENTER-8"
 
 // =========================================================================
 // ADMIN TESTING
@@ -211,3 +263,7 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 
 #undef STATION_FOG_MAX_THICKNESS
 #undef STATION_FOG_SCREEN
+#undef STATION_FOG_SCREEN_WEST
+#undef STATION_FOG_SCREEN_EAST
+#undef STATION_FOG_SCREEN_NORTH
+#undef STATION_FOG_SCREEN_SOUTH
