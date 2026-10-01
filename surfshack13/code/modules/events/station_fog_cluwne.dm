@@ -47,6 +47,7 @@
 	if(!length(chosen))
 		message_admins("Nightmare fog: nobody signed up to be a floor cluwne.")
 		return
+	make_gullet()
 	for(var/mob/dead/observer/ghost in chosen)
 		spawn_cluwne(ghost)
 
@@ -91,10 +92,20 @@
 		qdel(cluwne)
 	cluwnes.Cut()
 
+/// Makes the place under the floor: a reserved tile off the station map. It
+/// has to be a real turf: a mob with a client and no turf gets flagged by
+/// Life() and thrown into the error room. Can sleep on the reservation.
+/datum/weather/station_fog/proc/make_gullet()
+	if(gullet)
+		return gullet
+	gullet_reservation = SSmapping.request_turf_block_reservation(1, 1)
+	var/turf/holding = gullet_reservation?.bottom_left_turfs?[1]
+	gullet = new(holding)
+	return gullet
+
 /// Takes [victim] under the floor until the fog ends.
 /datum/weather/station_fog/proc/take_victim(mob/living/carbon/human/victim)
-	if(!gullet)
-		gullet = new
+	make_gullet()
 	eaten[victim] = TRUE
 	victim.forceMove(gullet)
 	victim.apply_status_effect(/datum/status_effect/grouped/stasis, FLOOR_CLUWNE_SOURCE)
@@ -118,10 +129,12 @@
 			victim.forceMove(drop)
 		victim.remove_status_effect(/datum/status_effect/grouped/stasis, FLOOR_CLUWNE_SOURCE)
 		victim.cure_blind(FLOOR_CLUWNE_SOURCE)
-		victim.adjustBruteLoss(35)
-		victim.adjustStaminaLoss(80)
-		victim.Knockdown(5 SECONDS)
-		victim.adjust_jitter(30 SECONDS)
+		victim.adjustBruteLoss(60)
+		victim.adjustOxyLoss(30)
+		victim.adjustStaminaLoss(120)
+		victim.Knockdown(10 SECONDS)
+		victim.adjust_jitter(45 SECONDS)
+		victim.adjust_confusion(20 SECONDS)
 		victim.gain_trauma(/datum/brain_trauma/mild/phobia/clowns, TRAUMA_RESILIENCE_BASIC)
 		if(drop)
 			playsound(drop, 'surfshack13/sound/hippie/bodyscrape1.ogg', 50, TRUE)
@@ -129,6 +142,7 @@
 		to_chat(victim, span_userdanger("The floor spits you back out somewhere dark. You can still hear it laughing."))
 	eaten.Cut()
 	QDEL_NULL(gullet)
+	QDEL_NULL(gullet_reservation)
 
 /// Where people dragged under the floor wait out the fog. Lives in nullspace.
 /obj/effect/abstract/floor_cluwne_gullet
@@ -154,8 +168,8 @@
 	movement_type = PHASING | FLYING
 	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB | PASSGLASS
 	move_resist = MOVE_FORCE_OVERPOWERING
-	// A touch quicker than a running spaceman.
-	speed = 1
+	// Noticeably quicker than a running spaceman (1.5): the hunt is short.
+	speed = 0.6
 	sight = SEE_SELF | SEE_MOBS
 	lighting_cutoff_red = 30
 	lighting_cutoff_green = 20
@@ -194,7 +208,8 @@
 	. = ..()
 	src.fog = fog
 	SetInvisibility(INVISIBILITY_OBSERVER, FLOOR_CLUWNE_SUBMERGED)
-	add_traits(list(TRAIT_WEATHER_IMMUNE, TRAIT_SPACEWALK, TRAIT_NO_FLOATING_ANIM), INNATE_TRAIT)
+	add_traits(list(TRAIT_WEATHER_IMMUNE, TRAIT_SPACEWALK, TRAIT_NO_FLOATING_ANIM, TRAIT_THERMAL_VISION), INNATE_TRAIT)
+	update_sight()
 	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(on_pre_move))
 	for(var/ability_type in cluwne_abilities)
 		var/datum/action/ability = new ability_type(src)
@@ -213,12 +228,20 @@
 	. = ..()
 	if(!. || !client)
 		return
+	thin_the_fog()
 	to_chat(src, boxed_message(jointext(list(
 		span_deadsay(span_boldbig("You are a floor cluwne.")),
-		span_bold("You move under the station's floors, through walls and doors, unseen by anyone but the dead. You can only go where the fog goes."),
+		span_bold("You move under the station's floors, through walls and doors, unseen by anyone but the dead. You can only go where the fog goes, and you see through it: heat and all."),
 		span_bold("Haunt, Trip and Torment scare the crew. Grab drags someone within 3 tiles under the floor: you surface to do it, and while you're up you can be hurt and pulled off them."),
 		span_bold("People you drag under aren't killed. They're spat back out when the fog lifts, which will be soon. Make it count."),
 	), "<br>")))
+
+/// The fog is home: the haze drawn over the floors is only faint to us.
+/mob/living/basic/floor_cluwne/proc/thin_the_fog()
+	if(!hud_used)
+		return
+	for(var/atom/movable/screen/plane_master/weather in hud_used.get_true_plane_masters(WEATHER_PLANE))
+		weather.alpha = 50
 
 /mob/living/basic/floor_cluwne/med_hud_set_health()
 	return
@@ -392,7 +415,7 @@
 /datum/action/cooldown/floor_cluwne/haunt
 	name = "Haunt"
 	desc = "Toy with someone: a laugh only they hear, a horn, a thrown object, or blurry eyes."
-	cooldown_time = 6 SECONDS
+	cooldown_time = 3 SECONDS
 	click_to_activate = TRUE
 
 /datum/action/cooldown/floor_cluwne/haunt/Activate(atom/target)
@@ -426,7 +449,7 @@
 /datum/action/cooldown/floor_cluwne/trip
 	name = "Trip"
 	desc = "The floor shifts under someone, knocking them over."
-	cooldown_time = 15 SECONDS
+	cooldown_time = 7 SECONDS
 	click_to_activate = TRUE
 
 /datum/action/cooldown/floor_cluwne/trip/Activate(atom/target)
@@ -442,7 +465,7 @@
 /datum/action/cooldown/floor_cluwne/torment
 	name = "Torment"
 	desc = "Make the lights flicker and the floor go slick around you, with a laugh everyone nearby hears."
-	cooldown_time = 30 SECONDS
+	cooldown_time = 15 SECONDS
 
 /datum/action/cooldown/floor_cluwne/torment/Activate(atom/target)
 	var/turf/here = get_turf(owner)
@@ -458,7 +481,7 @@
 /datum/action/cooldown/floor_cluwne/grab
 	name = "Grab"
 	desc = "Surface and drag someone within 3 tiles under the floor. While you're up you can be hurt, and they can be pulled away from you."
-	cooldown_time = 40 SECONDS
+	cooldown_time = 20 SECONDS
 	click_to_activate = TRUE
 	target_range = 3
 

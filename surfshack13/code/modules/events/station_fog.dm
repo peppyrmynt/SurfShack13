@@ -76,8 +76,22 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 /datum/round_event/station_fog/announce(fake)
 	priority_announce("A dense vapour bank has been drawn into the station's air handling. Visibility will fall across the station as it thickens. Maintenance runs on independent scrubbers and should remain clear.", "Atmospheric Anomaly")
 
+/// Chance the random event is a nightmare fog: thickness 6, maintenance, and a floor cluwne.
+#define STATION_FOG_NIGHTMARE_CHANCE 33
+
 /datum/round_event/station_fog/start()
-	SSweather.run_weather(/datum/weather/station_fog)
+	if(!prob(STATION_FOG_NIGHTMARE_CHANCE))
+		SSweather.run_weather(/datum/weather/station_fog)
+		return
+	var/datum/weather/station_fog/fog = new(SSmapping.levels_by_trait(ZTRAIT_STATION))
+	fog.nightmare = TRUE
+	fog.cluwne_count = 1
+	fog.perpetual = TRUE
+	fog.telegraph()
+	message_admins("The station fog event rolled a NIGHTMARE fog: it will poll ghosts for a floor cluwne at thickness 5.")
+	log_game("The station fog event rolled a nightmare fog.")
+
+#undef STATION_FOG_NIGHTMARE_CHANCE
 
 /datum/weather/station_fog
 	name = "station fog"
@@ -139,8 +153,10 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/mob/living/basic/floor_cluwne/cluwnes = list()
 	/// People dragged under the floor (assoc, mob -> TRUE), spat out when it ends.
 	var/list/mob/living/carbon/human/eaten = list()
-	/// Where the dragged-under wait, in nullspace.
+	/// Where the dragged-under wait: a reserved tile off the station map.
 	var/obj/effect/abstract/floor_cluwne_gullet/gullet
+	/// The reservation that tile comes from.
+	var/datum/turf_reservation/gullet_reservation
 
 /datum/weather/station_fog/New(z_levels)
 	. = ..()
@@ -471,8 +487,9 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 	if(stage == MAIN_STAGE && conceal_range)
 		for(var/z_level in impacted_z_levels)
 			for(var/mob/living/viewer in SSmobs.clients_by_zlevel[z_level])
-				// Floor cluwnes and the like see straight through the fog.
-				if(HAS_TRAIT(viewer, TRAIT_WEATHER_IMMUNE))
+				// Floor cluwnes and the like see straight through the fog, and
+				// anyone not actually on the map has nothing to look at.
+				if(HAS_TRAIT(viewer, TRAIT_WEATHER_IMMUNE) || !isturf(viewer.loc))
 					continue
 				var/viewer_fogged = fogged_players[viewer]
 				var/list/hide_here = list()
