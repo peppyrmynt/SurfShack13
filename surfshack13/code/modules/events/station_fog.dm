@@ -57,16 +57,16 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	desc = "A dense fog fills the station, thickening over time. Maintenance stays clear."
 
 	telegraph_message = span_notice("A faint haze starts curling out of the air vents.")
-	telegraph_duration = 60 SECONDS
+	telegraph_duration = 30 SECONDS
 	telegraph_overlay = "fog1"
 
 	weather_message = span_warning("The fog rolls in properly. You can't see far through it.")
-	weather_duration_lower = 8 MINUTES
-	weather_duration_upper = 12 MINUTES
+	weather_duration_lower = 4 MINUTES
+	weather_duration_upper = 6 MINUTES
 	weather_overlay = "fog1"
 
 	end_message = span_notice("The fog starts thinning out as the scrubbers catch up.")
-	end_duration = 60 SECONDS
+	end_duration = 30 SECONDS
 	end_overlay = "fog1"
 
 	area_type = /area/station
