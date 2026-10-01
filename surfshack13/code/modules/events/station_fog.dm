@@ -645,7 +645,8 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 /datum/weather/station_fog/proc/conceal_from(mob/living/target, mob/viewer)
 	if(target == viewer || !viewer.client)
 		return
-	get_disguise(target).show_to(viewer)
+	var/datum/atom_hud/alternate_appearance/basic/station_fog/disguise = get_disguise(target)
+	disguise.show_to(viewer)
 	viewer_clients[viewer] = viewer.client
 	// Sec and med HUD icons would give the game away: hide this body's.
 	for(var/datum/atom_hud/data/human/hud in GLOB.huds)
