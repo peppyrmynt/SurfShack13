@@ -115,6 +115,8 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/list/next_hallucination = list()
 	/// world.time the next shared floor cluwne sound is due, at thickness 5.
 	var/next_cluwne_sound = 0
+	/// The most recently played cluwne sound groups, newest last.
+	var/list/recent_cluwne_groups = list()
 
 /datum/weather/station_fog/New(z_levels)
 	. = ..()
@@ -245,21 +247,39 @@ GLOBAL_LIST_INIT(station_fog_hallucinations, list(
 
 // ---- Floor cluwne ------------------------------------------------------
 
-/// What the floor cluwne sounds like. Laughs, breathing and emerging are
-/// HippieStation's floor cluwne sounds; the voice lines are the ones it used,
-/// which Surf already has.
+/**
+ * What the floor cluwne sounds like, as groups of interchangeable takes
+ * (group -> list(weight, files...)). A group heard recently won't come up
+ * again (see STATION_FOG_CLUWNE_NO_REPEAT), so it never loops one sound.
+ *
+ * Laughs, breathing, emerge, feast, creepy horn, distant honk and giggle are
+ * HippieStation's (surfshack13/sound/hippie); the voice lines are the floor
+ * cluwne's own hallucination lines, which Surf already has, plus a few of
+ * Surf's clown laughs.
+ */
 GLOBAL_LIST_INIT(station_fog_cluwne_sounds, list(
-	'surfshack13/sound/hippie/cluwne_breathing.ogg' = 3,
-	'surfshack13/sound/hippie/cluwnelaugh1.ogg' = 2,
-	'surfshack13/sound/hippie/cluwnelaugh2.ogg' = 2,
-	'surfshack13/sound/hippie/cluwnelaugh3.ogg' = 2,
-	'surfshack13/sound/hippie/cluwnelaugh2_reversed.ogg' = 2,
-	'surfshack13/sound/hippie/floor_cluwne_emerge.ogg' = 1,
-	'sound/misc/scary_horn.ogg' = 1,
-	'sound/effects/hallucinations/behind_you1.ogg' = 1,
-	'sound/effects/hallucinations/im_here1.ogg' = 1,
-	'sound/effects/hallucinations/i_see_you1.ogg' = 1,
+	"breathing" = list(3, 'surfshack13/sound/hippie/cluwne_breathing.ogg'),
+	"cluwne laugh" = list(3, 'surfshack13/sound/hippie/cluwnelaugh1.ogg', 'surfshack13/sound/hippie/cluwnelaugh2.ogg', 'surfshack13/sound/hippie/cluwnelaugh3.ogg'),
+	"reversed laugh" = list(2, 'surfshack13/sound/hippie/cluwnelaugh2_reversed.ogg'),
+	"emerge" = list(1, 'surfshack13/sound/hippie/floor_cluwne_emerge.ogg'),
+	"feast" = list(1, 'surfshack13/sound/hippie/cluwne_feast.ogg'),
+	"creepy horn" = list(2, 'surfshack13/sound/hippie/bikehorn_creepy.ogg'),
+	"distant honk" = list(2, 'surfshack13/sound/hippie/honk_echo_distant.ogg'),
+	"giggle" = list(2, 'surfshack13/sound/hippie/scrake_giggle.ogg'),
+	"scary horn" = list(1, 'sound/misc/scary_horn.ogg'),
+	"clown laugh" = list(2, 'sound/mobs/non-humanoids/clown/hehe.ogg', 'sound/mobs/non-humanoids/clown/hohoho.ogg'),
+	"evil laugh" = list(1, 'sound/mobs/non-humanoids/honkbot/honkbot_evil_laugh.ogg'),
+	"low laugh" = list(1, 'sound/misc/insane_low_laugh.ogg'),
+	"behind you" = list(1, 'sound/effects/hallucinations/behind_you1.ogg', 'sound/effects/hallucinations/behind_you2.ogg'),
+	"im here" = list(1, 'sound/effects/hallucinations/im_here1.ogg', 'sound/effects/hallucinations/im_here2.ogg'),
+	"i see you" = list(1, 'sound/effects/hallucinations/i_see_you1.ogg', 'sound/effects/hallucinations/i_see_you2.ogg'),
+	"over here" = list(1, 'sound/effects/hallucinations/over_here1.ogg', 'sound/effects/hallucinations/over_here2.ogg', 'sound/effects/hallucinations/over_here3.ogg'),
+	"turn around" = list(1, 'sound/effects/hallucinations/turn_around1.ogg', 'sound/effects/hallucinations/turn_around2.ogg'),
+	"look up" = list(1, 'sound/effects/hallucinations/look_up1.ogg', 'sound/effects/hallucinations/look_up2.ogg'),
 ))
+
+/// How many of the most recent cluwne sound groups can't be picked again.
+#define STATION_FOG_CLUWNE_NO_REPEAT 5
 
 /// How far a shared cluwne sound carries through the fog.
 #define STATION_FOG_CLUWNE_RANGE 18
@@ -276,6 +296,21 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 	list("name" = "out there", "min" = 6, "max" = 9, "volume" = 50, "direct_hf" = -1200, "occlusion" = -800, "weight" = 40),
 	list("name" = "distant", "min" = 10, "max" = 14, "volume" = 35, "direct_hf" = -3000, "occlusion" = -2500, "weight" = 35),
 ))
+
+/// Picks a cluwne sound from a group that hasn't played recently.
+/datum/weather/station_fog/proc/pick_cluwne_sound()
+	var/list/weighted = list()
+	for(var/group in GLOB.station_fog_cluwne_sounds)
+		if(group in recent_cluwne_groups)
+			continue
+		var/list/entry = GLOB.station_fog_cluwne_sounds[group]
+		weighted[group] = entry[1]
+	var/group = pick_weight(weighted)
+	recent_cluwne_groups += group
+	while(length(recent_cluwne_groups) > STATION_FOG_CLUWNE_NO_REPEAT)
+		recent_cluwne_groups.Cut(1, 2)
+	var/list/entry = GLOB.station_fog_cluwne_sounds[group]
+	return pick(entry.Copy(2))
 
 /// At thickness 5, every so often, the floor cluwne makes itself heard.
 /datum/weather/station_fog/proc/roll_cluwne_sound()
@@ -325,7 +360,7 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 		else if(dist >= 3)
 			fallback += spot
 	var/turf/origin = length(spots) ? pick(spots) : (length(fallback) ? pick(fallback) : get_turf(near))
-	sound_file ||= pick_weight(GLOB.station_fog_cluwne_sounds)
+	sound_file ||= pick_cluwne_sound()
 	// Everyone hears the same pitch, so it reads as one thing out there.
 	var/pitch = rand(85, 110) / 100
 
@@ -342,6 +377,7 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 	return heard
 
 #undef STATION_FOG_CLUWNE_RANGE
+#undef STATION_FOG_CLUWNE_NO_REPEAT
 
 // ---- Identity concealment ----------------------------------------------
 
