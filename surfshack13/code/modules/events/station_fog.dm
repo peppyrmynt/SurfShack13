@@ -28,6 +28,12 @@
  *   plays from a spot in the fog, and every fogged player in earshot hears the
  *   same sound from the same place at the same time.
  *
+ * - nightmare fog (admin only, see station_fog_cluwne.dm): climbs on to
+ *   thickness 6. At 5 it polls ghosts to play floor cluwnes; at 6 it pours into
+ *   maintenance, so nowhere is safe, with an announcement that something is
+ *   moving in the fog. About 90 seconds later it dissipates, the cluwnes sink
+ *   away, and everyone they dragged under is spat back out.
+ *
  * Admins can drive it by hand with the "Debug Station Fog" verb.
  */
 
@@ -36,6 +42,10 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 
 /// Thickness steps the fog climbs through, matching the fog1..fog5 icon states.
 #define STATION_FOG_MAX_THICKNESS 5
+/// The nightmare fog's extra step (fog6), when it reaches into maintenance.
+#define STATION_FOG_NIGHTMARE_THICKNESS 6
+/// How long the nightmare fog holds at thickness 6 before it dissipates.
+#define STATION_FOG_NIGHTMARE_HUNT 90 SECONDS
 /// Fullscreen category for the fog vignette.
 #define STATION_FOG_SCREEN "station_fog"
 /// Fullscreen categories for the solid strips beyond the 15x15 vignette.
@@ -117,6 +127,20 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	var/next_cluwne_sound = 0
 	/// The most recently played cluwne sound groups, newest last.
 	var/list/recent_cluwne_groups = list()
+	/// Admin-only nightmare fog: goes to thickness 6, maintenance included, with floor cluwnes.
+	var/nightmare = FALSE
+	/// How many floor cluwnes the nightmare fog polls for.
+	var/cluwne_count = 1
+	/// Whether the ghost poll for floor cluwnes has run.
+	var/cluwnes_polled = FALSE
+	/// Whether the fog has poured into maintenance (thickness 6).
+	var/maintenance_fogged = FALSE
+	/// The floor cluwnes hunting in this fog.
+	var/list/mob/living/basic/floor_cluwne/cluwnes = list()
+	/// People dragged under the floor (assoc, mob -> TRUE), spat out when it ends.
+	var/list/mob/living/carbon/human/eaten = list()
+	/// Where the dragged-under wait, in nullspace.
+	var/obj/effect/abstract/floor_cluwne_gullet/gullet
 
 /datum/weather/station_fog/New(z_levels)
 	. = ..()
@@ -135,6 +159,12 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	. = ..()
 	if(!auto_thicken)
 		return
+	if(nightmare)
+		// 40 seconds a step up to 5 (the cluwne poll), a minute of that, then 6.
+		for(var/step in 2 to STATION_FOG_MAX_THICKNESS)
+			addtimer(CALLBACK(src, PROC_REF(set_thickness), step), 40 SECONDS * (step - 1))
+		addtimer(CALLBACK(src, PROC_REF(set_thickness), STATION_FOG_NIGHTMARE_THICKNESS), 40 SECONDS * (STATION_FOG_MAX_THICKNESS - 1) + 60 SECONDS)
+		return
 	// Thicken in even steps over the first three quarters of the fog, so the
 	// last stretch sits at full thickness before it winds down.
 	var/step_time = (weather_duration * 0.75) / (STATION_FOG_MAX_THICKNESS - 1)
@@ -143,6 +173,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 
 /datum/weather/station_fog/wind_down()
 	thickness = 1
+	remove_cluwnes()
 	return ..()
 
 /datum/weather/station_fog/end()
@@ -150,6 +181,8 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	if(GLOB.station_fog == src)
 		GLOB.station_fog = null
 	STOP_PROCESSING(SSprocessing, src)
+	remove_cluwnes()
+	release_victims()
 	reveal_everyone()
 	for(var/mob/living/player as anything in fogged_players)
 		clear_fog_screens(player)
@@ -159,20 +192,47 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	if(GLOB.station_fog == src)
 		GLOB.station_fog = null
 	STOP_PROCESSING(SSprocessing, src)
+	remove_cluwnes()
+	release_victims()
 	reveal_everyone()
 	for(var/mob/living/player as anything in fogged_players)
 		clear_fog_screens(player, animated = 0)
 	fogged_players.Cut()
 	return ..()
 
+/// The thickest this fog can get: 5, or 6 for the nightmare fog.
+/datum/weather/station_fog/proc/max_thickness()
+	return nightmare ? STATION_FOG_NIGHTMARE_THICKNESS : STATION_FOG_MAX_THICKNESS
+
 /datum/weather/station_fog/proc/set_thickness(new_thickness, silent = FALSE)
 	if(stage != MAIN_STAGE)
 		return
 	var/old_thickness = thickness
-	thickness = clamp(new_thickness, 1, STATION_FOG_MAX_THICKNESS)
+	thickness = clamp(new_thickness, 1, max_thickness())
 	update_areas()
 	if(!silent && thickness > old_thickness)
 		send_alert(span_warning("The fog grows thicker."))
+	if(!nightmare)
+		return
+	if(thickness >= STATION_FOG_MAX_THICKNESS && !cluwnes_polled)
+		INVOKE_ASYNC(src, PROC_REF(poll_for_cluwnes))
+	if(thickness >= STATION_FOG_NIGHTMARE_THICKNESS && !maintenance_fogged)
+		spread_to_maintenance()
+
+/// Thickness 6: the fog pours into maintenance, so nowhere is safe, then
+/// dissipates after STATION_FOG_NIGHTMARE_HUNT.
+/datum/weather/station_fog/proc/spread_to_maintenance()
+	maintenance_fogged = TRUE
+	for(var/area/station/maintenance/maint in get_areas(/area/station/maintenance))
+		for(var/z_level in impacted_z_levels)
+			if(length(maint.get_turfs_by_zlevel(z_level)))
+				impacted_areas |= maint
+				fogged_area_set[maint] = TRUE
+				break
+	update_areas()
+	priority_announce("Something has been detected moving within the fog. The vapour has overrun the maintenance scrubbers: no part of the station is clear. Stay together, and stay off the floor if you can.", "Unknown Lifeform Detected")
+	send_alert(span_userdanger("The fog pours into the maintenance tunnels. There is nowhere left that's safe."))
+	addtimer(CALLBACK(src, PROC_REF(wind_down)), STATION_FOG_NIGHTMARE_HUNT)
 
 /datum/weather/station_fog/generate_overlay_cache()
 	if(stage == END_STAGE)
@@ -395,6 +455,8 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 			return 3
 		if(5)
 			return 2
+		if(6)
+			return 1
 	return null
 
 /// Whether a mob is something the fog disguises: people and cyborgs.
@@ -409,6 +471,9 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 	if(stage == MAIN_STAGE && conceal_range)
 		for(var/z_level in impacted_z_levels)
 			for(var/mob/living/viewer in SSmobs.clients_by_zlevel[z_level])
+				// Floor cluwnes and the like see straight through the fog.
+				if(HAS_TRAIT(viewer, TRAIT_WEATHER_IMMUNE))
+					continue
 				var/viewer_fogged = fogged_players[viewer]
 				var/list/hide_here = list()
 				// The spatial grid hands back only the hearing-sensitive atoms in
@@ -599,8 +664,9 @@ GLOBAL_LIST_INIT(station_fog_cluwne_distances, list(
 ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set the thickness of the station fog to test how each stage looks.", ADMIN_CATEGORY_EVENTS)
 	var/datum/weather/station_fog/fog = GLOB.station_fog
 	var/list/options = list()
-	for(var/level in 1 to STATION_FOG_MAX_THICKNESS)
+	for(var/level in 1 to (fog ? fog.max_thickness() : STATION_FOG_MAX_THICKNESS))
 		options += "Thickness [level][fog?.stage == MAIN_STAGE && fog.thickness == level ? " (current)" : ""]"
+	options += "Start NIGHTMARE fog (level 6, maintenance, floor cluwnes)"
 	options += "Hallucinate a fog figure (me)"
 	options += "Hallucinate something random from the fog pool (me)"
 	options += "Play a shared floor cluwne sound (near me)"
@@ -610,6 +676,29 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 	if(!choice)
 		return
 	fog = GLOB.station_fog
+	if(findtext(choice, "Start NIGHTMARE") == 1)
+		if(fog && tgui_alert(user, "A fog is already running. End it and start the nightmare fog?", "Nightmare fog", list("Yes", "No")) != "Yes")
+			return
+		var/count = tgui_input_number(user, "How many floor cluwnes should it poll ghosts for?", "Nightmare fog", 1, 3, 1)
+		if(!count)
+			return
+		var/timeline = tgui_alert(user, "Run it automatically (thickens to 5 over ~3 minutes, polls for cluwnes, 6 a minute later, then 90 seconds of hunting), or drive it by hand with the thickness options (5 polls, 6 spreads into maintenance and starts the 90 second clock)?", "Nightmare fog", list("Automatic", "By hand"))
+		if(!timeline)
+			return
+		fog?.end()
+		fog = new /datum/weather/station_fog(SSmapping.levels_by_trait(ZTRAIT_STATION))
+		fog.nightmare = TRUE
+		fog.cluwne_count = count
+		fog.perpetual = TRUE
+		fog.auto_thicken = (timeline == "Automatic")
+		priority_announce("A dense vapour bank has been drawn into the station's air handling. Visibility will fall across the station as it thickens. Maintenance runs on independent scrubbers and should remain clear.", "Atmospheric Anomaly")
+		fog.telegraph()
+		if(!fog.auto_thicken)
+			fog.start()
+		message_admins("[key_name_admin(user)] started a NIGHTMARE station fog with [count] floor cluwne\s ([timeline]).")
+		log_admin("[key_name(user)] started a nightmare station fog with [count] floor cluwnes ([timeline]).")
+		BLACKBOX_LOG_ADMIN_VERB("Debug Station Fog")
+		return
 	if(choice == "Stop fog")
 		if(!fog)
 			to_chat(user, span_warning("There's no station fog running."))
@@ -659,6 +748,8 @@ ADMIN_VERB(debug_station_fog, R_FUN, "Debug Station Fog", "Start, stop or set th
 	BLACKBOX_LOG_ADMIN_VERB("Debug Station Fog")
 
 #undef STATION_FOG_MAX_THICKNESS
+#undef STATION_FOG_NIGHTMARE_THICKNESS
+#undef STATION_FOG_NIGHTMARE_HUNT
 #undef STATION_FOG_SCREEN
 #undef STATION_FOG_SCREEN_WEST
 #undef STATION_FOG_SCREEN_EAST
