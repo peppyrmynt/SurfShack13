@@ -195,9 +195,11 @@
 			to_chat(user, span_userdanger("Your bond with [artifact] snaps! You'll have to bind it again."))
 		if("demon")
 			to_chat(user, span_userdanger("Your heart demon tears itself free!"))
-			var/mob/living/simple_animal/hostile/illusion/heart_demon/demon = new(get_turf(user))
+			var/mob/living/simple_animal/hostile/illusion/demon = new(get_turf(user))
 			demon.Copy_Parent(user, 60 SECONDS, 60, 8)
 			demon.name = "heart demon of [user.real_name]"
+			demon.desc = "Your own face, twisted by every doubt you ever had."
+			demon.color = "#c070ff"
 			demon.GiveTarget(user)
 
 /datum/cultivation_breakthrough/proc/cancel(message)
@@ -211,10 +213,6 @@
 	duration = 1.5 SECONDS
 	color = "#ffe27a"
 	damage_blacklist_typecache = list()
-
-/mob/living/simple_animal/hostile/illusion/heart_demon
-	desc = "Your own face, twisted by every doubt you ever had."
-	color = "#c070ff"
 
 /obj/effect/temp_visual/cultivation_ascension_pillar
 	icon = 'icons/effects/32x96.dmi'

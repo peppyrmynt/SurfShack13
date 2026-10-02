@@ -304,7 +304,6 @@
 	icon = 'surfshack13/icons/cultivation/cultivation_items.dmi'
 	icon_state = "ring"
 	w_class = WEIGHT_CLASS_TINY
-	slot_flags = ITEM_SLOT_GLOVES
 	/// The old master inside
 	var/mob/living/basic/shade/ring_elder/elder
 	var/polling = FALSE
