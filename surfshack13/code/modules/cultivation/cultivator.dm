@@ -69,7 +69,7 @@
 	/// Progress needed to reach realm (index = target realm)
 	var/static/list/realm_thresholds = list(0, 60, 150, 300)
 	/// Max qi per realm (index = realm)
-	var/static/list/realm_max_qi = list(50, 100, 175, 275)
+	var/static/list/realm_max_qi = list(60, 130, 230, 360)
 	/// Display names per realm (index = realm)
 	var/static/list/realm_names = list("Qi Condensation", "Foundation Establishment", "Golden Core", "Nascent Soul")
 	/// Techniques everyone gets, by required realm
@@ -136,12 +136,14 @@
 	RegisterSignal(current, COMSIG_MOB_SURGERY_STEP_SUCCESS, PROC_REF(on_surgery_step))
 	RegisterSignal(current, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_item_attack))
 	RegisterSignal(current, COMSIG_LIVING_UNARMED_ATTACK, PROC_REF(on_unarmed_attack))
+	RegisterSignal(current, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, PROC_REF(qi_body))
 	if(current.hud_used)
 		on_hud_created()
 	else
 		RegisterSignal(current, COMSIG_MOB_HUD_CREATED, PROC_REF(on_hud_created))
 	for(var/datum/cultivation_law/law as anything in laws)
 		law.on_body_gained(current, src)
+	update_light_body()
 
 /datum/antagonist/cultivator/remove_innate_effects(mob/living/mob_override)
 	. = ..()
@@ -158,12 +160,14 @@
 		COMSIG_MOB_SURGERY_STEP_SUCCESS,
 		COMSIG_MOB_ITEM_ATTACK,
 		COMSIG_LIVING_UNARMED_ATTACK,
+		COMSIG_MOB_APPLY_DAMAGE_MODIFIERS,
 	))
 	if(current.hud_used && qi_display)
 		current.hud_used.infodisplay -= qi_display
 	QDEL_NULL(qi_display)
 	for(var/datum/cultivation_law/law as anything in laws)
 		law.on_body_lost(current, src)
+	current.remove_movespeed_modifier(/datum/movespeed_modifier/qi_light_body)
 
 /datum/antagonist/cultivator/on_body_transfer(mob/living/old_body, mob/living/new_body)
 	if(breakthrough)
@@ -309,6 +313,28 @@
 	for(var/datum/cultivation_law/law as anything in laws)
 		law.on_activity(src, activity, thing)
 
+/// Light Body: qi makes you quicker on your feet, 6% per realm above Qi Condensation
+/datum/movespeed_modifier/qi_light_body
+	variable = TRUE
+
+/datum/antagonist/cultivator/proc/update_light_body()
+	var/mob/living/body = owner.current
+	if(!body)
+		return
+	var/bonus = max(effective_realm() - REALM_QI_CONDENSATION, 0)
+	if(bonus)
+		body.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/qi_light_body, multiplicative_slowdown = -0.06 * bonus)
+	else
+		body.remove_movespeed_modifier(/datum/movespeed_modifier/qi_light_body)
+
+/// Qi circulating through the body: 5% less brute and burn at Foundation, 10% at Golden Core, 15% at Nascent Soul
+/datum/antagonist/cultivator/proc/qi_body(mob/living/source, list/damage_mods, damage, damagetype, ...)
+	SIGNAL_HANDLER
+	var/body_realm = effective_realm()
+	if(body_realm < REALM_FOUNDATION || (damagetype != BRUTE && damagetype != BURN))
+		return
+	damage_mods += 1 - 0.05 * (body_realm - REALM_QI_CONDENSATION)
+
 /datum/antagonist/cultivator/proc/on_crafted(mob/living/source, datum/crafting_recipe/recipe, atom/result)
 	SIGNAL_HANDLER
 	notify_laws(ispath(recipe.result, /obj/item/food) ? INSIGHT_SOURCE_COOK : INSIGHT_SOURCE_CRAFT, null)
@@ -401,6 +427,14 @@
 	refresh_techniques()
 	return TRUE
 
+/// Movement techniques reach further as the realm rises: Qinggong 4 tiles plus 2 per realm, Void Step 6 plus 2 per realm past Golden Core
+/datum/antagonist/cultivator/proc/refresh_technique_ranges()
+	var/bonus = max(realm - REALM_QI_CONDENSATION, 0)
+	for(var/datum/action/cooldown/spell/pointed/cultivation/qinggong/qinggong in techniques)
+		qinggong.cast_range = 4 + 2 * bonus
+	for(var/datum/action/cooldown/spell/pointed/cultivation/void_step/void_step in techniques)
+		void_step.cast_range = 6 + 2 * max(realm - REALM_GOLDEN_CORE, 0)
+
 /// Make sure we have every technique our realm and laws allow
 /datum/antagonist/cultivator/proc/refresh_techniques()
 	for(var/technique_type in universal_techniques)
@@ -417,6 +451,7 @@
 				to_chat(owner.current, span_boldnotice("Your [combo.element_one] and [combo.element_two] qi resonate! You have comprehended [initial(combo.technique.name)]!"))
 			grant_technique(combo.technique)
 	grant_forbidden_techniques()
+	refresh_technique_ranges()
 
 /// The realm a technique type was unlocked at
 /datum/antagonist/cultivator/proc/required_realm_for(technique_type)
@@ -470,6 +505,7 @@
 	for(var/datum/cultivation_law/law as anything in laws)
 		law.on_realm_up(src)
 	SEND_SIGNAL(owner.current, COMSIG_MOB_CULTIVATION_REALM_CHANGED, src)
+	update_light_body()
 	update_hud()
 
 // ----- Life -----
@@ -479,7 +515,7 @@
 	if(source.stat == DEAD)
 		return
 	if(effective_realm() > REALM_MORTAL && qi < max_qi())
-		adjust_qi(0.25 * seconds_per_tick)
+		adjust_qi((0.25 + 0.1 * effective_realm()) * seconds_per_tick)
 	core_sustain(source, seconds_per_tick)
 	if(pill_toxicity > 0)
 		pill_toxicity = max(pill_toxicity - 0.1 * seconds_per_tick, 0)

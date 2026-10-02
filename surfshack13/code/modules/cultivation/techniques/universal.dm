@@ -242,7 +242,7 @@
 			return
 		victim.visible_message(span_danger("[user]'s open palm sends [victim] flying!"), span_userdanger("[user]'s palm hits you like a battering ram!"))
 		victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
-		victim.apply_damage(5 + 2 * cultivation_realm_of(user), BRUTE)
+		victim.apply_damage((5 + 2 * cultivation_realm_of(user)) * cultivation_qi_power(user), BRUTE)
 		victim.apply_damage(15, STAMINA)
 	else if(cast_on.anchored)
 		return
@@ -253,7 +253,7 @@
 
 /datum/action/cooldown/spell/pointed/cultivation/qinggong
 	name = "Qinggong"
-	desc = "The lightness skill. Dash a short distance, skimming over tables and railings."
+	desc = "The lightness skill. Dash a short distance (4 tiles, 2 more per realm), skimming over tables and railings."
 	button_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "jetboot"
 	cast_range = 4

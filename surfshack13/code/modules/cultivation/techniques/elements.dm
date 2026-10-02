@@ -94,7 +94,7 @@
 			to_chat(owner, span_warning("Living things need a touch to catch."))
 			return
 		var/mob/living/victim = cast_on
-		victim.apply_damage(5, BURN)
+		victim.apply_damage(5 * cultivation_qi_power(owner), BURN)
 		victim.adjust_fire_stacks(3)
 		victim.ignite_mob()
 		return
@@ -139,7 +139,7 @@
 		new /obj/effect/hotspot(target_turf)
 		target_turf.hotspot_expose(700, 50, 1)
 		for(var/mob/living/victim in target_turf)
-			victim.apply_damage(8 + 3 * cultivation_realm_of(user), BURN)
+			victim.apply_damage((8 + 3 * cultivation_realm_of(user)) * cultivation_qi_power(user), BURN)
 			victim.adjust_fire_stacks(2)
 			victim.ignite_mob()
 	user.apply_damage(5, BURN)
@@ -358,7 +358,7 @@
 	thorn.aim_projectile(aim_turf, user, deviation = spread)
 	thorn.firer = user
 	thorn.fired_from = user
-	thorn.damage = 6 + cultivation_realm_of(user)
+	thorn.damage = (6 + cultivation_realm_of(user)) * cultivation_qi_power(user)
 	playsound(user, 'sound/items/weapons/fwoosh.ogg', 25, TRUE, frequency = 1.4)
 	thorn.fire()
 

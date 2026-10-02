@@ -67,7 +67,7 @@ Icons: `surfshack13/icons/cultivation/` (actions, hud, items, artifacts, effects
 ## Key numbers (for balance passes)
 
 - Realm thresholds (consolidated insight): 60 / 150 / 300. Max qi 50 / 100 / 175 / 275. Pending insight cap 60.
-- Cooldowns scale 100/90/80/70% by realm. Law slots = realm (Nascent Soul: all 5).
+- Qi path is the faster, easier path: thresholds 60/150/300, Ascension 400. It scales into utility and speed rather than raw damage: cooldowns 100/85/70/55% by realm, Light Body move speed +6% per realm, Qinggong 4 + 2 per realm tiles, Void Step 6 + 2 per realm past Golden Core, max qi 60/130/230/360, qi regen 0.25 + 0.1*realm per second, qi body 5/10/15% less brute and burn from Foundation, and only a modest Qi Power damage bump (1.0/1.1/1.2/1.3x via `cultivation_qi_power`). Stage-9 body cultivation is deliberately stronger in a fight. Law slots = realm (Nascent Soul: all 5).
 - Sword Qi: 22 + 4/realm, range 12, speed 2.5, sever 10% + 5%/realm. Flying Sword cap 20 + 4/realm, blades sever 8% + 4%/realm.
 - Buddha's Palm 45 centre / 20 shockwave; Sword Formation 12/s within 2 tiles; Sea of Flames 22/30/38 per wave over 6 tiles.
 - Golden Core crit sustain 1.5 brute+burn/s (x2 Nascent Soul), Nascent Soul revival every 10 minutes.

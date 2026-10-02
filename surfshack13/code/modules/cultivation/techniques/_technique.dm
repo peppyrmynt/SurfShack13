@@ -66,7 +66,7 @@
 	technique.button_icon_state = copytext(type_text, findlasttext(type_text, "/") + 1)
 	technique.background_icon_state = "bg_heretic"
 	technique.overlay_icon_state = "bg_heretic_border"
-	technique.desc = "[technique.desc]<br><i>Qi: [qi_cost] | Cooldown: [DisplayTimeText(technique.cooldown_time)], 10% shorter per realm above Qi Condensation</i>"
+	technique.desc = "[technique.desc]<br><i>Qi: [qi_cost] | Cooldown: [DisplayTimeText(technique.cooldown_time)], 15% shorter per realm above Qi Condensation</i>"
 
 /datum/action/cooldown/spell/cultivation/New(Target, original)
 	cultivation_setup_technique(src, qi_cost)
@@ -76,9 +76,9 @@
 	cultivation_setup_technique(src, qi_cost)
 	return ..()
 
-/// Cooldowns shrink as your cultivation deepens: 100% at Qi Condensation, 90% Foundation, 80% Golden Core, 70% Nascent Soul
+/// Cooldowns shrink as your cultivation deepens: 100% at Qi Condensation, 85% Foundation, 70% Golden Core, 55% Nascent Soul
 /proc/cultivation_cooldown_multiplier(mob/living/caster)
-	return 1 - 0.1 * max(cultivation_realm_of(caster) - REALM_QI_CONDENSATION, 0)
+	return 1 - 0.15 * max(cultivation_realm_of(caster) - REALM_QI_CONDENSATION, 0)
 
 /datum/action/cooldown/spell/cultivation/StartCooldownSelf(override_cooldown_time)
 	if(!isnum(override_cooldown_time))
@@ -146,6 +146,15 @@
 	if(law?.counterfeit && isliving(technique.owner))
 		var/mob/living/shouter = technique.owner
 		shouter.say("[uppertext(technique.name)]!!", forced = "counterfeit cultivation manual")
+
+/// Qi Power: a modest damage bump by realm (qi is about utility and speed, raw damage is the body path's job). 1x, 1.1x, 1.2x, 1.3x.
+/proc/cultivation_power_for_realm(realm)
+	return 1 + 0.1 * max(realm - REALM_QI_CONDENSATION, 0)
+
+/// Qi Power of a caster (1 for anyone who isn't a qi cultivator)
+/proc/cultivation_qi_power(mob/living/caster)
+	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(caster)
+	return cultivator ? cultivation_power_for_realm(cultivator.effective_realm()) : 1
 
 /// Realm of any mob for comparisons. Mortals are realm 0.
 /proc/cultivation_realm_of(mob/living/target)

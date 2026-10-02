@@ -122,7 +122,7 @@
 	new /obj/effect/temp_visual/impact_effect/cultivation_sword_qi(get_turf(victim), 0, 0)
 	victim.Shake(2, 2, 0.3 SECONDS)
 	if(source.sharpness)
-		victim.apply_damage(5 + 2 * launch_realm, BRUTE, sharpness = source.sharpness)
+		victim.apply_damage((5 + 2 * launch_realm) * cultivation_power_for_realm(launch_realm), BRUTE, sharpness = source.sharpness)
 		cultivation_sever_limb(victim, 8 + 4 * launch_realm + 2 * refinement, launch_realm)
 	else
 		victim.Knockdown(1 SECONDS)
@@ -395,7 +395,7 @@
 	var/mob/living/user = owner
 	var/obj/projectile/cultivation_sword_qi/slash = new(get_turf(user))
 	var/realm = cultivation_realm_of(user)
-	slash.damage = 22 + 4 * realm
+	slash.damage = (22 + 4 * realm) * cultivation_qi_power(user)
 	slash.caster_realm = realm
 	slash.aim_projectile(cast_on, user)
 	slash.firer = user
