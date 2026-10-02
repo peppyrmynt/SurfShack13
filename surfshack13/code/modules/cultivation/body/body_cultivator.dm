@@ -178,6 +178,10 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 /datum/movespeed_modifier/body_thousand_league
 	multiplicative_slowdown = -0.3
 
+/// Every stage makes you a little faster on top of your legs
+/datum/movespeed_modifier/body_stage
+	variable = TRUE
+
 // ===================== Limb tempering =====================
 
 /// The tempering of one limb. Rides on the bodypart, so it goes wherever the limb goes.
@@ -312,6 +316,12 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	var/committed = FALSE
 	/// Tempering earned from training but not yet forged into a limb
 	var/tempering = 0
+	/// Exhaustion from body arts, 0 to BODY_EXHAUSTION_MAX. Drains back on its own.
+	var/exhaustion = 0
+	/// Exhaustion in tens at the last button refresh, so buttons grey out and light up as it changes
+	var/last_exhaustion_band = 0
+	/// HUD meter
+	var/atom/movable/screen/body_display/body_display
 	/// source -> world.time we can next earn tempering from it
 	var/list/tempering_cooldowns = list()
 	/// Techniques we've been granted
@@ -408,6 +418,10 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	RegisterSignal(current, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, PROC_REF(damage_modifiers))
 	RegisterSignals(current, list(COMSIG_CARBON_POST_ATTACH_LIMB, COMSIG_CARBON_POST_REMOVE_LIMB, COMSIG_CARBON_GAIN_ORGAN, COMSIG_CARBON_LOSE_ORGAN), PROC_REF(on_limbs_changed))
 	RegisterSignal(current, COMSIG_LIVING_DEATH, PROC_REF(on_death))
+	if(current.hud_used)
+		on_hud_created()
+	else
+		RegisterSignal(current, COMSIG_MOB_HUD_CREATED, PROC_REF(on_hud_created))
 	apply_stage_benefits()
 
 /datum/antagonist/body_cultivator/remove_innate_effects(mob/living/mob_override)
@@ -424,12 +438,68 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		COMSIG_CARBON_GAIN_ORGAN,
 		COMSIG_CARBON_LOSE_ORGAN,
 		COMSIG_LIVING_DEATH,
+		COMSIG_MOB_HUD_CREATED,
 	))
+	if(current.hud_used && body_display)
+		current.hud_used.infodisplay -= body_display
+	QDEL_NULL(body_display)
 	clear_stage_benefits(current)
 
 /datum/antagonist/body_cultivator/on_body_transfer(mob/living/old_body, mob/living/new_body)
 	tribulation?.cancel("Your soul is torn from your body mid-tribulation!")
 	return ..()
+
+// ----- HUD and exhaustion -----
+
+/datum/antagonist/body_cultivator/proc/on_hud_created(datum/source)
+	SIGNAL_HANDLER
+	var/datum/hud/hud = owner.current?.hud_used
+	if(!hud || body_display)
+		return
+	body_display = new /atom/movable/screen/body_display(null, hud)
+	hud.infodisplay += body_display
+	hud.show_hud(hud.hud_version)
+	UnregisterSignal(owner.current, COMSIG_MOB_HUD_CREATED)
+	update_hud()
+
+/datum/antagonist/body_cultivator/proc/update_hud()
+	if(!body_display)
+		return
+	var/ready = can_attempt_tribulation()
+	body_display.icon_state = ready ? "body_display_ready" : "body_display"
+	body_display.cut_overlays()
+	var/band = clamp(round(exhaustion / 10), 0, 10)
+	if(band)
+		body_display.add_overlay(mutable_appearance('surfshack13/icons/cultivation/cultivation_hud.dmi', "body_exhaustion_[band]"))
+	var/exhaustion_color = exhaustion >= 80 ? "#ff5a5a" : (exhaustion >= 50 ? "#ff9a3c" : "#7fe08a")
+	body_display.maptext = MAPTEXT("<div align='center' valign='middle' style='position:relative; top:0px; left:6px'>\
+		<font color='[exhaustion_color]'>[round(exhaustion)]%</font><br><font color='#e0a050'>[ready ? "READY" : "[round(tempering)]"]</font></div>")
+	body_display.name = "Body: [stage_name()] | Exhaustion [round(exhaustion)]% | Tempering [round(tempering)]/[BODY_TEMPERING_CAP][ready ? " | READY for the Tribulation of Flesh" : ""]"
+
+/// How fast exhaustion drains, per second
+/datum/antagonist/body_cultivator/proc/exhaustion_recovery()
+	var/recovery = 3 + 0.4 * stage
+	if(body_group_level(owner.current, "heart") >= 3)
+		recovery += 1
+	if(body_group_level(owner.current, "lungs") >= 6)
+		recovery += 1
+	return recovery
+
+/datum/antagonist/body_cultivator/proc/add_exhaustion(amount)
+	exhaustion = clamp(exhaustion + amount, 0, BODY_EXHAUSTION_MAX)
+	if(exhaustion >= BODY_EXHAUSTION_MAX * 0.9 && amount > 0)
+		owner.current?.balloon_alert(owner.current, "exhausted!")
+	refresh_buttons()
+	update_hud()
+
+/// Grey out or light up technique buttons as exhaustion crosses each 10%
+/datum/antagonist/body_cultivator/proc/refresh_buttons()
+	var/band = round(exhaustion / 10)
+	if(band == last_exhaustion_band)
+		return
+	last_exhaustion_band = band
+	for(var/datum/action/technique as anything in techniques)
+		technique.build_all_button_icons(UPDATE_BUTTON_STATUS)
 
 // ----- Accessors -----
 
@@ -481,6 +551,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		return 0
 	tempering += gained
 	owner.current?.balloon_alert(owner.current, "+[round(gained, 0.1)] tempering")
+	update_hud()
 	return gained
 
 /// Pour pending tempering into one limb or organ. Returns levels gained.
@@ -498,6 +569,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 /datum/antagonist/body_cultivator/proc/clear_stage_benefits(mob/living/body)
 	body.remove_traits(list(TRAIT_HARDLY_WOUNDED, TRAIT_SHOCKIMMUNE), BODY_TRAIT_SOURCE)
 	clear_part_powers(body)
+	body.remove_movespeed_modifier(/datum/movespeed_modifier/body_stage)
 	body.maxHealth -= applied_health
 	applied_health = 0
 	body.updatehealth()
@@ -513,6 +585,8 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		health_bonus += stage_health[i]
 	applied_health = health_bonus
 	body.maxHealth += applied_health
+	if(stage)
+		body.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/body_stage, multiplicative_slowdown = -0.04 * stage)
 	var/list/traits = list()
 	if(stage >= 2)
 		traits += TRAIT_HARDLY_WOUNDED
@@ -615,6 +689,10 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	if(COOLDOWN_FINISHED(src, passive_tempering_cooldown) && body.stat == CONSCIOUS)
 		COOLDOWN_START(src, passive_tempering_cooldown, 10 SECONDS)
 		tempering = min(tempering + 1, BODY_TEMPERING_CAP)
+	if(exhaustion > 0)
+		exhaustion = max(exhaustion - exhaustion_recovery() * seconds_per_tick, 0)
+		refresh_buttons()
+	update_hud()
 	var/heart = body_group_level(body, "heart")
 	var/lungs = body_group_level(body, "lungs")
 	// Heart and lungs: blood, stamina, healing
@@ -696,34 +774,47 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		return
 	var/obj/item/bodypart/arm = source.get_active_hand()
 	var/datum/component/body_tempering/arm_tempering = arm?.GetComponent(/datum/component/body_tempering)
-	if(!arm_tempering || arm_tempering.level < 5)
+	var/arm_level = arm_tempering ? arm_tempering.level : 0
+	if(!stage && !arm_level)
 		return
-	INVOKE_ASYNC(src, PROC_REF(forged_strike), source, target, arm_tempering.level)
+	INVOKE_ASYNC(src, PROC_REF(forged_strike), source, target, arm_level)
 
-/// What a forged arm's punch does on top of the punch
+/// What a forged body's punch does on top of the punch: more damage and faster fists every stage, and more chaos from forged arms
 /datum/antagonist/body_cultivator/proc/forged_strike(mob/living/source, atom/target, arm_level)
+	// Faster fists: the melee cooldown shrinks with your stage
+	if(stage)
+		source.changeNext_move(max(CLICK_CD_MELEE - round(stage / 2), 3))
 	if(isliving(target))
 		var/mob/living/victim = target
-		if(victim.stat == DEAD || cultivation_realm_of(victim) > cultivation_realm_of(source))
+		if(victim.stat == DEAD || victim == source)
 			return
-		victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
-		if(arm_level >= 7 && prob(25) && !HAS_TRAIT(victim, TRAIT_PUSHIMMUNE))
+		if(cultivation_realm_of(victim) > cultivation_realm_of(source))
+			victim.apply_damage(round((stage + arm_level / 2) / 2), BRUTE, wound_bonus = CANT_WOUND)
+			return
+		victim.apply_damage(stage + round(arm_level / 2), BRUTE)
+		if(stage >= 4)
+			new /obj/effect/temp_visual/cultivation_spark(get_turf(victim), "#ffd27a", rand(-6, 6), rand(-2, 10))
+		if(stage >= 5 || arm_level >= 5)
+			victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
+		if(arm_level >= 7 && prob(20 + 3 * stage) && !HAS_TRAIT(victim, TRAIT_PUSHIMMUNE))
 			victim.visible_message(span_danger("[source]'s punch hurls [victim] back like a thunderclap!"))
-			playsound(victim, 'sound/effects/meteorimpact.ogg', 30, TRUE)
-			victim.throw_at(get_edge_target_turf(victim, get_dir(source, victim)), 2, 2, source)
-		else if(arm_level >= 6 && prob(15))
+			playsound(victim, 'sound/effects/meteorimpact.ogg', 40, TRUE)
+			if(stage >= 7)
+				new /obj/effect/temp_visual/kinetic_blast(get_turf(victim))
+			victim.throw_at(get_edge_target_turf(victim, get_dir(source, victim)), 2 + round(stage / 3), 2, source)
+		else if(arm_level >= 6 && prob(10 + 2 * stage))
 			victim.Knockdown(1 SECONDS)
 		return
-	if(arm_level >= 9 && iswallturf(target) && !istype(target, /turf/closed/wall/r_wall) && COOLDOWN_FINISHED(src, wall_punch_cooldown))
-		COOLDOWN_START(src, wall_punch_cooldown, 5 SECONDS)
+	if(arm_level >= 9 && iswallturf(target) && COOLDOWN_FINISHED(src, wall_punch_cooldown))
+		COOLDOWN_START(src, wall_punch_cooldown, 3 SECONDS)
 		source.visible_message(span_danger("[source] punches clean through [target]!"))
-		playsound(target, 'sound/effects/meteorimpact.ogg', 60, TRUE)
-		body_art_smash(target, source, 0, break_walls = TRUE)
+		playsound(target, 'sound/effects/meteorimpact.ogg', 70, TRUE)
+		body_art_shatter_line(source, get_turf(source), get_dir(source, target), 1 + round(stage / 3), stage >= 9 ? 1 : 0, 10 + stage, max(body_art_wall_tier(stage), 1), "a wall-breaking punch", 0.3)
 		return
-	if(arm_level >= 8 && isobj(target))
+	if((arm_level >= 8 || stage >= 6) && isobj(target))
 		var/obj/thing = target
-		if(!(thing.resistance_flags & INDESTRUCTIBLE) && (isstructure(thing) || ismachinery(thing)))
-			thing.take_damage(25, BRUTE, MELEE)
+		if(thing.uses_integrity && !(thing.resistance_flags & INDESTRUCTIBLE) && (isstructure(thing) || ismachinery(thing)))
+			thing.take_damage(25 + 5 * stage, BRUTE, MELEE)
 
 /// Being beaten is training too
 /datum/antagonist/body_cultivator/proc/on_damaged(mob/living/source, damage, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item)
@@ -835,3 +926,18 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 
 #undef BODY_TRAIT_SOURCE
 #undef BODY_PART_TRAIT_SOURCE
+
+/// HUD readout: exhaustion (top, coloured, with a filling red ring) and pending tempering (bottom). Click for the panel.
+/atom/movable/screen/body_display
+	name = "Body Molding"
+	icon = 'surfshack13/icons/cultivation/cultivation_hud.dmi'
+	icon_state = "body_display"
+	screen_loc = "WEST:6,CENTER+1:5"
+	maptext_width = 64
+	maptext_height = 32
+	maptext_x = -16
+	maptext_y = 2
+
+/atom/movable/screen/body_display/Click(location, control, params)
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(usr)
+	body_datum?.open_panel(usr)

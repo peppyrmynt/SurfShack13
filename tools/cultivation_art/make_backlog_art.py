@@ -459,6 +459,37 @@ def rubble(seed):
     d.point(pts[0], fill=(170, 162, 150, 255))
     return outline(harden(im), (40, 34, 30, 255))
 
+def body_hud(glow_phase=None):
+    """Bronze medallion with a clenched fist: the body path's HUD meter. glow_phase animates the 'ready' pulse."""
+    big = 128
+    im = Image.new('RGBA', (big, big), (0, 0, 0, 0))
+    dark, mid, light = (70, 40, 14), (196, 128, 56), (255, 226, 180)
+    if glow_phase is not None:
+        pulse = 0.5 + 0.5 * math.sin(glow_phase * 2 * math.pi / 8)
+        halo = Image.new('RGBA', (big, big), (0, 0, 0, 0))
+        ImageDraw.Draw(halo).ellipse((2, 2, big - 3, big - 3), fill=(255, 200, 90, int(90 + 120 * pulse)))
+        im.alpha_composite(halo.filter(ImageFilter.GaussianBlur(8)))
+    disc = radial((big, big), lerp(mid, light, 0.3), lerp(mid, dark, 0.5), center=(big * 0.4, big * 0.35), radius=big * 0.6)
+    mask = Image.new('L', (big, big), 0)
+    ImageDraw.Draw(mask).ellipse((10, 10, big - 11, big - 11), fill=255)
+    im.paste(disc, (0, 0), mask)
+    d = ImageDraw.Draw(im)
+    d.ellipse((10, 10, big - 11, big - 11), outline=dark + (255,), width=7)
+    font = ImageFont.truetype(FONT_BOLD, 64)
+    bbox = d.textbbox((0, 0), '体', font=font)
+    tx, ty = big / 2 - (bbox[2] - bbox[0]) / 2 - bbox[0], big / 2 - (bbox[3] - bbox[1]) / 2 - bbox[1]
+    d.text((tx + 3, ty + 4), '体', font=font, fill=dark + (255,))
+    d.text((tx, ty), '体', font=font, fill=(255, 246, 226, 255))
+    return im.resize((32, 32), Image.LANCZOS)
+
+def exhaustion_ring(band):
+    """A red arc around the medallion, filling clockwise from the top in tenths."""
+    big = 128
+    im = Image.new('RGBA', (big, big), (0, 0, 0, 0))
+    color = (120, 220, 120) if band < 5 else ((255, 160, 60) if band < 8 else (230, 40, 40))
+    ImageDraw.Draw(im).arc((4, 4, big - 5, big - 5), -90, -90 + 36 * band, fill=color + (255,), width=12)
+    return im.resize((32, 32), Image.LANCZOS)
+
 # ---------------------------------------------------------------- write
 
 merge_dmi(OUT + 'cultivation_actions.dmi', [(k, [medallion(*v)], 1) for k, v in TECHNIQUES.items()])
@@ -494,6 +525,9 @@ merge_dmi(OUT + 'cultivation_effects_64.dmi', [
     ('decree_scroll', [decree_scroll()], 1),
     ('crater', [crater()], 1),
 ])
+
+merge_dmi(OUT + 'cultivation_hud.dmi', [('body_display', [body_hud()], 1), ('body_display_ready', [body_hud(p) for p in range(8)], 1)] + \
+    [(f'body_exhaustion_{band}', [exhaustion_ring(band)], 1) for band in range(1, 11)])
 
 merge_dmi(OUT + 'cultivation_particles.dmi', [('rubble_1', [rubble(1)], 1), ('rubble_2', [rubble(2)], 1), ('rubble_3', [rubble(3)], 1)])
 

@@ -1,4 +1,4 @@
-// Body Molding Art techniques. They cost stamina and food instead of qi, and ignore antimagic: there's nothing magic about a fist.
+// Body Molding Art techniques. They cost exhaustion and a little food instead of qi, and ignore antimagic: there's nothing magic about a fist.
 
 /datum/action/cooldown/spell/body_art
 	name = "Body Technique"
@@ -14,22 +14,22 @@
 	antimagic_flags = NONE
 	spell_max_level = 1
 	cooldown_time = 10 SECONDS
-	/// Stamina damage it costs to use
-	var/stamina_cost = 0
+	/// Exhaustion it costs to use (out of 100)
+	var/exhaustion_cost = 0
 
 /datum/action/cooldown/spell/body_art/New(Target, original)
-	body_setup_technique(src, stamina_cost)
+	body_setup_technique(src, exhaustion_cost)
 	return ..()
 
 /datum/action/cooldown/spell/body_art/can_cast_spell(feedback = TRUE)
 	. = ..()
 	if(!.)
 		return FALSE
-	return body_can_cast(src, stamina_cost, feedback)
+	return body_can_cast(src, exhaustion_cost, feedback)
 
 /datum/action/cooldown/spell/body_art/cast(atom/cast_on)
 	. = ..()
-	body_spend(src, stamina_cost)
+	body_spend(src, exhaustion_cost)
 
 /datum/action/cooldown/spell/pointed/body_art
 	name = "Pointed Body Technique"
@@ -47,29 +47,40 @@
 	cooldown_time = 10 SECONDS
 	active_msg = "You tense your body..."
 	deactive_msg = "You relax."
-	var/stamina_cost = 0
+	var/exhaustion_cost = 0
 
 /datum/action/cooldown/spell/pointed/body_art/New(Target, original)
-	body_setup_technique(src, stamina_cost)
+	body_setup_technique(src, exhaustion_cost)
 	return ..()
 
 /datum/action/cooldown/spell/pointed/body_art/can_cast_spell(feedback = TRUE)
 	. = ..()
 	if(!.)
 		return FALSE
-	return body_can_cast(src, stamina_cost, feedback)
+	return body_can_cast(src, exhaustion_cost, feedback)
 
 /datum/action/cooldown/spell/pointed/body_art/cast(atom/cast_on)
 	. = ..()
-	body_spend(src, stamina_cost)
+	body_spend(src, exhaustion_cost)
 
 /// Medallion named after the typepath, and the costs in the description
-/proc/body_setup_technique(datum/action/cooldown/spell/technique, stamina_cost)
+/proc/body_setup_technique(datum/action/cooldown/spell/technique, exhaustion_cost)
 	var/type_text = "[technique.type]"
 	technique.button_icon_state = copytext(type_text, findlasttext(type_text, "/") + 1)
-	technique.desc = "[technique.desc]<br><i>Stamina: [stamina_cost] | Cooldown: [DisplayTimeText(technique.cooldown_time)]</i>"
+	technique.desc = "[technique.desc]<br><i>Exhaustion: [exhaustion_cost] | Cooldown: [DisplayTimeText(technique.cooldown_time)], 5% shorter per stage</i>"
 
-/proc/body_can_cast(datum/action/technique, stamina_cost, feedback)
+/// Body arts recover faster the higher your stage: 5% per stage, 55% at the Primordial Chaos Body
+/datum/action/cooldown/spell/body_art/StartCooldownSelf(override_cooldown_time)
+	if(!isnum(override_cooldown_time))
+		override_cooldown_time = cooldown_time * (1 - 0.05 * body_art_stage(owner))
+	return ..(override_cooldown_time)
+
+/datum/action/cooldown/spell/pointed/body_art/StartCooldownSelf(override_cooldown_time)
+	if(!isnum(override_cooldown_time))
+		override_cooldown_time = cooldown_time * (1 - 0.05 * body_art_stage(owner))
+	return ..(override_cooldown_time)
+
+/proc/body_can_cast(datum/action/technique, exhaustion_cost, feedback)
 	var/mob/living/caster = technique.owner
 	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(caster)
 	if(!body_datum)
@@ -83,18 +94,29 @@
 		if(feedback)
 			to_chat(caster, span_warning("Your body isn't tempered enough for [technique.name]."))
 		return FALSE
-	if(stamina_cost && caster.getStaminaLoss() + stamina_cost > 90)
+	if(exhaustion_cost && body_datum.exhaustion + exhaustion_cost > BODY_EXHAUSTION_MAX)
 		if(feedback)
-			to_chat(caster, span_warning("You're too exhausted!"))
+			to_chat(caster, span_warning("You're too exhausted! ([round(body_datum.exhaustion)]% exhaustion, this needs [exhaustion_cost]%)"))
 		return FALSE
 	return TRUE
 
-/proc/body_spend(datum/action/technique, stamina_cost)
+/// The exhaustion a body technique costs, whichever base type it is
+/proc/body_technique_cost(datum/action/technique)
+	if(istype(technique, /datum/action/cooldown/spell/body_art))
+		var/datum/action/cooldown/spell/body_art/self_art = technique
+		return self_art.exhaustion_cost
+	if(istype(technique, /datum/action/cooldown/spell/pointed/body_art))
+		var/datum/action/cooldown/spell/pointed/body_art/pointed_art = technique
+		return pointed_art.exhaustion_cost
+	return 0
+
+/proc/body_spend(datum/action/technique, exhaustion_cost)
 	var/mob/living/caster = technique.owner
-	if(!caster || !stamina_cost)
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(caster)
+	if(!body_datum || !exhaustion_cost)
 		return
-	caster.adjustStaminaLoss(stamina_cost)
-	caster.adjust_nutrition(-stamina_cost / 2)
+	body_datum.add_exhaustion(exhaustion_cost)
+	caster.adjust_nutrition(-exhaustion_cost / 4)
 
 // ===================== Forge the Body =====================
 
@@ -374,7 +396,7 @@
 	name = "Iron Shirt"
 	desc = "Clench every muscle into a shell. For a while brute damage is halved and you can't be shoved."
 	cooldown_time = 45 SECONDS
-	stamina_cost = 20
+	exhaustion_cost = 20
 
 /datum/action/cooldown/spell/body_art/iron_shirt/cast(mob/living/cast_on)
 	. = ..()
@@ -413,10 +435,11 @@
 
 /datum/action/cooldown/spell/pointed/body_art/mountain_leap
 	name = "Mountain Leap"
-	desc = "Leap like a falling boulder. From Crimson Blood, your landing knocks down everyone beside you."
-	cast_range = 5
+	desc = "Leap like a falling boulder: 3 tiles plus your stage, faster the higher you climb. From Crimson Blood your landing cracks the floor \
+		and knocks down everyone around you, wider at higher stages."
+	cast_range = 9
 	cooldown_time = 10 SECONDS
-	stamina_cost = 15
+	exhaustion_cost = 15
 	aim_assist = FALSE
 
 /datum/action/cooldown/spell/pointed/body_art/mountain_leap/is_valid_target(atom/cast_on)
@@ -434,72 +457,105 @@
 /datum/action/cooldown/spell/pointed/body_art/mountain_leap/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/user = owner
-	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(user)
+	var/stage = body_art_stage(user)
 	var/old_pass = user.pass_flags
 	user.pass_flags |= PASSTABLE
 	user.visible_message(span_warning("[user] crouches and launches [user.p_them()]self into the air!"))
 	playsound(user, 'sound/effects/rock/rock_break.ogg', 40, TRUE, frequency = 1.4)
 	new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(user))
-	user.throw_at(get_turf(cast_on), 3 + round(body_datum.stage / 2), 1.5, user, spin = FALSE, gentle = TRUE, callback = CALLBACK(src, PROC_REF(land), user, old_pass))
+	if(stage >= 5)
+		body_art_crack_ground(get_turf(user), 0, 60, crater = stage >= 7)
+	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(leap_trail))
+	user.throw_at(get_turf(cast_on), 3 + stage, 1.5 + stage / 3, user, spin = FALSE, gentle = TRUE, callback = CALLBACK(src, PROC_REF(land), user, old_pass, stage))
 
-/datum/action/cooldown/spell/pointed/body_art/mountain_leap/proc/land(mob/living/user, old_pass)
+/datum/action/cooldown/spell/pointed/body_art/mountain_leap/proc/leap_trail(mob/living/source)
+	SIGNAL_HANDLER
+	cultivation_afterimage(source, 0.3 SECONDS)
+
+/datum/action/cooldown/spell/pointed/body_art/mountain_leap/proc/land(mob/living/user, old_pass, stage)
+	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
 	user.pass_flags = old_pass
 	var/turf/landing = get_turf(user)
-	playsound(landing, 'sound/effects/meteorimpact.ogg', 40, TRUE)
+	playsound(landing, 'sound/effects/meteorimpact.ogg', 40 + 5 * stage, TRUE)
 	user.Shake(1, 1, 0.3 SECONDS)
 	new /obj/effect/temp_visual/circle_wave/cultivation/earth(landing)
-	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(user)
-	if(body_datum?.stage < 5)
+	if(stage < 5)
 		return
-	for(var/mob/living/victim in orange(1, landing))
-		if(victim.stat == DEAD || victim.body_position == LYING_DOWN)
+	var/radius = 1 + round((stage - 5) / 2)
+	body_art_crack_ground(landing, radius, 30 + 5 * stage, crater = TRUE)
+	cultivation_distortion_wave(user, radius + 2, 0.5 SECONDS, 200)
+	for(var/turf/nearby in range(radius, landing))
+		if(stage >= 7)
+			body_art_smash(nearby, user, 60 + 10 * stage, 0)
+	for(var/mob/living/victim in range(radius, landing))
+		if(victim == user || victim.body_position == LYING_DOWN)
 			continue
-		victim.Knockdown(1 SECONDS)
-		to_chat(victim, span_userdanger("The floor jumps under you as [user] lands!"))
+		body_art_hit(user, victim, 2 + stage, 1 SECONDS + stage * 0.1 SECONDS, name)
+	for(var/mob/living/viewer in range(radius + 3, landing))
+		shake_camera(viewer, 2, 2)
 
 // ===================== Shattering Fist =====================
 
 /datum/action/cooldown/spell/pointed/body_art/shattering_fist
 	name = "Shattering Fist"
-	desc = "Put your whole forged body behind one punch. People are hurled away, machines and structures crumple, and a Golden Body can punch through walls."
+	desc = "Put your whole forged body behind one punch. People are hurled away and machines crumple, harder the higher your stage. \
+		From Jade Marrow a punch at a wall, door or machine blasts a trench through it and everything behind it, deeper and wider every stage; \
+		reinforced walls and blast doors give way from Golden Body, and a Primordial Chaos Body's fist carves a canyon nine deep and five wide."
 	cast_range = 1
 	cooldown_time = 15 SECONDS
-	stamina_cost = 25
+	exhaustion_cost = 25
 
 /datum/action/cooldown/spell/pointed/body_art/shattering_fist/is_valid_target(atom/cast_on)
 	return ..() && (isliving(cast_on) || isclosedturf(cast_on) || isobj(cast_on))
 
+/// Shattering Fist breaks walls earlier than the other arts: plain walls from Jade Marrow, reinforced from Golden Body
+/datum/action/cooldown/spell/pointed/body_art/shattering_fist/proc/fist_wall_tier(stage)
+	if(stage >= 7)
+		return 2
+	if(stage >= 4)
+		return 1
+	return 0
+
 /datum/action/cooldown/spell/pointed/body_art/shattering_fist/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/user = owner
-	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(user)
+	var/stage = body_art_stage(user)
 	var/arm_level = body_part_level(user, user.active_hand_index % 2 ? BODY_ZONE_L_ARM : BODY_ZONE_R_ARM)
+	var/direction = get_dir(user, cast_on)
+	body_art_shout(user, name)
 	user.do_attack_animation(cast_on, ATTACK_EFFECT_SMASH)
-	playsound(cast_on, 'sound/effects/meteorimpact.ogg', 50, TRUE)
+	playsound(cast_on, 'sound/effects/meteorimpact.ogg', 60 + 4 * stage, TRUE)
 	new /obj/effect/temp_visual/kinetic_blast(get_turf(cast_on))
-	cultivation_distortion_wave(user, 2, 0.4 SECONDS, 160)
+	cultivation_distortion_wave(user, 2 + round(stage / 3), 0.4 SECONDS, 160 + 8 * stage)
 	if(isliving(cast_on))
 		var/mob/living/victim = cast_on
 		victim.visible_message(span_danger("[user]'s fist lands on [victim] like a falling mountain!"), span_userdanger("[user] hits you like a falling mountain!"))
-		victim.apply_damage(10 + 2 * arm_level, BRUTE, wound_bonus = 10)
+		body_art_hit(user, victim, 10 + 2 * arm_level + 2 * stage, 1 SECONDS + stage * 0.2 SECONDS, name)
 		victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
+		if(stage >= 7)
+			body_art_shatter_line(user, get_turf(victim), direction, stage - 4, stage >= 9 ? 1 : 0, 8 + stage, body_art_wall_tier(stage), name)
 		if(!HAS_TRAIT(victim, TRAIT_PUSHIMMUNE))
-			victim.throw_at(get_edge_target_turf(victim, get_dir(user, victim)), 2 + round(body_datum.stage / 3), 2, user)
-		log_combat(user, victim, "used Shattering Fist on")
+			victim.throw_at(get_edge_target_turf(victim, direction), 3 + round(stage / 2), 2 + round(stage / 3), user)
 		return
-	if(iswallturf(cast_on))
-		var/turf/closed/wall/wall = cast_on
-		if(body_datum.stage >= 7 && !istype(wall, /turf/closed/wall/r_wall))
-			wall.visible_message(span_danger("[user] punches straight through [wall]!"))
-			wall.dismantle_wall(devastated = TRUE)
+	var/wall_tier = fist_wall_tier(stage)
+	// Walls, doors and anything else in the way: the punch blasts a trench through it and what's behind it.
+	// Jade Marrow: 1 deep. Crimson Blood: 2. Vajra Viscera: 3. Golden Body: 4, 3 wide. Undying Flesh: 6, 3 wide. Primordial Chaos: 9 deep, 5 wide.
+	if(isclosedturf(cast_on) || isobj(cast_on))
+		if(!wall_tier)
+			if(isobj(cast_on))
+				var/obj/thing = cast_on
+				if(thing.uses_integrity && !(thing.resistance_flags & INDESTRUCTIBLE))
+					thing.take_damage(30 + 15 * stage, BRUTE, MELEE, armour_penetration = 30)
+			else
+				cast_on.visible_message(span_warning("[user] punches [cast_on] hard enough to crack it."))
 			return
-		wall.visible_message(span_warning("[user] punches [wall] hard enough to crack the paint."))
-		user.apply_damage(3, BRUTE, user.get_active_hand(), wound_bonus = CANT_WOUND)
+		var/list/depths = list(1, 2, 3, 4, 6, 9)
+		var/depth = depths[clamp(stage - 3, 1, length(depths))]
+		var/half_width = stage >= 9 ? 2 : (stage >= 7 ? 1 : 0)
+		cast_on.visible_message(span_boldwarning("[user]'s fist blasts straight through [cast_on] and everything behind it!"))
+		playsound(cast_on, 'sound/effects/explosion/explosion_distant.ogg', 60 + 4 * stage, TRUE)
+		body_art_shatter_line(user, get_turf(user), direction, depth, half_width, 10 + 2 * stage, wall_tier, name, 0.3)
 		return
-	if(isobj(cast_on))
-		var/obj/thing = cast_on
-		if(!(thing.resistance_flags & INDESTRUCTIBLE))
-			thing.take_damage(30 + 5 * body_datum.stage, BRUTE, MELEE)
 
 // ===================== Bone Setting =====================
 
@@ -507,7 +563,7 @@
 	name = "Bone Setting"
 	desc = "Wrench your own dislocations and fractures back into place. Moderate breaks at first, severe ones from Vajra Viscera."
 	cooldown_time = 60 SECONDS
-	stamina_cost = 15
+	exhaustion_cost = 15
 
 /datum/action/cooldown/spell/body_art/bone_setting/cast(mob/living/carbon/cast_on)
 	. = ..()
@@ -541,7 +597,7 @@
 	desc = "The Body Molding Art itself. Grow a lost limb back from your own flesh, or remold a limb that isn't yours (a transplant or a fresh regrowth) \
 		up to half your stage, closing its wounds."
 	cooldown_time = 3 MINUTES
-	stamina_cost = 40
+	exhaustion_cost = 40
 
 /datum/action/cooldown/spell/body_art/remold_limb/cast(mob/living/carbon/cast_on)
 	. = ..()
@@ -592,7 +648,7 @@
 
 /datum/action/cooldown/spell/body_art/blood_boil
 	name = "Blood Boil"
-	desc = "Set your blood boiling. For fifteen seconds you shrug off exhaustion and slowdowns, then you crash hard."
+	desc = "Set your blood boiling. For fifteen seconds your exhaustion drains away fast and nothing slows you, then you crash hard (+40 exhaustion)."
 	cooldown_time = 90 SECONDS
 
 /datum/action/cooldown/spell/body_art/blood_boil/cast(mob/living/cast_on)
@@ -617,12 +673,16 @@
 
 /datum/status_effect/body_blood_boil/tick(seconds_between_ticks)
 	owner.adjustStaminaLoss(-10)
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(owner)
+	body_datum?.add_exhaustion(-15)
 
 /datum/status_effect/body_blood_boil/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_IGNORESLOWDOWN, id)
 	owner.remove_filter("blood_boil")
 	QDEL_NULL(steam)
-	owner.adjustStaminaLoss(50)
+	owner.adjustStaminaLoss(30)
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(owner)
+	body_datum?.add_exhaustion(40)
 	to_chat(owner, span_warning("Your blood cools, and exhaustion crashes over you."))
 
 // ===================== Vajra Golden Body =====================
@@ -631,7 +691,7 @@
 	name = "Vajra Golden Body"
 	desc = "Turn your skin to temple gold for eight seconds: three quarters less brute and burn damage, and nothing can stun or shove you."
 	cooldown_time = 2 MINUTES
-	stamina_cost = 30
+	exhaustion_cost = 30
 
 /datum/action/cooldown/spell/body_art/vajra_body/cast(mob/living/cast_on)
 	. = ..()
@@ -667,9 +727,9 @@
 
 /datum/action/cooldown/spell/body_art/primordial_roar
 	name = "Primordial Roar"
-	desc = "Roar with the voice of the first mountain. Everyone weaker than you within five tiles is knocked flat and deafened."
+	desc = "Roar with the voice of the first mountain. Everyone weaker than you within seven tiles is knocked flat, battered and deafened, and every window shatters."
 	cooldown_time = 60 SECONDS
-	stamina_cost = 30
+	exhaustion_cost = 30
 
 /datum/action/cooldown/spell/body_art/primordial_roar/cast(mob/living/cast_on)
 	. = ..()
@@ -678,15 +738,19 @@
 	playsound(cast_on, 'sound/effects/magic/demon_dies.ogg', 80, TRUE, frequency = 0.5)
 	playsound(cast_on, 'sound/effects/gong.ogg', 60, TRUE, frequency = 0.35)
 	new /obj/effect/temp_visual/circle_wave/cultivation/earth(get_turf(cast_on))
-	cultivation_distortion_wave(cast_on, 5, 0.8 SECONDS, 220)
-	for(var/mob/living/victim in range(5, cast_on))
+	cultivation_distortion_wave(cast_on, 8, 0.8 SECONDS, 255)
+	for(var/turf/nearby in range(7, cast_on))
+		for(var/obj/structure/window/window in nearby)
+			window.take_damage(60, BRUTE, MELEE)
+	for(var/mob/living/victim in range(7, cast_on))
 		if(victim == cast_on || victim.stat == DEAD)
 			continue
-		shake_camera(victim, 3, 2)
+		shake_camera(victim, 5, 3)
 		if(cultivation_realm_of(victim) >= my_realm)
 			to_chat(victim, span_warning("You brace against [cast_on]'s roar."))
 			continue
-		victim.Knockdown(2 SECONDS)
+		victim.Knockdown(3 SECONDS)
+		victim.apply_damage(10, BRUTE, wound_bonus = CANT_WOUND)
 		victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
 		if(iscarbon(victim))
 			var/mob/living/carbon/carbon_victim = victim
@@ -778,6 +842,8 @@
 	html += "<div class='dim'>[committed ? "Disciple of the Body Molding Art (stages 1 to [BODY_STAGE_MAX])" : "Mortal training (Copper Skin is as far as you can go without the Body Molding Art)"]</div>"
 	html += "<div style='margin-top:6px'>Pending tempering: [round(tempering)] / [BODY_TEMPERING_CAP]</div>"
 	html += "<div class='bar'><div class='fill' style='width:[round(100 * tempering / BODY_TEMPERING_CAP)]%'></div></div>"
+	html += "<div style='margin-top:6px'>Exhaustion: [round(exhaustion)]% <span class='dim'>(recovers [round(exhaustion_recovery(), 0.1)]% a second)</span></div>"
+	html += "<div class='bar'><div class='fill' style='width:[round(exhaustion)]%; background:linear-gradient(90deg,#c0a030,#d0201a)'></div></div>"
 	html += "<h2>The way forward</h2><div class='card'>"
 	if(stage >= stage_cap())
 		html += committed ? "<span class='good'>You have the Primordial Chaos Body.</span>" : "Mortal training ends at Copper Skin. Read the <b>Body Molding Art</b> or be accepted as a disciple to go further (this closes the way of qi)."
@@ -814,6 +880,27 @@
 			var/list/power = powers[i]
 			html += "<div style='[group_level >= i ? "color:#ffd27a" : "opacity:0.55"]'>[i]. <b>[power[1]]</b>: [power[2]]</div>"
 		html += "</div>"
+	html += "<h2>Techniques</h2><div class='card'><table>"
+	for(var/technique_type in body_techniques)
+		var/required = body_techniques[technique_type]
+		var/datum/action/technique = locate(technique_type) in techniques
+		var/datum/action/cooldown/spell/spell = technique
+		var/datum/action/typed_path = technique_type
+		var/technique_name = initial(typed_path.name)
+		var/cost = body_technique_cost(technique)
+		var/status
+		if(!technique)
+			status = "<span class='dim'>unlocks at [stage_name(max(required, 1))]</span>"
+		else if(!istype(spell))
+			status = "<span class='good'>ready</span>"
+		else if(spell.next_use_time > world.time)
+			status = "<span class='warn'>cooling down ([DisplayTimeText(spell.next_use_time - world.time, 1)])</span>"
+		else if(cost && exhaustion + cost > BODY_EXHAUSTION_MAX)
+			status = "<span class='warn'>too exhausted (needs [cost]%)</span>"
+		else
+			status = "<span class='good'>ready</span>"
+		html += "<tr><td><b>[technique ? technique.name : technique_name]</b></td><td>[status]</td></tr>"
+	html += "</table></div>"
 	html += "<h2>Stages</h2>"
 	for(var/i in 1 to BODY_STAGE_MAX)
 		var/reached = stage >= i

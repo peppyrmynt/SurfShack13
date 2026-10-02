@@ -130,3 +130,5 @@ GLOBAL_LIST_INIT(cultivation_overcomes, list(
 #define PILL_GRADE_MID "mid"
 #define PILL_GRADE_HIGH "high"
 #define PILL_GRADE_SPIRIT "spirit"
+/// Body arts can't push exhaustion past this
+#define BODY_EXHAUSTION_MAX 100
