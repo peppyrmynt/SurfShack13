@@ -78,3 +78,6 @@ GLOBAL_LIST_INIT(cultivation_overcomes, list(
 #define COMSIG_MOB_CULTIVATION_HARVESTED "mob_cultivation_harvested"
 /// Sent to the cultivator's body when they change realm: (datum/antagonist/cultivator/cultivator)
 #define COMSIG_MOB_CULTIVATION_REALM_CHANGED "mob_cultivation_realm_changed"
+
+/// Trait source for Spiritual Sense's see-through-walls, which also lets Void Step pass walls
+#define SPIRITUAL_SENSE_TRAIT "spiritual_sense"

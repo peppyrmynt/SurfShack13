@@ -24,6 +24,10 @@
 	var/started = FALSE
 	/// Readiness explanation
 	var/list/reasons = list()
+	/// Tribulation cloud hanging over the cultivator
+	var/obj/effect/abstract/cultivation_vis/storm
+	/// Qi swirling around them
+	var/obj/effect/abstract/particle_holder/motes
 
 /datum/cultivation_breakthrough/New(datum/antagonist/cultivator/cultivator)
 	src.cultivator = cultivator
@@ -50,6 +54,9 @@
 	if(body)
 		body.remove_traits(list(TRAIT_IMMOBILIZED, TRAIT_HANDS_BLOCKED), REF(src))
 		body.remove_filter("breakthrough_glow")
+		cultivation_detach_vis(body, storm)
+	storm = null
+	QDEL_NULL(motes)
 	if(cultivator?.breakthrough == src)
 		cultivator.breakthrough = null
 	cultivator = null
@@ -84,6 +91,11 @@
 		if(law.counterfeit)
 			readiness -= 5
 			reasons += span_warning("-5: something about your [law.name] feels off.")
+	if(body.has_status_effect(/datum/status_effect/cultivation_pill_buff/foundation))
+		readiness += 20
+		reasons += span_nicegreen("+20: a Foundation Establishment Pill steadies you.")
+	if(body.has_status_effect(/datum/status_effect/cultivation_pill_buff/tribulation))
+		reasons += span_nicegreen("A Tribulation Warding Pill will halve heaven's lightning.")
 	if(locate(/obj/machinery/power/energy_accumulator/grounding_rod) in range(4, body))
 		reasons += span_nicegreen("A grounding rod nearby will draw some of heaven's lightning.")
 	reasons += span_boldnotice("Total: [readiness] ([readiness_word()]). Stable breakthroughs always succeed if you endure them.")
@@ -107,6 +119,8 @@
 		span_boldnotice("You begin your breakthrough. Endure for [duration] seconds!"),
 	)
 	playsound(body, 'sound/effects/magic/lightning_chargeup.ogg', 60, TRUE)
+	storm = cultivation_attach_vis(body, 'surfshack13/icons/cultivation/cultivation_effects_96.dmi', "storm_cloud", null, 96, 56, 230)
+	motes = cultivation_particles(body, /particles/cultivation/gold)
 	for(var/mob/living/carbon/human/witness in view(7, body))
 		if(witness != body)
 			to_chat(witness, span_notice("<i>You get the strong feeling you should not be standing near [body] right now.</i>"))
@@ -142,6 +156,8 @@
 		return
 	var/obj/effect/temp_visual/lightning_strike/tribulation/bolt = new(target)
 	bolt.zap_damage = strike_damage
+	if(body.has_status_effect(/datum/status_effect/cultivation_pill_buff/tribulation))
+		bolt.zap_damage = round(strike_damage / 2)
 
 /datum/cultivation_breakthrough/proc/resolve()
 	var/chance = readiness >= 70 ? 100 : clamp(readiness, 5, 95)
@@ -161,6 +177,7 @@
 	)
 	playsound(user, 'sound/effects/magic/charge.ogg', 70, TRUE)
 	new /obj/effect/temp_visual/cultivation_ascension_pillar(get_turf(user))
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(get_turf(user))
 	// Watching someone else break through is a lesson in itself
 	for(var/mob/living/witness in view(7, user))
 		if(witness == user)
@@ -216,9 +233,11 @@
 
 /obj/effect/temp_visual/lightning_strike/tribulation
 	name = "tribulation lightning"
-	desc = "Heaven is about to smite this exact spot. Move."
+	desc = "Heaven is about to smite this exact spot."
 	duration = 1.5 SECONDS
-	color = "#ffe27a"
+	// No targeting marker, heaven doesn't warn you
+	alpha = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	damage_blacklist_typecache = list()
 
 /obj/effect/temp_visual/cultivation_ascension_pillar

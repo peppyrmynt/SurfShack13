@@ -4,6 +4,7 @@
 /datum/controller/subsystem/ticker/Initialize()
 	. = ..()
 	OnRoundstart(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(spawn_cultivation_loot)))
+	GLOB.mandate_controller.register()
 
 /// Hide a few manuals and an ancestral ring around the station: maintenance and the library
 /proc/spawn_cultivation_loot()
@@ -14,6 +15,11 @@
 		new /obj/effect/spawner/random/cultivation_manual(pick_n_take(maint_spots))
 	if(length(maint_spots))
 		new /obj/item/ancestral_ring(pick_n_take(maint_spots))
+	for(var/i in 1 to 2)
+		if(length(maint_spots))
+			new /obj/effect/spawner/random/wuxia_manual(pick_n_take(maint_spots))
+	if(length(maint_spots))
+		new /obj/effect/spawner/random/legendary_artifact(pick_n_take(maint_spots))
 	var/list/library_turfs = list()
 	for(var/area/station/service/library/library in GLOB.areas)
 		for(var/turf/open/floor/library_floor in library.get_turfs_from_all_zlevels())

@@ -213,38 +213,77 @@
 
 // ===== Spirit beasts =====
 
-/// A station animal under a cultivator's contract. Grows with its master's realm.
+/**
+ * A station animal under a cultivator's contract. It befriends its master and plugs into the normal pet command system:
+ * alt-click it for a radial (follow, stay, attack, free), or call commands out loud and point at targets.
+ * It automatically defends its master when they're attacked, and grows with its master's realm.
+ */
 /datum/component/spirit_beast
 	var/datum/mind/master_mind
 	/// Realm we last scaled to
 	var/scaled_realm = 0
 	var/base_max_health
+	/// Did we add the obeys_commands component ourselves (so we remove it again)
+	var/added_obedience = FALSE
+	/// Planning subtrees before we taught it to listen
+	var/list/original_subtrees
+	COOLDOWN_DECLARE(catch_up_cooldown)
+	/// Commands every spirit beast understands
+	var/static/list/spirit_beast_commands = list(
+		/datum/pet_command/idle,
+		/datum/pet_command/free,
+		/datum/pet_command/follow,
+		/datum/pet_command/point_targeting/attack,
+		/datum/pet_command/protect_owner,
+	)
+	/// Monkeys fight with their own AI, so their attack commands just point that AI at someone
+	var/static/list/spirit_monkey_commands = list(
+		/datum/pet_command/idle,
+		/datum/pet_command/free,
+		/datum/pet_command/follow,
+		/datum/pet_command/point_targeting/attack/spirit_monkey,
+		/datum/pet_command/protect_owner/spirit_monkey,
+	)
 
 /datum/component/spirit_beast/Initialize(datum/mind/master_mind)
-	if(!isliving(parent))
+	if(!isbasicmob(parent) && !ismonkey(parent))
+		return COMPONENT_INCOMPATIBLE
+	var/mob/living/beast = parent
+	if(!beast.ai_controller)
 		return COMPONENT_INCOMPATIBLE
 	src.master_mind = master_mind
-	var/mob/living/beast = parent
 	base_max_health = beast.maxHealth
 
 /datum/component/spirit_beast/RegisterWithParent()
 	var/mob/living/beast = parent
+	var/mob/living/master = master_mind?.current
 	RegisterSignal(beast, COMSIG_ATOM_EXAMINE, PROC_REF(on_examine))
 	RegisterSignal(beast, COMSIG_LIVING_DEATH, PROC_REF(on_death))
-	if(master_mind?.current)
-		RegisterSignal(master_mind.current, COMSIG_MOB_CULTIVATION_REALM_CHANGED, PROC_REF(rescale))
+	if(master)
+		RegisterSignal(master, COMSIG_MOB_CULTIVATION_REALM_CHANGED, PROC_REF(rescale))
+		RegisterSignal(master, COMSIG_MOVABLE_MOVED, PROC_REF(on_master_moved))
 	beast.add_filter("spirit_beast", 2, list("type" = "outline", "color" = "#b6f2ff", "size" = 1, "alpha" = 150))
-	beast.faction |= REF(master_mind?.current)
 	if(!findtext(beast.name, "Spirit "))
 		beast.name = "Spirit [beast.name]"
+	teach_obedience()
+	if(master)
+		beast.befriend(master)
+		command(master, "Follow")
 	rescale()
-	to_chat(master_mind?.current, span_boldnotice("[beast] is now your spirit beast!"))
+	if(master)
+		to_chat(master, span_boldnotice("[beast] is now your spirit beast! Alt-click it to command it, or point at enemies after telling it to attack. It will defend you if you're attacked."))
 
 /datum/component/spirit_beast/UnregisterFromParent()
 	var/mob/living/beast = parent
+	var/mob/living/master = master_mind?.current
 	UnregisterSignal(beast, list(COMSIG_ATOM_EXAMINE, COMSIG_LIVING_DEATH))
-	if(master_mind?.current)
-		UnregisterSignal(master_mind.current, COMSIG_MOB_CULTIVATION_REALM_CHANGED)
+	if(master)
+		UnregisterSignal(master, list(COMSIG_MOB_CULTIVATION_REALM_CHANGED, COMSIG_MOVABLE_MOVED))
+		beast.unfriend(master)
+	if(added_obedience)
+		qdel(beast.GetComponent(/datum/component/obeys_commands))
+	if(original_subtrees && beast.ai_controller)
+		beast.ai_controller.replace_planning_subtrees(original_subtrees)
 	beast.remove_filter("spirit_beast")
 	beast.name = replacetext(beast.name, "Spirit ", "")
 	beast.maxHealth = base_max_health
@@ -254,6 +293,84 @@
 /datum/component/spirit_beast/Destroy(force)
 	master_mind = null
 	return ..()
+
+/// Make sure the beast's brain can take pet commands, even if it's not normally a pet
+/datum/component/spirit_beast/proc/teach_obedience()
+	var/mob/living/beast = parent
+	var/datum/ai_controller/brain = beast.ai_controller
+	if(isnull(brain.blackboard[BB_PET_TARGETING_STRATEGY]))
+		brain.set_blackboard_key(BB_PET_TARGETING_STRATEGY, /datum/targeting_strategy/basic/not_friends)
+	if(isnull(brain.blackboard[BB_TARGET_MINIMUM_STAT]))
+		brain.set_blackboard_key(BB_TARGET_MINIMUM_STAT, HARD_CRIT)
+	var/list/subtree_types = list()
+	for(var/datum/ai_planning_subtree/subtree as anything in brain.planning_subtrees)
+		subtree_types += subtree.type
+	if(!(/datum/ai_planning_subtree/pet_planning in subtree_types))
+		original_subtrees = subtree_types.Copy()
+		subtree_types.Insert(1, /datum/ai_planning_subtree/pet_planning)
+		brain.replace_planning_subtrees(subtree_types)
+	var/datum/component/obeys_commands/obedience = beast.GetComponent(/datum/component/obeys_commands)
+	if(!obedience)
+		beast.AddComponent(/datum/component/obeys_commands, ismonkey(beast) ? spirit_monkey_commands : spirit_beast_commands)
+		added_obedience = TRUE
+		return
+	// Existing pets learn to protect their master too
+	var/has_protect = FALSE
+	for(var/command_name in obedience.available_commands)
+		if(istype(obedience.available_commands[command_name], /datum/pet_command/protect_owner))
+			has_protect = TRUE
+			break
+	if(!has_protect)
+		var/datum/pet_command/protect_owner/protect = new(beast)
+		obedience.available_commands[protect.command_name] = protect
+
+/// Issue one of the beast's commands by name, as if the master had chosen it from the radial
+/datum/component/spirit_beast/proc/command(mob/living/commander, command_name)
+	var/mob/living/beast = parent
+	var/datum/component/obeys_commands/obedience = beast.GetComponent(/datum/component/obeys_commands)
+	for(var/name in obedience?.available_commands)
+		var/datum/pet_command/pet_command = obedience.available_commands[name]
+		if(pet_command.command_name == command_name || istype(pet_command, /datum/pet_command/follow) && command_name == "Follow")
+			pet_command.try_activate_command(commander)
+			return TRUE
+	return FALSE
+
+/// Jump or rift next to a spot
+/datum/component/spirit_beast/proc/hop_to(turf/destination, through_void)
+	var/mob/living/beast = parent
+	var/turf/landing = destination
+	for(var/turf/open/nearby in orange(1, destination))
+		if(!nearby.is_blocked_turf(exclude_mobs = TRUE))
+			landing = nearby
+			break
+	if(through_void)
+		new /obj/effect/temp_visual/cultivation_void_rift(get_turf(beast))
+		cultivation_afterimage(beast, 0.5 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(arrive), landing), 0.3 SECONDS)
+		return
+	var/old_pass = beast.pass_flags
+	beast.pass_flags |= PASSTABLE
+	playsound(beast, 'sound/items/weapons/fwoosh.ogg', 30, TRUE, frequency = 1.5)
+	beast.throw_at(landing, 8, 2, beast, spin = FALSE, gentle = TRUE, callback = VARSET_CALLBACK(beast, pass_flags, old_pass))
+
+/datum/component/spirit_beast/proc/arrive(turf/landing)
+	var/mob/living/beast = parent
+	if(QDELETED(beast) || beast.stat == DEAD)
+		return
+	beast.forceMove(landing)
+	new /obj/effect/temp_visual/cultivation_void_rift(landing)
+	playsound(landing, 'sound/effects/magic/blink.ogg', 30, TRUE)
+
+/// Master got too far away (barriers, doors, space): the beast rifts after them
+/datum/component/spirit_beast/proc/on_master_moved(atom/movable/master, atom/old_loc, dir, forced)
+	SIGNAL_HANDLER
+	var/mob/living/beast = parent
+	if(!COOLDOWN_FINISHED(src, catch_up_cooldown) || beast.stat != CONSCIOUS || master.z != beast.z || get_dist(master, beast) <= 9)
+		return
+	if(beast.ai_controller?.blackboard[BB_ACTIVE_PET_COMMAND] && !istype(beast.ai_controller.blackboard[BB_ACTIVE_PET_COMMAND], /datum/pet_command/follow))
+		return // told to stay or attack something, don't drag it along
+	COOLDOWN_START(src, catch_up_cooldown, 10 SECONDS)
+	hop_to(get_turf(master), TRUE)
 
 /datum/component/spirit_beast/proc/rescale(datum/source)
 	SIGNAL_HANDLER
@@ -269,6 +386,7 @@
 		var/mob/living/basic/basic_beast = beast
 		basic_beast.melee_damage_lower = max(basic_beast.melee_damage_lower, 2 * new_realm)
 		basic_beast.melee_damage_upper = max(basic_beast.melee_damage_upper, 4 * new_realm)
+	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(beast))
 	beast.visible_message(span_notice("[beast] grows a little larger, a faint aura shimmering around it."))
 
 /datum/component/spirit_beast/proc/on_examine(datum/source, mob/user, list/examine_list)
@@ -281,9 +399,43 @@
 	if(master)
 		to_chat(master, span_userdanger("You feel your spirit beast's life snuff out! Your contract shatters!"))
 		master.add_mood_event("spirit_beast_died", /datum/mood_event/spirit_beast_died)
-		var/datum/antagonist/cultivator/cultivation_datum = IS_CULTIVATOR(master)
-		cultivation_datum?.adjust_instability(10)
+		var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(master)
+		cultivator?.adjust_instability(10)
 	qdel(src)
+
+/// Your spirit beast comes with you when you leap (it leaps too) or step through the void (it's pulled through the rift)
+/proc/cultivation_beast_follow(mob/living/master, turf/destination, through_void)
+	var/mob/living/beast = cultivation_get_beast(master.mind)
+	if(!beast || beast.stat != CONSCIOUS || beast.z != master.z || get_dist(beast, master) > 9 || beast.buckled || beast.pulledby)
+		return
+	var/datum/component/spirit_beast/contract = beast.GetComponent(/datum/component/spirit_beast)
+	contract.hop_to(destination, through_void)
+
+/// Find a mind's contracted spirit beast
+/proc/cultivation_get_beast(datum/mind/master_mind)
+	if(!master_mind)
+		return null
+	for(var/mob/living/beast as anything in GLOB.mob_living_list)
+		var/datum/component/spirit_beast/contract = beast.GetComponent(/datum/component/spirit_beast)
+		if(contract?.master_mind == master_mind)
+			return beast
+	return null
+
+/// Monkey version of attack: put the target on the monkey's enemies list and let monkey combat AI take over
+/datum/pet_command/point_targeting/attack/spirit_monkey
+	command_feedback = "screeches"
+
+/datum/pet_command/point_targeting/attack/spirit_monkey/execute_action(datum/ai_controller/controller)
+	var/atom/target = controller.blackboard[BB_CURRENT_PET_TARGET]
+	if(isliving(target))
+		controller.add_blackboard_key_assoc(BB_MONKEY_ENEMIES, target, MONKEY_HATRED_AMOUNT * 3)
+	controller.clear_blackboard_key(BB_ACTIVE_PET_COMMAND)
+
+/datum/pet_command/protect_owner/spirit_monkey/execute_action(datum/ai_controller/controller)
+	var/mob/living/attacker = controller.blackboard[BB_CURRENT_PET_TARGET]
+	if(isliving(attacker) && attacker != controller.pawn)
+		controller.add_blackboard_key_assoc(BB_MONKEY_ENEMIES, attacker, MONKEY_HATRED_AMOUNT * 3)
+	controller.clear_blackboard_key(BB_ACTIVE_PET_COMMAND)
 
 /datum/mood_event/spirit_beast_died
 	description = "My spirit beast was slain. I will have vengeance."
@@ -431,10 +583,10 @@
 /datum/action/cooldown/ring_elder_lend_qi
 	name = "Lend Qi"
 	desc = "Pour some of your ancient qi into your bearer."
-	button_icon = 'icons/mob/actions/actions_spells.dmi'
-	button_icon_state = "charge"
-	background_icon_state = "bg_nature"
-	overlay_icon_state = "bg_nature_border"
+	button_icon = 'surfshack13/icons/cultivation/cultivation_actions.dmi'
+	button_icon_state = "lend_qi"
+	background_icon_state = "bg_heretic"
+	overlay_icon_state = "bg_heretic_border"
 	cooldown_time = 3 MINUTES
 
 /datum/action/cooldown/ring_elder_lend_qi/Activate(atom/target)

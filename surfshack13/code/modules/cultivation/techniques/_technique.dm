@@ -58,6 +58,24 @@
 	. = ..()
 	cultivation_spend(src, qi_cost)
 
+/// Every technique uses its own medallion from cultivation_actions.dmi (named after the last part of its typepath),
+/// and its description lists qi cost and cooldown so players don't have to guess.
+/proc/cultivation_setup_technique(datum/action/cooldown/spell/technique, qi_cost)
+	var/type_text = "[technique.type]"
+	technique.button_icon = 'surfshack13/icons/cultivation/cultivation_actions.dmi'
+	technique.button_icon_state = copytext(type_text, findlasttext(type_text, "/") + 1)
+	technique.background_icon_state = "bg_heretic"
+	technique.overlay_icon_state = "bg_heretic_border"
+	technique.desc = "[technique.desc]<br><i>Qi: [qi_cost] | Cooldown: [DisplayTimeText(technique.cooldown_time)]</i>"
+
+/datum/action/cooldown/spell/cultivation/New(Target, original)
+	cultivation_setup_technique(src, qi_cost)
+	return ..()
+
+/datum/action/cooldown/spell/pointed/cultivation/New(Target, original)
+	cultivation_setup_technique(src, qi_cost)
+	return ..()
+
 /// Finds the law (if any) a technique belongs to, for counterfeit penalties
 /proc/cultivation_law_of(datum/antagonist/cultivator/cultivator, technique_type)
 	for(var/datum/cultivation_law/law as anything in cultivator.laws)

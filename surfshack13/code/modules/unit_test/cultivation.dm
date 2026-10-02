@@ -14,6 +14,10 @@
 	TEST_ASSERT_EQUAL(cultivator.effective_realm(), REALM_QI_CONDENSATION, "New cultivator isn't at Qi Condensation.")
 	TEST_ASSERT_NOTNULL(locate(/datum/action/cooldown/spell/cultivation/meditate) in disciple.actions, "No Meditate technique.")
 
+	// Admin heals and organ regeneration must not delete the dantian
+	disciple.fully_heal(HEAL_ALL)
+	TEST_ASSERT_NOTNULL(disciple.get_organ_slot(ORGAN_SLOT_DANTIAN), "A full heal deleted the dantian.")
+
 	// Laws and slots
 	TEST_ASSERT(cultivator.learn_law(/datum/cultivation_law/returning_iron, feedback = FALSE), "Couldn't learn a first law.")
 	TEST_ASSERT(!cultivator.learn_law(/datum/cultivation_law/evergreen_spring, feedback = FALSE), "Learned a second law with only one slot.")

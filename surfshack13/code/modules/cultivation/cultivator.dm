@@ -43,6 +43,8 @@
 	var/breakthroughs_survived = 0
 	/// Number of breakthroughs failed
 	var/breakthroughs_failed = 0
+	/// Pill toxicity, decays slowly. Above 30 every pill adds instability.
+	var/pill_toxicity = 0
 	/// Seconds since the last passive insight tick
 	var/passive_timer = 0
 	/// Area types we've already found enlightening
@@ -53,6 +55,8 @@
 	COOLDOWN_DECLARE(epiphany_cooldown)
 	/// Spam limiter for the instability side effects
 	COOLDOWN_DECLARE(instability_cooldown)
+	/// Spam limiter for "your mind is full"
+	COOLDOWN_DECLARE(full_warning_cooldown)
 
 	/// Progress needed to reach realm (index = target realm)
 	var/static/list/realm_thresholds = list(0, 60, 150, 300)
@@ -62,16 +66,22 @@
 	var/static/list/realm_names = list("Qi Condensation", "Foundation Establishment", "Golden Core", "Nascent Soul")
 	/// Techniques everyone gets, by required realm
 	var/static/list/universal_techniques = list(
+		/datum/action/cultivation_panel = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/meditate = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/breakthrough = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/spiritual_sense = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/pointed/cultivation/empty_palm = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/pointed/cultivation/qinggong = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/write_talisman = REALM_QI_CONDENSATION,
+		/datum/action/cooldown/jianghu_duel = REALM_QI_CONDENSATION,
+		/datum/action/cooldown/spell/cultivation/found_sect = REALM_FOUNDATION,
+		/datum/action/cooldown/spell/cultivation/inscribe_formation = REALM_FOUNDATION,
+		/datum/action/cooldown/spell/pointed/cultivation/void_step = REALM_GOLDEN_CORE,
 		/datum/action/cooldown/spell/pointed/cultivation/teach = REALM_FOUNDATION,
 		/datum/action/cooldown/spell/pointed/cultivation/beast_contract = REALM_FOUNDATION,
+		/datum/action/cooldown/spell/cultivation/summon_beast = REALM_FOUNDATION,
 		/datum/action/cooldown/spell/pointed/cultivation/acupoint = REALM_FOUNDATION,
-		/datum/action/cooldown/spell/cultivation/realm_pressure = REALM_GOLDEN_CORE,
+		/datum/action/cooldown/spell/cultivation/realm_pressure = REALM_FOUNDATION,
 	)
 
 /datum/antagonist/cultivator/on_gain()
@@ -95,7 +105,7 @@
 /datum/antagonist/cultivator/greet()
 	. = ..()
 	to_chat(owner.current, span_boldnotice("Qi stirs in your dantian. You have stepped onto the path of cultivation!"))
-	to_chat(owner.current, span_notice("Work at your craft to earn <b>insight</b>, then <b>Meditate</b> to consolidate it. \
+	to_chat(owner.current, span_notice("Click the yin-yang orb on your screen (or the Path of Cultivation button) to open your cultivation panel. Work at your craft to earn <b>insight</b>, then <b>Meditate</b> to consolidate it. \
 		When your foundation is ready, <b>Attempt Breakthrough</b> to reach the next realm. \
 		Find more cultivation manuals (or a willing master) to learn more laws."))
 
@@ -162,8 +172,12 @@
 		return
 	var/next = next_threshold()
 	var/progress_text = next ? "[round(100 * progress / next)]%" : "MAX"
+	var/obj/item/organ/dantian/dantian = get_dantian()
+	var/ready = (next && progress >= next) || (dantian && dantian.grade < realm)
+	qi_display.icon_state = ready ? "qi_display_ready" : "qi_display"
+	var/progress_color = pending_insight >= CULTIVATION_MAX_PENDING_INSIGHT ? "#ff9a3c" : "#ffd55a"
 	qi_display.maptext = MAPTEXT("<div align='center' valign='middle' style='position:relative; top:0px; left:6px'>\
-		<font color='#7fd7ff'>[round(qi)]</font><br><font color='#ffd55a'>[progress_text]</font></div>")
+		<font color='#7fd7ff'>[round(qi)]</font><br><font color='[progress_color]'>[ready ? "READY" : progress_text]</font></div>")
 	qi_display.name = "Cultivation: [realm_name()] | Qi [round(qi)]/[max_qi()] | Insight [round(pending_insight)] pending, [progress_text] | Instability [round(instability)]"
 
 // ----- Basic accessors -----
@@ -240,15 +254,25 @@
 	var/multiplier = 1
 	for(var/bonus_source in insight_bonuses)
 		multiplier += insight_bonuses[bonus_source]
+	// Heaven favours those it has mandated
+	var/datum/component/mandate_of_heaven/mandate = owner.current?.GetComponent(/datum/component/mandate_of_heaven)
+	if(mandate)
+		multiplier += mandate.son_of_heaven ? 0.5 : 0.25
+	// Cultivating alongside fellow sect members
+	var/datum/jianghu_sect/sect = jianghu_sect_of(owner)
+	if(sect && owner.current)
+		multiplier += sect.fellowship_bonus(owner.current)
 	var/room = CULTIVATION_MAX_PENDING_INSIGHT - pending_insight
 	var/gained = min(amount * multiplier, room)
 	if(gained <= 0)
-		if(!silent)
-			to_chat(owner.current, span_warning("Your mind is full of unconsolidated insight. You need to meditate!"))
+		if(!silent && COOLDOWN_FINISHED(src, full_warning_cooldown))
+			COOLDOWN_START(src, full_warning_cooldown, 60 SECONDS)
+			to_chat(owner.current, span_warning("Your mind is full of unconsolidated insight. Meditate to make room!"))
 		return 0
 	pending_insight += gained
-	if(!silent)
-		to_chat(owner.current, span_notice("<i>You gain insight into the Dao. ([round(gained)])</i>"))
+	owner.current?.balloon_alert(owner.current, "+[round(gained, 0.1)] insight")
+	if(pending_insight >= CULTIVATION_MAX_PENDING_INSIGHT)
+		to_chat(owner.current, span_notice("Your pending insight is full. Meditate to consolidate it."))
 	update_hud()
 	return gained
 
@@ -261,6 +285,7 @@
 	if(next && progress >= next)
 		progress = next
 		to_chat(owner.current, span_boldnotice("Your foundation is full. You are ready to attempt a breakthrough to [realm_name(realm + 1)]!"))
+		owner.current?.balloon_alert(owner.current, "ready to break through!")
 	update_hud()
 	return consolidated
 
@@ -398,6 +423,8 @@
 	for(var/datum/action/technique as anything in techniques)
 		if(technique.type == technique_type)
 			return technique
+	if(owner.current && (locate(technique_type) in owner.current.actions))
+		return
 	var/datum/action/new_technique = new technique_type(owner)
 	techniques += new_technique
 	RegisterSignal(new_technique, COMSIG_QDELETING, PROC_REF(on_technique_deleted))
@@ -435,6 +462,8 @@
 		return
 	if(effective_realm() > REALM_MORTAL && qi < max_qi())
 		adjust_qi(0.25 * seconds_per_tick)
+	if(pill_toxicity > 0)
+		pill_toxicity = max(pill_toxicity - 0.1 * seconds_per_tick, 0)
 	passive_timer += seconds_per_tick
 	if(passive_timer >= CULTIVATION_PASSIVE_INTERVAL)
 		passive_timer = 0
@@ -590,7 +619,7 @@
 	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(usr)
 	if(!cultivator)
 		return
-	to_chat(usr, boxed_message(cultivator.status_report()))
+	cultivator.open_panel(usr)
 
 /datum/antagonist/cultivator/proc/status_report()
 	var/list/text = list()

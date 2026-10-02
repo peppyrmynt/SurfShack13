@@ -63,6 +63,7 @@
 		/datum/action/cooldown/spell/pointed/cultivation/flying_sword = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/pointed/cultivation/sword_qi = REALM_FOUNDATION,
 		/datum/action/cooldown/spell/cultivation/sword_riding = REALM_GOLDEN_CORE,
+		/datum/action/cooldown/spell/cultivation/sword_formation = REALM_NASCENT_SOUL,
 	)
 	insight_activities = list(
 		INSIGHT_SOURCE_CRAFT = 4,
@@ -80,6 +81,7 @@
 		/datum/action/cooldown/spell/pointed/cultivation/still_water_ward = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/pointed/cultivation/calm_heart = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/turtle_breathing = REALM_GOLDEN_CORE,
+		/datum/action/cooldown/spell/cultivation/mirror_lake = REALM_NASCENT_SOUL,
 	)
 	insight_activities = list(
 		INSIGHT_SOURCE_CLEANING = 4,
@@ -104,6 +106,7 @@
 		/datum/action/cooldown/spell/pointed/cultivation/kindle = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/furnace_burst = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/burning_blood = REALM_GOLDEN_CORE,
+		/datum/action/cooldown/spell/cultivation/sea_of_flames = REALM_NASCENT_SOUL,
 	)
 	insight_activities = list(
 		INSIGHT_SOURCE_COOK = 5,
@@ -126,6 +129,7 @@
 		/datum/action/cooldown/spell/cultivation/rooted_stance = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/golden_bell = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/dharma_idol = REALM_GOLDEN_CORE,
+		/datum/action/cooldown/spell/pointed/cultivation/buddha_palm = REALM_NASCENT_SOUL,
 	)
 	insight_activities = list(
 		INSIGHT_SOURCE_MINING = 4,
@@ -154,6 +158,7 @@
 		/datum/action/cooldown/spell/pointed/cultivation/spring_mending = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/cultivation/verdant_growth = REALM_QI_CONDENSATION,
 		/datum/action/cooldown/spell/pointed/cultivation/binding_vines = REALM_GOLDEN_CORE,
+		/datum/action/cooldown/spell/cultivation/spring_revival = REALM_NASCENT_SOUL,
 	)
 	insight_activities = list(
 		INSIGHT_SOURCE_HARVEST = 5,

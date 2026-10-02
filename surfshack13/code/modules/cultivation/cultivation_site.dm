@@ -149,8 +149,19 @@ GLOBAL_LIST_INIT(cultivation_element_sources, list(
 	else
 		report.lines += span_notice("Others are nearby. Closed-door seclusion would be better.")
 
-	report.multiplier = 1 + (report.has_mat ? 0.1 : 0) + clamp(net * 0.05, -0.2, 0.5) + (report.secluded ? 0.25 : 0)
-	report.readiness_bonus = (report.has_mat ? 10 : 0) + clamp(round(net * 3), -20, 25) + (report.secluded ? 5 : 0)
+	var/in_gathering_array = FALSE
+	for(var/obj/effect/cultivation_formation/gathering/array in range(1, user))
+		in_gathering_array = TRUE
+		report.lines += span_nicegreen("A gathering array draws qi towards you.")
+		break
+	var/near_plaque = FALSE
+	var/datum/jianghu_sect/sect = jianghu_sect_of(user.mind)
+	var/obj/structure/sect_plaque/plaque = sect?.get_plaque()
+	if(plaque && plaque.z == user.z && get_dist(plaque, user) <= 5)
+		near_plaque = TRUE
+		report.lines += span_nicegreen("You are within the grounds of the [sect.name].")
+	report.multiplier = 1 + (report.has_mat ? 0.1 : 0) + clamp(net * 0.05, -0.2, 0.5) + (report.secluded ? 0.25 : 0) + (near_plaque ? 0.25 : 0) + (in_gathering_array ? 0.3 : 0)
+	report.readiness_bonus = (report.has_mat ? 10 : 0) + clamp(round(net * 3), -20, 25) + (report.secluded ? 5 : 0) + (near_plaque ? 10 : 0) + (in_gathering_array ? 10 : 0)
 	return report
 
 /**

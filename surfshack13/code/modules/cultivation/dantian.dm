@@ -62,3 +62,14 @@
 		. += span_notice("It has been refined to the [grade_names[clamp(grade, 1, length(grade_names))]] realm.[cracked ? " It is cracked." : ""]")
 		if(original_owner)
 			. += span_notice("The qi within still carries the signature of <b>[original_owner]</b>.")
+
+/// Species organ regeneration (admin heals, rejuvenate, species changes) deletes any organ the species doesn't
+/// normally have. A dantian isn't a species organ, it's earned, so set it aside and put it back afterwards.
+/datum/species/regenerate_organs(mob/living/carbon/organ_holder, datum/species/old_species, replace_current = TRUE, list/excluded_zones, visual_only = FALSE)
+	var/obj/item/organ/dantian/dantian = organ_holder.get_organ_slot(ORGAN_SLOT_DANTIAN)
+	if(dantian)
+		dantian.Remove(organ_holder, special = TRUE)
+		dantian.moveToNullspace()
+	. = ..()
+	if(dantian && !QDELETED(dantian) && !QDELETED(organ_holder))
+		dantian.Insert(organ_holder, special = TRUE)

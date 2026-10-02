@@ -4,11 +4,11 @@
 
 /datum/action/cooldown/spell/cultivation/meditate
 	name = "Meditate"
-	desc = "Sit still and circulate your qi. Consolidates pending insight into real progress, restores qi and calms instability. \
-		Works best on a cultivation mat, in seclusion, surrounded by things that suit your laws."
+	desc = "Sit still and circulate your qi in 10 second cycles until you move. Each cycle consolidates pending insight into real progress, \
+		restores qi, calms instability and heals you a little (much more on a mat in good surroundings). Works best on a cultivation mat, in seclusion, surrounded by things that suit your laws."
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "telepathy"
-	cooldown_time = 5 SECONDS
+	cooldown_time = 3 SECONDS
 	/// Sessions spent without a dantian, three regrows one
 	var/dantian_regrowth = 0
 	var/meditating = FALSE
@@ -30,20 +30,30 @@
 	. = ..()
 	INVOKE_ASYNC(src, PROC_REF(meditate), cast_on)
 
+/// Meditation keeps going in 10 second cycles until you move, get interrupted, or have nothing left to gain
 /datum/action/cooldown/spell/cultivation/meditate/proc/meditate(mob/living/user)
 	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(user)
 	if(!cultivator)
 		return
 	meditating = TRUE
-	var/datum/cultivation_site_report/report = cultivation_evaluate_site(user, cultivator)
-	user.visible_message(span_notice("[user] sits cross-legged and begins to breathe slowly and deeply."), span_notice("You begin circulating your qi..."))
+	user.visible_message(span_notice("[user] sits cross-legged and begins to breathe slowly and deeply."), span_notice("You begin circulating your qi. Move to stop."))
 	user.add_filter("meditation_glow", 2, list("type" = "outline", "color" = "#9fe3ff", "size" = 1))
-	var/success = do_after(user, 15 SECONDS, user, IGNORE_HELD_ITEM)
+	var/obj/effect/abstract/particle_holder/motes = cultivation_particles(user, /particles/cultivation)
+	var/cycles = 0
+	while(meditating)
+		var/datum/cultivation_site_report/report = cultivation_evaluate_site(user, cultivator)
+		if(!do_after(user, 10 SECONDS, user, IGNORE_HELD_ITEM))
+			break
+		cycles++
+		if(!meditation_cycle(user, cultivator, report, cycles == 1))
+			break
 	user.remove_filter("meditation_glow")
+	QDEL_NULL(motes)
 	meditating = FALSE
-	if(!success)
-		to_chat(user, span_warning("Your meditation is broken!"))
-		return
+	to_chat(user, span_notice("You open your eyes and end your meditation[cycles ? " after [cycles] cycle\s" : ""]."))
+
+/// One cycle of meditation. Returns FALSE when there's nothing more to gain.
+/datum/action/cooldown/spell/cultivation/meditate/proc/meditation_cycle(mob/living/user, datum/antagonist/cultivator/cultivator, datum/cultivation_site_report/report, first_cycle)
 	// Someone wandered into your secluded retreat
 	if(report.secluded && !cultivation_evaluate_site(user, cultivator).secluded)
 		user.say(pick("WHO DARES DISTURB MY SECLUSION?!", "You! You are courting death!", "Insolent junior, you have ruined my closed-door cultivation!"), forced = "broken seclusion")
@@ -58,21 +68,37 @@
 			new_dantian.Insert(user, special = TRUE)
 			new_dantian.set_grade(REALM_QI_CONDENSATION)
 			to_chat(user, span_boldnotice("A new dantian has condensed in this body! Break through again to restore it to your true realm."))
-		else
-			to_chat(user, span_notice("Slowly, a new dantian begins to take shape... ([dantian_regrowth]/3)"))
-		return
+			return FALSE
+		to_chat(user, span_notice("Slowly, a new dantian begins to take shape... ([dantian_regrowth]/3)"))
+		return TRUE
 
+	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(user))
+	// Circulating qi mends the body. A good mat in good surroundings mends it far more.
+	var/heal = report.has_mat ? round(4 * report.multiplier, 0.5) : 1
+	if(heal && (user.getBruteLoss() || user.getFireLoss() || user.getToxLoss()))
+		user.heal_overall_damage(brute = heal, burn = heal)
+		user.adjustToxLoss(-heal / 2)
+		if(heal >= 4)
+			new /obj/effect/temp_visual/heal(get_turf(user), "#9fe3ff")
 	var/gained = cultivator.consolidate(report.multiplier)
-	cultivator.adjust_qi(cultivator.max_qi() * (report.has_mat ? 0.6 : 0.35))
-	cultivator.adjust_instability(report.has_mat ? -20 : -10)
+	cultivator.adjust_qi(cultivator.max_qi() * (report.has_mat ? 0.4 : 0.25))
+	cultivator.adjust_instability(report.has_mat ? -15 : -8)
 	if(dantian.cracked && report.has_mat)
 		if(dantian.mend_step())
 			to_chat(user, span_boldnotice("The cracks in your core have sealed!"))
 		else
-			to_chat(user, span_notice("Your cracked core mends a little. ([dantian.mend_sessions] more sessions on a mat)"))
-	to_chat(user, span_notice("You finish meditating. [gained ? "Consolidated [round(gained)] insight (x[round(report.multiplier, 0.01)])." : "You had no new insight to consolidate."]"))
-	for(var/line in report.lines)
-		to_chat(user, line)
+			to_chat(user, span_notice("Your cracked core mends a little. ([dantian.mend_sessions] more cycles on a mat)"))
+	if(gained)
+		user.balloon_alert(user, "+[round(gained)] progress")
+		to_chat(user, span_notice("Consolidated [round(gained)] insight (x[round(report.multiplier, 0.01)])."))
+	if(first_cycle)
+		for(var/line in report.lines)
+			to_chat(user, line)
+	// Stop once there's nothing left to do
+	if(cultivator.qi >= cultivator.max_qi() && !cultivator.pending_insight && !cultivator.instability && !dantian.cracked && !user.getBruteLoss() && !user.getFireLoss())
+		to_chat(user, span_notice("Your qi is full and your mind is clear."))
+		return FALSE
+	return TRUE
 
 // ----- Breakthrough -----
 
@@ -81,7 +107,7 @@
 	desc = "Once your foundation is full, attempt to break through to the next realm. Heaven will notice. Prepare well."
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "lightning"
-	cooldown_time = 30 SECONDS
+	cooldown_time = 15 SECONDS
 
 /datum/action/cooldown/spell/cultivation/breakthrough/can_cast_spell(feedback = TRUE)
 	. = ..()
@@ -126,15 +152,16 @@
 /datum/action/cooldown/spell/cultivation/spiritual_sense
 	name = "Spiritual Sense"
 	desc = "Pulse your divine sense outward. Reveals nearby cultivators' realms, items steeped in qi, and how the five elements flow around you. \
-		From Golden Core onward, you briefly see through walls."
+		From Golden Core onward, you briefly see through walls, and Void Step can follow your sight through them."
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "mindread"
-	cooldown_time = 15 SECONDS
+	cooldown_time = 8 SECONDS
 	qi_cost = 5
 
 /datum/action/cooldown/spell/cultivation/spiritual_sense/cast(mob/living/cast_on)
 	. = ..()
 	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(cast_on)
+	new /obj/effect/temp_visual/circle_wave/cultivation/sense(get_turf(cast_on))
 	var/list/lines = list(span_boldnotice("You extend your spiritual sense..."))
 	for(var/mob/living/other in range(7, cast_on))
 		if(other == cast_on)
@@ -157,12 +184,13 @@
 	lines += span_notice("Meditation multiplier here: x[round(report.multiplier, 0.01)]. Breakthrough readiness modifier: [report.readiness_bonus >= 0 ? "+" : ""][report.readiness_bonus].")
 	to_chat(cast_on, boxed_message(lines.Join("<br>")))
 	if(cultivator.effective_realm() >= REALM_GOLDEN_CORE)
-		ADD_TRAIT(cast_on, TRAIT_XRAY_VISION, REF(src))
+		ADD_TRAIT(cast_on, TRAIT_XRAY_VISION, SPIRITUAL_SENSE_TRAIT)
 		cast_on.update_sight()
-		addtimer(CALLBACK(src, PROC_REF(end_sight), cast_on), 5 SECONDS)
+		to_chat(cast_on, span_notice("Your sense pierces the walls. While it lasts, Void Step can take you anywhere you can sense."))
+		addtimer(CALLBACK(src, PROC_REF(end_sight), cast_on), 6 SECONDS)
 
 /datum/action/cooldown/spell/cultivation/spiritual_sense/proc/end_sight(mob/living/user)
-	REMOVE_TRAIT(user, TRAIT_XRAY_VISION, REF(src))
+	REMOVE_TRAIT(user, TRAIT_XRAY_VISION, SPIRITUAL_SENSE_TRAIT)
 	user.update_sight()
 
 // ----- Empty Palm -----
@@ -173,7 +201,7 @@
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "repulse"
 	cast_range = 1
-	cooldown_time = 15 SECONDS
+	cooldown_time = 6 SECONDS
 	qi_cost = 10
 
 /datum/action/cooldown/spell/pointed/cultivation/empty_palm/is_valid_target(atom/cast_on)
@@ -184,6 +212,8 @@
 	var/mob/living/user = owner
 	user.do_attack_animation(cast_on)
 	playsound(cast_on, 'sound/effects/magic/repulse.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(cast_on))
+	new /obj/effect/temp_visual/kinetic_blast(get_turf(cast_on))
 	if(isliving(cast_on))
 		var/mob/living/victim = cast_on
 		if(HAS_TRAIT(victim, TRAIT_PUSHIMMUNE) || victim.move_resist >= MOVE_FORCE_OVERPOWERING)
@@ -191,6 +221,8 @@
 			return
 		victim.visible_message(span_danger("[user]'s open palm sends [victim] flying!"), span_userdanger("[user]'s palm hits you like a battering ram!"))
 		victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
+		victim.apply_damage(5 + 2 * cultivation_realm_of(user), BRUTE)
+		victim.apply_damage(15, STAMINA)
 	else if(cast_on.anchored)
 		return
 	var/turf/throw_target = get_edge_target_turf(cast_on, get_dir(user, cast_on))
@@ -204,7 +236,7 @@
 	button_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "jetboot"
 	cast_range = 4
-	cooldown_time = 10 SECONDS
+	cooldown_time = 4 SECONDS
 	qi_cost = 10
 	aim_assist = FALSE
 
@@ -227,10 +259,21 @@
 	user.visible_message(span_notice("[user] springs into the air as light as a feather!"))
 	var/old_pass = user.pass_flags
 	user.pass_flags |= PASSTABLE
+	new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(user))
+	playsound(user, 'sound/items/weapons/fwoosh.ogg', 50, TRUE, frequency = 1.3)
+	cultivation_beast_follow(user, target_turf, FALSE)
+	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(leave_afterimage))
 	user.throw_at(target_turf, cast_range, 2, user, spin = FALSE, gentle = TRUE, callback = CALLBACK(src, PROC_REF(land), user, old_pass))
 
 /datum/action/cooldown/spell/pointed/cultivation/qinggong/proc/land(mob/living/user, old_pass)
 	user.pass_flags = old_pass
+	playsound(user, 'sound/items/weapons/thudswoosh.ogg', 40, TRUE)
+	new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(user))
+	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+
+/datum/action/cooldown/spell/pointed/cultivation/qinggong/proc/leave_afterimage(mob/living/source)
+	SIGNAL_HANDLER
+	cultivation_afterimage(source)
 
 // ----- Write Talisman -----
 
@@ -239,7 +282,7 @@
 	desc = "Inscribe a sheet of paper in your hand with qi, making a one-use talisman that anyone can use."
 	button_icon = 'icons/obj/service/bureaucracy.dmi'
 	button_icon_state = "paper_talisman"
-	cooldown_time = 20 SECONDS
+	cooldown_time = 8 SECONDS
 	qi_cost = 20
 
 /datum/action/cooldown/spell/cultivation/write_talisman/before_cast(atom/cast_on)
@@ -268,6 +311,7 @@
 		refund?.adjust_qi(cultivation_actual_cost(refund, src, qi_cost))
 		return
 	user.visible_message(span_notice("[user] traces glowing characters across [paper] with a fingertip."))
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold(get_turf(user))
 	if(!do_after(user, 3 SECONDS, paper))
 		return
 	var/talisman_type = options[choice]
@@ -285,7 +329,7 @@
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "declaration"
 	cast_range = 1
-	cooldown_time = 60 SECONDS
+	cooldown_time = 30 SECONDS
 	qi_cost = 30
 
 /datum/action/cooldown/spell/pointed/cultivation/teach/is_valid_target(atom/cast_on)
@@ -330,6 +374,9 @@
 	if(disciple_datum.learn_law(law.type, law.counterfeit))
 		master_datum.gain_insight(10, INSIGHT_SOURCE_TEACHING, cooldown = 5 MINUTES)
 		to_chat(master, span_notice("You have taken [disciple] as a disciple."))
+		var/datum/jianghu_sect/sect = jianghu_sect_of(master.mind)
+		if(sect && jianghu_sect_of(disciple.mind) != sect)
+			sect.add_member(disciple.mind)
 
 // ----- Acupoint Sealing -----
 
@@ -339,7 +386,7 @@
 	button_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "neckchop"
 	cast_range = 1
-	cooldown_time = 45 SECONDS
+	cooldown_time = 20 SECONDS
 	qi_cost = 25
 
 /datum/action/cooldown/spell/pointed/cultivation/acupoint/is_valid_target(atom/cast_on)
@@ -349,7 +396,8 @@
 	. = ..()
 	var/mob/living/user = owner
 	var/zone = user.zone_selected
-	user.do_attack_animation(cast_on)
+	user.do_attack_animation(cast_on, ATTACK_EFFECT_PUNCH)
+	playsound(cast_on, 'sound/items/weapons/cqchit1.ogg', 50, TRUE)
 	var/armor = cast_on.run_armor_check(check_zone(zone), MELEE, silent = TRUE)
 	if(armor >= 40)
 		cast_on.visible_message(span_warning("[user] jabs at [cast_on], but [user.p_their()] fingers can't find the acupoint through the armour!"))
@@ -381,46 +429,63 @@
 
 /datum/action/cooldown/spell/cultivation/realm_pressure
 	name = "Realm Pressure"
-	desc = "Release the full weight of your cultivation. Anyone of a lower realm nearby (mortals included) is slowed and struggles to speak."
+	desc = "Release the full weight of your cultivation. Everyone of a lower realm nearby (mortals included) is crushed: slowed, winded and stammering. \
+		The higher your realm and the wider the gap, the further it reaches and the harder it hits. Two realms apart and they're forced to their knees."
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "terrify"
-	cooldown_time = 90 SECONDS
+	cooldown_time = 40 SECONDS
 	qi_cost = 40
 
 /datum/action/cooldown/spell/cultivation/realm_pressure/cast(mob/living/cast_on)
 	. = ..()
 	var/my_realm = cultivation_realm_of(cast_on)
+	var/reach = 3 + my_realm * 2
 	cast_on.visible_message(span_boldwarning("The air around [cast_on] becomes crushingly heavy!"), span_boldnotice("You release your aura!"))
-	playsound(cast_on, 'sound/effects/magic/repulse.ogg', 60, TRUE, frequency = 0.5)
-	for(var/mob/living/victim in view(5, cast_on))
+	playsound(cast_on, 'sound/effects/magic/repulse.ogg', 70, TRUE, frequency = 0.5)
+	playsound(cast_on, 'sound/effects/gong.ogg', 50, TRUE, frequency = 0.4)
+	var/obj/effect/temp_visual/circle_wave/cultivation/gold/big/wave = new(get_turf(cast_on))
+	wave.transform = matrix().Scale(0.1)
+	animate(wave, transform = matrix().Scale(reach), time = 0.8 SECONDS, flags = ANIMATION_PARALLEL)
+	cast_on.Shake(2, 2, 1 SECONDS)
+	for(var/mob/living/victim in range(reach, cast_on))
 		if(victim == cast_on || victim.stat == DEAD)
 			continue
-		if(cultivation_realm_of(victim) >= my_realm)
+		var/gap = my_realm - cultivation_realm_of(victim)
+		if(gap <= 0)
 			to_chat(victim, span_notice("You feel [cast_on]'s aura press against you, and push back."))
 			continue
-		to_chat(victim, span_userdanger("An overwhelming pressure bears down on you! Your knees buckle!"))
-		victim.apply_status_effect(/datum/status_effect/cultivation_slow, 4 SECONDS)
-		victim.adjust_stutter_up_to(8 SECONDS, 8 SECONDS)
+		to_chat(victim, span_userdanger("An overwhelming pressure bears down on you!"))
+		victim.Shake(2, 2, 1 SECONDS)
+		shake_camera(victim, 2 + gap, 2)
+		victim.apply_status_effect(/datum/status_effect/cultivation_slow, 3 SECONDS + gap * 1.5 SECONDS)
+		victim.adjust_stutter_up_to(5 SECONDS * gap, 20 SECONDS)
+		victim.adjustStaminaLoss(15 * gap)
+		if(gap >= 2)
+			victim.visible_message(span_danger("[victim] is forced to [victim.p_their()] knees!"), span_userdanger("Your knees buckle under the pressure!"))
+			victim.Knockdown(gap * 1 SECONDS)
+		if(gap >= 3)
+			victim.drop_all_held_items()
 
 // ----- Spirit Beast Contract -----
 
 /datum/action/cooldown/spell/pointed/cultivation/beast_contract
 	name = "Spirit Beast Contract"
-	desc = "Bind a station animal as your spirit beast. It grows stronger as your realm rises. You can only hold one contract."
+	desc = "Bind a station animal (or a monkey) as your spirit beast. It follows you, obeys pet commands (alt-click it), defends you, \
+		and grows stronger as your realm rises. You can only hold one contract."
 	button_icon = 'icons/mob/actions/actions_minor_antag.dmi'
 	button_icon_state = "hoard"
 	cast_range = 1
-	cooldown_time = 30 SECONDS
+	cooldown_time = 15 SECONDS
 	qi_cost = 30
 
 /datum/action/cooldown/spell/pointed/cultivation/beast_contract/is_valid_target(atom/cast_on)
 	if(!..())
 		return FALSE
-	if(!isanimal_or_basicmob(cast_on))
+	if(!isbasicmob(cast_on) && !ismonkey(cast_on))
 		to_chat(owner, span_warning("Only beasts can form a spirit contract."))
 		return FALSE
 	var/mob/living/beast = cast_on
-	if(beast.stat == DEAD || beast.maxHealth > 200 || beast.mind)
+	if(beast.stat == DEAD || beast.maxHealth > 200 || beast.mind || beast.client || !beast.ai_controller)
 		to_chat(owner, span_warning("[beast] cannot accept a contract."))
 		return FALSE
 	return TRUE
@@ -439,3 +504,36 @@
 			to_chat(user, span_notice("You release [other_beast] from your old contract."))
 			qdel(old)
 	beast.AddComponent(/datum/component/spirit_beast, user.mind)
+	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(beast))
+
+// ----- Summon Spirit Beast -----
+
+/datum/action/cooldown/spell/cultivation/summon_beast
+	name = "Summon Spirit Beast"
+	desc = "Call your contracted spirit beast to your side from anywhere nearby on the same level, and tell it to follow you."
+	button_icon = 'icons/mob/actions/actions_spells.dmi'
+	button_icon_state = "summons"
+	cooldown_time = 30 SECONDS
+	qi_cost = 10
+
+/datum/action/cooldown/spell/cultivation/summon_beast/before_cast(atom/cast_on)
+	. = ..()
+	if(. & SPELL_CANCEL_CAST)
+		return
+	var/mob/living/beast = cultivation_get_beast(owner.mind)
+	if(!beast)
+		to_chat(owner, span_warning("You have no spirit beast."))
+		return . | SPELL_CANCEL_CAST
+	if(beast.z != owner.z || beast.stat == DEAD)
+		to_chat(owner, span_warning("Your spirit beast can't hear your call."))
+		return . | SPELL_CANCEL_CAST
+
+/datum/action/cooldown/spell/cultivation/summon_beast/cast(mob/living/cast_on)
+	. = ..()
+	var/mob/living/beast = cultivation_get_beast(cast_on.mind)
+	new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(beast))
+	beast.forceMove(get_turf(cast_on))
+	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(cast_on))
+	beast.visible_message(span_notice("[beast] bounds out of thin air to [cast_on]'s side!"))
+	var/datum/component/spirit_beast/contract = beast.GetComponent(/datum/component/spirit_beast)
+	contract.command(cast_on, "Follow")
