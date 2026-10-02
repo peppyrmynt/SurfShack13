@@ -42,6 +42,7 @@ This file is a working note for whoever continues the feature. Delete it (and `t
 | `items.dm` | Manuals (+ counterfeits), talismans, spirit beast component (pet commands, monkeys, follow/rift), ancestral ring ghost role |
 | `alchemy.dm` | Pills and pill toxicity |
 | `legendary_artifacts.dm` | Ganjiang/Moye, Heaven Reliant (carves walls), Dragon Saber, Ruyi Jingu Bang, Purple-Gold Gourd, Plantain Fan, Bagua Mirror, Qiankun Pouch |
+| `legendary_artifacts.dm` (power tier) | Legendary artifacts are meant to match or beat a stage-9 body: `legendary_hit()` is true damage (`forced`, skips armour, torso hide, Vajra, Iron Shirt and realm bracing), +3 per body stage, strips Iron Shirt/Vajra/Blood Boil and adds exhaustion; +10% per refinement grade when bound. Active powers: Twin Dragon Sword Storm (paired), Heaven-Cleaving Stroke (14x3 line through reinforced walls), Dragon Slaying Strike (radius 3 cataclysm), Thirteen-Thousand-Jin Slam (Ruyi), gourd dissolves prisoners, fan hurricane/typhoon ignores push immunity, Bagua Eight Trigrams Seal (`/datum/status_effect/bagua_sealed` blocks qi techniques and body arts), Qiankun Swallow Heaven and Earth. All artifacts are INDESTRUCTIBLE |
 | `mandate_of_heaven.dm` | Mandate for heads (Captain = Son of Heaven), decree, withdrawal, jade seal, omens |
 | `wuxia/martial_styles.dm` | Drunken Fist, Eagle Claw, Wing Chun + manuals |
 | `wuxia/jianghu.dm` | Face, honor duels, sects/plaques/transmission/rivalry, hidden weapons |

@@ -51,10 +51,10 @@
 	for(var/obj/thing in target)
 		if(!thing.uses_integrity || (thing.resistance_flags & INDESTRUCTIBLE))
 			continue
-		// Doors: airlocks and windoors give way to anything that breaks walls (or hits hard enough), blast doors only at the reinforced tier
+		// Doors: airlocks and windoors are torn out by any real shockwave, blast doors and shutters only by the reinforced tier
 		if(istype(thing, /obj/machinery/door))
 			var/blast_door = istype(thing, /obj/machinery/door/poddoor)
-			if(blast_door ? wall_tier >= 2 : (wall_tier >= 1 || power >= 150))
+			if(blast_door ? (wall_tier >= 2 || power >= 200) : (wall_tier >= 1 || power >= 100))
 				thing.visible_message(span_danger("[thing] is torn out of its frame!"))
 				playsound(thing, 'sound/effects/bang.ogg', 70, TRUE)
 				thing.take_damage(thing.max_integrity * 3, BRUTE, MELEE, armour_penetration = 100)
@@ -83,7 +83,7 @@
  * A shockwave tearing a trench through everything: `length` tiles along `direction`, `half_width` tiles to either side.
  * Breaks walls by tier, smashes structures, cracks the floor, and hurls people along with it.
  */
-/proc/body_art_shatter_line(mob/living/user, turf/origin, direction, length, half_width, damage, wall_tier, technique_name, step_delay = 0.5)
+/proc/body_art_shatter_line(mob/living/user, turf/origin, direction, length, half_width, damage, wall_tier, technique_name, step_delay = 0.5, obj/item/legendary)
 	var/turf/center = origin
 	for(var/step in 1 to length)
 		center = get_step(center, direction)
@@ -99,9 +99,10 @@
 				row += left
 			if(right)
 				row += right
-		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(body_art_shatter_row), user, row, direction, damage, wall_tier, technique_name), step * step_delay)
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(body_art_shatter_row), user, row, direction, damage, wall_tier, technique_name, legendary), step * step_delay)
 
-/proc/body_art_shatter_row(mob/living/user, list/row, direction, damage, wall_tier, technique_name)
+/// One row of a shatter line. A legendary artifact's line hits with true damage that ignores tempered flesh and realm.
+/proc/body_art_shatter_row(mob/living/user, list/row, direction, damage, wall_tier, technique_name, obj/item/legendary)
 	var/turf/middle = row[1]
 	playsound(middle, pick('sound/effects/rock/rock_break.ogg', 'sound/effects/meteorimpact.ogg'), 50, TRUE)
 	for(var/turf/where as anything in row)
@@ -115,7 +116,10 @@
 		for(var/mob/living/victim in where)
 			if(victim == user)
 				continue
-			if(body_art_hit(user, victim, damage, 2 SECONDS, technique_name) && !HAS_TRAIT(victim, TRAIT_PUSHIMMUNE))
+			if(legendary)
+				legendary_hit(user, victim, damage, 2 SECONDS, technique_name, legendary)
+				victim.throw_at(get_edge_target_turf(victim, direction), 3, 2, user)
+			else if(body_art_hit(user, victim, damage, 2 SECONDS, technique_name) && !HAS_TRAIT(victim, TRAIT_PUSHIMMUNE))
 				victim.throw_at(get_edge_target_turf(victim, direction), 3, 2, user)
 	for(var/mob/living/viewer in range(5, middle))
 		shake_camera(viewer, 2, 2)

@@ -1,18 +1,56 @@
 /**
  * Legendary weapons and treasures from Chinese legend and the martial novels.
  * One turns up somewhere in maintenance each round. Any of them can be bound with Returning Iron.
+ *
+ * They are meant to stand level with (or above) a Primordial Chaos Body: every hit from a legendary artifact is true damage that
+ * ignores tempered flesh, Iron Shirt and the Vajra Golden Body, cracks those defences off, knocks the breath out of a body cultivator
+ * (exhaustion), and hits harder the more tempered the body is. Nobody braces against them by realm. Refining a bound artifact makes it stronger still.
  */
 
 /obj/item/cultivation_artifact
 	icon = 'surfshack13/icons/cultivation/cultivation_artifacts.dmi'
-	resistance_flags = FIRE_PROOF | ACID_PROOF | LAVA_PROOF
+	resistance_flags = INDESTRUCTIBLE | FIRE_PROOF | ACID_PROOF | LAVA_PROOF
 	/// Shown on examine to cultivators
 	var/legend = ""
+	/// What its active power does, shown on examine to everyone
+	var/power_text = ""
 
 /obj/item/cultivation_artifact/examine(mob/user)
 	. = ..()
-	if(legend && (IS_CULTIVATOR(user) || isobserver(user)))
+	if(power_text)
+		. += span_notice("[power_text]")
+	. += span_notice("Its blows are true damage that ignore any body's tempering, and shatter Iron Shirt and the Vajra Golden Body.")
+	if(legend && (IS_CULTIVATOR(user) || IS_BODY_CULTIVATOR(user) || isobserver(user)))
 		. += span_notice("<i>[legend]</i>")
+
+/// How much stronger a bound, refined artifact hits: +10% per refinement grade
+/proc/legendary_power(obj/item/artifact)
+	var/datum/component/cultivation_artifact/bond = artifact?.GetComponent(/datum/component/cultivation_artifact)
+	return 1 + (bond ? 0.1 * bond.refinement : 0)
+
+/**
+ * A legendary blow. True damage (no armour, no damage reduction, no realm bracing), heavier against tempered bodies,
+ * and it breaks a body cultivator's protective techniques and knocks the wind out of them.
+ */
+/proc/legendary_hit(mob/living/user, mob/living/victim, damage, knockdown = 0, source_name = "a legendary artifact", obj/item/artifact)
+	if(QDELETED(victim) || victim == user || victim.stat == DEAD)
+		return FALSE
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(victim)
+	if(body_datum?.stage)
+		damage += 3 * body_datum.stage
+		var/broke_defence = victim.has_status_effect(/datum/status_effect/body_iron_shirt) || victim.has_status_effect(/datum/status_effect/body_vajra)
+		victim.remove_status_effect(/datum/status_effect/body_iron_shirt)
+		victim.remove_status_effect(/datum/status_effect/body_vajra)
+		victim.remove_status_effect(/datum/status_effect/body_blood_boil)
+		body_datum.add_exhaustion(10 + 2 * body_datum.stage)
+		new /obj/effect/temp_visual/cultivation_spark(get_turf(victim), "#ffffff", rand(-6, 6), rand(0, 10))
+		if(broke_defence)
+			victim.visible_message(span_danger("[source_name] shatters [victim]'s golden body like glass!"), span_userdanger("[source_name] cracks your tempered body open!"))
+	victim.apply_damage(damage * legendary_power(artifact), BRUTE, forced = TRUE, wound_bonus = 10)
+	if(knockdown)
+		victim.Knockdown(knockdown)
+	log_combat(user, victim, "struck with [source_name]")
+	return TRUE
 
 // ===================== Ganjiang and Moye =====================
 
@@ -21,17 +59,20 @@
 	inhand_icon_state = "sabre"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-	force = 17
-	throwforce = 12
+	force = 22
+	throwforce = 18
+	armour_penetration = 40
 	w_class = WEIGHT_CLASS_NORMAL
 	sharpness = SHARP_EDGED
 	attack_verb_continuous = list("slashes", "cuts", "pierces")
 	attack_verb_simple = list("slash", "cut", "pierce")
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
-	block_chance = 15
+	block_chance = 30
 	legend = "The swordsmith Ganjiang and his wife Moye forged a pair of swords, one male and one female. Held together, they long for each other."
+	power_text = "Held together, the pair strike twice as hard, parry far more, and can be used in hand to unleash the Twin Dragon Sword Storm: five seconds of slashing everything around you."
 	/// The other sword type of the pair
 	var/partner_type = /obj/item/cultivation_artifact/twin_sword/moye
+	COOLDOWN_DECLARE(storm_cooldown)
 
 /obj/item/cultivation_artifact/twin_sword/ganjiang
 	name = "Ganjiang"
@@ -48,13 +89,49 @@
 
 /obj/item/cultivation_artifact/twin_sword/afterattack(atom/target, mob/user, list/modifiers, list/attack_modifiers)
 	. = ..()
-	if(!isliving(target) || !paired(user))
+	if(!isliving(target))
 		return
 	var/mob/living/victim = target
-	victim.apply_damage(7, BRUTE, sharpness = SHARP_EDGED)
+	var/together = paired(user)
+	legendary_hit(user, victim, together ? 12 : 5, 0, name, src)
 	new /obj/effect/temp_visual/slash(get_turf(victim), victim, rand(10, 22), rand(10, 22), "#9fb8ff")
-	if(prob(25))
+	if(together && prob(25))
 		user.visible_message(span_danger("Ganjiang and Moye sing in harmony as [user] strikes!"))
+
+/obj/item/cultivation_artifact/twin_sword/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
+	if(paired(owner))
+		final_block_chance += 30
+	return ..()
+
+/obj/item/cultivation_artifact/twin_sword/attack_self(mob/user)
+	if(!paired(user))
+		to_chat(user, span_warning("A single sword can't sing alone. Hold both Ganjiang and Moye."))
+		return
+	for(var/obj/item/cultivation_artifact/twin_sword/sword in user.held_items)
+		if(!COOLDOWN_FINISHED(sword, storm_cooldown))
+			user.balloon_alert(user, "the swords are resting!")
+			return
+	for(var/obj/item/cultivation_artifact/twin_sword/sword in user.held_items)
+		COOLDOWN_START(sword, storm_cooldown, 40 SECONDS)
+	user.say("TWIN DRAGON SWORD STORM!!", forced = "ganjiang and moye")
+	user.visible_message(span_boldwarning("[user] spins into a whirlwind of blue and silver steel!"))
+	playsound(user, 'sound/effects/magic/repulse.ogg', 70, TRUE, frequency = 1.4)
+	for(var/i in 0 to 9)
+		addtimer(CALLBACK(src, PROC_REF(storm_tick), user), i * 0.5 SECONDS)
+
+/obj/item/cultivation_artifact/twin_sword/proc/storm_tick(mob/living/user)
+	if(QDELETED(user) || user.stat != CONSCIOUS || !paired(user))
+		return
+	user.SpinAnimation(4, 1)
+	playsound(user, pick('sound/items/weapons/bladeslice.ogg', 'sound/items/weapons/slice.ogg'), 50, TRUE)
+	for(var/mob/living/victim in range(2, user))
+		if(victim == user || victim.stat == DEAD)
+			continue
+		new /obj/effect/temp_visual/slash(get_turf(victim), victim, rand(10, 22), rand(10, 22), pick("#9fb8ff", "#e8e8ff"))
+		legendary_hit(user, victim, 8, 0, "Ganjiang and Moye", src)
+	for(var/turf/nearby in range(1, user))
+		for(var/obj/structure/window/window in nearby)
+			window.take_damage(40, BRUTE, MELEE)
 
 /obj/item/cultivation_artifact/twin_sword/equipped(mob/user, slot, initial)
 	. = ..()
@@ -83,25 +160,30 @@
 	inhand_icon_state = "katana"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-	force = 22
-	throwforce = 15
-	armour_penetration = 50
+	force = 30
+	throwforce = 20
+	armour_penetration = 80
 	w_class = WEIGHT_CLASS_BULKY
 	sharpness = SHARP_EDGED
-	block_chance = 20
+	block_chance = 30
 	attack_verb_continuous = list("slices", "cleaves", "shears")
 	attack_verb_simple = list("slice", "cleave", "shear")
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
 	legend = "\"Supreme in the martial world is the Dragon Slaying Saber. Who dares not obey? If the Heaven Reliant Sword does not appear, who can contend with it?\""
+	power_text = "Click a distant spot to loose the Heaven-Cleaving Stroke: a blade of light fourteen tiles long and three wide that slices through people, doors and even reinforced walls."
+	COOLDOWN_DECLARE(cleave_cooldown)
 
 /obj/item/cultivation_artifact/heaven_reliant/afterattack(atom/target, mob/user, list/modifiers, list/attack_modifiers)
 	. = ..()
+	if(isliving(target))
+		legendary_hit(user, target, 12, 0, name, src)
+		return
 	// It cuts through iron like mud: doors, windows, grilles, lockers and machines barely slow it down
 	if(isobj(target) && !isitem(target))
 		var/obj/cut = target
 		if(!cut.uses_integrity || (cut.resistance_flags & INDESTRUCTIBLE))
 			return
-		cut.take_damage(force * 4, BRUTE, MELEE, armour_penetration = 100)
+		cut.take_damage(force * 6, BRUTE, MELEE, armour_penetration = 100)
 		new /obj/effect/temp_visual/slash(get_turf(cut), cut, rand(10, 22), rand(10, 22), "#d8fff0")
 
 /// Walls are carved straight through, like mud
@@ -111,6 +193,23 @@
 	INVOKE_ASYNC(src, PROC_REF(carve_wall), interacting_with, user)
 	return ITEM_INTERACT_SUCCESS
 
+/obj/item/cultivation_artifact/heaven_reliant/ranged_interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if(!COOLDOWN_FINISHED(src, cleave_cooldown))
+		user.balloon_alert(user, "the blade is gathering light!")
+		return ITEM_INTERACT_BLOCKING
+	var/direction = get_dir(user, interacting_with)
+	if(!direction)
+		return NONE
+	COOLDOWN_START(src, cleave_cooldown, 20 SECONDS)
+	user.say("HEAVEN-CLEAVING STROKE!!", forced = "heaven reliant sword")
+	user.visible_message(span_boldwarning("[user] sweeps the Heaven Reliant Sword and a blade of pale light splits the air!"))
+	user.do_attack_animation(get_step(user, direction))
+	playsound(user, 'sound/items/weapons/bladeslice.ogg', 80, TRUE, frequency = 0.6)
+	playsound(user, 'sound/effects/magic/repulse.ogg', 60, TRUE, frequency = 1.5)
+	cultivation_distortion_wave(user, 3, 0.4 SECONDS, 200)
+	body_art_shatter_line(user, get_turf(user), direction, 14, 1, 25, 2, name, 0.2, src)
+	return ITEM_INTERACT_SUCCESS
+
 /obj/item/cultivation_artifact/heaven_reliant/proc/carve_wall(turf/closed/wall/wall, mob/living/user)
 	if(DOING_INTERACTION_WITH_TARGET(user, wall))
 		return
@@ -118,15 +217,11 @@
 	user.visible_message(span_warning("[user] draws the Heaven Reliant Sword across [wall]. The blade sinks into the metal like it's mud!"),
 		span_notice("You begin carving through [wall]..."))
 	playsound(wall, 'sound/items/weapons/bladeslice.ogg', 60, TRUE)
-	var/carve_time = reinforced ? 6 SECONDS : 3 SECONDS
-	// A cultivator wielding it carves faster
-	carve_time = max(carve_time - cultivation_realm_of(user) * 0.5 SECONDS, 1.5 SECONDS)
-	for(var/i in 1 to 3)
-		if(!do_after(user, carve_time / 3, wall))
-			return
-		new /obj/effect/temp_visual/slash(wall, null, 0, 0, "#d8fff0")
-		playsound(wall, 'sound/items/weapons/bladeslice.ogg', 40, TRUE, frequency = 0.8 + i * 0.1)
-		do_sparks(2, FALSE, wall)
+	var/carve_time = reinforced ? 2 SECONDS : 1 SECONDS
+	if(!do_after(user, carve_time, wall))
+		return
+	new /obj/effect/temp_visual/slash(wall, null, 0, 0, "#d8fff0")
+	do_sparks(2, FALSE, wall)
 	if(QDELETED(wall) || !iswallturf(wall))
 		return
 	user.visible_message(span_boldwarning("[user] slices clean through [wall], which collapses into neat pieces!"))
@@ -141,24 +236,76 @@
 	inhand_icon_state = "claymore"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-	force = 26
-	throwforce = 18
+	force = 35
+	throwforce = 25
+	armour_penetration = 60
 	w_class = WEIGHT_CLASS_BULKY
 	sharpness = SHARP_EDGED
-	attack_speed = CLICK_CD_MELEE * 1.5
+	attack_speed = CLICK_CD_MELEE * 1.3
 	attack_verb_continuous = list("hacks", "cleaves", "crushes")
 	attack_verb_simple = list("hack", "cleave", "crush")
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
 	legend = "\"Supreme in the martial world is the Dragon Slaying Saber.\" Legend says it holds a secret, revealed only when it meets the Heaven Reliant Sword."
+	power_text = "Every blow hurls its target and cracks the floor. Use it in hand to wake the dragon: your next blow within ten seconds is the Dragon Slaying Strike, \
+		a cataclysm that flattens everything within three tiles and brings down even reinforced walls."
+	/// The dragon is awake: the next hit is the Dragon Slaying Strike
+	var/dragon_awake = FALSE
+	COOLDOWN_DECLARE(dragon_cooldown)
+
+/obj/item/cultivation_artifact/dragon_saber/attack_self(mob/user)
+	if(dragon_awake)
+		return
+	if(!COOLDOWN_FINISHED(src, dragon_cooldown))
+		user.balloon_alert(user, "the dragon sleeps!")
+		return
+	COOLDOWN_START(src, dragon_cooldown, 30 SECONDS)
+	dragon_awake = TRUE
+	add_filter("dragon_awake", 2, list("type" = "outline", "color" = "#ffcc33", "size" = 2))
+	user.visible_message(span_boldwarning("The golden dragon on [user]'s saber opens its eyes!"))
+	playsound(user, 'sound/effects/magic/demon_dies.ogg', 50, TRUE, frequency = 0.5)
+	addtimer(CALLBACK(src, PROC_REF(dragon_sleeps)), 10 SECONDS)
+
+/obj/item/cultivation_artifact/dragon_saber/proc/dragon_sleeps()
+	dragon_awake = FALSE
+	remove_filter("dragon_awake")
 
 /obj/item/cultivation_artifact/dragon_saber/afterattack(atom/target, mob/user, list/modifiers, list/attack_modifiers)
 	. = ..()
 	if(!isliving(target))
 		return
 	var/mob/living/victim = target
-	if(!HAS_TRAIT(victim, TRAIT_PUSHIMMUNE) && victim.move_resist < MOVE_FORCE_OVERPOWERING)
-		victim.throw_at(get_edge_target_turf(victim, get_dir(user, victim)), 2, 2, user)
+	if(dragon_awake)
+		dragon_sleeps()
+		dragon_slaying_strike(user, victim)
+		return
+	legendary_hit(user, victim, 15, 1 SECONDS, name, src)
+	body_art_crack_ground(get_turf(victim), 0, 70, crater = FALSE)
 	victim.Shake(2, 2, 0.4 SECONDS)
+	victim.throw_at(get_edge_target_turf(victim, get_dir(user, victim)), 4, 2, user)
+
+/obj/item/cultivation_artifact/dragon_saber/proc/dragon_slaying_strike(mob/living/user, mob/living/victim)
+	var/turf/center = get_turf(victim)
+	user.say("DRAGON SLAYING STRIKE!!", forced = "dragon slaying saber")
+	user.visible_message(span_boldwarning("[user] brings the Dragon Slaying Saber down and a golden dragon erupts from the blade!"))
+	playsound(center, 'sound/effects/explosion/explosion_distant.ogg', 90, TRUE)
+	playsound(center, 'sound/effects/meteorimpact.ogg', 90, TRUE)
+	cultivation_great_bell(center, 80)
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(center)
+	new /obj/effect/temp_visual/cultivation_crater(center, 2.5)
+	cultivation_distortion_wave(victim, 7, 1 SECONDS, 255)
+	body_art_crack_ground(center, 3, 70, crater = FALSE)
+	legendary_hit(user, victim, 45, 3 SECONDS, "the Dragon Slaying Strike", src)
+	for(var/turf/nearby in range(3, center))
+		body_art_smash(nearby, user, 150, get_dist(nearby, center) <= 1 ? 2 : 0)
+		if(prob(30))
+			new /obj/effect/temp_visual/cultivation_rubble(nearby)
+	for(var/mob/living/bystander in range(3, center))
+		if(bystander == user || bystander == victim)
+			continue
+		legendary_hit(user, bystander, 15, 1.5 SECONDS, "the Dragon Slaying Strike", src)
+		bystander.throw_at(get_edge_target_turf(bystander, get_dir(center, bystander)), 3, 2, user)
+	for(var/mob/living/viewer in range(10, center))
+		shake_camera(viewer, 6, 3)
 
 /// The legend: strike the saber with the sword and both shatter, revealing the secret manuals hidden inside
 /obj/item/cultivation_artifact/dragon_saber/attackby(obj/item/attacking_item, mob/user, list/modifiers)
@@ -191,7 +338,10 @@
 	force = 2
 	throwforce = 2
 	legend = "The As-You-Will Gold-Banded Cudgel. It weighs thirteen thousand five hundred jin and grows or shrinks at its master's word."
+	power_text = "Grown, it strikes three tiles away and sends people flying. Click a distant spot to stretch it to the heavens and bring it down: \
+		the Thirteen-Thousand-Jin Slam smashes a three-wide path through everything, walls included, and craters where it lands."
 	var/extended = FALSE
+	COOLDOWN_DECLARE(slam_cooldown)
 
 /obj/item/cultivation_artifact/ruyi_jingu_bang/attack_self(mob/user)
 	extended = !extended
@@ -201,9 +351,10 @@
 		icon_state = "ruyi_staff"
 		inhand_icon_state = "bostaff1"
 		w_class = WEIGHT_CLASS_HUGE
-		force = 18
-		throwforce = 15
-		reach = 2
+		force = 30
+		throwforce = 20
+		armour_penetration = 50
+		reach = 3
 		attack_verb_continuous = list("smashes", "whacks", "sends flying")
 		attack_verb_simple = list("smash", "whack", "send flying")
 		hitsound = 'sound/items/weapons/genhit3.ogg'
@@ -216,6 +367,7 @@
 		w_class = initial(w_class)
 		force = initial(force)
 		throwforce = initial(throwforce)
+		armour_penetration = 0
 		reach = 1
 		user.visible_message(span_notice("[user]'s staff shrinks back down into a tiny golden needle."))
 		user.say("Shrink!", forced = "ruyi jingu bang")
@@ -231,10 +383,40 @@
 		return
 	var/mob/living/victim = target
 	// The Monkey King's own kin hit hardest
-	if(ismonkey(user))
-		victim.apply_damage(10, BRUTE)
-	if(!HAS_TRAIT(victim, TRAIT_PUSHIMMUNE) && victim.move_resist < MOVE_FORCE_OVERPOWERING && prob(40))
-		victim.throw_at(get_edge_target_turf(victim, get_dir(user, victim)), 3, 2, user)
+	legendary_hit(user, victim, ismonkey(user) ? 20 : 10, 0, name, src)
+	if(prob(60))
+		victim.throw_at(get_edge_target_turf(victim, get_dir(user, victim)), 5, 2, user)
+
+/obj/item/cultivation_artifact/ruyi_jingu_bang/ranged_interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if(!extended)
+		return NONE
+	if(!COOLDOWN_FINISHED(src, slam_cooldown))
+		user.balloon_alert(user, "the staff is heavy!")
+		return ITEM_INTERACT_BLOCKING
+	var/turf/target_turf = get_turf(interacting_with)
+	var/direction = get_dir(user, target_turf)
+	var/distance = min(get_dist(user, target_turf), 10)
+	if(!direction || distance < 2)
+		return NONE
+	COOLDOWN_START(src, slam_cooldown, 25 SECONDS)
+	user.say("THIRTEEN THOUSAND JIN!!", forced = "ruyi jingu bang")
+	user.visible_message(span_boldwarning("The Ruyi Jingu Bang shoots up to the heavens and comes crashing down!"))
+	playsound(user, 'sound/effects/magic/charge.ogg', 70, TRUE, frequency = 0.6)
+	cultivation_particles(user, /particles/cultivation/gold, 1.5 SECONDS)
+	body_art_shatter_line(user, get_turf(user), direction, distance, 1, ismonkey(user) ? 35 : 25, 2, name, 0.15, src)
+	addtimer(CALLBACK(src, PROC_REF(slam_end), user, target_turf), distance * 0.15 + 0.2 SECONDS)
+	return ITEM_INTERACT_SUCCESS
+
+/obj/item/cultivation_artifact/ruyi_jingu_bang/proc/slam_end(mob/living/user, turf/landing)
+	playsound(landing, 'sound/effects/explosion/explosion_distant.ogg', 80, TRUE)
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(landing)
+	new /obj/effect/temp_visual/cultivation_crater(landing, 2)
+	body_art_crack_ground(landing, 2, 60, crater = FALSE)
+	for(var/mob/living/victim in range(2, landing))
+		if(victim != user)
+			legendary_hit(user, victim, 15, 2 SECONDS, name, src)
+	for(var/mob/living/viewer in range(8, landing))
+		shake_camera(viewer, 4, 3)
 
 // ===================== Purple-Gold Gourd =====================
 
@@ -243,7 +425,8 @@
 	desc = "A purple calabash with a gold band and a red cork. Point it at someone and call their name. If they answer, they're inside."
 	icon_state = "purple_gold_gourd"
 	w_class = WEIGHT_CLASS_SMALL
-	legend = "From the Journey to the West. Whoever answers when the gourd's holder calls their name is sucked inside."
+	legend = "From the Journey to the West. Whoever answers when the gourd's holder calls their name is sucked inside, to be slowly dissolved."
+	power_text = "No realm or body is too strong for it. Whoever is inside slowly dissolves, and a body cultivator's training melts away with them."
 	/// Who we're waiting to hear from
 	var/datum/weakref/target_ref
 	/// Who's inside
@@ -277,12 +460,9 @@
 	if(!COOLDOWN_FINISHED(src, call_cooldown))
 		to_chat(user, span_warning("The gourd is still gathering its strength."))
 		return ITEM_INTERACT_BLOCKING
-	if(get_dist(user, victim) > 7)
+	if(get_dist(user, victim) > 9)
 		return ITEM_INTERACT_BLOCKING
-	if(cultivation_realm_of(victim) > cultivation_realm_of(user))
-		to_chat(user, span_warning("[victim]'s cultivation is too deep. The gourd won't take [victim.p_them()]."))
-		return ITEM_INTERACT_BLOCKING
-	COOLDOWN_START(src, call_cooldown, 90 SECONDS)
+	COOLDOWN_START(src, call_cooldown, 60 SECONDS)
 	user.say("[uppertext(victim.real_name)]!", forced = "purple-gold gourd")
 	user.visible_message(span_warning("[user] points a purple gourd at [victim] and calls [victim.p_their()] name!"))
 	to_chat(victim, span_userdanger("[user] calls your name, pointing a purple gourd at you... You feel a strong urge to answer."))
@@ -298,7 +478,7 @@
 /obj/item/cultivation_artifact/purple_gold_gourd/proc/on_answer(mob/living/victim, list/speech_args)
 	SIGNAL_HANDLER
 	stop_listening(victim)
-	if(QDELETED(src) || get_dist(src, victim) > 9 || prisoner)
+	if(QDELETED(src) || get_dist(src, victim) > 11 || prisoner)
 		return
 	INVOKE_ASYNC(src, PROC_REF(suck_in), victim)
 
@@ -315,22 +495,36 @@
 	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(src))
 	victim.forceMove(src)
 	prisoner = victim
-	to_chat(victim, span_notice("It's dark and smells of wine in here. Resist to try to break out (it takes a while)."))
+	victim.remove_status_effect(/datum/status_effect/body_iron_shirt)
+	victim.remove_status_effect(/datum/status_effect/body_vajra)
+	to_chat(victim, span_userdanger("It's dark and smells of wine in here, and your skin is starting to sting. Resist to try to break out (it takes a while)."))
+	START_PROCESSING(SSobj, src)
 	// Never forever: the gourd spits them out eventually
 	addtimer(CALLBACK(src, PROC_REF(release)), 2 MINUTES)
+
+/// The gourd's wine slowly dissolves whoever is inside
+/obj/item/cultivation_artifact/purple_gold_gourd/process(seconds_per_tick)
+	if(!prisoner || prisoner.loc != src)
+		return PROCESS_KILL
+	prisoner.apply_damage(1.5 * seconds_per_tick, BURN, forced = TRUE)
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(prisoner)
+	if(body_datum)
+		body_datum.tempering = max(body_datum.tempering - 2 * seconds_per_tick, 0)
+		body_datum.add_exhaustion(10 * seconds_per_tick)
 
 /obj/item/cultivation_artifact/purple_gold_gourd/container_resist_act(mob/living/user)
 	if(user != prisoner)
 		return
-	to_chat(user, span_notice("You start squirming against the cork... (this will take 30 seconds)"))
+	to_chat(user, span_notice("You start squirming against the cork... (this will take 45 seconds)"))
 	audible_message(span_warning("[src] wobbles and thumps!"))
-	if(do_after(user, 30 SECONDS, src, timed_action_flags = IGNORE_TARGET_LOC_CHANGE | IGNORE_HELD_ITEM))
+	if(do_after(user, 45 SECONDS, src, timed_action_flags = IGNORE_TARGET_LOC_CHANGE | IGNORE_HELD_ITEM))
 		release()
 
 /obj/item/cultivation_artifact/purple_gold_gourd/relaymove(mob/living/user, direction)
 	return
 
 /obj/item/cultivation_artifact/purple_gold_gourd/proc/release()
+	STOP_PROCESSING(SSobj, src)
 	if(!prisoner)
 		return
 	var/mob/living/freed = prisoner
@@ -353,11 +547,24 @@
 	icon_state = "plantain_fan"
 	w_class = WEIGHT_CLASS_NORMAL
 	force = 5
-	legend = "The Iron Fan Princess's treasure. One wave of it blows a man fifty thousand li away. Here, it's a few tiles, but still."
+	legend = "The Iron Fan Princess's treasure. One wave of it blows a man fifty thousand li away. Here, it's the length of a corridor, but still."
+	power_text = "Click a direction to loose a hurricane nine tiles deep that hurls everyone (no stance can root against it) ten tiles away and shatters glass. \
+		Use it in hand for a typhoon all around you."
 	COOLDOWN_DECLARE(gust_cooldown)
 
 /obj/item/cultivation_artifact/plantain_fan/attack_self(mob/user)
-	gust(user, get_step(user, user.dir))
+	if(!COOLDOWN_FINISHED(src, gust_cooldown))
+		user.balloon_alert(user, "the fan is resting!")
+		return
+	COOLDOWN_START(src, gust_cooldown, 15 SECONDS)
+	user.say("TYPHOON!!", forced = "plantain fan")
+	user.visible_message(span_boldwarning("[user] whirls the Plantain Fan overhead and a typhoon explodes outward!"))
+	playsound(user, 'sound/effects/space_wind.ogg', 90, TRUE)
+	user.SpinAnimation(5, 1)
+	var/turf/start = get_turf(user)
+	for(var/turf/gust_turf in range(5, start))
+		if(gust_turf != start)
+			blow(user, gust_turf, get_dir(start, gust_turf))
 
 /obj/item/cultivation_artifact/plantain_fan/ranged_interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	gust(user, interacting_with)
@@ -367,56 +574,70 @@
 	if(!COOLDOWN_FINISHED(src, gust_cooldown))
 		user.balloon_alert(user, "the fan is resting!")
 		return
-	COOLDOWN_START(src, gust_cooldown, 20 SECONDS)
+	COOLDOWN_START(src, gust_cooldown, 15 SECONDS)
 	var/blow_dir = get_dir(user, towards) || user.dir
+	user.say("HURRICANE!!", forced = "plantain fan")
 	user.visible_message(span_boldwarning("[user] swings the Plantain Fan and a howling gale bursts forth!"))
-	playsound(user, 'sound/effects/space_wind.ogg', 80, TRUE)
+	playsound(user, 'sound/effects/space_wind.ogg', 90, TRUE)
 	user.do_attack_animation(get_step(user, blow_dir))
 	var/turf/start = get_turf(user)
-	for(var/turf/gust_turf in range(3, start))
-		if(gust_turf == start || get_dir(start, gust_turf) & REVERSE_DIR(blow_dir) || !(get_dir(start, gust_turf) & blow_dir))
+	for(var/turf/gust_turf in range(9, start))
+		if(gust_turf == start || !(get_dir(start, gust_turf) & blow_dir) || (get_dir(start, gust_turf) & REVERSE_DIR(blow_dir)))
 			continue
+		blow(user, gust_turf, blow_dir)
+
+/// Everything on one turf goes flying
+/obj/item/cultivation_artifact/plantain_fan/proc/blow(mob/living/user, turf/gust_turf, blow_dir)
+	if(prob(40))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(gust_turf)
-		for(var/obj/effect/hotspot/flame in gust_turf)
-			qdel(flame)
-		for(var/atom/movable/blown in gust_turf)
-			if(blown.anchored || blown == user)
-				continue
-			if(isliving(blown))
-				var/mob/living/victim = blown
-				victim.extinguish_mob()
-				if(HAS_TRAIT(victim, TRAIT_PUSHIMMUNE))
-					continue
-				victim.Knockdown(1 SECONDS)
-			blown.throw_at(get_edge_target_turf(blown, blow_dir), 5, 2, user)
+	for(var/obj/effect/hotspot/flame in gust_turf)
+		qdel(flame)
+	for(var/obj/structure/window/window in gust_turf)
+		window.take_damage(50, BRUTE, MELEE)
+	for(var/atom/movable/blown in gust_turf)
+		if(blown.anchored || blown == user)
+			continue
+		if(isliving(blown))
+			var/mob/living/victim = blown
+			victim.extinguish_mob()
+			legendary_hit(user, victim, 5, 2 SECONDS, name, src)
+		// Positional: some throw_at overrides elsewhere lack the force keyword
+		blown.throw_at(get_edge_target_turf(blown, blow_dir), 10, 3, user, TRUE, FALSE, null, MOVE_FORCE_OVERPOWERING)
 
 // ===================== Bagua Mirror =====================
 
 /obj/item/cultivation_artifact/bagua_mirror
 	name = "Bagua Mirror"
-	desc = "A bronze octagonal mirror ringed with the eight trigrams. Held up, it flashes with a light evil can't stand, and it sometimes turns aside a shot."
+	desc = "A bronze octagonal mirror ringed with the eight trigrams. Held up, it flashes with a light evil can't stand, and it turns aside shots."
 	icon_state = "bagua_mirror"
 	w_class = WEIGHT_CLASS_SMALL
-	block_chance = 25
+	block_chance = 50
 	legend = "Hung over doorways to turn away evil spirits. In a cultivator's hand it does a great deal more."
+	power_text = "Use it in hand: the Eight Trigrams Seal. Every cultivator who sees the light (qi or body) has their cultivation sealed for twenty seconds: \
+		no techniques, no body arts, no Iron Shirt or Golden Body. The undead and the wicked burn."
 	COOLDOWN_DECLARE(flash_cooldown)
 
 /obj/item/cultivation_artifact/bagua_mirror/attack_self(mob/user)
 	if(!COOLDOWN_FINISHED(src, flash_cooldown))
 		user.balloon_alert(user, "the mirror is dim!")
 		return
-	COOLDOWN_START(src, flash_cooldown, 30 SECONDS)
-	user.visible_message(span_boldwarning("[user] holds up the Bagua Mirror and it blazes with holy light!"))
+	COOLDOWN_START(src, flash_cooldown, 45 SECONDS)
+	user.say("EIGHT TRIGRAMS SEAL!!", forced = "bagua mirror")
+	user.visible_message(span_boldwarning("[user] holds up the Bagua Mirror and it blazes with the light of the eight trigrams!"))
 	playsound(user, 'sound/items/weapons/flash.ogg', 70, TRUE)
+	cultivation_temple_sound(user, 70)
 	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(get_turf(user))
-	for(var/mob/living/victim in view(4, user))
+	for(var/mob/living/victim in view(6, user))
 		if(victim == user)
 			continue
 		var/undead = (victim.mob_biotypes & MOB_UNDEAD) || IS_BLOODSUCKER(victim) || IS_CULTIST(victim) || IS_HERETIC(victim)
 		if(undead)
 			victim.Paralyze(3 SECONDS)
-			victim.apply_damage(15, BURN)
+			victim.apply_damage(20, BURN, forced = TRUE)
 			to_chat(victim, span_userdanger("The mirror's light sears your evil qi!"))
+		if(IS_CULTIVATOR(victim) || IS_BODY_CULTIVATOR(victim))
+			victim.apply_status_effect(/datum/status_effect/bagua_sealed)
+			victim.Knockdown(1 SECONDS)
 		else
 			victim.flash_act(1, TRUE)
 
@@ -429,18 +650,57 @@
 		return TRUE
 	return FALSE
 
+/// Sealed by the eight trigrams: no techniques of any kind
+/datum/status_effect/bagua_sealed
+	id = "bagua_sealed"
+	alert_type = null
+	duration = 20 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+
+/datum/status_effect/bagua_sealed/on_apply()
+	owner.remove_status_effect(/datum/status_effect/body_iron_shirt)
+	owner.remove_status_effect(/datum/status_effect/body_vajra)
+	owner.remove_status_effect(/datum/status_effect/body_blood_boil)
+	owner.add_filter("bagua_sealed", 2, list("type" = "outline", "color" = "#f0d080", "size" = 1))
+	to_chat(owner, span_userdanger("The eight trigrams lock around your meridians and sinews! Your cultivation is sealed!"))
+	return TRUE
+
+/datum/status_effect/bagua_sealed/on_remove()
+	owner.remove_filter("bagua_sealed")
+	to_chat(owner, span_notice("The seal of the eight trigrams fades."))
+
 // ===================== Qiankun Pouch =====================
 
 /obj/item/cultivation_artifact/qiankun_pouch
 	name = "Qiankun Pouch"
-	desc = "A small embroidered pouch that holds a whole world inside. It fits far more than it should."
+	desc = "A small embroidered pouch that holds a whole world inside. It fits far more than it should, even huge things."
 	icon_state = "qiankun_pouch"
 	w_class = WEIGHT_CLASS_SMALL
 	legend = "Qian and Kun, heaven and earth. The inside of this pouch is larger than the outside, which is the point."
+	power_text = "Use it in hand to Swallow Heaven and Earth: every loose item within five tiles flies into the pouch."
+	COOLDOWN_DECLARE(swallow_cooldown)
 
 /obj/item/cultivation_artifact/qiankun_pouch/Initialize(mapload)
 	. = ..()
-	create_storage(max_slots = 21, max_specific_storage = WEIGHT_CLASS_BULKY, max_total_storage = 42)
+	create_storage(max_slots = 50, max_specific_storage = WEIGHT_CLASS_GIGANTIC, max_total_storage = 200)
+
+/obj/item/cultivation_artifact/qiankun_pouch/attack_self(mob/user)
+	if(!COOLDOWN_FINISHED(src, swallow_cooldown))
+		user.balloon_alert(user, "the pouch is full of wind!")
+		return
+	COOLDOWN_START(src, swallow_cooldown, 20 SECONDS)
+	user.say("SWALLOW HEAVEN AND EARTH!", forced = "qiankun pouch")
+	user.visible_message(span_boldwarning("[user] opens the Qiankun Pouch and everything around [user.p_them()] is dragged inside!"))
+	playsound(user, 'sound/effects/magic/summonitems_generic.ogg', 60, TRUE)
+	new /obj/effect/temp_visual/circle_wave/cultivation/sense(get_turf(user))
+	var/swallowed = 0
+	for(var/obj/item/loose in range(5, user))
+		if(loose == src || loose.anchored || !isturf(loose.loc) || (loose.item_flags & ABSTRACT))
+			continue
+		if(!atom_storage?.attempt_insert(loose, user, messages = FALSE))
+			continue
+		swallowed++
+	to_chat(user, span_notice("[swallowed ? "[swallowed] thing\s vanish" : "Nothing vanishes"] into the pouch."))
 
 // ===================== Spawning =====================
 

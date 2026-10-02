@@ -85,6 +85,10 @@
 	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(caster)
 	if(!body_datum)
 		return FALSE
+	if(caster.has_status_effect(/datum/status_effect/bagua_sealed))
+		if(feedback)
+			to_chat(caster, span_warning("The eight trigrams still seal your body!"))
+		return FALSE
 	if(body_datum.tribulation && !istype(technique, /datum/action/cooldown/spell/body_art/body_breakthrough))
 		if(feedback)
 			to_chat(caster, span_warning("You can't spare a thought from the Tribulation of Flesh!"))
@@ -541,6 +545,9 @@
 	// Walls, doors and anything else in the way: the punch blasts a trench through it and what's behind it.
 	// Jade Marrow: 1 deep. Crimson Blood: 2. Vajra Viscera: 3. Golden Body: 4, 3 wide. Undying Flesh: 6, 3 wide. Primordial Chaos: 9 deep, 5 wide.
 	if(isclosedturf(cast_on) || isobj(cast_on))
+		// A door you punch always comes out of its frame (blast doors need a Golden Body)
+		if(istype(cast_on, /obj/machinery/door))
+			body_art_smash(get_turf(cast_on), user, 150, wall_tier)
 		if(!wall_tier)
 			if(isobj(cast_on))
 				var/obj/thing = cast_on

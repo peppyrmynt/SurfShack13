@@ -112,6 +112,10 @@
 		if(feedback)
 			to_chat(caster, span_warning("Without a dantian your qi just leaks away!"))
 		return FALSE
+	if(caster.has_status_effect(/datum/status_effect/bagua_sealed))
+		if(feedback)
+			to_chat(caster, span_warning("The eight trigrams still seal your meridians!"))
+		return FALSE
 	if(cultivator.breakthrough && !istype(technique, /datum/action/cooldown/spell/cultivation/breakthrough))
 		if(feedback)
 			to_chat(caster, span_warning("You can't spare a thought from your breakthrough!"))
