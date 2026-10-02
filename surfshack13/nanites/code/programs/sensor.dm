@@ -364,3 +364,137 @@
 /datum/nanite_program/sensor/resting/make_rule(datum/nanite_program/target)
 	var/datum/nanite_rule/resting/rule = new(target)
 	return rule
+
+/datum/nanite_program/sensor/fire
+	name = "Fire Sensor"
+	desc = "The nanites receive a signal constantly while the host is on fire."
+	can_rule = TRUE
+
+/datum/nanite_program/sensor/fire/check_event()
+	if(host_mob.on_fire)
+		return TRUE
+	return FALSE
+
+/datum/nanite_program/sensor/fire/make_rule(datum/nanite_program/target)
+	var/datum/nanite_rule/fire/rule = new(target)
+	return rule
+
+/datum/nanite_program/sensor/blood
+	name = "Blood Sensor"
+	desc = "The nanites receive a signal constantly while the host's blood volume is higher or lower than a target value."
+	can_rule = TRUE
+
+/datum/nanite_program/sensor/blood/register_extra_settings()
+	. = ..()
+	extra_settings[NES_VALUE] = new /datum/nanite_extra_setting/number(560, 0, 560)
+	extra_settings[NES_DIRECTION] = new /datum/nanite_extra_setting/boolean(TRUE, "Above", "Below")
+
+/datum/nanite_program/sensor/blood/check_event()
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	var/check_above =  direction.get_value()
+
+	if(check_above)
+		if(host_mob.blood_volume >= value.get_value())
+			return TRUE
+	else
+		if(host_mob.blood_volume < value.get_value())
+			return TRUE
+	return FALSE
+
+/datum/nanite_program/sensor/blood/make_rule(datum/nanite_program/target)
+	var/datum/nanite_rule/blood/rule = new(target)
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	rule.threshold = value.get_value()
+	rule.above = direction.get_value()
+	return rule
+
+/datum/nanite_program/sensor/nutrition
+	name = "Nutrition Sensor"
+	desc = "The nanites receive a signal constantly while the host's nutrition is higher or lower than a target value."
+	can_rule = TRUE
+
+/datum/nanite_program/sensor/nutrition/register_extra_settings()
+	. = ..()
+	extra_settings[NES_VALUE] = new /datum/nanite_extra_setting/number(400, 0, 1000)
+	extra_settings[NES_DIRECTION] = new /datum/nanite_extra_setting/boolean(TRUE, "Above", "Below")
+
+/datum/nanite_program/sensor/nutrition/check_event()
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	var/check_above =  direction.get_value()
+
+	if(check_above)
+		if(host_mob.nutrition >= value.get_value())
+			return TRUE
+	else
+		if(host_mob.nutrition < value.get_value())
+			return TRUE
+	return FALSE
+
+/datum/nanite_program/sensor/nutrition/make_rule(datum/nanite_program/target)
+	var/datum/nanite_rule/nutrition/rule = new(target)
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	rule.threshold = value.get_value()
+	rule.above = direction.get_value()
+	return rule
+
+/datum/nanite_program/sensor/soul_check
+	name = "Catatonic Sensor"
+	desc = "The nanites receive a signal constantly while the host is or isn't in a catatonic-like state."
+	can_rule = TRUE
+
+/datum/nanite_program/sensor/soul_check/register_extra_settings()
+	. = ..()
+	extra_settings[NES_DIRECTION] = new /datum/nanite_extra_setting/boolean(TRUE, "Is", "Is Not")
+
+/datum/nanite_program/sensor/soul_check/check_event()
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	var/check_above =  direction.get_value()
+
+	if(check_above)
+		if(isnull(host_mob.key))
+			return TRUE
+	else
+		if(!isnull(host_mob.key))
+			return TRUE
+	return FALSE
+
+/datum/nanite_program/sensor/soul_check/make_rule(datum/nanite_program/target)
+	var/datum/nanite_rule/soul_check/rule = new(target)
+	var/datum/nanite_extra_setting/soul_or_no = extra_settings[NES_DIRECTION]
+	rule.is_soulless = soul_or_no.get_value()
+	return rule
+
+/datum/nanite_program/sensor/temperature
+	name = "Temperature Sensor"
+	desc = "The nanites receive a signal constantly while the host is above or below a certain temperature threshold. 310.15 is the normal body temperature for a human."
+	can_rule = TRUE
+
+/datum/nanite_program/sensor/temperature/register_extra_settings()
+	. = ..()
+	extra_settings[NES_VALUE] = new /datum/nanite_extra_setting/number(310, 0, 1000)
+	extra_settings[NES_DIRECTION] = new /datum/nanite_extra_setting/boolean(TRUE, "Hotter", "Colder")
+
+/datum/nanite_program/sensor/temperature/check_event()
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	var/check_above =  direction.get_value()
+
+	if(check_above)
+		if(host_mob.bodytemperature >= value.get_value())
+			return TRUE
+	else
+		if(host_mob.bodytemperature < value.get_value())
+			return TRUE
+	return FALSE
+
+/datum/nanite_program/sensor/temperature/make_rule(datum/nanite_program/target)
+	var/datum/nanite_rule/temperature/rule = new(target)
+	var/datum/nanite_extra_setting/value = extra_settings[NES_VALUE]
+	var/datum/nanite_extra_setting/direction = extra_settings[NES_DIRECTION]
+	rule.threshold = value.get_value()
+	rule.above = direction.get_value()
+	return rule
