@@ -200,7 +200,7 @@ GLOBAL_DATUM(station_fog, /datum/weather/station_fog)
 	/// The floor cluwnes hunting in this fog.
 	var/list/mob/living/basic/floor_cluwne/cluwnes = list()
 	/// People dragged under the floor (assoc, mob -> TRUE), spat out when it ends.
-	var/list/mob/living/carbon/human/eaten = list()
+	var/list/mob/living/eaten = list()
 	/// Where the dragged-under wait: a reserved tile off the station map.
 	var/obj/effect/abstract/floor_cluwne_gullet/gullet
 	/// The reservation that tile comes from.
