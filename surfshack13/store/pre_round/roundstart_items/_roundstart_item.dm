@@ -36,6 +36,21 @@
 	item_cost = 500
 	item_path = /obj/item/storage/pill_bottle/maintenance_pill/full
 
+/datum/store_item/roundstart/soap
+	name = "Soap"
+	item_path = /obj/item/soap/nanotrasen
+	item_cost = 50
+
+/datum/store_item/roundstart/crayons
+	name = "Crayons"
+	item_path = /obj/item/storage/crayons
+	item_cost = 50
+
+/datum/store_item/roundstart/plushes
+	name = "Box of Plushies"
+	item_path = /obj/item/storage/box/hug/plushes
+	item_cost = 50
+
 /datum/store_item/roundstart/donkpockets
 	name = "Box of Donk Pockets"
 	item_path = /obj/item/storage/box/donkpockets
@@ -44,6 +59,26 @@
 /datum/store_item/roundstart/donut_box
 	name = "Box of Doughnuts"
 	item_path = /obj/item/storage/fancy/donut_box
+	item_cost = 150
+
+/datum/store_item/roundstart/gum
+	name = "Gum"
+	item_path = /obj/item/storage/box/gum
+	item_cost = 25
+
+/datum/store_item/roundstart/gum_happiness
+	name = "HP+ Gum"
+	item_path = /obj/item/storage/box/gum/happiness
+	item_cost = 50
+
+/datum/store_item/roundstart/gum_medicated
+	name = "Activin 12-Hour Medicated Gum"
+	item_path = /obj/item/storage/box/gum/wake_up
+	item_cost = 400
+
+/datum/store_item/roundstart/creampie
+	name = "Banana Cream Pie"
+	item_path = /obj/item/food/pie/cream
 	item_cost = 150
 
 /datum/store_item/roundstart/whiskey
@@ -56,15 +91,60 @@
 	item_path = /obj/item/reagent_containers/cup/glass/bottle/lizardwine
 	item_cost = 100
 
+/datum/store_item/roundstart/champagne
+	name = "Eau d' Dandy Brut Champagne"
+	item_path = /obj/item/reagent_containers/cup/glass/bottle/champagne
+	item_cost = 100
+
+/datum/store_item/roundstart/absinthe
+	name = "Gwyn's premium absinthe"
+	item_path = /obj/item/reagent_containers/cup/glass/bottle/absinthe/premium
+	item_cost = 100
+
 /datum/store_item/roundstart/cigars
 	name = "Premium Cigar Case"
 	item_path = /obj/item/storage/fancy/cigarettes/cigars
 	item_cost = 125
 
+/datum/store_item/roundstart/cohiba_cigars
+	name = "Cohiba Robusto Cigar Case"
+	item_path = /obj/item/storage/fancy/cigarettes/cigars/cohiba
+	item_cost = 150
+
+/datum/store_item/roundstart/inducer
+	name = "Inducer"
+	item_path = /obj/item/inducer
+	item_cost = 150
+
+/datum/store_item/roundstart/budget_insuls
+	name = "Budget Insulated Gloves"
+	item_path = /obj/item/clothing/gloves/color/fyellow
+	item_cost = 100
+
 /datum/store_item/roundstart/insuls
 	name = "Insulated Gloves"
 	item_path = /obj/item/clothing/gloves/color/yellow
 	item_cost = 500
+
+/datum/store_item/roundstart/tinkerer
+	name = "Tinkerer's Gloves"
+	item_path = /obj/item/clothing/gloves/tinkerer
+	item_cost = 200
+
+/datum/store_item/roundstart/tackler
+	name = "Gorilla Gloves"
+	item_path = /obj/item/clothing/gloves/tackler/combat
+	item_cost = 700
+
+/datum/store_item/roundstart/dolphin
+	name = "Dolphin Gloves"
+	item_path = /obj/item/clothing/gloves/tackler/dolphin
+	item_cost = 1000
+
+/datum/store_item/roundstart/cargo_gauntlet
+	name = "H.A.U.L Gloves"
+	item_path = /obj/item/clothing/gloves/cargo_gauntlet
+	item_cost = 250
 
 /datum/store_item/roundstart/flash
 	name = "Handheld Flash"
@@ -86,9 +166,29 @@
 	item_path = /obj/item/stack/sheet/plasteel/fifty
 	item_cost = 600
 
+/datum/store_item/roundstart/tencloth
+	name = "Ten Cloth Sheets"
+	item_path = /obj/item/stack/sheet/cloth/ten
+	item_cost = 100
+
 /datum/store_item/roundstart/lazarus
 	name = "Lazarus Injector"
 	item_path = /obj/item/lazarus_injector
+	item_cost = 500
+
+/datum/store_item/roundstart/survivalcapsule
+	name = "Bluespace Shelter Capsule"
+	item_path = /obj/item/survivalcapsule
+	item_cost = 650
+
+/datum/store_item/roundstart/survival_medipens
+	name = "Survival Medipen"
+	item_path = /obj/item/reagent_containers/hypospray/medipen/survival
+	item_cost = 100
+
+/datum/store_item/roundstart/luxury_medipens
+	name = "Luxury Medipen"
+	item_path = /obj/item/reagent_containers/hypospray/medipen/survival/luxury
 	item_cost = 500
 
 /datum/store_item/roundstart/medkitemergency
@@ -156,6 +256,21 @@
 	item_path = /obj/item/dnainjector/glow
 	item_cost = 50
 
+/datum/store_item/roundstart/olfactionmut
+	name = "DNA Mutator (Olfaction)"
+	item_path = /obj/item/dnainjector/olfaction
+	item_cost = 50
+
+/datum/store_item/roundstart/clevermut
+	name = "DNA Mutator (Clever)"
+	item_path = /obj/item/dnainjector/clever
+	item_cost = 50
+
+/datum/store_item/roundstart/lay_on_handsmut
+	name = "DNA Mutator (Mending Touch)"
+	item_path = /obj/item/dnainjector/lay_on_hands
+	item_cost = 300
+
 /datum/store_item/roundstart/insulatedmut
 	name = "DNA Mutator (Insulated)"
 	item_path = /obj/item/dnainjector/insulated
@@ -191,6 +306,31 @@
 	item_path = /obj/item/clothing/glasses/sunglasses
 	item_cost = 400
 
+/datum/store_item/roundstart/mesonglasses
+	name = "Meson Goggles"
+	item_path = /obj/item/clothing/glasses/meson
+	item_cost = 200
+
+/datum/store_item/roundstart/scienceglasses
+	name = "Science Goggles"
+	item_path = /obj/item/clothing/glasses/science
+	item_cost = 100
+
+/datum/store_item/roundstart/hudhealth
+	name = "Health HUD"
+	item_path = /obj/item/clothing/glasses/hud/health
+	item_cost = 200
+
+/datum/store_item/roundstart/huddiagnostic
+	name = "Diagnostic HUD"
+	item_path = /obj/item/clothing/glasses/hud/diagnostic
+	item_cost = 200
+
+/datum/store_item/roundstart/hudsecurity
+	name = "Security HUD"
+	item_path = /obj/item/clothing/glasses/hud/security
+	item_cost = 500
+
 /datum/store_item/roundstart/robustteclesser
 	name = "Implanter (R.O.B.U.S.T)"
 	item_path = /obj/item/implanter/robusttec/lesser
@@ -216,6 +356,21 @@
 	item_path = /obj/item/implanter/biosig
 	item_cost = 750
 
+/datum/store_item/roundstart/pistoltoy
+	name = "Toy Pistol"
+	item_path = /obj/item/gun/ballistic/automatic/pistol/toy
+	item_cost = 500
+
+/datum/store_item/roundstart/pepperspray
+	name = "Pepper Spray"
+	item_path = /obj/item/reagent_containers/spray/pepper
+	item_cost = 800
+
+/datum/store_item/roundstart/bepis
+	name = "BEPIS Tech Disk"
+	item_path = /obj/item/disk/design_disk/bepis/remove_tech
+	item_cost = 600
+
 /datum/store_item/roundstart/ltsrbt
 	name = "Flatpacked L.T.S.R.B.T"
 	item_path = /obj/item/flatpack/ltsrbt
@@ -225,6 +380,11 @@
 	name = "Black Market Uplink"
 	item_path = /obj/item/market_uplink/blackmarket
 	item_cost = 150
+
+/datum/store_item/roundstart/civilianmod
+	name = "Civilian MODsuit"
+	item_path = /obj/item/mod/control/pre_equipped/civilian
+	item_cost = 1000
 
 
 /datum/store_item/roundstart/antag_token_traitor
