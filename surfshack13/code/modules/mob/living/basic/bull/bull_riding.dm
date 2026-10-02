@@ -39,7 +39,8 @@
 /mob/living/basic/bull/proc/try_rodeo(mob/living/cowboy)
 	if(stat == DEAD || LAZYLEN(buckled_mobs) || !cowboy.Adjacent(src) || HAS_TRAIT(cowboy, TRAIT_INCAPACITATED) || cowboy.buckled)
 		return
-	if(!is_type_in_typecache(cowboy.get_item_by_slot(ITEM_SLOT_HEAD), rodeo_hats))
+	var/obj/item/hat = cowboy.get_item_by_slot(ITEM_SLOT_HEAD)
+	if(!is_type_in_typecache(hat, rodeo_hats))
 		to_chat(cowboy, span_warning("You'd need a proper cowboy hat before you even think about riding [src]."))
 		return
 	if(!HAS_TRAIT(src, TRAIT_INCAPACITATED))

@@ -21,7 +21,7 @@
 	// Keep thinking even with nobody nearby, so it roams the station on its own
 	can_idle = FALSE
 	ai_movement = /datum/ai_movement/basic_avoidance
-	idle_behavior = /datum/idle_behavior/idle_random_walk/bull
+	idle_behavior = /datum/idle_behavior/bull_wander
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/target_retaliate/check_faction,
 		/datum/ai_planning_subtree/simple_find_target,
@@ -138,12 +138,14 @@
 	return length(candidates) ? pick(candidates) : null
 
 /// Ambles along in one direction for a while instead of jittering on the spot
-/datum/idle_behavior/idle_random_walk/bull
-	walk_chance = 60
+/datum/idle_behavior/bull_wander
+	/// Chance per second to take a step
+	var/walk_chance = 60
 	/// Chance per step to pick a new direction even if the way is clear
 	var/turn_chance = 15
 
-/datum/idle_behavior/idle_random_walk/bull/perform_idle_behavior(seconds_per_tick, datum/ai_controller/controller)
+/datum/idle_behavior/bull_wander/perform_idle_behavior(seconds_per_tick, datum/ai_controller/controller)
+	. = ..()
 	var/mob/living/living_pawn = controller.pawn
 	if(LAZYLEN(living_pawn.do_afters) || !(living_pawn.mobility_flags & MOBILITY_MOVE) || !isturf(living_pawn.loc) || living_pawn.pulledby)
 		return FALSE
