@@ -51,6 +51,9 @@ GLOBAL_LIST_INIT(cultivation_element_colors, list(
 	if(href_list["cultivation_refresh"] && usr == owner.current)
 		open_panel(usr)
 		return
+	if(href_list["cultivation_ascend"] && usr == owner.current)
+		start_ascension(usr)
+		return
 	return ..()
 
 /// A labelled progress bar
@@ -88,7 +91,7 @@ GLOBAL_LIST_INIT(cultivation_element_colors, list(
 	if(next)
 		html += panel_bar("Foundation towards [realm_name(realm + 1)]", progress, next, "linear-gradient(90deg,#b8860b,#ffd55a)")
 	else
-		html += panel_bar("Foundation", 1, 1, "linear-gradient(90deg,#b8860b,#ffd55a)", "peak of this world")
+		html += panel_bar("Foundation towards Ascension", progress, CULTIVATION_ASCENSION_PROGRESS, "linear-gradient(90deg,#b8860b,#fff3b0)")
 	html += panel_bar("Instability", instability, 100, "linear-gradient(90deg,#a02020,#ff5a5a)")
 	if(pill_toxicity >= 1)
 		html += panel_bar("Pill toxicity", pill_toxicity, 60, "linear-gradient(90deg,#3c8a3c,#b8e05a)", "[round(pill_toxicity)] (above 30, pills cause instability)")
@@ -99,6 +102,11 @@ GLOBAL_LIST_INIT(cultivation_element_colors, list(
 		html += "<span class='bad'>You have no dantian!</span> Meditate three cycles to grow a new one."
 	else if(dantian.grade < realm)
 		html += "<span class='warn'>This body's dantian is only at [realm_name(dantian.grade)].</span> Attempt Breakthrough to restore it; no insight needed."
+	else if(!next && progress >= CULTIVATION_ASCENSION_PROGRESS)
+		html += "<span class='good'>You are ready to Ascend.</span> Succeed and you leave this world (the round) forever. \
+			<a class='btn' href='byond://?src=[REF(src)];cultivation_ascend=1'>Attempt Ascension</a>"
+	else if(!next)
+		html += "You stand at the peak of this world. Consolidate [CULTIVATION_ASCENSION_PROGRESS] insight to attempt <b>Ascension</b> (with <b>Attempt Breakthrough</b> or from this panel)."
 	else if(next && progress >= next)
 		html += "<span class='good'>Your foundation is full!</span> Prepare a mat, fill your qi, find a grounding rod, then <b>Attempt Breakthrough</b>."
 	else if(pending_insight >= CULTIVATION_MAX_PENDING_INSIGHT)

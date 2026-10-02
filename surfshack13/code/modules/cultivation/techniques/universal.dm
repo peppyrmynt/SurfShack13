@@ -135,6 +135,8 @@
 		return TRUE
 	var/next = cultivator.next_threshold()
 	if(!next)
+		if(cultivator.progress >= CULTIVATION_ASCENSION_PROGRESS)
+			return TRUE
 		if(feedback)
 			to_chat(owner, span_notice("You stand at the peak of what this world allows. Only Ascension lies beyond. ([round(cultivator.progress)]/[CULTIVATION_ASCENSION_PROGRESS] insight consolidated)"))
 		return FALSE
@@ -146,6 +148,12 @@
 
 /datum/action/cooldown/spell/cultivation/breakthrough/cast(mob/living/cast_on)
 	. = ..()
+	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(cast_on)
+	var/obj/item/organ/dantian/dantian = cultivator.get_dantian()
+	// At the peak with a full foundation, the only breakthrough left is Ascension
+	if(!cultivator.next_threshold() && dantian?.grade >= cultivator.realm)
+		cultivator.start_ascension(cast_on)
+		return
 	INVOKE_ASYNC(src, PROC_REF(prepare), cast_on)
 
 /datum/action/cooldown/spell/cultivation/breakthrough/proc/prepare(mob/living/user)
@@ -600,6 +608,15 @@
 /datum/action/cooldown/spell/cultivation/ascension/cast(mob/living/cast_on)
 	. = ..()
 	INVOKE_ASYNC(src, PROC_REF(prepare), cast_on)
+
+/// Ascension from anywhere (the breakthrough button at the peak, or the panel): find or grant the technique and use it
+/datum/antagonist/cultivator/proc/start_ascension(mob/living/user)
+	if(realm < REALM_NASCENT_SOUL)
+		return
+	var/datum/action/cooldown/spell/cultivation/ascension/ascend = grant_technique(/datum/action/cooldown/spell/cultivation/ascension)
+	if(!ascend)
+		ascend = locate() in user.actions
+	ascend?.Trigger()
 
 /datum/action/cooldown/spell/cultivation/ascension/proc/prepare(mob/living/user)
 	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(user)
