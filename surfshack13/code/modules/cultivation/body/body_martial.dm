@@ -52,6 +52,13 @@
 /// Wuxia heroes announce their moves
 /proc/body_art_shout(mob/living/user, technique_name)
 	user.say("[uppertext(technique_name)]!!", forced = "body molding art")
+	// Lion's Roar: tempered lungs make the shout itself a blow
+	if(body_group_level(user, "lungs") < 7)
+		return
+	for(var/mob/living/listener in range(1, user))
+		if(listener != user && listener.stat == CONSCIOUS && cultivation_realm_of(listener) <= cultivation_realm_of(user))
+			listener.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
+			listener.Shake(1, 1, 0.3 SECONDS)
 
 /// A cracked crater that lingers for a while
 /obj/effect/temp_visual/cultivation_crater

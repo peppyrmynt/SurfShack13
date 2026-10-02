@@ -26,32 +26,43 @@
 /// The six limbs that are tempered
 GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))
 
+/// Inner organs that are tempered: power group -> organ slot
+GLOBAL_LIST_INIT(body_tempered_organs, list(
+	"eyes" = ORGAN_SLOT_EYES,
+	"ears" = ORGAN_SLOT_EARS,
+	"heart" = ORGAN_SLOT_HEART,
+	"lungs" = ORGAN_SLOT_LUNGS,
+	"liver" = ORGAN_SLOT_LIVER,
+	"stomach" = ORGAN_SLOT_STOMACH,
+))
+
 /**
- * Nine powers per body part type. Head and chest use their own level, arms and legs use the weaker of the pair
+ * Nine powers for every body part type: four outer (head, torso, arms, legs) and six inner organs.
+ * Head, torso and each organ use their own level; arms and legs use the weaker of the pair
  * (arm strike powers use the arm you hit with). Each entry: list(name, description, trait or null).
  */
 GLOBAL_LIST_INIT(body_part_powers, list(
 	"head" = list(
-		list("Keen Ears", "You hear whispers from further away.", TRAIT_GOOD_HEARING),
-		list("Clear Eyes", "You see in the dark.", TRAIT_NIGHT_VISION),
-		list("Unblinking Eyes", "Flashes can't blind you.", TRAIT_NOFLASH),
-		list("Hunter's Sight", "True night vision: darkness hides nothing.", TRAIT_TRUE_NIGHT_VISION),
+		list("Fearless", "Phobias and fear don't grip you.", TRAIT_FEARLESS),
+		list("Clear Head", "Confusion fades from you quickly.", null),
 		list("Still Mind", "Sleep and sedation can't take you.", TRAIT_SLEEPIMMUNE),
-		list("Heat Sight", "You see the warmth of living things through walls.", TRAIT_THERMAL_VISION),
 		list("Indomitable Will", "Pain doesn't slow you.", TRAIT_ANALGESIA),
+		list("Will to Live", "You take no damage just from being in critical condition.", TRAIT_NOCRITDAMAGE),
 		list("Iron Skull", "Your head can't be severed.", null),
-		list("Primordial Gaze", "You see straight through walls.", TRAIT_XRAY_VISION),
+		list("Mind Like a Mountain", "You never fall unconscious from your wounds.", TRAIT_NOHARDCRIT),
+		list("Battle Trance", "Half stamina damage.", null),
+		list("Primordial Will", "Magic slides off you.", TRAIT_ANTIMAGIC),
 	),
 	"chest" = list(
-		list("Iron Belly", "Nothing turns your stomach.", TRAIT_STRONG_STOMACH),
-		list("Bellows Lungs", "Half damage from suffocation.", null),
-		list("Iron Guts", "Half damage from toxins.", null),
-		list("Stable Heart", "Your heart never fails.", TRAIT_STABLEHEART),
-		list("Furnace Core", "Cold and heat don't hurt you.", null),
-		list("Endless Wind", "Half stamina damage.", null),
-		list("Pressure-Proof Body", "Low and high pressure don't hurt you.", null),
-		list("Heart of the Mountain", "You fight on in critical condition.", TRAIT_NOSOFTCRIT),
-		list("Breathless Body", "You no longer need to breathe. With Furnace Core and Pressure-Proof Body, you can walk through space.", TRAIT_NOBREATH),
+		list("Thick Hide", "5% less brute damage.", null),
+		list("Iron Hide", "10% less brute damage.", null),
+		list("Needleproof Skin", "Nothing embeds in you.", TRAIT_PIERCEIMMUNE),
+		list("Fire-Tempered Skin", "25% less burn damage.", null),
+		list("Steel Hide", "15% less brute damage.", null),
+		list("Batonproof", "Stun batons barely bite.", TRAIT_BATON_RESISTANCE),
+		list("Fireproof", "You can't be set on fire.", TRAIT_NOFIRE),
+		list("Diamond Hide", "25% less brute and 40% less burn damage.", null),
+		list("Never Wounded", "Your body takes no wounds at all.", TRAIT_NEVER_WOUNDED),
 	),
 	"arms" = list(
 		list("Iron Palms", "Hot things don't burn your hands.", TRAIT_RESISTHEATHANDS),
@@ -75,10 +86,78 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		list("Unslippable", "Nothing makes you slip.", TRAIT_NO_SLIP_ALL),
 		list("Thousand-League Legs", "Nothing slows you down, and you're faster still.", TRAIT_IGNORESLOWDOWN),
 	),
+	"eyes" = list(
+		list("Clear Eyes", "You see in the dark.", TRAIT_NIGHT_VISION),
+		list("Unblinking Eyes", "Flashes can't blind you.", TRAIT_NOFLASH),
+		list("Hunter's Sight", "True night vision: darkness hides nothing.", TRAIT_TRUE_NIGHT_VISION),
+		list("Healer's Eyes", "You see how hurt people are at a glance (medical HUD).", TRAIT_MEDICAL_HUD),
+		list("Stone-Reading Eyes", "You see the shape of walls and machines through walls.", TRAIT_MESON_VISION),
+		list("Heat Sight", "You see the warmth of living things through walls.", TRAIT_THERMAL_VISION),
+		list("Judging Eyes", "You read a person's record at a glance (security HUD).", TRAIT_SECURITY_HUD),
+		list("Diamond Eyes", "Your eyes can't be harmed.", null),
+		list("Primordial Gaze", "You see straight through walls.", TRAIT_XRAY_VISION),
+	),
+	"ears" = list(
+		list("Keen Ears", "You hear whispers from further away.", TRAIT_GOOD_HEARING),
+		list("Night Ears", "You hear perfectly well in the dark.", TRAIT_HEAR_THROUGH_DARKNESS),
+		list("Ringing Ears", "Bangs barely deafen you.", null),
+		list("Wall Listening", "You hear speech through walls.", TRAIT_XRAY_HEARING),
+		list("Balance", "Dizziness fades from you quickly.", null),
+		list("Thunderproof", "Flashbangs can't deafen or stun you through your ears.", null),
+		list("Inner Compass", "You move freely in zero gravity.", TRAIT_SPACEWALK),
+		list("Diamond Ears", "Your ears can't be harmed.", null),
+		list("Voices of the Dead", "You hear the dead.", TRAIT_SIXTHSENSE),
+	),
+	"heart" = list(
+		list("Strong Pulse", "Your blood refills quickly.", null),
+		list("Stable Heart", "Your heart never fails.", TRAIT_STABLEHEART),
+		list("Tireless", "Your stamina comes back fast.", null),
+		list("Hot Blood", "Cold doesn't hurt you.", TRAIT_RESISTCOLD),
+		list("Crimson Tide", "Your wounds close on their own.", null),
+		list("Furnace Heart", "Heat doesn't hurt you.", TRAIT_RESISTHEAT),
+		list("Heart of the Mountain", "You fight on in critical condition.", TRAIT_NOSOFTCRIT),
+		list("Undying Pulse", "You heal very quickly.", null),
+		list("Eternal Heart", "When you die, your heart restarts itself (once every fifteen minutes).", null),
+	),
+	"lungs" = list(
+		list("Deep Breath", "Half damage from suffocation.", null),
+		list("Thin-Air Lungs", "Low pressure doesn't hurt you.", TRAIT_RESISTLOWPRESSURE),
+		list("Clean Breath", "Diseases can't take hold of you.", TRAIT_VIRUSIMMUNE),
+		list("Crushing-Depth Lungs", "High pressure doesn't hurt you.", TRAIT_RESISTHIGHPRESSURE),
+		list("Endless Breath", "A quarter damage from suffocation.", null),
+		list("Second Wind", "Your stamina comes back even faster.", null),
+		list("Lion's Roar", "When you shout a technique, everyone beside you staggers.", null),
+		list("Iron Lungs", "Your lungs can't be harmed.", null),
+		list("Breathless Body", "You no longer need to breathe. With Hot Blood and Thin-Air Lungs, you can walk through space.", TRAIT_NOBREATH),
+	),
+	"liver" = list(
+		list("Iron Liver", "You hold your drink.", TRAIT_ALCOHOL_TOLERANCE),
+		list("Toxin Filter", "25% less toxin damage.", null),
+		list("Stable Liver", "Your liver never fails.", TRAIT_STABLELIVER),
+		list("Purifier", "Half toxin damage.", null),
+		list("Sober Mind", "Drunkenness fades from you quickly.", null),
+		list("Toxin Eater", "Three quarters less toxin damage.", null),
+		list("Radiant Blood", "Radiation can't harm you.", TRAIT_RADIMMUNE),
+		list("Diamond Liver", "Your liver can't be harmed.", null),
+		list("Poison Immunity", "Toxins can't hurt you at all.", TRAIT_TOXIMMUNE),
+	),
+	"stomach" = list(
+		list("Iron Belly", "Nothing turns your stomach.", TRAIT_STRONG_STOMACH),
+		list("Lean Body", "You never get fat.", TRAIT_NOFAT),
+		list("Light Eater", "You get hungry half as fast.", null),
+		list("Hearty", "Forging the Body costs you no food.", null),
+		list("Inner Furnace", "While well fed, you slowly heal.", null),
+		list("Frugal Belly", "You get hungry a quarter as fast.", null),
+		list("Diamond Stomach", "Your stomach can't be harmed.", null),
+		list("Wind Drinker", "You barely get hungry at all.", null),
+		list("Bigu", "You have abstained from grain. You never hunger.", TRAIT_NOHUNGER),
+	),
 ))
 
 /// The level a body part type counts as: its own level for head and chest, the weaker of the pair for arms and legs
 /proc/body_group_level(mob/living/carbon/body, group)
+	if(group in GLOB.body_tempered_organs)
+		return body_organ_level(body, GLOB.body_tempered_organs[group])
 	switch(group)
 		if("head")
 			return body_part_level(body, BODY_ZONE_HEAD)
@@ -113,9 +192,15 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	var/applied_wound_resistance = 0
 	/// Unarmed damage we added (fists and kicks)
 	var/applied_unarmed = 0
+	/// Organ durability we added
+	var/applied_organ_health = 0
+	/// Bang protection we added to ears
+	var/applied_bang_protect = 0
+	/// Hunger multiplier we applied to a stomach
+	var/applied_hunger_factor = 1
 
 /datum/component/body_tempering/Initialize()
-	if(!istype(parent, /obj/item/bodypart))
+	if(!istype(parent, /obj/item/bodypart) && !istype(parent, /obj/item/organ))
 		return COMPONENT_INCOMPATIBLE
 
 /datum/component/body_tempering/RegisterWithParent()
@@ -130,8 +215,11 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	if(level)
 		examine_list += span_notice("It has been tempered by the Body Molding Art (level [level]). It feels unnaturally dense.")
 
-/// Set the limb's tempered level and its physical effects
+/// Set the limb's (or organ's) tempered level and its physical effects
 /datum/component/body_tempering/proc/apply_level(new_level)
+	if(isorgan(parent))
+		apply_organ_level(new_level)
+		return
 	var/obj/item/bodypart/part = parent
 	var/new_factor = 1 - 0.03 * new_level
 	part.brute_modifier = part.brute_modifier / applied_brute_factor * new_factor
@@ -142,6 +230,30 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		part.unarmed_damage_low += new_level - applied_unarmed
 		part.unarmed_damage_high += new_level - applied_unarmed
 		applied_unarmed = new_level
+	level = new_level
+
+/// Tempered organs are tougher, and some get their own physical changes
+/datum/component/body_tempering/proc/apply_organ_level(new_level)
+	var/obj/item/organ/organ = parent
+	var/new_health = round(organ.maxHealth * 0.1) * new_level
+	organ.maxHealth += new_health - applied_organ_health
+	applied_organ_health = new_health
+	if(istype(organ, /obj/item/organ/ears))
+		var/obj/item/organ/ears/ears = organ
+		var/new_bang = new_level >= 6 ? 2 : (new_level >= 3 ? 1 : 0)
+		ears.bang_protect += new_bang - applied_bang_protect
+		applied_bang_protect = new_bang
+	if(istype(organ, /obj/item/organ/stomach))
+		var/obj/item/organ/stomach/stomach = organ
+		var/new_factor = 1
+		if(new_level >= 8)
+			new_factor = 0.1
+		else if(new_level >= 6)
+			new_factor = 0.25
+		else if(new_level >= 3)
+			new_factor = 0.5
+		stomach.hunger_modifier = stomach.hunger_modifier / applied_hunger_factor * new_factor
+		applied_hunger_factor = new_factor
 	level = new_level
 
 /// Pour tempering in. Returns how many levels were gained.
@@ -157,6 +269,24 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	if(level >= cap)
 		progress = min(progress, BODY_PART_COST(level + 1) - 1)
 	return gained
+
+/// The tempered level of a mob's organ in a slot (0 if missing or untempered)
+/proc/body_organ_level(mob/living/carbon/body, slot)
+	var/obj/item/organ/organ = body?.get_organ_slot(slot)
+	var/datum/component/body_tempering/tempering = organ?.GetComponent(/datum/component/body_tempering)
+	return tempering ? tempering.level : 0
+
+/// Every limb and organ that can be forged, as name -> object, for the forge menu and the panel
+/proc/body_forgeable_parts(mob/living/carbon/body)
+	. = list()
+	for(var/zone in GLOB.body_tempered_zones)
+		var/obj/item/bodypart/part = body.get_bodypart(zone)
+		if(part)
+			.[part.plaintext_zone] = part
+	for(var/group in GLOB.body_tempered_organs)
+		var/obj/item/organ/organ = body.get_organ_slot(GLOB.body_tempered_organs[group])
+		if(organ)
+			.[group] = organ
 
 /// The tempered level of a mob's limb in a zone (0 if missing or untempered)
 /proc/body_part_level(mob/living/carbon/body, zone)
@@ -196,6 +326,8 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	COOLDOWN_DECLARE(limb_regrowth_cooldown)
 	/// Mountain-Breaking Fists can only fell a wall this often
 	COOLDOWN_DECLARE(wall_punch_cooldown)
+	/// Eternal Heart restarts you this often
+	COOLDOWN_DECLARE(eternal_heart_cooldown)
 	/// Traits the body part powers currently grant
 	var/list/part_traits = list()
 	/// The head Iron Skull made unremovable, so we can give it back
@@ -209,12 +341,12 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	var/static/list/stage_benefits = list(
 		"+10 max health.",
 		"+10 max health. Bones that barely break (fewer wounds). Iron Shirt, Mountain Leap, Earth-Shattering Stomp.",
-		"+10 max health. Stamina comes back fast. Shattering Fist, Hundred Fist Barrage, Bone Setting, Accept Body Disciple.",
-		"+10 max health. Marrow that makes blood fast. Remold Limb (regrow a lost limb), Raging Bull Charge.",
-		"+15 max health. Wounds close on their own. Blood Boil, Falling Mountain Descent, Mountain-Toppling Throw.",
-		"+15 max health. Organs that heal themselves. Sky-Splitting Palm; Raging Bull Charge breaks walls.",
-		"+15 max health. A golden body: batons and needles don't bite, Shattering Fist breaks walls. Vajra Golden Body.",
-		"+20 max health. Undying: heal fast and regrow lost limbs on your own. Heaven-Shaking Quake.",
+		"+10 max health. Shattering Fist, Hundred Fist Barrage, Bone Setting, Accept Body Disciple.",
+		"+10 max health. Remold Limb (regrow a lost limb), Raging Bull Charge.",
+		"+15 max health. Blood Boil, Falling Mountain Descent, Mountain-Toppling Throw.",
+		"+15 max health. Sky-Splitting Palm; Raging Bull Charge breaks walls.",
+		"+15 max health. Shattering Fist breaks walls. Vajra Golden Body.",
+		"+20 max health. Undying: lost limbs regrow on their own. Heaven-Shaking Quake.",
 		"+20 max health. Primordial Chaos Body: shock immune. Primordial Roar.",
 	)
 	/// Body techniques, by stage required
@@ -272,7 +404,8 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	RegisterSignal(current, COMSIG_LIVING_UNARMED_ATTACK, PROC_REF(on_unarmed_attack))
 	RegisterSignal(current, COMSIG_MOB_AFTER_APPLY_DAMAGE, PROC_REF(on_damaged))
 	RegisterSignal(current, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, PROC_REF(damage_modifiers))
-	RegisterSignals(current, list(COMSIG_CARBON_POST_ATTACH_LIMB, COMSIG_CARBON_POST_REMOVE_LIMB), PROC_REF(on_limbs_changed))
+	RegisterSignals(current, list(COMSIG_CARBON_POST_ATTACH_LIMB, COMSIG_CARBON_POST_REMOVE_LIMB, COMSIG_CARBON_GAIN_ORGAN, COMSIG_CARBON_LOSE_ORGAN), PROC_REF(on_limbs_changed))
+	RegisterSignal(current, COMSIG_LIVING_DEATH, PROC_REF(on_death))
 	apply_stage_benefits()
 
 /datum/antagonist/body_cultivator/remove_innate_effects(mob/living/mob_override)
@@ -286,6 +419,9 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		COMSIG_MOB_APPLY_DAMAGE_MODIFIERS,
 		COMSIG_CARBON_POST_ATTACH_LIMB,
 		COMSIG_CARBON_POST_REMOVE_LIMB,
+		COMSIG_CARBON_GAIN_ORGAN,
+		COMSIG_CARBON_LOSE_ORGAN,
+		COMSIG_LIVING_DEATH,
 	))
 	clear_stage_benefits(current)
 
@@ -319,6 +455,8 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	var/lowest = BODY_STAGE_MAX
 	for(var/zone in GLOB.body_tempered_zones)
 		lowest = min(lowest, body_part_level(owner.current, zone))
+	for(var/group in GLOB.body_tempered_organs)
+		lowest = min(lowest, body_organ_level(owner.current, GLOB.body_tempered_organs[group]))
 	return lowest
 
 /datum/antagonist/body_cultivator/proc/can_attempt_tribulation()
@@ -343,8 +481,8 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	owner.current?.balloon_alert(owner.current, "+[round(gained, 0.1)] tempering")
 	return gained
 
-/// Pour pending tempering into one limb. Returns levels gained.
-/datum/antagonist/body_cultivator/proc/forge_part(obj/item/bodypart/part, amount)
+/// Pour pending tempering into one limb or organ. Returns levels gained.
+/datum/antagonist/body_cultivator/proc/forge_part(obj/item/part, amount)
 	var/datum/component/body_tempering/part_tempering = part.GetComponent(/datum/component/body_tempering) || part.AddComponent(/datum/component/body_tempering)
 	amount = min(amount, tempering)
 	tempering -= amount
@@ -356,7 +494,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 // ----- Stage benefits -----
 
 /datum/antagonist/body_cultivator/proc/clear_stage_benefits(mob/living/body)
-	body.remove_traits(list(TRAIT_HARDLY_WOUNDED, TRAIT_BATON_RESISTANCE, TRAIT_PIERCEIMMUNE, TRAIT_SHOCKIMMUNE), BODY_TRAIT_SOURCE)
+	body.remove_traits(list(TRAIT_HARDLY_WOUNDED, TRAIT_SHOCKIMMUNE), BODY_TRAIT_SOURCE)
 	clear_part_powers(body)
 	body.maxHealth -= applied_health
 	applied_health = 0
@@ -376,8 +514,6 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	var/list/traits = list()
 	if(stage >= 2)
 		traits += TRAIT_HARDLY_WOUNDED
-	if(stage >= 7)
-		traits += list(TRAIT_BATON_RESISTANCE, TRAIT_PIERCEIMMUNE)
 	if(stage >= 9)
 		traits += TRAIT_SHOCKIMMUNE
 	if(length(traits))
@@ -411,11 +547,6 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 			var/list/power = powers[i]
 			if(power[3])
 				part_traits |= power[3]
-	var/chest_level = body_group_level(body, "chest")
-	if(chest_level >= 5)
-		part_traits |= list(TRAIT_RESISTCOLD, TRAIT_RESISTHEAT)
-	if(chest_level >= 7)
-		part_traits |= list(TRAIT_RESISTLOWPRESSURE, TRAIT_RESISTHIGHPRESSURE)
 	if(length(part_traits))
 		body.add_traits(part_traits, BODY_PART_TRAIT_SOURCE)
 	var/legs_level = body_group_level(body, "legs")
@@ -426,7 +557,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	else if(legs_level >= 3)
 		body.add_movespeed_modifier(/datum/movespeed_modifier/body_swift_feet)
 	var/obj/item/bodypart/head/head = body.get_bodypart(BODY_ZONE_HEAD)
-	if(head && body_group_level(body, "head") >= 8 && !(head.bodypart_flags & BODYPART_UNREMOVABLE))
+	if(head && body_group_level(body, "head") >= 6 && !(head.bodypart_flags & BODYPART_UNREMOVABLE))
 		head.bodypart_flags |= BODYPART_UNREMOVABLE
 		iron_skull_ref = WEAKREF(head)
 	body.update_sight()
@@ -476,30 +607,76 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 
 /datum/antagonist/body_cultivator/proc/on_life(mob/living/source, seconds_per_tick, times_fired)
 	SIGNAL_HANDLER
-	if(source.stat == DEAD)
+	if(source.stat == DEAD || !iscarbon(source))
 		return
-	if(stage >= 3 && source.getStaminaLoss())
-		source.adjustStaminaLoss(-1 * seconds_per_tick)
-	if(stage >= 6 && iscarbon(source))
-		var/mob/living/carbon/organ_owner = source
-		for(var/obj/item/organ/organ as anything in organ_owner.organs)
-			if(organ.damage && !(organ.organ_flags & ORGAN_ROBOTIC))
-				organ.apply_organ_damage(-0.2 * seconds_per_tick)
-	if(stage >= 4 && iscarbon(source))
-		var/mob/living/carbon/carbon_source = source
-		if(carbon_source.blood_volume < BLOOD_VOLUME_NORMAL)
-			carbon_source.blood_volume = min(carbon_source.blood_volume + 1 * seconds_per_tick, BLOOD_VOLUME_NORMAL)
-	if(stage >= 5 && (source.getBruteLoss() || source.getFireLoss()))
-		var/regen = (stage >= 8 ? 0.8 : 0.3) * seconds_per_tick
-		source.heal_overall_damage(brute = regen, burn = regen)
-	if(stage >= 8 && iscarbon(source) && COOLDOWN_FINISHED(src, limb_regrowth_cooldown))
-		var/mob/living/carbon/carbon_source = source
-		var/list/missing = carbon_source.get_missing_limbs()
+	var/mob/living/carbon/body = source
+	var/heart = body_group_level(body, "heart")
+	var/lungs = body_group_level(body, "lungs")
+	// Heart and lungs: blood, stamina, healing
+	if(heart >= 1 && body.blood_volume < BLOOD_VOLUME_NORMAL)
+		body.blood_volume = min(body.blood_volume + 0.5 * heart * seconds_per_tick, BLOOD_VOLUME_NORMAL)
+	var/stamina_regen = (heart >= 3 ? 1 : 0) + (lungs >= 6 ? 1 : 0)
+	if(stamina_regen && body.getStaminaLoss())
+		body.adjustStaminaLoss(-stamina_regen * seconds_per_tick)
+	var/regen = 0
+	if(heart >= 8)
+		regen = 0.8
+	else if(heart >= 5)
+		regen = 0.3
+	if(body_group_level(body, "stomach") >= 5 && body.nutrition >= NUTRITION_LEVEL_WELL_FED)
+		regen += 0.2
+	if(regen && (body.getBruteLoss() || body.getFireLoss()))
+		body.heal_overall_damage(brute = regen * seconds_per_tick, burn = regen * seconds_per_tick)
+	// Head, ears, liver: shaking off confusion, dizziness and drink
+	if(body_group_level(body, "head") >= 2)
+		body.adjust_confusion(-2 SECONDS * seconds_per_tick)
+	if(body_group_level(body, "ears") >= 5)
+		body.adjust_dizzy(-2 SECONDS * seconds_per_tick)
+	if(body_group_level(body, "liver") >= 5)
+		body.adjust_drunk_effect(-1 * seconds_per_tick)
+	// Tempered organs mend themselves; level 7 or 8 ones can't be harmed at all
+	var/static/list/diamond_levels = list("eyes" = 8, "ears" = 8, "heart" = 99, "lungs" = 8, "liver" = 8, "stomach" = 7)
+	for(var/group in GLOB.body_tempered_organs)
+		var/obj/item/organ/organ = body.get_organ_slot(GLOB.body_tempered_organs[group])
+		if(!organ?.damage)
+			continue
+		var/level = body_organ_level(body, GLOB.body_tempered_organs[group])
+		if(level >= diamond_levels[group])
+			organ.set_organ_damage(0)
+		else if(level)
+			organ.apply_organ_damage(-0.1 * level * seconds_per_tick)
+	// Undying Flesh regrows lost limbs
+	if(stage >= 8 && COOLDOWN_FINISHED(src, limb_regrowth_cooldown))
+		var/list/missing = body.get_missing_limbs()
 		if(length(missing))
 			COOLDOWN_START(src, limb_regrowth_cooldown, 2 MINUTES)
 			var/zone = pick(missing)
-			carbon_source.regenerate_limb(zone)
-			carbon_source.visible_message(span_warning("Flesh boils out of [carbon_source]'s stump and knits itself into a new limb!"), span_notice("Your undying flesh regrows your [parse_zone(zone)]."))
+			body.regenerate_limb(zone)
+			body.visible_message(span_warning("Flesh boils out of [body]'s stump and knits itself into a new limb!"), span_notice("Your undying flesh regrows your [parse_zone(zone)]."))
+
+/// Eternal Heart: the heart restarts itself
+/datum/antagonist/body_cultivator/proc/on_death(mob/living/source, gibbed)
+	SIGNAL_HANDLER
+	tribulation?.cancel()
+	if(gibbed || body_group_level(source, "heart") < 9)
+		return
+	if(!COOLDOWN_FINISHED(src, eternal_heart_cooldown))
+		to_chat(source, span_warning("Your eternal heart is still recovering. It can't restart this time."))
+		return
+	COOLDOWN_START(src, eternal_heart_cooldown, 15 MINUTES)
+	to_chat(source, span_boldnotice("Your body dies... but your heart refuses. Hold on."))
+	addtimer(CALLBACK(src, PROC_REF(eternal_heart_revive), source), 10 SECONDS)
+
+/datum/antagonist/body_cultivator/proc/eternal_heart_revive(mob/living/body)
+	if(QDELETED(body) || body.stat != DEAD || owner.current != body)
+		return
+	body.revive(HEAL_DAMAGE | HEAL_ORGANS | HEAL_BLOOD | HEAL_WOUNDS | HEAL_TEMP, force_grab_ghost = TRUE)
+	if(body.stat == DEAD)
+		return
+	playsound(body, 'sound/effects/singlebeat.ogg', 80, TRUE)
+	new /obj/effect/temp_visual/circle_wave/cultivation/blood(get_turf(body))
+	body.visible_message(span_boldwarning("[body]'s chest heaves with one enormous heartbeat, and [body.p_they()] rise[body.p_s()] again!"), span_boldnotice("Your eternal heart drags you back to life!"))
+	body.log_message("was revived by their Eternal Heart", LOG_GAME)
 
 /// Punching things (people, walls, bags) is training, and a forged arm hits like it
 /datum/antagonist/body_cultivator/proc/on_unarmed_attack(mob/living/source, atom/target, proximity, modifiers)
@@ -551,16 +728,39 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 
 /datum/antagonist/body_cultivator/proc/damage_modifiers(mob/living/source, list/damage_mods, damage, damagetype, ...)
 	SIGNAL_HANDLER
-	var/chest_level = body_group_level(source, "chest")
 	switch(damagetype)
+		if(BRUTE)
+			var/torso = body_group_level(source, "chest")
+			if(torso >= 8)
+				damage_mods += 0.75
+			else if(torso >= 5)
+				damage_mods += 0.85
+			else if(torso >= 2)
+				damage_mods += 0.9
+			else if(torso >= 1)
+				damage_mods += 0.95
+		if(BURN)
+			var/torso = body_group_level(source, "chest")
+			if(torso >= 8)
+				damage_mods += 0.6
+			else if(torso >= 4)
+				damage_mods += 0.75
 		if(OXY)
-			if(chest_level >= 2)
+			var/lungs = body_group_level(source, "lungs")
+			if(lungs >= 5)
+				damage_mods += 0.25
+			else if(lungs >= 1)
 				damage_mods += 0.5
 		if(TOX)
-			if(chest_level >= 3)
+			var/liver = body_group_level(source, "liver")
+			if(liver >= 6)
+				damage_mods += 0.25
+			else if(liver >= 4)
 				damage_mods += 0.5
+			else if(liver >= 2)
+				damage_mods += 0.75
 		if(STAMINA)
-			if(chest_level >= 6)
+			if(body_group_level(source, "head") >= 8)
 				damage_mods += 0.5
 
 /// Training any mob does: gym work starts mortals on the path, everything else only counts once they're on it
@@ -620,9 +820,12 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	var/mob/living/carbon/body = owner.current
 	if(!istype(body) || stage >= BODY_STAGE_MAX)
 		return
-	for(var/obj/item/bodypart/part as anything in body.bodyparts)
+	var/list/parts = body_forgeable_parts(body)
+	for(var/part_name in parts)
+		var/obj/item/part = parts[part_name]
 		var/datum/component/body_tempering/part_tempering = part.GetComponent(/datum/component/body_tempering) || part.AddComponent(/datum/component/body_tempering)
 		part_tempering.apply_level(max(part_tempering.level, stage + 1))
+	on_limbs_changed()
 	advance_stage()
 
 #undef BODY_TRAIT_SOURCE

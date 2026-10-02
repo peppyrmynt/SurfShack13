@@ -100,10 +100,12 @@
 
 /datum/action/cooldown/spell/body_art/forge_body
 	name = "Forge the Body"
-	desc = "Pour your training into one limb in punishing 10 second cycles until you move: the one you have selected, or the weakest if that one is done. \
-		It hurts and makes you hungry. A limb can be forged one level past your stage."
+	desc = "Pour your training into a limb or an inner organ in punishing 10 second cycles until you move. Choose what to forge when you start; \
+		once it's done, the weakest part is forged next. It hurts and makes you hungry. Parts can be forged one level past your stage."
 	cooldown_time = 3 SECONDS
 	var/forging = FALSE
+	/// What we're forging right now
+	var/datum/weakref/target_ref
 
 /datum/action/cooldown/spell/body_art/forge_body/can_cast_spell(feedback = TRUE)
 	. = ..()
@@ -124,27 +126,39 @@
 	. = ..()
 	INVOKE_ASYNC(src, PROC_REF(forge), cast_on)
 
-/datum/action/cooldown/spell/body_art/forge_body/proc/pick_part(mob/living/carbon/user, datum/antagonist/body_cultivator/body_datum)
+/// The weakest limb or organ still below the cap
+/datum/action/cooldown/spell/body_art/forge_body/proc/weakest_part(mob/living/carbon/user, datum/antagonist/body_cultivator/body_datum)
 	var/cap = body_datum.part_cap()
-	var/obj/item/bodypart/chosen = user.get_bodypart(check_zone(user.zone_selected))
-	if(chosen && body_part_level(user, chosen.body_zone) < cap)
-		return chosen
-	chosen = null
+	var/obj/item/chosen
 	var/lowest = cap
-	for(var/zone in GLOB.body_tempered_zones)
-		var/obj/item/bodypart/part = user.get_bodypart(zone)
-		if(!part)
-			continue
-		var/level = body_part_level(user, zone)
+	var/list/parts = body_forgeable_parts(user)
+	for(var/part_name in parts)
+		var/obj/item/part = parts[part_name]
+		var/datum/component/body_tempering/part_tempering = part.GetComponent(/datum/component/body_tempering)
+		var/level = part_tempering ? part_tempering.level : 0
 		if(level < lowest)
 			lowest = level
 			chosen = part
 	return chosen
 
+/datum/action/cooldown/spell/body_art/forge_body/proc/part_level(obj/item/part)
+	var/datum/component/body_tempering/part_tempering = part.GetComponent(/datum/component/body_tempering)
+	return part_tempering ? part_tempering.level : 0
+
 /datum/action/cooldown/spell/body_art/forge_body/proc/forge(mob/living/carbon/user)
 	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(user)
 	if(!body_datum || !iscarbon(user))
 		return
+	var/list/parts = body_forgeable_parts(user)
+	var/list/options = list("Weakest first" = null)
+	for(var/part_name in parts)
+		var/obj/item/part = parts[part_name]
+		options["[capitalize(part_name)] (level [part_level(part)]/[body_datum.part_cap()])"] = part
+	var/choice = tgui_input_list(user, "Forge which part?", "Forge the Body", options)
+	if(!choice)
+		reset_spell_cooldown()
+		return
+	target_ref = options[choice] ? WEAKREF(options[choice]) : null
 	forging = TRUE
 	user.visible_message(span_notice("[user] drops into a deep horse stance and begins to strike [user.p_their()] own body, over and over."), span_notice("You begin to forge your body. Move to stop."))
 	user.add_filter("forge_body", 2, list("type" = "outline", "color" = "#c98a3c", "size" = 1))
@@ -158,33 +172,45 @@
 
 /// One cycle. Returns FALSE when there's nothing more to forge.
 /datum/action/cooldown/spell/body_art/forge_body/proc/forge_cycle(mob/living/carbon/user, datum/antagonist/body_cultivator/body_datum)
-	if(user.nutrition < NUTRITION_LEVEL_HUNGRY)
+	var/hearty = body_group_level(user, "stomach") >= 4
+	if(!hearty && user.nutrition < NUTRITION_LEVEL_HUNGRY)
 		to_chat(user, span_warning("You're too hungry to keep forging. Eat something!"))
 		return FALSE
 	if(body_datum.tempering < 1)
 		to_chat(user, span_notice("You've forged all your training into your body."))
 		return FALSE
-	var/obj/item/bodypart/part = pick_part(user, body_datum)
+	var/obj/item/part = target_ref?.resolve()
+	if(!part || (part.loc != user && !(part in user.organs) && !(part in user.bodyparts)) || part_level(part) >= body_datum.part_cap())
+		part = weakest_part(user, body_datum)
+		target_ref = part ? WEAKREF(part) : null
 	if(!part)
-		to_chat(user, span_boldnotice("Every limb is forged as far as your stage allows. [body_datum.can_attempt_tribulation() ? "Endure the Tribulation of Flesh to go further!" : "Commit to the Body Molding Art to go further."]"))
+		to_chat(user, span_boldnotice("Every limb and organ is forged as far as your stage allows. [body_datum.can_attempt_tribulation() ? "Endure the Tribulation of Flesh to go further!" : "Commit to the Body Molding Art to go further."]"))
 		return FALSE
+	var/part_name = part.name
+	if(istype(part, /obj/item/bodypart))
+		var/obj/item/bodypart/limb = part
+		part_name = limb.plaintext_zone
 	var/gained = body_datum.forge_part(part, 10)
-	user.adjust_nutrition(-8)
-	user.apply_damage(2, BRUTE, part, wound_bonus = CANT_WOUND)
+	if(!hearty)
+		user.adjust_nutrition(-8)
+	if(isorgan(part))
+		user.adjustStaminaLoss(5)
+	else
+		user.apply_damage(2, BRUTE, part, wound_bonus = CANT_WOUND)
 	user.Shake(1, 1, 0.4 SECONDS)
 	playsound(user, pick('sound/items/weapons/genhit1.ogg', 'sound/items/weapons/genhit2.ogg', 'sound/items/weapons/genhit3.ogg'), 40, TRUE)
 	playsound(user, pick('sound/effects/rock/rocktap1.ogg', 'sound/effects/rock/rocktap2.ogg'), 30, TRUE, frequency = 0.7)
-	new /obj/effect/temp_visual/cultivation_spark(get_turf(user), "#e0a050", rand(-6, 6), rand(-4, 8))
+	new /obj/effect/temp_visual/cultivation_spark(get_turf(user), isorgan(part) ? "#e05050" : "#e0a050", rand(-6, 6), rand(-4, 8))
 	var/datum/component/body_tempering/part_tempering = part.GetComponent(/datum/component/body_tempering)
 	if(gained)
 		new /obj/effect/temp_visual/circle_wave/cultivation/earth(get_turf(user))
 		cultivation_guqin_phrase(user, list(1, 3), 0.15 SECONDS, 35)
-		to_chat(user, span_boldnotice("Your [part.plaintext_zone] has been forged to level [part_tempering.level]!"))
+		to_chat(user, span_boldnotice("Your [part_name] has been forged to level [part_tempering.level]!"))
 		if(body_datum.can_attempt_tribulation())
-			to_chat(user, span_boldnotice("Every limb is ready. You can endure the Tribulation of Flesh to reach [body_datum.stage_name(body_datum.stage + 1)]!"))
+			to_chat(user, span_boldnotice("Every limb and organ is ready. You can endure the Tribulation of Flesh to reach [body_datum.stage_name(body_datum.stage + 1)]!"))
 			user.balloon_alert(user, "ready for tribulation!")
 	else
-		to_chat(user, span_notice("You drive your training into your [part.plaintext_zone]. ([part_tempering.progress]/[BODY_PART_COST(part_tempering.level + 1)])"))
+		to_chat(user, span_notice("You drive your training into your [part_name]. ([part_tempering.progress]/[BODY_PART_COST(part_tempering.level + 1)])"))
 	return TRUE
 
 // ===================== Tribulation of Flesh =====================
@@ -208,7 +234,7 @@
 		return FALSE
 	if(!body_datum.can_attempt_tribulation())
 		if(feedback)
-			to_chat(owner, span_warning("Every limb must be forged to level [body_datum.stage + 1] first. (weakest: level [body_datum.weakest_part_level()])"))
+			to_chat(owner, span_warning("Every limb and organ must be forged to level [body_datum.stage + 1] first. (weakest: level [body_datum.weakest_part_level()])"))
 		return FALSE
 	return TRUE
 
@@ -758,7 +784,7 @@
 	else if(can_attempt_tribulation())
 		html += "<span class='good'>Every limb is ready.</span> Endure the <b>Tribulation of Flesh</b> to reach [stage_name(stage + 1)]."
 	else
-		html += "Forge every limb to level [stage + 1]. Earn tempering from the gym, fighting, punching walls or bags, mining and taking hits; then <b>Forge the Body</b> with the limb you want selected."
+		html += "Forge every limb and inner organ to level [stage + 1]. Earn tempering from the gym, fighting, punching walls or bags, mining and taking hits; then <b>Forge the Body</b> with the limb you want selected."
 	html += "</div><h2>Limbs</h2><div class='card'><table>"
 	for(var/zone in GLOB.body_tempered_zones)
 		var/obj/item/bodypart/part = body?.get_bodypart(zone)
@@ -769,11 +795,20 @@
 		var/level = part_tempering ? part_tempering.level : 0
 		var/progress = part_tempering ? part_tempering.progress : 0
 		html += "<tr><td>[part.plaintext_zone]</td><td>level <b>[level]</b> / [part_cap()]</td><td class='dim'>[level < part_cap() ? "[progress]/[BODY_PART_COST(level + 1)]" : "done for now"]</td></tr>"
-	html += "</table><div class='dim'>Every level of a limb: -3% brute and +3 wound resistance on it, and +1 punch or kick damage on arms and legs.</div></div>"
+	for(var/group in GLOB.body_tempered_organs)
+		var/obj/item/organ/organ = body?.get_organ_slot(GLOB.body_tempered_organs[group])
+		if(!organ)
+			html += "<tr><td>[group]</td><td class='warn'>missing</td></tr>"
+			continue
+		var/datum/component/body_tempering/organ_tempering = organ.GetComponent(/datum/component/body_tempering)
+		var/organ_level = organ_tempering ? organ_tempering.level : 0
+		var/organ_progress = organ_tempering ? organ_tempering.progress : 0
+		html += "<tr><td>[group] <span class='dim'>(organ)</span></td><td>level <b>[organ_level]</b> / [part_cap()]</td><td class='dim'>[organ_level < part_cap() ? "[organ_progress]/[BODY_PART_COST(organ_level + 1)]" : "done for now"]</td></tr>"
+	html += "</table><div class='dim'>Every level of an organ makes it tougher and mend itself. Every level of a limb: -3% brute and +3 wound resistance on it, and +1 punch or kick damage on arms and legs.</div></div>"
 	html += "<h2>Powers of the body</h2><div class='dim'>Head and chest count their own level; arms and legs count the weaker of the pair (strike powers use the arm you punch with).</div>"
 	for(var/group in GLOB.body_part_powers)
 		var/group_level = body_group_level(body, group)
-		html += "<div class='card'><b>[capitalize(group)]</b> <span class='dim'>(level [group_level])</span><br>"
+		html += "<div class='card'><b>[group == "chest" ? "Torso" : capitalize(group)]</b> <span class='dim'>(level [group_level])</span><br>"
 		var/list/powers = GLOB.body_part_powers[group]
 		for(var/i in 1 to length(powers))
 			var/list/power = powers[i]
