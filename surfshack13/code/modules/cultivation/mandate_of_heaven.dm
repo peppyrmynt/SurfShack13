@@ -68,6 +68,7 @@ GLOBAL_DATUM_INIT(mandate_controller, /datum/mandate_controller, new)
 	ruler.add_filter("mandate_of_heaven", 3, list("type" = "outline", "color" = "#ffd55a", "size" = 1, "alpha" = son_of_heaven ? 110 : 60))
 	decree = new(src)
 	decree.Grant(ruler)
+	setup_powers()
 	to_chat(ruler, span_boldnotice("You hold the Mandate of Heaven over [domain_name]. Rule justly: if you die, are demoted, or are kept in chains, heaven will withdraw it, \
 		and a jade seal will fall for others to claim."))
 
@@ -76,6 +77,7 @@ GLOBAL_DATUM_INIT(mandate_controller, /datum/mandate_controller, new)
 	UnregisterSignal(ruler, list(COMSIG_ATOM_EXAMINE, COMSIG_LIVING_DEATH, COMSIG_LIVING_LIFE))
 	ruler.remove_filter("mandate_of_heaven")
 	QDEL_NULL(decree)
+	teardown_powers()
 
 /datum/component/mandate_of_heaven/proc/title_of()
 	return son_of_heaven ? "Son of Heaven" : "Mandated Lord of [domain_name]"
@@ -92,6 +94,7 @@ GLOBAL_DATUM_INIT(mandate_controller, /datum/mandate_controller, new)
 /datum/component/mandate_of_heaven/proc/on_life(datum/source, seconds_per_tick, times_fired)
 	SIGNAL_HANDLER
 	var/mob/living/carbon/human/ruler = parent
+	update_dynasty()
 	// Kept in chains
 	if(HAS_TRAIT(ruler, TRAIT_RESTRAINED))
 		restrained_time += seconds_per_tick SECONDS
@@ -117,6 +120,7 @@ GLOBAL_DATUM_INIT(mandate_controller, /datum/mandate_controller, new)
 	var/turf/fall_turf = get_turf(ruler)
 	var/obj/item/jade_seal/seal = new(fall_turf)
 	seal.set_domain(domain_name, domain_type, son_of_heaven)
+	judgement(reason, seal)
 	to_chat(ruler, span_userdanger("Heaven withdraws its Mandate from you!"))
 	if(son_of_heaven)
 		priority_announce("The heavens darken and thunder rolls across the station. The Mandate of Heaven has been withdrawn from [ruler.real_name], who [reason]. \
@@ -165,12 +169,17 @@ GLOBAL_DATUM_INIT(mandate_controller, /datum/mandate_controller, new)
 /obj/item/jade_seal/examine(mob/user)
 	. = ..()
 	. += span_notice("Use it in hand to raise it to heaven and claim the Mandate over [domain_name].")
+	if(length(lineage))
+		. += span_notice("The seal remembers those who held it:<br>[jointext(lineage, "<br>")]")
 
 /obj/item/jade_seal/attack_self(mob/living/carbon/human/user)
 	if(!ishuman(user))
 		return
 	if(user.GetComponent(/datum/component/mandate_of_heaven))
 		to_chat(user, span_warning("You already bear a Mandate. Heaven does not grant two."))
+		return
+	if(user.has_status_effect(/datum/status_effect/regicide_curse))
+		to_chat(user, span_warning("The seal is cold in a regicide's hands. Heaven will not answer you."))
 		return
 	if(tgui_alert(user, "Raise the seal to heaven and claim the Mandate over [domain_name]?", "Mandate of Heaven", list("Claim it", "Not yet")) != "Claim it")
 		return
@@ -186,7 +195,9 @@ GLOBAL_DATUM_INIT(mandate_controller, /datum/mandate_controller, new)
 		priority_announce("A new dynasty! [user.real_name] has raised the Heirloom Seal of the Realm and claimed the Mandate of Heaven.", "Omen of Heaven", 'sound/effects/gong.ogg')
 	else
 		minor_announce("[user.real_name] has claimed the Mandate of Heaven over [domain_name].", "Omen of Heaven")
-	user.AddComponent(/datum/component/mandate_of_heaven, domain_name, domain_type, son_of_heaven, null)
+	var/datum/component/mandate_of_heaven/new_mandate = user.AddComponent(/datum/component/mandate_of_heaven, domain_name, domain_type, son_of_heaven, null)
+	if(new_mandate)
+		new_mandate.lineage = lineage.Copy()
 	user.log_message("claimed the Mandate of Heaven over [domain_name]", LOG_GAME)
 	qdel(src)
 

@@ -110,6 +110,10 @@
 	if(body.has_status_effect(/datum/status_effect/dao_heart_tempered))
 		readiness += 15
 		reasons += span_nicegreen("+15: you have faced your heart demon. Your Dao heart is tempered.")
+	var/heaven_favour = mandate_readiness_bonus(body)
+	if(heaven_favour)
+		readiness += heaven_favour
+		reasons += span_nicegreen("+[heaven_favour]: heaven favours the one who bears its Mandate.")
 	if(locate(/obj/machinery/power/energy_accumulator/grounding_rod) in range(4, body))
 		reasons += span_nicegreen("A grounding rod nearby will draw some of heaven's lightning.")
 	reasons += span_boldnotice("Total: [readiness] ([readiness_word()]). Stable breakthroughs always succeed if you endure them.")

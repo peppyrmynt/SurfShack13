@@ -147,6 +147,10 @@ TECHNIQUES = {
     'falling_star': ('坠', 'earth'), 'mountain_hurl': ('掷', 'bronze'), 'sky_splitting_palm': ('裂', 'metal'),
     'heaven_quake': ('崩', 'void'),
     'breath_of_renewal': ('息', 'jade'),
+    # Mandate of Heaven
+    'mandate_kneel': ('跪', 'gold'), 'mandate_treasury': ('宝', 'gold'), 'mandate_pardon': ('赦', 'jade'),
+    'mandate_jinyiwei': ('卫', 'crimson'), 'mandate_fealty': ('盟', 'bronze'), 'mandate_ennoble': ('封', 'gold'),
+    'mandate_punishment': ('罚', 'void'),
 }
 
 # ---------------------------------------------------------------- items
@@ -491,6 +495,39 @@ def exhaustion_ring(band):
     ImageDraw.Draw(im).arc((4, 4, big - 5, big - 5), -90, -90 + 36 * band, fill=color + (255,), width=12)
     return im.resize((32, 32), Image.LANCZOS)
 
+def dragon_aura(phase, frames=8):
+    """A golden dragon coiling around the Son of Heaven: a scaled body spiralling up the figure, head reaching over the shoulder."""
+    big = 256
+    im = Image.new('RGBA', (big, big), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    gold, light, dark = (240, 190, 60), (255, 236, 150), (150, 96, 20)
+    points = []
+    for k in range(60):
+        t = k / 59
+        a = 2 * math.pi * (1.4 * t + phase / frames)
+        x = 128 + math.cos(a) * 62
+        y = 200 - t * 150 + math.sin(a) * 18
+        points.append((x, y, math.sin(a), t))
+    # Draw back-to-front so the near coils overlap the far ones
+    for x, y, depth, t in sorted(points, key=lambda p: p[2]):
+        r = 12 - 6 * t
+        shade = lerp(dark, gold, 0.5 + 0.5 * depth)
+        alpha = int(110 + 110 * (0.5 + 0.5 * depth))
+        d.ellipse((x - r, y - r, x + r, y + r), fill=shade + (alpha,))
+        d.ellipse((x - r * 0.4, y - r * 0.7, x + r * 0.2, y - r * 0.1), fill=light + (alpha,))
+    # The head at the top of the coil
+    hx, hy, _, _ = points[-1]
+    d.ellipse((hx - 14, hy - 12, hx + 14, hy + 10), fill=gold + (230,))
+    d.polygon([(hx - 6, hy - 10), (hx - 16, hy - 26), (hx - 2, hy - 12)], fill=light + (230,))
+    d.polygon([(hx + 6, hy - 10), (hx + 16, hy - 26), (hx + 2, hy - 12)], fill=light + (230,))
+    d.ellipse((hx - 6, hy - 4, hx - 2, hy), fill=(200, 30, 30, 255))
+    d.ellipse((hx + 2, hy - 4, hx + 6, hy), fill=(200, 30, 30, 255))
+    glow = im.filter(ImageFilter.GaussianBlur(10))
+    out = Image.new('RGBA', (big, big), (0, 0, 0, 0))
+    out.alpha_composite(glow)
+    out.alpha_composite(im)
+    return out.resize((64, 64), Image.LANCZOS)
+
 # ---------------------------------------------------------------- write
 
 merge_dmi(OUT + 'cultivation_actions.dmi', [(k, [medallion(*v)], 1) for k, v in TECHNIQUES.items()])
@@ -525,6 +562,7 @@ merge_dmi(OUT + 'cultivation_effects_64.dmi', [
     ('beast_aura', [beast_aura(p) for p in range(6)], 1.5),
     ('decree_scroll', [decree_scroll()], 1),
     ('crater', [crater()], 1),
+    ('dragon_aura', [dragon_aura(p) for p in range(8)], 1.5),
 ])
 
 merge_dmi(OUT + 'cultivation_hud.dmi', [('body_display', [body_hud()], 1), ('body_display_ready', [body_hud(p) for p in range(8)], 1)] + \

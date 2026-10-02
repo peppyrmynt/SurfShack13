@@ -315,6 +315,10 @@
 	if((locate(/obj/structure/weightmachine) in range(3, body)) || (locate(/obj/structure/punching_bag) in range(3, body)))
 		readiness += 10
 		reasons += span_nicegreen("+10: the gym around you.")
+	var/heaven_favour = mandate_readiness_bonus(body)
+	if(heaven_favour)
+		readiness += heaven_favour
+		reasons += span_nicegreen("+[heaven_favour]: heaven favours the one who bears its Mandate.")
 	if(body.nutrition >= NUTRITION_LEVEL_WELL_FED)
 		readiness += 10
 		reasons += span_nicegreen("+10: a full stomach.")

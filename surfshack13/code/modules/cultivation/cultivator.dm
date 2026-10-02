@@ -276,6 +276,8 @@
 	var/datum/component/mandate_of_heaven/mandate = owner.current?.GetComponent(/datum/component/mandate_of_heaven)
 	if(mandate)
 		multiplier += mandate.son_of_heaven ? 0.5 : 0.25
+	// Nobles, Jinyiwei and sects sworn to a ruler
+	multiplier += mandate_cultivation_bonus(owner.current)
 	// Cultivating alongside fellow sect members
 	var/datum/jianghu_sect/sect = jianghu_sect_of(owner)
 	if(sect && owner.current)
@@ -531,7 +533,7 @@
 	if(instability >= 50 && COOLDOWN_FINISHED(src, instability_cooldown) && SPT_PROB(instability / 10, seconds_per_tick))
 		COOLDOWN_START(src, instability_cooldown, 20 SECONDS)
 		INVOKE_ASYNC(src, PROC_REF(instability_flare), source)
-	if(COOLDOWN_FINISHED(src, epiphany_cooldown) && SPT_PROB(1, seconds_per_tick))
+	if(COOLDOWN_FINISHED(src, epiphany_cooldown) && SPT_PROB(source.GetComponent(/datum/component/mandate_of_heaven) ? 2 : 1, seconds_per_tick))
 		COOLDOWN_START(src, epiphany_cooldown, 30 SECONDS)
 		INVOKE_ASYNC(src, PROC_REF(check_epiphany), source)
 

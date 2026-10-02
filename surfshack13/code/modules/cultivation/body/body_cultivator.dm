@@ -549,6 +549,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	var/datum/component/mandate_of_heaven/mandate = owner.current?.GetComponent(/datum/component/mandate_of_heaven)
 	if(mandate)
 		amount *= mandate.son_of_heaven ? 1.5 : 1.25
+	amount *= 1 + mandate_cultivation_bonus(owner.current)
 	var/gained = min(amount, BODY_TEMPERING_CAP - tempering)
 	if(gained <= 0)
 		if(!silent)

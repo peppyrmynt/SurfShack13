@@ -6602,6 +6602,7 @@
 #include "surfshack13\code\modules\cultivation\laws.dm"
 #include "surfshack13\code\modules\cultivation\legendary_artifacts.dm"
 #include "surfshack13\code\modules\cultivation\mandate_of_heaven.dm"
+#include "surfshack13\code\modules\cultivation\mandate_powers.dm"
 #include "surfshack13\code\modules\cultivation\roundstart_loot.dm"
 #include "surfshack13\code\modules\cultivation\status_effects.dm"
 #include "surfshack13\code\modules\cultivation\visuals.dm"
