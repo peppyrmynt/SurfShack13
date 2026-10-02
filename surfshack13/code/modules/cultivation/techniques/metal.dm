@@ -184,68 +184,68 @@
 		item.forceMove(master.drop_location())
 
 /// How far the artifact hears its master
-/datum/component/cultivation_artifact/proc/recall_range(mob/living/caller)
-	return 7 + 3 * cultivation_realm_of(caller) + refinement
+/datum/component/cultivation_artifact/proc/recall_range(mob/living/summoner)
+	return 7 + 3 * cultivation_realm_of(summoner) + refinement
 
 /// Is someone holding our artifact weaker than us? Lower realm (mortals always are), or from a smaller sect.
-/datum/component/cultivation_artifact/proc/holder_is_weaker(mob/living/caller, mob/living/holder)
-	if(cultivation_realm_of(holder) < cultivation_realm_of(caller))
+/datum/component/cultivation_artifact/proc/holder_is_weaker(mob/living/summoner, mob/living/holder)
+	if(cultivation_realm_of(holder) < cultivation_realm_of(summoner))
 		return TRUE
-	var/datum/jianghu_sect/caller_sect = jianghu_sect_of(caller.mind)
+	var/datum/jianghu_sect/caller_sect = jianghu_sect_of(summoner.mind)
 	var/datum/jianghu_sect/holder_sect = jianghu_sect_of(holder.mind)
 	if(caller_sect && caller_sect != holder_sect && length(caller_sect.members) > length(holder_sect?.members))
 		return TRUE
 	return FALSE
 
 /// Can the owner call this back right now? Containers and stronger holders stop it.
-/datum/component/cultivation_artifact/proc/can_recall(mob/living/caller, feedback = TRUE)
+/datum/component/cultivation_artifact/proc/can_recall(mob/living/summoner, feedback = TRUE)
 	var/obj/item/item = parent
 	if(item.anchored)
 		return FALSE
-	if(item.z != caller.z || get_dist(item, caller) > recall_range(caller))
+	if(item.z != summoner.z || get_dist(item, summoner) > recall_range(summoner))
 		if(feedback)
-			to_chat(caller, span_warning("[item] is too far away to answer your call. (range [recall_range(caller)])"))
+			to_chat(summoner, span_warning("[item] is too far away to answer your call. (range [recall_range(summoner)])"))
 		return FALSE
 	if(isliving(item.loc))
 		var/mob/living/holder = item.loc
-		if(holder == caller)
+		if(holder == summoner)
 			return FALSE
-		if(!holder_is_weaker(caller, holder))
+		if(!holder_is_weaker(summoner, holder))
 			if(feedback)
-				to_chat(caller, span_warning("[holder] grips [item] with qi as strong as your own. It won't come."))
+				to_chat(summoner, span_warning("[holder] grips [item] with qi as strong as your own. It won't come."))
 				to_chat(holder, span_warning("[item] tugs in your hand, but you hold on."))
 			return FALSE
 		return TRUE
 	if(!isturf(item.loc))
 		if(feedback)
-			to_chat(caller, span_warning("You feel [item] tug against something holding it shut. It won't come."))
+			to_chat(summoner, span_warning("You feel [item] tug against something holding it shut. It won't come."))
 		return FALSE
 	// Out of sight: only a Golden Core can fold space to bring it home
-	if(!can_see(caller, item, recall_range(caller)) && cultivation_realm_of(caller) < REALM_GOLDEN_CORE)
+	if(!can_see(summoner, item, recall_range(summoner)) && cultivation_realm_of(summoner) < REALM_GOLDEN_CORE)
 		if(feedback)
-			to_chat(caller, span_warning("You can't see a clear path for [item] to fly to you. (Golden Core cultivators can call it through walls)"))
+			to_chat(summoner, span_warning("You can't see a clear path for [item] to fly to you. (Golden Core cultivators can call it through walls)"))
 		return FALSE
 	return TRUE
 
 /// Pull the artifact out of a weaker holder's hand or through walls, then bring it home
-/datum/component/cultivation_artifact/proc/recall(mob/living/caller)
+/datum/component/cultivation_artifact/proc/recall(mob/living/summoner)
 	var/obj/item/item = parent
 	if(isliving(item.loc))
 		var/mob/living/holder = item.loc
 		holder.visible_message(span_danger("[item] tears itself out of [holder]'s grip!"), span_userdanger("[item] rips out of your hand, answering its true master!"))
 		holder.dropItemToGround(item, force = TRUE)
 		playsound(holder, 'sound/items/weapons/thudswoosh.ogg', 50, TRUE)
-	if(!can_see(caller, item, recall_range(caller)))
+	if(!can_see(summoner, item, recall_range(summoner)))
 		// Fold space
 		new /obj/effect/temp_visual/cultivation_void_rift(get_turf(item))
-		new /obj/effect/temp_visual/cultivation_void_rift(get_turf(caller))
-		playsound(caller, 'sound/effects/magic/blink.ogg', 40, TRUE)
-		item.forceMove(caller.drop_location())
-		caller.put_in_hands(item)
-		caller.visible_message(span_notice("[item] emerges from a rip in space into [caller]'s hand."))
+		new /obj/effect/temp_visual/cultivation_void_rift(get_turf(summoner))
+		playsound(summoner, 'sound/effects/magic/blink.ogg', 40, TRUE)
+		item.forceMove(summoner.drop_location())
+		summoner.put_in_hands(item)
+		summoner.visible_message(span_notice("[item] emerges from a rip in space into [summoner]'s hand."))
 		return
-	caller.visible_message(span_notice("[item] leaps up and flies to [caller]'s hand!"))
-	fly_home(caller)
+	summoner.visible_message(span_notice("[item] leaps up and flies to [summoner]'s hand!"))
+	fly_home(summoner)
 
 // ----- Bind Artifact -----
 
