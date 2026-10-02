@@ -128,7 +128,7 @@ GLOBAL_LIST_INIT(cultivation_pill_grades, list(
 
 /obj/item/cultivation_pill/tempering/body_effect(mob/living/eater, datum/antagonist/body_cultivator/body_datum)
 	mortal_effect(eater)
-	body_datum.gain_tempering(15 * potency, null)
+	body_datum.gain_tempering(30 * potency, null)
 	eater.apply_status_effect(/datum/status_effect/cultivation_pill_buff/body_tempering)
 	to_chat(eater, span_nicegreen("The pill's fire sinks into your bones. (+tempering, +20 Tribulation of Flesh readiness for 10 minutes)"))
 

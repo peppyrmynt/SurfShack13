@@ -21,7 +21,7 @@
 #define BODY_PART_TRAIT_SOURCE "body_cultivation_parts"
 
 /// Tempering needed to raise a limb to a level
-#define BODY_PART_COST(level) (6 + 4 * (level))
+#define BODY_PART_COST(level) (2 + (level))
 
 /// The six limbs that are tempered
 GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))
@@ -328,6 +328,8 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	COOLDOWN_DECLARE(wall_punch_cooldown)
 	/// Eternal Heart restarts you this often
 	COOLDOWN_DECLARE(eternal_heart_cooldown)
+	/// A body on the path tempers itself a little just by living
+	COOLDOWN_DECLARE(passive_tempering_cooldown)
 	/// Traits the body part powers currently grant
 	var/list/part_traits = list()
 	/// The head Iron Skull made unremovable, so we can give it back
@@ -610,6 +612,9 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	if(source.stat == DEAD || !iscarbon(source))
 		return
 	var/mob/living/carbon/body = source
+	if(COOLDOWN_FINISHED(src, passive_tempering_cooldown) && body.stat == CONSCIOUS)
+		COOLDOWN_START(src, passive_tempering_cooldown, 10 SECONDS)
+		tempering = min(tempering + 1, BODY_TEMPERING_CAP)
 	var/heart = body_group_level(body, "heart")
 	var/lungs = body_group_level(body, "lungs")
 	// Heart and lungs: blood, stamina, healing
@@ -684,9 +689,9 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	if(!proximity)
 		return
 	if(isliving(target) && target != source)
-		gain_tempering(2, BODY_TRAINING_FIGHT, 30 SECONDS, silent = TRUE)
+		gain_tempering(6, BODY_TRAINING_FIGHT, 15 SECONDS, silent = TRUE)
 	else if(isclosedturf(target) || istype(target, /obj/structure/punching_bag))
-		gain_tempering(3, BODY_TRAINING_STRIKE, 45 SECONDS, silent = TRUE)
+		gain_tempering(8, BODY_TRAINING_STRIKE, 20 SECONDS, silent = TRUE)
 	if(LAZYACCESS(modifiers, RIGHT_CLICK))
 		return
 	var/obj/item/bodypart/arm = source.get_active_hand()
@@ -724,7 +729,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 /datum/antagonist/body_cultivator/proc/on_damaged(mob/living/source, damage, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item)
 	SIGNAL_HANDLER
 	if(damage >= 5 && (damagetype == BRUTE || damagetype == BURN) && source.stat == CONSCIOUS)
-		gain_tempering(2, BODY_TRAINING_BEATEN, 30 SECONDS, silent = TRUE)
+		gain_tempering(5, BODY_TRAINING_BEATEN, 15 SECONDS, silent = TRUE)
 
 /datum/antagonist/body_cultivator/proc/damage_modifiers(mob/living/source, list/damage_mods, damage, damagetype, ...)
 	SIGNAL_HANDLER

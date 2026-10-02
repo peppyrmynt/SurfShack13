@@ -117,7 +117,7 @@ GLOBAL_LIST_INIT(cultivation_overcomes, list(
 /// Mortals who haven't committed to the Body Molding Art stop here (Copper Skin)
 #define BODY_STAGE_MORTAL_CAP 1
 /// Pending tempering caps here until you Forge the Body
-#define BODY_TEMPERING_CAP 60
+#define BODY_TEMPERING_CAP 120
 // Body training sources, each with its own cooldown
 #define BODY_TRAINING_GYM "gym"
 #define BODY_TRAINING_FIGHT "fight"

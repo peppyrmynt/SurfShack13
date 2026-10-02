@@ -100,7 +100,7 @@
 
 /datum/action/cooldown/spell/body_art/forge_body
 	name = "Forge the Body"
-	desc = "Pour your training into a limb or an inner organ in punishing 10 second cycles until you move. Choose what to forge when you start; \
+	desc = "Pour your training into a limb or an inner organ in punishing 5 second cycles until you move. Choose what to forge when you start; \
 		once it's done, the weakest part is forged next. It hurts and makes you hungry. Parts can be forged one level past your stage."
 	cooldown_time = 3 SECONDS
 	var/forging = FALSE
@@ -163,7 +163,7 @@
 	user.visible_message(span_notice("[user] drops into a deep horse stance and begins to strike [user.p_their()] own body, over and over."), span_notice("You begin to forge your body. Move to stop."))
 	user.add_filter("forge_body", 2, list("type" = "outline", "color" = "#c98a3c", "size" = 1))
 	while(forging)
-		if(!do_after(user, 10 SECONDS, user, IGNORE_HELD_ITEM))
+		if(!do_after(user, 5 SECONDS, user, IGNORE_HELD_ITEM))
 			break
 		if(!forge_cycle(user, body_datum))
 			break
@@ -190,7 +190,7 @@
 	if(istype(part, /obj/item/bodypart))
 		var/obj/item/bodypart/limb = part
 		part_name = limb.plaintext_zone
-	var/gained = body_datum.forge_part(part, 10)
+	var/gained = body_datum.forge_part(part, 25)
 	if(!hearty)
 		user.adjust_nutrition(-8)
 	if(isorgan(part))
@@ -264,7 +264,7 @@
 /datum/body_tribulation/New(datum/antagonist/body_cultivator/body_datum)
 	src.body_datum = body_datum
 	body = body_datum.owner.current
-	duration = 15 + 3 * body_datum.stage
+	duration = 10 + 2 * body_datum.stage
 
 /datum/body_tribulation/Destroy(force)
 	STOP_PROCESSING(SSprocessing, src)
