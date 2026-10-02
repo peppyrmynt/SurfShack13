@@ -95,6 +95,11 @@
 
 /datum/antagonist/cultivator/on_gain()
 	. = ..()
+	// Qi and the flesh don't mix: mortal Copper Skin training is set aside (the limbs keep their mortal tempering)
+	var/datum/antagonist/body_cultivator/body_datum = owner.has_antag_datum(/datum/antagonist/body_cultivator)
+	if(body_datum)
+		to_chat(owner.current, span_notice("You set aside the training of the flesh for the way of qi."))
+		owner.remove_antag_datum(/datum/antagonist/body_cultivator)
 	var/mob/living/carbon/body = owner.current
 	if(iscarbon(body) && !body.get_organ_slot(ORGAN_SLOT_DANTIAN))
 		var/obj/item/organ/dantian/dantian = new()

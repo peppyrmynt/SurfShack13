@@ -73,6 +73,33 @@
 	cultivator.become_demonic(DEMONIC_MASTER)
 	TEST_ASSERT_NOTNULL(locate(/datum/action/cooldown/spell/pointed/cultivation/transmit_forbidden) in disciple.actions, "A demonic master can't transmit the arts.")
 
+	// Body Molding Art: mortals reach Copper Skin, committing goes further and closes qi
+	var/mob/living/carbon/human/consistent/trainee = allocate(/mob/living/carbon/human/consistent)
+	trainee.mind_initialize()
+	var/base_health = trainee.maxHealth
+	TEST_ASSERT(body_cultivation_train(trainee, 20, BODY_TRAINING_GYM, can_start = TRUE), "Gym training didn't start a mortal on body cultivation.")
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(trainee)
+	TEST_ASSERT_NOTNULL(body_datum, "No body cultivator datum after gym training.")
+	var/obj/item/bodypart/trainee_chest = trainee.get_bodypart(BODY_ZONE_CHEST)
+	body_datum.tempering = BODY_TEMPERING_CAP
+	body_datum.forge_part(trainee_chest, BODY_TEMPERING_CAP)
+	TEST_ASSERT_EQUAL(body_part_level(trainee, BODY_ZONE_CHEST), 1, "Forging pushed a limb past its cap.")
+	body_datum.admin_stage_up()
+	TEST_ASSERT_EQUAL(body_datum.stage, 1, "Mortal didn't reach Copper Skin.")
+	TEST_ASSERT(!body_datum.can_attempt_tribulation(), "A mortal can go past Copper Skin.")
+	body_datum.commit()
+	body_datum.admin_stage_up()
+	TEST_ASSERT_EQUAL(body_datum.stage, 2, "Committed body cultivator didn't reach Iron Bone.")
+	TEST_ASSERT_EQUAL(trainee.maxHealth, base_health + 20, "Body stages didn't raise max health.")
+	TEST_ASSERT_NOTNULL(locate(/datum/action/cooldown/spell/body_art/iron_shirt) in trainee.actions, "Iron Bone didn't grant Iron Shirt.")
+	TEST_ASSERT_EQUAL(cultivation_realm_of(trainee), REALM_QI_CONDENSATION, "Iron Bone doesn't compare as Qi Condensation.")
+	var/obj/item/book/granter/cultivation_manual/returning_iron/qi_manual = allocate(/obj/item/book/granter/cultivation_manual/returning_iron)
+	TEST_ASSERT(!qi_manual.can_learn(trainee), "A committed body cultivator can learn qi.")
+	var/obj/item/book/granter/body_manual/body_book = allocate(/obj/item/book/granter/body_manual/molding_art)
+	TEST_ASSERT(!body_book.can_learn(disciple), "A qi cultivator can learn the Body Molding Art.")
+	trainee.mind.remove_antag_datum(/datum/antagonist/body_cultivator)
+	TEST_ASSERT_EQUAL(trainee.maxHealth, base_health, "Losing body cultivation didn't remove its health.")
+
 	// Body swap: knowledge follows the mind, power stays in the body
 	var/mob/living/carbon/human/consistent/new_body = allocate(/mob/living/carbon/human/consistent)
 	var/obj/item/organ/dantian/old_dantian = new_body.get_organ_slot(ORGAN_SLOT_DANTIAN)

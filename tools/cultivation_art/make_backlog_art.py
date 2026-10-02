@@ -98,6 +98,10 @@ PALETTE = {
     'void':    ((8, 8, 20), (70, 60, 120), (200, 190, 255)),
     'demon':   ((14, 2, 6), (104, 14, 28), (255, 150, 150)),
     'violet':  ((40, 16, 72), (146, 92, 220), (240, 226, 255)),
+    'metal':   ((52, 58, 72), (196, 206, 222), (255, 255, 255)),
+    'earth':   ((58, 36, 12), (184, 132, 66), (255, 232, 186)),
+    'jade':    ((12, 66, 54), (80, 186, 144), (226, 255, 240)),
+    'bronze':  ((70, 40, 14), (196, 128, 56), (255, 226, 180)),
 }
 
 def medallion(char, palette):
@@ -134,6 +138,11 @@ TECHNIQUES = {
     'devouring_art': ('噬', 'demon'), 'gu_worm': ('蛊', 'demon'), 'stir_gu': ('搅', 'demon'),
     'soul_search': ('搜', 'void'), 'corpse_puppet': ('尸', 'demon'), 'blood_escape': ('遁', 'crimson'),
     'transmit_forbidden': ('魔', 'demon'), 'ascension': ('仙', 'gold'),
+    # Body Molding Art
+    'body_panel': ('体', 'bronze'), 'forge_body': ('锻', 'earth'), 'body_breakthrough': ('蜕', 'bronze'),
+    'iron_shirt': ('铁', 'metal'), 'mountain_leap': ('跃', 'earth'), 'shattering_fist': ('碎', 'crimson'),
+    'bone_setting': ('骨', 'jade'), 'body_disciple': ('徒', 'bronze'), 'remold_limb': ('塑', 'bronze'),
+    'blood_boil': ('沸', 'crimson'), 'vajra_body': ('刚', 'gold'), 'primordial_roar': ('吼', 'void'),
 }
 
 # ---------------------------------------------------------------- items
@@ -199,6 +208,43 @@ def manual_demonic():
     d.line((12, 14, 13, 14), fill=c(cover_dark)); d.line((21, 14, 22, 14), fill=c(cover_dark))
     d.point((14, 21), fill=c(red)); d.point((16, 23), fill=c(red)); d.point((19, 21), fill=c(red))
     return finish(im, glow=((180, 20, 30), (4, 2, 28, 30), 3, 120))
+
+def body_primer():
+    """A thin, grubby tan pamphlet with a figure in horse stance."""
+    im, d = canvas()
+    paper, paper_dark, ink = (214, 190, 140), (160, 132, 86), (60, 36, 24)
+    d.polygon([(9, 6), (23, 5), (24, 27), (10, 28)], fill=c(paper))
+    d.line((9, 6, 10, 28), fill=c(paper_dark))
+    d.line((23, 5, 24, 27), fill=c(lerp(paper, (255, 255, 255), 0.3)))
+    # stick figure in a horse stance
+    d.ellipse((15, 9, 18, 12), fill=c(ink))
+    d.line((16, 12, 16, 18), fill=c(ink))
+    d.line((12, 14, 20, 14), fill=c(ink))
+    d.line((16, 18, 13, 20), fill=c(ink)); d.line((13, 20, 13, 23), fill=c(ink))
+    d.line((16, 18, 19, 20), fill=c(ink)); d.line((19, 20, 19, 23), fill=c(ink))
+    # dog-eared corner and a sweat stain
+    d.polygon([(20, 25), (24, 27), (23, 24)], fill=c(paper_dark))
+    d.point((12, 25), fill=c(paper_dark)); d.point((13, 25), fill=c(paper_dark))
+    return finish(im)
+
+def body_manual():
+    """A heavy book bound between two bronze plates, with a clenched fist on the cover."""
+    im, d = canvas()
+    bronze, bronze_dark, bronze_light, patina = (156, 108, 48), (96, 62, 26), (214, 168, 92), (86, 150, 120)
+    d.rectangle((7, 4, 25, 28), fill=c(bronze))
+    d.rectangle((7, 4, 25, 28), outline=c(bronze_dark))
+    d.line((8, 5, 24, 5), fill=c(bronze_light))
+    for x, y in ((9, 6), (23, 6), (9, 26), (23, 26)):
+        d.point((x, y), fill=c(bronze_light))
+    # clenched fist
+    skin, skin_dark = (232, 186, 140), (170, 120, 80)
+    d.rectangle((12, 11, 20, 18), fill=c(skin))
+    for x in (13, 15, 17, 19):
+        d.line((x, 11, x, 13), fill=c(skin_dark))
+    d.line((12, 15, 17, 15), fill=c(skin_dark))
+    d.rectangle((13, 19, 19, 22), fill=c(skin_dark))
+    d.point((10, 24), fill=c(patina)); d.point((22, 9), fill=c(patina)); d.point((21, 25), fill=c(patina))
+    return finish(im)
 
 def talisman(stamp):
     """A vertical yellow paper strip with red brush strokes and a coloured top stamp."""
@@ -388,6 +434,8 @@ items = [
     ('manual_earth', [manual_cover((130, 92, 44), (84, 56, 24), emblem_earth)], 1),
     ('manual_wood', [manual_cover((44, 96, 66), (26, 60, 40), emblem_wood)], 1),
     ('manual_demonic', [manual_demonic()], 1),
+    ('manual_body_primer', [body_primer()], 1),
+    ('manual_body', [body_manual()], 1),
     ('talisman', [talisman(lambda d: None)], 1),
     ('talisman_fire', [talisman(stamp_fire)], 1),
     ('talisman_binding', [talisman(stamp_binding)], 1),

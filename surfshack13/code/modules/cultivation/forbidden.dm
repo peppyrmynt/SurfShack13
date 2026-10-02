@@ -76,6 +76,9 @@ GLOBAL_LIST_INIT(cultivation_forbidden_techniques, list(
 		. += span_danger("[other] reeks of demonic qi!")
 	if(other.has_status_effect(/datum/status_effect/gu_worm))
 		. += span_warning("Something small and hungry squirms inside [other].")
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(other)
+	if(body_datum?.stage)
+		. += span_notice("[other]: a body cultivator at [body_datum.stage_name()]. No qi at all, but that body...")
 	if(istype(other, /mob/living/basic/corpse_puppet))
 		. += span_danger("[other] is a corpse strung up with demonic qi.")
 
@@ -117,6 +120,10 @@ GLOBAL_LIST_INIT(cultivation_forbidden_techniques, list(
 	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(user)
 	if(cultivator?.demonic >= DEMONIC_MASTER)
 		to_chat(user, span_warning("You already hold this scripture in your heart."))
+		return FALSE
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(user)
+	if(body_datum?.committed)
+		to_chat(user, span_warning("The scripture needs qi to take root, and your meridians are sealed into flesh."))
 		return FALSE
 	if(!cultivation_is_true_antag(user.mind))
 		qi_deviation(user, cultivator)
@@ -459,6 +466,10 @@ GLOBAL_LIST_INIT(cultivation_forbidden_techniques, list(
 /datum/action/cooldown/spell/pointed/cultivation/transmit_forbidden/proc/transmit(mob/living/master, mob/living/carbon/human/disciple)
 	if(!disciple.mind || !disciple.client)
 		to_chat(master, span_warning("[disciple] has no mind to receive the arts."))
+		return
+	var/datum/antagonist/body_cultivator/body_disciple = IS_BODY_CULTIVATOR(disciple)
+	if(body_disciple?.committed)
+		to_chat(master, span_warning("[disciple]'s meridians are sealed into flesh. The arts can't take root."))
 		return
 	var/datum/antagonist/cultivator/existing = IS_CULTIVATOR(disciple)
 	if(existing?.demonic)

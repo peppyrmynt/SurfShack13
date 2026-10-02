@@ -20,6 +20,11 @@
 			new /obj/effect/spawner/random/wuxia_manual(pick_n_take(maint_spots))
 	if(length(maint_spots))
 		new /obj/effect/spawner/random/legendary_artifact(pick_n_take(maint_spots))
+	// The path of the flesh: a full Body Molding Art in maintenance, primers for anyone
+	if(length(maint_spots))
+		new /obj/item/book/granter/body_manual/molding_art(pick_n_take(maint_spots))
+	if(length(maint_spots))
+		new /obj/item/book/granter/body_manual(pick_n_take(maint_spots))
 	// Sometimes a forbidden scripture is lying around for an antagonist to find (and anyone else to regret reading)
 	if(length(maint_spots) && prob(30))
 		new /obj/item/book/granter/demonic_scripture(pick_n_take(maint_spots))
@@ -30,5 +35,14 @@
 				library_turfs += library_floor
 	if(length(library_turfs))
 		new /obj/effect/spawner/random/cultivation_manual(pick(library_turfs))
+		new /obj/item/book/granter/body_manual(pick(library_turfs))
+	// A primer in the gym, where the training happens
+	var/list/gym_turfs = list()
+	for(var/area/station/commons/fitness/gym in GLOB.areas)
+		for(var/turf/open/floor/gym_floor in gym.get_turfs_from_all_zlevels())
+			if(!gym_floor.is_blocked_turf())
+				gym_turfs += gym_floor
+	if(length(gym_turfs))
+		new /obj/item/book/granter/body_manual(pick(gym_turfs))
 
 #undef CULTIVATION_MAINT_MANUALS

@@ -365,6 +365,10 @@
 	if(!disciple.mind || !disciple.client)
 		to_chat(master, span_warning("[disciple] has no mind to receive your teachings."))
 		return
+	var/datum/antagonist/body_cultivator/body_disciple = IS_BODY_CULTIVATOR(disciple)
+	if(body_disciple?.committed)
+		to_chat(master, span_warning("[disciple]'s meridians are sealed into flesh. [disciple.p_They()] can't cultivate qi."))
+		return
 	var/list/options = list()
 	for(var/datum/cultivation_law/law as anything in master_datum.laws)
 		options[law.name] = law

@@ -46,6 +46,10 @@
 	if(!ishuman(user) || !user.mind)
 		to_chat(user, span_warning("You can't make sense of the diagrams."))
 		return FALSE
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(user)
+	if(body_datum?.committed)
+		to_chat(user, span_warning("Your meridians are sealed into muscle and bone. The way of qi is closed to you."))
+		return FALSE
 	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(user)
 	var/datum/cultivation_law/known = cultivator?.has_law(law_type)
 	if(known && !(known.counterfeit && !counterfeit))

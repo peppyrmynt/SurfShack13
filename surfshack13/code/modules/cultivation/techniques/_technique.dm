@@ -146,4 +146,7 @@
 /// Realm of any mob for comparisons. Mortals are realm 0.
 /proc/cultivation_realm_of(mob/living/target)
 	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(target)
-	return cultivator ? cultivator.effective_realm() : REALM_MORTAL
+	if(cultivator)
+		return cultivator.effective_realm()
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(target)
+	return body_datum ? body_datum.realm_equivalent() : REALM_MORTAL

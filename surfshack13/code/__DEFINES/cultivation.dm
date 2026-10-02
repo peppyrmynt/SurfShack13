@@ -108,3 +108,19 @@ GLOBAL_LIST_INIT(cultivation_overcomes, list(
 
 /// Insight consolidated past the peak of Nascent Soul before Ascension can be attempted
 #define CULTIVATION_ASCENSION_PROGRESS 400
+
+// Body Molding Art, see body/
+/// Is this mob a body cultivator? Returns the datum or null.
+#define IS_BODY_CULTIVATOR(mob) (mob?.mind?.has_antag_datum(/datum/antagonist/body_cultivator))
+/// Highest body stage (Primordial Chaos Body)
+#define BODY_STAGE_MAX 9
+/// Mortals who haven't committed to the Body Molding Art stop here (Copper Skin)
+#define BODY_STAGE_MORTAL_CAP 1
+/// Pending tempering caps here until you Forge the Body
+#define BODY_TEMPERING_CAP 60
+// Body training sources, each with its own cooldown
+#define BODY_TRAINING_GYM "gym"
+#define BODY_TRAINING_FIGHT "fight"
+#define BODY_TRAINING_STRIKE "strike"
+#define BODY_TRAINING_BEATEN "beaten"
+#define BODY_TRAINING_MINING "mining"

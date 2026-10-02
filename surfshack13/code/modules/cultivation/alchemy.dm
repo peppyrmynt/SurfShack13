@@ -41,12 +41,19 @@
 	eater.visible_message(span_notice("[eater] swallows [src]."), span_notice("You swallow [src]."))
 	playsound(eater, 'sound/items/eatfood.ogg', 40, TRUE)
 	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(eater)
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(eater)
 	if(cultivator)
 		cultivator.add_pill_toxicity(toxicity)
 		cultivator_effect(eater, cultivator)
+	else if(body_datum)
+		body_effect(eater, body_datum)
 	else
 		mortal_effect(eater)
 	qdel(src)
+
+/// What it does for a body cultivator. Most pills are made for qi and only warm them up.
+/obj/item/cultivation_pill/proc/body_effect(mob/living/eater, datum/antagonist/body_cultivator/body_datum)
+	mortal_effect(eater)
 
 /obj/item/cultivation_pill/proc/cultivator_effect(mob/living/eater, datum/antagonist/cultivator/cultivator)
 	return
@@ -97,6 +104,12 @@
 /obj/item/cultivation_pill/tempering/cultivator_effect(mob/living/eater, datum/antagonist/cultivator/cultivator)
 	mortal_effect(eater)
 	eater.heal_overall_damage(brute = 10 * potency, burn = 10 * potency)
+
+/obj/item/cultivation_pill/tempering/body_effect(mob/living/eater, datum/antagonist/body_cultivator/body_datum)
+	mortal_effect(eater)
+	body_datum.gain_tempering(15 * potency, null)
+	eater.apply_status_effect(/datum/status_effect/cultivation_pill_buff/body_tempering)
+	to_chat(eater, span_nicegreen("The pill's fire sinks into your bones. (+tempering, +20 Tribulation of Flesh readiness for 10 minutes)"))
 
 /obj/item/cultivation_pill/tempering/mortal_effect(mob/living/eater)
 	eater.heal_overall_damage(brute = 20, burn = 10)
