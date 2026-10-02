@@ -11,18 +11,39 @@
 	w_class = WEIGHT_CLASS_TINY
 	/// Pill toxicity added to cultivators
 	var/toxicity = 8
-	/// Effect multiplier. Spirit-grade pills from a cauldron are stronger.
+	/// Effect multiplier, set by the pill's grade
 	var/potency = 1
-	/// Refined to perfection in a cauldron
-	var/spirit_grade = FALSE
+	/// Cauldron grade (PILL_GRADE_*), or null for hand-crafted pills
+	var/grade
 
-/// A perfect cauldron refinement: stronger, half the toxicity, and it glows
-/obj/item/cultivation_pill/proc/make_spirit_grade()
-	spirit_grade = TRUE
-	potency = 1.5
-	toxicity = round(toxicity / 2)
-	name = "spirit-grade [name]"
-	add_filter("spirit_grade", 2, list("type" = "outline", "color" = "#fff6c8", "size" = 1, "alpha" = 180))
+/// Cauldron grades: name, potency, toxicity multiplier, outline colour (or null)
+GLOBAL_LIST_INIT(cultivation_pill_grades, list(
+	PILL_GRADE_LOW = list("low-grade", 0.75, 1.25, null),
+	PILL_GRADE_MID = list("mid-grade", 1, 1, null),
+	PILL_GRADE_HIGH = list("high-grade", 1.25, 0.75, "#9fe3ff"),
+	PILL_GRADE_SPIRIT = list("spirit-grade", 1.5, 0.5, "#fff6c8"),
+))
+
+/// Set the grade a cauldron refined this pill to
+/obj/item/cultivation_pill/proc/set_grade(new_grade)
+	var/list/info = GLOB.cultivation_pill_grades[new_grade]
+	if(!info)
+		return
+	grade = new_grade
+	potency = info[2]
+	toxicity = round(initial(toxicity) * info[3])
+	name = "[info[1]] [initial(name)]"
+	remove_filter("pill_grade")
+	if(info[4])
+		add_filter("pill_grade", 2, list("type" = "outline", "color" = info[4], "size" = 1, "alpha" = 180))
+
+/obj/item/cultivation_pill/examine(mob/user)
+	. = ..()
+	if(grade)
+		var/list/info = GLOB.cultivation_pill_grades[grade]
+		. += span_notice("A [info[1]] pill: [round(info[2] * 100)]% strength, [round(info[3] * 100)]% toxicity.")
+	else
+		. += span_notice("Hand-rolled, ungraded. A cauldron refines better pills.")
 
 /obj/item/cultivation_pill/attack_self(mob/living/user)
 	consume(user, user)

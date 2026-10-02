@@ -124,3 +124,9 @@ GLOBAL_LIST_INIT(cultivation_overcomes, list(
 #define BODY_TRAINING_STRIKE "strike"
 #define BODY_TRAINING_BEATEN "beaten"
 #define BODY_TRAINING_MINING "mining"
+
+// Cauldron pill grades
+#define PILL_GRADE_LOW "low"
+#define PILL_GRADE_MID "mid"
+#define PILL_GRADE_HIGH "high"
+#define PILL_GRADE_SPIRIT "spirit"

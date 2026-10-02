@@ -63,6 +63,12 @@
 	TEST_ASSERT(nine.total_ingredients() > foundation_recipe.total_ingredients(), "The more specific recipe should win.")
 	qdel(nine)
 	qdel(foundation_recipe)
+	var/obj/item/cultivation_pill/qi_gathering/graded = allocate(/obj/item/cultivation_pill/qi_gathering)
+	graded.set_grade(PILL_GRADE_SPIRIT)
+	TEST_ASSERT_EQUAL(graded.potency, 1.5, "Spirit-grade pills aren't stronger.")
+	TEST_ASSERT_EQUAL(graded.toxicity, round(initial(graded.toxicity) * 0.5), "Spirit-grade pills aren't gentler.")
+	graded.set_grade(PILL_GRADE_LOW)
+	TEST_ASSERT_EQUAL(graded.potency, 0.75, "Regrading a pill didn't reset its potency.")
 
 	// The Demonic Path: only real antagonists can comprehend the scripture, masters can transmit, disciples can't
 	TEST_ASSERT(!cultivation_is_true_antag(disciple.mind), "A plain cultivator counted as a real antagonist.")

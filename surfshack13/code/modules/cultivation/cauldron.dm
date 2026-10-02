@@ -188,7 +188,7 @@
 	if(artifact_bond)
 		temper(user, artifact_bond)
 		return
-	var/quality = 40 + 10 * cultivator.effective_realm() + rand(-25, 25) - round(cultivator.instability / 4)
+	var/quality = 45 + 8 * cultivator.effective_realm() + rand(-25, 25) - round(cultivator.instability / 4)
 	if(cultivator.has_element(ELEMENT_FIRE))
 		quality += 15
 	if(cultivator.has_element(ELEMENT_WOOD))
@@ -197,18 +197,27 @@
 	if(quality < 15)
 		blow_up(user, cultivator)
 		return
-	var/spirit_grade = quality >= 85
+	var/pill_grade = PILL_GRADE_LOW
+	if(quality >= 85)
+		pill_grade = PILL_GRADE_SPIRIT
+	else if(quality >= 65)
+		pill_grade = PILL_GRADE_HIGH
+	else if(quality >= 40)
+		pill_grade = PILL_GRADE_MID
+	var/spirit_grade = pill_grade == PILL_GRADE_SPIRIT
 	for(var/i in 1 to recipe.result_amount)
 		var/obj/item/cultivation_pill/pill = new recipe.result(drop_location())
-		if(spirit_grade)
-			pill.make_spirit_grade()
+		pill.set_grade(pill_grade)
 	new /obj/effect/temp_visual/cultivation_spark(get_turf(src), spirit_grade ? "#ffffff" : null, 0, 10)
 	new /obj/effect/temp_visual/circle_wave/cultivation/gold(get_turf(src))
 	playsound(src, 'sound/effects/magic/charge.ogg', 30, TRUE, frequency = 1.4)
 	cultivation_guqin_phrase(src, spirit_grade ? list(1, 3, 5, 6) : list(3, 5), 0.12 SECONDS, 35)
 	user.visible_message(span_notice("[src] gives a deep hum, and [recipe.result_amount > 1 ? "pills pop" : "a pill pops"] out of it[spirit_grade ? ", ringed with a halo of light" : ""]!"))
+	var/list/grade_info = GLOB.cultivation_pill_grades[pill_grade]
 	if(spirit_grade)
-		to_chat(user, span_boldnotice("A perfect refinement! Spirit-grade pills: stronger, and kinder to your meridians."))
+		to_chat(user, span_boldnotice("A perfect refinement! Spirit-grade pills: stronger, and kinder to your meridians. (quality [quality])"))
+	else
+		to_chat(user, span_notice("You refine [grade_info[1]] pills. (quality [quality]: 40 mid, 65 high, 85 spirit. Higher realms, Fire and Wood laws and a calm mind refine better.)"))
 	cultivator.gain_insight(3, "alchemy_general", cooldown = 2 MINUTES, silent = TRUE)
 	cultivator.notify_laws(INSIGHT_SOURCE_ALCHEMY, src)
 	jianghu_mission_progress(user.mind, SECT_MISSION_PILLS, recipe.result_amount)
@@ -217,7 +226,11 @@
 /obj/structure/alchemy_cauldron/proc/temper(mob/living/user, datum/component/cultivation_artifact/bond)
 	var/points = 0
 	for(var/obj/item/stack/sheet/sheet in contents)
-		var/value = tempering_materials[sheet.type]
+		var/value = 0
+		for(var/material_type in tempering_materials)
+			if(istype(sheet, material_type))
+				value = tempering_materials[material_type]
+				break
 		if(!value)
 			continue
 		var/used = min(sheet.amount, 5)
