@@ -59,6 +59,13 @@
 /obj/item/storage/belt/sabre/hfblade
 	name = "high frequency blade sheath"
 	desc = "A sturdy sheath designed to hold an electric blade of some sort."
+	icon = 'surfshack13/icons/hippie/hfblade.dmi'
+	// sold with the blade inside, so show the full sheath in the uplink and on spawn
+	icon_state = "sheath-sabre"
+	worn_icon = 'surfshack13/icons/hippie/hfblade_worn.dmi'
+	// Surf's sabre sheath in-hands recoloured, so it never shows the captain's red sheath
+	lefthand_file = 'surfshack13/icons/hippie/hfblade_sheath_lefthand.dmi'
+	righthand_file = 'surfshack13/icons/hippie/hfblade_sheath_righthand.dmi'
 	/// Set once a blade with its buttrock speakers enabled has been sheathed
 	var/edgelord = FALSE
 
@@ -69,13 +76,6 @@
 		edgelord = TRUE
 		name = "edgelord's sheath"
 		desc = "A strange sheath designed to hold an electric blade of some sort. One could only imagine how edgy this guy's musical preference is."
-	icon = 'surfshack13/icons/hippie/hfblade.dmi'
-	// sold with the blade inside, so show the full sheath in the uplink and on spawn
-	icon_state = "sheath-sabre"
-	worn_icon = 'surfshack13/icons/hippie/hfblade_worn.dmi'
-	// Surf's sabre sheath in-hands recoloured, so it never shows the captain's red sheath
-	lefthand_file = 'surfshack13/icons/hippie/hfblade_sheath_lefthand.dmi'
-	righthand_file = 'surfshack13/icons/hippie/hfblade_sheath_righthand.dmi'
 
 /obj/item/storage/belt/sabre/hfblade/Initialize(mapload)
 	. = ..()
