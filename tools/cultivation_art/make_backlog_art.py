@@ -146,6 +146,7 @@ TECHNIQUES = {
     'earth_stomp': ('震', 'earth'), 'hundred_fists': ('百', 'crimson'), 'bull_charge': ('冲', 'bronze'),
     'falling_star': ('坠', 'earth'), 'mountain_hurl': ('掷', 'bronze'), 'sky_splitting_palm': ('裂', 'metal'),
     'heaven_quake': ('崩', 'void'),
+    'breath_of_renewal': ('息', 'jade'),
 }
 
 # ---------------------------------------------------------------- items

@@ -351,7 +351,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	var/static/list/stage_health = list(10, 10, 10, 10, 15, 15, 15, 20, 20)
 	/// What each stage gives you, for the panel
 	var/static/list/stage_benefits = list(
-		"+10 max health.",
+		"+10 max health. Breath of Renewal: channel your breath to heal.",
 		"+10 max health. Bones that barely break (fewer wounds). Iron Shirt, Mountain Leap, Earth-Shattering Stomp.",
 		"+10 max health. Shattering Fist, Hundred Fist Barrage, Bone Setting, Accept Body Disciple.",
 		"+10 max health. Remold Limb (regrow a lost limb), Raging Bull Charge.",
@@ -366,6 +366,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		/datum/action/body_panel = 0,
 		/datum/action/cooldown/spell/body_art/forge_body = 0,
 		/datum/action/cooldown/spell/body_art/body_breakthrough = 0,
+		/datum/action/cooldown/spell/body_art/breath_of_renewal = 1,
 		/datum/action/cooldown/spell/body_art/iron_shirt = 2,
 		/datum/action/cooldown/spell/pointed/body_art/mountain_leap = 2,
 		/datum/action/cooldown/spell/pointed/body_art/shattering_fist = 3,

@@ -394,6 +394,54 @@
 		to_chat(body, span_warning(message))
 	fail(TRUE)
 
+// ===================== Breath of Renewal =====================
+
+/datum/action/cooldown/spell/body_art/breath_of_renewal
+	name = "Breath of Renewal"
+	desc = "Breathe deep and drive your blood around your body: up to three 2 second cycles, each healing brute and burn (more with your stage and a forged heart) \
+		for 15 exhaustion. From Crimson Blood it also closes cuts and stops bleeding. Moving or running out of breath ends it."
+	cooldown_time = 30 SECONDS
+	exhaustion_cost = 15
+
+/datum/action/cooldown/spell/body_art/breath_of_renewal/cast(mob/living/cast_on)
+	. = ..()
+	INVOKE_ASYNC(src, PROC_REF(breathe), cast_on)
+
+/datum/action/cooldown/spell/body_art/breath_of_renewal/proc/breathe(mob/living/user)
+	var/datum/antagonist/body_cultivator/body_datum = IS_BODY_CULTIVATOR(user)
+	if(!body_datum)
+		return
+	user.visible_message(span_notice("[user] draws a long, rumbling breath, and steam begins to rise off [user.p_their()] skin."), span_notice("You breathe deep and drive your blood around your body..."))
+	user.add_filter("breath_of_renewal", 2, list("type" = "outline", "color" = "#e0a050", "size" = 1))
+	var/obj/effect/abstract/particle_holder/steam = cultivation_particles(user, /particles/cultivation/steam)
+	for(var/cycle in 1 to 3)
+		// The first cycle was paid for by casting; the others cost their own breath
+		if(cycle > 1)
+			if(body_datum.exhaustion + exhaustion_cost > BODY_EXHAUSTION_MAX)
+				to_chat(user, span_warning("You're out of breath."))
+				break
+			body_datum.add_exhaustion(exhaustion_cost)
+		if(!do_after(user, 2 SECONDS, user, IGNORE_HELD_ITEM))
+			break
+		renew(user, body_datum)
+	user.remove_filter("breath_of_renewal")
+	qdel(steam)
+
+/// One breath's healing
+/datum/action/cooldown/spell/body_art/breath_of_renewal/proc/renew(mob/living/user, datum/antagonist/body_cultivator/body_datum)
+	var/heal = 5 + 2 * body_datum.stage + body_group_level(user, "heart")
+	user.heal_overall_damage(brute = heal, burn = heal)
+	playsound(user, 'sound/effects/singlebeat.ogg', 40, TRUE)
+	new /obj/effect/temp_visual/heal(get_turf(user), "#e0a050")
+	if(body_datum.stage >= 5 && iscarbon(user))
+		var/mob/living/carbon/carbon_user = user
+		for(var/datum/wound/wound as anything in carbon_user.all_wounds)
+			if((istype(wound, /datum/wound/slash) || istype(wound, /datum/wound/pierce)) && wound.severity <= (body_datum.stage >= 8 ? WOUND_SEVERITY_CRITICAL : WOUND_SEVERITY_SEVERE))
+				wound.remove_wound()
+				to_chat(user, span_nicegreen("Your flesh pulls the wound shut."))
+				break
+	to_chat(user, span_nicegreen("Warm blood surges through you. (+[heal] brute and burn healed)"))
+
 // ===================== Iron Shirt =====================
 
 /datum/action/cooldown/spell/body_art/iron_shirt
