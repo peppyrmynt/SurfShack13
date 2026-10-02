@@ -680,7 +680,9 @@
 	.["Grant Demonic Path (master)"] = CALLBACK(src, PROC_REF(admin_grant_forbidden))
 
 /datum/antagonist/cultivator/proc/admin_give_progress(mob/admin)
-	progress = min(progress + 50, next_threshold() || progress)
+	var/next = next_threshold()
+	// At the peak, keep counting towards Ascension
+	progress = next ? min(progress + 50, next) : progress + 50
 	update_hud()
 
 /datum/antagonist/cultivator/proc/admin_teach_law(mob/admin)
