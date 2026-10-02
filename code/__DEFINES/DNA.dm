@@ -92,6 +92,9 @@
 #define ORGAN_SLOT_LUNGS "lungs"
 #define ORGAN_SLOT_PARASITE_EGG "parasite_egg"
 #define ORGAN_SLOT_MONSTER_CORE "monstercore"
+// Surf Shack Edit
+#define ORGAN_SLOT_DANTIAN "dantian"
+// Surf Shack End
 #define ORGAN_SLOT_RIGHT_ARM_AUG "r_arm_device"
 #define ORGAN_SLOT_LEFT_ARM_AUG "l_arm_device" //This one ignores alphabetical order cause the arms should be together
 #define ORGAN_SLOT_RIGHT_ARM_MUSCLE "r_arm_muscle"
@@ -175,6 +178,7 @@ GLOBAL_LIST_INIT(organ_process_order, list(
 	ORGAN_SLOT_BRAIN_CNS,
 	ORGAN_SLOT_PARASITE_EGG,
 	ORGAN_SLOT_MONSTER_CORE,
+	ORGAN_SLOT_DANTIAN, // Surf Shack Edit
 	ORGAN_SLOT_XENO_PLASMAVESSEL,
 	ORGAN_SLOT_XENO_HIVENODE,
 	ORGAN_SLOT_XENO_RESINSPINNER,

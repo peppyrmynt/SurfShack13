@@ -315,3 +315,33 @@ As the Captain, your sabre deals extra damage to Assistants (as long as they hav
 You can automatically extract and retract arm implants by 'activating' the empty hand they're on. This includes integrated toolsets, cursed katanas, and vorpal scythes.
 You can combine the Carpet reagent with various different reagents, such as Oil and Cyanide, to create unique carpet types.
 You can bake a birthday cake and then microwave it to create a legendary cake hat. You can then combine it with an energy sword to create an energy cake.
+Confucius said: "Is it not a pleasure to learn, and to practice what you have learned?"
+Confucius said: "Real knowledge is to know the extent of one's ignorance."
+Confucius said: "It does not matter how slowly you go, as long as you do not stop."
+Confucius said: "When you see a worthy person, think of becoming their equal. When you see an unworthy one, examine yourself."
+Confucius said: "Do not impose on others what you yourself do not desire."
+Confucius said: "The gentleman is modest in his speech, but exceeds in his actions."
+Confucius said: "Learning without thought is labour lost; thought without learning is perilous."
+Confucius said: "When three people walk together, one of them can surely be my teacher."
+Confucius said: "Reviewing the old to understand the new, one may become a teacher."
+Confucius said: "The gentleman understands what is right; the petty man understands what is profitable."
+Confucius said: "To see what is right and not do it is a lack of courage."
+Confucius said: "At fifteen I set my heart on learning. At thirty I stood firm. At forty I had no doubts. At fifty I knew the Mandate of Heaven."
+Confucius said: "If a man takes no thought about what is distant, he will find sorrow near at hand."
+Confucius said: "The gentleman is not a tool." Even if your job title says otherwise.
+Confucius said: "The virtue of the ruler is the wind, the virtue of the people is the grass. When the wind blows, the grass bends."
+Confucius said: "Do not worry that others do not know you; worry that you do not know others."
+Confucius said: "Those who know it are not equal to those who love it, and those who love it are not equal to those who delight in it."
+Confucius said: "The gentleman seeks harmony, not sameness."
+Confucius said: "A craftsman who wishes to do good work must first sharpen his tools." Check your toolbelt before the shift.
+Confucius said: "If you hear the Way in the morning, you may die content in the evening."
+孔子曰：「学而时习之，不亦说乎？」 (Confucius: Is it not a pleasure to learn, and to practice what you have learned?)
+孔子曰：「己所不欲，勿施于人。」 (Confucius: Do not impose on others what you yourself do not desire.)
+孔子曰：「三人行，必有我师焉。」 (Confucius: When three people walk together, one of them can surely be my teacher.)
+孔子曰：「温故而知新，可以为师矣。」 (Confucius: Reviewing the old to understand the new, one may become a teacher.)
+孔子曰：「工欲善其事，必先利其器。」 (Confucius: A craftsman who wishes to do good work must first sharpen his tools.)
+Cultivation manuals are hidden in maintenance and the library. Reading one awakens you to qi. About one in four is a counterfeit that makes you shout every technique's name.
+As a cultivator, mixing up your work earns more insight than repeating one task. Meditate to turn pending insight into real progress.
+A cultivation mat surrounded by objects of your laws' elements makes meditation and breakthroughs far more effective. Use Spiritual Sense on the mat for a reading.
+Breakthroughs call down heaven's lightning. Ask an engineer to build a grounding rod nearby; it will pull some of the bolts away from you.
+Heads of staff hold the Mandate of Heaven. If they fall, a jade seal drops where they stood, and whoever claims it inherits the Mandate.
