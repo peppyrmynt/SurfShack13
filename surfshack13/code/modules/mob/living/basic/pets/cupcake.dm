@@ -106,9 +106,10 @@
 		'surfshack13/sound/mobs/cupcake/whine5.ogg',
 	)
 
-	/// What we eat, and what tames us
+	/// What we eat, and what tames us. Kept different from the carp's meat-only list, the unit tests want identical element lists shared
 	var/static/list/food_types = list(
 		/obj/item/food/meat,
+		/obj/item/food/sausage,
 	)
 	/// Commands we listen to while tamed
 	var/static/list/pet_commands = list(
