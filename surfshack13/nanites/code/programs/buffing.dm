@@ -202,3 +202,40 @@
 /datum/nanite_program/limbtach/disable_passive_effect()
 	. = ..()
 	host_mob.remove_traits(list(TRAIT_LIMBATTACHMENT), TRAIT_NANITES)
+
+/datum/nanite_program/antibomb
+	name = "Explosive Resistance"
+	desc = "The nanites form a metallic netting within the host, preventing the host from being torn apart by explosives. Additionally increases the hosts resilience against explosives."
+	use_rate = 1.5
+	rogue_types = list(/datum/nanite_program/glitch)
+	// The amount of armor we initially added, to then be retracted later.
+	var/current_armor = 0
+
+/datum/nanite_program/antibomb/enable_passive_effect()
+	. = ..()
+	host_mob.add_traits(list(TRAIT_BOMBGIBIMMUNE), TRAIT_NANITES)
+
+	var/datum/armor/our_armor = host_mob.get_armor()
+	var/list/armorlist = our_armor.get_rating_list()
+
+	// Get your current armor. Usually you don't have armor as a mob, but we'll account for it.
+	// Then, multiply your current armor by 0.25, to find our difference.
+	// Basically, we're minimizing how much armor you get in total, but at the bare minimum, we'll give you 20 armor.
+	// If this makes you 100% resistance to bombs, we do nothing.
+	var/armor_bonus = CEILING((100 - armorlist[BOMB]) * 0.25, 20)
+	if(armorlist[BOMB] + armor_bonus >= 100)
+		armor_bonus = 0
+	armorlist[BOMB] += armor_bonus
+	current_armor = armor_bonus
+
+	host_mob.set_armor(our_armor.generate_new_with_specific(armorlist))
+
+/datum/nanite_program/antibomb/disable_passive_effect()
+	. = ..()
+	host_mob.remove_traits(list(TRAIT_BOMBGIBIMMUNE), TRAIT_NANITES)
+
+	var/datum/armor/our_armor = host_mob.get_armor()
+	var/list/armorlist = our_armor.get_rating_list()
+	armorlist[BOMB] -= current_armor
+
+	host_mob.set_armor(our_armor.generate_new_with_specific(armorlist))
