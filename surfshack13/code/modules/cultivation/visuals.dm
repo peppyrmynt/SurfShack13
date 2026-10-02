@@ -154,3 +154,111 @@
 	playsound(source, 'sound/effects/gong.ogg', volume, TRUE, frequency = 0.35)
 	playsound(source, 'sound/effects/explosion/explosion_distant.ogg', volume * 0.7, TRUE)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), source, 'sound/runtime/instruments/synthesis_samples/chromatic/fluid_celeste/C4.ogg', volume * 0.5, TRUE), 0.35 SECONDS)
+
+// ===================== Music =====================
+
+/// Gong scale (do re mi sol la), as playback speeds relative to the sample's root note
+#define CULTIVATION_PENTATONIC list(1, 1.122, 1.26, 1.498, 1.682, 2)
+
+/// A guqin-like phrase: plucked nylon strings walking up the pentatonic scale. Notes are indexes into CULTIVATION_PENTATONIC.
+/proc/cultivation_guqin_phrase(atom/source, list/notes = list(1, 2, 3, 5), gap = 0.18 SECONDS, volume = 45)
+	var/list/scale = CULTIVATION_PENTATONIC
+	var/delay = 0
+	for(var/note in notes)
+		var/speed = scale[clamp(note, 1, length(scale))]
+		if(delay)
+			addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), source, 'sound/runtime/instruments/synthesis_samples/guitar/crisis_nylon/c4.ogg', volume, FALSE, 0, SOUND_FALLOFF_EXPONENT, speed), delay)
+		else
+			playsound(source, 'sound/runtime/instruments/synthesis_samples/guitar/crisis_nylon/c4.ogg', volume, FALSE, frequency = speed)
+		delay += gap
+
+#undef CULTIVATION_PENTATONIC
+
+// ===================== Distortion =====================
+
+/// Heat-haze style warp that bends everything behind it
+/atom/movable/warp_effect/cultivation
+	alpha = 0
+
+/// A ring of bent air rushing outward from something, `radius` tiles across at its widest
+/proc/cultivation_distortion_wave(atom/movable/center, radius = 4, time = 0.8 SECONDS, strength = 200)
+	if(QDELETED(center))
+		return
+	var/atom/movable/warp_effect/cultivation/warp = new(center)
+	// The warp sprite is 11 tiles across
+	var/final_scale = max(radius * 2 / 11, 0.2)
+	warp.transform = matrix().Scale(0.05)
+	center.vis_contents += warp
+	animate(warp, alpha = strength, transform = matrix().Scale(final_scale * 0.5), time = time * 0.3, easing = SINE_EASING | EASE_OUT)
+	animate(alpha = 0, transform = matrix().Scale(final_scale), time = time * 0.7, easing = SINE_EASING | EASE_IN)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(cultivation_remove_vis), center, warp), time)
+
+// ===================== Small strikes =====================
+
+/// A quick star of qi where fingers or a talisman land
+/obj/effect/temp_visual/cultivation_spark
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "impact_laser_yellow"
+	layer = ABOVE_MOB_LAYER
+	duration = 0.4 SECONDS
+	blend_mode = BLEND_ADD
+	randomdir = FALSE
+
+/obj/effect/temp_visual/cultivation_spark/Initialize(mapload, spark_color, offset_x = 0, offset_y = 0)
+	. = ..()
+	if(spark_color)
+		color = spark_color
+	pixel_x = offset_x
+	pixel_y = offset_y
+	transform = matrix().Scale(0.4)
+	var/matrix/burst = matrix()
+	burst.Scale(1.1)
+	burst.Turn(rand(-30, 30))
+	animate(src, transform = burst, time = 0.15 SECONDS, easing = SINE_EASING | EASE_OUT)
+	animate(alpha = 0, time = 0.25 SECONDS)
+
+// ===================== Breakthrough =====================
+
+/// The name of the new realm, rising in gold above the cultivator
+/obj/effect/temp_visual/cultivation_realm_banner
+	icon = null
+	icon_state = null
+	duration = 4 SECONDS
+	randomdir = FALSE
+	layer = ABOVE_ALL_MOB_LAYER
+	plane = ABOVE_GAME_PLANE
+	maptext_width = 256
+	maptext_height = 64
+	maptext_x = -112
+	maptext_y = 36
+	alpha = 0
+
+/obj/effect/temp_visual/cultivation_realm_banner/Initialize(mapload, realm_text)
+	. = ..()
+	maptext = MAPTEXT_PIXELLARI("<span style='text-align: center; color: #ffe27a; font-size: 14pt'>[realm_text]</span>")
+	animate(src, alpha = 255, maptext_y = 48, time = 0.6 SECONDS, easing = SINE_EASING | EASE_OUT)
+	animate(maptext_y = 54, time = 2.4 SECONDS)
+	animate(alpha = 0, maptext_y = 62, time = 1 SECONDS, easing = SINE_EASING | EASE_IN)
+
+/// The whole show of a successful breakthrough: lift off, a pillar of light, a crashing wave of qi, the realm's name, and the strings.
+/proc/cultivation_breakthrough_sequence(mob/living/user, realm_text)
+	var/turf/here = get_turf(user)
+	if(!here)
+		return
+	// Rise on a column of qi
+	animate(user, pixel_z = 10, time = 0.8 SECONDS, easing = SINE_EASING | EASE_OUT, flags = ANIMATION_RELATIVE | ANIMATION_PARALLEL)
+	animate(time = 1.2 SECONDS)
+	animate(pixel_z = -10, time = 0.8 SECONDS, easing = SINE_EASING | EASE_IN, flags = ANIMATION_RELATIVE)
+	user.add_filter("breakthrough_radiance", 3, list("type" = "outline", "color" = "#fff3b0", "size" = 3, "alpha" = 0))
+	var/radiance = user.get_filter("breakthrough_radiance")
+	animate(radiance, alpha = 255, time = 0.4 SECONDS, flags = ANIMATION_PARALLEL)
+	animate(alpha = 0, time = 2.4 SECONDS)
+	addtimer(CALLBACK(user, TYPE_PROC_REF(/datum, remove_filter), "breakthrough_radiance"), 2.8 SECONDS)
+	cultivation_particles(user, /particles/cultivation/gold, 3 SECONDS)
+	new /obj/effect/temp_visual/cultivation_ascension_pillar(here)
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(here)
+	cultivation_distortion_wave(user, 7, 1.2 SECONDS)
+	playsound(user, 'sound/effects/magic/charge.ogg', 70, TRUE)
+	cultivation_guqin_phrase(user, list(1, 2, 3, 4, 5, 6))
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(cultivation_temple_sound), user, 70), 1.1 SECONDS)
+	new /obj/effect/temp_visual/cultivation_realm_banner(here, realm_text)

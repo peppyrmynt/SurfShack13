@@ -175,9 +175,7 @@
 		span_boldnotice("A pillar of golden light erupts from [user]! [user.p_They()] [user.p_have()] broken through to [winner.realm_name(winner.effective_realm())]!"),
 		span_boldnotice("Your qi surges through every meridian. You have broken through to [winner.realm_name(winner.effective_realm())]!"),
 	)
-	playsound(user, 'sound/effects/magic/charge.ogg', 70, TRUE)
-	new /obj/effect/temp_visual/cultivation_ascension_pillar(get_turf(user))
-	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(get_turf(user))
+	cultivation_breakthrough_sequence(user, winner.realm_name(winner.effective_realm()))
 	// Watching someone else break through is a lesson in itself
 	for(var/mob/living/witness in view(7, user))
 		if(witness == user)
@@ -244,4 +242,16 @@
 	icon = 'icons/effects/32x96.dmi'
 	icon_state = "thunderbolt"
 	color = "#ffe27a"
-	duration = 1.5 SECONDS
+	duration = 2 SECONDS
+	layer = ABOVE_ALL_MOB_LAYER
+	blend_mode = BLEND_ADD
+	randomdir = FALSE
+
+/obj/effect/temp_visual/cultivation_ascension_pillar/Initialize(mapload)
+	. = ..()
+	// Bursts open from a thin thread of light, holds, then thins away
+	transform = matrix().Scale(0.15, 1)
+	alpha = 0
+	animate(src, transform = matrix().Scale(1.6, 1), alpha = 255, time = 0.25 SECONDS, easing = SINE_EASING | EASE_OUT)
+	animate(transform = matrix().Scale(1.2, 1), time = 1 SECONDS)
+	animate(transform = matrix().Scale(0.1, 1), alpha = 0, time = 0.75 SECONDS, easing = SINE_EASING | EASE_IN)

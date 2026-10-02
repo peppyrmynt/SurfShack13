@@ -55,7 +55,8 @@
 /// One cycle of meditation. Returns FALSE when there's nothing more to gain.
 /datum/action/cooldown/spell/cultivation/meditate/proc/meditation_cycle(mob/living/user, datum/antagonist/cultivator/cultivator, datum/cultivation_site_report/report, first_cycle)
 	// Someone wandered into your secluded retreat
-	if(report.secluded && !cultivation_evaluate_site(user, cultivator).secluded)
+	var/datum/cultivation_site_report/current_site = report.secluded ? cultivation_evaluate_site(user, cultivator) : null
+	if(current_site && !current_site.secluded)
 		user.say(pick("WHO DARES DISTURB MY SECLUSION?!", "You! You are courting death!", "Insolent junior, you have ruined my closed-door cultivation!"), forced = "broken seclusion")
 		report.multiplier -= 0.25
 
@@ -399,9 +400,12 @@
 	user.do_attack_animation(cast_on, ATTACK_EFFECT_PUNCH)
 	playsound(cast_on, 'sound/items/weapons/cqchit1.ogg', 50, TRUE)
 	var/armor = cast_on.run_armor_check(check_zone(zone), MELEE, silent = TRUE)
+	var/list/jab_offset = acupoint_offset(zone)
 	if(armor >= 40)
+		new /obj/effect/temp_visual/cultivation_spark(get_turf(cast_on), "#9a9a9a", jab_offset[1], jab_offset[2])
 		cast_on.visible_message(span_warning("[user] jabs at [cast_on], but [user.p_their()] fingers can't find the acupoint through the armour!"))
 		return
+	new /obj/effect/temp_visual/cultivation_spark(get_turf(cast_on), null, jab_offset[1], jab_offset[2])
 	var/realm_gap = cultivation_realm_of(user) - cultivation_realm_of(cast_on)
 	var/duration = clamp(4 SECONDS + realm_gap * 1 SECONDS, 2 SECONDS, 7 SECONDS)
 	switch(zone)
@@ -421,6 +425,19 @@
 		else
 			cast_on.visible_message(span_danger("[user] jabs a point on [cast_on]'s leg!"), span_userdanger("Your legs feel like lead!"))
 			cast_on.apply_status_effect(/datum/status_effect/cultivation_slow, duration)
+
+/// Roughly where on a standing body the fingers land, so the spark shows on the throat, the arm or the leg
+/datum/action/cooldown/spell/pointed/cultivation/acupoint/proc/acupoint_offset(zone)
+	switch(zone)
+		if(BODY_ZONE_PRECISE_MOUTH, BODY_ZONE_HEAD, BODY_ZONE_PRECISE_EYES)
+			return list(0, 9)
+		if(BODY_ZONE_L_ARM, BODY_ZONE_PRECISE_L_HAND)
+			return list(7, 0)
+		if(BODY_ZONE_R_ARM, BODY_ZONE_PRECISE_R_HAND)
+			return list(-7, 0)
+		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_PRECISE_R_FOOT, BODY_ZONE_PRECISE_GROIN)
+			return list(0, -9)
+	return list(0, 2)
 
 /datum/action/cooldown/spell/pointed/cultivation/acupoint/proc/unseal_arm(mob/living/carbon/target, trait)
 	REMOVE_TRAIT(target, trait, REF(src))
@@ -446,6 +463,7 @@
 	var/obj/effect/temp_visual/circle_wave/cultivation/gold/big/wave = new(get_turf(cast_on))
 	wave.transform = matrix().Scale(0.1)
 	animate(wave, transform = matrix().Scale(reach), time = 0.8 SECONDS, flags = ANIMATION_PARALLEL)
+	cultivation_distortion_wave(cast_on, reach, 0.9 SECONDS, 140 + my_realm * 25)
 	cast_on.Shake(2, 2, 1 SECONDS)
 	for(var/mob/living/victim in range(reach, cast_on))
 		if(victim == cast_on || victim.stat == DEAD)
@@ -457,6 +475,9 @@
 		to_chat(victim, span_userdanger("An overwhelming pressure bears down on you!"))
 		victim.Shake(2, 2, 1 SECONDS)
 		shake_camera(victim, 2 + gap, 2)
+		// Pressed down into the floor for a moment
+		animate(victim, pixel_z = -2 - gap, time = 0.15 SECONDS, easing = SINE_EASING | EASE_OUT, flags = ANIMATION_RELATIVE | ANIMATION_PARALLEL)
+		animate(pixel_z = 2 + gap, time = 0.6 SECONDS, easing = SINE_EASING | EASE_IN, flags = ANIMATION_RELATIVE)
 		victim.apply_status_effect(/datum/status_effect/cultivation_slow, 3 SECONDS + gap * 1.5 SECONDS)
 		victim.adjust_stutter_up_to(5 SECONDS * gap, 20 SECONDS)
 		victim.adjustStaminaLoss(15 * gap)

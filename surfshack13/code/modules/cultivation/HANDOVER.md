@@ -18,6 +18,7 @@ This file is a working note for whoever continues the feature. Delete it (and `t
 - Build: `dm.exe tgstation.dme` (Windows) or the repo's normal build tooling. If a DreamDaemon is running from the same checkout, its `.rsc` is locked and new icon files "cannot be found": compile a copy (`cp tgstation.dme tgstation_cultcheck.dme`) and delete the copy afterwards.
 - Lint: `bash tools/ci/check_grep.sh`. On Windows it always reports invalid map file references in `_maps/*.json`; those are pre-existing and unrelated.
 - Unit tests: build with `-DCIBUILDING`, deploy with `tools/deploy.sh <dir>`, copy `tools/ci/ci_config.txt` to `<dir>/config/config.txt` and `_maps/runtimestation.json` to `<dir>/data/next_map.json`, then `DreamDaemon tgstation.dmb -close -trusted -verbose -params "log-directory=ci"` and read `<dir>/data/logs/ci/tests.log`. Last full run: 336 passing.
+- No BYOND on Linux/cloud? `dreamchecker` (SpacemanDMM `suite-1.11`, from its GitHub releases) runs on Linux in ~20s from the repo root. Master reports 0 diagnostics; keep it that way (it catches sleeping calls inside `SIGNAL_HANDLER`s and untyped field access, which CI rejects).
 - Our test: `surfshack13/code/modules/unit_test/cultivation.dm`. Core `#undef`s `TEST_ASSERT`/`TEST_ASSERT_EQUAL` after its own tests, so modular tests redefine them locally (already done there).
 - tg CI rules we hit: no new `simple_animal` subtypes; every status effect type (including abstract parents) needs an `id`; worn items need worn sprites; all spell names must be unique; new traits must be registered globally (we avoided new traits).
 
@@ -44,7 +45,7 @@ This file is a working note for whoever continues the feature. Delete it (and `t
 | `mandate_of_heaven.dm` | Mandate for heads (Captain = Son of Heaven), decree, withdrawal, jade seal, omens |
 | `wuxia/martial_styles.dm` | Drunken Fist, Eagle Claw, Wing Chun + manuals |
 | `wuxia/jianghu.dm` | Face, honor duels, sects/plaques/transmission/rivalry, hidden weapons |
-| `visuals.dm` | Qi waves, particles, attached visuals, temple sounds, wound mending helper |
+| `visuals.dm` | Qi waves, particles, attached visuals, temple sounds, wound mending helper, guqin phrases (nylon plucks on the gong scale), distortion waves (tg `warp_effect`), acupoint sparks, breakthrough success sequence and realm banner |
 | `activity_hooks.dm` | Modular hooks that feed insight (crafting, tool use, skills, harvest, books, tea, water) |
 | `roundstart_loot.dm` | Round start spawns (manuals, ring, wuxia manuals, one legendary artifact) and mandate registration |
 
@@ -83,7 +84,7 @@ Everything since the second commit has only been compiled and unit tested, with 
 The user's standing direction is "keep improving: sprites, animations, sounds, gameplay loops, polish, fun". Concretely:
 
 - **Sprites**: inhand sprites for artifacts (currently borrowed tg inhands), proper talisman sprites per type, sect plaque and jade seal could use the HD treatment, a real cultivation manual cover per law, Heart Demon visual, spirit beast aura sprite.
-- **Animations**: talisman use effects, acupoint jab sparks, Realm Pressure distortion, breakthrough success sequence (rising, light pillar, realm name banner), formation activation flare, decree banner.
-- **Sounds**: more oriental cues (guqin/pipa-like plucks via instrument samples, wind chimes); qinggong whoosh variants; per-element cast sounds.
+- **Animations**: talisman use effects, decree banner. (Done, not yet seen in game: acupoint jab sparks, Realm Pressure distortion + victims pressed down, breakthrough success sequence (rise, radiant outline, light pillar, distortion, realm name banner, guqin run + temple bell), formation activation flare + barrier flash.)
+- **Sounds**: more oriental cues (`cultivation_guqin_phrase` exists now; use it more, add wind chimes); qinggong whoosh variants; per-element cast sounds.
 - **Gameplay loops**: forbidden/antag techniques (corpse puppets, devouring art, soul search, gu worms; ask whether antag-only or rare manuals), guqin music cultivation, Ascension finale, sect missions/tournaments, more insight sources per law, pills that matter more (alchemy cauldron structure), artifact refinement (upgrade a bound artifact over time), Heart Demon fights, spirit beast evolutions.
 - **Balance**: everything is first-pass numbers; adjust from playtest feedback.

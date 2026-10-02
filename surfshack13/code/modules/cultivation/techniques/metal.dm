@@ -118,10 +118,16 @@
 	if(catcher.mind != owner_mind)
 		return NONE
 	UnregisterSignal(source, list(COMSIG_MOVABLE_PRE_IMPACT, COMSIG_MOVABLE_MOVED))
+	INVOKE_ASYNC(src, PROC_REF(snap_into_hand), catcher, source)
+	return COMPONENT_MOVABLE_IMPACT_NEVERMIND
+
+/// Putting an item in hands can sleep (stack merging), so the catch happens outside the impact signal
+/datum/component/cultivation_artifact/proc/snap_into_hand(mob/living/catcher, obj/item/source)
+	if(QDELETED(catcher) || QDELETED(source))
+		return
 	if(!catcher.put_in_hands(source))
 		source.forceMove(catcher.drop_location())
 	catcher.visible_message(span_notice("[source] slaps neatly into [catcher]'s hand."))
-	return COMPONENT_MOVABLE_IMPACT_NEVERMIND
 
 /datum/component/cultivation_artifact/proc/caught(mob/living/master)
 	var/obj/item/item = parent

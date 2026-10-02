@@ -228,7 +228,8 @@
 	var/trait = (victim.active_hand_index % 2) ? TRAIT_PARALYSIS_L_ARM : TRAIT_PARALYSIS_R_ARM
 	ADD_TRAIT(victim, trait, "eagle_claw")
 	addtimer(TRAIT_CALLBACK_REMOVE(victim, trait, "eagle_claw"), 5 SECONDS)
-	victim.apply_damage(15, BRUTE, victim.get_active_hand()?.body_zone || BODY_ZONE_CHEST)
+	var/obj/item/bodypart/locked_arm = victim.get_active_hand()
+	victim.apply_damage(15, BRUTE, locked_arm?.body_zone || BODY_ZONE_CHEST)
 	log_combat(attacker, victim, "joint locked (Eagle Claw)")
 
 /mob/living/proc/eagle_claw_help()

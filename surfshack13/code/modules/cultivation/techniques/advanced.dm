@@ -110,11 +110,17 @@ GLOBAL_LIST_EMPTY(cultivation_formations)
 	. = ..()
 	owner_mind = creator?.mind
 	GLOB.cultivation_formations += src
-	animate(src, alpha = 200, time = 1 SECONDS)
+	// Activation flare: the array flashes white, overshoots, and settles into its slow glow
+	transform = matrix().Scale(0.4)
+	color = list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, 0.7,0.7,0.7,0)
+	animate(src, alpha = 255, transform = matrix().Scale(1.12), time = 0.35 SECONDS, easing = SINE_EASING | EASE_OUT)
+	animate(alpha = 200, transform = matrix(), color = COLOR_MATRIX_IDENTITY, time = 0.65 SECONDS, easing = SINE_EASING | EASE_IN)
 	animate(alpha = 140, time = 2 SECONDS, loop = -1)
 	animate(alpha = 200, time = 2 SECONDS)
 	QDEL_IN(src, lifetime)
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold(loc)
 	playsound(src, 'sound/effects/magic/charge.ogg', 40, TRUE)
+	cultivation_guqin_phrase(src, list(5, 3, 1), 0.12 SECONDS, 35)
 
 /obj/effect/cultivation_formation/Destroy()
 	GLOB.cultivation_formations -= src
@@ -170,7 +176,9 @@ GLOBAL_LIST_EMPTY(cultivation_formations)
 	. = ..()
 	src.formation = formation
 	alpha = 0
-	animate(src, alpha = 150, time = 0.5 SECONDS)
+	animate(src, alpha = 255, time = 0.2 SECONDS)
+	animate(alpha = 150, time = 0.4 SECONDS)
+	flick("shield-flash", src)
 
 /obj/structure/cultivation_barrier/Destroy()
 	formation?.walls -= src
