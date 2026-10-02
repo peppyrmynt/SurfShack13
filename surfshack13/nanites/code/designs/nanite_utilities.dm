@@ -149,7 +149,7 @@
 
 /datum/design/nanites/monitoring
 	name = "Monitoring"
-	desc = "The nanites monitor the host's vitals and location, sending them to the suit sensor network. Cannot function if the host isn't wearing a suit."
+	desc = "The nanites monitor the host's vitals and location, sending them to the suit sensor network."
 	research_icon_state = "nanite_program_utility"
 	id = "monitoring_nanites"
 	program_type = /datum/nanite_program/monitoring
