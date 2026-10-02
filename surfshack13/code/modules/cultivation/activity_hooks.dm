@@ -17,7 +17,7 @@
 		SEND_SIGNAL(current, COMSIG_MOB_CULTIVATION_SKILL_EXP, skill, amt)
 		// Hard physical training tempers the body. The gym starts anyone on Copper Skin.
 		if(amt > 0 && skill == /datum/skill/athletics)
-			body_cultivation_train(current, 12, BODY_TRAINING_GYM, 20 SECONDS, can_start = TRUE)
+			body_cultivation_train(current, 15, BODY_TRAINING_GYM, 10 SECONDS, can_start = TRUE)
 		else if(amt > 0 && skill == /datum/skill/mining)
 			body_cultivation_train(current, 8, BODY_TRAINING_MINING, 30 SECONDS)
 

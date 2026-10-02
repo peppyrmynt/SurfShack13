@@ -691,7 +691,7 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 	if(isliving(target) && target != source)
 		gain_tempering(6, BODY_TRAINING_FIGHT, 15 SECONDS, silent = TRUE)
 	else if(isclosedturf(target) || istype(target, /obj/structure/punching_bag))
-		gain_tempering(8, BODY_TRAINING_STRIKE, 20 SECONDS, silent = TRUE)
+		gain_tempering(10, BODY_TRAINING_STRIKE, 15 SECONDS, silent = TRUE)
 	if(LAZYACCESS(modifiers, RIGHT_CLICK))
 		return
 	var/obj/item/bodypart/arm = source.get_active_hand()
