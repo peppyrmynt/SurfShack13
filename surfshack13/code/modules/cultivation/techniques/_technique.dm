@@ -66,7 +66,7 @@
 	technique.button_icon_state = copytext(type_text, findlasttext(type_text, "/") + 1)
 	technique.background_icon_state = "bg_heretic"
 	technique.overlay_icon_state = "bg_heretic_border"
-	technique.desc = "[technique.desc]<br><i>Qi: [qi_cost] | Cooldown: [DisplayTimeText(technique.cooldown_time)]</i>"
+	technique.desc = "[technique.desc]<br><i>Qi: [qi_cost] | Cooldown: [DisplayTimeText(technique.cooldown_time)], 10% shorter per realm above Qi Condensation</i>"
 
 /datum/action/cooldown/spell/cultivation/New(Target, original)
 	cultivation_setup_technique(src, qi_cost)
@@ -75,6 +75,20 @@
 /datum/action/cooldown/spell/pointed/cultivation/New(Target, original)
 	cultivation_setup_technique(src, qi_cost)
 	return ..()
+
+/// Cooldowns shrink as your cultivation deepens: 100% at Qi Condensation, 90% Foundation, 80% Golden Core, 70% Nascent Soul
+/proc/cultivation_cooldown_multiplier(mob/living/caster)
+	return 1 - 0.1 * max(cultivation_realm_of(caster) - REALM_QI_CONDENSATION, 0)
+
+/datum/action/cooldown/spell/cultivation/StartCooldownSelf(override_cooldown_time)
+	if(!isnum(override_cooldown_time))
+		override_cooldown_time = cooldown_time * cultivation_cooldown_multiplier(owner)
+	return ..(override_cooldown_time)
+
+/datum/action/cooldown/spell/pointed/cultivation/StartCooldownSelf(override_cooldown_time)
+	if(!isnum(override_cooldown_time))
+		override_cooldown_time = cooldown_time * cultivation_cooldown_multiplier(owner)
+	return ..(override_cooldown_time)
 
 /// Finds the law (if any) a technique belongs to, for counterfeit penalties
 /proc/cultivation_law_of(datum/antagonist/cultivator/cultivator, technique_type)

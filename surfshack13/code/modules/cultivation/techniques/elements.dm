@@ -228,7 +228,8 @@
 
 /datum/action/cooldown/spell/pointed/cultivation/spring_mending
 	name = "Spring Mending"
-	desc = "Channel spring qi into someone beside you, closing wounds and burns (more at higher realms). Half as strong on yourself."
+	desc = "Channel spring qi into someone beside you: heals brute and (extra) burn damage and closes their worst wound, \
+		up to severe at Foundation and critical at Golden Core. Half as strong on yourself."
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "nose"
 	cast_range = 1
@@ -249,10 +250,13 @@
 	patient.remove_filter("spring_mending")
 	if(!success)
 		return
-	var/amount = 15 + 5 * cultivation_realm_of(healer)
+	var/realm = cultivation_realm_of(healer)
+	var/amount = 15 + 5 * realm
 	if(patient == healer)
 		amount = round(amount / 2)
-	patient.heal_overall_damage(brute = amount, burn = amount)
+	patient.heal_overall_damage(brute = amount, burn = round(amount * 1.25))
+	var/max_severity = realm >= REALM_GOLDEN_CORE ? WOUND_SEVERITY_CRITICAL : (realm >= REALM_FOUNDATION ? WOUND_SEVERITY_SEVERE : WOUND_SEVERITY_MODERATE)
+	cultivation_mend_wounds(patient, max_severity, 1)
 	new /obj/effect/temp_visual/heal(get_turf(patient), "#5fd35f")
 	new /obj/effect/temp_visual/circle_wave/cultivation/wood(get_turf(patient))
 	to_chat(patient, span_nicegreen("Warm spring qi knits your wounds together."))
@@ -368,7 +372,7 @@
 	armour_penetration = 15
 	wound_bonus = 5
 	range = 7
-	speed = 0.7
+	speed = 1.6
 	hitsound = 'sound/items/weapons/pierce.ogg'
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/cultivation_thorn
 

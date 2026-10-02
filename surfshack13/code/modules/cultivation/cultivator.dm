@@ -57,6 +57,10 @@
 	COOLDOWN_DECLARE(instability_cooldown)
 	/// Spam limiter for "your mind is full"
 	COOLDOWN_DECLARE(full_warning_cooldown)
+	/// Nascent Soul revival can only happen this often
+	COOLDOWN_DECLARE(nascent_revival_cooldown)
+	/// Already told them their core is keeping them alive this crit
+	var/core_sustain_announced = FALSE
 
 	/// Progress needed to reach realm (index = target realm)
 	var/static/list/realm_thresholds = list(0, 60, 150, 300)
@@ -462,6 +466,7 @@
 		return
 	if(effective_realm() > REALM_MORTAL && qi < max_qi())
 		adjust_qi(0.25 * seconds_per_tick)
+	core_sustain(source, seconds_per_tick)
 	if(pill_toxicity > 0)
 		pill_toxicity = max(pill_toxicity - 0.1 * seconds_per_tick, 0)
 	passive_timer += seconds_per_tick
@@ -479,6 +484,27 @@
 	if(COOLDOWN_FINISHED(src, epiphany_cooldown) && SPT_PROB(1, seconds_per_tick))
 		COOLDOWN_START(src, epiphany_cooldown, 30 SECONDS)
 		INVOKE_ASYNC(src, PROC_REF(check_epiphany), source)
+
+/// A Golden Core keeps its owner alive in critical condition, burning qi to do it. Twice as strong at Nascent Soul.
+/datum/antagonist/cultivator/proc/core_sustain(mob/living/source, seconds_per_tick)
+	var/core_realm = effective_realm()
+	if(core_realm < REALM_GOLDEN_CORE || source.stat == DEAD || source.health > source.crit_threshold)
+		core_sustain_announced = FALSE
+		return
+	var/strength = core_realm >= REALM_NASCENT_SOUL ? 2 : 1
+	// Qi fuels it, but even an empty core gives a little
+	var/fuelled = qi >= 1
+	if(fuelled)
+		adjust_qi(-1 * seconds_per_tick)
+	var/heal = (fuelled ? 1.5 : 0.5) * strength * seconds_per_tick
+	source.heal_overall_damage(brute = heal, burn = heal, updating_health = FALSE)
+	source.adjustOxyLoss(-2 * strength * seconds_per_tick, updating_health = FALSE)
+	source.updatehealth()
+	if(!core_sustain_announced)
+		core_sustain_announced = TRUE
+		to_chat(source, span_boldnotice("Your [core_realm >= REALM_NASCENT_SOUL ? "nascent soul" : "golden core"] blazes inside you, refusing to let you die!"))
+		source.add_filter("core_sustain", 2, list("type" = "outline", "color" = "#ffd55a", "size" = 1))
+		addtimer(CALLBACK(source, TYPE_PROC_REF(/datum, remove_filter), "core_sustain"), 3 SECONDS)
 
 /// Cultivation never really stops: a trickle of insight just from living, more near your elements
 /datum/antagonist/cultivator/proc/passive_insight(mob/living/source)
@@ -552,6 +578,51 @@
 	SIGNAL_HANDLER
 	if(breakthrough)
 		breakthrough.cancel()
+	if(gibbed || effective_realm() < REALM_NASCENT_SOUL)
+		return
+	if(!COOLDOWN_FINISHED(src, nascent_revival_cooldown))
+		to_chat(source, span_warning("Your nascent soul is still exhausted from its last return. It cannot carry you back this time."))
+		return
+	COOLDOWN_START(src, nascent_revival_cooldown, 10 MINUTES)
+	to_chat(source, span_boldnotice("Your body dies... but your nascent soul stirs. Hold on."))
+	addtimer(CALLBACK(src, PROC_REF(nascent_rise), source), 8 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(nascent_revive), source), 12 SECONDS)
+
+/// The nascent soul climbs out of the corpse
+/datum/antagonist/cultivator/proc/nascent_rise(mob/living/body)
+	if(QDELETED(body) || body.stat != DEAD || !get_dantian())
+		return
+	body.visible_message(span_boldwarning("A tiny golden figure, a perfect miniature of [body], sits up out of the corpse and begins to glow!"))
+	var/obj/effect/temp_visual/decoy/fading/threesecond/soul = new(get_turf(body), body)
+	soul.color = "#ffe27a"
+	soul.transform = matrix().Scale(0.4)
+	soul.pixel_y = 10
+	animate(soul, pixel_y = 16, transform = matrix().Scale(0.6), time = 3 SECONDS)
+	cultivation_particles(body, /particles/cultivation/gold, 4 SECONDS)
+	cultivation_temple_sound(body, 50)
+
+/// ...and drags it back to life
+/datum/antagonist/cultivator/proc/nascent_revive(mob/living/body)
+	if(QDELETED(body) || body.stat != DEAD || !get_dantian() || owner.current != body)
+		return
+	body.revive(HEAL_DAMAGE | HEAL_ORGANS | HEAL_LIMBS | HEAL_BLOOD | HEAL_WOUNDS | HEAL_TEMP, force_grab_ghost = TRUE)
+	if(body.stat == DEAD)
+		to_chat(body, span_userdanger("Your nascent soul strains, but this body is too broken to return to."))
+		return
+	adjust_qi(-qi)
+	adjust_instability(20)
+	new /obj/effect/temp_visual/cultivation_ascension_pillar(get_turf(body))
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(get_turf(body))
+	cultivation_great_bell(body, 70)
+	body.visible_message(span_boldwarning("[body] gasps and rises again, golden light pouring from [body.p_their()] eyes!"), span_boldnotice("Your nascent soul drags you back from death! It will need ten minutes to recover before it can do so again."))
+	body.log_message("was revived by their Nascent Soul", LOG_GAME)
+	// Every cultivator on the station feels it
+	for(var/datum/antagonist/cultivator/other in GLOB.antagonists)
+		var/mob/living/feeler = other.owner?.current
+		if(!feeler || feeler == body || feeler.stat == DEAD || feeler.z != body.z)
+			continue
+		to_chat(feeler, span_boldwarning("<i>A shiver runs down your spine. Somewhere on the station, a vast presence that should be dead has awakened... and it is stronger than you.</i>"))
+		feeler.playsound_local(get_turf(feeler), 'sound/effects/gong.ogg', 40, TRUE, frequency = 0.4)
 
 // ----- Examine: the arrogant young master experience -----
 

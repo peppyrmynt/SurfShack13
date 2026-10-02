@@ -126,3 +126,31 @@
 	if(!QDELETED(target))
 		target.vis_contents -= visual
 	qdel(visual)
+
+/// Spring qi closes wounds (burns, cuts, breaks), worst first, up to a severity. Returns how many were mended.
+/proc/cultivation_mend_wounds(mob/living/carbon/patient, max_severity = WOUND_SEVERITY_MODERATE, count = 1)
+	if(!iscarbon(patient) || !length(patient.all_wounds))
+		return 0
+	var/list/wounds = patient.all_wounds.Copy()
+	var/mended = 0
+	while(mended < count && length(wounds))
+		var/datum/wound/worst
+		for(var/datum/wound/wound as anything in wounds)
+			if(wound.severity > max_severity)
+				continue
+			if(!worst || wound.severity > worst.severity)
+				worst = wound
+		if(!worst)
+			break
+		wounds -= worst
+		to_chat(patient, span_nicegreen("Spring qi soothes away your [lowertext(worst.name)]."))
+		worst.remove_wound()
+		mended++
+	return mended
+
+/// A great temple bell struck by a giant: a deep bell, a slow booming gong, the thud of impact, then a ringing overtone
+/proc/cultivation_great_bell(atom/source, volume = 80)
+	playsound(source, 'sound/runtime/instruments/synthesis_samples/chromatic/fluid_celeste/C2.ogg', volume, TRUE)
+	playsound(source, 'sound/effects/gong.ogg', volume, TRUE, frequency = 0.35)
+	playsound(source, 'sound/effects/explosion/explosion_distant.ogg', volume * 0.7, TRUE)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), source, 'sound/runtime/instruments/synthesis_samples/chromatic/fluid_celeste/C4.ogg', volume * 0.5, TRUE), 0.35 SECONDS)

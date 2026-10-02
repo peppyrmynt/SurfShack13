@@ -306,7 +306,8 @@
 		INVOKE_ASYNC(src, PROC_REF(palm_living), target)
 	else if(isstructure(target) || ismachinery(target))
 		var/obj/smashed = target
-		smashed.take_damage(40, BRUTE, MELEE)
+		if(smashed.uses_integrity && !(smashed.resistance_flags & INDESTRUCTIBLE))
+			smashed.take_damage(40, BRUTE, MELEE)
 		playsound(smashed, 'sound/effects/meteorimpact.ogg', 50, TRUE)
 		new /obj/effect/temp_visual/kinetic_blast(get_turf(smashed))
 

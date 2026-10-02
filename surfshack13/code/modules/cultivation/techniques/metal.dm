@@ -322,7 +322,7 @@
 		You must be holding the artifact."
 	button_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "arcane_barrage"
-	cast_range = 5
+	cast_range = 10
 	cooldown_time = 4 SECONDS
 	qi_cost = 20
 
@@ -367,8 +367,8 @@
 	sharpness = SHARP_EDGED
 	wound_bonus = 20
 	bare_wound_bonus = 30
-	range = 5
-	speed = 0.6
+	range = 12
+	speed = 2.5
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/cultivation_sword_qi
 	light_system = OVERLAY_LIGHT

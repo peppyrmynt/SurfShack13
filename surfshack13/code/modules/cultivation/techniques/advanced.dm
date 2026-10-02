@@ -443,8 +443,7 @@ GLOBAL_LIST_EMPTY(cultivation_formations)
 
 /obj/effect/temp_visual/cultivation_buddha_palm/proc/slam()
 	var/mob/living/caster = owner_ref?.resolve()
-	playsound(src, 'sound/effects/meteorimpact.ogg', 80, TRUE)
-	playsound(src, 'sound/effects/gong.ogg', 60, TRUE, frequency = 0.5)
+	cultivation_great_bell(src, 80)
 	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(loc)
 	var/obj/effect/temp_visual/circle_wave/cultivation/earth/dust = new(loc)
 	dust.transform = matrix().Scale(0.1)
@@ -472,7 +471,8 @@ GLOBAL_LIST_EMPTY(cultivation_formations)
 					victim.throw_at(get_edge_target_turf(victim, get_dir(center, victim)), 3, 2, caster)
 				to_chat(victim, span_userdanger("The shockwave of a giant palm hurls you back!"))
 		for(var/obj/structure/smashed in hit_turf)
-			smashed.take_damage(inner ? 120 : 40, BRUTE, MELEE)
+			if(smashed.uses_integrity && !(smashed.resistance_flags & INDESTRUCTIBLE))
+				smashed.take_damage(inner ? 120 : 40, BRUTE, MELEE)
 	animate(alpha = 0, time = 0.6 SECONDS)
 
 /obj/effect/temp_visual/cultivation_buddha_palm/Destroy()
@@ -497,7 +497,8 @@ GLOBAL_LIST_EMPTY(cultivation_formations)
 
 /datum/action/cooldown/spell/cultivation/spring_revival
 	name = "Myriad Spring Revival"
-	desc = "Release a wave of spring qi. Everyone friendly within 5 tiles is healed and shakes off stuns, and the plants around you bloom."
+	desc = "Release a wave of spring qi. Everyone friendly within 5 tiles is healed (brute, burn and toxins), has their two worst wounds closed, \
+		and shakes off stuns. The plants around you bloom."
 	cooldown_time = 60 SECONDS
 	qi_cost = 70
 
@@ -511,8 +512,9 @@ GLOBAL_LIST_EMPTY(cultivation_formations)
 		// People, and your own spirit beast or pets
 		if(friend.stat == DEAD || (!ishuman(friend) && !(REF(cast_on) in friend.faction)))
 			continue
-		friend.heal_overall_damage(brute = 40, burn = 40)
+		friend.heal_overall_damage(brute = 40, burn = 50)
 		friend.adjustToxLoss(-15)
+		cultivation_mend_wounds(friend, WOUND_SEVERITY_CRITICAL, 2)
 		friend.AdjustAllImmobility(-5 SECONDS)
 		new /obj/effect/temp_visual/heal(get_turf(friend), "#5fd35f")
 	for(var/obj/machinery/hydroponics/tray in view(5, cast_on))

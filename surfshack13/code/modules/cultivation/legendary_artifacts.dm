@@ -77,7 +77,8 @@
 
 /obj/item/cultivation_artifact/heaven_reliant
 	name = "Heaven Reliant Sword"
-	desc = "A long, impossibly keen sword of pale jade-white steel. It cuts iron like mud."
+	desc = "A long, impossibly keen sword of pale jade-white steel. It cuts iron like mud: use it on a wall to carve straight through it, \
+		and doors, windows and machines fall apart under it."
 	icon_state = "heaven_reliant"
 	inhand_icon_state = "katana"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
@@ -95,10 +96,43 @@
 
 /obj/item/cultivation_artifact/heaven_reliant/afterattack(atom/target, mob/user, list/modifiers, list/attack_modifiers)
 	. = ..()
-	// It cuts through iron like mud
+	// It cuts through iron like mud: doors, windows, grilles, lockers and machines barely slow it down
 	if(isobj(target) && !isitem(target))
 		var/obj/cut = target
-		cut.take_damage(force * 2, BRUTE, MELEE)
+		if(!cut.uses_integrity || (cut.resistance_flags & INDESTRUCTIBLE))
+			return
+		cut.take_damage(force * 4, BRUTE, MELEE, armour_penetration = 100)
+		new /obj/effect/temp_visual/slash(get_turf(cut), cut, rand(10, 22), rand(10, 22), "#d8fff0")
+
+/// Walls are carved straight through, like mud
+/obj/item/cultivation_artifact/heaven_reliant/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if(!iswallturf(interacting_with))
+		return NONE
+	INVOKE_ASYNC(src, PROC_REF(carve_wall), interacting_with, user)
+	return ITEM_INTERACT_SUCCESS
+
+/obj/item/cultivation_artifact/heaven_reliant/proc/carve_wall(turf/closed/wall/wall, mob/living/user)
+	if(DOING_INTERACTION_WITH_TARGET(user, wall))
+		return
+	var/reinforced = istype(wall, /turf/closed/wall/r_wall)
+	user.visible_message(span_warning("[user] draws the Heaven Reliant Sword across [wall]. The blade sinks into the metal like it's mud!"),
+		span_notice("You begin carving through [wall]..."))
+	playsound(wall, 'sound/items/weapons/bladeslice.ogg', 60, TRUE)
+	var/carve_time = reinforced ? 6 SECONDS : 3 SECONDS
+	// A cultivator wielding it carves faster
+	carve_time = max(carve_time - cultivation_realm_of(user) * 0.5 SECONDS, 1.5 SECONDS)
+	for(var/i in 1 to 3)
+		if(!do_after(user, carve_time / 3, wall))
+			return
+		new /obj/effect/temp_visual/slash(wall, null, 0, 0, "#d8fff0")
+		playsound(wall, 'sound/items/weapons/bladeslice.ogg', 40, TRUE, frequency = 0.8 + i * 0.1)
+		do_sparks(2, FALSE, wall)
+	if(QDELETED(wall) || !iswallturf(wall))
+		return
+	user.visible_message(span_boldwarning("[user] slices clean through [wall], which collapses into neat pieces!"))
+	playsound(wall, 'sound/effects/meteorimpact.ogg', 40, TRUE)
+	user.log_message("carved through [wall] at [AREACOORD(wall)] with the Heaven Reliant Sword", LOG_ATTACK)
+	wall.dismantle_wall()
 
 /obj/item/cultivation_artifact/dragon_saber
 	name = "Dragon Slaying Saber"
