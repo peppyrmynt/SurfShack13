@@ -6587,6 +6587,8 @@
 #include "surfshack13\code\modules\clothing\head\hat.dm"
 #include "surfshack13\code\modules\clown\clown_props.dm"
 #include "surfshack13\code\modules\datums\components\crafting\misc.dm"
+#include "surfshack13\code\modules\events\station_fog.dm"
+#include "surfshack13\code\modules\events\station_fog_cluwne.dm"
 #include "surfshack13\code\modules\frog_ui\frog_ui.dm"
 #include "surfshack13\code\modules\mob\living\tweak.dm"
 #include "surfshack13\code\modules\mob\living\basic\alligator.dm"

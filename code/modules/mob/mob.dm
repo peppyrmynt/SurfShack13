@@ -540,6 +540,11 @@
 		get_dist(src, examine_turf) > 1 && \
 		!has_nightvision()) // If you aren't blind, it's in darkness (that you can't see) and farther then next to you
 		return
+	//surfshack start - station fog hides who distant people are
+	if(GLOB.station_fog?.is_concealed_from(examinify, src))
+		to_chat(src, span_warning("You can't make out who that is through the fog."))
+		return
+	//surfshack end
 
 	face_atom(examinify)
 	var/result_combined
