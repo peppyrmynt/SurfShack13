@@ -84,6 +84,10 @@
 		if(feedback)
 			to_chat(caster, span_warning("You can't spare a thought from your breakthrough!"))
 		return FALSE
+	if(cultivator.effective_realm() < cultivator.required_realm_for(technique.type))
+		if(feedback)
+			to_chat(caster, span_warning("This body's dantian isn't refined enough to channel [technique.name]. Break through again to restore it."))
+		return FALSE
 	var/cost = cultivation_actual_cost(cultivator, technique, base_cost)
 	if(cultivator.qi < cost)
 		if(feedback)

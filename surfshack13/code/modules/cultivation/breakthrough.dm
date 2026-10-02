@@ -34,15 +34,15 @@
 	switch(target_realm)
 		if(REALM_FOUNDATION)
 			duration = 20
-			strike_damage = 8
+			strike_damage = 6
 			strike_times = list(8, 15)
 		if(REALM_GOLDEN_CORE)
 			duration = 30
-			strike_damage = 14
+			strike_damage = 10
 			strike_times = list(6, 11, 16, 21, 26)
 		else
 			duration = 40
-			strike_damage = 18
+			strike_damage = 12
 			strike_times = list(5, 9, 13, 17, 21, 25, 29, 33, 37)
 
 /datum/cultivation_breakthrough/Destroy(force)

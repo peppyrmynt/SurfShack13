@@ -264,6 +264,8 @@
 	var/obj/item/paper/paper = user.is_holding_item_of_type(/obj/item/paper)
 	if(!choice || !paper)
 		reset_spell_cooldown()
+		var/datum/antagonist/cultivator/refund = IS_CULTIVATOR(user)
+		refund?.adjust_qi(cultivation_actual_cost(refund, src, qi_cost))
 		return
 	user.visible_message(span_notice("[user] traces glowing characters across [paper] with a fingertip."))
 	if(!do_after(user, 3 SECONDS, paper))

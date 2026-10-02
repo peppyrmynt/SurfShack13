@@ -78,7 +78,7 @@
 	qi_cost = 10
 
 /datum/action/cooldown/spell/pointed/cultivation/kindle/is_valid_target(atom/cast_on)
-	return !isturf(cast_on)
+	return ..() && !isturf(cast_on)
 
 /datum/action/cooldown/spell/pointed/cultivation/kindle/cast(atom/cast_on)
 	. = ..()

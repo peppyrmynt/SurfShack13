@@ -58,6 +58,7 @@
 /obj/item/organ/dantian/examine(mob/user)
 	. = ..()
 	if(IS_CULTIVATOR(user) || isobserver(user))
-		. += span_notice("It has been refined to the [grade >= REALM_GOLDEN_CORE ? "Golden Core" : "Foundation"] level.[cracked ? " It is cracked." : ""]")
+		var/static/list/grade_names = list("Qi Condensation", "Foundation Establishment", "Golden Core", "Nascent Soul")
+		. += span_notice("It has been refined to the [grade_names[clamp(grade, 1, length(grade_names))]] realm.[cracked ? " It is cracked." : ""]")
 		if(original_owner)
 			. += span_notice("The qi within still carries the signature of <b>[original_owner]</b>.")

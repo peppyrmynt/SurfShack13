@@ -351,6 +351,18 @@
 				to_chat(owner.current, span_boldnotice("Your [combo.element_one] and [combo.element_two] qi resonate! You have comprehended [initial(combo.technique.name)]!"))
 			grant_technique(combo.technique)
 
+/// The realm a technique type was unlocked at
+/datum/antagonist/cultivator/proc/required_realm_for(technique_type)
+	if(technique_type in universal_techniques)
+		return universal_techniques[technique_type]
+	for(var/datum/cultivation_law/law as anything in laws)
+		if(technique_type in law.techniques)
+			return law.techniques[technique_type]
+	for(var/datum/cultivation_combo/combo as anything in GLOB.cultivation_combos)
+		if(combo.technique == technique_type)
+			return combo.realm_required
+	return REALM_QI_CONDENSATION
+
 /datum/antagonist/cultivator/proc/typecache_of_techniques()
 	. = list()
 	for(var/datum/action/technique as anything in techniques)

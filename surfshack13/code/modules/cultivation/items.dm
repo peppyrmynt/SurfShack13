@@ -208,7 +208,7 @@
 		to_chat(user, span_warning("[target] isn't undead. The talisman just sticks to [target.p_their()] forehead and looks silly."))
 		return TRUE
 	target.visible_message(span_danger("[user] slaps a talisman onto [target]'s forehead, and [target.p_they()] freeze[target.p_s()] rigid!"), span_userdanger("A talisman seals your corpse-qi! You can't move!"))
-	target.Paralyze(8 SECONDS)
+	target.Paralyze(5 SECONDS)
 	return TRUE
 
 // ===== Spirit beasts =====
