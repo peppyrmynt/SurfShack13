@@ -545,6 +545,10 @@ GLOBAL_LIST_INIT(body_part_powers, list(
 		if(world.time < tempering_cooldowns[source])
 			return 0
 		tempering_cooldowns[source] = world.time + cooldown
+	// Heaven favours those it has mandated
+	var/datum/component/mandate_of_heaven/mandate = owner.current?.GetComponent(/datum/component/mandate_of_heaven)
+	if(mandate)
+		amount *= mandate.son_of_heaven ? 1.5 : 1.25
 	var/gained = min(amount, BODY_TEMPERING_CAP - tempering)
 	if(gained <= 0)
 		if(!silent)

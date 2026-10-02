@@ -899,6 +899,9 @@
 	html += "<div class='bar'><div class='fill' style='width:[round(100 * tempering / BODY_TEMPERING_CAP)]%'></div></div>"
 	html += "<div style='margin-top:6px'>Exhaustion: [round(exhaustion)]% <span class='dim'>(recovers [round(exhaustion_recovery(), 0.1)]% a second)</span></div>"
 	html += "<div class='bar'><div class='fill' style='width:[round(exhaustion)]%; background:linear-gradient(90deg,#c0a030,#d0201a)'></div></div>"
+	var/datum/component/mandate_of_heaven/mandate = body?.GetComponent(/datum/component/mandate_of_heaven)
+	if(mandate)
+		html += "<div style='color:#ffd55a; margin-top:6px'>You bear the Mandate of Heaven as [mandate.title_of()]: +[mandate.son_of_heaven ? 50 : 25]% tempering from all training.</div>"
 	html += "<h2>The way forward</h2><div class='card'>"
 	if(stage >= stage_cap())
 		html += committed ? "<span class='good'>You have the Primordial Chaos Body.</span>" : "Mortal training ends at Copper Skin. Read the <b>Body Molding Art</b> or be accepted as a disciple to go further (this closes the way of qi)."
