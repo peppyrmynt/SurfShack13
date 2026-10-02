@@ -12,6 +12,15 @@
 /datum/component/riding/creature/cow/bull
 	can_use_abilities = TRUE
 
+// Sit on the middle of the back, which from the side is half a tile behind our real tile
+/datum/component/riding/creature/cow/bull/get_rider_offsets_and_layers(pass_index, mob/offsetter)
+	return list(
+		TEXT_NORTH = list(0, 10),
+		TEXT_SOUTH = list(0, 10),
+		TEXT_EAST = list(-16, 10),
+		TEXT_WEST = list(16, 10),
+	)
+
 /mob/living/basic/bull
 	/// Hats that make you think you can ride a bull
 	var/static/list/rodeo_hats = typecacheof(list(

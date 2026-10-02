@@ -6,8 +6,8 @@
 	icon_state = "Bull"
 	icon_living = "Bull"
 	icon_dead = "Dead"
-	// 64px wide sprite, centre it on the tile. pixel_w so shaking and riding offsets leave it alone
-	pixel_w = -16
+	// 64px wide sprite, see update_sprite_offset(). pixel_w so shaking and riding offsets leave it alone
+	pixel_w = 0
 	gender = MALE
 	mob_biotypes = MOB_ORGANIC | MOB_BEAST | MOB_RUMINANT
 	mob_size = MOB_SIZE_LARGE
@@ -57,6 +57,8 @@
 	ai_controller.set_blackboard_key(BB_TARGETED_ACTION, charge)
 	RegisterSignal(src, COMSIG_HOSTILE_POST_ATTACKINGTARGET, PROC_REF(on_attacked_target))
 	setup_riding()
+	RegisterSignal(src, COMSIG_ATOM_POST_DIR_CHANGE, PROC_REF(on_dir_change))
+	update_sprite_offset()
 
 /// Our regular attacks gore too, just with less oomph than a full charge
 /mob/living/basic/bull/proc/on_attacked_target(mob/living/basic/source, atom/target, success)
@@ -67,6 +69,31 @@
 	if(victim.stat == DEAD)
 		return
 	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(bull_gore), src, victim, gore_damage, gore_fling_range, get_dir(src, victim), WOUND_SEVERITY_MODERATE, 1 SECONDS, gore_toss_chance, gore_wound_chance)
+
+/mob/living/basic/bull/proc/on_dir_change(datum/source, old_dir, new_dir)
+	SIGNAL_HANDLER
+	update_sprite_offset(new_dir)
+
+/**
+ * The sprite is two tiles long from the side, so we line it up so our real tile is where the head is
+ * and the body trails back over the tile behind us. Front and back views are drawn in the left half of the canvas
+ * and sit right on our tile. The corpse is drawn in the middle of the canvas.
+ */
+/mob/living/basic/bull/proc/update_sprite_offset(facing = dir)
+	if(stat == DEAD)
+		pixel_w = -16
+	else if(facing & EAST)
+		pixel_w = -32
+	else
+		pixel_w = 0
+
+/mob/living/basic/bull/death(gibbed)
+	. = ..()
+	update_sprite_offset()
+
+/mob/living/basic/bull/revive(full_heal_flags = NONE, excess_healing = 0, force_grab_ghost = FALSE)
+	. = ..()
+	update_sprite_offset()
 
 /mob/living/basic/bull/Destroy()
 	QDEL_NULL(charge)
