@@ -769,7 +769,16 @@
 		var/level = part_tempering ? part_tempering.level : 0
 		var/progress = part_tempering ? part_tempering.progress : 0
 		html += "<tr><td>[part.plaintext_zone]</td><td>level <b>[level]</b> / [part_cap()]</td><td class='dim'>[level < part_cap() ? "[progress]/[BODY_PART_COST(level + 1)]" : "done for now"]</td></tr>"
-	html += "</table><div class='dim'>Each level: -3% brute and +3 wound resistance on that limb, +1 unarmed damage on arms and legs. Head 4: night vision, head 6: flash proof. Both legs 4: vault tables.</div></div>"
+	html += "</table><div class='dim'>Every level of a limb: -3% brute and +3 wound resistance on it, and +1 punch or kick damage on arms and legs.</div></div>"
+	html += "<h2>Powers of the body</h2><div class='dim'>Head and chest count their own level; arms and legs count the weaker of the pair (strike powers use the arm you punch with).</div>"
+	for(var/group in GLOB.body_part_powers)
+		var/group_level = body_group_level(body, group)
+		html += "<div class='card'><b>[capitalize(group)]</b> <span class='dim'>(level [group_level])</span><br>"
+		var/list/powers = GLOB.body_part_powers[group]
+		for(var/i in 1 to length(powers))
+			var/list/power = powers[i]
+			html += "<div style='[group_level >= i ? "color:#ffd27a" : "opacity:0.55"]'>[i]. <b>[power[1]]</b>: [power[2]]</div>"
+		html += "</div>"
 	html += "<h2>Stages</h2>"
 	for(var/i in 1 to BODY_STAGE_MAX)
 		var/reached = stage >= i

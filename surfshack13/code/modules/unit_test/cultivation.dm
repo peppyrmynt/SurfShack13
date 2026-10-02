@@ -98,6 +98,9 @@
 	TEST_ASSERT_EQUAL(body_datum.stage, 2, "Committed body cultivator didn't reach Iron Bone.")
 	TEST_ASSERT_EQUAL(trainee.maxHealth, base_health + 20, "Body stages didn't raise max health.")
 	TEST_ASSERT_NOTNULL(locate(/datum/action/cooldown/spell/body_art/iron_shirt) in trainee.actions, "Iron Bone didn't grant Iron Shirt.")
+	TEST_ASSERT(HAS_TRAIT(trainee, TRAIT_NIGHT_VISION), "A level 2 head didn't grant Clear Eyes.")
+	TEST_ASSERT(HAS_TRAIT(trainee, TRAIT_QUICKER_CARRY), "Level 2 arms didn't grant Quick Hands.")
+	TEST_ASSERT(!HAS_TRAIT(trainee, TRAIT_STRONG_GRABBER), "Level 3 arm power granted at level 2.")
 	TEST_ASSERT_EQUAL(cultivation_realm_of(trainee), REALM_QI_CONDENSATION, "Iron Bone doesn't compare as Qi Condensation.")
 	var/obj/item/book/granter/cultivation_manual/returning_iron/qi_manual = allocate(/obj/item/book/granter/cultivation_manual/returning_iron)
 	TEST_ASSERT(!qi_manual.can_learn(trainee), "A committed body cultivator can learn qi.")
@@ -105,6 +108,7 @@
 	TEST_ASSERT(!body_book.can_learn(disciple), "A qi cultivator can learn the Body Molding Art.")
 	trainee.mind.remove_antag_datum(/datum/antagonist/body_cultivator)
 	TEST_ASSERT_EQUAL(trainee.maxHealth, base_health, "Losing body cultivation didn't remove its health.")
+	TEST_ASSERT(!HAS_TRAIT(trainee, TRAIT_QUICKER_CARRY), "Body part powers survived losing body cultivation.")
 
 	// Body swap: knowledge follows the mind, power stays in the body
 	var/mob/living/carbon/human/consistent/new_body = allocate(/mob/living/carbon/human/consistent)

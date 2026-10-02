@@ -6607,6 +6607,7 @@
 #include "surfshack13\code\modules\cultivation\visuals.dm"
 #include "surfshack13\code\modules\cultivation\body\body_cultivator.dm"
 #include "surfshack13\code\modules\cultivation\body\body_items.dm"
+#include "surfshack13\code\modules\cultivation\body\body_martial.dm"
 #include "surfshack13\code\modules\cultivation\body\body_techniques.dm"
 #include "surfshack13\code\modules\cultivation\techniques\_technique.dm"
 #include "surfshack13\code\modules\cultivation\techniques\advanced.dm"

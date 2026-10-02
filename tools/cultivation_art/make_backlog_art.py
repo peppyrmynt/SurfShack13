@@ -143,6 +143,9 @@ TECHNIQUES = {
     'iron_shirt': ('铁', 'metal'), 'mountain_leap': ('跃', 'earth'), 'shattering_fist': ('碎', 'crimson'),
     'bone_setting': ('骨', 'jade'), 'body_disciple': ('徒', 'bronze'), 'remold_limb': ('塑', 'bronze'),
     'blood_boil': ('沸', 'crimson'), 'vajra_body': ('刚', 'gold'), 'primordial_roar': ('吼', 'void'),
+    'earth_stomp': ('震', 'earth'), 'hundred_fists': ('百', 'crimson'), 'bull_charge': ('冲', 'bronze'),
+    'falling_star': ('坠', 'earth'), 'mountain_hurl': ('掷', 'bronze'), 'sky_splitting_palm': ('裂', 'metal'),
+    'heaven_quake': ('崩', 'void'),
 }
 
 # ---------------------------------------------------------------- items
@@ -423,6 +426,39 @@ def decree_scroll():
     body = outline(harden(im), OUTLINE)
     return compose(soft_glow((64, 64), [('ellipse', (2, 14, 62, 48))], (255, 220, 110), 4, 90), body)
 
+def crater():
+    """Cracked, sunken floor: a dark bowl with radial cracks and chunks of broken tile."""
+    im = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.ellipse((14, 18, 50, 46), fill=(30, 26, 24, 170))
+    d.ellipse((20, 23, 44, 41), fill=(18, 15, 14, 200))
+    rng = __import__('random').Random(13)
+    for k in range(9):
+        a = 2 * math.pi * k / 9 + rng.uniform(-0.2, 0.2)
+        x, y = 32, 32
+        for step in range(4):
+            r = 8 + step * 5 + rng.uniform(0, 3)
+            nx, ny = 32 + math.cos(a) * r, 32 + math.sin(a) * r * 0.75
+            d.line((x, y, nx, ny), fill=(14, 12, 12, 230), width=1)
+            x, y = nx, ny
+            a += rng.uniform(-0.35, 0.35)
+    for k in range(7):
+        a = rng.uniform(0, 2 * math.pi)
+        r = rng.uniform(16, 22)
+        cx, cy = 32 + math.cos(a) * r, 32 + math.sin(a) * r * 0.75
+        d.polygon([(cx - 2, cy), (cx, cy - 2), (cx + 2, cy + 1), (cx, cy + 2)], fill=(120, 116, 110, 230))
+        d.point((round(cx), round(cy) - 1), fill=(170, 166, 160, 230))
+    return im
+
+def rubble(seed):
+    im = Image.new('RGBA', (8, 8), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    rng = __import__('random').Random(seed)
+    pts = [(rng.randint(1, 3), rng.randint(1, 3)), (rng.randint(4, 6), rng.randint(1, 3)), (rng.randint(4, 6), rng.randint(4, 6)), (rng.randint(1, 3), rng.randint(4, 6))]
+    d.polygon(pts, fill=(118, 110, 100, 255))
+    d.point(pts[0], fill=(170, 162, 150, 255))
+    return outline(harden(im), (40, 34, 30, 255))
+
 # ---------------------------------------------------------------- write
 
 merge_dmi(OUT + 'cultivation_actions.dmi', [(k, [medallion(*v)], 1) for k, v in TECHNIQUES.items()])
@@ -456,7 +492,10 @@ merge_dmi(OUT + 'cultivation_effects_64.dmi', [
     ('heart_demon_aura', [heart_demon_aura(p) for p in range(6)], 1.5),
     ('beast_aura', [beast_aura(p) for p in range(6)], 1.5),
     ('decree_scroll', [decree_scroll()], 1),
+    ('crater', [crater()], 1),
 ])
+
+merge_dmi(OUT + 'cultivation_particles.dmi', [('rubble_1', [rubble(1)], 1), ('rubble_2', [rubble(2)], 1), ('rubble_3', [rubble(3)], 1)])
 
 if os.environ.get('PREVIEW'):
     sheet = Image.new('RGBA', (40 * 12, 40 * 4), (60, 60, 70, 255))

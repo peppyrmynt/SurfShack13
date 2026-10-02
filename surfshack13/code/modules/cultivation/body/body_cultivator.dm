@@ -21,10 +21,83 @@
 #define BODY_PART_TRAIT_SOURCE "body_cultivation_parts"
 
 /// Tempering needed to raise a limb to a level
-#define BODY_PART_COST(level) (6 + 3 * (level))
+#define BODY_PART_COST(level) (6 + 4 * (level))
 
 /// The six limbs that are tempered
 GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))
+
+/**
+ * Nine powers per body part type. Head and chest use their own level, arms and legs use the weaker of the pair
+ * (arm strike powers use the arm you hit with). Each entry: list(name, description, trait or null).
+ */
+GLOBAL_LIST_INIT(body_part_powers, list(
+	"head" = list(
+		list("Keen Ears", "You hear whispers from further away.", TRAIT_GOOD_HEARING),
+		list("Clear Eyes", "You see in the dark.", TRAIT_NIGHT_VISION),
+		list("Unblinking Eyes", "Flashes can't blind you.", TRAIT_NOFLASH),
+		list("Hunter's Sight", "True night vision: darkness hides nothing.", TRAIT_TRUE_NIGHT_VISION),
+		list("Still Mind", "Sleep and sedation can't take you.", TRAIT_SLEEPIMMUNE),
+		list("Heat Sight", "You see the warmth of living things through walls.", TRAIT_THERMAL_VISION),
+		list("Indomitable Will", "Pain doesn't slow you.", TRAIT_ANALGESIA),
+		list("Iron Skull", "Your head can't be severed.", null),
+		list("Primordial Gaze", "You see straight through walls.", TRAIT_XRAY_VISION),
+	),
+	"chest" = list(
+		list("Iron Belly", "Nothing turns your stomach.", TRAIT_STRONG_STOMACH),
+		list("Bellows Lungs", "Half damage from suffocation.", null),
+		list("Iron Guts", "Half damage from toxins.", null),
+		list("Stable Heart", "Your heart never fails.", TRAIT_STABLEHEART),
+		list("Furnace Core", "Cold and heat don't hurt you.", null),
+		list("Endless Wind", "Half stamina damage.", null),
+		list("Pressure-Proof Body", "Low and high pressure don't hurt you.", null),
+		list("Heart of the Mountain", "You fight on in critical condition.", TRAIT_NOSOFTCRIT),
+		list("Breathless Body", "You no longer need to breathe. With Furnace Core and Pressure-Proof Body, you can walk through space.", TRAIT_NOBREATH),
+	),
+	"arms" = list(
+		list("Iron Palms", "Hot things don't burn your hands.", TRAIT_RESISTHEATHANDS),
+		list("Quick Hands", "You carry people faster.", TRAIT_QUICKER_CARRY),
+		list("Iron Grip", "Your grabs start aggressive.", TRAIT_STRONG_GRABBER),
+		list("Strength of an Ox", "Faster gym gains and stronger lifts.", TRAIT_STRENGTH),
+		list("Crushing Blows", "Punches with a level 5 arm stagger.", null),
+		list("Toppling Blows", "Punches with a level 6 arm sometimes knock people down.", null),
+		list("Thunder Fists", "Punches with a level 7 arm sometimes hurl people back.", null),
+		list("Breaking Fists", "Punches with a level 8 arm smash windows, tables, grilles and machines.", null),
+		list("Mountain-Breaking Fists", "Punches with a level 9 arm knock down plain walls.", null),
+	),
+	"legs" = list(
+		list("Light Step", "You tread lightly over glass and sharp things.", TRAIT_LIGHT_STEP),
+		list("Sure Footing", "Wet floors don't slip you.", TRAIT_NO_SLIP_WATER),
+		list("Swift Feet", "You move a little faster.", null),
+		list("Vaulting", "You vault over tables.", TRAIT_FREERUNNING),
+		list("Sturdy Frame", "Heavy equipment barely slows you.", TRAIT_STURDY_FRAME),
+		list("Rooted", "You can't be shoved.", TRAIT_PUSHIMMUNE),
+		list("Silent Stride", "Your footsteps make no sound, and you're faster still.", TRAIT_SILENT_FOOTSTEPS),
+		list("Unslippable", "Nothing makes you slip.", TRAIT_NO_SLIP_ALL),
+		list("Thousand-League Legs", "Nothing slows you down, and you're faster still.", TRAIT_IGNORESLOWDOWN),
+	),
+))
+
+/// The level a body part type counts as: its own level for head and chest, the weaker of the pair for arms and legs
+/proc/body_group_level(mob/living/carbon/body, group)
+	switch(group)
+		if("head")
+			return body_part_level(body, BODY_ZONE_HEAD)
+		if("chest")
+			return body_part_level(body, BODY_ZONE_CHEST)
+		if("arms")
+			return min(body_part_level(body, BODY_ZONE_L_ARM), body_part_level(body, BODY_ZONE_R_ARM))
+		if("legs")
+			return min(body_part_level(body, BODY_ZONE_L_LEG), body_part_level(body, BODY_ZONE_R_LEG))
+	return 0
+
+/datum/movespeed_modifier/body_swift_feet
+	multiplicative_slowdown = -0.1
+
+/datum/movespeed_modifier/body_silent_stride
+	multiplicative_slowdown = -0.2
+
+/datum/movespeed_modifier/body_thousand_league
+	multiplicative_slowdown = -0.3
 
 // ===================== Limb tempering =====================
 
@@ -121,6 +194,12 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 	var/tribulations_failed = 0
 	/// Undying Flesh regrows lost limbs this often
 	COOLDOWN_DECLARE(limb_regrowth_cooldown)
+	/// Mountain-Breaking Fists can only fell a wall this often
+	COOLDOWN_DECLARE(wall_punch_cooldown)
+	/// Traits the body part powers currently grant
+	var/list/part_traits = list()
+	/// The head Iron Skull made unremovable, so we can give it back
+	var/datum/weakref/iron_skull_ref
 
 	/// Display names per stage (index = stage)
 	var/static/list/stage_names = list("Copper Skin", "Iron Bone", "Steel Sinew", "Jade Marrow", "Crimson Blood", "Vajra Viscera", "Golden Body", "Undying Flesh", "Primordial Chaos Body")
@@ -128,15 +207,15 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 	var/static/list/stage_health = list(10, 10, 10, 10, 15, 15, 15, 20, 20)
 	/// What each stage gives you, for the panel
 	var/static/list/stage_benefits = list(
-		"+10 max health. Every tempered limb shrugs off brute damage and wounds, and fists and kicks hit harder.",
-		"+10 max health. Bones that barely break (fewer wounds). Iron Shirt and Mountain Leap.",
-		"+10 max health. Strength of an ox: faster gym gains, quicker fireman carries. Shattering Fist and Bone Setting.",
-		"+10 max health. Marrow that makes blood fast and a heart that won't fail. Body Molding: regrow a lost limb.",
-		"+15 max health. Wounds close on their own and pain doesn't slow you. Blood Boil.",
-		"+15 max health. Organs like iron: half toxin damage, cold and low pressure don't hurt.",
-		"+15 max health. A golden body: batons and needles don't bite. Vajra Golden Body.",
-		"+20 max health. Undying: you fight on in critical condition, heal fast and regrow lost limbs on your own.",
-		"+20 max health. Primordial Chaos Body: shock immune, vault anything. Primordial Roar.",
+		"+10 max health.",
+		"+10 max health. Bones that barely break (fewer wounds). Iron Shirt, Mountain Leap, Earth-Shattering Stomp.",
+		"+10 max health. Stamina comes back fast. Shattering Fist, Hundred Fist Barrage, Bone Setting, Accept Body Disciple.",
+		"+10 max health. Marrow that makes blood fast. Remold Limb (regrow a lost limb), Raging Bull Charge.",
+		"+15 max health. Wounds close on their own. Blood Boil, Falling Mountain Descent, Mountain-Toppling Throw.",
+		"+15 max health. Organs that heal themselves. Sky-Splitting Palm; Raging Bull Charge breaks walls.",
+		"+15 max health. A golden body: batons and needles don't bite, Shattering Fist breaks walls. Vajra Golden Body.",
+		"+20 max health. Undying: heal fast and regrow lost limbs on your own. Heaven-Shaking Quake.",
+		"+20 max health. Primordial Chaos Body: shock immune. Primordial Roar.",
 	)
 	/// Body techniques, by stage required
 	var/static/list/body_techniques = list(
@@ -152,6 +231,13 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 		/datum/action/cooldown/spell/body_art/blood_boil = 5,
 		/datum/action/cooldown/spell/body_art/vajra_body = 7,
 		/datum/action/cooldown/spell/body_art/primordial_roar = 9,
+		/datum/action/cooldown/spell/body_art/earth_stomp = 2,
+		/datum/action/cooldown/spell/pointed/body_art/hundred_fists = 3,
+		/datum/action/cooldown/spell/pointed/body_art/bull_charge = 4,
+		/datum/action/cooldown/spell/pointed/body_art/falling_star = 5,
+		/datum/action/cooldown/spell/pointed/body_art/mountain_hurl = 5,
+		/datum/action/cooldown/spell/pointed/body_art/sky_splitting_palm = 6,
+		/datum/action/cooldown/spell/body_art/heaven_quake = 8,
 	)
 
 /datum/antagonist/body_cultivator/on_gain()
@@ -270,9 +356,8 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 // ----- Stage benefits -----
 
 /datum/antagonist/body_cultivator/proc/clear_stage_benefits(mob/living/body)
-	body.remove_traits(list(TRAIT_HARDLY_WOUNDED, TRAIT_STRENGTH, TRAIT_QUICKER_CARRY, TRAIT_STABLEHEART, TRAIT_ANALGESIA, TRAIT_RESISTCOLD, TRAIT_RESISTLOWPRESSURE, \
-		TRAIT_BATON_RESISTANCE, TRAIT_PIERCEIMMUNE, TRAIT_NOSOFTCRIT, TRAIT_SHOCKIMMUNE, TRAIT_FREERUNNING), BODY_TRAIT_SOURCE)
-	body.remove_traits(list(TRAIT_NIGHT_VISION, TRAIT_NOFLASH, TRAIT_FREERUNNING), BODY_PART_TRAIT_SOURCE)
+	body.remove_traits(list(TRAIT_HARDLY_WOUNDED, TRAIT_BATON_RESISTANCE, TRAIT_PIERCEIMMUNE, TRAIT_SHOCKIMMUNE), BODY_TRAIT_SOURCE)
+	clear_part_powers(body)
 	body.maxHealth -= applied_health
 	applied_health = 0
 	body.updatehealth()
@@ -291,39 +376,59 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 	var/list/traits = list()
 	if(stage >= 2)
 		traits += TRAIT_HARDLY_WOUNDED
-	if(stage >= 3)
-		traits += list(TRAIT_STRENGTH, TRAIT_QUICKER_CARRY)
-	if(stage >= 4)
-		traits += TRAIT_STABLEHEART
-	if(stage >= 5)
-		traits += TRAIT_ANALGESIA
-	if(stage >= 6)
-		traits += list(TRAIT_RESISTCOLD, TRAIT_RESISTLOWPRESSURE)
 	if(stage >= 7)
 		traits += list(TRAIT_BATON_RESISTANCE, TRAIT_PIERCEIMMUNE)
-	if(stage >= 8)
-		traits += TRAIT_NOSOFTCRIT
 	if(stage >= 9)
-		traits += list(TRAIT_SHOCKIMMUNE, TRAIT_FREERUNNING)
+		traits += TRAIT_SHOCKIMMUNE
 	if(length(traits))
 		body.add_traits(traits, BODY_TRAIT_SOURCE)
 	body.updatehealth()
 	on_limbs_changed()
 
-/// Benefits that come from particular limbs: tempered eyes and legs
+/datum/antagonist/body_cultivator/proc/clear_part_powers(mob/living/body)
+	if(length(part_traits))
+		body.remove_traits(part_traits, BODY_PART_TRAIT_SOURCE)
+	part_traits = list()
+	body.remove_movespeed_modifier(/datum/movespeed_modifier/body_swift_feet)
+	body.remove_movespeed_modifier(/datum/movespeed_modifier/body_silent_stride)
+	body.remove_movespeed_modifier(/datum/movespeed_modifier/body_thousand_league)
+	var/obj/item/bodypart/head/iron_skull = iron_skull_ref?.resolve()
+	if(iron_skull)
+		iron_skull.bodypart_flags &= ~BODYPART_UNREMOVABLE
+	iron_skull_ref = null
+
+/// Re-apply every body part power from the limbs this body has right now
 /datum/antagonist/body_cultivator/proc/on_limbs_changed(datum/source)
 	SIGNAL_HANDLER
 	var/mob/living/carbon/body = owner.current
 	if(!istype(body))
 		return
-	body.remove_traits(list(TRAIT_NIGHT_VISION, TRAIT_NOFLASH, TRAIT_FREERUNNING), BODY_PART_TRAIT_SOURCE)
-	var/head_level = body_part_level(body, BODY_ZONE_HEAD)
-	if(head_level >= 4)
-		ADD_TRAIT(body, TRAIT_NIGHT_VISION, BODY_PART_TRAIT_SOURCE)
-	if(head_level >= 6)
-		ADD_TRAIT(body, TRAIT_NOFLASH, BODY_PART_TRAIT_SOURCE)
-	if(min(body_part_level(body, BODY_ZONE_L_LEG), body_part_level(body, BODY_ZONE_R_LEG)) >= 4)
-		ADD_TRAIT(body, TRAIT_FREERUNNING, BODY_PART_TRAIT_SOURCE)
+	clear_part_powers(body)
+	for(var/group in GLOB.body_part_powers)
+		var/level = body_group_level(body, group)
+		var/list/powers = GLOB.body_part_powers[group]
+		for(var/i in 1 to min(level, length(powers)))
+			var/list/power = powers[i]
+			if(power[3])
+				part_traits |= power[3]
+	var/chest_level = body_group_level(body, "chest")
+	if(chest_level >= 5)
+		part_traits |= list(TRAIT_RESISTCOLD, TRAIT_RESISTHEAT)
+	if(chest_level >= 7)
+		part_traits |= list(TRAIT_RESISTLOWPRESSURE, TRAIT_RESISTHIGHPRESSURE)
+	if(length(part_traits))
+		body.add_traits(part_traits, BODY_PART_TRAIT_SOURCE)
+	var/legs_level = body_group_level(body, "legs")
+	if(legs_level >= 9)
+		body.add_movespeed_modifier(/datum/movespeed_modifier/body_thousand_league)
+	else if(legs_level >= 7)
+		body.add_movespeed_modifier(/datum/movespeed_modifier/body_silent_stride)
+	else if(legs_level >= 3)
+		body.add_movespeed_modifier(/datum/movespeed_modifier/body_swift_feet)
+	var/obj/item/bodypart/head/head = body.get_bodypart(BODY_ZONE_HEAD)
+	if(head && body_group_level(body, "head") >= 8 && !(head.bodypart_flags & BODYPART_UNREMOVABLE))
+		head.bodypart_flags |= BODYPART_UNREMOVABLE
+		iron_skull_ref = WEAKREF(head)
 	body.update_sight()
 
 /datum/antagonist/body_cultivator/proc/refresh_techniques()
@@ -373,6 +478,13 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 	SIGNAL_HANDLER
 	if(source.stat == DEAD)
 		return
+	if(stage >= 3 && source.getStaminaLoss())
+		source.adjustStaminaLoss(-1 * seconds_per_tick)
+	if(stage >= 6 && iscarbon(source))
+		var/mob/living/carbon/organ_owner = source
+		for(var/obj/item/organ/organ as anything in organ_owner.organs)
+			if(organ.damage && !(organ.organ_flags & ORGAN_ROBOTIC))
+				organ.apply_organ_damage(-0.2 * seconds_per_tick)
 	if(stage >= 4 && iscarbon(source))
 		var/mob/living/carbon/carbon_source = source
 		if(carbon_source.blood_volume < BLOOD_VOLUME_NORMAL)
@@ -389,7 +501,7 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 			carbon_source.regenerate_limb(zone)
 			carbon_source.visible_message(span_warning("Flesh boils out of [carbon_source]'s stump and knits itself into a new limb!"), span_notice("Your undying flesh regrows your [parse_zone(zone)]."))
 
-/// Punching things (people, walls, bags) toughens the arms that do it
+/// Punching things (people, walls, bags) is training, and a forged arm hits like it
 /datum/antagonist/body_cultivator/proc/on_unarmed_attack(mob/living/source, atom/target, proximity, modifiers)
 	SIGNAL_HANDLER
 	if(!proximity)
@@ -398,6 +510,38 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 		gain_tempering(2, BODY_TRAINING_FIGHT, 30 SECONDS, silent = TRUE)
 	else if(isclosedturf(target) || istype(target, /obj/structure/punching_bag))
 		gain_tempering(3, BODY_TRAINING_STRIKE, 45 SECONDS, silent = TRUE)
+	if(LAZYACCESS(modifiers, RIGHT_CLICK))
+		return
+	var/obj/item/bodypart/arm = source.get_active_hand()
+	var/datum/component/body_tempering/arm_tempering = arm?.GetComponent(/datum/component/body_tempering)
+	if(!arm_tempering || arm_tempering.level < 5)
+		return
+	INVOKE_ASYNC(src, PROC_REF(forged_strike), source, target, arm_tempering.level)
+
+/// What a forged arm's punch does on top of the punch
+/datum/antagonist/body_cultivator/proc/forged_strike(mob/living/source, atom/target, arm_level)
+	if(isliving(target))
+		var/mob/living/victim = target
+		if(victim.stat == DEAD || cultivation_realm_of(victim) > cultivation_realm_of(source))
+			return
+		victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
+		if(arm_level >= 7 && prob(25) && !HAS_TRAIT(victim, TRAIT_PUSHIMMUNE))
+			victim.visible_message(span_danger("[source]'s punch hurls [victim] back like a thunderclap!"))
+			playsound(victim, 'sound/effects/meteorimpact.ogg', 30, TRUE)
+			victim.throw_at(get_edge_target_turf(victim, get_dir(source, victim)), 2, 2, source)
+		else if(arm_level >= 6 && prob(15))
+			victim.Knockdown(1 SECONDS)
+		return
+	if(arm_level >= 9 && iswallturf(target) && !istype(target, /turf/closed/wall/r_wall) && COOLDOWN_FINISHED(src, wall_punch_cooldown))
+		COOLDOWN_START(src, wall_punch_cooldown, 5 SECONDS)
+		source.visible_message(span_danger("[source] punches clean through [target]!"))
+		playsound(target, 'sound/effects/meteorimpact.ogg', 60, TRUE)
+		body_art_smash(target, source, 0, break_walls = TRUE)
+		return
+	if(arm_level >= 8 && isobj(target))
+		var/obj/thing = target
+		if(!(thing.resistance_flags & INDESTRUCTIBLE) && (isstructure(thing) || ismachinery(thing)))
+			thing.take_damage(25, BRUTE, MELEE)
 
 /// Being beaten is training too
 /datum/antagonist/body_cultivator/proc/on_damaged(mob/living/source, damage, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item)
@@ -407,8 +551,17 @@ GLOBAL_LIST_INIT(body_tempered_zones, list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY
 
 /datum/antagonist/body_cultivator/proc/damage_modifiers(mob/living/source, list/damage_mods, damage, damagetype, ...)
 	SIGNAL_HANDLER
-	if(damagetype == TOX && stage >= 6)
-		damage_mods += 0.5
+	var/chest_level = body_group_level(source, "chest")
+	switch(damagetype)
+		if(OXY)
+			if(chest_level >= 2)
+				damage_mods += 0.5
+		if(TOX)
+			if(chest_level >= 3)
+				damage_mods += 0.5
+		if(STAMINA)
+			if(chest_level >= 6)
+				damage_mods += 0.5
 
 /// Training any mob does: gym work starts mortals on the path, everything else only counts once they're on it
 /proc/body_cultivation_train(mob/living/user, amount, source, cooldown = 60 SECONDS, can_start = FALSE)
