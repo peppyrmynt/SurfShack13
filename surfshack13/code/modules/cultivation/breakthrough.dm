@@ -161,6 +161,13 @@
 	)
 	playsound(user, 'sound/effects/magic/charge.ogg', 70, TRUE)
 	new /obj/effect/temp_visual/cultivation_ascension_pillar(get_turf(user))
+	// Watching someone else break through is a lesson in itself
+	for(var/mob/living/witness in view(7, user))
+		if(witness == user)
+			continue
+		var/datum/antagonist/cultivator/witness_cultivator = IS_CULTIVATOR(witness)
+		if(witness_cultivator?.gain_insight(10, INSIGHT_SOURCE_WITNESS, cooldown = 5 MINUTES, silent = TRUE))
+			to_chat(witness, span_notice("<i>Watching [user]'s breakthrough, you glimpse something of the Dao.</i>"))
 
 /// Recoverable failures. Interrupted attempts only cost progress.
 /datum/cultivation_breakthrough/proc/fail(interrupted = FALSE)

@@ -23,7 +23,7 @@
 	item.add_filter("cultivation_artifact", 2, list("type" = "outline", "color" = "#c0d8ff", "size" = 1, "alpha" = 120))
 
 /datum/component/cultivation_artifact/UnregisterFromParent()
-	UnregisterSignal(parent, COMSIG_ATOM_EXAMINE)
+	UnregisterSignal(parent, list(COMSIG_ATOM_EXAMINE, COMSIG_MOVABLE_PRE_IMPACT))
 	var/obj/item/item = parent
 	item.remove_filter("cultivation_artifact")
 	end_flight()
@@ -71,12 +71,34 @@
 		return
 	if(!can_recall(launcher, feedback = FALSE))
 		return
-	item.throw_at(launcher, 8, 3, launcher, spin = TRUE, gentle = TRUE, callback = CALLBACK(src, PROC_REF(caught), launcher))
+	fly_home(launcher)
 
-/datum/component/cultivation_artifact/proc/caught(mob/living/launcher)
+/// Fly back to the owner's hand. It never hits its own master.
+/datum/component/cultivation_artifact/proc/fly_home(mob/living/master)
 	var/obj/item/item = parent
-	if(get_dist(item, launcher) <= 1 && isturf(item.loc))
-		launcher.put_in_hands(item)
+	RegisterSignal(item, COMSIG_MOVABLE_PRE_IMPACT, PROC_REF(on_return_impact), override = TRUE)
+	item.throw_at(master, 8, 3, master, spin = TRUE, gentle = TRUE, callback = CALLBACK(src, PROC_REF(caught), master))
+
+/datum/component/cultivation_artifact/proc/on_return_impact(obj/item/source, atom/hit_atom, datum/thrownthing/throwingdatum)
+	SIGNAL_HANDLER
+	if(!isliving(hit_atom))
+		return NONE
+	var/mob/living/catcher = hit_atom
+	if(catcher.mind != owner_mind)
+		return NONE
+	UnregisterSignal(source, COMSIG_MOVABLE_PRE_IMPACT)
+	if(!catcher.put_in_hands(source))
+		source.forceMove(catcher.drop_location())
+	catcher.visible_message(span_notice("[source] slaps neatly into [catcher]'s hand."))
+	return COMPONENT_MOVABLE_IMPACT_NEVERMIND
+
+/datum/component/cultivation_artifact/proc/caught(mob/living/master)
+	var/obj/item/item = parent
+	UnregisterSignal(item, COMSIG_MOVABLE_PRE_IMPACT)
+	if(QDELETED(master) || !isturf(item.loc) || get_dist(item, master) > 1)
+		return
+	if(!master.put_in_hands(item))
+		item.forceMove(master.drop_location())
 
 /// Can the owner call this back right now? Containers, other people and walls all stop it.
 /datum/component/cultivation_artifact/proc/can_recall(mob/living/caller, feedback = TRUE)
@@ -170,7 +192,7 @@
 	if(!bond.can_recall(cast_on))
 		return
 	cast_on.visible_message(span_notice("[artifact] leaps up and flies to [cast_on]'s hand!"))
-	artifact.throw_at(cast_on, 8, 3, cast_on, spin = TRUE, gentle = TRUE, callback = CALLBACK(bond, TYPE_PROC_REF(/datum/component/cultivation_artifact, caught), cast_on))
+	bond.fly_home(cast_on)
 
 /// Finds the caster's bound artifact through their Bind Artifact technique
 /proc/cultivation_get_artifact(mob/living/user)

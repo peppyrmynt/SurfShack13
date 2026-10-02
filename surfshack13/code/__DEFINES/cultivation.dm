@@ -53,6 +53,16 @@ GLOBAL_LIST_INIT(cultivation_overcomes, list(
 #define INSIGHT_SOURCE_TALISMAN "talisman"
 #define INSIGHT_SOURCE_TEACHING "teaching"
 #define INSIGHT_SOURCE_EPIPHANY "epiphany"
+#define INSIGHT_SOURCE_PASSIVE "passive"
+#define INSIGHT_SOURCE_EXPLORE "explore"
+#define INSIGHT_SOURCE_COMBAT "combat"
+#define INSIGHT_SOURCE_READING "reading"
+#define INSIGHT_SOURCE_TEA "tea"
+#define INSIGHT_SOURCE_DRINK_WATER "drink_water"
+#define INSIGHT_SOURCE_WITNESS "witness"
+
+/// Seconds between passive insight ticks
+#define CULTIVATION_PASSIVE_INTERVAL 40
 
 /// Pending (unconsolidated) insight caps here until you meditate
 #define CULTIVATION_MAX_PENDING_INSIGHT 60

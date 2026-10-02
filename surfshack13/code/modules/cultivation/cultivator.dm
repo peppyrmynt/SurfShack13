@@ -43,6 +43,10 @@
 	var/breakthroughs_survived = 0
 	/// Number of breakthroughs failed
 	var/breakthroughs_failed = 0
+	/// Seconds since the last passive insight tick
+	var/passive_timer = 0
+	/// Area types we've already found enlightening
+	var/list/visited_areas = list()
 	/// HUD element showing qi / insight
 	var/atom/movable/screen/cultivation_display/qi_display
 	/// Next world.time an epiphany can trigger
@@ -106,6 +110,8 @@
 	RegisterSignal(current, COMSIG_MOB_CULTIVATION_SKILL_EXP, PROC_REF(on_skill_exp))
 	RegisterSignal(current, COMSIG_MOB_CULTIVATION_HARVESTED, PROC_REF(on_harvested))
 	RegisterSignal(current, COMSIG_MOB_SURGERY_STEP_SUCCESS, PROC_REF(on_surgery_step))
+	RegisterSignal(current, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_item_attack))
+	RegisterSignal(current, COMSIG_LIVING_UNARMED_ATTACK, PROC_REF(on_unarmed_attack))
 	if(current.hud_used)
 		on_hud_created()
 	else
@@ -126,6 +132,8 @@
 		COMSIG_MOB_CULTIVATION_SKILL_EXP,
 		COMSIG_MOB_CULTIVATION_HARVESTED,
 		COMSIG_MOB_SURGERY_STEP_SUCCESS,
+		COMSIG_MOB_ITEM_ATTACK,
+		COMSIG_LIVING_UNARMED_ATTACK,
 	))
 	if(current.hud_used && qi_display)
 		current.hud_used.infodisplay -= qi_display
@@ -288,6 +296,24 @@
 	SIGNAL_HANDLER
 	notify_laws(INSIGHT_SOURCE_HARVEST, tray)
 
+/// Fighting teaches you too
+/datum/antagonist/cultivator/proc/on_item_attack(mob/living/source, mob/living/target, mob/living/user)
+	SIGNAL_HANDLER
+	combat_insight(source, target)
+
+/datum/antagonist/cultivator/proc/on_unarmed_attack(mob/living/source, atom/target, proximity, modifiers)
+	SIGNAL_HANDLER
+	if(proximity)
+		combat_insight(source, target)
+
+/datum/antagonist/cultivator/proc/combat_insight(mob/living/source, atom/target)
+	if(!isliving(target) || target == source)
+		return
+	var/mob/living/opponent = target
+	if(opponent.stat == DEAD)
+		return
+	gain_insight(3, INSIGHT_SOURCE_COMBAT, cooldown = 60 SECONDS, silent = TRUE)
+
 /datum/antagonist/cultivator/proc/on_surgery_step(mob/living/source, datum/surgery_step/step, mob/living/target, ...)
 	SIGNAL_HANDLER
 	if(target != source)
@@ -409,12 +435,33 @@
 		return
 	if(effective_realm() > REALM_MORTAL && qi < max_qi())
 		adjust_qi(0.25 * seconds_per_tick)
+	passive_timer += seconds_per_tick
+	if(passive_timer >= CULTIVATION_PASSIVE_INTERVAL)
+		passive_timer = 0
+		INVOKE_ASYNC(src, PROC_REF(passive_insight), source)
+	var/area/here = get_area(source)
+	if(here && !(here.type in visited_areas))
+		visited_areas += here.type
+		if(length(visited_areas) > 1) // the room you awaken in doesn't count
+			gain_insight(2, INSIGHT_SOURCE_EXPLORE, cooldown = 15 SECONDS, silent = TRUE)
 	if(instability >= 50 && COOLDOWN_FINISHED(src, instability_cooldown) && SPT_PROB(instability / 10, seconds_per_tick))
 		COOLDOWN_START(src, instability_cooldown, 20 SECONDS)
 		INVOKE_ASYNC(src, PROC_REF(instability_flare), source)
 	if(COOLDOWN_FINISHED(src, epiphany_cooldown) && SPT_PROB(1, seconds_per_tick))
 		COOLDOWN_START(src, epiphany_cooldown, 30 SECONDS)
 		INVOKE_ASYNC(src, PROC_REF(check_epiphany), source)
+
+/// Cultivation never really stops: a trickle of insight just from living, more near your elements
+/datum/antagonist/cultivator/proc/passive_insight(mob/living/source)
+	if(source.stat != CONSCIOUS || effective_realm() <= REALM_MORTAL)
+		return
+	var/amount = 1
+	var/list/points = cultivation_count_elements(get_turf(source))
+	for(var/datum/cultivation_law/law as anything in laws)
+		if(points[law.element])
+			amount++
+			break
+	gain_insight(amount, INSIGHT_SOURCE_PASSIVE, cooldown = 0, silent = TRUE)
 
 /// Unstable qi does unpleasant, visible things
 /datum/antagonist/cultivator/proc/instability_flare(mob/living/source)

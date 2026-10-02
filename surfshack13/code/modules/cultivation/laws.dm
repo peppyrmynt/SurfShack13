@@ -85,6 +85,7 @@
 		INSIGHT_SOURCE_CLEANING = 4,
 		INSIGHT_SOURCE_FISHING = 5,
 		INSIGHT_SOURCE_HARVEST = 2,
+		INSIGHT_SOURCE_DRINK_WATER = 2,
 	)
 
 /datum/cultivation_law/still_water/apply_passive(mob/living/body)

@@ -20,3 +20,22 @@
 	. = ..()
 	if(user)
 		SEND_SIGNAL(user, COMSIG_MOB_CULTIVATION_HARVESTED, src)
+
+/// Give a mob insight if it's a cultivator. For hooks that don't belong to any one law.
+/proc/cultivation_insight(mob/living/user, amount, source, cooldown = 60 SECONDS)
+	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(user)
+	return cultivator?.gain_insight(amount, source, cooldown, silent = TRUE)
+
+/obj/item/book/display_content(mob/living/user)
+	. = ..()
+	cultivation_insight(user, 3, INSIGHT_SOURCE_READING, 3 MINUTES)
+
+/datum/reagent/consumable/tea/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
+	. = ..()
+	if(cultivation_insight(affected_mob, 2, INSIGHT_SOURCE_TEA, 2 MINUTES))
+		to_chat(affected_mob, span_notice("<i>The tea clears your mind. A sip of the Dao.</i>"))
+
+/datum/reagent/water/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
+	. = ..()
+	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(affected_mob)
+	cultivator?.notify_laws(INSIGHT_SOURCE_DRINK_WATER, null)

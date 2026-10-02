@@ -101,6 +101,8 @@
 		return
 	cultivator.adjust_qi(-cultivation_actual_cost(cultivator, technique, base_cost))
 	cultivator.on_technique_used(technique)
+	// Practice makes perfect, a little
+	cultivator.gain_insight(1, "practice_[technique.type]", cooldown = 90 SECONDS, silent = TRUE)
 	// Counterfeit manuals teach you to shout the name of every move. Like in the novels.
 	var/datum/cultivation_law/law = cultivation_law_of(cultivator, technique.type)
 	if(law?.counterfeit && isliving(technique.owner))

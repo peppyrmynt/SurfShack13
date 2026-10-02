@@ -103,6 +103,8 @@
 	duration = 8 SECONDS
 	/// The artifact we're standing on
 	var/obj/item/mount
+	/// The artifact drawn under our feet
+	var/mutable_appearance/mount_overlay
 
 /datum/status_effect/sword_riding/on_creation(mob/living/new_owner, obj/item/mount)
 	src.mount = mount
@@ -113,6 +115,15 @@
 		return FALSE
 	owner.add_traits(list(TRAIT_MOVE_FLYING, TRAIT_NO_SLIP_ALL), TRAIT_STATUS_EFFECT(id))
 	owner.add_movespeed_modifier(/datum/movespeed_modifier/status_effect/sword_riding)
+	// Same rider offset as a skateboard, with the artifact turned sideways under our feet
+	owner.add_offsets(id, y_add = 5)
+	mount_overlay = mutable_appearance(mount.icon, mount.icon_state, MOB_LAYER - 0.01)
+	mount_overlay.color = mount.color
+	var/matrix/sideways = matrix()
+	sideways.Turn(90)
+	mount_overlay.transform = sideways
+	mount_overlay.pixel_y = -9
+	owner.add_overlay(mount_overlay)
 	RegisterSignals(mount, list(COMSIG_ITEM_DROPPED, COMSIG_QDELETING), PROC_REF(lose_mount))
 	owner.visible_message(span_notice("[owner] hops onto [mount] and rises into the air!"))
 	return TRUE
@@ -120,6 +131,10 @@
 /datum/status_effect/sword_riding/on_remove()
 	owner.remove_traits(list(TRAIT_MOVE_FLYING, TRAIT_NO_SLIP_ALL), TRAIT_STATUS_EFFECT(id))
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/sword_riding)
+	owner.remove_offsets(id)
+	if(mount_overlay)
+		owner.cut_overlay(mount_overlay)
+		mount_overlay = null
 	if(mount)
 		UnregisterSignal(mount, list(COMSIG_ITEM_DROPPED, COMSIG_QDELETING))
 	mount = null
