@@ -137,6 +137,8 @@
 	cultivator.gain_insight(1, "practice_[technique.type]", cooldown = 90 SECONDS, silent = TRUE)
 	// Counterfeit manuals teach you to shout the name of every move. Like in the novels.
 	var/datum/cultivation_law/law = cultivation_law_of(cultivator, technique.type)
+	if(law && technique.owner)
+		cultivation_element_cue(technique.owner, law.element)
 	if(law?.counterfeit && isliving(technique.owner))
 		var/mob/living/shouter = technique.owner
 		shouter.say("[uppertext(technique.name)]!!", forced = "counterfeit cultivation manual")

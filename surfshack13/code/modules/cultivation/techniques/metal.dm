@@ -15,6 +15,14 @@
 	var/old_wound_bonus
 	/// Realm of whoever launched it
 	var/launch_realm = REALM_MORTAL
+	/// Refinement grade, see refinement_grades. Raised by meditating with it and tempering it in an alchemy cauldron.
+	var/refinement = 0
+	/// Progress towards the next grade
+	var/refine_points = 0
+	/// Names for each refinement grade
+	var/static/list/refinement_grades = list("Mortal", "Spirit", "Earth", "Heaven", "Immortal", "Dao")
+	/// Outline colour per grade
+	var/static/list/refinement_colors = list("#c0d8ff", "#9fe3ff", "#c9a26b", "#ffd55a", "#ffffff", "#e9b5ff")
 
 /datum/component/cultivation_artifact/Initialize(datum/mind/owner_mind)
 	if(!isitem(parent))
@@ -23,8 +31,7 @@
 
 /datum/component/cultivation_artifact/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_ATOM_EXAMINE, PROC_REF(on_examine))
-	var/obj/item/item = parent
-	item.add_filter("cultivation_artifact", 2, list("type" = "outline", "color" = "#c0d8ff", "size" = 1, "alpha" = 120))
+	update_refinement_glow()
 
 /datum/component/cultivation_artifact/UnregisterFromParent()
 	UnregisterSignal(parent, list(COMSIG_ATOM_EXAMINE, COMSIG_MOVABLE_PRE_IMPACT))
@@ -39,6 +46,45 @@
 /datum/component/cultivation_artifact/proc/on_examine(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 	examine_list += span_notice("It hums faintly. [user.mind == owner_mind ? "It is bound to your soul." : "Someone's qi is bound into it."]")
+	examine_list += span_notice("It is a <b>[refinement_grade_name()]-grade</b> artifact.[refinement < MAX_ARTIFACT_REFINEMENT ? " ([refine_points]/[points_for_next_grade()] towards the next grade)" : ""]")
+
+
+/datum/component/cultivation_artifact/proc/refinement_grade_name()
+	return refinement_grades[refinement + 1]
+
+/datum/component/cultivation_artifact/proc/points_for_next_grade()
+	return 5 + 5 * refinement
+
+/datum/component/cultivation_artifact/proc/update_refinement_glow()
+	var/obj/item/item = parent
+	item.remove_filter("cultivation_artifact")
+	item.add_filter("cultivation_artifact", 2, list("type" = "outline", "color" = refinement_colors[refinement + 1], "size" = 1, "alpha" = 120 + 25 * refinement))
+
+/// Feed the artifact refinement. Returns TRUE if it rose a grade.
+/datum/component/cultivation_artifact/proc/add_refinement(points, mob/living/refiner)
+	if(refinement >= MAX_ARTIFACT_REFINEMENT)
+		return FALSE
+	refine_points += points
+	var/ranked_up = FALSE
+	while(refinement < MAX_ARTIFACT_REFINEMENT && refine_points >= points_for_next_grade())
+		refine_points -= points_for_next_grade()
+		refinement++
+		ranked_up = TRUE
+	if(refinement >= MAX_ARTIFACT_REFINEMENT)
+		refine_points = 0
+	if(!ranked_up)
+		return FALSE
+	var/obj/item/item = parent
+	update_refinement_glow()
+	var/turf/here = get_turf(item)
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold(here)
+	new /obj/effect/temp_visual/cultivation_spark(here, refinement_colors[refinement + 1])
+	cultivation_guqin_phrase(item, list(3, 5, 6), 0.12 SECONDS, 35)
+	item.visible_message(span_boldnotice("[item] rings like a struck bell. It has been refined to a [refinement_grade_name()]-grade artifact!"))
+	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(refiner)
+	cultivator?.notify_laws(INSIGHT_SOURCE_REFINING, item)
+	return TRUE
+
 
 /// Fly at a target, hit with a capped amount of force, then come home if possible
 /datum/component/cultivation_artifact/proc/launch(atom/target, mob/living/launcher, range = 7)
@@ -54,7 +100,7 @@
 	old_throwforce = item.throwforce
 	// Controlled power budget: always hurts a bit, never more than a solid melee hit
 	var/realm = cultivation_realm_of(launcher)
-	item.throwforce = clamp(max(item.force, item.throwforce) + 8, 12, 20 + 4 * realm)
+	item.throwforce = clamp(max(item.force, item.throwforce) + 8 + refinement, 12, 20 + 4 * realm + 2 * refinement)
 	old_wound_bonus = item.wound_bonus
 	item.wound_bonus = max(item.wound_bonus, 15)
 	launch_realm = realm
@@ -77,7 +123,7 @@
 	victim.Shake(2, 2, 0.3 SECONDS)
 	if(source.sharpness)
 		victim.apply_damage(5 + 2 * launch_realm, BRUTE, sharpness = source.sharpness)
-		cultivation_sever_limb(victim, 8 + 4 * launch_realm, launch_realm)
+		cultivation_sever_limb(victim, 8 + 4 * launch_realm + 2 * refinement, launch_realm)
 	else
 		victim.Knockdown(1 SECONDS)
 
@@ -139,7 +185,7 @@
 
 /// How far the artifact hears its master
 /datum/component/cultivation_artifact/proc/recall_range(mob/living/caller)
-	return 7 + 3 * cultivation_realm_of(caller)
+	return 7 + 3 * cultivation_realm_of(caller) + refinement
 
 /// Is someone holding our artifact weaker than us? Lower realm (mortals always are), or from a smaller sect.
 /datum/component/cultivation_artifact/proc/holder_is_weaker(mob/living/caller, mob/living/holder)

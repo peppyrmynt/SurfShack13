@@ -39,6 +39,7 @@
 	user.visible_message(span_notice("[user] sits cross-legged and begins to breathe slowly and deeply."), span_notice("You begin circulating your qi. Move to stop."))
 	user.add_filter("meditation_glow", 2, list("type" = "outline", "color" = "#9fe3ff", "size" = 1))
 	var/obj/effect/abstract/particle_holder/motes = cultivation_particles(user, /particles/cultivation)
+	cultivation_wind_chimes(user, 20)
 	var/cycles = 0
 	while(meditating)
 		var/datum/cultivation_site_report/report = cultivation_evaluate_site(user, cultivator)
@@ -81,6 +82,16 @@
 		user.adjustToxLoss(-heal / 2)
 		if(heal >= 4)
 			new /obj/effect/temp_visual/heal(get_turf(user), "#9fe3ff")
+	// Meditating at your own sect's gate counts for the sect
+	var/datum/jianghu_sect/sect = jianghu_sect_of(user.mind)
+	var/obj/structure/sect_plaque/plaque = sect?.get_plaque()
+	if(plaque && plaque.z == user.z && get_dist(plaque, user) <= 3)
+		sect.mission_step(SECT_MISSION_MEDITATE, 1)
+	// Circulating qi through a carried artifact slowly refines it
+	var/obj/item/carried_artifact = cultivation_get_artifact(user)
+	if(carried_artifact && get(carried_artifact, /mob/living) == user)
+		var/datum/component/cultivation_artifact/bond = carried_artifact.GetComponent(/datum/component/cultivation_artifact)
+		bond?.add_refinement(1, user)
 	var/gained = cultivator.consolidate(report.multiplier)
 	cultivator.adjust_qi(cultivator.max_qi() * (report.has_mat ? 0.4 : 0.25))
 	cultivator.adjust_instability(report.has_mat ? -15 : -8)
@@ -125,7 +136,7 @@
 	var/next = cultivator.next_threshold()
 	if(!next)
 		if(feedback)
-			to_chat(owner, span_notice("You stand at the peak of what this world allows. Ascension is a matter for another day."))
+			to_chat(owner, span_notice("You stand at the peak of what this world allows. Only Ascension lies beyond. ([round(cultivator.progress)]/[CULTIVATION_ASCENSION_PROGRESS] insight consolidated)"))
 		return FALSE
 	if(cultivator.progress < next)
 		if(feedback)
@@ -177,8 +188,9 @@
 		var/datum/component/spirit_beast/beast = other.GetComponent(/datum/component/spirit_beast)
 		if(beast)
 			lines += span_notice("[other]: a contracted spirit beast.")
+		lines += cultivation_sense_forbidden(other)
 	for(var/obj/item/thing in range(7, cast_on))
-		if(thing.GetComponent(/datum/component/cultivation_artifact) || istype(thing, /obj/item/book/granter/cultivation_manual) || istype(thing, /obj/item/cultivation_talisman) || istype(thing, /obj/item/organ/dantian) || istype(thing, /obj/item/ancestral_ring))
+		if(thing.GetComponent(/datum/component/cultivation_artifact) || istype(thing, /obj/item/book/granter/cultivation_manual) || istype(thing, /obj/item/cultivation_talisman) || istype(thing, /obj/item/organ/dantian) || istype(thing, /obj/item/ancestral_ring) || istype(thing, /obj/item/book/granter/demonic_scripture))
 			lines += span_notice("[thing] [isturf(thing.loc) ? "" : "(hidden) "]hums with qi.")
 	var/datum/cultivation_site_report/report = cultivation_evaluate_site(cast_on, cultivator)
 	lines += report.lines
@@ -261,7 +273,7 @@
 	var/old_pass = user.pass_flags
 	user.pass_flags |= PASSTABLE
 	new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(user))
-	playsound(user, 'sound/items/weapons/fwoosh.ogg', 50, TRUE, frequency = 1.3)
+	cultivation_qinggong_whoosh(user)
 	cultivation_beast_follow(user, target_turf, FALSE)
 	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(leave_afterimage))
 	user.throw_at(target_turf, cast_range, 2, user, spin = FALSE, gentle = TRUE, callback = CALLBACK(src, PROC_REF(land), user, old_pass))
@@ -558,3 +570,45 @@
 	beast.visible_message(span_notice("[beast] bounds out of thin air to [cast_on]'s side!"))
 	var/datum/component/spirit_beast/contract = beast.GetComponent(/datum/component/spirit_beast)
 	contract.command(cast_on, "Follow")
+
+// ----- Ascension -----
+
+/datum/action/cooldown/spell/cultivation/ascension
+	name = "Attempt Ascension"
+	desc = "The end of the path. With enough insight consolidated past the peak of Nascent Soul, call down the final tribulation: a minute of lightning \
+		while your last heart demon claws at you (endure it, you can't fight back), and the whole station watching. Succeed and you shatter the void and leave this world forever (you leave the round). \
+		Fail and heaven smashes you down, cracking your core and scattering half your foundation."
+	cooldown_time = 5 MINUTES
+
+/datum/action/cooldown/spell/cultivation/ascension/can_cast_spell(feedback = TRUE)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(owner)
+	if(cultivator.breakthrough)
+		return FALSE
+	if(cultivator.effective_realm() < REALM_MAX)
+		if(feedback)
+			to_chat(owner, span_warning("This body can't bear the weight of Ascension. Restore it to Nascent Soul first."))
+		return FALSE
+	if(cultivator.progress < CULTIVATION_ASCENSION_PROGRESS)
+		if(feedback)
+			to_chat(owner, span_warning("Your foundation can't yet support Ascension. ([round(cultivator.progress)]/[CULTIVATION_ASCENSION_PROGRESS] consolidated insight)"))
+		return FALSE
+	return TRUE
+
+/datum/action/cooldown/spell/cultivation/ascension/cast(mob/living/cast_on)
+	. = ..()
+	INVOKE_ASYNC(src, PROC_REF(prepare), cast_on)
+
+/datum/action/cooldown/spell/cultivation/ascension/proc/prepare(mob/living/user)
+	var/datum/antagonist/cultivator/cultivator = IS_CULTIVATOR(user)
+	var/datum/cultivation_breakthrough/attempt = new(cultivator, TRUE)
+	var/list/readiness_lines = attempt.assess()
+	to_chat(user, boxed_message(readiness_lines.Join("<br>")))
+	var/answer = tgui_alert(user, "Readiness: [attempt.readiness_word()] ([attempt.readiness]). If you succeed you LEAVE THE ROUND forever. Begin your Ascension?", "Ascension", list("Shatter the void", "Not yet"))
+	if(answer != "Shatter the void" || QDELETED(user) || cultivator.breakthrough || !can_cast_spell())
+		qdel(attempt)
+		reset_spell_cooldown()
+		return
+	attempt.start()

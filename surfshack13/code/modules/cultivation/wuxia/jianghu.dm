@@ -70,6 +70,8 @@ GLOBAL_LIST_EMPTY(jianghu_dishonor)
 		else if(viewer_sect && (sect in viewer_sect.rivals))
 			relation = span_warning(" A member of your RIVAL sect!")
 		examine_list += span_notice("[source.p_They()] [source.p_are()] [sect.rank_of(mind)] of the <b>[sect.name]</b>.[relation]")
+	if(GLOB.jianghu_champion == mind)
+		examine_list += span_boldnotice("[source.p_They()] [source.p_are()] the reigning Martial Champion!")
 	if(jianghu_is_dishonored(source))
 		examine_list += span_warning("[source.p_They()] recently interfered in an honor duel. Shameful.")
 
@@ -208,12 +210,19 @@ GLOBAL_LIST_EMPTY(jianghu_duels)
 			face_gain += 5
 			winner_sect.announce("[winner] has defeated [loser] of our rival, the [loser_sect.name], in an honor duel!")
 			loser_sect.announce("[loser] was defeated by [winner] of the [winner_sect.name]. Our sect's face suffers.")
+		if(GLOB.jianghu_tournament)
+			face_gain *= 2
 		jianghu_adjust_face(winner, face_gain, "won an honor duel")
 		jianghu_adjust_face(loser, how == "fled" ? -5 : -2, how == "fled" ? "fled from a duel" : "lost an honor duel")
 		winner?.add_mood_event("honor_duel", /datum/mood_event/duel_won)
 		loser?.add_mood_event("honor_duel", /datum/mood_event/duel_lost)
 		var/datum/antagonist/cultivator/winner_cultivator = IS_CULTIVATOR(winner)
 		winner_cultivator?.gain_insight(10, "duel_win", cooldown = 2 MINUTES)
+		winner_cultivator?.notify_laws(INSIGHT_SOURCE_DUEL, loser)
+		var/datum/antagonist/cultivator/loser_cultivator = IS_CULTIVATOR(loser)
+		loser_cultivator?.notify_laws(INSIGHT_SOURCE_DUEL, winner)
+		jianghu_mission_progress(winner?.mind, SECT_MISSION_DUEL, 1)
+		jianghu_tournament_record(winner, loser)
 	// Watching masters fight is educational
 	for(var/mob/living/spectator in viewers(7, center))
 		if(spectator == fighter_one || spectator == fighter_two || spectator.stat != CONSCIOUS)
@@ -293,6 +302,7 @@ GLOBAL_LIST_EMPTY(jianghu_sects)
 	src.master = master
 	GLOB.jianghu_sects += src
 	add_member(master)
+	schedule_mission()
 
 /datum/jianghu_sect/proc/add_member(datum/mind/new_member)
 	if(!new_member || (new_member in members))
@@ -307,6 +317,8 @@ GLOBAL_LIST_EMPTY(jianghu_sects)
 		var/datum/action/cooldown/sect_transmission/transmission = new(new_member)
 		transmission.Grant(body)
 	announce("[new_member.name] has joined the sect as [rank_of(new_member)]!")
+	if(new_member != master)
+		mission_step(SECT_MISSION_RECRUIT, 1)
 
 /datum/jianghu_sect/proc/remove_member(datum/mind/old_member)
 	members -= old_member
@@ -407,17 +419,28 @@ GLOBAL_LIST_EMPTY(jianghu_sects)
 		for(var/datum/jianghu_sect/rival as anything in sect.rivals)
 			rival_names += rival.name
 		. += span_warning("Sworn rivals: [english_list(rival_names)].")
-	. += span_notice("Members meditating near the plaque cultivate faster. Others can click it to ask to join.")
+	. += span_notice("Sect mission: [sect.mission_text()][sect.mission_type ? " ([sect.mission_progress]/[sect.mission_goal])" : ""]. Missions completed: [sect.missions_completed].")
+	. += span_notice("Members meditating near the plaque cultivate faster. Others can click it to ask to join. The Sect Master can proclaim a Martial Tournament here.")
 
 /obj/structure/sect_plaque/attack_hand(mob/living/user, list/modifiers)
 	. = ..()
 	if(. || !sect || !user.mind)
 		return
+	if(user.mind == sect.master)
+		INVOKE_ASYNC(src, PROC_REF(master_menu), user)
+		return TRUE
 	if(jianghu_sect_of(user.mind) == sect)
-		to_chat(user, span_notice("You bow to your sect's plaque."))
+		to_chat(user, span_notice("You bow to your sect's plaque. Current mission: [sect.mission_text()]."))
 		return
 	INVOKE_ASYNC(src, PROC_REF(request_join), user)
 	return TRUE
+
+/obj/structure/sect_plaque/proc/master_menu(mob/living/user)
+	var/choice = tgui_alert(user, "Current mission: [sect.mission_text()].", "[sect.name]", list("Bow", "Proclaim Martial Tournament"))
+	if(choice == "Proclaim Martial Tournament")
+		proclaim_tournament(user)
+	else if(choice == "Bow")
+		to_chat(user, span_notice("You bow to your sect's plaque."))
 
 /obj/structure/sect_plaque/proc/request_join(mob/living/user)
 	var/mob/living/master_body = sect.master?.current

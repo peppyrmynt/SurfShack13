@@ -45,9 +45,14 @@ This file is a working note for whoever continues the feature. Delete it (and `t
 | `mandate_of_heaven.dm` | Mandate for heads (Captain = Son of Heaven), decree, withdrawal, jade seal, omens |
 | `wuxia/martial_styles.dm` | Drunken Fist, Eagle Claw, Wing Chun + manuals |
 | `wuxia/jianghu.dm` | Face, honor duels, sects/plaques/transmission/rivalry, hidden weapons |
-| `visuals.dm` | Qi waves, particles, attached visuals, temple sounds, wound mending helper, guqin phrases (nylon plucks on the gong scale), distortion waves (tg `warp_effect`), acupoint sparks, breakthrough success sequence and realm banner |
+| `visuals.dm` | Wind chimes, qinggong whoosh variants, per-element cast cues, talisman flare, decree scroll, qi waves, particles, attached visuals, temple sounds, wound mending helper, guqin phrases (nylon plucks on the gong scale), distortion waves (tg `warp_effect`), acupoint sparks, breakthrough success sequence and realm banner |
 | `activity_hooks.dm` | Modular hooks that feed insight (crafting, tool use, skills, harvest, books, tea, water) |
-| `roundstart_loot.dm` | Round start spawns (manuals, ring, wuxia manuals, one legendary artifact) and mandate registration |
+| `roundstart_loot.dm` | Round start spawns (manuals, ring, wuxia manuals, one legendary artifact, 30% chance of a Demonic Scripture) and mandate registration |
+| `forbidden.dm` | The Demonic Path. Only true antagonists (any non-FLAG_FAKE_ANTAG datum) can read the Demonic Scripture (traitor uplink, 6 TC, or maint); others get a qi deviation. Masters can Transmit to willing people, who become disciples and can't teach on. Arts: Devouring Art, Plant Gu Worm + Stir the Gu, Soul Search, Corpse Puppet (basic mob jiangshi wearing the corpse, pet commands, sealed by jiangshi talismans), Heavenly Demon Blood Escape. Spiritual Sense smells demonic qi, worms and puppets |
+| `heart_demon.dm` | Basic mob heart demon that copies its host and hunts only them. Killed with the host within 3 tiles = Dao heart tempered (-50 instability, +25 insight, +15 readiness for 20 min); timeout = +25 instability. From failed breakthroughs, instability >= 90 flares, and Ascension |
+| `cauldron.dm` | Alchemy cauldron (craftable: 10 iron, 2 gold, welder). Heat it (welder, fire, Kindle, a Fire cultivator's palm), add herbs, a cultivator refines (20 qi, 12s). Quality roll by realm/Fire/Wood/instability: blow-ups, normal, spirit-grade pills. Cauldron-only pills: Marrow Cleansing, Beast Awakening, Pure Heart, Nine Revolutions. A bound artifact + precious sheets = tempering |
+| `guqin.dm` | Guqin instrument (craftable). Playing it pulses insight and calm to the player and cultivators listening, mood to everyone |
+| `wuxia/sect_missions.dm` | Sect missions (pills, duels, harvest, meditate at plaque, recruit, heart demons), and Martial Tournaments proclaimed by a Sect Master at the plaque (10 min, double duel face, Martial Champion) |
 
 Defines: `surfshack13/code/__DEFINES/cultivation.dm`. The only core edits: `ORGAN_SLOT_DANTIAN` in `code/__DEFINES/DNA.dm` (marked Surf Shack Edit) and 25 lines appended to `strings/tips.txt` (Confucius quotes + cultivation tips).
 
@@ -60,6 +65,9 @@ Icons: `surfshack13/icons/cultivation/` (actions, hud, items, artifacts, effects
 - Sword Qi: 22 + 4/realm, range 12, speed 2.5, sever 10% + 5%/realm. Flying Sword cap 20 + 4/realm, blades sever 8% + 4%/realm.
 - Buddha's Palm 45 centre / 20 shockwave; Sword Formation 12/s within 2 tiles; Sea of Flames 22/30/38 per wave over 6 tiles.
 - Golden Core crit sustain 1.5 brute+burn/s (x2 Nascent Soul), Nascent Soul revival every 10 minutes.
+- Artifact refinement: grade n needs 5 + 5n points (Mortal, Spirit, Earth, Heaven, Immortal, Dao). +1 per meditation cycle carrying it; cauldron tempering: silver 1, gold/plasma 2, diamond/bluespace 4 per sheet (max 5 sheets each). Each grade: +1 flight force and cap +2, +2% sever, +1 recall range.
+- Ascension: 400 consolidated insight past Nascent Soul peak. 60s tribulation, 14 strikes of 14, heart demon at 20s. Success leaves the round; failure halves progress, +60 instability, cracks the core, 40 burn.
+- Spirit beast evolutions: Beast Awakening Pill, master Foundation for Awakened (regen 0.5/s), Golden Core for Divine (regen 1/s, 25% knockdown bites). Health x1.5 per stage.
 
 ## Art pipeline
 
@@ -72,19 +80,20 @@ Scripts in `tools/cultivation_art/` (Python + Pillow; Chinese glyphs need a CJK 
 5. `make_pixel_items.py`: all items (mat, manual, ring, dantian, golden core, needles, dagger, pellets, plaque, seal, pills) and first pass of artifacts
 6. `make_artifacts_hd.py`: gourd, fan, mirror, pouch, needle (drawn at 256px, downscaled, re-sharpened, crisp alpha + outline)
 7. `make_weapons_native.py`: swords and staff, hand-placed pixels in tg's weapon style (replaces only those states)
+8. `make_backlog_art.py` (optional env `PREVIEW=<png path>`): demonic medallions + Ascension, per-law manual covers, demonic scripture, per-type talismans, cauldron (+ lit animation), guqin, new pills, heart demon and beast auras, decree scroll. It MERGES into the existing DMIs (only touches its own states), so it is safe to run on its own.
 
 Lessons: long thin diagonals (weapons) must be native pixel art in tg's style (corner to corner, solid shaded rows, no black outline). On a 45 degree line, offsets `(1,0)` and `(0,1)` are the same row (row index = dx + dy). Chunky objects look great drawn large and downscaled, then re-sharpened. Keep glows as a separate soft layer, small and subtle.
 
 ## Not yet tested in game
 
+Everything in the backlog batch (demonic path, heart demons, cauldron, refinement, guqin, beast evolution, Ascension, sect missions, tournaments, new sounds and animations) was built in a cloud session without BYOND: it passes `dreamchecker` and `check_grep.sh`, and the unit test was extended, but none of it has been compiled with DreamMaker or run. Build and run the unit tests first.
+
 Everything since the second commit has only been compiled and unit tested, with the user spot-checking. Especially worth real testing: Mandate withdrawal/seal claim, honor duels and sects with two clients, spirit beast pet commands on non-pet mobs and monkeys, purple-gold gourd, Heaven Reliant wall carving, Nascent Soul revival, Golden Core crit sustain, Sword Riding platform visuals, formation barrier pathing.
 
 ## Backlog: what the user wants next
 
-The user's standing direction is "keep improving: sprites, animations, sounds, gameplay loops, polish, fun". Concretely:
+The user's standing direction is "keep improving: sprites, animations, sounds, gameplay loops, polish, fun". The forbidden arts were decided as: antagonist only, but a master can teach them to others (who can't teach on).
 
-- **Sprites**: inhand sprites for artifacts (currently borrowed tg inhands), proper talisman sprites per type, sect plaque and jade seal could use the HD treatment, a real cultivation manual cover per law, Heart Demon visual, spirit beast aura sprite.
-- **Animations**: talisman use effects, decree banner. (Done, not yet seen in game: acupoint jab sparks, Realm Pressure distortion + victims pressed down, breakthrough success sequence (rise, radiant outline, light pillar, distortion, realm name banner, guqin run + temple bell), formation activation flare + barrier flash.)
-- **Sounds**: more oriental cues (`cultivation_guqin_phrase` exists now; use it more, add wind chimes); qinggong whoosh variants; per-element cast sounds.
-- **Gameplay loops**: forbidden/antag techniques (corpse puppets, devouring art, soul search, gu worms; ask whether antag-only or rare manuals), guqin music cultivation, Ascension finale, sect missions/tournaments, more insight sources per law, pills that matter more (alchemy cauldron structure), artifact refinement (upgrade a bound artifact over time), Heart Demon fights, spirit beast evolutions.
-- **Balance**: everything is first-pass numbers; adjust from playtest feedback.
+- **Sprites still borrowed or first pass**: proper inhand sprites for legendary artifacts (still tg inhands; need 4-dir left/right sheets drawn by hand in tg style), HD sect plaque and jade seal, the corpse puppet and heart demon use their victim's/host's appearance (tinted), which is intentional.
+- **Balance**: everything is first-pass numbers; adjust from playtest feedback. Watch the demonic arts (Devouring Art husks corpses, Soul Search reveals antag status) and the Ascension threshold.
+- **Ideas not yet built**: Heart demons you can fight during Ascension (currently endured while seated), more sect mission types, spirit beast element breaths at Divine, guqin songs with specific effects.

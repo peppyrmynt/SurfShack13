@@ -143,6 +143,10 @@ GLOBAL_LIST_EMPTY(cultivation_formations)
 	desc = "A circle of trigrams that draws ambient qi inward. Meditating inside it is far more effective."
 	icon_state = "sigil_gathering"
 
+/obj/effect/cultivation_formation/gathering/Initialize(mapload, mob/living/creator)
+	. = ..()
+	cultivation_wind_chimes(src)
+
 /obj/effect/cultivation_formation/barrier
 	name = "barrier array"
 	desc = "A circle of trigrams holding up a ring of shimmering qi walls."

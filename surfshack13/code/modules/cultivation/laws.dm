@@ -69,6 +69,8 @@
 		INSIGHT_SOURCE_CRAFT = 4,
 		INSIGHT_SOURCE_TOOL = 3,
 		INSIGHT_SOURCE_WELD = 3,
+		INSIGHT_SOURCE_REFINING = 6,
+		INSIGHT_SOURCE_DUEL = 4,
 	)
 
 // ----- Water -----
@@ -88,6 +90,7 @@
 		INSIGHT_SOURCE_FISHING = 5,
 		INSIGHT_SOURCE_HARVEST = 2,
 		INSIGHT_SOURCE_DRINK_WATER = 2,
+		INSIGHT_SOURCE_MUSIC = 4,
 	)
 
 /datum/cultivation_law/still_water/apply_passive(mob/living/body)
@@ -111,6 +114,7 @@
 	insight_activities = list(
 		INSIGHT_SOURCE_COOK = 5,
 		INSIGHT_SOURCE_WELD = 3,
+		INSIGHT_SOURCE_ALCHEMY = 6,
 	)
 
 /datum/cultivation_law/furnace_heart/apply_passive(mob/living/body)
@@ -135,6 +139,7 @@
 		INSIGHT_SOURCE_MINING = 4,
 		INSIGHT_SOURCE_TOOL = 2,
 		INSIGHT_SOURCE_ATHLETICS = 4,
+		INSIGHT_SOURCE_DUEL = 5,
 	)
 
 /datum/cultivation_law/rooted_mountain/apply_passive(mob/living/body)
@@ -163,6 +168,8 @@
 	insight_activities = list(
 		INSIGHT_SOURCE_HARVEST = 5,
 		INSIGHT_SOURCE_SURGERY = 4,
+		INSIGHT_SOURCE_ALCHEMY = 4,
+		INSIGHT_SOURCE_MUSIC = 3,
 	)
 
 /datum/cultivation_law/evergreen_spring/apply_passive(mob/living/body)

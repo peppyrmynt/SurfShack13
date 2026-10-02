@@ -59,6 +59,10 @@
 	COOLDOWN_DECLARE(full_warning_cooldown)
 	/// Nascent Soul revival can only happen this often
 	COOLDOWN_DECLARE(nascent_revival_cooldown)
+	/// Shattered the void and left for the Immortal Realm
+	var/ascended = FALSE
+	/// Instability can only birth a heart demon this often
+	COOLDOWN_DECLARE(heart_demon_cooldown)
 	/// Already told them their core is keeping them alive this crit
 	var/core_sustain_announced = FALSE
 
@@ -86,6 +90,7 @@
 		/datum/action/cooldown/spell/cultivation/summon_beast = REALM_FOUNDATION,
 		/datum/action/cooldown/spell/pointed/cultivation/acupoint = REALM_FOUNDATION,
 		/datum/action/cooldown/spell/cultivation/realm_pressure = REALM_FOUNDATION,
+		/datum/action/cooldown/spell/cultivation/ascension = REALM_NASCENT_SOUL,
 	)
 
 /datum/antagonist/cultivator/on_gain()
@@ -324,6 +329,7 @@
 /datum/antagonist/cultivator/proc/on_harvested(mob/living/source, obj/machinery/hydroponics/tray)
 	SIGNAL_HANDLER
 	notify_laws(INSIGHT_SOURCE_HARVEST, tray)
+	jianghu_mission_progress(owner, SECT_MISSION_HARVEST, 1)
 
 /// Fighting teaches you too
 /datum/antagonist/cultivator/proc/on_item_attack(mob/living/source, mob/living/target, mob/living/user)
@@ -405,6 +411,7 @@
 			if(!(combo.technique in typecache_of_techniques()))
 				to_chat(owner.current, span_boldnotice("Your [combo.element_one] and [combo.element_two] qi resonate! You have comprehended [initial(combo.technique.name)]!"))
 			grant_technique(combo.technique)
+	grant_forbidden_techniques()
 
 /// The realm a technique type was unlocked at
 /datum/antagonist/cultivator/proc/required_realm_for(technique_type)
@@ -416,6 +423,8 @@
 	for(var/datum/cultivation_combo/combo as anything in GLOB.cultivation_combos)
 		if(combo.technique == technique_type)
 			return combo.realm_required
+	if(technique_type in GLOB.cultivation_forbidden_techniques)
+		return GLOB.cultivation_forbidden_techniques[technique_type]
 	return REALM_QI_CONDENSATION
 
 /datum/antagonist/cultivator/proc/typecache_of_techniques()
@@ -520,6 +529,11 @@
 
 /// Unstable qi does unpleasant, visible things
 /datum/antagonist/cultivator/proc/instability_flare(mob/living/source)
+	// Badly deviated qi takes on a face of its own
+	if(instability >= 90 && prob(30) && COOLDOWN_FINISHED(src, heart_demon_cooldown))
+		COOLDOWN_START(src, heart_demon_cooldown, 10 MINUTES)
+		cultivation_summon_heart_demon(source)
+		return
 	switch(rand(1, 3))
 		if(1)
 			source.visible_message(span_warning("Sparks of wild qi crackle off [source]!"), span_warning("Your qi flares out of control!"))
@@ -572,6 +586,7 @@
 	if(source != owner.current || get_turf(source) != epiphany_turf || source.stat != CONSCIOUS)
 		to_chat(source, span_warning("The epiphany slips away..."))
 		return
+	cultivation_wind_chimes(source)
 	gain_insight(20, INSIGHT_SOURCE_EPIPHANY, cooldown = 10 MINUTES)
 
 /datum/antagonist/cultivator/proc/on_death(mob/living/source, gibbed)
@@ -649,7 +664,11 @@
 	for(var/datum/cultivation_law/law as anything in laws)
 		law_names += law.name
 	report += "Reached <b>[realm_name()]</b>[length(law_names) ? " cultivating [english_list(law_names)]" : ""]."
+	if(ascended)
+		report += span_greentext("Shattered the void and ascended to the Immortal Realm!")
 	report += "Breakthroughs survived: [breakthroughs_survived]. Failed: [breakthroughs_failed]."
+	if(demonic)
+		report += span_redtext("Walked the Demonic Path[demonic >= DEMONIC_MASTER ? " as a master" : " as a disciple"].")
 	return report.Join("<br>")
 
 /datum/antagonist/cultivator/get_admin_commands()
@@ -658,6 +677,7 @@
 	.["Force Realm Up"] = CALLBACK(src, PROC_REF(advance_realm))
 	.["Teach Law"] = CALLBACK(src, PROC_REF(admin_teach_law))
 	.["Refill Qi"] = CALLBACK(src, PROC_REF(adjust_qi), 1000)
+	.["Grant Demonic Path (master)"] = CALLBACK(src, PROC_REF(admin_grant_forbidden))
 
 /datum/antagonist/cultivator/proc/admin_give_progress(mob/admin)
 	progress = min(progress + 50, next_threshold() || progress)
@@ -704,7 +724,7 @@
 		text += span_warning("Your core is cracked! Max qi is halved. Meditate on a good mat to mend it.")
 	text += "Qi: [round(qi)] / [max_qi()]"
 	var/next = next_threshold()
-	text += "Insight: [round(pending_insight)] pending (cap [CULTIVATION_MAX_PENDING_INSIGHT]), [next ? "[round(progress)] / [next] consolidated" : "at peak"]"
+	text += "Insight: [round(pending_insight)] pending (cap [CULTIVATION_MAX_PENDING_INSIGHT]), [next ? "[round(progress)] / [next] consolidated" : "at peak, [round(progress)] / [CULTIVATION_ASCENSION_PROGRESS] towards Ascension"]"
 	text += "Instability: [round(instability)][instability >= 50 ? span_warning(" (dangerous)") : ""]"
 	var/list/law_names = list()
 	for(var/datum/cultivation_law/law as anything in laws)

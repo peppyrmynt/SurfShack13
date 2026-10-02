@@ -233,9 +233,9 @@
 	maptext_y = 36
 	alpha = 0
 
-/obj/effect/temp_visual/cultivation_realm_banner/Initialize(mapload, realm_text)
+/obj/effect/temp_visual/cultivation_realm_banner/Initialize(mapload, realm_text, text_color = "#ffe27a")
 	. = ..()
-	maptext = MAPTEXT_PIXELLARI("<span style='text-align: center; color: #ffe27a; font-size: 14pt'>[realm_text]</span>")
+	maptext = MAPTEXT_PIXELLARI("<span style='text-align: center; color: [text_color]; font-size: 14pt'>[realm_text]</span>")
 	animate(src, alpha = 255, maptext_y = 48, time = 0.6 SECONDS, easing = SINE_EASING | EASE_OUT)
 	animate(maptext_y = 54, time = 2.4 SECONDS)
 	animate(alpha = 0, maptext_y = 62, time = 1 SECONDS, easing = SINE_EASING | EASE_IN)
@@ -262,3 +262,73 @@
 	cultivation_guqin_phrase(user, list(1, 2, 3, 4, 5, 6))
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(cultivation_temple_sound), user, 70), 1.1 SECONDS)
 	new /obj/effect/temp_visual/cultivation_realm_banner(here, realm_text)
+
+// ===================== More sounds =====================
+
+/// Wind chimes: a few high celeste notes on the gong scale, loosely spaced
+/proc/cultivation_wind_chimes(atom/source, volume = 30)
+	var/static/list/scale = list(1, 1.122, 1.26, 1.498, 1.682)
+	var/delay = 0
+	for(var/i in 1 to rand(3, 5))
+		var/sample = pick('sound/runtime/instruments/synthesis_samples/chromatic/fluid_celeste/C6.ogg', 'sound/runtime/instruments/synthesis_samples/chromatic/fluid_celeste/C7.ogg')
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), source, sample, volume, FALSE, 0, SOUND_FALLOFF_EXPONENT, pick(scale)), delay)
+		delay += rand(1, 4) * 0.1 SECONDS
+
+/// Whoosh of a qinggong leap, never quite the same twice: air, then robes snapping
+/proc/cultivation_qinggong_whoosh(atom/source)
+	playsound(source, pick('sound/items/weapons/fwoosh.ogg', 'sound/effects/magic/tail_swing.ogg'), 45, FALSE, frequency = 1.1 + rand() * 0.5)
+	playsound(source, pick('sound/effects/rustle/rustle1.ogg', 'sound/effects/rustle/rustle2.ogg', 'sound/effects/rustle/rustle3.ogg', 'sound/effects/rustle/rustle4.ogg', 'sound/effects/rustle/rustle5.ogg'), 30, TRUE)
+
+/// Each element has its own voice when its techniques are cast
+/proc/cultivation_element_cue(atom/source, element)
+	switch(element)
+		if(ELEMENT_METAL)
+			playsound(source, 'sound/items/unsheath.ogg', 30, TRUE, frequency = 1.2)
+		if(ELEMENT_WATER)
+			playsound(source, 'sound/effects/splash.ogg', 25, TRUE, frequency = 1.3)
+		if(ELEMENT_WOOD)
+			playsound(source, pick('sound/effects/rustle/rustle1.ogg', 'sound/effects/rustle/rustle3.ogg'), 35, TRUE, frequency = 0.8)
+		if(ELEMENT_FIRE)
+			playsound(source, 'sound/effects/fire_puff.ogg', 30, TRUE)
+		if(ELEMENT_EARTH)
+			playsound(source, pick('sound/effects/rock/rocktap1.ogg', 'sound/effects/rock/rocktap2.ogg', 'sound/effects/rock/rocktap3.ogg'), 40, TRUE, frequency = 0.7)
+
+// ===================== Talismans and decrees =====================
+
+/// A talisman flaring up: the paper lifts, flashes and burns away into embers
+/obj/effect/temp_visual/cultivation_talisman_flare
+	icon = 'surfshack13/icons/cultivation/cultivation_items.dmi'
+	icon_state = "talisman"
+	duration = 0.8 SECONDS
+	randomdir = FALSE
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/temp_visual/cultivation_talisman_flare/Initialize(mapload, obj/item/talisman)
+	. = ..()
+	if(talisman)
+		icon = talisman.icon
+		icon_state = talisman.icon_state
+		color = talisman.color
+	add_filter("talisman_flare", 2, list("type" = "outline", "color" = "#ffb347", "size" = 1))
+	animate(src, pixel_z = 10, transform = matrix().Scale(1.3), time = 0.3 SECONDS, easing = SINE_EASING | EASE_OUT)
+	animate(alpha = 0, color = "#ff6a1f", transform = matrix().Scale(0.6), time = 0.5 SECONDS, easing = SINE_EASING | EASE_IN)
+	cultivation_particles(src, /particles/cultivation/embers, 0.8 SECONDS)
+
+/// An imperial edict unrolling above the ruler's head
+/obj/effect/temp_visual/cultivation_decree_scroll
+	icon = 'surfshack13/icons/cultivation/cultivation_effects_64.dmi'
+	icon_state = "decree_scroll"
+	duration = 4 SECONDS
+	randomdir = FALSE
+	layer = ABOVE_ALL_MOB_LAYER
+	plane = ABOVE_GAME_PLANE
+	pixel_x = -16
+	pixel_y = 30
+
+/obj/effect/temp_visual/cultivation_decree_scroll/Initialize(mapload)
+	. = ..()
+	transform = matrix().Scale(0.05, 1)
+	alpha = 0
+	animate(src, transform = matrix(), alpha = 255, time = 0.5 SECONDS, easing = SINE_EASING | EASE_OUT)
+	animate(time = 2.7 SECONDS)
+	animate(alpha = 0, pixel_y = 40, time = 0.8 SECONDS)

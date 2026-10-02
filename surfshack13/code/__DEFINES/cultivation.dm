@@ -60,6 +60,11 @@ GLOBAL_LIST_INIT(cultivation_overcomes, list(
 #define INSIGHT_SOURCE_TEA "tea"
 #define INSIGHT_SOURCE_DRINK_WATER "drink_water"
 #define INSIGHT_SOURCE_WITNESS "witness"
+#define INSIGHT_SOURCE_HEART_DEMON "heart_demon"
+#define INSIGHT_SOURCE_ALCHEMY "alchemy"
+#define INSIGHT_SOURCE_MUSIC "music"
+#define INSIGHT_SOURCE_REFINING "refining"
+#define INSIGHT_SOURCE_DUEL "duel"
 
 /// Seconds between passive insight ticks
 #define CULTIVATION_PASSIVE_INTERVAL 40
@@ -81,3 +86,25 @@ GLOBAL_LIST_INIT(cultivation_overcomes, list(
 
 /// Trait source for Spiritual Sense's see-through-walls, which also lets Void Step pass walls
 #define SPIRITUAL_SENSE_TRAIT "spiritual_sense"
+
+// Demonic path levels, see forbidden.dm
+/// Has never touched the demonic path
+#define DEMONIC_NONE 0
+/// Was taught the arts by a demonic master, can't teach them on
+#define DEMONIC_DISCIPLE 1
+/// An antagonist who comprehended the scripture themselves, can transmit it
+#define DEMONIC_MASTER 2
+
+// Sect missions, see wuxia/sect_missions.dm
+#define SECT_MISSION_PILLS "pills"
+#define SECT_MISSION_DUEL "duel"
+#define SECT_MISSION_HARVEST "harvest"
+#define SECT_MISSION_MEDITATE "meditate"
+#define SECT_MISSION_RECRUIT "recruit"
+#define SECT_MISSION_HEART_DEMON "heart_demon"
+
+/// Highest refinement grade a bound artifact can reach (Dao-grade)
+#define MAX_ARTIFACT_REFINEMENT 5
+
+/// Insight consolidated past the peak of Nascent Soul before Ascension can be attempted
+#define CULTIVATION_ASCENSION_PROGRESS 400

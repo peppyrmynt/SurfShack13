@@ -71,18 +71,23 @@
 	to_chat(user, span_warning("The ink has faded to nothing. Whatever qi this book held has been used up."))
 
 /obj/item/book/granter/cultivation_manual/returning_iron
+	icon_state = "manual_metal"
 	law_type = /datum/cultivation_law/returning_iron
 
 /obj/item/book/granter/cultivation_manual/still_water
+	icon_state = "manual_water"
 	law_type = /datum/cultivation_law/still_water
 
 /obj/item/book/granter/cultivation_manual/furnace_heart
+	icon_state = "manual_fire"
 	law_type = /datum/cultivation_law/furnace_heart
 
 /obj/item/book/granter/cultivation_manual/rooted_mountain
+	icon_state = "manual_earth"
 	law_type = /datum/cultivation_law/rooted_mountain
 
 /obj/item/book/granter/cultivation_manual/evergreen_spring
+	icon_state = "manual_wood"
 	law_type = /datum/cultivation_law/evergreen_spring
 
 /// A random law, one in four chance of being a fake
@@ -114,8 +119,8 @@
 /obj/item/cultivation_talisman
 	name = "talisman"
 	desc = "A strip of yellow paper covered in glowing red characters."
-	icon = 'icons/obj/service/bureaucracy.dmi'
-	icon_state = "paper_talisman"
+	icon = 'surfshack13/icons/cultivation/cultivation_items.dmi'
+	icon_state = "talisman"
 	w_class = WEIGHT_CLASS_TINY
 	resistance_flags = FLAMMABLE
 	/// Text shown on use
@@ -124,8 +129,15 @@
 /obj/item/cultivation_talisman/proc/burn_out(mob/living/user)
 	if(user)
 		to_chat(user, span_notice(use_text))
+	var/turf/here = get_turf(src)
+	new /obj/effect/temp_visual/cultivation_talisman_flare(here, src)
+	playsound(here, 'sound/items/match_strike.ogg', 40, TRUE)
 	new /obj/effect/decal/cleanable/ash(drop_location())
 	qdel(src)
+
+/// The talisman's own effect on whoever it hit
+/obj/item/cultivation_talisman/proc/talisman_effect(mob/living/target)
+	return
 
 /// Slap a talisman on a living target
 /obj/item/cultivation_talisman/proc/apply_to(mob/living/target, mob/living/user)
@@ -136,6 +148,7 @@
 		return NONE
 	if(apply_to(interacting_with, user))
 		user.do_attack_animation(interacting_with)
+		talisman_effect(interacting_with)
 		burn_out(user)
 		return ITEM_INTERACT_SUCCESS
 	return ITEM_INTERACT_BLOCKING
@@ -143,7 +156,7 @@
 /obj/item/cultivation_talisman/fire
 	name = "fire talisman"
 	desc = "A talisman with the character for fire. Throw it and it bursts into flame where it lands."
-	color = "#ffb38a"
+	icon_state = "talisman_fire"
 	use_text = "The fire talisman bursts into flame!"
 
 /obj/item/cultivation_talisman/fire/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
@@ -159,30 +172,41 @@
 /obj/item/cultivation_talisman/binding
 	name = "binding talisman"
 	desc = "A talisman with the character for binding. Slap it on someone to make their legs heavy."
-	color = "#c2a8ff"
+	icon_state = "talisman_binding"
 
 /obj/item/cultivation_talisman/binding/apply_to(mob/living/target, mob/living/user)
 	target.visible_message(span_warning("[user] slaps a talisman onto [target]!"), span_userdanger("Your legs turn to lead!"))
 	target.apply_status_effect(/datum/status_effect/cultivation_slow, 5 SECONDS)
 	return TRUE
 
+/obj/item/cultivation_talisman/binding/talisman_effect(mob/living/target)
+	var/obj/effect/temp_visual/circle_wave/cultivation/ring = new(get_turf(target))
+	ring.color = "#c2a8ff"
+	target.Shake(1, 0, 0.5 SECONDS)
+	playsound(target, 'sound/items/weapons/chainhit.ogg', 40, TRUE)
+
 /obj/item/cultivation_talisman/ward
 	name = "ward talisman"
 	desc = "A talisman with the character for protection. Use it in hand or on someone to cover them in still water."
-	color = "#9fd8ff"
+	icon_state = "talisman_ward"
 
 /obj/item/cultivation_talisman/ward/apply_to(mob/living/target, mob/living/user)
 	target.apply_status_effect(/datum/status_effect/still_water_ward)
 	return TRUE
 
+/obj/item/cultivation_talisman/ward/talisman_effect(mob/living/target)
+	new /obj/effect/temp_visual/circle_wave/cultivation/water(get_turf(target))
+	playsound(target, 'sound/effects/splash.ogg', 30, TRUE, frequency = 1.4)
+
 /obj/item/cultivation_talisman/ward/attack_self(mob/user)
 	if(isliving(user) && apply_to(user, user))
+		talisman_effect(user)
 		burn_out(user)
 
 /obj/item/cultivation_talisman/light
 	name = "light talisman"
 	desc = "A talisman with the character for light. Use it in hand and it glows for a few minutes."
-	color = "#fff6a8"
+	icon_state = "talisman_light"
 	light_range = 4
 	light_color = "#fff2b0"
 	light_on = FALSE
@@ -194,20 +218,30 @@
 		return
 	used = TRUE
 	set_light_on(TRUE)
+	add_filter("talisman_glow", 2, list("type" = "outline", "color" = "#fff2b0", "size" = 1))
+	new /obj/effect/temp_visual/cultivation_spark(get_turf(src), "#fff2b0")
+	cultivation_wind_chimes(src, 20)
 	to_chat(user, span_notice("The talisman begins to glow softly."))
 	addtimer(CALLBACK(src, PROC_REF(burn_out)), 3 MINUTES)
 
 /obj/item/cultivation_talisman/jiangshi
 	name = "jiangshi-sealing talisman"
 	desc = "A talisman for sealing hopping corpses. Slap it on the forehead of the undead to freeze them in place."
-	color = "#ffd27a"
+	icon_state = "talisman_jiangshi"
 
 /obj/item/cultivation_talisman/jiangshi/apply_to(mob/living/target, mob/living/user)
+	if(istype(target, /mob/living/basic/corpse_puppet))
+		var/mob/living/basic/corpse_puppet/puppet = target
+		target.visible_message(span_danger("[user] slaps a talisman onto [target]'s forehead! The demonic qi holding it up gutters out!"))
+		puppet.collapse()
+		return TRUE
 	var/undead = (target.mob_biotypes & MOB_UNDEAD) || IS_BLOODSUCKER(target)
 	if(!undead)
 		to_chat(user, span_warning("[target] isn't undead. The talisman just sticks to [target.p_their()] forehead and looks silly."))
 		return TRUE
 	target.visible_message(span_danger("[user] slaps a talisman onto [target]'s forehead, and [target.p_they()] freeze[target.p_s()] rigid!"), span_userdanger("A talisman seals your corpse-qi! You can't move!"))
+	new /obj/effect/temp_visual/cultivation_spark(get_turf(target), "#ffd27a", 0, 10)
+	cultivation_temple_sound(target, 40)
 	target.Paralyze(5 SECONDS)
 	return TRUE
 
@@ -227,6 +261,12 @@
 	var/added_obedience = FALSE
 	/// Planning subtrees before we taught it to listen
 	var/list/original_subtrees
+	/// Bloodline awakenings: 0 spirit beast, 1 awakened, 2 divine. Fed Beast Awakening Pills.
+	var/evolution = 0
+	/// Aura sprite once awakened
+	var/obj/effect/abstract/cultivation_vis/aura
+	/// Names for each stage
+	var/static/list/evolution_titles = list("Spirit", "Awakened Spirit", "Divine Spirit")
 	COOLDOWN_DECLARE(catch_up_cooldown)
 	/// Commands every spirit beast understands
 	var/static/list/spirit_beast_commands = list(
@@ -259,6 +299,8 @@
 	var/mob/living/master = master_mind?.current
 	RegisterSignal(beast, COMSIG_ATOM_EXAMINE, PROC_REF(on_examine))
 	RegisterSignal(beast, COMSIG_LIVING_DEATH, PROC_REF(on_death))
+	RegisterSignal(beast, COMSIG_LIVING_LIFE, PROC_REF(on_beast_life))
+	RegisterSignal(beast, COMSIG_HOSTILE_POST_ATTACKINGTARGET, PROC_REF(on_beast_attack))
 	if(master)
 		RegisterSignal(master, COMSIG_MOB_CULTIVATION_REALM_CHANGED, PROC_REF(rescale))
 		RegisterSignal(master, COMSIG_MOVABLE_MOVED, PROC_REF(on_master_moved))
@@ -276,7 +318,9 @@
 /datum/component/spirit_beast/UnregisterFromParent()
 	var/mob/living/beast = parent
 	var/mob/living/master = master_mind?.current
-	UnregisterSignal(beast, list(COMSIG_ATOM_EXAMINE, COMSIG_LIVING_DEATH))
+	UnregisterSignal(beast, list(COMSIG_ATOM_EXAMINE, COMSIG_LIVING_DEATH, COMSIG_LIVING_LIFE, COMSIG_HOSTILE_POST_ATTACKINGTARGET))
+	cultivation_detach_vis(beast, aura)
+	aura = null
 	if(master)
 		UnregisterSignal(master, list(COMSIG_MOB_CULTIVATION_REALM_CHANGED, COMSIG_MOVABLE_MOVED))
 		beast.unfriend(master)
@@ -285,10 +329,10 @@
 	if(original_subtrees && beast.ai_controller)
 		beast.ai_controller.replace_planning_subtrees(original_subtrees)
 	beast.remove_filter("spirit_beast")
-	beast.name = replacetext(beast.name, "Spirit ", "")
+	beast.name = replacetext(replacetext(replacetext(beast.name, "Divine ", ""), "Awakened ", ""), "Spirit ", "")
 	beast.maxHealth = base_max_health
 	beast.health = min(beast.health, beast.maxHealth)
-	beast.update_transform(1 / (1 + 0.1 * scaled_realm))
+	beast.update_transform(1 / ((1 + 0.1 * scaled_realm) * (1 + 0.1 * evolution)))
 
 /datum/component/spirit_beast/Destroy(force)
 	master_mind = null
@@ -380,18 +424,73 @@
 		return
 	beast.update_transform((1 + 0.1 * new_realm) / (1 + 0.1 * scaled_realm))
 	scaled_realm = new_realm
-	beast.maxHealth = base_max_health * (1 + 0.5 * new_realm)
+	apply_stats()
+	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(beast))
+	beast.visible_message(span_notice("[beast] grows a little larger, a faint aura shimmering around it."))
+
+/// Health and bite from its master's realm and its own bloodline
+/datum/component/spirit_beast/proc/apply_stats()
+	var/mob/living/beast = parent
+	beast.maxHealth = base_max_health * (1 + 0.5 * scaled_realm) * (1 + 0.5 * evolution)
 	beast.heal_overall_damage(brute = 20, burn = 20)
 	if(isbasicmob(beast))
 		var/mob/living/basic/basic_beast = beast
-		basic_beast.melee_damage_lower = max(basic_beast.melee_damage_lower, 2 * new_realm)
-		basic_beast.melee_damage_upper = max(basic_beast.melee_damage_upper, 4 * new_realm)
-	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(beast))
-	beast.visible_message(span_notice("[beast] grows a little larger, a faint aura shimmering around it."))
+		basic_beast.melee_damage_lower = max(basic_beast.melee_damage_lower, 2 * scaled_realm + 3 * evolution)
+		basic_beast.melee_damage_upper = max(basic_beast.melee_damage_upper, 4 * scaled_realm + 4 * evolution)
+
+/// A Beast Awakening Pill stirs the bloodline. Each awakening needs its master one realm higher (Foundation, then Golden Core).
+/datum/component/spirit_beast/proc/evolve()
+	var/mob/living/beast = parent
+	if(evolution >= 2 || beast.stat == DEAD)
+		return FALSE
+	var/master_realm = master_mind?.current ? cultivation_realm_of(master_mind.current) : REALM_MORTAL
+	if(master_realm < REALM_FOUNDATION + evolution)
+		return FALSE
+	var/old_title = evolution_titles[evolution + 1]
+	evolution++
+	beast.update_transform(1.1)
+	apply_stats()
+	beast.fully_heal(HEAL_DAMAGE)
+	beast.name = replacetext(beast.name, "[old_title] ", "[evolution_titles[evolution + 1]] ")
+	beast.remove_filter("spirit_beast")
+	beast.add_filter("spirit_beast", 2, list("type" = "outline", "color" = evolution >= 2 ? "#ffd55a" : "#b6f2ff", "size" = 1, "alpha" = 200))
+	cultivation_detach_vis(beast, aura)
+	aura = cultivation_attach_vis(beast, 'surfshack13/icons/cultivation/cultivation_effects_64.dmi', "beast_aura", evolution >= 2 ? "#ffd55a" : null, 64, 0, 170)
+	aura.layer = BELOW_MOB_LAYER
+	// The awakening itself
+	animate(beast, pixel_z = 8, time = 0.6 SECONDS, easing = SINE_EASING | EASE_OUT, flags = ANIMATION_RELATIVE | ANIMATION_PARALLEL)
+	animate(pixel_z = -8, time = 0.6 SECONDS, easing = SINE_EASING | EASE_IN, flags = ANIMATION_RELATIVE)
+	new /obj/effect/temp_visual/cultivation_ascension_pillar(get_turf(beast))
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(get_turf(beast))
+	cultivation_particles(beast, /particles/cultivation/gold, 3 SECONDS)
+	cultivation_guqin_phrase(beast, list(1, 2, 3, 5, 6))
+	playsound(beast, 'sound/effects/magic/charge.ogg', 60, TRUE)
+	beast.visible_message(span_boldnotice("[beast]'s bloodline awakens! It swells with power, its eyes blazing!"))
+	if(master_mind?.current)
+		to_chat(master_mind.current, span_boldnotice("Your spirit beast has become a [evolution_titles[evolution + 1]] beast! [evolution >= 2 ? "Its bites now bowl enemies over, and it heals quickly." : "It now slowly heals its wounds."]"))
+	return TRUE
+
+/// Awakened beasts knit their wounds
+/datum/component/spirit_beast/proc/on_beast_life(mob/living/source, seconds_per_tick, times_fired)
+	SIGNAL_HANDLER
+	if(!evolution || source.stat == DEAD || source.health >= source.maxHealth)
+		return
+	source.heal_overall_damage(brute = 0.5 * evolution * seconds_per_tick, burn = 0.5 * evolution * seconds_per_tick)
+
+/// Divine beasts knock their prey down
+/datum/component/spirit_beast/proc/on_beast_attack(mob/living/source, atom/target, success)
+	SIGNAL_HANDLER
+	if(evolution < 2 || !success || !isliving(target) || !prob(25))
+		return
+	var/mob/living/prey = target
+	prey.Knockdown(1.5 SECONDS)
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold(get_turf(prey))
 
 /datum/component/spirit_beast/proc/on_examine(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 	examine_list += span_notice("It is bound by a spirit contract[master_mind?.current ? " to [master_mind.current]" : ""].")
+	if(evolution)
+		examine_list += span_notice("Its bloodline has awakened: it is a [evolution_titles[evolution + 1]] beast.")
 
 /datum/component/spirit_beast/proc/on_death(datum/source)
 	SIGNAL_HANDLER

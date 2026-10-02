@@ -28,10 +28,21 @@
 	var/obj/effect/abstract/cultivation_vis/storm
 	/// Qi swirling around them
 	var/obj/effect/abstract/particle_holder/motes
+	/// The finale: shatter the void and leave this world for the Immortal Realm
+	var/ascension = FALSE
+	/// Has the Ascension's heart demon come out yet
+	var/demon_summoned = FALSE
 
-/datum/cultivation_breakthrough/New(datum/antagonist/cultivator/cultivator)
+/datum/cultivation_breakthrough/New(datum/antagonist/cultivator/cultivator, ascension = FALSE)
 	src.cultivator = cultivator
+	src.ascension = ascension
 	body = cultivator.owner.current
+	if(ascension)
+		duration = 60
+		strike_damage = 14
+		for(var/strike in 4 to 56 step 4)
+			strike_times += strike
+		return
 	var/obj/item/organ/dantian/dantian = cultivator.get_dantian()
 	restoration = dantian && dantian.grade < cultivator.realm
 	var/target_realm = restoration ? dantian.grade + 1 : cultivator.realm + 1
@@ -96,6 +107,9 @@
 		reasons += span_nicegreen("+20: a Foundation Establishment Pill steadies you.")
 	if(body.has_status_effect(/datum/status_effect/cultivation_pill_buff/tribulation))
 		reasons += span_nicegreen("A Tribulation Warding Pill will halve heaven's lightning.")
+	if(body.has_status_effect(/datum/status_effect/dao_heart_tempered))
+		readiness += 15
+		reasons += span_nicegreen("+15: you have faced your heart demon. Your Dao heart is tempered.")
 	if(locate(/obj/machinery/power/energy_accumulator/grounding_rod) in range(4, body))
 		reasons += span_nicegreen("A grounding rod nearby will draw some of heaven's lightning.")
 	reasons += span_boldnotice("Total: [readiness] ([readiness_word()]). Stable breakthroughs always succeed if you endure them.")
@@ -119,6 +133,10 @@
 		span_boldnotice("You begin your breakthrough. Endure for [duration] seconds!"),
 	)
 	playsound(body, 'sound/effects/magic/lightning_chargeup.ogg', 60, TRUE)
+	if(ascension)
+		var/area/here = get_area(body)
+		minor_announce("A heavenly tribulation of terrifying scale is gathering over [here?.name || "the station"]. [body.real_name] is attempting to ascend!", "Heavenly Omen")
+		body.log_message("began an Ascension attempt", LOG_GAME)
 	storm = cultivation_attach_vis(body, 'surfshack13/icons/cultivation/cultivation_effects_96.dmi', "storm_cloud", null, 96, 56, 230)
 	motes = cultivation_particles(body, /particles/cultivation/gold)
 	for(var/mob/living/carbon/human/witness in view(7, body))
@@ -135,6 +153,10 @@
 	for(var/strike_time in strike_times)
 		if(strike_time > before && strike_time <= elapsed)
 			call_lightning()
+	// Ascension drags out your last heart demon
+	if(ascension && !demon_summoned && elapsed >= 20)
+		demon_summoned = TRUE
+		cultivation_summon_heart_demon(body, 40 SECONDS)
 	if(elapsed >= duration)
 		resolve()
 		return PROCESS_KILL
@@ -169,6 +191,10 @@
 /datum/cultivation_breakthrough/proc/succeed()
 	var/mob/living/user = body
 	var/datum/antagonist/cultivator/winner = cultivator
+	if(ascension)
+		qdel(src)
+		cultivation_ascend(user, winner)
+		return
 	qdel(src)
 	winner.advance_realm()
 	user.visible_message(
@@ -192,6 +218,9 @@
 	if(!loser)
 		return
 	loser.breakthroughs_failed++
+	if(ascension && !interrupted && !QDELETED(user))
+		ascension_rejected(user, loser)
+		return
 	loser.progress = round(loser.progress * 0.75)
 	loser.update_hud()
 	if(interrupted || QDELETED(user))
@@ -216,13 +245,7 @@
 			qdel(artifact.GetComponent(/datum/component/cultivation_artifact))
 			to_chat(user, span_userdanger("Your bond with [artifact] snaps! You'll have to bind it again."))
 		if("demon")
-			to_chat(user, span_userdanger("Your heart demon tears itself free!"))
-			var/mob/living/simple_animal/hostile/illusion/demon = new(get_turf(user))
-			demon.Copy_Parent(user, 60 SECONDS, 60, 8)
-			demon.name = "heart demon of [user.real_name]"
-			demon.desc = "Your own face, twisted by every doubt you ever had."
-			demon.color = "#c070ff"
-			demon.GiveTarget(user)
+			cultivation_summon_heart_demon(user)
 
 /datum/cultivation_breakthrough/proc/cancel(message)
 	if(message && body)
@@ -255,3 +278,51 @@
 	animate(src, transform = matrix().Scale(1.6, 1), alpha = 255, time = 0.25 SECONDS, easing = SINE_EASING | EASE_OUT)
 	animate(transform = matrix().Scale(1.2, 1), time = 1 SECONDS)
 	animate(transform = matrix().Scale(0.1, 1), alpha = 0, time = 0.75 SECONDS, easing = SINE_EASING | EASE_IN)
+
+/// Heaven slaps down a failed Ascension. Brutal, but you live to try again.
+/datum/cultivation_breakthrough/proc/ascension_rejected(mob/living/user, datum/antagonist/cultivator/loser)
+	loser.progress = round(loser.progress / 2)
+	loser.adjust_instability(60)
+	var/obj/item/organ/dantian/dantian = loser.get_dantian()
+	dantian?.crack()
+	user.apply_damage(40, BURN)
+	user.Knockdown(5 SECONDS)
+	new /obj/effect/temp_visual/lightning_strike/tribulation(get_turf(user))
+	cultivation_great_bell(user, 70)
+	minor_announce("The heavenly tribulation scatters. Heaven has rejected [user.real_name]'s Ascension.", "Heavenly Omen")
+	user.visible_message(span_danger("A final, enormous bolt slams [user] into the floor!"), span_userdanger("Heaven rejects you! Your core cracks and half your foundation scatters... but you live."))
+
+/// Shatter the void. The cultivator rises into the sky and leaves the round for the Immortal Realm.
+/proc/cultivation_ascend(mob/living/user, datum/antagonist/cultivator/cultivator)
+	if(QDELETED(user))
+		return
+	cultivator.ascended = TRUE
+	user.log_message("ascended to the Immortal Realm", LOG_GAME)
+	cultivation_breakthrough_sequence(user, "Immortal Ascension")
+	cultivation_great_bell(user, 90)
+	minor_announce("The void splits open above [user.real_name]. A cultivator has ascended to the Immortal Realm!", "Heavenly Omen")
+	user.visible_message(span_boldnotice("[user] rises into a torrent of golden light pouring from a crack in the sky!"), span_boldnotice("The void opens. Immortality welcomes you."))
+	user.add_traits(list(TRAIT_IMMOBILIZED, TRAIT_HANDS_BLOCKED, TRAIT_GODMODE), "ascension")
+	for(var/i in 0 to 3)
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(cultivation_ascension_pillar_at), get_turf(user)), i * 1.5 SECONDS)
+	animate(user, pixel_z = 192, alpha = 0, time = 6 SECONDS, easing = SINE_EASING | EASE_IN, flags = ANIMATION_RELATIVE | ANIMATION_PARALLEL)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(cultivation_finish_ascension), user), 6 SECONDS)
+	// Every cultivator on the station feels it
+	for(var/datum/antagonist/cultivator/other in GLOB.antagonists)
+		var/mob/living/feeler = other.owner?.current
+		if(!feeler || feeler == user || feeler.stat == DEAD)
+			continue
+		to_chat(feeler, span_boldnotice("<i>Somewhere, someone has stepped beyond this world. For a moment, you glimpse the shape of the Dao.</i>"))
+		other.gain_insight(15, INSIGHT_SOURCE_WITNESS, cooldown = 0, silent = TRUE)
+
+/proc/cultivation_ascension_pillar_at(turf/where)
+	new /obj/effect/temp_visual/cultivation_ascension_pillar(where)
+
+/proc/cultivation_finish_ascension(mob/living/user)
+	if(QDELETED(user))
+		return
+	var/turf/here = get_turf(user)
+	user.unequip_everything()
+	new /obj/effect/temp_visual/circle_wave/cultivation/gold/big(here)
+	user.ghostize(FALSE)
+	qdel(user)

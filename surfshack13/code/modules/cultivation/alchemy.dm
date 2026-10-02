@@ -11,6 +11,18 @@
 	w_class = WEIGHT_CLASS_TINY
 	/// Pill toxicity added to cultivators
 	var/toxicity = 8
+	/// Effect multiplier. Spirit-grade pills from a cauldron are stronger.
+	var/potency = 1
+	/// Refined to perfection in a cauldron
+	var/spirit_grade = FALSE
+
+/// A perfect cauldron refinement: stronger, half the toxicity, and it glows
+/obj/item/cultivation_pill/proc/make_spirit_grade()
+	spirit_grade = TRUE
+	potency = 1.5
+	toxicity = round(toxicity / 2)
+	name = "spirit-grade [name]"
+	add_filter("spirit_grade", 2, list("type" = "outline", "color" = "#fff6c8", "size" = 1, "alpha" = 180))
 
 /obj/item/cultivation_pill/attack_self(mob/living/user)
 	consume(user, user)
@@ -49,8 +61,8 @@
 	toxicity = 8
 
 /obj/item/cultivation_pill/qi_gathering/cultivator_effect(mob/living/eater, datum/antagonist/cultivator/cultivator)
-	cultivator.adjust_qi(40)
-	cultivator.gain_insight(8, null, silent = TRUE)
+	cultivator.adjust_qi(40 * potency)
+	cultivator.gain_insight(8 * potency, null, silent = TRUE)
 	new /obj/effect/temp_visual/circle_wave/cultivation(get_turf(eater))
 	to_chat(eater, span_nicegreen("Qi surges through your meridians!"))
 
@@ -84,7 +96,7 @@
 
 /obj/item/cultivation_pill/tempering/cultivator_effect(mob/living/eater, datum/antagonist/cultivator/cultivator)
 	mortal_effect(eater)
-	eater.heal_overall_damage(brute = 10, burn = 10)
+	eater.heal_overall_damage(brute = 10 * potency, burn = 10 * potency)
 
 /obj/item/cultivation_pill/tempering/mortal_effect(mob/living/eater)
 	eater.heal_overall_damage(brute = 20, burn = 10)

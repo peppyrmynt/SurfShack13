@@ -41,6 +41,38 @@
 	TEST_ASSERT(cultivator.instability > instability_before, "Metal and wood didn't clash.")
 	TEST_ASSERT_NOTNULL(locate(/datum/action/cooldown/spell/pointed/cultivation/thousand_thorns) in disciple.actions, "Metal + wood combo wasn't granted.")
 
+	// Artifact refinement: grades rise and stop at the cap
+	var/obj/item/kitchen/rollingpin/artifact = allocate(/obj/item/kitchen/rollingpin)
+	var/datum/component/cultivation_artifact/bond = artifact.AddComponent(/datum/component/cultivation_artifact, disciple.mind)
+	TEST_ASSERT(bond.add_refinement(bond.points_for_next_grade(), disciple), "Enough refinement didn't raise the artifact's grade.")
+	TEST_ASSERT_EQUAL(bond.refinement, 1, "Artifact didn't reach Spirit grade.")
+	bond.add_refinement(1000, disciple)
+	TEST_ASSERT_EQUAL(bond.refinement, MAX_ARTIFACT_REFINEMENT, "Artifact refinement didn't stop at the cap.")
+
+	// Cauldron recipes pick the most specific match
+	var/datum/cauldron_recipe/nine = new /datum/cauldron_recipe/nine_revolutions
+	var/datum/cauldron_recipe/foundation_recipe = new /datum/cauldron_recipe/foundation
+	var/list/pot = list(
+		allocate(/obj/item/food/grown/ambrosia/gaia),
+		allocate(/obj/item/food/grown/mushroom/reishi),
+		allocate(/obj/item/food/grown/mushroom/reishi),
+		allocate(/obj/item/food/grown/mushroom/libertycap),
+	)
+	TEST_ASSERT(nine.matches(pot), "Nine Revolutions recipe didn't match its ingredients.")
+	TEST_ASSERT(foundation_recipe.matches(pot), "Gaia should count as ambrosia for the Foundation recipe.")
+	TEST_ASSERT(nine.total_ingredients() > foundation_recipe.total_ingredients(), "The more specific recipe should win.")
+	qdel(nine)
+	qdel(foundation_recipe)
+
+	// The Demonic Path: only real antagonists can comprehend the scripture, masters can transmit, disciples can't
+	TEST_ASSERT(!cultivation_is_true_antag(disciple.mind), "A plain cultivator counted as a real antagonist.")
+	cultivator.become_demonic(DEMONIC_DISCIPLE)
+	TEST_ASSERT_NOTNULL(locate(/datum/action/cooldown/spell/pointed/cultivation/devouring_art) in disciple.actions, "Demonic disciple didn't get the Devouring Art.")
+	TEST_ASSERT_NULL(locate(/datum/action/cooldown/spell/pointed/cultivation/transmit_forbidden) in disciple.actions, "A demonic disciple can transmit the arts.")
+	TEST_ASSERT_NULL(locate(/datum/action/cooldown/spell/pointed/cultivation/corpse_puppet) in disciple.actions, "Golden Core forbidden art granted at Foundation.")
+	cultivator.become_demonic(DEMONIC_MASTER)
+	TEST_ASSERT_NOTNULL(locate(/datum/action/cooldown/spell/pointed/cultivation/transmit_forbidden) in disciple.actions, "A demonic master can't transmit the arts.")
+
 	// Body swap: knowledge follows the mind, power stays in the body
 	var/mob/living/carbon/human/consistent/new_body = allocate(/mob/living/carbon/human/consistent)
 	var/obj/item/organ/dantian/old_dantian = new_body.get_organ_slot(ORGAN_SLOT_DANTIAN)
