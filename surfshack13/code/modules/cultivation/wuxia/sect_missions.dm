@@ -26,8 +26,8 @@ GLOBAL_LIST_INIT(jianghu_mission_table, list(
 	SECT_MISSION_DUEL = list("Win %GOAL% honor duels", 1, 3),
 	SECT_MISSION_HARVEST = list("Harvest %GOAL% plants", 3, 8),
 	SECT_MISSION_MEDITATE = list("Meditate %GOAL% cycles beside the sect plaque", 6, 12),
-	SECT_MISSION_RECRUIT = list("Accept %GOAL% new member\s into the sect", 1, 2),
-	SECT_MISSION_HEART_DEMON = list("Defeat %GOAL% heart demon\s", 1, 1),
+	SECT_MISSION_RECRUIT = list("Accept %GOAL% new members into the sect", 1, 2),
+	SECT_MISSION_HEART_DEMON = list("Defeat %GOAL% heart demons", 1, 1),
 ))
 
 /// Any member's progress on their sect's mission
