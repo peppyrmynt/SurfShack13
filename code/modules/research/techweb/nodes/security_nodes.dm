@@ -70,20 +70,21 @@
 		"pyro_grenade",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
+	discount_experiments = list(/datum/experiment/ordnance/explosive/highyieldbomb = TECHWEB_TIER_3_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SECURITY, RADIO_CHANNEL_MEDICAL)
 
 /datum/techweb_node/exotic_ammo
 	id = TECHWEB_NODE_EXOTIC_AMMO
 	display_name = "Exotic Ammunition"
 	description = "Specialized bullets designed to ignite, freeze, and inflict various other effects on targets, expanding combat capabilities."
-	prereq_ids = list(TECHWEB_NODE_EXPLOSIVES)
+	prereq_ids = list(TECHWEB_NODE_RIOT_SUPRESSION)
 	design_ids = list(
 		"c38_hotshot",
 		"c38_iceblox",
 		"techshotshell",
 	)
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
-	discount_experiments = list(/datum/experiment/ordnance/explosive/highyieldbomb = TECHWEB_TIER_4_POINTS)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
+	discount_experiments = list(/datum/experiment/ordnance/explosive/lowyieldbomb = TECHWEB_TIER_3_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SECURITY)
 
 /datum/techweb_node/electric_weapons
@@ -110,4 +111,18 @@
 		"nuclear_gun",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
+	announce_channels = list(RADIO_CHANNEL_SECURITY)
+
+/datum/techweb_node/ballistic_ammo
+	id = TECHWEB_NODE_BALLISTIC_AMMO
+	display_name = "Ballistic Ammunition"
+	description = "Standard ballistic ammunition for shotguns."
+	prereq_ids = list(TECHWEB_NODE_EXOTIC_AMMO)
+	design_ids = list(
+		"shotgun_slug",
+		"buckshot_shell",
+		"buckshot_box",
+		"slug_box",
+	)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS)
 	announce_channels = list(RADIO_CHANNEL_SECURITY)

@@ -133,7 +133,7 @@
 		to_chat(src, span_notice("Your still dizzy from the last death roll, wait a second."))
 		return FALSE
 
-	if(HAS_TRAIT(florida, TRAIT_ON_ELEVATED_SURFACE) && !HAS_TRAIT(src, TRAIT_ON_ELEVATED_SURFACE))
+	if(HAS_TRAIT(florida.loc, TRAIT_ELEVATED_TURF) && !HAS_TRAIT(src.loc, TRAIT_ELEVATED_TURF))
 		to_chat(src, span_notice("[florida] is too high up to grab and death roll."))
 		return FALSE
 

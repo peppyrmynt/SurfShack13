@@ -52,7 +52,7 @@
 	desc = "Designed to quickly reload revolvers. Rubber bullets are bouncy and less-than-lethal."
 	id = "c38_rubber"
 	build_type = PROTOLATHE | AWAY_LATHE
-	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 10)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 7)
 	build_path = /obj/item/ammo_box/c38/match/bouncy
 	category = list(
 		RND_CATEGORY_WEAPONS + RND_SUBCATEGORY_WEAPONS_AMMO

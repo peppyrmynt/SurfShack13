@@ -1811,6 +1811,14 @@
 	icon_state = "default"
 	color_src = FALSE
 
+/datum/sprite_accessory/tails/saiyan
+
+/datum/sprite_accessory/tails/saiyan/saiyan
+	name = "Saiyan"
+	icon = 'icons/mob/human/species/monkey/monkey_tail.dmi'
+	icon_state = "monkey"
+	color_src = FALSE
+
 /datum/sprite_accessory/pod_hair
 	icon = 'icons/mob/human/species/podperson_hair.dmi'
 	em_block = TRUE

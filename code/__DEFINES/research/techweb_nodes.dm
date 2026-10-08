@@ -9,6 +9,7 @@
 #define TECHWEB_NODE_ATMOS "atmos"
 #define TECHWEB_NODE_AUGMENTATION "augmentation"
 #define TECHWEB_NODE_AUS_SECURITY "aus_security"
+#define TECHWEB_NODE_BALLISTIC_AMMO "ballistic_ammo"
 #define TECHWEB_NODE_BASIC_ARMS "basic_arms"
 #define TECHWEB_NODE_BCI "bci"
 #define TECHWEB_NODE_BEAM_WEAPONS "beam_weapons"

@@ -9,7 +9,7 @@
 	// What antag does this give our user?
 	var/provided_antag_datum = /datum/antagonist/traitor
 	// How many credits do we give the player should they already have antagonist status.
-	var/refund_amount = 5000
+	var/refund_amount = 7500
 	// Safety check to prevent exploits with lag and such
 	var/has_used = FALSE
 	// Do we make the user drop all of their shit to make room for new outfits?
@@ -47,32 +47,32 @@
 
 /obj/item/antag_maker/heretic
 	provided_antag_datum = /datum/antagonist/heretic
-	refund_amount = 5000
+	refund_amount = 7500
 
 /obj/item/antag_maker/brother
 	provided_antag_datum = /datum/antagonist/brother
-	refund_amount = 4000
+	refund_amount = 6000
 
 /obj/item/antag_maker/changeling
 	provided_antag_datum = /datum/antagonist/changeling
-	refund_amount = 5000
+	refund_amount = 8000
 
 /obj/item/antag_maker/bloodsucker
 	provided_antag_datum = /datum/antagonist/bloodsucker
-	refund_amount = 5000
+	refund_amount = 8000
 
 /obj/item/antag_maker/spy
 	provided_antag_datum = /datum/antagonist/spy
-	refund_amount = 4000
+	refund_amount = 6000
 
 /obj/item/antag_maker/wizard
 	provided_antag_datum = /datum/antagonist/wizard
-	refund_amount = 8000
+	refund_amount = 12500
 
 /obj/item/antag_maker/nukie
 	provided_antag_datum = /datum/antagonist/nukeop
-	refund_amount = 7000
+	refund_amount = 10000
 
 /obj/item/antag_maker/clown_op
 	provided_antag_datum = /datum/antagonist/nukeop/clownop
-	refund_amount = 7000
+	refund_amount = 10000

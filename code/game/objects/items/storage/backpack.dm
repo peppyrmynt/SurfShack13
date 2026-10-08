@@ -19,7 +19,7 @@
 	lefthand_file = 'icons/mob/inhands/equipment/backpack_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/backpack_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
-	slot_flags = ITEM_SLOT_BACK //ERROOOOO
+	slot_flags = ITEM_SLOT_BACK
 	resistance_flags = NONE
 	max_integrity = 300
 	storage_type = /datum/storage/backpack
@@ -416,7 +416,7 @@
 	actions_types = list(/datum/action/item_action/zipper)
 	storage_type = /datum/storage/duffel
 	// How much to slow you down if your bag isn't zipped up
-	var/zip_slowdown = 1
+	var/zip_slowdown = 0.2
 	/// If this bag is zipped (contents hidden) up or not
 	/// Starts enabled so you're forced to interact with it to "get" it
 	var/zipped_up = TRUE
@@ -644,8 +644,8 @@
 	inhand_icon_state = "duffel-syndieammo"
 	storage_type = /datum/storage/duffel/syndicate
 	resistance_flags = FIRE_PROOF
-	// Less slowdown while unzipped. Still bulky, but it won't halve your movement speed in an active combat situation.
-	zip_slowdown = 0.3
+	// Less slowdown while unzipped. Still bulky, but it won't penalize your movement speed greatly in an active combat situation.
+	zip_slowdown = 0.1
 	// Faster unzipping. Utilizes the same noise as zipping up to fit the unzip duration.
 	unzip_duration = 0.5 SECONDS
 	unzip_sfx = 'sound/items/zip/zip_up.ogg'
@@ -809,16 +809,43 @@
 /*
  * Messenger Bag Types
  */
-
 /obj/item/storage/backpack/messenger
 	name = "messenger bag"
 	desc = "A trendy looking messenger bag; sometimes known as a courier bag. Fashionable and portable."
 	icon_state = "messenger"
 	inhand_icon_state = "messenger"
+	worn_icon_state = "messenger"
 	icon = 'icons/obj/storage/backpack.dmi'
 	worn_icon = 'icons/mob/clothing/back/backpack.dmi'
 	lefthand_file = 'icons/mob/inhands/equipment/backpack_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/backpack_righthand.dmi'
+	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_BELT
+	storage_type = /datum/storage/backpack/messenger
+	/// Tracks which slot the bag is currently equipped to
+	var/equipped_slot = null
+
+/obj/item/storage/backpack/messenger/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/update_icon_updates_onmob)
+
+/obj/item/storage/backpack/messenger/equipped(mob/user, slot, initial = FALSE)
+	equipped_slot = slot
+	update_appearance()
+	. = ..()
+
+/obj/item/storage/backpack/messenger/dropped(mob/user, silent)
+	equipped_slot = null
+	update_appearance()
+	. = ..()
+
+/obj/item/storage/backpack/messenger/update_icon_state()
+	if(equipped_slot == ITEM_SLOT_BELT)
+		icon_state = "[initial(icon_state)]"
+		worn_icon_state = "[initial(icon_state)]_belt"
+	else
+		icon_state = initial(icon_state)
+		worn_icon_state = initial(icon_state)
+	return ..()
 
 /obj/item/storage/backpack/messenger/eng
 	name = "industrial messenger bag"

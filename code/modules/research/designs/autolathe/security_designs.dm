@@ -14,7 +14,7 @@
 	name = "Rubber Shot (Less Lethal)"
 	id = "rubber_shot"
 	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
-	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT*2)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT*1)
 	build_path = /obj/item/ammo_casing/shotgun/rubbershot
 	category = list(
 		RND_CATEGORY_INITIAL,
@@ -267,7 +267,7 @@
 /datum/design/shotgun_slug
 	name = "Shotgun Slug"
 	id = "shotgun_slug"
-	build_type = AUTOLATHE
+	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
 	materials = list(/datum/material/iron = SMALL_MATERIAL_AMOUNT * 75)
 	build_path = /obj/item/ammo_casing/shotgun
 	category = list(
@@ -279,7 +279,7 @@
 /datum/design/buckshot_shell
 	name = "Buckshot Shell"
 	id = "buckshot_shell"
-	build_type = AUTOLATHE
+	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
 	materials = list(/datum/material/iron = SMALL_MATERIAL_AMOUNT * 75)
 	build_path = /obj/item/ammo_casing/shotgun/buckshot
 	category = list(
@@ -291,7 +291,7 @@
 /datum/design/buckshot_box
 	name = "Buckshot Ammo Box (12g) (Lethal)"
 	id = "buckshot_box"
-	build_type = AUTOLATHE
+	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
 	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT * 350)
 	build_path = /obj/item/storage/box/lethalshot
 	category = list(
@@ -303,7 +303,7 @@
 /datum/design/slug_box
 	name = "Slug Ammo Box (12g) (Lethal)"
 	id = "slug_box"
-	build_type = AUTOLATHE
+	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
 	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT * 350)
 	build_path = /obj/item/storage/box/slugs
 	category = list(

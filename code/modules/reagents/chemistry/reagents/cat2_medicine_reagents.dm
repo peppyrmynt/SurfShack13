@@ -198,7 +198,7 @@
 	var/resetting_probability = 0 //same with this? Old legacy vars that should be removed?
 	var/message_cd = 0
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	inverse_chem_val = 0.35
+	inverse_chem_val = 0.3
 	inverse_chem = /datum/reagent/inverse/aiuri
 
 /datum/reagent/medicine/c2/aiuri/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
@@ -296,7 +296,7 @@
 	color = "#FF6464"
 	ph = 5.6
 	inverse_chem = /datum/reagent/inverse/healing/tirimol
-	inverse_chem_val = 0.25
+	inverse_chem_val = 0.3
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
 	/// A cooldown for spacing bursts of stamina damage
@@ -412,6 +412,8 @@
 	metabolization_rate = 0.75 * REAGENTS_METABOLISM
 	overdose_threshold = 6
 	ph = 8.6
+	inverse_chem_val = 0.4
+	inverse_chem = /datum/reagent/inverse/healing/syriniver
 	var/conversion_amount
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 

@@ -476,6 +476,7 @@
 	toxpwr = 0
 	metabolization_rate = 1.5 * REAGENTS_METABOLISM
 	ph = 11
+	inverse_chem_val = 0.4
 	inverse_chem = /datum/reagent/impurity/chloralax
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
@@ -687,6 +688,7 @@
 	purity = REAGENT_STANDARD_PURITY
 	toxpwr = 1
 	ph = 2.0
+	inverse_chem_val = 0.4
 	inverse_chem = /datum/reagent/impurity/methanol
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 

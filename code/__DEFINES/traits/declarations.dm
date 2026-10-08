@@ -89,6 +89,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// "Magic" trait that blocks the mob from moving or interacting with anything. Used for transient stuff like mob transformations or incorporality in special cases.
 /// Will block movement, `Life()` (!!!), and other stuff based on the mob.
 #define TRAIT_NO_TRANSFORM "block_transformations"
+/// I've been turned into something else
+#define TRAIT_SHAPESHIFTED "shapeshifted"
 /// Tracks whether we're gonna be a baby alien's mummy.
 #define TRAIT_XENO_HOST "xeno_host"
 /// This parrot is currently perched
@@ -581,8 +583,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Whether or not the user is in a MODlink call, prevents making more calls
 #define TRAIT_IN_CALL "in_call"
 
-/// Is the mob standing on an elevated surface? This prevents them from dropping down if not elevated first.
-#define TRAIT_ON_ELEVATED_SURFACE "on_elevated_surface"
 /// Does the mob ignore elevation? (e.g. xeno larvas on hiding)
 #define TRAIT_IGNORE_ELEVATION "ignore_elevation"
 
@@ -862,6 +862,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_CONTRABAND_BLOCKER "contraband_blocker"
 /// For edible items that cannot be composted inside hydro trays
 #define TRAIT_UNCOMPOSTABLE "uncompostable"
+/// limbs with this trait can be empowered by a saiyan heart
+#define TRAIT_SAIYAN_STRENGTH "saiyan_strength"
+/// Allows you to detect power levels
+#define TRAIT_MARTIAL_VISION "martial_vision"
+/// Are you the legendary super saiyan? If so, you are allowed to become blonde.
+#define TRAIT_POWER_HAIR "thirty_dollar_haircut"
 
 //quirk traits
 #define TRAIT_ALCOHOL_TOLERANCE "alcohol_tolerance"
@@ -1383,5 +1389,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 ///Trait given to atoms currently affected by projectile dampeners
 #define TRAIT_GOT_DAMPENED "got_dampened"
+/// Trait that allows mobs to perform surgery on themselves
+#define TRAIT_SELF_SURGERY "self_surgery"
+
+/// Apply this trait to mobs which can buckle humans
+#define TRAIT_CAN_MOUNT_HUMANS "can_mount_humans"
+/// Apply this trait to mobs which can buckle cyborgs
+#define TRAIT_CAN_MOUNT_CYBORGS "can_mount_cyborgs"
 
 // END TRAIT DEFINES

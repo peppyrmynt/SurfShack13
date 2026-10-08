@@ -19,6 +19,31 @@
 	var/surgery_speed = 1
 	/// The overlay that shows when the autosurgeon has an organ inside of it.
 	var/loaded_overlay = "autosurgeon_loaded_overlay"
+	//surfshack start
+	/// Organs that cant be put in by players, but still hard coded into autosurgeons
+	var/list/organ_blacklist = list(
+		/obj/item/organ/brain,
+		)
+	/// amount of uses left before theres a risk of malfunction
+	var/malfunction_threshold = 3
+
+/obj/item/autosurgeon/emag_act(mob/user, obj/item/card/emag/emag_card)
+	if(obj_flags & EMAGGED)
+		return FALSE
+	obj_flags |= EMAGGED
+	visible_message(span_warning("\The [src] whirs gently!"))
+	return TRUE
+
+/obj/item/autosurgeon/Destroy(force)
+	if(stored_organ)
+		stored_organ.forceMove(get_turf(src))
+	do_sparks(1)
+	. = ..()
+
+/obj/item/autosurgeon/examine_more(mob/user)
+	. = ..()
+	. += span_warning("Warrenty void after [malfunction_threshold] operations.")
+//surfshack end
 
 /obj/item/autosurgeon/attack_self_tk(mob/user)
 	return //stops TK fuckery
@@ -34,6 +59,21 @@
 		. += loaded_overlay
 		. += emissive_appearance(icon, loaded_overlay, src)
 
+//surfshack start
+/obj/item/autosurgeon/proc/malfunction(mob/living/carbon/human/H)
+	if(!ishuman(H))
+		return
+	for(var/obj/item/bodypart/arm/ripped in H.bodyparts)
+		//dismember 25% of the time, otherwise apply same damage as circular saw.
+		to_chat(H, span_userdanger("\The [src] Malfunctions and starts to prod and carve your arm."))
+		playsound(src, 'sound/items/weapons/chainsawhit.ogg', 60, vary = TRUE)
+		if(prob(25))
+			ripped.dismember()
+		else
+			ripped.receive_damage(brute = 30, sharpness = SHARP_EDGED)
+		return
+//surfshack end
+
 /obj/item/autosurgeon/proc/load_organ(obj/item/organ/loaded_organ, mob/living/user)
 	if(user)
 		if(stored_organ)
@@ -43,7 +83,11 @@
 		if(uses <= 0)
 			to_chat(user, span_alert("[src] is used up and cannot be loaded with more implants."))
 			return
-
+		//surfshack start
+		if(organ_blacklist.Find(loaded_organ.type))
+			to_chat(user, span_alert("[src] cant implant the [loaded_organ] and refuses it!"))
+			return
+		//surfshack end
 		if(organ_whitelist.len)
 			var/organ_whitelisted
 			for(var/whitelisted_organ in organ_whitelist)
@@ -80,7 +124,6 @@
 		)
 		if(!do_after(user, (implant_time * surgery_speed), target))
 			return
-
 	if(target != user)
 		log_combat(user, target, "autosurgeon implanted [stored_organ] into", "[src]", "in [AREACOORD(target)]")
 		user.visible_message(span_notice("[user] presses a button on [src] as it plunges into [target]'s body."), span_notice("You press a button on [src] as it plunges into [target]'s body."))
@@ -89,13 +132,26 @@
 			span_notice("[user] pressses a button on [src] as it plunges into [user.p_their()] body."),
 			span_notice("You press a button on [src] as it plunges into your body."),
 		)
-
+	//surfshack start
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		if(obj_flags & EMAGGED)
+			malfunction(H)
+			obj_flags -= EMAGGED
+			visible_message(span_warning("\The [src] stops whirring!"))
+			return
+		else if(H.auto_surgeon_uses >= malfunction_threshold && prob(40))
+			malfunction(H)
+			Destroy()
+			return
+		else
+			H.auto_surgeon_uses ++
+	//surfshack end
 	stored_organ.Insert(target)//insert stored organ into the user
 	stored_organ = null
 	name = initial(name) //get rid of the organ in the name
 	playsound(target.loc, 'sound/items/weapons/circsawhit.ogg', 50, vary = TRUE)
 	update_appearance()
-
 	uses--
 	if(uses <= 0)
 		desc = "[initial(desc)] Looks like it's been used up."
@@ -142,8 +198,9 @@
 
 /obj/item/autosurgeon/unlocked
 	name = "autosurgeon"
-	desc = "A single use autosurgeon that can be loaded with any implant, though can only be used once."
-	uses = 1
+	//surfshack start
+	// uses = 1
+	//surfshack end
 	surgery_speed = 0.1
 
 /obj/item/autosurgeon/syndicate

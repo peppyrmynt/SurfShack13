@@ -820,6 +820,18 @@
 	eye_icon_state = "motheyes"
 	icon_state = "eyeballs-cybermoth"
 
+/obj/item/organ/eyes/saiyan
+	name = "saiyan eyes"
+	desc = "The incisive eyes of a warrior. Special cells allow the detection of power levels."
+
+/obj/item/organ/eyes/saiyan/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
+	. = ..()
+	ADD_TRAIT(organ_owner, TRAIT_MARTIAL_VISION, ORGAN_TRAIT)
+
+/obj/item/organ/eyes/saiyan/on_mob_remove(mob/living/carbon/organ_owner, special)
+	. = ..()
+	REMOVE_TRAIT(organ_owner, TRAIT_MARTIAL_VISION, ORGAN_TRAIT)
+
 /obj/item/organ/eyes/snail
 	name = "snail eyes"
 	desc = "These eyes seem to have a large range, but might be cumbersome with glasses."
@@ -861,3 +873,8 @@
 /obj/item/organ/eyes/night_vision/maintenance_adapted/on_mob_remove(mob/living/carbon/unadapted, special = FALSE, movement_flags)
 	REMOVE_TRAIT(unadapted, TRAIT_UNNATURAL_RED_GLOWY_EYES, ORGAN_TRAIT)
 	return ..()
+
+/obj/item/organ/eyes/pod
+	name = "pod eyes"
+	desc = "Strangest salad you've ever seen."
+	foodtype_flags = PODPERSON_ORGAN_FOODTYPES

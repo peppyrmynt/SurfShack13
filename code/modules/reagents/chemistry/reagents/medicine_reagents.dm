@@ -658,6 +658,7 @@
 	description = "A painkiller that allows the patient to move at full speed even when injured. Causes drowsiness and eventually unconsciousness in high doses. Overdose will cause a variety of effects, ranging from minor to lethal."
 	reagent_state = LIQUID
 	color = "#A9FBFB"
+	taste_description = "a perfumy, bitter vanilla"
 	metabolization_rate = 0.5 * REAGENTS_METABOLISM
 	overdose_threshold = 30
 	ph = 8.96
@@ -1065,7 +1066,7 @@
 	overdose_threshold = 15
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	purity = REAGENT_STANDARD_PURITY
-	inverse_chem = /datum/reagent/inverse
+	inverse_chem = /datum/reagent/impurity/mannitol
 	inverse_chem_val = 0.45
 	metabolized_traits = list(TRAIT_TUMOR_SUPPRESSED) //Having mannitol in you will pause the brain damage from brain tumor (so it heals an even 2 brain damage instead of 1.8)
 
@@ -1668,6 +1669,8 @@
 	reagent_state = LIQUID
 	overdose_threshold = 50
 	metabolization_rate = 0.5 * REAGENTS_METABOLISM //same as C2s
+	inverse_chem_val = 0.35
+	inverse_chem = /datum/reagent/impurity/healing/medicine_failure
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
 /datum/reagent/medicine/granibitaluri/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)

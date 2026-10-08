@@ -44,7 +44,7 @@
 
 /obj/projectile/bullet/incendiary/shotgun/dragonsbreath
 	name = "dragonsbreath pellet"
-	damage = 5
+	damage = 6
 
 /obj/projectile/bullet/shotgun_stunslug
 	name = "stunslug"
@@ -91,10 +91,11 @@
 /obj/projectile/bullet/pellet/shotgun_rubbershot
 	name = "rubber shot pellet"
 	damage = 3
-	stamina = 11
+	stamina = 12
 	sharpness = NONE
 	embed_type = null
-	speed = 0.8
+	speed = 0.9
+	damage_falloff_tile = -0.2
 	stamina_falloff_tile = -0.25
 	ricochets_max = 4
 	ricochet_chance = 120

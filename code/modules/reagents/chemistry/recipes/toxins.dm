@@ -15,8 +15,8 @@
 	thermic_constant = 200
 	H_ion_release = -3
 	rate_up_lim = 15
-	purity_min = 0.5
-	reaction_flags = REACTION_PH_VOL_CONSTANT
+	purity_min = 0.25
+	reaction_flags = REACTION_PH_VOL_CONSTANT | REACTION_CLEAR_INVERSE
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DAMAGING | REACTION_TAG_CHEMICAL | REACTION_TAG_BRUTE | REACTION_TAG_TOXIN
 
 /datum/chemical_reaction/fentanyl
@@ -207,7 +207,7 @@
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DAMAGING | REACTION_TAG_CHEMICAL | REACTION_TAG_TOXIN
 
 /datum/chemical_reaction/chloralhydrate
-	results = list(/datum/reagent/toxin/chloralhydrate = 1)
+	results = list(/datum/reagent/toxin/chloralhydrate = 2)
 	required_reagents = list(/datum/reagent/consumable/ethanol = 1, /datum/reagent/chlorine = 3, /datum/reagent/water = 1)
 	mix_message = "The mixture turns deep blue."
 	is_cold_recipe = FALSE
@@ -223,7 +223,7 @@
 	H_ion_release = 2
 	rate_up_lim = 10
 	purity_min = 0.6
-	reaction_flags = REACTION_PH_VOL_CONSTANT
+	reaction_flags = REACTION_PH_VOL_CONSTANT | REACTION_CLEAR_INVERSE
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DAMAGING | REACTION_TAG_OTHER
 
 /datum/chemical_reaction/mutetoxin //i'll just fit this in here snugly between other unfun chemicals :v

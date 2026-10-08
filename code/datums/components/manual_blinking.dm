@@ -91,3 +91,65 @@
 		warn_grace = FALSE
 		warn_dying = FALSE
 		last_blink = world.time
+
+//This is used for aivime, the inverse of aiuri.
+/datum/component/manual_blinking/overdrive
+	dupe_mode = COMPONENT_DUPE_UNIQUE
+	warn_grace = FALSE
+	warn_dying = FALSE
+	last_blink
+	check_every = 2 SECONDS
+	grace_period = 1 SECONDS
+	damage_rate = 5 // organ damage taken per tick
+	var/datum/action/cooldown/manual_blink_button/blink_button
+
+/datum/component/manual_blinking/overdrive/Initialize()
+	if(!iscarbon(parent))
+		return COMPONENT_INCOMPATIBLE
+
+	var/mob/living/carbon/C = parent
+	E = C.get_organ_slot(ORGAN_SLOT_EYES)
+
+	blink_button = new
+	blink_button.Grant(C)
+
+	if(E)
+		START_PROCESSING(SSdcs, src)
+		last_blink = world.time
+		to_chat(C, span_userdanger("You suddenly realize you're blinking manually."))
+
+/datum/component/manual_blinking/overdrive/Destroy(force)
+	QDEL_NULL(blink_button)
+	E = null
+	STOP_PROCESSING(SSdcs, src)
+	to_chat(parent, span_notice("You revert back to automatic blinking."))
+	return ..()
+
+/datum/component/manual_blinking/overdrive/process()
+	var/mob/living/carbon/C = parent
+
+	if(world.time > (last_blink + check_every + grace_period))
+		if(!warn_dying)
+			to_chat(C, span_userdanger("Your eyes begin to wither, you need to blink!"))
+			warn_dying = TRUE
+
+		E.set_organ_damage(min(E.damage + damage_rate, 35))
+	else if(world.time > (last_blink + check_every))
+		if(!warn_grace)
+			to_chat(C, span_danger("You feel a need to blink!"))
+			warn_grace = TRUE
+
+/datum/action/cooldown/manual_blink_button
+	name = "Blink"
+	cooldown_time = 2.5 SECONDS
+	button_icon = 'icons/effects/mouse_pointers/blind_target.dmi'
+	button_icon_state = "blink"
+
+/datum/action/cooldown/manual_blink_button/Activate(atom/target)
+	. = ..()
+
+	var/mob/living/carbon/C = owner
+	if(!istype(C))
+		return
+
+	C.emote("blink")

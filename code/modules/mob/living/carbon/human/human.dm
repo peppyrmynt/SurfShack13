@@ -36,6 +36,8 @@
 	)
 	AddElement(/datum/element/connect_loc, loc_connections)
 	GLOB.human_list += src
+	ADD_TRAIT(src, TRAIT_CAN_MOUNT_HUMANS, INNATE_TRAIT)
+	ADD_TRAIT(src, TRAIT_CAN_MOUNT_CYBORGS, INNATE_TRAIT)
 
 /mob/living/carbon/human/proc/setup_physiology()
 	physiology = new()
@@ -141,7 +143,7 @@
 		id_examine += "</div>" // container
 		id_examine += "</div>" // text
 
-		to_chat(viewer, examine_block(span_info(id_examine)))
+		to_chat(viewer, boxed_message(span_info(id_examine)))
 
 ///////HUDs///////
 	if(href_list["hud"])
@@ -318,7 +320,7 @@
 						sec_record_message += "\n<b>Crime:</b> [crime.name]"
 						sec_record_message += "\n<b>Details:</b> [crime.details]"
 						sec_record_message += "\nAdded by [crime.author] at [crime.time]"
-				to_chat(human_or_ghost_user, examine_block(sec_record_message))
+				to_chat(human_or_ghost_user, boxed_message(sec_record_message))
 				return
 			if(ishuman(human_or_ghost_user))
 				var/mob/living/carbon/human/human_user = human_or_ghost_user
@@ -987,14 +989,13 @@
 
 	return buckle_mob(target, TRUE, TRUE, RIDER_NEEDS_ARMS)
 
-/mob/living/carbon/human/buckle_mob(mob/living/target, force = FALSE, check_loc = TRUE, buckle_mob_flags= NONE)
-	if(!is_type_in_typecache(target, can_ride_typecache))
+/mob/living/carbon/human/is_buckle_possible(mob/living/target, force, check_loc)
+	if(!HAS_TRAIT(target, TRAIT_CAN_MOUNT_HUMANS))
 		target.visible_message(span_warning("[target] really can't seem to mount [src]..."))
-		return
-
-	if(!force)//humans are only meant to be ridden through piggybacking and special cases
-		return
-
+		return FALSE
+	// if you don't invoke it with forced, IE via piggyback / fireman, always fail
+	if(!force)
+		return FALSE
 	return ..()
 
 /mob/living/carbon/human/reagent_check(datum/reagent/chem, seconds_per_tick, times_fired)
@@ -1178,6 +1179,9 @@
 
 /mob/living/carbon/human/species/pod
 	race = /datum/species/pod
+
+/mob/living/carbon/human/species/saiyan
+	race = /datum/species/saiyan
 
 /mob/living/carbon/human/species/shadow
 	race = /datum/species/shadow

@@ -269,6 +269,9 @@
 
 	///Which ambient sound this client is currently being provided.
 	var/current_ambient_sound
+
+	/// The DPI scale of the client. 1 is equivalent to 100% window scaling, 2 will be 200% window scaling
+	var/window_scaling
 	//surfshack start
 	///country flag the client is connecting from
 	var/country_flag

@@ -40,6 +40,11 @@
 	list_reagents = list(/datum/reagent/medicine/c2/aiuri = 2, /datum/reagent/medicine/granibitaluri = 8)
 	icon_state = "bandaid_burn"
 
+/obj/item/reagent_containers/pill/patch/fent
+	name = "unmarked patch"
+	desc = "An unmarked, unlabeled transdermal patch for you to wear!"
+	list_reagents = list(/datum/reagent/toxin/fentanyl = 2)
+
 /obj/item/reagent_containers/pill/patch/synthflesh
 	name = "synthflesh patch"
 	desc = "Helps with brute and burn injuries. Slightly toxic."
