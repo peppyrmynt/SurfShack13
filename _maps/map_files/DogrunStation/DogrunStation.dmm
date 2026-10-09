@@ -5647,14 +5647,11 @@
 /turf/open/floor/plating,
 /area/station/maintenance/floor2/port)
 "bdK" = (
-/obj/machinery/power/terminal{
-	dir = 1
-	},
-/obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/turf_decal/trimline/yellow/filled/corner{
 	dir = 1
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/dark,
 /area/station/maintenance/disposal/incinerator)
 "bdL" = (
@@ -11026,6 +11023,7 @@
 /obj/effect/turf_decal/trimline/yellow/mid_joiner{
 	dir = 1
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
 	},
@@ -17916,10 +17914,6 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/floor2/starboard/fore)
-"dyZ" = (
-/obj/structure/cable,
-/turf/closed/wall/r_wall,
-/area/station/maintenance/disposal/incinerator)
 "dza" = (
 /obj/structure/transit_tube/horizontal,
 /obj/structure/lattice/catwalk,
@@ -36240,11 +36234,10 @@
 	},
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/machinery/button/door/directional/north{
-	id = "atmos";
-	name = "Atmospherics Lockdown";
-	pixel_x = -6;
-	req_access = list("atmospherics");
-	pixel_w = 10;
+	id = "mechbay";
+	name = "Mech Bay Shutter Control";
+	req_access = list("robotics");
+	pixel_w = 4;
 	pixel_z = 4
 	},
 /turf/open/floor/iron/large,
@@ -50161,8 +50154,6 @@
 /turf/open/floor/plating,
 /area/station/medical/treatment_center/abandoned)
 "jXE" = (
-/obj/structure/cable,
-/obj/machinery/power/apc/auto_name/directional/east,
 /obj/machinery/camera/autoname/directional/east,
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 4
@@ -61587,6 +61578,7 @@
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 1
 	},
+/obj/structure/cable,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
 	},
@@ -75340,6 +75332,10 @@
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 1
 	},
+/obj/machinery/power/terminal{
+	dir = 8
+	},
+/obj/structure/cable,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
 	},
@@ -89151,7 +89147,6 @@
 /turf/open/floor/iron/dark/textured_large,
 /area/station/science/cytology)
 "rXm" = (
-/obj/structure/cable,
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 8
 	},
@@ -101037,7 +101032,6 @@
 	},
 /area/station/science/xenobiology)
 "uxb" = (
-/obj/structure/cable,
 /obj/effect/spawner/random/engineering/tracking_beacon,
 /turf/open/floor/iron/dark,
 /area/station/maintenance/disposal/incinerator)
@@ -111215,13 +111209,21 @@
 /turf/open/floor/iron/edge,
 /area/station/hallway/floor2/starboard/aft)
 "wCf" = (
-/obj/machinery/light_switch/directional/north,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 1
 	},
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner{
 	dir = 1
+	},
+/obj/structure/cable,
+/obj/machinery/power/apc/auto_name/directional/north{
+	pixel_w = 4;
+	pixel_z = 0
+	},
+/obj/machinery/light_switch/directional/north{
+	pixel_w = -9;
+	pixel_z = -1
 	},
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
@@ -231274,7 +231276,7 @@ hjM
 qpW
 wwb
 sXq
-dyZ
+sXq
 wCf
 evQ
 eTV
