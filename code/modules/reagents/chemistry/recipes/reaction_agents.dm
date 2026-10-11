@@ -35,16 +35,11 @@
 	purity_min = 0
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_CHEMICAL
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////// Example competitive reaction (REACTION_COMPETITIVE)  //////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 /datum/chemical_reaction/prefactor_a
-	results = list(/datum/reagent/prefactor_a = 5)
+	results = list(/datum/reagent/prefactor_a = 2)
 	required_reagents = list(/datum/reagent/phenol = 1, /datum/reagent/consumable/ethanol = 3, /datum/reagent/toxin/plasma = 1)
 	mix_message = "The solution's viscosity increases."
-	required_temp = 100
+	required_temp = 150
 	optimal_temp = 300
 	overheat_temp = 500
 	optimal_ph_min = 0
@@ -52,7 +47,7 @@
 	determin_ph_range = 0
 	temp_exponent_factor = 1
 	ph_exponent_factor = 0
-	thermic_constant = -300
+	thermic_constant = -400
 	H_ion_release = 0
 	rate_up_lim = 4
 	purity_min = 0.25
@@ -60,11 +55,11 @@
 
 
 /datum/chemical_reaction/prefactor_b
-	results = list(/datum/reagent/prefactor_b = 5)
+	results = list(/datum/reagent/prefactor_b = 2)
 	required_reagents = list(/datum/reagent/acetone = 1, /datum/reagent/consumable/ethanol = 3, /datum/reagent/toxin/plasma = 1)
 	mix_message = "The solution's viscosity decreases."
 	mix_sound = 'sound/effects/chemistry/bluespace.ogg' //Maybe use this elsewhere instead
-	required_temp = 100
+	required_temp = 150
 	optimal_temp = 300
 	overheat_temp = 500
 	optimal_ph_min = 0
@@ -72,21 +67,10 @@
 	determin_ph_range = 0
 	temp_exponent_factor = 1
 	ph_exponent_factor = 2
-	thermic_constant = -300
+	thermic_constant = -400
 	H_ion_release = -0.02
 	rate_up_lim = 6
 	purity_min = 0.35
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_CHEMICAL
-
-/datum/chemical_reaction/prefactor_b/overheated(datum/reagents/holder, datum/equilibrium/equilibrium, step_volume_added)
-	. = ..()
-	explode_shockwave(holder, equilibrium)
-	var/vol = max(20, holder.total_volume/5) //Not letting you have more than 5
-	clear_reagents(holder, vol)//Lest we explode forever
-
-/datum/chemical_reaction/prefactor_b/overly_impure(datum/reagents/holder, datum/equilibrium/equilibrium, step_volume_added)
-	explode_fire(holder, equilibrium)
-	var/vol = max(20, holder.total_volume/5) //Not letting you have more than 5
-	clear_reagents(holder, vol)
 
 ////////////////////////////////End example/////////////////////////////////////////////////////////////////////////////
