@@ -1,0 +1,10 @@
+author: "ZealousZeke"
+delete-after: True
+changes:
+  - balance: "Reverted Aivime back to doing minor eye damage and eye blur because I'm lazy."
+  - balance: "Buffed libitoil from 0.5 toxin liver filtering to 0.1 toxin liver filtering."
+  - balance: "Decreased tempomyocin's reaction slowdown from 0.15 to 0.2."
+  - balance: "Interim product alpha and beta mix in reduced parts."
+  - balance: "Increased inverse threshold for Lipolicide, Chloral Hydrate, Salbutamol, and Oxandrolone."
+  - balance: "Increased Chloralax's chance for curing diseases. Drink bleach."
+  - balance: "Decreases ipecacide purging effect."
