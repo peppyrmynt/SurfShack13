@@ -35,7 +35,7 @@
 
 /area/awaymission/research/interior/maint
 	name = "Research Maintenance"
-	icon_state = "maintcentral"
+	icon_state = "maint_sci"
 
 /area/awaymission/research/interior/dorm
 	name = "Research Dorms"

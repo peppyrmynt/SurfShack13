@@ -69,6 +69,11 @@ map omegastation
 endmap
 
 
+map dogrunstation
+	minplayers 25
+	votable
+endmap
+
 # Debug-only maps.
 
 map gateway_test

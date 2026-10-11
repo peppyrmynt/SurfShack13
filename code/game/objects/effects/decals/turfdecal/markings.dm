@@ -227,6 +227,34 @@
 
 /obj/effect/turf_decal/siding
 	icon_state = "siding_plain"
+	layer = GLASS_FLOOR_LAYER + 0.1
+
+/obj/effect/turf_decal/siding/Initialize(mapload)
+	var/turf/T = loc
+	if(istype(T))
+		var/obj/structure/lattice/L = locate(/obj/structure/lattice) in T
+		if(L)
+			if(flags_1 & INITIALIZED_1)
+				stack_trace("Warning: [src]([type]) initialized multiple times!")
+			flags_1 |= INITIALIZED_1
+
+			if(use_holiday_colors)
+				var/custom_color = request_station_colors(src, pattern) || request_holiday_colors(src, pattern)
+				if(custom_color)
+					color = custom_color
+					alpha = DECAL_ALPHA
+
+			var/decal_layer = layer
+			if(istype(L, /obj/structure/lattice/catwalk))
+				decal_layer = CATWALK_LAYER + 0.1
+			else
+				decal_layer = LATTICE_LAYER + 0.1
+
+			L.AddElement(/datum/element/decal, icon, icon_state, dir, null, decal_layer, alpha, color, null, FALSE, null)
+			return INITIALIZE_HINT_QDEL
+
+	return ..()
+
 
 /obj/effect/turf_decal/siding/corner
 	icon_state = "siding_plain_corner"
