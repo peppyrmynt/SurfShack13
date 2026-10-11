@@ -1,0 +1,4 @@
+author: "ZealousZeke"
+delete-after: True
+changes:
+  - rscadd: "Chem heaters now have stabilizing agent as an injectable buffer."
