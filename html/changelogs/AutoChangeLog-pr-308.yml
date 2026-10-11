@@ -1,0 +1,9 @@
+author: "Twaticus"
+delete-after: True
+changes:
+  - rscadd: "Adds some new areas for maintenance rooms + head quarters + changes to multiz hallway/maint areas"
+  - map: "New map, DogrunStation"
+  - map: "New arrivals shuttle for dogrun"
+  - map: "New escape shuttle, Ironlung"
+  - code_imp: "Adds the ability for siding decals to show on lattices/catwalks"
+  - code_imp: "Adds multiz fluid duct adapters"
