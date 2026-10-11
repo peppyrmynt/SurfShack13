@@ -40,6 +40,7 @@ type Data = {
   isFlashing: number;
   acidicBufferVol: number;
   basicBufferVol: number;
+  stabilizingAgentVol: number;
   dispenseVolume: number;
 };
 
@@ -189,6 +190,7 @@ export const ChemHeater = (props) => {
     currentTemp,
     acidicBufferVol,
     basicBufferVol,
+    stabilizingAgentVol,
     dispenseVolume,
     upgradeLevel,
     activeReactions = [],
@@ -230,7 +232,7 @@ export const ChemHeater = (props) => {
                   stepPixelSize={3}
                   value={dispenseVolume}
                   minValue={1}
-                  maxValue={10}
+                  maxValue={99}
                   onDrag={(value) =>
                     act('disp_vol', {
                       target: value,
@@ -336,6 +338,45 @@ export const ChemHeater = (props) => {
                   disabled={basicBufferVol === 100}
                   onClick={() =>
                     act('basicBuffer', {
+                      target: -100,
+                    })
+                  }
+                />
+              </Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell />
+              <Table.Cell />
+              <Table.Cell collapsing color="label">
+                Stable:
+              </Table.Cell>
+              <Table.Cell>
+                <Button
+                  icon={'syringe'}
+                  disabled={!stabilizingAgentVol}
+                  tooltip={'Inject'}
+                  tooltipPosition={'left'}
+                  onClick={() =>
+                    act('stabilizingAgent', {
+                      target: 1,
+                    })
+                  }
+                />
+              </Table.Cell>
+              <Table.Cell
+                color={COLORS.reagent.stabilizingAgent}
+                textAlign="center"
+              >
+                {stabilizingAgentVol + 'u'}
+              </Table.Cell>
+              <Table.Cell>
+                <Button
+                  icon={'upload'}
+                  tooltip={'Draw all'}
+                  tooltipPosition={'left'}
+                  disabled={stabilizingAgentVol === 100}
+                  onClick={() =>
+                    act('stabilizingAgent', {
                       target: -100,
                     })
                   }
