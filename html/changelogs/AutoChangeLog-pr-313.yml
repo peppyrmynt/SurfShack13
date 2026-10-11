@@ -1,0 +1,5 @@
+author: "hyperjll"
+delete-after: True
+changes:
+  - balance: "The nanite program 'Defibrillation' will refuse to trigger should the host be unrevivable."
+  - bugfix: "Players will no longer be softlocked for extended periods of time by the nanite program 'Defibrillation' should they die solely to oxygen damage."
