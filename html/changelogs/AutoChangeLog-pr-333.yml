@@ -1,4 +1,0 @@
-author: "hyperjll"
-delete-after: True
-changes:
-  - bugfix: "Pirates attempt to export humans won't cause that person to be deleted from existence. They'll return to the station eventually."

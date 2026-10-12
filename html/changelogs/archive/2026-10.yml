@@ -1,0 +1,41 @@
+2026-10-12:
+  Twaticus:
+  - rscadd: Adds some new areas for maintenance rooms + head quarters + changes to
+      multiz hallway/maint areas
+  - map: New map, DogrunStation
+  - map: New arrivals shuttle for dogrun
+  - map: New escape shuttle, Ironlung
+  - code_imp: Adds the ability for siding decals to show on lattices/catwalks
+  - code_imp: Adds multiz fluid duct adapters
+  ZealousZeke:
+  - rscadd: Chem heaters now have stabilizing agent as an injectable buffer.
+  - bugfix: Inorganic biology works on robotic and golem limbs.
+  - balance: Regenerative Coma activation thresholds scales with your max hp
+  - balance: Regenerative Coma can be canceled by gaining nosoftcrit before it activates
+  - balance: Toxolysis food scales with the amount of reagents purged
+  - balance: Reverted Aivime back to doing minor eye damage and eye blur because I'm
+      lazy.
+  - balance: Buffed libitoil from 0.5 toxin liver filtering to 0.1 toxin liver filtering.
+  - balance: Decreased tempomyocin's reaction slowdown from 0.15 to 0.2.
+  - balance: Interim product alpha and beta mix in reduced parts.
+  - balance: Increased inverse threshold for Lipolicide, Chloral Hydrate, Salbutamol,
+      and Oxandrolone.
+  - balance: Increased Chloralax's chance for curing diseases. Drink bleach.
+  - balance: Decreases ipecacide purging effect.
+  - balance: Restructures cybernetic tech nodes slightly.
+  - balance: The Self-Surgery Skillchip no longer requires uranium, and is now available
+      from advanced surgery.
+  hyperjll:
+  - bugfix: Pirates attempt to export humans won't cause that person to be deleted
+      from existence. They'll return to the station eventually.
+  - balance: The starting ore vent can now provide uranium when less than 20 people,
+      and has a higher chance to yield titanium, silver, and gold overall.
+  - balance: The nanite program 'Defibrillation' will refuse to trigger should the
+      host be unrevivable.
+  - bugfix: Players will no longer be softlocked for extended periods of time by the
+      nanite program 'Defibrillation' should they die solely to oxygen damage.
+  - rscadd: Now the crew can play paintball! You can order paintball guns at Cargo
+  - rscadd: Complaints from Security Officers about "The lack of ballistic guns in
+      their arsenal" have reached Nanotrasen. In response, they are now supplying
+      Security with recoloured surplus paintball guns called "pepperballs" via Cargo.
+      "You can reload them! Just like ballistics!"

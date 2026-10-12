@@ -1,4 +1,0 @@
-author: "hyperjll"
-delete-after: True
-changes:
-  - balance: "The starting ore vent can now provide uranium when less than 20 people, and has a higher chance to yield titanium, silver, and gold overall."
