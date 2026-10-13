@@ -42,3 +42,7 @@
 ## Force tab indents on dm files
 *.dm whitespace=indent-with-non-tab
 
+
+## New includes from parallel PRs land on the same lines of the .dme. Union merges keep both
+## sides instead of conflicting, so test merges of several PRs at once go through.
+*.dme merge=union
