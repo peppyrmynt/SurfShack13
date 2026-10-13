@@ -25,11 +25,12 @@
 	var/executing = FALSE
 	/// True we let the user pick the entity.
 	var/can_change_faction = FALSE
-	var/list/execution_songs
+	/// Songs played while executing, each one is about 30 seconds long.
+	var/list/execution_songs = list('surfshack13/sound/misc/nasheed_1.ogg', 'surfshack13/sound/misc/nasheed_2.ogg', 'surfshack13/sound/misc/bosanska.ogg')
 	/// Players currently hearing execution song.
 	var/listeners
-	/// How long it take execute someone '
-	var/execution_time = 15 SECONDS
+	/// How long it take execute someone, matched to the length of the songs
+	var/execution_time = 30 SECONDS
 
 /obj/item/melee/execution_sword/examine(mob/user)
 	. = ..()
@@ -62,6 +63,8 @@
 		return
 
 	executing = TRUE
+	// Started up front, shared by every sword, so cancelling or an early exit can't be used to replay the song.
+	COOLDOWN_START(src, execution_cooldown, execution_time + EXECUTION_COOLDOWN_TIME)
 	var/announce_message = "[user] is preparing to execute [target_mob] near [get_area_name(src)] in the name of [execution_faction]!"
 	var/announce_sound = 'sound/announcer/notice/notice1.ogg'
 	minor_announce(announce_message, "LiveLeak Announcement", sound_override = announce_sound)
@@ -74,11 +77,17 @@
 	stop_execution_music()
 	minor_announce(announce_message, "LiveLeak Announcement", should_play_sound = FALSE)
 	executing = FALSE
-	COOLDOWN_START(src, execution_cooldown, EXECUTION_COOLDOWN_TIME)
 
+/obj/item/melee/execution_sword/Destroy()
+	stop_execution_music()
+	return ..()
 
 /obj/item/melee/execution_sword/proc/play_execution_music()
-	return
+	// Never layer a second song over one that is still going.
+	if(LAZYLEN(listeners) || !length(execution_songs))
+		return
+	var/song = pick(execution_songs)
+	listeners = playsound(src, song, SOUND_VOLUME, vary = FALSE, channel = CHANNEL_EXECUTION_SWORD)
 
 /obj/item/melee/execution_sword/proc/stop_execution_music()
 	for(var/mob/listener in listeners)
@@ -98,12 +107,6 @@
 /obj/item/melee/execution_sword/antag
 	execution_faction = "The Syndicate"
 	can_change_faction = TRUE
-	execution_time = 30 SECONDS
-	execution_songs = list('surfshack13/sound/misc/nasheed_1.ogg', 'surfshack13/sound/misc/nasheed_2.ogg', 'surfshack13/sound/misc/bosanska.ogg')
-
-/obj/item/melee/execution_sword/antag/play_execution_music()
-	var/song = pick(execution_songs)
-	listeners = playsound(src, song, SOUND_VOLUME, vary = FALSE, channel = CHANNEL_EXECUTION_SWORD)
 
 /obj/item/melee/execution_sword/admin
 	execution_faction = "Centcom"
