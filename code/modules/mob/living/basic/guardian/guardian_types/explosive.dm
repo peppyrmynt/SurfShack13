@@ -39,6 +39,8 @@
 	background_icon_state = "base"
 	/// After this amount of time passses, bomb deactivates.
 	var/decay_time = 1 MINUTES
+	/// Extra range passed to the trap explosion sound. Defaults to modern behavior.
+	var/sound_extra_range = 0
 	/// Static list of signals that activate the bomb.
 	var/static/list/boom_signals = list(COMSIG_ATOM_ATTACKBY, COMSIG_ATOM_BUMPED, COMSIG_ATOM_ATTACK_HAND)
 
@@ -59,6 +61,7 @@
 		saboteur = owner, \
 		expire_time = decay_time, \
 		glow_colour = glow_colour,\
+		sound_extra_range = sound_extra_range,\
 		explosive_checks = CALLBACK(src, PROC_REF(validate_target)), \
 		triggering_signals = boom_signals, \
 	)

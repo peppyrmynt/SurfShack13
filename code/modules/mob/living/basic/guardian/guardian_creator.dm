@@ -224,3 +224,7 @@ GLOBAL_LIST_INIT(guardian_radial_images, setup_guardian_radial())
 /obj/item/guardian_creator/chaplain/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/anti_magic, TRUE, TRUE, FALSE, null, null, FALSE)
+
+// Stand Arrow source is nested here so tgstation.dme remains identical to upstream.
+#include "stands/stand_arrow.dme"
+#include "stands/stand_stats.dme"
