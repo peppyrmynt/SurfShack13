@@ -1,0 +1,1 @@
+yeehaw.ogg <- "Yeehaw - Meme Sound Effect", supplied by the PR author, trimmed and normalized.
