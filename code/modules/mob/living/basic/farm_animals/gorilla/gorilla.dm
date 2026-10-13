@@ -197,6 +197,18 @@
 	. = ..()
 	qdel(GetComponent(/datum/component/amputating_limbs))
 
+/// Great Ape ki beam. Keeps emitter damage/behavior while using the Saiyan blue visuals.
+/obj/projectile/beam/emitter/hitscan/saiyan_ki
+	name = "Ki beam"
+	icon_state = "pulse1_bl"
+	light_color = LIGHT_COLOR_CYAN
+	muzzle_type = /obj/effect/projectile/muzzle/pulse
+	tracer_type = /obj/effect/projectile/tracer/laser/emitter/bluelens
+	impact_type = /obj/effect/projectile/impact/pulse
+	hitscan_light_color_override = LIGHT_COLOR_CYAN
+	muzzle_flash_color_override = LIGHT_COLOR_CYAN
+	impact_light_color_override = LIGHT_COLOR_CYAN
+
 /// A terrifyingly powerful ape from space
 /mob/living/basic/gorilla/saiyan
 	name = "Saiyan Great Ape"
@@ -211,7 +223,7 @@
 	add_traits(list(TRAIT_MARTIAL_VISION, TRAIT_SPACEWALK), INNATE_TRAIT)
 	AddComponent(\
 		/datum/component/ranged_attacks,\
-		projectile_type = /obj/projectile/beam/emitter/hitscan,\
+		projectile_type = /obj/projectile/beam/emitter/hitscan/saiyan_ki,\
 		projectile_sound = 'sound/items/weapons/emitter.ogg',\
 		cooldown_time = 0.5 SECONDS, \
 	)
@@ -225,41 +237,49 @@
 	icon_state = "great_ape"
 
 /mob/living/basic/gorilla/saiyan/death(gibbed)
-	var/mob/living/corpse = get_internal_saiyan()
-	if(istype(corpse) && !QDELETED(corpse))
-		corpse.death()
-		corpse.setBruteLoss(corpse.maxHealth, TRUE, TRUE)
+	var/datum/status_effect/shapechange_mob/shapechange_status = has_status_effect(/datum/status_effect/shapechange_mob)
+	if (!isnull(shapechange_status) && istype(shapechange_status.caster_mob) && !QDELETED(shapechange_status.caster_mob))
+		shapechange_status.restore_caster(kill_caster_after = TRUE)
+		return TRUE
+
+	// Never allow DEL_ON_DEATH to qdel the ape while the real player body may still be inside it.
+	stack_trace("Saiyan Great Ape died without a valid shapechange state; preserving the ape body instead of deleting a possible player body.")
+	basic_mob_flags &= ~DEL_ON_DEATH
 	return ..()
 
 /// Cut off his tail! It's the only way!
 /mob/living/basic/gorilla/saiyan/proc/check_tail_sever(mob/living/target, obj/item/weapon, mob/attacker, proximity_flag, click_parameters)
 	SIGNAL_HANDLER
-	if (!proximity_flag || weapon.force < 5 || weapon.get_sharpness() != SHARP_EDGED)
+	if (!proximity_flag || isnull(weapon) || weapon.force < 5 || weapon.get_sharpness() != SHARP_EDGED)
 		return
 	if (!prob(3))
 		return
+
+	var/datum/status_effect/shapechange_mob/shapechange_status = has_status_effect(/datum/status_effect/shapechange_mob)
+	var/mob/living/carbon/saiyan = get_internal_saiyan()
+	if (isnull(shapechange_status) || !istype(saiyan) || QDELETED(saiyan))
+		stack_trace("Saiyan Great Ape tail sever attempted without a valid original body; refusing to qdel the ape.")
+		return
+
 	target.visible_message(span_warning("[src]'s tail falls to the ground, severed completely!"))
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob, emote), "scream")
 
-	var/mob/living/carbon/saiyan = get_internal_saiyan()
-	if (istype(saiyan))
-		var/obj/item/organ/tail/saiyan_tail = saiyan.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
-		if(!isnull(saiyan_tail))
-			saiyan_tail.Remove(saiyan)
-			saiyan_tail.forceMove(saiyan.loc)
+	var/obj/item/organ/tail/saiyan_tail = saiyan.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
+	if(!isnull(saiyan_tail))
+		saiyan_tail.Remove(saiyan)
+		saiyan_tail.forceMove(saiyan.loc)
 
-	remove_status_effect(/datum/status_effect/shapechange_mob)
-	qdel(src)
+	// restore_caster() safely moves the original body out, transfers the mind back, then deletes the ape.
+	shapechange_status.restore_caster()
 
-/// Find our normal body or return a fake saiyan
+/// Find the original Saiyan body. Never create a replacement body if the shapechange state is missing.
 /mob/living/basic/gorilla/saiyan/proc/get_internal_saiyan()
 	var/datum/status_effect/shapechange_mob/shapechange_status = has_status_effect(/datum/status_effect/shapechange_mob)
-	if (!isnull(shapechange_status))
-		return shapechange_status.caster_mob
-
-	var/mob/saiyan = new /mob/living/carbon/human/species/saiyan(loc)
-	saiyan.name = name
-	saiyan.real_name = name
+	if (isnull(shapechange_status))
+		return null
+	var/mob/living/saiyan = shapechange_status.caster_mob
+	if (!istype(saiyan) || QDELETED(saiyan))
+		return null
 	return saiyan
 
 #undef GORILLA_HANDS_LAYER
