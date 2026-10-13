@@ -9,6 +9,7 @@
 #define MARTIALART_PLASMAFIST "plasma fist"
 #define MARTIALART_PSYCHOBRAWL "psychotic brawling"
 #define MARTIALART_SLEEPINGCARP "sleeping carp"
+#define MARTIALART_TWEAKER_FU "tweaker fu"
 #define MARTIALART_WRESTLING "wrestling"
 
 /// The number of hits required to crit a target

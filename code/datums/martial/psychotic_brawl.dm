@@ -107,3 +107,222 @@
 		return MARTIAL_ATTACK_SUCCESS
 
 	return MARTIAL_ATTACK_FAIL
+
+// Surf Shack: methamphetamine overdose martial art.
+#define TWEAKER_FLURRY_COMBO "HH"
+#define TWEAKER_ROCKET_KICK_COMBO "HD"
+#define TWEAKER_SHAKEDOWN_COMBO "GH"
+#define TWEAKER_FU_TRAIT "tweaker_fu"
+
+/mob/living/proc/tweaker_fu_help()
+	set name = "Recall Tweaker Fu"
+	set desc = "Remember the combat geometry currently screaming through your bloodstream."
+	set category = "Tweaker Fu"
+
+	to_chat(src, span_boldnotice("Tweaker Fu"))
+	to_chat(src, span_notice("Meth overdose unlocked this temporary martial art. It remains usable while methamphetamine is still in your system."))
+	to_chat(src, span_notice("Brain damage strengthens your Tweaker Fu attacks, up to 20% more attack damage."))
+	to_chat(src, span_notice("While Tweaker Fu is active, you ignore soft critical condition and slowly recover brain damage and stamina."))
+	to_chat(src, span_boldnotice("Combos:"))
+	to_chat(src, span_notice("Machine-Gun Jabs: Harm, Harm - five rapid punches, plus up to 15 brain damage if all five land."))
+	to_chat(src, span_notice("Rocket Kick: Harm, Shove - a flying kick that sends the target backwards and deals 18 brain damage."))
+	to_chat(src, span_notice("Shakedown: Grab, Harm - while pulling the target, rattle them hard enough to deal stamina damage and floor them."))
+	to_chat(src, span_notice("Every Tweaker Fu attack makes you scream."))
+
+/datum/martial_art/tweaker_fu
+	name = "Tweaker Fu"
+	id = MARTIALART_TWEAKER_FU
+	help_verb = /mob/living/proc/tweaker_fu_help
+	display_combos = TRUE
+	combo_timer = 4 SECONDS
+	max_streak_length = 2
+	var/meth_check_timer
+	var/datum/weakref/tweaker_holder
+
+/datum/martial_art/tweaker_fu/on_teach(mob/living/new_holder)
+	. = ..()
+	tweaker_holder = WEAKREF(new_holder)
+	ADD_TRAIT(new_holder, TRAIT_NOSOFTCRIT, TWEAKER_FU_TRAIT)
+	playsound(new_holder, 'sound/effects/tweaker_fu/i_can_break_these_cuffs.ogg', 75, FALSE, 8 - SOUND_RANGE)
+	to_chat(new_holder, span_userdanger("Your heart hammers. Every twitch suddenly looks like a combat technique. You have discovered Tweaker Fu!"))
+	to_chat(new_holder, span_notice("Use the 'Recall Tweaker Fu' button in the Tweaker Fu actions category to read your moves and combos."))
+	meth_check_timer = addtimer(CALLBACK(src, PROC_REF(check_meth)), 2 SECONDS, TIMER_STOPPABLE)
+
+/datum/martial_art/tweaker_fu/on_remove(mob/living/remove_from)
+	if(meth_check_timer)
+		deltimer(meth_check_timer)
+		meth_check_timer = null
+	REMOVE_TRAIT(remove_from, TRAIT_NOSOFTCRIT, TWEAKER_FU_TRAIT)
+	playsound(remove_from, 'sound/effects/tweaker_fu/you_cant_break_those_cuffs.ogg', 75, FALSE, 8 - SOUND_RANGE)
+	tweaker_holder = null
+	to_chat(remove_from, span_notice("The impossible combat geometry finally stops making sense."))
+	return ..()
+
+/datum/martial_art/tweaker_fu/can_use(mob/living/martial_artist)
+	if(!martial_artist.reagents?.has_reagent(/datum/reagent/drug/methamphetamine))
+		return FALSE
+	return ..()
+
+/datum/martial_art/tweaker_fu/proc/get_brain_damage(mob/living/user)
+	if(!iscarbon(user))
+		return 0
+	var/mob/living/carbon/carbon_user = user
+	return clamp(carbon_user.get_organ_loss(ORGAN_SLOT_BRAIN), 0, BRAIN_DAMAGE_DEATH)
+
+/datum/martial_art/tweaker_fu/proc/get_power_multiplier(mob/living/user)
+	return 1 + (0.2 * get_brain_damage(user) / BRAIN_DAMAGE_DEATH)
+
+/datum/martial_art/tweaker_fu/proc/check_meth()
+	meth_check_timer = null
+	var/mob/living/current_holder = tweaker_holder?.resolve()
+	if(isnull(current_holder))
+		return
+	if(!current_holder.reagents?.has_reagent(/datum/reagent/drug/methamphetamine))
+		fully_remove(current_holder)
+		return
+
+	var/brain_damage = get_brain_damage(current_holder)
+	if(iscarbon(current_holder) && brain_damage > 0)
+		var/mob/living/carbon/carbon_holder = current_holder
+		carbon_holder.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.3125)
+	current_holder.adjustStaminaLoss(-(0.25 + (0.5 * brain_damage / BRAIN_DAMAGE_DEATH)))
+	meth_check_timer = addtimer(CALLBACK(src, PROC_REF(check_meth)), 2 SECONDS, TIMER_STOPPABLE)
+
+/datum/martial_art/tweaker_fu/proc/combat_scream(mob/living/attacker)
+	attacker.emote("scream")
+
+/datum/martial_art/tweaker_fu/proc/check_streak(mob/living/attacker, mob/living/defender)
+	if(findtext(streak, TWEAKER_FLURRY_COMBO))
+		reset_streak()
+		return machinegun_jabs(attacker, defender)
+	if(findtext(streak, TWEAKER_ROCKET_KICK_COMBO))
+		reset_streak()
+		return rocket_kick(attacker, defender)
+	if(findtext(streak, TWEAKER_SHAKEDOWN_COMBO))
+		reset_streak()
+		return shakedown(attacker, defender)
+	return FALSE
+
+/datum/martial_art/tweaker_fu/harm_act(mob/living/attacker, mob/living/defender)
+	var/final_damage = 9 * get_power_multiplier(attacker)
+	if(defender.check_block(attacker, final_damage, "[attacker]'s frantic punch", UNARMED_ATTACK))
+		return MARTIAL_ATTACK_FAIL
+
+	combat_scream(attacker)
+	add_to_streak("H", defender)
+	if(check_streak(attacker, defender))
+		return MARTIAL_ATTACK_SUCCESS
+
+	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
+	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
+	playsound(defender, 'sound/items/weapons/punch1.ogg', 30, TRUE, -1)
+	defender.apply_damage(final_damage, attacker.get_attack_type(), affecting)
+	defender.visible_message(
+		span_danger("[attacker] snaps a twitchy punch into [defender]!"),
+		span_userdanger("[attacker] snaps a twitchy punch into you!"),
+		span_hear("You hear a quick smack of flesh!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You twitch-punch [defender]!"))
+	log_combat(attacker, defender, "punched (Tweaker Fu)")
+	return MARTIAL_ATTACK_SUCCESS
+
+/datum/martial_art/tweaker_fu/disarm_act(mob/living/attacker, mob/living/defender)
+	if(defender.check_block(attacker, 0, "[attacker]'s twitchy shove", UNARMED_ATTACK))
+		return MARTIAL_ATTACK_FAIL
+
+	combat_scream(attacker)
+	add_to_streak("D", defender)
+	if(check_streak(attacker, defender))
+		return MARTIAL_ATTACK_SUCCESS
+
+	defender.apply_damage(10 * get_power_multiplier(attacker), STAMINA)
+	return MARTIAL_ATTACK_INVALID
+
+/datum/martial_art/tweaker_fu/grab_act(mob/living/attacker, mob/living/defender)
+	if(defender.check_block(attacker, 0, "[attacker]'s twitchy grab", UNARMED_ATTACK))
+		return MARTIAL_ATTACK_FAIL
+
+	combat_scream(attacker)
+	add_to_streak("G", defender)
+	return MARTIAL_ATTACK_INVALID
+
+/datum/martial_art/tweaker_fu/proc/machinegun_jabs(mob/living/attacker, mob/living/defender)
+	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
+	var/power_multiplier = get_power_multiplier(attacker)
+	var/hits_landed = 0
+	defender.visible_message(
+		span_danger("[attacker]'s arms blur into a frantic barrage of jabs at [defender]!"),
+		span_userdanger("[attacker]'s arms blur into a frantic barrage of jabs at you!"),
+		span_hear("You hear a rapid series of thuds!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You machine-gun jab [defender]!"))
+	for(var/i in 1 to 5)
+		if(QDELETED(defender) || !attacker.Adjacent(defender))
+			break
+		attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
+		playsound(defender, 'sound/items/weapons/punch1.ogg', 35, TRUE, -1)
+		defender.apply_damage(4 * power_multiplier, attacker.get_attack_type(), affecting)
+		hits_landed++
+		sleep(0.1 SECONDS)
+	if(QDELETED(defender))
+		return TRUE
+	defender.apply_damage(10 * power_multiplier, STAMINA)
+	if(iscarbon(defender) && hits_landed)
+		var/mob/living/carbon/carbon_defender = defender
+		carbon_defender.adjustOrganLoss(ORGAN_SLOT_BRAIN, hits_landed * 3)
+	log_combat(attacker, defender, "machine-gun jabbed (Tweaker Fu), [hits_landed] hits")
+	return TRUE
+
+/datum/martial_art/tweaker_fu/proc/rocket_kick(mob/living/attacker, mob/living/defender)
+	attacker.do_attack_animation(defender, ATTACK_EFFECT_KICK)
+	playsound(defender, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
+	defender.apply_damage(12 * get_power_multiplier(attacker), attacker.get_attack_type(), BODY_ZONE_CHEST)
+	if(iscarbon(defender))
+		var/mob/living/carbon/carbon_defender = defender
+		carbon_defender.adjustOrganLoss(ORGAN_SLOT_BRAIN, 18)
+	var/atom/throw_target = get_edge_target_turf(defender, get_dir(attacker, defender))
+	defender.throw_at(throw_target, 4, 2, attacker)
+	defender.visible_message(
+		span_danger("[attacker] launches a wildly overcommitted kick into [defender], sending [defender.p_them()] flying!"),
+		span_userdanger("[attacker] launches a wildly overcommitted kick into you, sending you flying!"),
+		span_hear("You hear a heavy kick connect!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You rocket-kick [defender]!"))
+	log_combat(attacker, defender, "rocket kicked (Tweaker Fu)")
+	return TRUE
+
+/datum/martial_art/tweaker_fu/proc/shakedown(mob/living/attacker, mob/living/defender)
+	if(attacker.pulling != defender)
+		return FALSE
+
+	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
+	playsound(defender, 'sound/items/weapons/thudswoosh.ogg', 40, TRUE, -1)
+	defender.apply_damage(25 * get_power_multiplier(attacker), STAMINA)
+	defender.Knockdown(3 SECONDS)
+	defender.visible_message(
+		span_danger("[attacker] violently rattles [defender] around before dumping [defender.p_them()] onto the floor!"),
+		span_userdanger("[attacker] violently rattles you around and dumps you onto the floor!"),
+		span_hear("You hear frantic shuffling and a thud!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	to_chat(attacker, span_danger("You shake [defender] down!"))
+	log_combat(attacker, defender, "shook down (Tweaker Fu)")
+	return TRUE
+
+/datum/reagent/drug/methamphetamine/overdose_start(mob/living/affected_mob)
+	. = ..()
+	var/datum/martial_art/tweaker_fu/style = new()
+	if(!style.teach(affected_mob, make_temporary = TRUE))
+		qdel(style)
+
+#undef TWEAKER_FLURRY_COMBO
+#undef TWEAKER_ROCKET_KICK_COMBO
+#undef TWEAKER_SHAKEDOWN_COMBO
+#undef TWEAKER_FU_TRAIT
