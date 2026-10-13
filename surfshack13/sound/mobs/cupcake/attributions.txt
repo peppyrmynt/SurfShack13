@@ -1,0 +1,8 @@
+All sounds in this folder are taken from NovaSector (https://github.com/NovaSector/NovaSector),
+licensed under CC BY-SA 3.0 like the rest of that codebase's assets.
+
+aggro_bark1-4.ogg  <- modular_nova/modules/emotes/sound/voice/aggrobark*.ogg
+growl1-5.ogg       <- modular_nova/modules/emotes/sound/voice/dgrowl*.ogg
+whine1-5.ogg       <- modular_nova/modules/emotes/sound/voice/dwhine*.ogg
+bark1-2.ogg        <- modular_nova/modules/emotes/sound/voice/bark1.ogg, bark2.ogg
+neck_tear.ogg      <- modular_nova/modules/horrorform/sound/tear.ogg
