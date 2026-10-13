@@ -30,7 +30,9 @@
 		var/list/humans = list()
 
 		for(var/datum/mind/crew_mind in get_crewmember_minds())
-			if(crew_mind.current)
+			//surfshack start - never hallucinate yourself talking
+			if(crew_mind.current && crew_mind.current != hallucinator)
+			//surfshack end
 				humans += crew_mind.current
 		if(humans.len)
 			speaker = pick(humans)
