@@ -22,6 +22,16 @@
 	TEST_ASSERT(!expected_mods.len,
 		"Some message mods were expected, but were not returned by get_message_mods: [json_encode(expected_mods)]. Message: [message]")
 
+/// Floodmind uses :f rather than the normal comma language prefix.
+/datum/unit_test/flood_language_prefix
+
+/datum/unit_test/flood_language_prefix/Run()
+	var/mob/living/basic/flood/combat_form/human/speaker = allocate(/mob/living/basic/flood/combat_form/human)
+	var/list/mods = list()
+	TEST_ASSERT_EQUAL(speaker.get_message_mods(":F The hive stirs", mods), "The hive stirs", "The Flood speech prefix was not removed")
+	TEST_ASSERT_EQUAL(mods[LANGUAGE_EXTENSION], /datum/language/flood, "The Flood speech prefix did not select Floodmind")
+	TEST_ASSERT(!mods[RADIO_KEY], "The Flood speech prefix was treated as a radio channel")
+
 /// Test to ensure native tongue languages properly impact speech
 /datum/unit_test/speech_modifiers
 	var/mob/living/carbon/human/talking_lizard

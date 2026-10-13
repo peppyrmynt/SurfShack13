@@ -1,0 +1,11 @@
+.theme-flood:root {
+  --color-base: hsl(60, 21%, 15%);
+  --color-primary: hsl(53, 79%, 48%);
+  --color-action: hsl(51, 91%, 63%);
+  --color-border-primary: hsl(55, 32%, 37%);
+  --base-gradient-spread: 6;
+
+  --button-background-selected: hsl(52, 80%, 34%);
+  --button-background-caution: hsl(40, 80%, 42%);
+  --tooltip-background: hsl(53, 48%, 28%);
+}
