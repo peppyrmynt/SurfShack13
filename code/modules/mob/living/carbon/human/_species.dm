@@ -949,16 +949,20 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	var/attack_direction = get_dir(user, target)
 	var/attack_type = attacking_bodypart.attack_type
+	var/hit_zone = affecting.body_zone
+	var/damage_done
 	if(atk_effect == ATTACK_EFFECT_KICK || grappled) //kicks and punches when grappling bypass armor slightly.
 		if(damage >= 9)
 			target.force_say()
 		log_combat(user, target, grappled ? "grapple punched" : "kicked")
-		target.apply_damage(damage, attack_type, affecting, armor_block - limb_accuracy, attack_direction = attack_direction)
+		damage_done = target.apply_damage(damage, attack_type, affecting, armor_block - limb_accuracy, attack_direction = attack_direction)
 	else // Normal attacks do not gain the benefit of armor penetration.
-		target.apply_damage(damage, attack_type, affecting, armor_block, attack_direction = attack_direction)
+		damage_done = target.apply_damage(damage, attack_type, affecting, armor_block, attack_direction = attack_direction)
 		if(damage >= 9)
 			target.force_say()
 		log_combat(user, target, "punched")
+	if(damage_done > 0)
+		SEND_SIGNAL(user, COMSIG_MOB_ATTACK_LANDED, target, damage_done, attack_type, hit_zone, NONE, null)
 
 	// If our target is staggered and has sustained enough damage, we can apply a randomly determined status effect to inflict when we punch them.
 	// The effects are based on the punching effectiveness of our attacker. Some effects are not reachable by the average human, and require augmentation to reach or being a species with a heavy punch effectiveness.

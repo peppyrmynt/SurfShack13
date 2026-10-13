@@ -119,7 +119,7 @@
 		apply_projectile_effects(proj, def_zone, blocked)
 
 /mob/living/proc/apply_projectile_effects(obj/projectile/proj, def_zone, armor_check)
-	apply_damage(
+	var/damage_done = apply_damage(
 		damage = proj.damage,
 		damagetype = proj.damage_type,
 		def_zone = def_zone,
@@ -150,6 +150,9 @@
 
 	if (proj.damage && armor_check < 100)
 		create_projectile_hit_effects(proj, def_zone, armor_check)
+
+	if(damage_done > 0 && ismob(proj.firer))
+		SEND_SIGNAL(proj.firer, COMSIG_MOB_ATTACK_LANDED, src, damage_done, proj.damage_type, check_hit_limb_zone_name(def_zone), proj.sharpness, proj)
 
 /mob/living/proc/create_projectile_hit_effects(obj/projectile/proj, def_zone, blocked)
 	if (proj.damage_type != BRUTE)
@@ -242,9 +245,17 @@
 	if(!thrown_item.throwforce)
 		return
 	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour)
-	apply_damage(thrown_item.throwforce, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
+	var/throw_damage = thrown_item.throwforce
+	var/brutal_throw = thrown_by && HAS_TRAIT(thrown_by, TRAIT_BRUTAL_THROWER)
+	if(brutal_throw)
+		throw_damage *= BRUTAL_THROWER_DAMAGE_MULTIPLIER
+	var/damage_done = apply_damage(throw_damage, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
 	if(QDELETED(src)) //Damage can delete the mob.
 		return
+	if(damage_done > 0 && thrown_by)
+		SEND_SIGNAL(thrown_by, COMSIG_MOB_ATTACK_LANDED, src, damage_done, thrown_item.damtype, zone, thrown_item.get_sharpness(), thrown_item)
+	if(brutal_throw && thrown_item.w_class >= WEIGHT_CLASS_BULKY)
+		brutal_throw_impact(thrown_item, thrown_by)
 	if(body_position == LYING_DOWN) // physics says it's significantly harder to push someone by constantly chucking random furniture at them if they are down on the floor.
 		hitpush = FALSE
 	return ..()
@@ -751,6 +762,8 @@
 
 	if(shove_flags & SHOVE_CAN_KICK_SIDE) //KICK HIM IN THE NUTS
 		target.Paralyze(SHOVE_CHAIN_PARALYZE)
+		target.apply_status_effect(/datum/status_effect/shove_kicked) // Marker only, so executions can tell this apart from a real stun
+
 		target.visible_message(span_danger("[name] kicks [target.name] onto [target.p_their()] side!"),
 						span_userdanger("You're kicked onto your side by [name]!"), span_hear("You hear aggressive shuffling followed by a loud thud!"), COMBAT_MESSAGE_RANGE, src)
 		to_chat(src, span_danger("You kick [target.name] onto [target.p_their()] side!"))

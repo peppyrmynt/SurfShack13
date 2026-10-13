@@ -321,6 +321,8 @@ GLOBAL_LIST_INIT(achievements_unlocked, list())
 
 	//Antagonists
 	parts += antag_report()
+	//Chicken mask rampages, empty unless someone wore it
+	parts += rampage_report()
 
 	parts += hardcore_random_report()
 

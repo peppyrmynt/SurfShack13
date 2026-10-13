@@ -189,6 +189,10 @@
 #define COMSIG_MOB_ATTACK_HAND "mob_attack_hand"
 ///from base of /obj/item/attack(): (mob/M, mob/user)
 #define COMSIG_MOB_ITEM_ATTACK "mob_item_attack"
+/// Sent to the attacker after one of their attacks has dealt damage to a living mob.
+/// From /mob/living/attacked_by(), /datum/species/proc/harm(), /mob/living/proc/apply_projectile_effects() and /mob/living/hitby()
+/// (mob/living/target, damage_done, damagetype, def_zone, sharpness, atom/weapon) - weapon is null for unarmed attacks
+#define COMSIG_MOB_ATTACK_LANDED "mob_attack_landed"
 ///from base of mob/RangedAttack(): (atom/A, modifiers)
 #define COMSIG_MOB_ATTACK_RANGED "mob_attack_ranged"
 ///from base of mob/ranged_secondary_attack(): (atom/target, modifiers)
