@@ -2,25 +2,25 @@
 	name = "Beanbag Slug (Less Lethal)"
 	id = "beanbag_slug"
 	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
-	materials = list(/datum/material/iron =SHEET_MATERIAL_AMOUNT)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 1.25)
 	build_path = /obj/item/ammo_casing/shotgun/beanbag
 	category = list(
 		RND_CATEGORY_INITIAL,
 		RND_CATEGORY_WEAPONS + RND_SUBCATEGORY_WEAPONS_AMMO,
 	)
-	departmental_flags = DEPARTMENT_BITFLAG_SECURITY
+	departmental_flags = DEPARTMENT_BITFLAG_SECURITY | DEPARTMENT_BITFLAG_CARGO
 
 /datum/design/rubbershot
 	name = "Rubber Shot (Less Lethal)"
 	id = "rubber_shot"
 	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
-	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT*1)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 1.25)
 	build_path = /obj/item/ammo_casing/shotgun/rubbershot
 	category = list(
 		RND_CATEGORY_INITIAL,
 		RND_CATEGORY_WEAPONS + RND_SUBCATEGORY_WEAPONS_AMMO,
 	)
-	departmental_flags = DEPARTMENT_BITFLAG_SECURITY
+	departmental_flags = DEPARTMENT_BITFLAG_SECURITY | DEPARTMENT_BITFLAG_CARGO
 
 /datum/design/c38
 	name = "Speed Loader (.38) (Lethal)"
@@ -268,46 +268,46 @@
 	name = "Shotgun Slug"
 	id = "shotgun_slug"
 	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
-	materials = list(/datum/material/iron = SMALL_MATERIAL_AMOUNT * 75)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 1.25)
 	build_path = /obj/item/ammo_casing/shotgun
 	category = list(
 		RND_CATEGORY_HACKED,
 		RND_CATEGORY_WEAPONS + RND_SUBCATEGORY_WEAPONS_AMMO,
 	)
-	departmental_flags = DEPARTMENT_BITFLAG_SECURITY
+	departmental_flags = DEPARTMENT_BITFLAG_SECURITY | DEPARTMENT_BITFLAG_CARGO
 
 /datum/design/buckshot_shell
 	name = "Buckshot Shell"
 	id = "buckshot_shell"
 	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
-	materials = list(/datum/material/iron = SMALL_MATERIAL_AMOUNT * 75)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 1.25)
 	build_path = /obj/item/ammo_casing/shotgun/buckshot
 	category = list(
 		RND_CATEGORY_HACKED,
 		RND_CATEGORY_WEAPONS + RND_SUBCATEGORY_WEAPONS_AMMO,
 	)
-	departmental_flags = DEPARTMENT_BITFLAG_SECURITY
+	departmental_flags = DEPARTMENT_BITFLAG_SECURITY | DEPARTMENT_BITFLAG_CARGO
 
 /datum/design/buckshot_box
 	name = "Buckshot Ammo Box (12g) (Lethal)"
 	id = "buckshot_box"
 	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
-	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT * 350)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 8.75)
 	build_path = /obj/item/storage/box/lethalshot
 	category = list(
 		RND_CATEGORY_HACKED,
 		RND_CATEGORY_WEAPONS + RND_SUBCATEGORY_WEAPONS_AMMO,
 	)
-	departmental_flags = DEPARTMENT_BITFLAG_SECURITY
+	departmental_flags = DEPARTMENT_BITFLAG_SECURITY | DEPARTMENT_BITFLAG_CARGO
 
 /datum/design/slug_box
 	name = "Slug Ammo Box (12g) (Lethal)"
 	id = "slug_box"
 	build_type = AUTOLATHE | PROTOLATHE | AWAY_LATHE
-	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT * 350)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 8.75)
 	build_path = /obj/item/storage/box/slugs
 	category = list(
 		RND_CATEGORY_HACKED,
 		RND_CATEGORY_WEAPONS + RND_SUBCATEGORY_WEAPONS_AMMO,
 	)
-	departmental_flags = DEPARTMENT_BITFLAG_SECURITY
+	departmental_flags = DEPARTMENT_BITFLAG_SECURITY | DEPARTMENT_BITFLAG_CARGO
