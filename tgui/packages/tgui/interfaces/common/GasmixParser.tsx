@@ -9,6 +9,12 @@ export type Gasmix = {
   total_moles: number;
   reactions: [string, string, number][]; // ID, name, and amount.
   reference: string;
+  fusion?: {
+    power: number;
+    tier: string;
+    instability: number;
+    energy: number;
+  };
 };
 
 type GasmixParserProps = {
@@ -130,6 +136,11 @@ export const GasmixParser = (props: GasmixParserProps) => {
                 ),
               )
             : 'No reactions detected'}
+        </LabeledList.Item>
+      )}
+      {!!gasmix.fusion && (
+        <LabeledList.Item label="Fusion" color="orange">
+          {`${gasmix.fusion.tier} tier — power ${gasmix.fusion.power.toFixed(2)}, instability ${gasmix.fusion.instability.toFixed(2)}`}
         </LabeledList.Item>
       )}
     </LabeledList>

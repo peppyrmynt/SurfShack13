@@ -1,4 +1,6 @@
 /obj/machinery/portable_atmospherics/scrubber
+	// SURFSHACK EDIT: classic fusion does not require powered internal containment.
+	internal_atmos_damage = FALSE
 	name = "portable air scrubber"
 	desc = "A portable variant of the station scrubbers, capable of filtering gas from the air around it or inserted tank. May also be wrenched into a port."
 	icon_state = "scrubber"

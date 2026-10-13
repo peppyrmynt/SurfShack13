@@ -219,6 +219,10 @@
 			message += airs.len > 1 ? span_notice("This node is empty!") : span_notice("[target] is empty!")
 			message += span_notice("Volume: [volume] L") // don't want to change the order volume appears in, suck it
 
+		var/list/fusion = LAZYACCESS(air.analyzer_results, "fusion")
+		if(fusion)
+			message += span_warning("Fusion tier: [fusion["tier"]]. Last reaction power: [round(fusion["power"], 0.01)]; instability: [round(fusion["instability"], 0.01)].")
+
 	// we let the join apply newlines so we do need handholding
 	to_chat(user, boxed_message(jointext(message, "\n")), type = MESSAGE_TYPE_INFO)
 	return TRUE
