@@ -52,8 +52,13 @@
 		return FALSE
 
 	if(!right_click_attack_chain(attack_target, modifiers))
+		if(try_hyper_curbstomp(attack_target, proximity_flag))
+			return TRUE
 		resolve_unarmed_attack(attack_target, modifiers)
 	return TRUE
+
+/mob/living/proc/try_hyper_curbstomp(atom/attack_target, proximity_flag)
+	return FALSE
 
 /mob/living/carbon/human/UnarmedAttack(atom/attack_target, proximity_flag, list/modifiers)
 	// Humans can always check themself regardless of having their hands blocked or w/e
@@ -62,6 +67,36 @@
 		return TRUE
 
 	return ..()
+
+/mob/living/carbon/human/try_hyper_curbstomp(atom/attack_target, proximity_flag)
+	if(!proximity_flag || src == attack_target || !shoes)
+		return FALSE
+	if(!GLOB.hyper_adrenaline_active)
+		return FALSE
+
+	if(!iscarbon(attack_target))
+		return FALSE
+	var/mob/living/carbon/target = attack_target
+	if(target.stat < SOFT_CRIT)
+		return FALSE
+	if(HAS_TRAIT(target, TRAIT_GODMODE) || HAS_TRAIT(target, TRAIT_NODISMEMBER))
+		return FALSE
+	if(!COOLDOWN_FINISHED(target, hyper_trauma_cd))
+		return FALSE
+
+	var/obj/item/bodypart/head/head_part = target.get_bodypart(BODY_ZONE_HEAD)
+	if(!head_part || !target.get_bodypart(BODY_ZONE_CHEST) || !target.get_organ_slot(ORGAN_SLOT_BRAIN))
+		return FALSE
+	if(!prob(25))
+		return FALSE
+
+	target.visible_message(span_danger("<B>[src] stomps down on [target]'s head with horrifying force!</B>"), span_userdanger("[src] stomps down on your head!"), span_hear("You hear a sickening crunch!"), COMBAT_MESSAGE_RANGE, src)
+	to_chat(src, span_danger("You stomp down on [target]'s head with horrifying force!"))
+	log_combat(src, target, "curbstomped")
+	if(target.catastrophic_brain_ejection(head_part, null, src, force_destroy_head = TRUE, crushed = TRUE, delete_head = prob(50)))
+		COOLDOWN_START(target, hyper_trauma_cd, 1)
+		return TRUE
+	return FALSE
 
 /mob/living/carbon/resolve_unarmed_attack(atom/attack_target, list/modifiers)
 	return attack_target.attack_paw(src, modifiers)

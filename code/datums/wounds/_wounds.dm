@@ -188,7 +188,10 @@
 		qdel(src)
 		return FALSE
 
-	if(isitem(wound_source))
+	if(istype(wound_source, /obj/projectile))
+		var/obj/projectile/wound_projectile = wound_source
+		src.wound_source = wound_projectile.name
+	else if(isitem(wound_source))
 		var/obj/item/wound_item = wound_source
 		src.wound_source = wound_item.name
 	else
