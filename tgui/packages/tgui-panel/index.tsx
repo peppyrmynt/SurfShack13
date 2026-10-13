@@ -8,6 +8,7 @@
 import './styles/main.scss';
 import './styles/themes/light.scss';
 
+import { setupKeyReleaseForwarding } from 'common/keyRelease'; // SURFSHACK EDIT
 import { perf } from 'common/perf';
 import { combineReducers } from 'common/redux';
 import { setGlobalStore } from 'tgui/backend';
@@ -66,6 +67,7 @@ const setupApp = () => {
     ignoreWindowFocus: true,
   });
   setupPanelFocusHacks();
+  setupKeyReleaseForwarding(); // SURFSHACK EDIT - unstick keys released while chat has focus
   captureExternalLinks();
 
   // Re-render UI on store updates

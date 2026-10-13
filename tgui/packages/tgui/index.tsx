@@ -34,8 +34,10 @@ import { setupHotReloading } from 'tgui-dev-server/link/client.cjs';
 import { setGlobalStore } from './backend';
 import { loadIconRefMap } from './icons';
 import { captureExternalLinks } from './links';
+import { setupMapFocus } from './mapFocus'; // SURFSHACK EDIT
 import { createRenderer } from './renderer';
 import { configureStore } from './store';
+import { setupStuckKeyRelease } from './stuckKeys'; // SURFSHACK EDIT
 
 perf.mark('inception', window.performance?.timing?.navigationStart);
 perf.mark('init');
@@ -60,6 +62,8 @@ function setupApp() {
 
   setupGlobalEvents();
   setupHotKeys();
+  setupStuckKeyRelease(); // SURFSHACK EDIT - release keys held when the window stole focus
+  setupMapFocus(); // SURFSHACK EDIT - hand keyboard focus back to the map
   captureExternalLinks();
 
   // Re-render UI on store updates
