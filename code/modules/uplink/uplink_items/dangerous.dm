@@ -106,3 +106,10 @@
 	cost = 5
 	item = /obj/item/grenade/spawnergrenade/cat
 	surplus = 30
+
+/datum/uplink_item/dangerous/wrestling
+	name = "Wrestling Belt"
+	desc = "A championship belt that teaches its wearer the ancient art of professional wrestling. Gain access to powerful strikes, kicks, body slams, throws, and leg drops while the belt is worn. OH YEAH BROTHERRRR!"
+	item = /obj/item/storage/belt/champion/wrestling
+	cost = 8
+	purchasable_from = UPLINK_TRAITORS
