@@ -271,12 +271,15 @@
 							observers = null
 							break
 
-		var/icon_file = I.lefthand_file
-		if(IS_RIGHT_INDEX(get_held_index_of_item(I)))
-			icon_file = I.righthand_file
-
-		hands += I.build_worn_icon(default_layer = HANDS_LAYER, default_icon_file = icon_file, isinhands = TRUE)
+		hands += get_held_overlay(I)
 	return hands
+
+/// Generate the inhand overlay for one held item, using the icon file for the hand it's in
+/mob/living/carbon/proc/get_held_overlay(obj/item/held_item)
+	var/icon_file = held_item.lefthand_file
+	if(IS_RIGHT_INDEX(get_held_index_of_item(held_item)))
+		icon_file = held_item.righthand_file
+	return held_item.build_worn_icon(default_layer = HANDS_LAYER, default_icon_file = icon_file, isinhands = TRUE)
 
 /mob/living/carbon/get_fire_overlay(stacks, on_fire)
 	var/fire_icon = "[dna?.species.fire_overlay || "human"]_[stacks > MOB_BIG_FIRE_STACK_THRESHOLD ? "big_fire" : "small_fire"]"

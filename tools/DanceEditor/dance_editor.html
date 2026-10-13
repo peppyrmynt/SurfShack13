@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<title>Spaceman Dance Rig</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Pixelify+Sans:wght@500;700&display=swap">
+<style>
+:root {
+	--bg: #E7EBF0;
+	--panel: #FFFFFF;
+	--panel-2: #F2F5F8;
+	--ink: #1A2130;
+	--muted: #5B6677;
+	--line: #D1D8E1;
+	--accent: #2C63B0;
+	--accent-soft: #DCE7F6;
+	--accent-ink: #FFFFFF;
+	--key: #C96E12;
+	--key-soft: #F7E3CC;
+	--danger: #B23A2A;
+	--danger-soft: #F6DEDA;
+	--warn: #8A5A00;
+	--warn-soft: #F5E8C8;
+	--world: #262A31;
+	--font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+	--font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+	--font-pixel: "Pixelify Sans", "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #11151B;
+		--panel: #1A2029;
+		--panel-2: #222A35;
+		--ink: #E0E6EE;
+		--muted: #97A2B3;
+		--line: #2F3948;
+		--accent: #72A0E3;
+		--accent-soft: #22324A;
+		--accent-ink: #0D1420;
+		--key: #F0A04B;
+		--key-soft: #3A2B19;
+		--danger: #EC7B68;
+		--danger-soft: #3B211D;
+		--warn: #E6B653;
+		--warn-soft: #362C16;
+		--world: #0B0D11;
+		color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--bg: #11151B;
+	--panel: #1A2029;
+	--panel-2: #222A35;
+	--ink: #E0E6EE;
+	--muted: #97A2B3;
+	--line: #2F3948;
+	--accent: #72A0E3;
+	--accent-soft: #22324A;
+	--accent-ink: #0D1420;
+	--key: #F0A04B;
+	--key-soft: #3A2B19;
+	--danger: #EC7B68;
+	--danger-soft: #3B211D;
+	--warn: #E6B653;
+	--warn-soft: #362C16;
+	--world: #0B0D11;
+	color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+	background: var(--bg);
+	color: var(--ink);
+	font-family: var(--font-body);
+	font-size: 14px;
+	line-height: 1.45;
+}
+.app {
+	max-width: 1220px;
+	margin: 0 auto;
+	padding-block: 20px 48px;
+	padding-inline: clamp(16px, 3vw, 32px);
+	display: grid;
+	gap: 18px;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font-family: var(--font-pixel); font-weight: 700; font-size: 26px; letter-spacing: 0.02em; }
+h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+h3 { font-size: 15px; font-weight: 600; }
+p { margin: 0; }
+.hint { color: var(--muted); font-size: 12.5px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* header */
+.top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 14px 24px;
+}
+.brand { display: grid; gap: 4px; }
+.brand p { color: var(--muted); max-width: 60ch; }
+.meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	align-items: flex-end;
+}
+.field { display: grid; gap: 4px; }
+.field > label, .label { font-size: 12px; color: var(--muted); font-weight: 500; }
+input[type="text"], input[type="number"], select, textarea {
+	background: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 6px;
+	padding: 6px 9px;
+	min-width: 0;
+}
+input[type="number"] { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+input:disabled { opacity: 0.55; }
+#dance-name { width: 13ch; font-family: var(--font-mono); }
+#dance-text { width: 22ch; }
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	border: 1px solid var(--line);
+	background: var(--panel);
+	border-radius: 6px;
+	padding: 6px 11px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+.btn:disabled { opacity: 0.45; cursor: default; border-color: var(--line); color: inherit; }
+.btn.small { padding: 3px 8px; font-size: 12.5px; }
+
+.seg {
+	display: inline-flex;
+	border: 1px solid var(--line);
+	border-radius: 6px;
+	overflow: hidden;
+	background: var(--panel);
+}
+.seg button {
+	border: 0;
+	background: transparent;
+	padding: 5px 10px;
+	cursor: pointer;
+	border-left: 1px solid var(--line);
+}
+.seg button:first-child { border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+
+/* layout */
+.workspace {
+	display: grid;
+	grid-template-columns: minmax(0, 500px) minmax(0, 1fr);
+	gap: 18px;
+	align-items: start;
+}
+@media (max-width: 920px) {
+	.workspace { grid-template-columns: minmax(0, 1fr); }
+}
+.panel {
+	background: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	padding: 14px;
+	display: grid;
+	gap: 12px;
+	min-width: 0;
+}
+.col { display: grid; gap: 18px; min-width: 0; }
+
+/* stage */
+.stage {
+	background: var(--world);
+	border-radius: 10px;
+	padding: 12px;
+	display: grid;
+	gap: 10px;
+	position: relative;
+}
+#stage {
+	width: 100%;
+	max-width: 476px;
+	aspect-ratio: 1;
+	margin: 0 auto;
+	display: block;
+	image-rendering: pixelated;
+	touch-action: none;
+	cursor: grab;
+	border-radius: 4px;
+}
+#stage.dragging { cursor: grabbing; }
+.mini {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	display: grid;
+	justify-items: center;
+	gap: 2px;
+	pointer-events: none;
+}
+#mini {
+	width: 96px;
+	height: 96px;
+	image-rendering: pixelated;
+	border: 1px solid #ffffff30;
+	background: #00000040;
+}
+.mini span { font-family: var(--font-mono); font-size: 10.5px; color: #C9D2DE; }
+.stage-hint { color: #B7C1CF; font-size: 12.5px; text-align: center; min-height: 1.4em; }
+
+.transport {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 12px;
+	align-items: center;
+}
+.readout {
+	font-family: var(--font-mono);
+	font-variant-numeric: tabular-nums;
+	font-size: 12.5px;
+	color: var(--muted);
+	margin-left: auto;
+}
+.check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+
+.scrub {
+	position: relative;
+	height: 34px;
+	background: var(--panel-2);
+	border: 1px solid var(--line);
+	border-radius: 6px;
+	cursor: pointer;
+	touch-action: none;
+	overflow: hidden;
+}
+.scrub .s {
+	position: absolute;
+	top: 5px;
+	bottom: 5px;
+	background: var(--accent-soft);
+	border-left: 2px solid var(--key);
+}
+.scrub .s.rep { background: repeating-linear-gradient(135deg, var(--accent-soft) 0 5px, transparent 5px 9px); }
+.scrub .s.on { background: var(--key-soft); }
+.scrub .s.zero { width: 0 !important; }
+.scrub .head {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 2px;
+	background: var(--ink);
+	pointer-events: none;
+}
+.scrub-empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 12.5px; }
+
+/* keyframe list */
+.kf-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 4px;
+	max-height: 330px;
+	overflow-y: auto;
+}
+.kf {
+	display: grid;
+	grid-template-columns: 58px 92px minmax(0, 1fr);
+	gap: 10px;
+	align-items: center;
+	padding: 6px 10px;
+	border: 1px solid var(--line);
+	border-radius: 6px;
+	cursor: pointer;
+	background: var(--panel);
+}
+.kf:hover { border-color: var(--accent); }
+.kf.sel { border-color: var(--accent); background: var(--accent-soft); }
+.kf.err { border-color: var(--danger); background: var(--danger-soft); }
+.kf-num { font-family: var(--font-pixel); font-weight: 500; font-size: 15px; color: var(--key); }
+.kf-time { font-family: var(--font-mono); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.kf-tags { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.tag {
+	font-size: 11.5px;
+	padding: 1px 6px;
+	border-radius: 4px;
+	background: var(--panel-2);
+	border: 1px solid var(--line);
+	white-space: nowrap;
+}
+.tag.dir { font-family: var(--font-mono); }
+.tag.rep { background: var(--key-soft); border-color: transparent; }
+.list-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* inspector */
+.insp-head {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: space-between;
+	align-items: center;
+}
+.insp-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.dirs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.dirs .seg button { font-family: var(--font-mono); min-width: 32px; }
+.limb-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.limb-tabs button {
+	border: 1px solid var(--line);
+	background: var(--panel);
+	border-radius: 999px;
+	padding: 4px 11px;
+	cursor: pointer;
+	font-size: 13px;
+}
+.limb-tabs button.changed { border-color: var(--key); }
+.limb-tabs button[aria-selected="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.sliders { display: grid; gap: 8px; }
+.slider {
+	display: grid;
+	grid-template-columns: 76px minmax(0, 1fr) 76px 18px;
+	gap: 10px;
+	align-items: center;
+}
+.slider label { font-size: 13px; }
+.slider input[type="range"] { width: 100%; accent-color: var(--accent); }
+.slider .unit { color: var(--muted); font-size: 12px; }
+.notes { display: grid; gap: 6px; }
+.note { font-size: 12.5px; padding: 6px 10px; border-radius: 6px; }
+.note.err { background: var(--danger-soft); color: var(--danger); }
+.note.warn { background: var(--warn-soft); color: var(--warn); }
+
+/* export */
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.out {
+	width: 100%;
+	min-height: 220px;
+	max-height: 360px;
+	font-family: var(--font-mono);
+	font-size: 12px;
+	line-height: 1.5;
+	tab-size: 4;
+	white-space: pre;
+	overflow: auto;
+	resize: vertical;
+	background: var(--panel-2);
+}
+#import-text { width: 100%; min-height: 90px; font-family: var(--font-mono); font-size: 12px; tab-size: 4; }
+.steps { margin: 0; padding-left: 20px; display: grid; gap: 4px; color: var(--ink); }
+code { font-family: var(--font-mono); font-size: 0.92em; background: var(--panel-2); padding: 0 4px; border-radius: 3px; }
+.status { font-size: 12.5px; color: var(--muted); min-height: 1.3em; }
+.foot { color: var(--muted); font-size: 12px; max-width: 80ch; }
+
+@media (max-width: 520px) {
+	.slider { grid-template-columns: 64px minmax(0, 1fr) 64px; }
+	.slider .unit { display: none; }
+	.kf { grid-template-columns: 48px 80px minmax(0, 1fr); }
+	.mini { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+	* { scroll-behavior: auto !important; }
+}
+</style>
+
+<div class="app">
+	<header class="top">
+		<div class="brand">
+			<h1>Spaceman Dance Rig</h1>
+			<p>Pose the limbs frame by frame, press play, then copy the JSON into <code>strings/dances.json</code>.</p>
+		</div>
+		<div class="meta">
+			<div class="field">
+				<label for="library">Open</label>
+				<select id="library"></select>
+			</div>
+			<div class="field">
+				<label for="dance-section">Type</label>
+				<select id="dance-section">
+					<option value="random_dances">Random dance</option>
+					<option value="secret_dances">Secret dance</option>
+					<option value="emotes">Emote animation</option>
+				</select>
+			</div>
+			<div class="field">
+				<label for="dance-name">Name</label>
+				<input id="dance-name" type="text" spellcheck="false" autocomplete="off">
+			</div>
+			<div class="field">
+				<label for="dance-text">Chat text</label>
+				<input id="dance-text" type="text" placeholder="does the floss!" autocomplete="off">
+			</div>
+		</div>
+	</header>
+
+	<div class="workspace">
+		<div class="col">
+			<section class="stage" aria-label="Preview">
+				<canvas id="stage" width="480" height="480" aria-label="Animated spaceman preview. Drag a limb to pose it."></canvas>
+				<div class="mini"><canvas id="mini" width="96" height="96"></canvas><span>1:1</span></div>
+				<p class="stage-hint" id="stage-hint"></p>
+			</section>
+
+			<section class="panel" aria-label="Playback">
+				<div class="transport">
+					<button class="btn primary" id="play" type="button">Play</button>
+					<button class="btn" id="restart" type="button">Restart</button>
+					<label class="check"><input id="loop" type="checkbox"> Loop</label>
+					<label class="check"><input id="onion" type="checkbox"> Ghost previous frame</label>
+					<select id="speed" aria-label="Playback speed">
+						<option value="0.25">0.25x</option>
+						<option value="0.5">0.5x</option>
+						<option value="1" selected>1x</option>
+						<option value="2">2x</option>
+					</select>
+					<span class="readout" id="readout"></span>
+				</div>
+				<div class="scrub" id="scrub" role="slider" aria-label="Timeline" tabindex="0"></div>
+				<div class="row">
+					<span class="label">Drag on the spaceman to</span>
+					<div class="seg" id="drag-mode">
+						<button type="button" data-mode="rotate" aria-pressed="true">Rotate</button>
+						<button type="button" data-mode="move" aria-pressed="false">Move</button>
+					</div>
+					<span class="hint">Hold Shift to switch while dragging.</span>
+				</div>
+			</section>
+		</div>
+
+		<div class="col">
+			<section class="panel" aria-label="Keyframes">
+				<div class="insp-head">
+					<h2>Keyframes</h2>
+					<span class="hint" id="kf-summary"></span>
+				</div>
+				<ol class="kf-list" id="kf-list"></ol>
+				<div class="list-actions">
+					<button class="btn" id="add-frame" type="button">+ Keyframe</button>
+					<button class="btn" id="add-repeat" type="button">+ Repeat block</button>
+					<button class="btn" id="undo" type="button" title="Ctrl+Z">Undo</button>
+					<button class="btn" id="redo" type="button" title="Ctrl+Y">Redo</button>
+				</div>
+			</section>
+
+			<section class="panel" aria-label="Selected keyframe" id="inspector"></section>
+		</div>
+	</div>
+
+	<div class="workspace">
+		<section class="panel" aria-label="Export">
+			<div class="insp-head">
+				<h2>Export</h2>
+				<div class="tabs">
+					<div class="seg" id="export-mode">
+						<button type="button" data-mode="dance" aria-pressed="true">This dance</button>
+						<button type="button" data-mode="file" aria-pressed="false">Whole dances.json</button>
+					</div>
+					<button class="btn primary" id="copy" type="button">Copy</button>
+				</div>
+			</div>
+			<textarea class="out" id="out" readonly spellcheck="false" aria-label="Exported JSON"></textarea>
+			<p class="status" id="copy-status"></p>
+			<ol class="steps">
+				<li id="step-1"></li>
+				<li>In game, an admin runs <strong>Debug &rarr; Reload Dances</strong> (or restart the server).</li>
+				<li id="step-3"></li>
+			</ol>
+		</section>
+
+		<section class="panel" aria-label="Import">
+			<h2>Import</h2>
+			<p class="hint">Paste one dance, or a whole <code>dances.json</code> to refresh the Open list with your server's current dances.</p>
+			<textarea id="import-text" spellcheck="false" placeholder='{ "name": "my_dance", "emote_text": "...", "keyframes": [ ... ] }'></textarea>
+			<div class="row">
+				<button class="btn" id="import" type="button">Load</button>
+				<button class="btn" id="new-dance" type="button">New blank dance</button>
+				<span class="status" id="import-status"></span>
+			</div>
+			<p class="foot">Times are in deciseconds (10 = one second). The preview copies the game's rules: limbs tween into each keyframe's pose over that frame's duration, snap when their facing changes, and the whole body returns to normal once the last frame ends. Tweens are close to BYOND's but can differ a little in game. When facing east or west, both arms draw over the torso, the same as in game.</p>
+		</section>
+	</div>
+</div>
+
+<script>
+'use strict';
+
+// Copy of strings/dances.json at the time this tool was written. Paste a newer file into Import to refresh it.
+const DEFAULT_LIBRARY = {
+	"emotes": [
+		{"name": "wave", "emote_text": "", "keyframes": [{"time": 0}, {"time": 5, "arm_l": {"rotation": 10, "scale_y": -1}}, {"time": 3, "arm_l": {"rotation": 45, "scale_y": -1}}, {"time": 3, "arm_l": {"rotation": 10, "scale_y": -1}}, {"repeat_frames": [3, 4]}, {"time": 5}]},
+		{"name": "bow", "emote_text": "", "keyframes": [{"time": 0}, {"time": 3, "arm_l": {"rotation": 30}}, {"time": 4, "arm_l": {"rotation": 30}, "body": {"scale_y": 0.5}, "leg_l": {"scale_y": 1.75, "offset_y": -1}, "leg_r": {"scale_y": 1.75, "offset_y": -1}}, {"time": 4, "arm_l": {"rotation": 30}}, {"time": 5}]},
+		{"name": "nod", "emote_text": "", "keyframes": [{"time": 0}, {"time": 4, "head": {"scale_y": 0.75, "offset_y": 0}}, {"time": 4}]}
+	],
+	"random_dances": [
+		{"name": "shoulderwave", "emote_text": "does the wave!", "keyframes": [{"time": 0}, {"time": 3, "arm_l": {"rotation": -70}, "arm_r": {"rotation": 70}}, {"time": 3, "arm_l": {"rotation": -70}, "arm_r": {"rotation": 90}}, {"time": 3, "arm_l": {"rotation": -70}, "arm_r": {"rotation": 50, "offset_y": 3}}, {"time": 3, "arm_l": {"rotation": -50, "offset_y": 3}, "arm_r": {"rotation": 70}}, {"time": 3, "arm_l": {"rotation": -90}, "arm_r": {"rotation": 70}}, {"time": 3, "arm_l": {"rotation": -70}, "arm_r": {"rotation": 70}}, {"repeat_frames": [6, 5, 4, 3, 2]}, {"time": 3}]},
+		{"name": "floss", "emote_text": "does the floss!", "keyframes": [{"time": 0}, {"time": 5, "body": {"offset_x": 5, "rotation": -13}, "arm_l": {"offset_x": -2, "rotation": 45}, "arm_r": {"offset_x": 2, "rotation": 45}, "leg_l": {"offset_y": 3, "rotation": 25}, "leg_r": {"offset_y": 0, "rotation": 25}}, {"time": 5, "body": {"offset_x": -5, "rotation": 13}, "arm_l": {"offset_x": -2, "rotation": -45}, "arm_r": {"offset_x": 2, "rotation": -45}, "leg_l": {"offset_y": 0, "rotation": -25}, "leg_r": {"offset_y": 3, "rotation": -25}}, {"repeat_frames": [2, 3, 2, 3, 2, 3]}, {"time": 5}]},
+		{"name": "disco", "emote_text": "dances a groovy disco number!", "keyframes": [{"time": 0}, {"time": 8, "head_dir": "WEST", "body": {"offset_x": 3}, "arm_l": {"rotation": -15}, "arm_r": {"rotation": 120, "scale_y": 1.2, "scale_x": -0.9}, "leg_l": {"offset_y": 2}, "leg_r": {"rotation": 20}}, {"time": 8, "head_dir": "WEST", "body": {"offset_x": -1}, "arm_l": {"rotation": 0}, "arm_r": {"rotation": 120, "scale_y": -0.8, "scale_x": -0.9}, "leg_l": {"offset_y": 1}, "leg_r": {"rotation": 20}}, {"repeat_frames": [2, 3, 2, 3, 2, 3]}, {"time": 5}]},
+		{"name": "robot", "emote_text": "does the robot!", "keyframes": [{"time": 4, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "SOUTH"}, {"time": 8, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "SOUTH", "body": {"rotation": -30}, "leg_l": {"rotation": 30, "offset_y": -1}, "leg_r": {"rotation": 30, "offset_y": 1}}, {"time": 8, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "SOUTH"}, {"time": 8, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "SOUTH", "arm_l": {"rotation": 80}}, {"time": 8, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "SOUTH"}, {"time": 4, "head_dir": "SOUTH", "body_dir": "SOUTH", "legs_dir": "SOUTH"}, {"time": 4, "head_dir": "EAST", "body_dir": "EAST", "legs_dir": "SOUTH"}, {"time": 8, "head_dir": "EAST", "body_dir": "EAST", "legs_dir": "SOUTH", "body": {"rotation": 30}, "leg_l": {"rotation": -30, "offset_y": 1}, "leg_r": {"rotation": -30, "offset_y": -1}}, {"time": 8, "head_dir": "EAST", "body_dir": "EAST", "legs_dir": "SOUTH"}, {"time": 8, "head_dir": "EAST", "body_dir": "EAST", "legs_dir": "SOUTH", "arm_r": {"rotation": -110}}, {"time": 8, "head_dir": "EAST", "body_dir": "EAST", "legs_dir": "SOUTH"}, {"time": 0}]}
+	],
+	"secret_dances": [
+		{"name": "headspin", "emote_text": "spins on their head!", "keyframes": [{"time": 0, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "WEST"}, {"time": 8, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "WEST", "body": {"rotation": -90, "offset_x": 15}, "arm_l": {"rotation": 110}, "leg_l": {"rotation": 90, "offset_y": 3}, "leg_r": {"rotation": 90, "offset_y": 3}}, {"time": 8, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "WEST", "body": {"rotation": -180, "offset_y": 15}, "arm_l": {"rotation": 110}, "leg_l": {"rotation": 0, "offset_y": 0}, "leg_r": {"rotation": 0, "offset_y": 0}}, {"time": 1, "head_dir": "NORTH", "body_dir": "NORTH", "legs_dir": "NORTH", "arm_l": {"scale_y": -0.6, "rotation": -20}, "arm_r": {"scale_y": -0.6, "rotation": 20}, "body": {"rotation": -180, "offset_y": 15}}, {"time": 1, "head_dir": "EAST", "body_dir": "EAST", "legs_dir": "EAST", "arm_r": {"rotation": -110}, "body": {"rotation": -180, "offset_y": 15}}, {"time": 1, "head_dir": "SOUTH", "body_dir": "SOUTH", "legs_dir": "SOUTH", "arm_l": {"scale_y": -0.6, "rotation": 20}, "arm_r": {"scale_y": -0.6, "rotation": -20}, "body": {"rotation": -180, "offset_y": 15}}, {"time": 1, "head_dir": "WEST", "body_dir": "WEST", "legs_dir": "WEST", "arm_l": {"rotation": 110}, "body": {"rotation": -180, "offset_y": 15}}, {"repeat_frames": [4, 5, 6, 7, 4, 5, 6, 7, 4, 5]}, {"time": 6, "head_dir": "EAST", "body_dir": "EAST", "legs_dir": "EAST", "body": {"rotation": 90, "offset_y": 8, "offset_x": -15}, "arm_l": {"rotation": -110}, "leg_l": {"rotation": -90, "offset_y": 3}, "leg_r": {"rotation": -90, "offset_y": 3}}, {"time": 8, "head_dir": "EAST", "body_dir": "EAST", "legs_dir": "EAST"}]}
+	]
+};
+
+const SECTIONS = ["emotes", "random_dances", "secret_dances"];
+const SECTION_LABEL = { emotes: "Emote animations", random_dances: "Random dances", secret_dances: "Secret dances" };
+const LIMBS = ["head", "body", "arm_l", "arm_r", "leg_l", "leg_r"];
+const LIMB_LABEL = { head: "Head", body: "Torso", arm_l: "Left arm", arm_r: "Right arm", leg_l: "Left leg", leg_r: "Right leg" };
+// Same order the game nests the limbs: torso first, then its vis_contents in list order.
+const DRAW_ORDER = ["body", "head", "arm_l", "arm_r", "leg_l", "leg_r"];
+const DIRS = ["NORTH", "EAST", "SOUTH", "WEST"];
+const DIR_ARROW = { NORTH: "↑", EAST: "→", SOUTH: "↓", WEST: "←" };
+const DIR_KEYS = [["head_dir", "Head"], ["body_dir", "Torso & arms"], ["legs_dir", "Legs"]];
+const POSE_KEYS = ["rotation", "offset_x", "offset_y", "scale_x", "scale_y"];
+const POSE_FIELDS = {
+	rotation: { label: "Rotation", min: -180, max: 180, step: 1, unit: "°" },
+	offset_x: { label: "Offset X", min: -32, max: 32, step: 1, unit: "px" },
+	offset_y: { label: "Offset Y", min: -32, max: 32, step: 1, unit: "px" },
+	scale_x: { label: "Scale X", min: -3, max: 3, step: 0.05, unit: "×" },
+	scale_y: { label: "Scale Y", min: -3, max: 3, step: 0.05, unit: "×" },
+};
+// Anchoring joints from get_limb_joint_pos() in dancing.dm (1-indexed pixels, y up).
+const JOINTS = {
+	head: { NORTH: [16, 23], SOUTH: [16, 23], EAST: [16, 22], WEST: [16, 22] },
+	body: { NORTH: [16, 11], SOUTH: [16, 11], EAST: [16, 11], WEST: [16, 11] },
+	arm_l: { NORTH: [11, 21], SOUTH: [21, 21], EAST: [17, 20], WEST: [19, 20] },
+	arm_r: { NORTH: [21, 21], SOUTH: [11, 21], EAST: [14, 20], WEST: [16, 20] },
+	leg_l: { NORTH: [14, 10], SOUTH: [18, 10], EAST: [16, 10], WEST: [16, 10] },
+	leg_r: { NORTH: [18, 10], SOUTH: [14, 10], EAST: [17, 10], WEST: [17, 10] },
+};
+const ZOOM = 5; // stage canvas pixels per game pixel
+const DRAFT_KEY = "spaceman-dance-rig/v1";
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const clone = (o) => JSON.parse(JSON.stringify(o));
+const round3 = (n) => Math.round(Number(n) * 1000) / 1000;
+const fmt = (n) => String(round3(n));
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const store = {
+	get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } },
+	set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* storage unavailable */ } },
+};
+
+/* ---------- model ---------- */
+
+const defaultPose = () => ({ rotation: 0, offset_x: 0, offset_y: 0, scale_x: 1, scale_y: 1 });
+const poseDefault = (key) => (key.startsWith("scale") ? 1 : 0);
+function newFrame(time) {
+	const pose = {};
+	LIMBS.forEach((l) => (pose[l] = defaultPose()));
+	return { type: "frame", time, animate: true, head_dir: "SOUTH", body_dir: "SOUTH", legs_dir: "SOUTH", pose };
+}
+function limbDirKey(limb) {
+	if (limb === "head") return "head_dir";
+	if (limb === "leg_l" || limb === "leg_r") return "legs_dir";
+	return "body_dir";
+}
+function poseChanged(pose) {
+	return POSE_KEYS.some((k) => pose[k] !== poseDefault(k));
+}
+
+function danceFromJson(obj, section) {
+	const rows = (Array.isArray(obj.keyframes) ? obj.keyframes : []).map((k) => {
+		if (k && k.repeat_frames) {
+			return { type: "repeat", frames: [].concat(k.repeat_frames).map(Number).filter(Number.isFinite) };
+		}
+		k = k || {};
+		const frame = newFrame(Number(k.time) || 0);
+		if ("animate" in k) frame.animate = !!k.animate;
+		for (const [dirKey] of DIR_KEYS) {
+			const d = String(k[dirKey] || "").toUpperCase();
+			if (DIRS.includes(d)) frame[dirKey] = d;
+		}
+		for (const limb of LIMBS) {
+			if (!k[limb] || typeof k[limb] !== "object") continue;
+			for (const key of POSE_KEYS) {
+				const v = Number(k[limb][key]);
+				if (k[limb][key] != null && Number.isFinite(v)) frame.pose[limb][key] = v;
+			}
+		}
+		return frame;
+	});
+	return { section, name: String(obj.name || "new_dance"), emote_text: String(obj.emote_text || ""), rows };
+}
+
+function frameToJson(row) {
+	if (row.type === "repeat") return { repeat_frames: row.frames.slice() };
+	const out = { time: round3(row.time) };
+	if (!row.animate) out.animate = false;
+	for (const [dirKey] of DIR_KEYS) {
+		if (row[dirKey] !== "SOUTH") out[dirKey] = row[dirKey];
+	}
+	for (const limb of LIMBS) {
+		const pose = {};
+		for (const key of POSE_KEYS) {
+			if (row.pose[limb][key] !== poseDefault(key)) pose[key] = round3(row.pose[limb][key]);
+		}
+		if (Object.keys(pose).length) out[limb] = pose;
+	}
+	return out;
+}
+
+/* ---------- serializing in the same style as dances.json ---------- */
+
+function serializeValue(key, value) {
+	if (key === "repeat_frames") return "[" + value.join(", ") + "]";
+	if (typeof value === "string") return JSON.stringify(value);
+	if (typeof value === "boolean") return String(value);
+	if (typeof value === "object") {
+		return "{ " + Object.entries(value).map(([k, v]) => JSON.stringify(k) + ": " + fmt(v)).join(", ") + " }";
+	}
+	return fmt(value);
+}
+function serializeFrame(obj, indent) {
+	const lines = Object.entries(obj).map(([k, v]) => indent + "\t" + JSON.stringify(k) + ": " + serializeValue(k, v));
+	return indent + "{\n" + lines.join(",\n") + "\n" + indent + "}";
+}
+function serializeDance(d, indent) {
+	const inner = indent + "\t";
+	const frames = d.rows.map((r) => serializeFrame(frameToJson(r), inner + "\t"));
+	return indent + "{\n"
+		+ inner + '"name": ' + JSON.stringify(d.name) + ",\n"
+		+ inner + '"emote_text": ' + JSON.stringify(d.section === "emotes" ? "" : d.emote_text) + ",\n"
+		+ inner + '"keyframes": [\n' + frames.join(",\n") + "\n" + inner + "]\n"
+		+ indent + "}";
+}
+function serializeFile(lib, current) {
+	const sections = {};
+	const name = current.name.toLowerCase();
+	for (const s of SECTIONS) {
+		sections[s] = lib[s].map((raw) => danceFromJson(raw, s));
+	}
+	// Emote animations and dances are looked up in separate lists in game, so only replace within the right namespace.
+	const scope = current.section === "emotes" ? ["emotes"] : ["random_dances", "secret_dances"];
+	let placed = false;
+	for (const s of scope) {
+		sections[s] = sections[s].flatMap((d) => {
+			if (d.name.toLowerCase() !== name) return [d];
+			if (s === current.section && !placed) {
+				placed = true;
+				return [current];
+			}
+			return [];
+		});
+	}
+	if (!placed) sections[current.section].push(current);
+	const body = SECTIONS.map((s) => {
+		const list = sections[s];
+		if (!list.length) return "\t" + JSON.stringify(s) + ": []";
+		return "\t" + JSON.stringify(s) + ": [\n" + list.map((d) => serializeDance(d, "\t\t")).join(",\n") + "\n\t]";
+	});
+	return "{\n" + body.join(",\n") + "\n}\n";
+}
+
+/* ---------- matrix math matching DM's /matrix ---------- */
+// x' = a*x + b*y + c ; y' = d*x + e*y + f (y up, origin at the icon center)
+
+const IDENT = { a: 1, b: 0, c: 0, d: 0, e: 1, f: 0 };
+function mul(P, M) { // apply M, then P
+	return {
+		a: P.a * M.a + P.b * M.d, b: P.a * M.b + P.b * M.e, c: P.a * M.c + P.b * M.f + P.c,
+		d: P.d * M.a + P.e * M.d, e: P.d * M.b + P.e * M.e, f: P.d * M.c + P.e * M.f + P.f,
+	};
+}
+const translate = (M, x, y) => mul({ a: 1, b: 0, c: x, d: 0, e: 1, f: y }, M);
+const scale = (M, x, y) => mul({ a: x, b: 0, c: 0, d: 0, e: y, f: 0 }, M);
+function turn(M, deg) { // DM's Turn() is clockwise
+	const r = (deg * Math.PI) / 180, cs = Math.cos(r), sn = Math.sin(r);
+	return mul({ a: cs, b: sn, c: 0, d: -sn, e: cs, f: 0 }, M);
+}
+function invert(M) {
+	const det = M.a * M.e - M.b * M.d || 1e-9;
+	const a = M.e / det, b = -M.b / det, d = -M.d / det, e = M.a / det;
+	return { a, b, c: -(a * M.c + b * M.f), d, e, f: -(d * M.c + e * M.f) };
+}
+const apply = (M, x, y) => [M.a * x + M.b * y + M.c, M.d * x + M.e * y + M.f];
+// The loader skips zero values, so a scale of 0 ends up as 1 in game.
+const gameScale = (v) => (Number(v) ? Number(v) : 1);
+
+// Mirrors /datum/animation_pose/proc/get_matrix()
+function poseMatrix(pose, joint) {
+	let M = IDENT;
+	M = translate(M, 16.5 - joint[0], 16.5 - joint[1]);
+	M = scale(M, gameScale(pose.scale_x), gameScale(pose.scale_y));
+	M = turn(M, Number(pose.rotation) || 0);
+	M = translate(M, joint[0] - 16.5, joint[1] - 16.5);
+	M = translate(M, Number(pose.offset_x) || 0, Number(pose.offset_y) || 0);
+	return M;
+}
+
+// Tween by splitting each matrix into rotation, scale, shear and translation.
+function decompose(M) {
+	const sx = Math.hypot(M.a, M.d);
+	const th = Math.atan2(M.d, M.a);
+	const cs = Math.cos(th), sn = Math.sin(th);
+	return { th, sx, k: cs * M.b + sn * M.e, sy: -sn * M.b + cs * M.e, tx: M.c, ty: M.f };
+}
+function recompose(p) {
+	const cs = Math.cos(p.th), sn = Math.sin(p.th);
+	return { a: cs * p.sx, b: cs * p.k - sn * p.sy, c: p.tx, d: sn * p.sx, e: sn * p.k + cs * p.sy, f: p.ty };
+}
+function lerpMatrix(A, B, t) {
+	const p = decompose(A), q = decompose(B);
+	let dth = q.th - p.th;
+	while (dth > Math.PI) dth -= 2 * Math.PI;
+	while (dth < -Math.PI) dth += 2 * Math.PI;
+	const mix = (x, y) => x + (y - x) * t;
+	return recompose({ th: p.th + dth * t, sx: mix(p.sx, q.sx), k: mix(p.k, q.k), sy: mix(p.sy, q.sy), tx: mix(p.tx, q.tx), ty: mix(p.ty, q.ty) });
+}
+
+/* ---------- timeline, mirroring json_list_to_keyframes() and apply_keyframe() ---------- */
+
+function expand(rows) {
+	const built = [];
+	const spans = [];
+	const errors = {};
+	rows.forEach((row, i) => {
+		const first = built.length + 1;
+		if (row.type === "repeat") {
+			const missing = [];
+			if (!row.frames.length) errors[i] = "List at least one frame number to repeat.";
+			for (const n of row.frames) {
+				if (!Number.isInteger(n) || n < 1 || n > built.length) {
+					missing.push(n);
+					continue;
+				}
+				built.push({ f: built[n - 1].f, src: built[n - 1].src, via: i });
+			}
+			if (missing.length) {
+				errors[i] = "Frame " + missing.join(", ") + (missing.length > 1 ? " don't" : " doesn't")
+					+ " exist at this point. The game would fail to load every dance, so fix this before exporting.";
+			}
+		} else {
+			built.push({ f: row, src: i, via: i });
+		}
+		spans[i] = [first, built.length];
+	});
+	let t = 0;
+	const segs = built.map((b) => {
+		const dur = Math.max(0, Number(b.f.time) || 0);
+		const seg = { f: b.f, src: b.src, via: b.via, start: t, dur };
+		t += dur;
+		return seg;
+	});
+	return { segs, total: t, spans, errors };
+}
+
+function restState() {
+	const st = {};
+	LIMBS.forEach((l) => (st[l] = { M: IDENT, dir: "SOUTH" }));
+	return st;
+}
+function evaluate(segs, upto, frac) {
+	const st = restState();
+	for (let i = 0; i <= upto; i++) {
+		const f = segs[i].f;
+		const t = i < upto ? 1 : frac;
+		for (const limb of LIMBS) {
+			const dir = f[limbDirKey(limb)];
+			const target = poseMatrix(f.pose[limb], JOINTS[limb][dir]);
+			const dirChanged = st[limb].dir !== dir; // limbs snap when they change facing
+			st[limb].dir = dir;
+			if (!dirChanged && f.animate && segs[i].dur > 0 && t < 1) st[limb].M = lerpMatrix(st[limb].M, target, t);
+			else st[limb].M = target;
+		}
+	}
+	return st;
+}
+function locate(T) {
+	let idx = -1;
+	for (let i = 0; i < tl.segs.length; i++) {
+		if (tl.segs[i].start <= T) idx = i;
+		else break;
+	}
+	if (idx < 0) return { idx: -1, frac: 0 };
+	const s = tl.segs[idx];
+	return { idx, frac: s.dur > 0 ? Math.min(1, (T - s.start) / s.dur) : 1 };
+}
+
+/* ---------- spaceman sprites ---------- */
+
+const PAL = {
+	skin: "#E8B791", skinDark: "#C48D69", hair: "#5B3A21", eye: "#1B1A1C",
+	suit: "#8D939B", suitDark: "#6C7179", suitLight: "#AAB0B7", belt: "#4B4F57", shoe: "#26272C",
+	outline: "#1C1E24",
+};
+const R = (x1, y1, x2, y2, c) => [x1, y1, x2, y2, PAL[c]];
+const mirror = (rects) => rects.map(([x1, y1, x2, y2, c]) => [33 - x2, y1, 33 - x1, y2, c]);
+const armRects = (x1, x2, far) => [R(x1, 15, x2, 21, far ? "suitDark" : "suit"), R(x1, 12, x2, 14, far ? "skinDark" : "skin")];
+const legRects = (x1, x2, far, shoeShift) => [R(x1, 4, x2, 10, far ? "suitDark" : "suit"), R(x1 + Math.min(0, shoeShift), 2, x2 + Math.max(0, shoeShift), 3, "shoe")];
+
+const EAST_PARTS = {
+	head: [R(13, 23, 19, 29, "skin"), R(13, 29, 19, 30, "hair"), R(13, 24, 14, 28, "hair"), R(18, 26, 18, 26, "eye"), R(20, 25, 20, 25, "skin")],
+	body: [R(14, 11, 19, 22, "suit"), R(14, 13, 14, 21, "suitDark"), R(14, 12, 19, 12, "belt")],
+	arm_l: armRects(16, 18, true),
+	arm_r: armRects(13, 15, false),
+	leg_l: legRects(15, 17, true, 1),
+	leg_r: legRects(16, 18, false, 1),
+};
+const PARTS = {
+	SOUTH: {
+		head: [R(13, 23, 20, 29, "skin"), R(15, 23, 18, 23, "skinDark"), R(13, 29, 20, 30, "hair"), R(13, 27, 13, 28, "hair"), R(20, 27, 20, 28, "hair"), R(15, 26, 15, 26, "eye"), R(18, 26, 18, 26, "eye")],
+		body: [R(13, 11, 20, 22, "suit"), R(13, 13, 13, 21, "suitDark"), R(20, 13, 20, 21, "suitDark"), R(15, 22, 18, 22, "suitLight"), R(13, 12, 20, 12, "belt")],
+		arm_r: armRects(10, 12, false),
+		arm_l: armRects(21, 23, false),
+		leg_r: legRects(13, 16, false, 0),
+		leg_l: legRects(17, 20, false, 0),
+	},
+	NORTH: {
+		head: [R(13, 23, 20, 30, "hair"), R(15, 23, 18, 23, "skinDark")],
+		body: [R(13, 11, 20, 22, "suit"), R(13, 13, 13, 21, "suitDark"), R(20, 13, 20, 21, "suitDark"), R(14, 22, 19, 22, "suitDark"), R(13, 12, 20, 12, "belt")],
+		arm_l: armRects(10, 12, false),
+		arm_r: armRects(21, 23, false),
+		leg_l: legRects(13, 16, false, 0),
+		leg_r: legRects(17, 20, false, 0),
+	},
+	EAST: EAST_PARTS,
+	WEST: {
+		head: mirror(EAST_PARTS.head),
+		body: mirror(EAST_PARTS.body),
+		arm_l: armRects(18, 20, false),
+		arm_r: armRects(15, 17, true),
+		leg_l: legRects(15, 17, false, -1),
+		leg_r: legRects(16, 18, true, -1),
+	},
+};
+
+function hexToRgb(hex) {
+	const n = parseInt(hex.slice(1), 16);
+	return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function makeSprite(rects) {
+	const canvas = document.createElement("canvas");
+	canvas.width = canvas.height = 32;
+	const g = canvas.getContext("2d");
+	const img = g.createImageData(32, 32);
+	const px = img.data;
+	const put = (x, y, rgb) => { // x, y are 1-indexed with y up
+		if (x < 1 || x > 32 || y < 1 || y > 32) return;
+		const i = ((32 - y) * 32 + (x - 1)) * 4;
+		px[i] = rgb[0]; px[i + 1] = rgb[1]; px[i + 2] = rgb[2]; px[i + 3] = 255;
+	};
+	for (const [x1, y1, x2, y2, color] of rects) {
+		const rgb = hexToRgb(color);
+		for (let x = x1; x <= x2; x++) for (let y = y1; y <= y2; y++) put(x, y, rgb);
+	}
+	const solid = new Uint8Array(32 * 32);
+	for (let i = 0; i < 32 * 32; i++) solid[i] = px[i * 4 + 3] ? 1 : 0;
+	const outline = hexToRgb(PAL.outline);
+	for (let row = 0; row < 32; row++) {
+		for (let col = 0; col < 32; col++) {
+			if (solid[row * 32 + col]) continue;
+			const near = (r, c) => r >= 0 && r < 32 && c >= 0 && c < 32 && solid[r * 32 + c];
+			if (near(row - 1, col) || near(row + 1, col) || near(row, col - 1) || near(row, col + 1)) put(col + 1, 32 - row, outline);
+		}
+	}
+	g.putImageData(img, 0, 0);
+	const alpha = new Uint8Array(32 * 32);
+	for (let i = 0; i < 32 * 32; i++) alpha[i] = px[i * 4 + 3];
+	return { canvas, alpha };
+}
+const SPRITES = {};
+for (const limb of LIMBS) {
+	SPRITES[limb] = {};
+	for (const dir of DIRS) SPRITES[limb][dir] = makeSprite(PARTS[dir][limb]);
+}
+
+/* ---------- drawing ---------- */
+
+function drawFloor(ctx, z) {
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+	for (let tx = 0; tx < 3; tx++) {
+		for (let ty = 0; ty < 3; ty++) {
+			const x = tx * 32 * z, y = ty * 32 * z, s = 32 * z;
+			ctx.fillStyle = "#7C828B";
+			ctx.fillRect(x, y, s, s);
+			ctx.fillStyle = "#8C929B";
+			ctx.fillRect(x, y, s, z);
+			ctx.fillRect(x, y, z, s);
+			ctx.fillStyle = "#666B73";
+			ctx.fillRect(x, y + s - z, s, z);
+			ctx.fillRect(x + s - z, y, z, s);
+		}
+	}
+	ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
+	ctx.fillRect(32 * z, 32 * z, 32 * z, 32 * z);
+}
+function limbMatrix(st, limb) {
+	return limb === "body" ? st.body.M : mul(st.body.M, st[limb].M); // limbs ride on the torso's transform
+}
+function drawMob(ctx, z, st, alpha) {
+	const c = 48 * z;
+	ctx.globalAlpha = alpha;
+	for (const limb of DRAW_ORDER) {
+		const M = limbMatrix(st, limb);
+		ctx.setTransform(z, 0, 0, -z, c, c);
+		ctx.transform(M.a, M.d, M.b, M.e, M.c, M.f);
+		ctx.scale(1, -1);
+		ctx.drawImage(SPRITES[limb][st[limb].dir].canvas, -16, -16);
+	}
+	ctx.globalAlpha = 1;
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+function jointScreen(st, limb, z) {
+	const joint = JOINTS[limb][st[limb].dir];
+	const [x, y] = apply(limbMatrix(st, limb), joint[0] - 16.5, joint[1] - 16.5);
+	return [48 * z + x * z, 48 * z - y * z];
+}
+function drawJoint(ctx, st, limb, z) {
+	const [x, y] = jointScreen(st, limb, z);
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+	ctx.lineWidth = 2;
+	ctx.strokeStyle = "#F0A04B";
+	ctx.fillStyle = "rgba(240, 160, 75, 0.25)";
+	ctx.beginPath();
+	ctx.arc(x, y, 6, 0, Math.PI * 2);
+	ctx.fill();
+	ctx.stroke();
+}
+function hitTest(st, sx, sy, z) {
+	const x = (sx - 48 * z) / z, y = -(sy - 48 * z) / z;
+	for (let i = DRAW_ORDER.length - 1; i >= 0; i--) {
+		const limb = DRAW_ORDER[i];
+		const [lx, ly] = apply(invert(limbMatrix(st, limb)), x, y);
+		const col = Math.floor(lx + 16), row = Math.floor(16 - ly);
+		if (col < 0 || col > 31 || row < 0 || row > 31) continue;
+		if (SPRITES[limb][st[limb].dir].alpha[row * 32 + col]) return limb;
+	}
+	return null;
+}
+
+/* ---------- app state ---------- */
+
+let library = clone(DEFAULT_LIBRARY);
+let dance = null;
+let selRow = 0;
+let limb = "arm_l";
+let dragMode = "rotate";
+let exportMode = "dance";
+let playing = false, loop = true, onion = true, speed = 1;
+let T = 0, pinned = true, ended = false;
+let tl = { segs: [], total: 0, spans: [], errors: {} };
+let dirty = true;
+let lastScrolledRow = -1;
+const undoStack = [], redoStack = [];
+let lastEditKind = null, lastEditAt = 0;
+
+const stage = $("#stage"), sctx = stage.getContext("2d");
+const mini = $("#mini"), mctx = mini.getContext("2d");
+
+function snapshot() { return JSON.stringify({ dance, selRow }); }
+function restore(json) {
+	const s = JSON.parse(json);
+	dance = s.dance;
+	selRow = s.selRow;
+	afterChange(true);
+}
+function edit(kind, fn, structural) {
+	const now = Date.now();
+	if (kind !== lastEditKind || now - lastEditAt > 800) {
+		undoStack.push(snapshot());
+		if (undoStack.length > 200) undoStack.shift();
+		redoStack.length = 0;
+	}
+	lastEditKind = kind;
+	lastEditAt = now;
+	fn();
+	afterChange(structural);
+}
+function undo() {
+	if (!undoStack.length) return;
+	redoStack.push(snapshot());
+	restore(undoStack.pop());
+	lastEditKind = null;
+}
+function redo() {
+	if (!redoStack.length) return;
+	undoStack.push(snapshot());
+	restore(redoStack.pop());
+	lastEditKind = null;
+}
+
+function loadDance(d) {
+	dance = d;
+	selRow = Math.min(dance.rows.findIndex((r) => r.type === "frame" && LIMBS.some((l) => poseChanged(r.pose[l]))), dance.rows.length - 1);
+	if (selRow < 0) selRow = 0;
+	playing = false;
+	pinned = true;
+	ended = false;
+	undoStack.length = 0;
+	redoStack.length = 0;
+	lastEditKind = null;
+	afterChange(true);
+}
+
+function afterChange(structural) {
+	if (dance.rows.length === 0) dance.rows.push(newFrame(0));
+	selRow = Math.max(0, Math.min(selRow, dance.rows.length - 1));
+	tl = expand(dance.rows);
+	if (T > tl.total) T = tl.total;
+	renderMeta();
+	renderList();
+	renderScrub();
+	if (structural) renderInspector();
+	else syncInspector();
+	renderExport();
+	saveDraft();
+	dirty = true;
+}
+
+let saveTimer = 0;
+function saveDraft() {
+	clearTimeout(saveTimer);
+	saveTimer = setTimeout(() => store.set(DRAFT_KEY, { dance, library, limb, loop, onion, speed }), 300);
+}
+
+/* ---------- rendering the UI ---------- */
+
+function renderLibrary() {
+	const sel = $("#library");
+	let html = '<option value="">Example or saved dance...</option>';
+	for (const s of SECTIONS) {
+		html += '<optgroup label="' + SECTION_LABEL[s] + '">';
+		library[s].forEach((d, i) => {
+			html += '<option value="' + s + ":" + i + '">' + escapeHtml(d.name) + "</option>";
+		});
+		html += "</optgroup>";
+	}
+	sel.innerHTML = html;
+}
+
+function renderMeta() {
+	if (document.activeElement !== $("#dance-name")) $("#dance-name").value = dance.name;
+	if (document.activeElement !== $("#dance-text")) $("#dance-text").value = dance.emote_text;
+	$("#dance-section").value = dance.section;
+	$("#dance-text").disabled = dance.section === "emotes";
+}
+
+function rowTags(row) {
+	if (row.type === "repeat") return '<span class="tag rep">plays #' + escapeHtml(row.frames.join(", #")) + "</span>";
+	const tags = [];
+	const dirs = DIR_KEYS.filter(([k]) => row[k] !== "SOUTH").map(([k, label]) => label.split(" ")[0][0] + DIR_ARROW[row[k]]);
+	if (dirs.length) tags.push('<span class="tag dir">' + dirs.join(" ") + "</span>");
+	LIMBS.filter((l) => poseChanged(row.pose[l])).forEach((l) => tags.push('<span class="tag">' + LIMB_LABEL[l] + "</span>"));
+	if (!row.animate) tags.push('<span class="tag">snap</span>');
+	if (!tags.length) tags.push('<span class="tag">rest pose</span>');
+	return tags.join("");
+}
+
+function renderList() {
+	const list = $("#kf-list");
+	list.innerHTML = dance.rows.map((row, i) => {
+		const [a, b] = tl.spans[i];
+		const num = b < a ? "#-" : a === b ? "#" + a : "#" + a + "–" + b;
+		const time = row.type === "repeat" ? "repeat" : (row.time / 10).toFixed(1) + " s";
+		const cls = "kf" + (i === selRow ? " sel" : "") + (tl.errors[i] ? " err" : "");
+		return '<li class="' + cls + '" data-row="' + i + '" tabindex="0" aria-selected="' + (i === selRow) + '">'
+			+ '<span class="kf-num">' + num + "</span>"
+			+ '<span class="kf-time">' + time + "</span>"
+			+ '<span class="kf-tags">' + rowTags(row) + "</span></li>";
+	}).join("");
+	const sel = list.querySelector(".sel");
+	if (sel && selRow !== lastScrolledRow) {
+		// Scroll only the list, never the page.
+		lastScrolledRow = selRow;
+		const top = sel.offsetTop - list.offsetTop;
+		if (top < list.scrollTop) list.scrollTop = top;
+		else if (top + sel.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top + sel.offsetHeight - list.clientHeight;
+	}
+	$("#kf-summary").textContent = tl.segs.length + " frames, " + (tl.total / 10).toFixed(1) + " s";
+	$("#undo").disabled = !undoStack.length;
+	$("#redo").disabled = !redoStack.length;
+}
+
+function renderScrub() {
+	const el = $("#scrub");
+	if (!tl.segs.length || tl.total <= 0) {
+		el.innerHTML = '<div class="scrub-empty">Give a keyframe a duration to see the timeline.</div><div class="head"></div>';
+		return;
+	}
+	el.innerHTML = tl.segs.map((s) => {
+		const left = (s.start / tl.total) * 100, width = (s.dur / tl.total) * 100;
+		const cls = "s" + (s.via !== s.src ? " rep" : "") + (s.src === selRow || s.via === selRow ? " on" : "") + (s.dur === 0 ? " zero" : "");
+		return '<div class="' + cls + '" style="left:' + left + "%;width:" + width + '%"></div>';
+	}).join("") + '<div class="head"></div>';
+}
+
+function renderInspector() {
+	const box = $("#inspector");
+	const row = dance.rows[selRow];
+	const [a, b] = tl.spans[selRow];
+	const tools = '<div class="insp-tools">'
+		+ '<button class="btn small" type="button" data-act="dup">Duplicate</button>'
+		+ '<button class="btn small" type="button" data-act="up"' + (selRow === 0 ? " disabled" : "") + ">Move up</button>"
+		+ '<button class="btn small" type="button" data-act="down"' + (selRow === dance.rows.length - 1 ? " disabled" : "") + ">Move down</button>"
+		+ '<button class="btn small danger" type="button" data-act="del"' + (dance.rows.length < 2 ? " disabled" : "") + ">Delete</button></div>";
+	if (row.type === "repeat") {
+		box.innerHTML = '<div class="insp-head"><h3>Repeat block ' + (b >= a ? "#" + a + "–" + b : "") + "</h3>" + tools + "</div>"
+			+ '<div class="field"><label for="r-frames">Frames to play again, in order</label>'
+			+ '<input id="r-frames" type="text" spellcheck="false" value="' + escapeHtml(row.frames.join(", ")) + '"></div>'
+			+ '<p class="hint">Use the # numbers from the list. They count every frame built so far, including frames added by earlier repeat blocks, so they can run ahead of the row count.</p>'
+			+ '<div class="notes" id="notes"></div>';
+	} else {
+		const dirs = DIR_KEYS.map(([key, label]) => '<div class="field"><span class="label">' + label + ' face</span><div class="seg" data-dirkey="' + key + '">'
+			+ DIRS.map((d) => '<button type="button" data-dir="' + d + '" aria-pressed="' + (row[key] === d) + '" title="' + d + '">' + DIR_ARROW[d] + "</button>").join("")
+			+ "</div></div>").join("");
+		const tabs = LIMBS.map((l) => '<button type="button" role="tab" data-limb="' + l + '" aria-selected="' + (l === limb) + '">' + LIMB_LABEL[l] + "</button>").join("");
+		const sliders = POSE_KEYS.map((key) => {
+			const f = POSE_FIELDS[key];
+			return '<div class="slider"><label for="n-' + key + '">' + f.label + "</label>"
+				+ '<input type="range" id="r-' + key + '" data-key="' + key + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" aria-label="' + f.label + '">'
+				+ '<input type="number" id="n-' + key + '" data-key="' + key + '" step="' + f.step + '">'
+				+ '<span class="unit">' + f.unit + "</span></div>";
+		}).join("");
+		box.innerHTML = '<div class="insp-head"><h3>Keyframe #' + a + "</h3>" + tools + "</div>"
+			+ '<div class="row"><div class="field"><label for="f-time">Duration (deciseconds)</label>'
+			+ '<div class="row"><input id="f-time" type="number" min="0" step="1" style="width:9ch"><span class="hint" id="f-time-s"></span></div></div>'
+			+ '<label class="check"><input id="f-animate" type="checkbox"> Tween into this pose</label></div>'
+			+ '<p class="hint">The pose is reached at the end of the duration. With tweening off, limbs jump straight to it and hold.</p>'
+			+ '<div class="dirs">' + dirs + "</div>"
+			+ '<div class="limb-tabs" role="tablist" aria-label="Limb">' + tabs + "</div>"
+			+ '<div class="sliders">' + sliders + "</div>"
+			+ '<div class="row"><button class="btn small" type="button" data-act="reset-limb">Reset limb</button>'
+			+ '<button class="btn small" type="button" data-act="reset-all">Reset whole pose</button>'
+			+ '<button class="btn small" type="button" data-act="copy-prev">Copy pose from previous keyframe</button></div>'
+			+ '<div class="notes" id="notes"></div>';
+	}
+	syncInspector();
+}
+
+function syncInspector() {
+	const row = dance.rows[selRow];
+	if (row.type === "frame") {
+		const time = $("#f-time");
+		if (!time) return renderInspector();
+		if (document.activeElement !== time) time.value = fmt(row.time);
+		$("#f-time-s").textContent = "= " + (row.time / 10).toFixed(2).replace(/0$/, "") + " s";
+		$("#f-animate").checked = row.animate;
+		document.querySelectorAll("#inspector .seg[data-dirkey]").forEach((seg) => {
+			seg.querySelectorAll("button").forEach((btn) => btn.setAttribute("aria-pressed", String(row[seg.dataset.dirkey] === btn.dataset.dir)));
+		});
+		document.querySelectorAll("#inspector .limb-tabs button").forEach((btn) => {
+			btn.setAttribute("aria-selected", String(btn.dataset.limb === limb));
+			btn.classList.toggle("changed", poseChanged(row.pose[btn.dataset.limb]));
+		});
+		for (const key of POSE_KEYS) {
+			const v = row.pose[limb][key];
+			$("#r-" + key).value = v;
+			if (document.activeElement !== $("#n-" + key)) $("#n-" + key).value = fmt(v);
+		}
+	} else if (!$("#r-frames")) {
+		return renderInspector();
+	}
+	renderNotes();
+}
+
+function renderNotes() {
+	const notes = [];
+	const row = dance.rows[selRow];
+	if (tl.errors[selRow]) notes.push(["err", tl.errors[selRow]]);
+	const otherErrors = Object.keys(tl.errors).filter((i) => Number(i) !== selRow);
+	if (otherErrors.length) notes.push(["err", "Repeat block problems in rows " + otherErrors.map((i) => Number(i) + 1).join(", ") + "."]);
+	if (row.type === "frame") {
+		const zero = LIMBS.filter((l) => row.pose[l].scale_x === 0 || row.pose[l].scale_y === 0);
+		if (zero.length) notes.push(["warn", "A scale of exactly 0 is read as 1 in game (" + zero.map((l) => LIMB_LABEL[l]).join(", ") + "). Use 0.05 to squash a limb flat."]);
+	}
+	if (!dance.name.trim()) notes.push(["err", "Give the dance a name."]);
+	if (dance.section === "emotes" && !["wave", "bow", "nod"].includes(dance.name.toLowerCase())) {
+		notes.push(["warn", "Emote animations only play for emotes that are hooked up in code (wave, bow and nod). Use a random or secret dance otherwise."]);
+	}
+	const el = $("#notes");
+	if (el) el.innerHTML = notes.map(([kind, text]) => '<p class="note ' + kind + '">' + escapeHtml(text) + "</p>").join("");
+}
+
+function renderExport() {
+	const out = $("#out");
+	out.value = exportMode === "dance" ? serializeDance(dance, "\t\t") : serializeFile(library, dance);
+	document.querySelectorAll("#export-mode button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === exportMode)));
+	const where = dance.section === "emotes" ? '"emotes"' : dance.section === "secret_dances" ? '"secret_dances"' : '"random_dances"';
+	$("#step-1").innerHTML = exportMode === "dance"
+		? "Paste this into the <code>" + escapeHtml(where) + "</code> list in <code>strings/dances.json</code>, with a comma between it and the dance before it."
+		: "Replace <code>strings/dances.json</code> with this. It holds the dances from the Open list plus this one.";
+	const name = escapeHtml(dance.name || "name");
+	$("#step-3").innerHTML = dance.section === "emotes"
+		? "Use the matching emote, like <code>*" + name + "</code>."
+		: dance.section === "secret_dances"
+			? "Type <code>*dance " + name + "</code>. Secret dances never come up at random."
+			: "Type <code>*dance " + name + "</code>, or plain <code>*dance</code> to get a random one.";
+	const hasErrors = Object.keys(tl.errors).length > 0;
+	$("#copy-status").textContent = hasErrors ? "Fix the repeat block errors first: the game can't load dances with a bad frame number." : "";
+}
+
+/* ---------- stage ---------- */
+
+function currentView() {
+	if (!tl.segs.length) return { st: restState(), idx: -1, rest: true };
+	if (pinned && !playing) {
+		const [a, b] = tl.spans[selRow];
+		if (b >= a) {
+			const idx = a - 1;
+			T = tl.segs[idx].start + tl.segs[idx].dur;
+			return { st: evaluate(tl.segs, idx, 1), idx };
+		}
+		return { st: restState(), idx: -1, rest: true };
+	}
+	if (ended) return { st: restState(), idx: -1, rest: true };
+	const { idx, frac } = locate(T);
+	if (idx < 0) return { st: restState(), idx: -1, rest: true };
+	return { st: evaluate(tl.segs, idx, frac), idx };
+}
+
+function draw() {
+	const view = currentView();
+	for (const [ctx, z] of [[sctx, ZOOM], [mctx, 1]]) {
+		ctx.imageSmoothingEnabled = false;
+		drawFloor(ctx, z);
+		if (z === ZOOM && onion && !playing && view.idx > 0) drawMob(ctx, z, evaluate(tl.segs, view.idx - 1, 1), 0.3);
+		drawMob(ctx, z, view.st, 1);
+	}
+	const row = dance.rows[selRow];
+	if (!playing && !view.rest && row.type === "frame" && tl.segs[view.idx] && tl.segs[view.idx].f === row) drawJoint(sctx, view.st, limb, ZOOM);
+
+	const head = $("#scrub .head");
+	if (head) head.style.left = tl.total > 0 ? Math.min(100, (T / tl.total) * 100) + "%" : "0";
+	const frameNo = view.idx >= 0 ? view.idx + 1 : 0;
+	$("#readout").textContent = (T / 10).toFixed(1) + " / " + (tl.total / 10).toFixed(1) + " s · frame " + frameNo + " of " + tl.segs.length;
+	$("#play").textContent = playing ? "Pause" : "Play";
+	let hint;
+	if (playing) hint = "Playing. Pause to edit.";
+	else if (view.rest) hint = ended ? "Dance finished. The mob goes back to its normal sprite here." : "Select a keyframe to pose it.";
+	else if (row.type === "repeat") hint = "Repeat blocks replay earlier frames. Select a keyframe to pose it.";
+	else if (pinned) hint = "Editing keyframe #" + tl.spans[selRow][0] + ", " + LIMB_LABEL[limb] + ". Drag a limb to " + (dragMode === "rotate" ? "rotate it around its joint." : "move it.");
+	else hint = "Scrubbing. Click a keyframe in the list to edit it.";
+	$("#stage-hint").textContent = hint;
+	dirty = false;
+}
+
+let lastTick = 0;
+function tick(now) {
+	const dt = lastTick ? Math.min(0.1, (now - lastTick) / 1000) : 0;
+	lastTick = now;
+	if (playing) {
+		T += dt * 10 * speed;
+		if (T >= tl.total) {
+			if (loop && tl.total > 0) T = T % tl.total;
+			else {
+				T = tl.total;
+				playing = false;
+				ended = true;
+			}
+		}
+		const { idx } = locate(T);
+		if (idx >= 0 && tl.segs[idx].src !== selRow && tl.segs[idx].via !== selRow) {
+			selRow = tl.segs[idx].via !== tl.segs[idx].src ? tl.segs[idx].via : tl.segs[idx].src;
+			renderList();
+			renderScrub();
+			renderInspector();
+		}
+		dirty = true;
+	}
+	if (dirty) draw();
+	requestAnimationFrame(tick);
+}
+
+function play() {
+	if (!tl.segs.length || tl.total <= 0) return;
+	if (playing) {
+		playing = false;
+	} else {
+		if (ended || pinned || T >= tl.total) T = 0;
+		playing = true;
+		pinned = false;
+		ended = false;
+	}
+	dirty = true;
+}
+function selectRow(i) {
+	selRow = i;
+	pinned = true;
+	playing = false;
+	ended = false;
+	lastEditKind = null;
+	renderList();
+	renderScrub();
+	renderInspector();
+	dirty = true;
+}
+
+/* ---------- events ---------- */
+
+$("#play").addEventListener("click", play);
+$("#restart").addEventListener("click", () => {
+	T = 0;
+	ended = false;
+	pinned = false;
+	playing = tl.total > 0;
+	dirty = true;
+});
+$("#loop").addEventListener("change", (e) => { loop = e.target.checked; saveDraft(); });
+$("#onion").addEventListener("change", (e) => { onion = e.target.checked; dirty = true; saveDraft(); });
+$("#speed").addEventListener("change", (e) => { speed = Number(e.target.value); saveDraft(); });
+
+$("#drag-mode").addEventListener("click", (e) => {
+	const btn = e.target.closest("button");
+	if (!btn) return;
+	dragMode = btn.dataset.mode;
+	document.querySelectorAll("#drag-mode button").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+	dirty = true;
+});
+$("#export-mode").addEventListener("click", (e) => {
+	const btn = e.target.closest("button");
+	if (!btn) return;
+	exportMode = btn.dataset.mode;
+	renderExport();
+});
+
+$("#kf-list").addEventListener("click", (e) => {
+	const li = e.target.closest("[data-row]");
+	if (li) selectRow(Number(li.dataset.row));
+});
+$("#kf-list").addEventListener("keydown", (e) => {
+	if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+		e.preventDefault();
+		const next = Math.max(0, Math.min(dance.rows.length - 1, selRow + (e.key === "ArrowDown" ? 1 : -1)));
+		selectRow(next);
+		const li = $('#kf-list [data-row="' + next + '"]');
+		if (li) li.focus();
+	} else if (e.key === "Enter" || e.key === " ") {
+		const li = e.target.closest("[data-row]");
+		if (li) {
+			e.preventDefault();
+			selectRow(Number(li.dataset.row));
+		}
+	}
+});
+
+function insertRow(row) {
+	edit("insert", () => {
+		dance.rows.splice(selRow + 1, 0, row);
+		selRow += 1;
+		pinned = true;
+		playing = false;
+	}, true);
+}
+$("#add-frame").addEventListener("click", () => {
+	const cur = dance.rows[selRow];
+	const base = cur && cur.type === "frame" ? clone(cur) : newFrame(5);
+	if (!base.time) base.time = 5;
+	insertRow(base);
+});
+$("#add-repeat").addEventListener("click", () => {
+	const [a, b] = tl.spans[selRow];
+	const last = Math.max(a, b);
+	const frames = last >= 2 ? [last - 1, last] : [Math.max(1, last)];
+	insertRow({ type: "repeat", frames });
+});
+$("#undo").addEventListener("click", undo);
+$("#redo").addEventListener("click", redo);
+
+const inspector = $("#inspector");
+inspector.addEventListener("click", (e) => {
+	const btn = e.target.closest("button");
+	if (!btn) return;
+	const row = dance.rows[selRow];
+	if (btn.dataset.limb) {
+		limb = btn.dataset.limb;
+		syncInspector();
+		saveDraft();
+		dirty = true;
+		return;
+	}
+	if (btn.dataset.dir) {
+		const key = btn.closest("[data-dirkey]").dataset.dirkey;
+		edit("dir", () => (row[key] = btn.dataset.dir));
+		return;
+	}
+	switch (btn.dataset.act) {
+		case "dup":
+			insertRow(clone(row));
+			break;
+		case "up":
+		case "down": {
+			const j = selRow + (btn.dataset.act === "up" ? -1 : 1);
+			if (j < 0 || j >= dance.rows.length) return;
+			edit("move", () => {
+				[dance.rows[selRow], dance.rows[j]] = [dance.rows[j], dance.rows[selRow]];
+				selRow = j;
+			}, true);
+			break;
+		}
+		case "del":
+			if (dance.rows.length < 2) return;
+			edit("delete", () => {
+				dance.rows.splice(selRow, 1);
+				selRow = Math.max(0, selRow - 1);
+			}, true);
+			break;
+		case "reset-limb":
+			edit("reset", () => (row.pose[limb] = defaultPose()));
+			break;
+		case "reset-all":
+			edit("reset", () => LIMBS.forEach((l) => (row.pose[l] = defaultPose())));
+			break;
+		case "copy-prev": {
+			const prev = dance.rows.slice(0, selRow).reverse().find((r) => r.type === "frame");
+			if (!prev) return;
+			edit("copy", () => {
+				row.pose = clone(prev.pose);
+				for (const [k] of DIR_KEYS) row[k] = prev[k];
+			});
+			break;
+		}
+	}
+});
+inspector.addEventListener("input", (e) => {
+	const t = e.target;
+	const row = dance.rows[selRow];
+	if (t.id === "f-time") {
+		const v = Number(t.value);
+		if (t.value === "" || !Number.isFinite(v) || v < 0) return;
+		edit("time", () => (row.time = round3(v)));
+	} else if (t.id === "f-animate") {
+		edit("animate", () => (row.animate = t.checked));
+	} else if (t.id === "r-frames") {
+		const frames = t.value.split(/[\s,]+/).filter(Boolean).map(Number).filter(Number.isFinite).map(Math.trunc);
+		edit("repeat", () => (row.frames = frames));
+	} else if (t.dataset.key) {
+		const v = Number(t.value);
+		if (t.value === "" || t.value === "-" || !Number.isFinite(v)) return;
+		edit("pose-" + limb + "-" + t.dataset.key, () => (row.pose[limb][t.dataset.key] = round3(v)));
+	}
+});
+inspector.addEventListener("change", (e) => {
+	if (e.target.id === "f-animate") return;
+	lastEditKind = null;
+	syncInspector();
+});
+
+$("#dance-name").addEventListener("input", (e) => edit("name", () => (dance.name = e.target.value.trim())));
+$("#dance-text").addEventListener("input", (e) => edit("text", () => (dance.emote_text = e.target.value)));
+$("#dance-section").addEventListener("change", (e) => edit("section", () => (dance.section = e.target.value)));
+$("#library").addEventListener("change", (e) => {
+	const [section, i] = e.target.value.split(":");
+	e.target.value = "";
+	if (!section) return;
+	loadDance(danceFromJson(library[section][Number(i)], section));
+});
+$("#new-dance").addEventListener("click", () => {
+	const d = { section: "random_dances", name: "my_dance", emote_text: "busts a move!", rows: [newFrame(0), newFrame(5)] };
+	d.rows[1].pose.arm_l.rotation = -60;
+	d.rows[1].pose.arm_r.rotation = 60;
+	d.rows.push(newFrame(5));
+	loadDance(d);
+	$("#import-status").textContent = "Started a new dance.";
+});
+
+$("#import").addEventListener("click", () => {
+	const status = $("#import-status");
+	let data;
+	try {
+		data = JSON.parse($("#import-text").value);
+	} catch (err) {
+		status.textContent = "That isn't valid JSON: " + err.message + ". Check for a missing comma or a trailing comma.";
+		return;
+	}
+	if (data && SECTIONS.some((s) => Array.isArray(data[s]))) {
+		library = { emotes: data.emotes || [], random_dances: data.random_dances || [], secret_dances: data.secret_dances || [] };
+		renderLibrary();
+		const count = SECTIONS.reduce((n, s) => n + library[s].length, 0);
+		status.textContent = "Loaded " + count + " dances into the Open list.";
+		renderExport();
+		saveDraft();
+		return;
+	}
+	const one = Array.isArray(data) ? data[0] : data;
+	if (!one || !Array.isArray(one.keyframes)) {
+		status.textContent = "Paste either one dance (an object with \"keyframes\") or a whole dances.json.";
+		return;
+	}
+	let section = "random_dances";
+	for (const s of SECTIONS) if (library[s].some((d) => String(d.name).toLowerCase() === String(one.name).toLowerCase())) section = s;
+	loadDance(danceFromJson(one, section));
+	status.textContent = "Loaded “" + dance.name + "”.";
+});
+
+$("#copy").addEventListener("click", async () => {
+	const out = $("#out");
+	const status = $("#copy-status");
+	try {
+		await navigator.clipboard.writeText(out.value);
+		status.textContent = "Copied.";
+	} catch (err) {
+		out.focus();
+		out.select();
+		status.textContent = "Couldn't reach the clipboard. The text is selected, so press Ctrl+C.";
+	}
+});
+
+/* timeline scrubbing */
+const scrub = $("#scrub");
+function scrubTo(clientX) {
+	if (tl.total <= 0) return;
+	const rect = scrub.getBoundingClientRect();
+	T = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * tl.total;
+	playing = false;
+	pinned = false;
+	ended = false;
+	const { idx } = locate(T);
+	if (idx >= 0) {
+		const s = tl.segs[idx];
+		const row = s.via !== s.src ? s.via : s.src;
+		if (row !== selRow) {
+			selRow = row;
+			renderList();
+			renderScrub();
+			renderInspector();
+		}
+	}
+	dirty = true;
+}
+scrub.addEventListener("pointerdown", (e) => {
+	scrub.setPointerCapture(e.pointerId);
+	scrubTo(e.clientX);
+});
+scrub.addEventListener("pointermove", (e) => {
+	if (scrub.hasPointerCapture(e.pointerId)) scrubTo(e.clientX);
+});
+scrub.addEventListener("keydown", (e) => {
+	if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+	e.preventDefault();
+	const next = Math.max(0, Math.min(dance.rows.length - 1, selRow + (e.key === "ArrowRight" ? 1 : -1)));
+	selectRow(next);
+});
+
+/* dragging limbs on the stage */
+let drag = null;
+function canvasPoint(e) {
+	const rect = stage.getBoundingClientRect();
+	return [((e.clientX - rect.left) * stage.width) / rect.width, ((e.clientY - rect.top) * stage.height) / rect.height];
+}
+stage.addEventListener("pointerdown", (e) => {
+	let row = dance.rows[selRow];
+	const [sx, sy] = canvasPoint(e);
+	playing = false;
+	if (row.type !== "frame") {
+		// Jump to the frame being shown so it can be posed.
+		const { idx } = locate(T);
+		if (idx < 0) return;
+		selRow = tl.segs[idx].src;
+		row = dance.rows[selRow];
+		renderList();
+		renderScrub();
+	}
+	pinned = true;
+	ended = false;
+	const st = currentView().st;
+	const hit = hitTest(st, sx, sy, ZOOM);
+	if (hit) limb = hit;
+	renderInspector();
+	dirty = true;
+	if (!hit) return;
+	stage.setPointerCapture(e.pointerId);
+	stage.classList.add("dragging");
+	const mode = e.shiftKey ? (dragMode === "rotate" ? "move" : "rotate") : dragMode;
+	const [jx, jy] = jointScreen(st, limb, ZOOM);
+	const parent = limb === "body" ? IDENT : st.body.M;
+	drag = {
+		mode, jx, jy, sx, sy,
+		angle: Math.atan2(sy - jy, sx - jx),
+		start: clone(row.pose[limb]),
+		flip: parent.a * parent.e - parent.b * parent.d < 0 ? -1 : 1,
+		parentInv: invert({ a: parent.a, b: parent.b, c: 0, d: parent.d, e: parent.e, f: 0 }),
+	};
+	lastEditKind = null;
+});
+stage.addEventListener("pointermove", (e) => {
+	if (!drag) return;
+	const [sx, sy] = canvasPoint(e);
+	const row = dance.rows[selRow];
+	if (drag.mode === "rotate") {
+		let delta = Math.atan2(sy - drag.jy, sx - drag.jx) - drag.angle;
+		while (delta > Math.PI) delta -= 2 * Math.PI;
+		while (delta < -Math.PI) delta += 2 * Math.PI;
+		let rot = drag.start.rotation + drag.flip * (delta * 180) / Math.PI;
+		while (rot > 180) rot -= 360;
+		while (rot < -180) rot += 360;
+		edit("drag-rotate", () => (row.pose[limb].rotation = Math.round(rot)));
+	} else {
+		const [dx, dy] = apply(drag.parentInv, (sx - drag.sx) / ZOOM, -(sy - drag.sy) / ZOOM);
+		edit("drag-move", () => {
+			row.pose[limb].offset_x = Math.round(drag.start.offset_x + dx);
+			row.pose[limb].offset_y = Math.round(drag.start.offset_y + dy);
+		});
+	}
+});
+function endDrag() {
+	if (!drag) return;
+	drag = null;
+	lastEditKind = null;
+	stage.classList.remove("dragging");
+}
+stage.addEventListener("pointerup", endDrag);
+stage.addEventListener("pointercancel", endDrag);
+
+document.addEventListener("keydown", (e) => {
+	const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+	if ((e.ctrlKey || e.metaKey) && !typing && e.key.toLowerCase() === "z") {
+		e.preventDefault();
+		if (e.shiftKey) redo();
+		else undo();
+	} else if ((e.ctrlKey || e.metaKey) && !typing && e.key.toLowerCase() === "y") {
+		e.preventDefault();
+		redo();
+	} else if (e.key === " " && !typing && !document.activeElement.closest("#kf-list, button")) {
+		e.preventDefault();
+		play();
+	}
+});
+
+/* ---------- start ---------- */
+
+(function init() {
+	const draft = store.get(DRAFT_KEY);
+	if (draft && draft.library && SECTIONS.every((s) => Array.isArray(draft.library[s]))) library = draft.library;
+	if (draft) {
+		if (LIMBS.includes(draft.limb)) limb = draft.limb;
+		if (typeof draft.loop === "boolean") loop = draft.loop;
+		if (typeof draft.onion === "boolean") onion = draft.onion;
+		if ([0.25, 0.5, 1, 2].includes(draft.speed)) speed = draft.speed;
+	}
+	$("#loop").checked = loop;
+	$("#onion").checked = onion;
+	$("#speed").value = String(speed);
+	renderLibrary();
+	if (draft && draft.dance && Array.isArray(draft.dance.rows) && draft.dance.rows.length) {
+		loadDance(draft.dance);
+	} else {
+		loadDance(danceFromJson(DEFAULT_LIBRARY.random_dances[1], "random_dances"));
+	}
+	requestAnimationFrame(tick);
+})();
+</script>
