@@ -280,8 +280,17 @@
 	if (hitscan)
 		generate_hitscan_tracers()
 	STOP_PROCESSING(SSprojectiles, src)
+	if(last_tick_turf)
+		UnregisterSignal(last_tick_turf, COMSIG_ATOM_ENTERED)
+		last_tick_turf = null
+	if(firer)
+		UnregisterSignal(firer, COMSIG_QDELETING)
+	if(original)
+		UnregisterSignal(original, COMSIG_QDELETING)
 	firer = null
+	fired_from = null
 	original = null
+	impacted = null
 	QDEL_NULL(embed_data)
 	if (movement_vector)
 		QDEL_NULL(movement_vector)

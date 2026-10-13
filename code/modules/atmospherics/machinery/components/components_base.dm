@@ -339,13 +339,14 @@
 	var/turf/local_turf = get_turf(src)
 	for(var/i in 1 to device_type)
 		var/datum/gas_mixture/air = airs[i]
-		if(!nodes[i] || (istype(nodes[i], /obj/machinery/atmospherics/components/unary/portables_connector) && !portable_device_connected(i)))
+		var/datum/pipeline/parent = parents[i]
+		if(!nodes[i] || !parent || !parent.air || (istype(nodes[i], /obj/machinery/atmospherics/components/unary/portables_connector) && !portable_device_connected(i)))
 			if(!to_release)
 				to_release = air
 				continue
 			to_release.merge(air)
 			continue
-		var/datum/gas_mixture/parents_air = parents[i].air
+		var/datum/gas_mixture/parents_air = parent.air
 		parents_air.merge(air)
 	if(to_release)
 		local_turf.assume_air(to_release)
