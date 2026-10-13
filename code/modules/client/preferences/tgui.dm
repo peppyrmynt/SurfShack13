@@ -95,3 +95,10 @@
 
 	INVOKE_ASYNC(client, TYPE_VERB_REF(/client, refresh_tgui))
 	client.tgui_say?.load()
+
+/// Use the Bible-style paginated radial menu for image emotes.
+/datum/preference/toggle/compact_emote_wheel
+	category = PREFERENCE_CATEGORY_GAME_PREFERENCES
+	savefile_key = "compact_emote_wheel"
+	savefile_identifier = PREFERENCE_PLAYER
+	default_value = FALSE
