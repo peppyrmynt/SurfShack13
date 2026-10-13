@@ -132,6 +132,7 @@
 					/obj/item/clothing/suit/hooded/ian_costume,
 					/obj/item/clothing/suit/hooded/carp_costume,
 					/obj/item/clothing/suit/hooded/bee_costume,
+					/obj/item/clothing/suit/hooded/hotdog_costume,
 				)
 	crate_name = "original costume crate"
 	crate_type = /obj/structure/closet/crate/wooden
