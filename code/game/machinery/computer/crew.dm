@@ -218,7 +218,7 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 
 		// Do they have monitoring nanites?
 		var/nanite_sensors = FALSE
-		if(tracked_human in SSnanites.nanite_monitored_mobs)
+		if(tracked_living_mob in SSnanites.nanite_monitored_mobs)
 			nanite_sensors = TRUE
 
 		// Check they have a uniform
@@ -228,11 +228,14 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 			continue
 
 		// Check if their uniform is in a compatible mode. OR if they have monitoring nanites, if they have monitoring nanites, then continue.
-		if((uniform.has_sensor == NO_SENSORS || !uniform.sensor_mode) && !nanite_sensors)
-			stack_trace("Human without active suit sensors is in suit_sensors_list: [tracked_human] ([tracked_human.type]) ([uniform.type])")
-			continue
+		if(!isnull(uniform))
+			if((uniform.has_sensor == NO_SENSORS || !uniform.sensor_mode) && !nanite_sensors)
+				stack_trace("Human without active suit sensors is in suit_sensors_list: [tracked_human] ([tracked_human.type]) ([uniform.type])")
+				continue
 
-		var/sensor_mode = uniform.sensor_mode
+		var/sensor_mode = null
+		if(!isnull(uniform))
+			sensor_mode = uniform.sensor_mode
 
 		// The entry for this human
 		var/list/entry = list(
@@ -251,35 +254,54 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 				entry["ijob"] = jobs[trim_assignment]
 
 		// Broken sensors show garbage data
-		if (uniform.has_sensor == BROKEN_SENSORS && !nanite_sensors)
-			entry["life_status"] = rand(0,1)
-			entry["area"] = pick_list (ION_FILE, "ionarea")
-			entry["oxydam"] = rand(0,175)
-			entry["toxdam"] = rand(0,175)
-			entry["burndam"] = rand(0,175)
-			entry["brutedam"] = rand(0,175)
-			entry["health"] = -50
-			entry["can_track"] = tracked_living_mob.can_track()
-			results[++results.len] = entry
-			continue
+		if(!isnull(uniform))
+			if (uniform.has_sensor == BROKEN_SENSORS && !nanite_sensors)
+				entry["life_status"] = rand(0,1)
+				entry["area"] = pick_list (ION_FILE, "ionarea")
+				entry["oxydam"] = rand(0,175)
+				entry["toxdam"] = rand(0,175)
+				entry["burndam"] = rand(0,175)
+				entry["brutedam"] = rand(0,175)
+				entry["health"] = -50
+				entry["can_track"] = tracked_living_mob.can_track()
+				results[++results.len] = entry
+				continue
 
 		// Current status
-		if (sensor_mode >= SENSOR_LIVING || nanite_sensors)
-			entry["life_status"] = tracked_living_mob.stat
+		if(!isnull(uniform))
+			if (sensor_mode >= SENSOR_LIVING || nanite_sensors)
+				entry["life_status"] = tracked_living_mob.stat
+		else
+			if(nanite_sensors)
+				entry["life_status"] = tracked_living_mob.stat
 
 		// Damage
-		if (sensor_mode >= SENSOR_VITALS || nanite_sensors)
-			entry += list(
-				"oxydam" = round(tracked_living_mob.getOxyLoss(), 1),
-				"toxdam" = round(tracked_living_mob.getToxLoss(), 1),
-				"burndam" = round(tracked_living_mob.getFireLoss(), 1),
-				"brutedam" = round(tracked_living_mob.getBruteLoss(), 1),
-				"health" = round(tracked_living_mob.health, 1),
-			)
+		if(!isnull(uniform))
+			if (sensor_mode >= SENSOR_VITALS || nanite_sensors)
+				entry += list(
+					"oxydam" = round(tracked_living_mob.getOxyLoss(), 1),
+					"toxdam" = round(tracked_living_mob.getToxLoss(), 1),
+					"burndam" = round(tracked_living_mob.getFireLoss(), 1),
+					"brutedam" = round(tracked_living_mob.getBruteLoss(), 1),
+					"health" = round(tracked_living_mob.health, 1),
+				)
+		else
+			if(nanite_sensors)
+				entry += list(
+					"oxydam" = round(tracked_living_mob.getOxyLoss(), 1),
+					"toxdam" = round(tracked_living_mob.getToxLoss(), 1),
+					"burndam" = round(tracked_living_mob.getFireLoss(), 1),
+					"brutedam" = round(tracked_living_mob.getBruteLoss(), 1),
+					"health" = round(tracked_living_mob.health, 1),
+				)
 
 		// Location
-		if (sensor_mode >= SENSOR_COORDS || nanite_sensors)
-			entry["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
+		if(!isnull(uniform))
+			if (sensor_mode >= SENSOR_COORDS || nanite_sensors)
+				entry["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
+		else
+			if(nanite_sensors)
+				entry["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
 
 		// Trackability
 		entry["can_track"] = tracked_living_mob.can_track()
