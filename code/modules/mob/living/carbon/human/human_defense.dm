@@ -281,7 +281,7 @@
 	var/obj/item/organ/ears/ears = get_organ_slot(ORGAN_SLOT_EARS)
 	switch (severity)
 		if (EXPLODE_DEVASTATE)
-			if(bomb_armor < EXPLODE_GIB_THRESHOLD) //gibs the mob if their bomb armor is lower than EXPLODE_GIB_THRESHOLD
+			if(bomb_armor < EXPLODE_GIB_THRESHOLD && !HAS_TRAIT(src, TRAIT_BOMBGIBIMMUNE)) //gibs the mob if their bomb armor is lower than EXPLODE_GIB_THRESHOLD
 				for(var/thing in contents)
 					switch(severity)
 						if(EXPLODE_DEVASTATE)

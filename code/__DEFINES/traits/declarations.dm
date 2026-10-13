@@ -131,6 +131,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_RESISTLOWPRESSURE "resist_low_pressure"
 /// This human is immune to the effects of being exploded. (ex_act)
 #define TRAIT_BOMBIMMUNE "bomb_immunity"
+/// This human cannot be gibbed from any explosions. (ex_act)
+#define TRAIT_BOMBGIBIMMUNE "bomb_gib_immunity"
 /// This mob won't get gibbed by nukes going off
 #define TRAIT_NUKEIMMUNE "nuke_immunity"
 /// Can't be given viruses
