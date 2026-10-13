@@ -201,16 +201,6 @@
 /datum/component/nanites/proc/add_program(datum/source, datum/nanite_program/new_program, datum/nanite_program/source_program)
 	SIGNAL_HANDLER
 
-	if(istype(new_program, /datum/nanite_program/protocol))
-		var/datum/nanite_program/protocol/protocol_nanite = new_program
-		for(var/datum/nanite_program/protocol/other_protocols as anything in protocols)
-			//skip over the same type so it continues on to delete it later.
-			if(other_protocols.type != new_program.type)
-				continue
-			if(other_protocols.protocol_class != protocol_nanite.protocol_class)
-				continue
-			return COMPONENT_PROGRAM_NOT_INSTALLED
-
 	for(var/datum/nanite_program/all_program as anything in programs)
 		if(!all_program.unique || all_program.type != new_program.type)
 			continue
