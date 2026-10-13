@@ -7,19 +7,28 @@ const GAIN_SCALE_FACTOR = 50; // Slider 0-100 maps to gain 0-2
 // Global State
 let socket;
 let localStream = null;
+let rawMicTrack = null; // the real microphone, localStream only holds the gain-adjusted copy
 let peerConnections = new Map();
 let audioElements = new Map();
 let audioSenders = new Map();
 let distances = new Map();
+// one-way pairs from the server: 'listen' = I only hear them (I'm a ghost listening to the living),
+// 'talk' = they only hear me, their audio stays silent here
+let peerModes = new Map();
 let mutedUsers = new Map();
 let gainNode = null;
+let gainAudioContext = null;
 let vadAudioContext = null;
 let vadAnalyser = null;
 let vadSource = null;
+let vadTimer = null;
 let isVoiceActive = false;
 let lastActiveTime = 0;
 let isDeafened = false;
 let isManuallyMuted = false;
+let mutedBeforeDeafen = false;
+let micError = null; // shown instead of "connected" while we have no microphone
+let micAttempted = false; // once true we join voice, with or without a mic (listen-only)
 let isMicTesting = false;
 let previousDeafenedState = false;
 let testAudioContext = null;
@@ -34,15 +43,40 @@ const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get('sessionId');
 const socket_address = urlParams.get('socket_address');
 
-const ICE_SERVERS = [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' },
-    { urls: `turn:${window.location.hostname}:3478`,
+// The page itself is served by the local byond client (127.0.0.1), so the game server's
+// address has to come from socket_address, not window.location.
+function getServerHost() {
+    try {
+        const addr = /^[a-z]+:\/\//i.test(socket_address) ? socket_address : `http://${socket_address}`;
+        return new URL(addr).hostname;
+    } catch (e) {
+        return window.location.hostname;
+    }
+}
+const SERVER_HOST = getServerHost();
+
+// google STUN is blocked or throttled in some countries, so it only goes last as a fallback
+const FALLBACK_STUN = { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] };
+
+// the game server's own STUN/TURN, replaced by whatever the server sends on join ('ice_servers')
+let ICE_SERVERS = [
+    { urls: `stun:${SERVER_HOST}:3478` },
+    { urls: `turn:${SERVER_HOST}:3478?transport=udp`,
         credential: sessionId,
         username: sessionId,
-    }
-]
+    },
+    FALLBACK_STUN,
+];
+
+function setIceServers(servers) {
+    if (!Array.isArray(servers) || !servers.length) return;
+    const withHost = (url) => url.replace('{host}', SERVER_HOST);
+    ICE_SERVERS = servers.map(server => ({
+        ...server,
+        urls: Array.isArray(server.urls) ? server.urls.map(withHost) : withHost(server.urls),
+    }));
+    ICE_SERVERS.push(FALLBACK_STUN);
+}
 
 function toggleDarkMode() {
 	darkMode = !darkMode;
@@ -86,32 +120,76 @@ function updateStatus(message) {
     document.getElementById('status').innerText = message;
 }
 
+// Browsers can start audio suspended until the user clicks the page, which silently
+// kills both the outgoing mic (gain node) and voice activity detection.
+function resumeAudio() {
+    let blocked = false;
+    [gainAudioContext, vadAudioContext].forEach(ctx => {
+        if (ctx && ctx.state === 'suspended') {
+            ctx.resume().catch(() => {});
+            blocked = true;
+        }
+    });
+    audioElements.forEach(audio => {
+        if (audio.paused && audio.srcObject) {
+            audio.play().catch(() => {});
+            blocked = true;
+        }
+    });
+    return blocked;
+}
+
+function checkAudioBlocked() {
+    const suspended = [gainAudioContext, vadAudioContext].some(ctx => ctx && ctx.state === 'suspended');
+    if (suspended) updateStatus('Click anywhere on this page to enable audio');
+}
+
+// localStream.getTracks() misses the real microphone track (it's swapped for the gain output),
+// so stopping only those left the old mic captured after switching devices.
+function stopLocalStream() {
+    if (localStream) localStream.getTracks().forEach(track => track.stop());
+    if (rawMicTrack) rawMicTrack.stop();
+    localStream = null;
+    rawMicTrack = null;
+}
+
 // Audio Device Management
 async function populateDevices() {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const audioInputs = devices.filter(device => device.kind === 'audioinput');
     const audioOutputs = devices.filter(device => device.kind === 'audiooutput');
 
-    const inputSelect = document.getElementById('audioInput');
-    inputSelect.innerHTML = audioInputs.map(device =>
-        `<option value="${device.deviceId}" ${device.deviceId === 'default' ? 'selected' : ''}>${device.label || 'Default Input'}</option>`
-    ).join('');
+    // keep the chosen devices selected when the list refreshes (e.g. a headset is plugged in)
+    fillDeviceSelect(document.getElementById('audioInput'), audioInputs, rawMicTrack && rawMicTrack.getSettings().deviceId, 'Default Input');
+    fillDeviceSelect(document.getElementById('audioOutput'), audioOutputs, sinkId, 'Default Output');
+}
 
-    const outputSelect = document.getElementById('audioOutput');
-    outputSelect.innerHTML = audioOutputs.map(device =>
-        `<option value="${device.deviceId}" ${device.deviceId === 'default' ? 'selected' : ''}>${device.label || 'Default Output'}</option>`
-    ).join('');
+function fillDeviceSelect(select, devices, currentId, fallbackLabel) {
+    select.innerHTML = '';
+    devices.forEach(device => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.textContent = device.label || fallbackLabel;
+        select.appendChild(option);
+    });
+    const ids = devices.map(device => device.deviceId);
+    select.value = ids.includes(currentId) ? currentId : (ids.includes('default') ? 'default' : (ids[0] || ''));
 }
 
 async function handleInputChange(event) {
     const deviceId = event.target.value;
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
+    let stream;
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            audio: { deviceId: { exact: deviceId }, echoCancellation: true, noiseSuppression: true }
+        });
+    } catch (err) {
+        console.error('Failed to switch microphone:', err);
+        updateStatus('Could not use that microphone');
+        return;
     }
-
-    localStream = await navigator.mediaDevices.getUserMedia({
-        audio: { deviceId: { exact: deviceId } }
-    });
+    stopLocalStream();
+    localStream = stream;
 
     setupGainNode(localStream);
     setupVoiceActivityDetection();
@@ -126,21 +204,34 @@ async function handleInputChange(event) {
 async function handleOutputChange(event) {
     sinkId = event.target.value;
     audioElements.forEach(audio => {
-        audio.setSinkId(sinkId);
+        audio.setSinkId(sinkId).catch(err => console.error('setSinkId failed:', err));
     });
 }
 
 // Microphone Access
 async function getMic() {
     try {
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        await populateDevices();
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: true, noiseSuppression: true }
+        });
+        stopLocalStream();
+        localStream = stream;
         setupGainNode(localStream);
+        await populateDevices();
         setupVoiceActivityDetection();
-        socket.emit('mic_access_granted');
+        updateAudioSenders();
+        if (micError) updateStatus(socket.connected ? 'Connected successfully' : 'Connecting...');
+        micError = null;
+        checkAudioBlocked();
     } catch (err) {
         console.error('Failed to get microphone access:', err);
+        // no mic: still join and listen. Others can't hear us until a mic works.
+        micError = `Listening only: microphone blocked or missing (${err.name}). Click "try microphone again" to talk`;
+        updateStatus(micError);
     }
+    micAttempted = true;
+    // tells the game we're ready for voice. If not connected yet, the 'connect' handler sends it.
+    if (socket.connected) socket.emit('mic_access_granted');
 }
 // Gain and Volume Control
 function setupGainNode(stream) {
@@ -150,7 +241,10 @@ function setupGainNode(stream) {
         return;
     }
 
+    if (gainAudioContext) gainAudioContext.close();
     const ctx = new AudioContext();
+    gainAudioContext = ctx;
+    rawMicTrack = audioTrack;
     const src = ctx.createMediaStreamSource(new MediaStream([audioTrack]));
     const dst = ctx.createMediaStreamDestination();
     gainNode = ctx.createGain();
@@ -184,7 +278,7 @@ function updateSensitivity() {
 function updateVolumes() {
     const masterVolume = document.getElementById('volume_slider').value ;
     audioElements.forEach((audio, userCode) => {
-        const isMuted = mutedUsers.get(userCode);
+        const isMuted = mutedUsers.get(userCode) || peerModes.get(userCode) === 'talk';
         if(!isMuted){
             const dist = distances.get(userCode) || 0;
             const linearBase = Math.max(0, 1 - dist / 10);
@@ -199,69 +293,137 @@ function updateVolumes() {
 }
 
 // Voice Activity Detection (VAD)
+// Measures mic loudness inside the audio engine. Timers and animation frames get slowed or
+// stopped when the tab is hidden (e.g. the browser behind the game window), which clipped or
+// dropped the start of speech; the audio engine keeps running at full speed.
+// Loudness is the RMS of the last 2048 samples, the same window the old AnalyserNode check used,
+// so the sensitivity slider means the same thing.
+const VAD_WORKLET_SOURCE = `
+class VoiceLevel extends AudioWorkletProcessor {
+    constructor() {
+        super();
+        this.window = new Float32Array(2048); // squared samples
+        this.pos = 0;
+        this.sum = 0;
+        this.sinceReport = 0;
+    }
+    process(inputs) {
+        const channel = inputs[0] && inputs[0][0];
+        if (channel) {
+            for (let i = 0; i < channel.length; i++) {
+                const sq = channel[i] * channel[i];
+                this.sum += sq - this.window[this.pos];
+                this.window[this.pos] = sq;
+                this.pos = (this.pos + 1) % this.window.length;
+            }
+            this.sinceReport += channel.length;
+            // report roughly every 20ms
+            if (this.sinceReport >= sampleRate / 50) {
+                this.sinceReport = 0;
+                this.port.postMessage(Math.sqrt(Math.max(0, this.sum) / this.window.length));
+            }
+        }
+        return true;
+    }
+}
+registerProcessor('voice-level', VoiceLevel);
+`;
+let vadMode = null; // 'worklet' or 'timer', for troubleshooting
+
 function setupVoiceActivityDetection() {
+    if (vadTimer) {
+        clearInterval(vadTimer);
+        vadTimer = null;
+    }
     if (vadAudioContext) {
         vadAudioContext.close();
     }
 
-    vadAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-    vadSource = vadAudioContext.createMediaStreamSource(localStream);
-    vadAnalyser = vadAudioContext.createAnalyser();
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    vadAudioContext = ctx;
+    vadSource = ctx.createMediaStreamSource(localStream);
+
+    startWorkletVad(ctx).catch(err => {
+        if (vadAudioContext !== ctx) return; // replaced meanwhile (mic switched)
+        console.warn('AudioWorklet voice detection unavailable, using a timer:', err);
+        startTimerVad(ctx);
+    });
+}
+
+async function startWorkletVad(ctx) {
+    if (!ctx.audioWorklet || typeof AudioWorkletNode === 'undefined') throw new Error('AudioWorklet not supported');
+    const url = URL.createObjectURL(new Blob([VAD_WORKLET_SOURCE], { type: 'application/javascript' }));
+    try {
+        await ctx.audioWorklet.addModule(url);
+    } finally {
+        URL.revokeObjectURL(url);
+    }
+    if (vadAudioContext !== ctx) return;
+    const node = new AudioWorkletNode(ctx, 'voice-level', { numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [1] });
+    // connected to the output through a silent gain so the browser keeps running it
+    const silent = ctx.createGain();
+    silent.gain.value = 0;
+    vadSource.connect(node);
+    node.connect(silent);
+    silent.connect(ctx.destination);
+    node.port.onmessage = (event) => {
+        if (vadAudioContext === ctx) handleMicLevel(event.data);
+    };
+    vadMode = 'worklet';
+}
+
+// fallback for browsers without AudioWorklet: the previous timer-based check
+function startTimerVad(ctx) {
+    vadAnalyser = ctx.createAnalyser();
     vadAnalyser.fftSize = 2048;
     const bufferLength = vadAnalyser.frequencyBinCount;
     const dataArray = new Float32Array(bufferLength);
-
     vadSource.connect(vadAnalyser);
-
-    function getRMS() {
+    vadTimer = setInterval(() => {
         vadAnalyser.getFloatTimeDomainData(dataArray);
         let sum = 0;
         for (let i = 0; i < bufferLength; i++) {
             sum += dataArray[i] * dataArray[i];
         }
-        return Math.sqrt(sum / bufferLength);
+        handleMicLevel(Math.sqrt(sum / bufferLength));
+    }, 30);
+    vadMode = 'timer';
+}
+
+function handleMicLevel(rms) {
+    const now = Date.now();
+
+    const indicator = document.getElementById('mic_test_visual_indicator');
+    if (indicator) {
+        const level = Math.min(1, rms / 0.5) * 100;
+        const detected = rms > volumeThreshold;
+        indicator.style.backgroundColor = detected ? 'green' : 'grey';
+        indicator.style.width = `${level}%`;
     }
 
-    function monitorAudio() {
-        const rms = getRMS();
-        const now = Date.now();
-
-        const indicator = document.getElementById('mic_test_visual_indicator');
-        if (indicator) {
-            const level = Math.min(1, rms / 0.5) * 100;
-            const detected = rms > volumeThreshold;
-            indicator.style.backgroundColor = detected ? 'green' : 'grey';
-            indicator.style.width = `${level}%`;
-        }
-
-        if (!isManuallyMuted) {
-            if (rms > volumeThreshold) {
-                lastActiveTime = now;
-                if (!isVoiceActive) {
-                    isVoiceActive = true;
-                    handleVoiceActivityChange(true);
-                }
-            } else if (isVoiceActive && now - lastActiveTime > VAD_DEBOUNCE_TIME) {
-                isVoiceActive = false;
-                handleVoiceActivityChange(false);
+    if (!isManuallyMuted) {
+        if (rms > volumeThreshold) {
+            lastActiveTime = now;
+            if (!isVoiceActive) {
+                isVoiceActive = true;
+                handleVoiceActivityChange(true);
             }
-        } else {
-            if (isVoiceActive) {
-                isVoiceActive = false;
-                handleVoiceActivityChange(false);
-            }
+        } else if (isVoiceActive && now - lastActiveTime > VAD_DEBOUNCE_TIME) {
+            isVoiceActive = false;
+            handleVoiceActivityChange(false);
         }
-
-        requestAnimationFrame(monitorAudio);
+    } else {
+        if (isVoiceActive) {
+            isVoiceActive = false;
+            handleVoiceActivityChange(false);
+        }
     }
-
-    monitorAudio();
 }
 
 function handleVoiceActivityChange(active) {
     const voiceStatus = document.getElementById('voice_activity_status');
     voiceStatus.classList = active ? 'active' : '';
-    socket.emit('voice_activity', { active });
+    if (socket) socket.emit('voice_activity', { active });
     updateAudioSenders();
 }
 
@@ -270,17 +432,20 @@ function updateAudioSenders() {
     if (!localStream) return;
     const shouldSend = !isManuallyMuted && !isDeafened && isVoiceActive;
     const track = shouldSend ? localStream.getAudioTracks()[0] : null;
-    audioSenders.forEach(sender => {
-        sender.replaceTrack(track);
+    audioSenders.forEach((sender, userCode) => {
+        const peerTrack = peerModes.get(userCode) === 'listen' ? null : track;
+        if (sender.track === peerTrack) return;
+        sender.replaceTrack(peerTrack).catch(err => console.error('replaceTrack failed:', err));
     });
 }
 
 function toggleMute(forceMute = false) {
-    if (!localStream) return;
     if (isDeafened && !forceMute) {
+        mutedBeforeDeafen = false; // clicking mute while deafened means "let me talk again"
         toggleDeafen();
         return;
     }
+    if (!localStream) return;
     isManuallyMuted = forceMute ? true : !isManuallyMuted;
     if (isManuallyMuted && isVoiceActive) {
         isVoiceActive = false;
@@ -291,9 +456,11 @@ function toggleMute(forceMute = false) {
 }
 
 function toggleDeafen(forceDeafen = false) {
-    if (!localStream) return;
+    const wasDeafened = isDeafened;
     isDeafened = forceDeafen ? true : !isDeafened;
-    isManuallyMuted = isDeafened;
+    // undeafening puts mute back to how it was, instead of always unmuting
+    if (isDeafened && !wasDeafened) mutedBeforeDeafen = isManuallyMuted;
+    isManuallyMuted = isDeafened ? true : mutedBeforeDeafen;
     audioElements.forEach(audio => {
         audio.muted = isDeafened;
     });
@@ -348,41 +515,47 @@ function toggleMicTest() {
 
 // Peer Connection Management
 function createPeerConnection(userCode, sendOffer) {
+    removePeer(userCode); // never leave an old connection behind
     const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
     peerConnections.set(userCode, pc);
 
     const audio = document.createElement('audio');
     audio.autoplay = true;
-    if (sinkId) audio.setSinkId(sinkId);
+    if (sinkId) audio.setSinkId(sinkId).catch(err => console.error('setSinkId failed:', err));
     audio.muted = isDeafened;
-    audio.volume = document.getElementById('volume_slider').value;
+    audio.volume = peerModes.get(userCode) === 'talk' ? 0 : document.getElementById('volume_slider').value;
     document.body.appendChild(audio);
     audioElements.set(userCode, audio);
 
-    if (localStream) {
-        const track = localStream.getAudioTracks()[0];
-        const sender = pc.addTrack(track, localStream);
-        audioSenders.set(userCode, sender);
-        updateAudioSenders(); // Apply current state
+    const track = localStream ? localStream.getAudioTracks()[0] : null;
+    if (track) {
+        audioSenders.set(userCode, pc.addTrack(track, localStream));
+    } else if (sendOffer) {
+        // always offer an audio line, even without a mic yet, so we can still hear the other side
+        audioSenders.set(userCode, pc.addTransceiver('audio', { direction: 'sendrecv' }).sender);
     }
-
-    let iceCandidates = [];
+    updateAudioSenders(); // Apply current state
 
     pc.onicecandidate = (event) => {
         if (event.candidate) {
-            iceCandidates.push(event.candidate);
             socket.emit('ice-candidate', { to: userCode, candidate: event.candidate });
         }
     };
-    pc.oniceconnectionstatechange = () => {
-        const state = pc.iceConnectionState;
-        if (state === 'failed') {
-            socket.emit('ice_failed')
-            updateStatus('a peer connection failed, view console error for more info')
+    pc.onconnectionstatechange = () => {
+        if (peerConnections.get(userCode) !== pc) return;
+        if (pc.connectionState === 'failed') {
+            console.error(`connection to ${userCode} failed, rebuilding`);
+            socket.emit('ice_failed');
+            updateStatus('a peer connection failed, retrying...');
+            // the server resets both ends and they reconnect on the next location update
+            socket.emit('peer_failed', { userCode });
+        } else if (pc.connectionState === 'connected') {
+            updateStatus(micError || 'Connected successfully');
         }
     };
     pc.ontrack = (event) => {
-        audio.srcObject = event.streams[0];
+        audio.srcObject = event.streams[0] || new MediaStream([event.track]);
+        audio.play().catch(() => checkAudioBlocked());
     };
 
     if (sendOffer) {
@@ -398,11 +571,6 @@ function createPeerConnection(userCode, sendOffer) {
     return pc;
 }
 
-addEventListener("icecandidateerror", (event) => {
-    updateStatus('peer connection failed, view console for details')
-    socket.emit('ice_failed', {event})
- })
-
 function removePeer(userCode) {
     const pc = peerConnections.get(userCode);
     if (pc) {
@@ -416,23 +584,28 @@ function removePeer(userCode) {
     }
     audioSenders.delete(userCode);
     distances.delete(userCode);
+    if (peerConnections.size === 0) toggleRoomStatus(false);
 }
 
 // Socket Event Handlers
 function setupSocketHandlers() {
     socket.on('update', (update) => {
         if (update.type === 'status') {
-            updateStatus(update.data);
+            const connectedMsg = typeof update.data === 'string' && update.data.startsWith('Connected');
+            updateStatus(micError && connectedMsg ? micError : update.data);
         }
     });
 
     socket.on('loc', (data) => {
         if (data.none === 1) {
             Array.from(peerConnections.keys()).forEach(removePeer);
+            peerModes.clear();
             toggleRoomStatus(false);
         } else {
             const peers = data['peers']
             const myUserCode = data['own']
+            // set before creating connections so new ones start with the right direction
+            peerModes = new Map(Object.entries(data['modes'] || {}));
             const newUserCodes = new Set(Object.keys(peers));
             const currentUserCodes = new Set(peerConnections.keys());
 
@@ -448,14 +621,40 @@ function setupSocketHandlers() {
 
             distances = new Map(Object.entries(peers));
             updateVolumes();
-            toggleRoomStatus(peerConnections.size > 0);
+            updateAudioSenders();
+            // ghosts listening in don't count, the living shouldn't be able to tell they're there
+            const audible = [...peerConnections.keys()].some(code => peerModes.get(code) !== 'talk');
+            toggleRoomStatus(audible);
         }
+    });
+
+    socket.on('connect', () => {
+        // also runs after socket.io reconnects on its own, the server needs to know who we are again
+        socket.emit('join', { sessionId: sessionId });
+        if (micAttempted) socket.emit('mic_access_granted');
+    });
+
+    socket.on('ice_servers', setIceServers);
+
+    socket.on('peer-reset', (data) => {
+        if (data && data.userCode) removePeer(data.userCode);
     });
 
     socket.on('offer', (data) => {
         const { from, offer } = data;
-        const pc = peerConnections.get(from) || createPeerConnection(from, false);
+        let pc = peerConnections.get(from);
+        // an offer on a connection that already negotiated means the other side started over
+        if (!pc || pc.remoteDescription) pc = createPeerConnection(from, false);
         pc.setRemoteDescription(new RTCSessionDescription(offer))
+            .then(() => {
+                // make sure we answer with our mic on the negotiated audio line
+                const transceiver = pc.getTransceivers().find(t => t.mid !== null);
+                if (transceiver) {
+                    transceiver.direction = 'sendrecv';
+                    audioSenders.set(from, transceiver.sender);
+                    updateAudioSenders();
+                }
+            })
             .then(() => pc.createAnswer())
             .then(answer => pc.setLocalDescription(answer))
             .then(() => socket.emit('answer', { to: from, answer: pc.localDescription }))
@@ -474,7 +673,7 @@ function setupSocketHandlers() {
     socket.on('ice-candidate', (data) => {
         const { from, candidate } = data;
         const pc = peerConnections.get(from);
-        if (pc) {
+        if (pc && candidate) {
             pc.addIceCandidate(new RTCIceCandidate(candidate))
                 .catch(err => console.error('Error adding ICE candidate:', err));
         }
@@ -487,8 +686,10 @@ function setupSocketHandlers() {
     });
 
     socket.on('disconnect', (reason) => {
-        cleanupConnections();
+        // keep the mic, socket.io will reconnect and rejoin
+        closePeerConnections();
         toggleRoomStatus(false);
+        if (reason !== 'io server disconnect') updateStatus('Connection lost, reconnecting...');
     });
 
     socket.on('mute_mic', () => {
@@ -509,16 +710,13 @@ function setupSocketHandlers() {
     })
 }
 
+function closePeerConnections() {
+    Array.from(peerConnections.keys()).forEach(removePeer);
+}
+
 function cleanupConnections() {
-    peerConnections.forEach(pc => pc.close());
-    peerConnections.clear();
-    audioElements.forEach(audio => audio.remove());
-    audioElements.clear();
-    audioSenders.clear();
-    distances.clear();
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-    }
+    closePeerConnections();
+    stopLocalStream();
 }
 
 // UI Event Listeners
@@ -531,6 +729,12 @@ function setupUIListeners() {
             tooltip.innerHTML = trigger.dataset.tip;
         });
     });
+
+    // any click or key press unlocks audio if the browser blocked it
+    document.addEventListener('click', () => {
+        if (resumeAudio()) updateStatus('Audio enabled');
+    });
+    document.addEventListener('keydown', () => resumeAudio());
 
     // Buttons
 	document.getElementById('dark_mode_toggle').addEventListener('click', toggleDarkMode)
@@ -554,9 +758,6 @@ function setupUIListeners() {
     // Cleanup on unload
     window.addEventListener('unload', () => {
         if (vadAudioContext) vadAudioContext.close();
-        if (localStream) {
-            localStream.getTracks().forEach(track => track.stop());
-        }
         cleanupConnections();
     });
 }
@@ -570,8 +771,7 @@ function toggleSettings() {
 // Initialization
 async function init() {
     socket = io(socket_address, { rejectUnauthorized: false });
-    socket.emit('join', { sessionId: sessionId });
-    setupSocketHandlers();
+    setupSocketHandlers(); // joins on 'connect'
     setupUIListeners();
     await getMic();
 }

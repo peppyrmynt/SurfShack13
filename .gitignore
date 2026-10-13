@@ -258,6 +258,8 @@ __*__
 
 # Node.js-specific
 node_modules/
+# holds the coturn secret, see voicechat/COTURN.md
+voicechat/node/turn_config.json
 npm-debug.log
 package-lock.json
 

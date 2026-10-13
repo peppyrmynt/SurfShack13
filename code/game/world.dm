@@ -265,8 +265,11 @@ GLOBAL_PROTECT(tracy_init_reason)
 #endif
 
 /world/Topic(T, addr, master, key)
-	if(addr == "127.0.0.1" && SSvoicechat)
+	// voice chat's node server sends JSON. Anything else from localhost (TGS, status tools) isn't
+	// voice chat's, and json_decode would runtime on it before TGS_TOPIC ran.
+	if(addr == "127.0.0.1" && SSvoicechat && copytext(T, 1, 2) == "{")
 		SSvoicechat.handle_topic(T , addr)
+		return
 
 	TGS_TOPIC //redirect to server tools if necessary
 

@@ -17,8 +17,12 @@ function cleanUpExistingSocket(PIPE_PATH){
 
 function startByondServer(byondPort, io, shutdown_function) {
     const ByondServer = net.createServer((stream) => {
-        stream.on('data', (data) => {
-            const jsonStr = data.toString('utf-8');
+        // byond writes one message per connection, but it can arrive in several chunks
+        const chunks = [];
+        stream.on('data', (data) => chunks.push(data));
+        stream.on('end', () => {
+            const jsonStr = Buffer.concat(chunks).toString('utf-8');
+            if (!jsonStr) return;
             try {
                 const json = JSON.parse(jsonStr);
                 // console.log('Received JSON:', json);
@@ -26,11 +30,10 @@ function startByondServer(byondPort, io, shutdown_function) {
             } catch (err) {
                 console.log(jsonStr);
                 console.error('Invalid JSON:', err);
-                sendJSON({ error: 'invalid JSON', data: err }, byondPort)
+                sendJSON({ error: 'invalid JSON', data: err.message }, byondPort)
             }
         });
-        stream.on('end', () => {
-        });
+        stream.on('error', (err) => console.error('byond stream error:', err));
     });
     cleanUpExistingSocket(PIPE_PATH)
     ByondServer.listen(PIPE_PATH, () => {

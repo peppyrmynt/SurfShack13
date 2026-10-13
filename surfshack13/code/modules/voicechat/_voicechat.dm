@@ -5,7 +5,9 @@ SUBSYSTEM_DEF(voicechat)
 	wait = 3 //300 ms
 	flags = SS_KEEP_TIMING|SS_OK_TO_FAIL_INIT
 	init_order = INIT_ORDER_VOICECHAT
-	runlevels = RUNLEVEL_GAME|RUNLEVEL_POSTGAME
+	// lobby too: rejoining after a dropped connection and retrying failed connections wait for
+	// the next location update, which never came before the round started
+	runlevels = RUNLEVEL_LOBBY|RUNLEVELS_DEFAULT
 	//userCodes associated thats been fully confirmed - browser paired and mic perms on
 	var/list/vc_clients = list()
 	//userCode to clientRef
@@ -20,6 +22,11 @@ SUBSYSTEM_DEF(voicechat)
 	var/list/userCode_mob_map = alist()
 	// mob to client map, needed for tracking switched mobs
 	var/list/mob_client_map = alist()
+	/// userCodes that can't be heard (mute, miming) or can't hear (deaf). Updated by signals, see update_speech_flags
+	var/list/cant_speak_users = list()
+	var/list/cant_hear_users = list()
+	/// ckeys of players who turned off hearing the living while dead
+	var/list/ghost_hearing_optout = list()
 	// SS_INIT_NO_NEED still sets initialized to true, so we use this instead
 	var/actually_initialized = FALSE
 
@@ -41,10 +48,14 @@ SUBSYSTEM_DEF(voicechat)
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/voicechat/proc/restart()
+	if(!CONFIG_GET(flag/enable_voicechat))
+		return
 	send_ooc_announcement("Voicechat restarting in a few seconds, please reconnect with join")
 	disconnect_all_clients()
 	stop_node()
-	spawn(4 SECONDS) start_node()
+	actually_initialized = FALSE
+	spawn(4 SECONDS)
+		actually_initialized = start_node()
 
 /datum/controller/subsystem/voicechat/proc/on_ice_failed(userCode)
 	// if(!userCode)
@@ -75,6 +86,8 @@ SUBSYSTEM_DEF(voicechat)
 		disconnect_all_clients()
 		stop_node()
 		send_ooc_announcement("voicechat stopped")
+		// so the join verbs say it's off, instead of handing out links to a dead server
+		actually_initialized = FALSE
 	. = ..()
 
 /datum/controller/subsystem/voicechat/proc/disconnect_all_clients()
@@ -106,6 +119,8 @@ SUBSYSTEM_DEF(voicechat)
 
 
 /datum/controller/subsystem/voicechat/fire()
+	if(!actually_initialized)
+		return
 	send_locations()
 
 /datum/controller/subsystem/voicechat/proc/on_node_start()
@@ -184,10 +199,17 @@ SUBSYSTEM_DEF(voicechat)
 			continue
 		if(room_has_proximity[room])
 			var/turf/T = get_turf(M)
+			if(!T) // nullspace, a runtime here would stop location updates for everyone
+				continue
 			var/localroom = "[T.z]_[room]"
 			if(!packet[localroom])
 				packet[localroom] = list()
 			packet[localroom][userCode] = list(T.x, T.y)
+			// ghosts also listen in on living players near them, one way only
+			if(room == ROOM_GHOST && !(C.ckey in ghost_hearing_optout))
+				if(!packet["listeners"])
+					packet["listeners"] = list()
+				packet["listeners"][userCode] = list(T.x, T.y, T.z)
 		else
 			var/room_noprox = room + "_noprox"
 			if(!packet[room_noprox])
@@ -196,8 +218,14 @@ SUBSYSTEM_DEF(voicechat)
 
 		locs_sent ++
 
-	if(!locs_sent) //dont send empty packets
+	// still send when nobody is in a room, so node can tell clients they lost their peers
+	if(!locs_sent && !length(vc_clients))
 		return
+	// node decides per pair who hears who from these
+	if(length(cant_speak_users))
+		packet["cant_speak"] = cant_speak_users.Copy()
+	if(length(cant_hear_users))
+		packet["cant_hear"] = cant_hear_users.Copy()
 	send_json(packet)
 
 

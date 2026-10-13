@@ -1,6 +1,7 @@
 const { sendJSON } = require('./ByondCommunication');
 const { sessionIdToUserCode, userCodeToSocketId, socketIdToUserCode } = require('../state');
 const { handleLocationPacket } = require('../proximity');
+const { endSession } = require('../client/websocketHandlers');
 function handleRequest(data, byondPort, io, shutdown_function) {
     try {
         const { cmd } = data;
@@ -69,25 +70,14 @@ function handleRequest(data, byondPort, io, shutdown_function) {
                     return;
                 }
                 console.log(`userCode ${data['userCode']} disconnected from byond, cleaning up...`)
-
-                const socketId = userCodeToSocketId.get(data['userCode']);
-                const socket = io.sockets.sockets.get(socketId)
-                if (!socketId || !socket) {
-                    const errorMsg = "socket not found";
-                    console.log(`error: ${errorMsg}`);
-                    sendJSON({ error: errorMsg, data: data }, byondPort);
-                    return;
-                }
-                socket.emit('update', { type: 'status', data: 'Disconnected: Byond Client changed'});
-                socket.disconnect();
-                userCodeToSocketId.delete(data['userCode']);
-                socketIdToUserCode.delete(socketId);
+                // the browser may be mid-reconnect with no socket, the session still has to end
+                endSession(data['userCode'], io, 'Disconnected: Byond Client changed');
             },
             mute_userCode: (data) => {
                 const userCodeFiring = data['userCodeFiring'];
                 const userCodeMuting = data['userCodeMuting'];
                 const muting = data['muting']; //true if muting false if unmuting
-                if(!userCodeFiring || !userCodeMuting || !muting){
+                if(!userCodeFiring || !userCodeMuting || typeof muting === 'undefined'){
                     const errorMsg = "Missing or invalid data: userCodeFiring or userCodeMuting or muting";
                     console.log(`error: ${errorMsg}`);
                     sendJSON({ error: errorMsg, data: data }, byondPort);
@@ -101,7 +91,7 @@ function handleRequest(data, byondPort, io, shutdown_function) {
                     sendJSON({ error: errorMsg, data: data }, byondPort);
                     return;
                 }
-                socket.emit('mute_usercode', {userCode: userCodeMutin, mute: muting})
+                socket.emit('mute_usercode', {userCode: userCodeMuting, mute: !!muting})
             }
         };
 
