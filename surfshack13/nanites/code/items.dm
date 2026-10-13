@@ -239,6 +239,9 @@
 /obj/item/disk/nanite_program/resting
 	program = /datum/nanite_program/sensor/resting
 
+/obj/item/disk/nanite_program/organ_sensor
+	program = /datum/nanite_program/sensor/organ_damage
+
 /obj/item/disk/nanite_program/defib
 	program = /datum/nanite_program/defib
 
