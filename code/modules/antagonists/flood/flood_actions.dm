@@ -137,6 +137,16 @@
 	var/mob/living/basic/flood/constructor/constructor = owner
 	return constructor.become_overseer()
 
+/datum/action/cooldown/flood/become_carrier
+	name = "Become Carrier"
+	desc = "Reshape into a Flood Carrier. You will burst into infectors when you attack, release them, or die."
+	button_icon = 'icons/mob/flood/flood_carrier.dmi'
+	button_icon_state = "static"
+
+/datum/action/cooldown/flood/become_carrier/Activate(atom/target)
+	var/mob/living/basic/flood/constructor/constructor = owner
+	return constructor.become_carrier()
+
 /datum/action/cooldown/flood/grow_spores
 	name = "Grow Spore Cluster"
 	desc = "Place a spore cluster on your tile every 180 seconds."
@@ -163,16 +173,16 @@
 	StartCooldownSelf()
 	return TRUE
 
-/datum/action/cooldown/flood/create_carrier
-	name = "Create Flood Carrier"
-	desc = "Bud off a Flood Carrier every 120 seconds."
-	button_icon = 'icons/mob/flood/flood_carrier.dmi'
+/datum/action/cooldown/flood/create_infestor
+	name = "Create Flood Infector"
+	desc = "Produce one AI Flood Infector every 30 seconds."
+	button_icon = 'icons/mob/flood/flood_infection.dmi'
 	button_icon_state = "static"
-	cooldown_time = 120 SECONDS
+	cooldown_time = 30 SECONDS
 
-/datum/action/cooldown/flood/create_carrier/Activate(atom/target)
+/datum/action/cooldown/flood/create_infestor/Activate(atom/target)
 	var/mob/living/basic/flood/overseer/overseer = owner
-	if(!overseer.create_carrier())
+	if(!overseer.create_infestor())
 		return FALSE
 	StartCooldownSelf()
 	return TRUE

@@ -105,6 +105,10 @@ const guides: Record<Form, Guide> = {
         label: 'Become Overseer',
         text: 'Only one living overseer can exist at a time. After one dies, the hive must recover for four minutes before any constructor can become the new overseer.',
       },
+      {
+        label: 'Become Carrier',
+        text: 'A player-controlled constructor can reshape into a Flood Carrier, keeping control of the new body. Releasing infectors from the carrier then places you into one of the infectors.',
+      },
     ],
   },
   Overseer: {
@@ -112,7 +116,7 @@ const guides: Record<Form, Guide> = {
     entries: [
       {
         label: 'Starting an outbreak',
-        text: 'When selected from a midround ghost poll, you begin in a placement view at an existing Blob spawn point. Move around the station and press Spawn Overseer on a clear floor away from crew. That tile becomes biomass and you take control of the first Overseer. Only one Overseer can be active or choosing a spawn at a time.',
+        text: 'Flood must be enabled in your antagonist preferences, and you must be observing with ghost-role polls enabled to receive the midround offer. When selected, you begin in a placement view at an existing Blob spawn point. Move around the station and press Spawn Overseer on a clear floor away from crew. That tile becomes biomass and you take control of the first Overseer. Only one Overseer can be active or choosing a spawn at a time.',
       },
       {
         label: 'Infest Floor',
@@ -128,7 +132,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Create Flood units',
-        text: 'Create a Flood Constructor every 180 seconds or a Flood Carrier every 120 seconds. Both appear on your tile as separate AI units.',
+        text: 'Create a Flood Constructor every 180 seconds or one AI Flood Infector every 30 seconds. Both appear on your tile. Overseers cannot directly create Carriers; player-controlled Constructors can reshape into one, and biomass spawners produce them.',
       },
       {
         label: 'Overseer Mode',

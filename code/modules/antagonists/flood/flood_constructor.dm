@@ -29,6 +29,7 @@
 		/datum/action/cooldown/flood/grow_membrane,
 		/datum/action/cooldown/flood/grow_spores,
 		/datum/action/cooldown/flood/produce_infestor,
+		/datum/action/cooldown/flood/become_carrier,
 		/datum/action/cooldown/flood/become_overseer,
 	)
 
@@ -191,6 +192,20 @@
 	qdel(src)
 	return TRUE
 
+/mob/living/basic/flood/constructor/proc/become_carrier()
+	if(stat == DEAD || !mind || !client)
+		return FALSE
+	var/turf/evolution_turf = get_turf(src)
+	if(!evolution_turf)
+		return FALSE
+	var/mob/living/basic/flood/carrier/new_carrier = new(evolution_turf)
+	var/datum/mind/flood_mind = mind
+	flood_mind.transfer_to(new_carrier)
+	drop_all_held_items()
+	visible_message(span_warning("[src] swells into a Flood Carrier!"))
+	qdel(src)
+	return TRUE
+
 /mob/living/basic/flood/constructor/proc/grow_spores()
 	if(world.time < next_spore_build)
 		to_chat(src, span_warning("Your spores have not recovered yet."))
@@ -224,7 +239,7 @@
 	melee_damage_upper = 10
 	var/next_biomass_build = 0
 	var/next_constructor = 0
-	var/next_carrier = 0
+	var/next_infestor = 0
 	var/next_direct_growth = 0
 	var/next_auto_direct = 0
 	var/mob/eye/flood_overseer/overseer_eye
@@ -239,7 +254,7 @@
 		/datum/action/cooldown/flood/grow_biomass,
 		/datum/action/cooldown/flood/infest_floor,
 		/datum/action/cooldown/flood/create_constructor,
-		/datum/action/cooldown/flood/create_carrier,
+		/datum/action/cooldown/flood/create_infestor,
 		/datum/action/cooldown/flood/toggle_overseer_mode,
 	)
 
@@ -308,18 +323,18 @@
 	visible_message(span_warning("[src] buds off a new Flood Constructor."))
 	return TRUE
 
-/mob/living/basic/flood/overseer/proc/create_carrier()
-	if(stat == DEAD || world.time < next_carrier)
+/mob/living/basic/flood/overseer/proc/create_infestor()
+	if(stat == DEAD || world.time < next_infestor)
 		return FALSE
 	var/turf/spawn_turf = get_turf(src)
 	if(!spawn_turf)
 		return FALSE
-	if(!flood_try_spawn_ai(/mob/living/basic/flood/carrier, spawn_turf))
+	if(!flood_try_spawn_ai(/mob/living/basic/flood/infestor, spawn_turf))
 		if(client)
 			to_chat(src, span_warning("The hive cannot support more AI Flood right now."))
 		return FALSE
-	next_carrier = world.time + 120 SECONDS
-	visible_message(span_warning("[src] buds off a Flood Carrier."))
+	next_infestor = world.time + 30 SECONDS
+	visible_message(span_warning("[src] produces a Flood Infector."))
 	return TRUE
 
 /mob/living/basic/flood/overseer/proc/direct_growth(show_failure = TRUE)

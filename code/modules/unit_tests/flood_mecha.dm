@@ -134,3 +134,30 @@
 	TEST_ASSERT(istype(placed_floor, /turf/open/floor/flood_biomass), "The Overseer did not start on biomass.")
 	TEST_ASSERT(QDELETED(placement), "The placement view remained after spawning its Overseer.")
 	TEST_ASSERT(!can_form_flood_overseer(), "The hive allowed a second Overseer after placement.")
+
+/// Flood midround eligibility must agree with its zero-day preference and ghost-only poll.
+/datum/unit_test/flood_midround_eligibility
+
+/datum/unit_test/flood_midround_eligibility/Run()
+	var/datum/dynamic_ruleset/midround/from_ghosts/flood/ruleset = allocate(/datum/dynamic_ruleset/midround/from_ghosts/flood)
+	TEST_ASSERT_EQUAL(ruleset.minimum_required_age, 0, "Flood incorrectly inherited the seven-day midround age restriction.")
+	TEST_ASSERT(!ruleset.restrict_ghost_roles, "Flood requires a previous crew assignment to enter its ghost poll.")
+	TEST_ASSERT_EQUAL(ruleset.required_type, /mob/dead/observer, "Flood is no longer a ghost-spawned Overseer ruleset.")
+
+/// The Overseer buds infectors at a separate 30-second rate; constructors can become carriers.
+/datum/unit_test/flood_form_creation_actions
+
+/datum/unit_test/flood_form_creation_actions/Run()
+	var/mob/living/basic/flood/overseer/overseer = allocate(/mob/living/basic/flood/overseer)
+	var/mob/living/basic/flood/constructor/constructor = allocate(/mob/living/basic/flood/constructor)
+	var/datum/action/cooldown/flood/create_infestor/infector_action = locate(/datum/action/cooldown/flood/create_infestor) in overseer.actions
+	TEST_ASSERT_NOTNULL(infector_action, "The Overseer has no Create Flood Infector action.")
+	TEST_ASSERT_EQUAL(infector_action.cooldown_time, 30 SECONDS, "The Overseer's Infector cooldown is not 30 seconds.")
+	TEST_ASSERT(locate(/datum/action/cooldown/flood/become_carrier) in constructor.actions, "The Constructor cannot become a Carrier.")
+	var/turf/spawn_turf = get_turf(overseer)
+	TEST_ASSERT(overseer.create_infestor(), "The Overseer did not create an Infector.")
+	var/mob/living/basic/flood/infestor/infector = locate(/mob/living/basic/flood/infestor) in spawn_turf
+	TEST_ASSERT_NOTNULL(infector, "Creating an Infector did not produce a Flood unit.")
+	TEST_ASSERT_EQUAL(overseer.next_infestor, world.time + 30 SECONDS, "The Overseer did not start its 30-second spawn cooldown.")
+	TEST_ASSERT(!overseer.create_infestor(), "The Overseer created another Infector during its cooldown.")
+	qdel(infector)
