@@ -53,7 +53,7 @@ const guides: Record<Form, Guide> = {
       },
       {
         label: 'Infected hosts',
-        text: "A converted human, lizard, or monkey becomes an empty-handed Flood Combat and keeps their original name. Other infected animals become Flood Carriers. Gear drops on the floor, but a human host's implants remain embedded; implants requiring human anatomy may be inert. A player-controlled converted unit has extra health.",
+        text: 'A converted human, lizard, or monkey becomes an empty-handed Flood Combat and keeps their original name. Other infected animals become Flood Carriers. Gear drops on the floor, but human implants remain embedded; implants requiring human anatomy may be inert. A player-controlled converted unit has extra health.',
       },
       {
         label: 'Attacks',
@@ -150,6 +150,9 @@ const guides: Record<Form, Guide> = {
   },
 };
 
+const infectorGuide =
+  'Flood Infectors cannot be taken over from the ghost spawner. They leap onto humans or animals and remain buckled to them. Against living hosts, they deal 10 brute every two seconds; the host can resist or the infector can be killed to break the latch. Only a dead host can be converted after twelve seconds attached to the corpse. Their swarms can merge, and an unlatched infector can reanimate a fallen Flood Combat once. Dying infectors also release a small Reactive Spines smoke cloud.';
+
 export const AntagInfoFlood = () => {
   const { data } = useBackend<Data>();
   const {
@@ -193,15 +196,7 @@ export const AntagInfoFlood = () => {
                   </Stack.Item>
                   <Stack.Item>
                     <Section title="Flood Infectors">
-                      Flood Infectors cannot be taken over from the ghost
-                      spawner. They leap onto humans or animals and remain
-                      buckled to them. Against living hosts, they deal 10 brute
-                      every two seconds; the host can resist or the infector can
-                      be killed to break the latch. Only a dead host can be
-                      converted, after twelve seconds attached to the corpse.
-                      Their swarms can merge, and an unlatched infector can
-                      reanimate a fallen Flood Combat once. Dying infectors
-                      also release a small Reactive Spines smoke cloud.
+                      {infectorGuide}
                     </Section>
                   </Stack.Item>
                   <Stack.Item>
