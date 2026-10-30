@@ -371,17 +371,30 @@
 	// A new generation prevents an earlier damage hit or corpse timer from firing.
 	latch_generation++
 	shake_infected_corpse(host, latch_generation)
+	addtimer(CALLBACK(src, PROC_REF(play_corpse_infection_sound), host, latch_generation, world.time + corpse_infection_time), 2 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, latch_generation), corpse_infection_time)
 
 /mob/living/basic/flood/infestor/proc/shake_infected_corpse(mob/living/host, expected_generation)
 	if(expected_generation != latch_generation || !latch_still_valid(host) || host.stat != DEAD)
 		return
-	// A short, gentle tremble returns the corpse to its original position each time.
-	animate(host, pixel_w = 1, time = 0.1 SECONDS, flags = ANIMATION_PARALLEL | ANIMATION_RELATIVE)
-	animate(pixel_w = -2, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
-	animate(pixel_w = 2, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
-	animate(pixel_w = -1, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
+	// A pronounced tremor returns the corpse to its original position each time.
+	animate(host, pixel_w = 4, time = 0.1 SECONDS, flags = ANIMATION_PARALLEL | ANIMATION_RELATIVE)
+	animate(pixel_w = -8, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
+	animate(pixel_w = 8, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
+	animate(pixel_w = -4, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE)
 	addtimer(CALLBACK(src, PROC_REF(shake_infected_corpse), host, expected_generation), 0.5 SECONDS)
+
+/mob/living/basic/flood/infestor/proc/play_corpse_infection_sound(mob/living/host, expected_generation, infection_deadline)
+	if(expected_generation != latch_generation || world.time >= infection_deadline || !latch_still_valid(host) || host.stat != DEAD)
+		return
+	playsound(host, pick(
+		'sound/flood/flood_idle_combat.melee1.ogg',
+		'sound/flood/flood_idle_combat.melee2.ogg',
+		'sound/flood/flood_idle_combat.melee5.ogg',
+		'sound/flood/flood_idle_combat.melee6.ogg',
+	), 40, TRUE)
+	if(world.time + 2 SECONDS < infection_deadline)
+		addtimer(CALLBACK(src, PROC_REF(play_corpse_infection_sound), host, expected_generation, infection_deadline), 2 SECONDS)
 
 /mob/living/basic/flood/infestor/proc/finish_latch(mob/living/host, expected_generation)
 	if(expected_generation != latch_generation)

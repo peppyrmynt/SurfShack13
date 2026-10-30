@@ -150,9 +150,6 @@ const guides: Record<Form, Guide> = {
   },
 };
 
-const infectorGuide =
-  'Flood Infectors cannot be taken over from the ghost spawner. They leap onto humans or animals and remain buckled to them. Against living hosts, they deal 10 brute every two seconds; the host can resist or the infector can be killed to break the latch. Only a dead host can be converted after twelve seconds attached to the corpse. Their swarms can merge, and an unlatched infector can reanimate a fallen Flood Combat once. Dying infectors also release a small Reactive Spines smoke cloud.';
-
 export const AntagInfoFlood = () => {
   const { data } = useBackend<Data>();
   const {
@@ -196,7 +193,15 @@ export const AntagInfoFlood = () => {
                   </Stack.Item>
                   <Stack.Item>
                     <Section title="Flood Infectors">
-                      {infectorGuide}
+                      Flood Infectors cannot be taken over from the ghost
+                      spawner. They leap onto humans or animals and remain
+                      buckled to them. Against living hosts, they deal 10 brute
+                      every two seconds; the host can resist or the infector can
+                      be killed to break the latch. Only a dead host can be
+                      converted, after 12 seconds attached to the corpse. Their
+                      swarms can merge, and an unlatched infector can reanimate
+                      a fallen Flood Combat once. Dying infectors also release a
+                      small Reactive Spines smoke cloud.
                     </Section>
                   </Stack.Item>
                   <Stack.Item>
