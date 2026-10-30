@@ -161,3 +161,32 @@
 	TEST_ASSERT_EQUAL(overseer.next_infestor, world.time + 30 SECONDS, "The Overseer did not start its 30-second spawn cooldown.")
 	TEST_ASSERT(!overseer.create_infestor(), "The Overseer created another Infector during its cooldown.")
 	qdel(infector)
+
+/// Human implants, including their own state and storage, survive corpse conversion.
+/datum/unit_test/flood_infection_transfers_implants
+
+/datum/unit_test/flood_infection_transfers_implants/Run()
+	var/mob/living/carbon/human/consistent/host = allocate(/mob/living/carbon/human/consistent)
+	var/mob/living/basic/flood/infestor/infector = allocate(/mob/living/basic/flood/infestor)
+	var/obj/item/implant/tracking/tracker = allocate(/obj/item/implant/tracking)
+	var/obj/item/implant/storage/bag = allocate(/obj/item/implant/storage)
+	var/obj/item/implant/mindshield/shield = allocate(/obj/item/implant/mindshield)
+	TEST_ASSERT(tracker.implant(host, silent = TRUE), "The test host could not receive a tracker implant.")
+	TEST_ASSERT(bag.implant(host, silent = TRUE), "The test host could not receive a storage implant.")
+	TEST_ASSERT(shield.implant(host, silent = TRUE), "The test host could not receive a mindshield implant.")
+	var/datum/storage/original_storage = bag.atom_storage
+	var/turf/conversion_turf = get_turf(host)
+	host.death()
+	infector.forceMove(get_step(host, NORTH))
+	TEST_ASSERT(infector.melee_attack(host), "The Infector could not latch onto the implanted corpse.")
+	TEST_ASSERT_EQUAL(infector.corpse_infection_time, 12 SECONDS, "Corpse infection does not take twelve seconds.")
+	TEST_ASSERT(infector.convert_host(host), "The implanted corpse was not converted.")
+	var/mob/living/basic/flood/combat_form/human/converted = locate(/mob/living/basic/flood/combat_form/human) in conversion_turf
+	TEST_ASSERT_NOTNULL(converted, "The infection did not create a Flood Combat.")
+	allocated += converted
+	for(var/obj/item/implant/surviving_implant in list(tracker, bag, shield))
+		TEST_ASSERT_EQUAL(surviving_implant.imp_in, converted, "An implant still points at the deleted human.")
+		TEST_ASSERT(surviving_implant in converted.implants, "An implant was not retained by Flood Combat.")
+		TEST_ASSERT_EQUAL(surviving_implant.loc, converted, "An implant was dropped instead of inherited.")
+	TEST_ASSERT_EQUAL(bag.atom_storage, original_storage, "The storage implant lost its existing storage datum.")
+	TEST_ASSERT(HAS_TRAIT(converted, TRAIT_MINDSHIELD), "The transferred mindshield no longer protects its host.")

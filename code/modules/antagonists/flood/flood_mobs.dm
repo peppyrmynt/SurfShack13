@@ -55,6 +55,10 @@
 	)
 	next_idle_sound = world.time + rand(300, 600)
 
+/mob/living/basic/flood/Destroy()
+	QDEL_LIST(implants)
+	return ..()
+
 /mob/living/basic/flood/mind_initialize()
 	. = ..()
 	grant_flood_antag()

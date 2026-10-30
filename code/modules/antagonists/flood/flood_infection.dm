@@ -25,7 +25,7 @@
 	attack_sound = 'sound/flood/leap.leap1.ogg'
 	var/next_reanimate_check = 0
 	var/mob/living/latched_host
-	/// Some animals normally disappear on death; keep their body for the ten-second takeover.
+	/// Some animals normally disappear on death; keep their body for the twelve-second takeover.
 	var/restore_basic_death_cleanup = FALSE
 	var/restore_simple_death_cleanup = FALSE
 	/// Restore the normal draw order when the infector releases its host.
@@ -34,6 +34,7 @@
 	var/swarm_size = 1
 	var/max_swarm_size = 6
 	var/next_swarm_merge = 0
+	var/corpse_infection_time = 12 SECONDS
 
 /mob/living/basic/flood/infestor/Initialize(mapload)
 	. = ..()
@@ -228,6 +229,9 @@
 		new_form.identifier = 0
 		new_form.unique_name = FALSE
 
+	if(ishuman(victim))
+		transfer_human_implants(victim, new_form)
+
 	if(victim.mind)
 		// The source gives player-infected forms more staying power than NPC forms.
 		new_form.maxHealth = round(new_form.maxHealth * 1.5)
@@ -250,6 +254,42 @@
 		playsound(conversion_turf, 'sound/flood/flood_idle_noncombat.idle1.ogg', 70, TRUE)
 	qdel(victim)
 	return TRUE
+
+/// Keep actual implanted items (including their charge, settings, and tracking identity)
+/// when a human corpse becomes a Flood Combat. Do this before moving the mind so a
+/// mindshield is not re-implanted into a newly assigned Flood antagonist.
+/mob/living/basic/flood/infestor/proc/transfer_human_implants(mob/living/carbon/human/host, mob/living/basic/flood/new_form)
+	var/static/list/preserve_as_is = list(
+		/obj/item/implant/uplink,
+		/obj/item/implant/freedom,
+		/obj/item/implant/chem,
+		/obj/item/implant/storage,
+		/obj/item/implant/robusttec,
+	)
+	if(!length(host.implants))
+		return
+	for(var/obj/item/implant/host_implant as anything in host.implants.Copy())
+		if(QDELETED(host_implant) || host_implant.imp_in != host)
+			continue
+		host_implant.removed(host, silent = TRUE, special = TRUE)
+		if(QDELETED(host_implant))
+			continue
+		// These implants either require carbon anatomy or would reset/eject their
+		// stored contents on implantation. Preserve them in the new body without
+		// invoking incompatible carbon-only behaviour.
+		if(!is_type_in_list(host_implant, preserve_as_is))
+			host_implant.implant(new_form, silent = TRUE, force = TRUE)
+		if(QDELETED(host_implant) || host_implant.imp_in == new_form)
+			continue
+		host_implant.forceMove(new_form)
+		host_implant.imp_in = new_form
+		LAZYADD(new_form.implants, host_implant)
+		GLOB.tracked_implants |= host_implant
+		// A freedom implant's action assumes handcuffs and a carbon body.
+		if(!istype(host_implant, /obj/item/implant/freedom))
+			for(var/datum/action/implant_action as anything in host_implant.actions)
+				implant_action.Grant(new_form)
+	new_form.sec_hud_set_implants()
 
 /mob/living/basic/flood/infestor/proc/clear_latch()
 	var/mob/living/old_host = latched_host
@@ -331,7 +371,7 @@
 	// A new generation prevents an earlier damage hit or corpse timer from firing.
 	latch_generation++
 	shake_infected_corpse(host, latch_generation)
-	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, latch_generation), 10 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(finish_latch), host, latch_generation), corpse_infection_time)
 
 /mob/living/basic/flood/infestor/proc/shake_infected_corpse(mob/living/host, expected_generation)
 	if(expected_generation != latch_generation || !latch_still_valid(host) || host.stat != DEAD)
