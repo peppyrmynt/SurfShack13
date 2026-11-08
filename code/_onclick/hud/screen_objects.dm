@@ -531,6 +531,9 @@
 	if(iscarbon(usr))
 		var/mob/living/carbon/C = usr
 		C.toggle_throw_mode()
+	else if(istype(usr, /mob/living/basic/flood/combat_form/human))
+		var/mob/living/basic/flood/combat_form/human/flood = usr
+		flood.toggle_flood_throw_mode()
 
 /atom/movable/screen/zone_sel
 	name = "damage zone"

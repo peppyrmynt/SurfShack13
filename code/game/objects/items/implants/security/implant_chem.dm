@@ -75,7 +75,7 @@
 
 /obj/item/implant/chem/activate(cause)
 	. = ..()
-	if(!cause || !imp_in)
+	if(!cause || !iscarbon(imp_in))
 		return
 	var/mob/living/carbon/R = imp_in
 	var/injectamount = null

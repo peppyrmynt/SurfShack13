@@ -54,6 +54,7 @@ SUBSYSTEM_DEF(polling)
 	amount_to_pick = 0,
 	chat_text_border_icon,
 	announce_chosen = TRUE,
+	allow_antag_opt_in = FALSE,
 )
 	if(group.len == 0)
 		return
@@ -80,10 +81,10 @@ SUBSYSTEM_DEF(polling)
 		if(!candidate_mob.client)
 			continue
 		// Universal opt-out for all players.
-		if(!candidate_mob.client.prefs.read_preference(/datum/preference/toggle/ghost_roles))
+		if(!candidate_mob.client.prefs.read_preference(/datum/preference/toggle/ghost_roles) && !(allow_antag_opt_in && role in candidate_mob.client.prefs.be_special))
 			continue
 		// Opt-out for admins whom are currently adminned.
-		if((!candidate_mob.client.prefs.read_preference(/datum/preference/toggle/ghost_roles_as_admin)) && candidate_mob.client.holder)
+		if((!candidate_mob.client.prefs.read_preference(/datum/preference/toggle/ghost_roles_as_admin)) && candidate_mob.client.holder && !(allow_antag_opt_in && role in candidate_mob.client.prefs.be_special))
 			continue
 		if(!is_eligible(candidate_mob, role, check_jobban, ignore_category))
 			continue

@@ -2,7 +2,7 @@
  * Basic handling for showing held items in a mob's hands
  */
 /datum/component/basic_inhands
-	/// Layer index we show our inhands upon
+	/// Optional layer override for mobs whose base icon would cover held items.
 	var/display_layer
 	/// Y offset to apply to inhands
 	var/y_offset
@@ -11,7 +11,7 @@
 	/// What overlays are we currently showing?
 	var/list/cached_overlays
 
-/datum/component/basic_inhands/Initialize(display_layer = 1, y_offset = 0, x_offset = 0)
+/datum/component/basic_inhands/Initialize(display_layer = null, y_offset = 0, x_offset = 0)
 	. = ..()
 	if (!isliving(parent))
 		return COMPONENT_INCOMPATIBLE
@@ -42,6 +42,8 @@
 		var/is_right = IS_RIGHT_INDEX(holding_mob.get_held_index_of_item(held))
 		var/icon_file = is_right ? held.righthand_file : held.lefthand_file
 		var/mutable_appearance/held_overlay = held.build_worn_icon(default_layer = HANDS_LAYER, default_icon_file = icon_file, isinhands = TRUE)
+		if(!isnull(display_layer))
+			held_overlay.layer = display_layer
 		held_overlay.pixel_y += y_offset
 		held_overlay.pixel_x += x_offset * (is_right ? 1 : -1)
 		held_overlays += held_overlay
