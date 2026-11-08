@@ -25,10 +25,6 @@
 	for(var/mob/dead/observer/ghost in GLOB.current_observers_list)
 		if(!ghost.client || HAS_TRAIT(ghost, TRAIT_MIND_TEMPORARILY_GONE) || HAS_TRAIT(ghost, TRAIT_TEMPORARY_BODY))
 			continue
-		if(!ghost.client.prefs.read_preference(/datum/preference/toggle/ghost_roles))
-			continue
-		if(ghost.client.holder && !ghost.client.prefs.read_preference(/datum/preference/toggle/ghost_roles_as_admin))
-			continue
 		if(!SSpolling.is_eligible(ghost, ROLE_FLOOD, ROLE_FLOOD, null))
 			continue
 		volunteers += ghost
@@ -52,7 +48,7 @@
 		message_admins("Flood Outbreak cannot poll observers while midround ghost roles are disabled.")
 		return
 	if(!length(possible_volunteers))
-		message_admins("Flood Outbreak has no available observers with Flood enabled, ghost-role polls enabled (including the admin setting), and no Flood ban. Living players cannot enter a ghost-spawned Overseer poll.")
+		message_admins("Flood Outbreak has no available observers with Flood enabled and no Flood ban. Living players cannot enter a ghost-spawned Overseer poll.")
 		return
 	SSdynamic.log_dynamic_and_announce("Polling [length(possible_volunteers)] observers to apply for the [name] ruleset.")
 	// The generic ghost helper is gated by STATION_SENTIENCE, which can be off
@@ -65,6 +61,7 @@
 		group = possible_volunteers,
 		alert_pic = signup_item_path,
 		role_name_text = antag_flag,
+		allow_antag_opt_in = TRUE,
 	)
 	if(!length(candidates))
 		SSdynamic.log_dynamic_and_announce("The ruleset [name] received no applications.")
